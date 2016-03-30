@@ -1,0 +1,6 @@
+AD Model Builder, or ADMB, is a powerful software package for the development of state-of-the-art nonlinear statistical models. ADMB is built around the AUTODIF Library, a C++ language extension which implements reverse mode automatic differentiation. A closely related software package, ADMB-RE, implements random effects in nonlinear models.
+ADMB was created by David Fournier and now continues to be developed by the ADMB Project, a creation of the non-profit ADMB Foundation. ADMB is free, open source, and available for Windows, Linux, MacOS, and Sun/SPARC.  
+
+How to cite ADMB:
+
+Fournier, D.A., H.J. Skaug, J. Ancheta, J. Ianelli, A. Magnusson, M.N. Maunder, A. Nielsen, and J. Sibert. 2012. AD Model Builder: using automatic differentiation for statistical inference of highly parameterized complex nonlinear models. Optim. Methods Softw. 27:233-249.
