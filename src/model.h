@@ -183,6 +183,8 @@ public slots:
     int fleet_discard_err_type (int fleet);
     int fleet_discard_count();
     int fleet_discard_obs_count();
+    void setUseMeanBwt (int flag) {useMeanBwtData = flag == 1? true: false;}
+    bool getUseMeanBwt () {return useMeanBwtData;}
     void set_mean_body_wt_obs_count(int count) {mbweightModel->setRowCount(count);}
     int mean_body_wt_count () {return mbweightModel->rowCount();}
     tablemodel *getMeanBwtModel() {return mbweightModel;}
@@ -200,6 +202,8 @@ public slots:
     void set_run_number (int r_num) {iNumRuns = r_num;}
     int run_number () {return iNumRuns;}
 
+    void setUseLengthComp (int flag) {useLenCompData = (flag == 1)? true: false;}
+    bool getUseLengthComp () {return useLenCompData;}
     void set_length_composition (compositionLength *l_data) {lengthData = l_data;}
     compositionLength *get_length_composition () {return lengthData;}
     void set_age_composition (compositionAge *a_data) {ageData = a_data;}
@@ -207,6 +211,8 @@ public slots:
     void set_morph_composition (compositionMorph *m_data) {morphData = m_data;}
     compositionMorph *get_morph_composition () {return morphData;}
 
+    void setUseMeanSAA (int flag) {useMeanSAAData = (flag == 1)? true: false;}
+    bool getUseMeanSAA () {return useMeanSAAData;}
     void set_num_environ_vars (int num) {obsEnvironVars->setNumVars(num);}
     int num_environ_vars () {return obsEnvironVars->getNumVars();}
     void set_num_environ_var_obs (int num) {obsEnvironVars->setNumObs(num);}
@@ -348,15 +354,20 @@ private:
 
     int iNumRuns;
 
+    bool useMeanBwtData;
     int i_mean_bwt_df;
 
     parametermodel *catchMult;
 
+    bool useLenCompData;
     compositionLength *lengthData;
+
     compositionAge *ageData;
     QList<compositionGeneral *> cListGeneralMethods;
     bool doMorphComp;
     compositionMorph *morphData;
+
+    bool useMeanSAAData;
 
     environmentalVars *obsEnvironVars;
     bool doTags;

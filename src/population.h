@@ -38,7 +38,6 @@ public slots:
     void setMeanBwt (int index, QStringList values) {meanBwtModel->setRowData(index, values);}
     QStringList getMeanBwt (int index) {return meanBwtModel->getRowData(index);}
 
-
     void readSeasonalEffects(ss_file *input);
     QString writeSeasonalEffects();
 
@@ -51,6 +50,8 @@ public slots:
     ss_growth * Grow() {return pop_growth;}
     ss_mortality *M () {return pop_mortality;}
 
+    QStringList getFractionFemale();
+    void setFractionFemale (QStringList data);
     int getFemwtlen1() const;
     void setFemwtlen1(int value);
     int getFemwtlen2() const;
@@ -88,6 +89,7 @@ private:
     ss_mortality *pop_mortality;
 
     float f_frac_female;
+    QStringList fractionFem;
 
     int i_gender;
     int i_mean_bwt_deg_freedom;

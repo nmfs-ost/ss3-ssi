@@ -88,6 +88,19 @@ int population::getK() const
     return K;
 }
 
+void population::setFractionFemale(QStringList data)
+{
+    if (!fractionFem.isEmpty())
+        fractionFem.clear();
+    for (int i = 0; i < data.count(); i++)
+        fractionFem.append(data.at(i));
+}
+
+QStringList population::getFractionFemale()
+{
+    return fractionFem;
+}
+
 void population::setK(int value)
 {
     K = value;

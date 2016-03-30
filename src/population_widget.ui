@@ -87,16 +87,6 @@
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QGridLayout" name="gridLayout_fecundity">
-             <item row="0" column="3">
-              <widget class="QLineEdit" name="lineEdit_fraction_female">
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-              </widget>
-             </item>
              <item row="6" column="1" colspan="2">
               <widget class="QLabel" name="label_fecund_hermaph">
                <property name="text">
@@ -147,26 +137,6 @@
                 <string>Fecundity option</string>
                </property>
               </widget>
-             </item>
-             <item row="0" column="1" colspan="2">
-              <widget class="QLabel" name="label_fraction_fem">
-               <property name="text">
-                <string>Fraction female</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="4">
-              <spacer name="horizontalSpacer_fecund1">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="2" column="1" colspan="2">
               <widget class="QLabel" name="label_fecund_adj_constraint">
@@ -392,6 +362,42 @@
                  <string>5: eggs = a + B * W</string>
                 </property>
                </item>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <spacer name="horizontalSpacer_fecund1">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="10" column="1">
+              <widget class="QLabel" name="label_fraction_fem">
+               <property name="text">
+                <string>Fraction female</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="2" colspan="4">
+              <widget class="QLineEdit" name="lineEdit_fraction_female">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
               </widget>
              </item>
             </layout>

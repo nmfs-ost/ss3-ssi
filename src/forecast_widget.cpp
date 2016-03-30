@@ -87,7 +87,7 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), SLOT(alloc_group_assign_changed()));
 
     connect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
-    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_input(int)));
+//    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_input(int)));
 
     connect (ui->lineEdit_max_catch_fleet, SIGNAL(editingFinished()), SLOT(change_max_catch_fleet()));
     connect (ui->lineEdit_max_catch_area, SIGNAL(editingFinished()), SLOT(change_max_catch_area()));
@@ -317,9 +317,13 @@ void forecast_widget::set_allocation_group_assign()
 {
     int num = model_data->forecast->num_fleets();
     QString txt("");
-    for (int i = 0; i < num; i++)
+    if (ui->spinBox_num_alloc_groups->value() > 0)
     {
-        txt.append(QString("%1 ").arg(QString::number(model_data->forecast->alloc_group(i))));
+        for (int i = 0; i < num; i++)
+        {
+            txt.append(QString("%1 ").arg(
+                     QString::number(model_data->forecast->alloc_group(i))));
+        }
     }
     ui->lineEdit_alloc_assignments->setText(txt);
 }

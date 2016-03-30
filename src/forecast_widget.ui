@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1015</width>
+    <width>829</width>
     <height>790</height>
    </rect>
   </property>
@@ -45,7 +45,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="stock_synth.qrc">:/images/images/modern_binocular_3-4_view.png</pixmap>
+        <pixmap>:/images/images/modern_binocular_3-4_view.png</pixmap>
        </property>
       </widget>
      </item>
@@ -431,7 +431,7 @@
                 <number>3000</number>
                </property>
                <property name="value">
-                <number>3000</number>
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -596,12 +596,12 @@
              </item>
              <item>
               <property name="text">
-               <string>3 = F(Btgt)</string>
+               <string>3 = F(B target)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>4 = Ave F (uses first-last relF yrs)</string>
+               <string>4 = Ave F (uses relative F years)</string>
               </property>
              </item>
              <item>
@@ -744,22 +744,22 @@
             <widget class="QComboBox" name="comboBox_MSY_options">
              <item>
               <property name="text">
-               <string>1 = set to F(SPR)</string>
+               <string>1 = F(SPR)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>2 = calc F(MSY)</string>
+               <string>2 = F(MSY)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>3 = set to F(Btgt)</string>
+               <string>3 = F(B target)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>4 = set to F(endyr)</string>
+               <string>4 = F(end year)</string>
               </property>
              </item>
             </widget>
@@ -782,7 +782,7 @@
          <item row="5" column="0">
           <widget class="QLabel" name="label_bmark_relF_basis">
            <property name="text">
-            <string>Benchmark relF basis</string>
+            <string>Benchmark relative F basis</string>
            </property>
           </widget>
          </item>
@@ -813,7 +813,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_SPR_target">
            <property name="text">
-            <string>SPR target (e.g. 0.40)</string>
+            <string>SPR target (e.g. 0.45)</string>
            </property>
           </widget>
          </item>
@@ -849,14 +849,14 @@ e.g. 0, -1, -2, ...</string>
          <item row="1" column="0">
           <widget class="QLabel" name="label_MSY_options">
            <property name="text">
-            <string>MSY option</string>
+            <string>Forecast Method</string>
            </property>
           </widget>
          </item>
          <item row="7" column="0">
           <widget class="QLabel" name="label_fcast_yr_num">
            <property name="text">
-            <string>Number of forecast years</string>
+            <string>Number of forecast years (at least one)</string>
            </property>
           </widget>
          </item>
@@ -870,7 +870,7 @@ e.g. 0, -1, -2, ...</string>
          <item row="3" column="0">
           <widget class="QLabel" name="label_biomass_target">
            <property name="text">
-            <string>Biomass target (e.g. 0.40)</string>
+            <string>Relative Biomass target (e.g. 0.40)</string>
            </property>
           </widget>
          </item>
@@ -891,6 +891,9 @@ e.g. 0, -1, -2, ...</string>
           <layout class="QHBoxLayout" name="horizontalLayout_fcast_yr_num">
            <item>
             <widget class="QSpinBox" name="spinBox_fcast_yr_num">
+             <property name="minimum">
+              <number>1</number>
+             </property>
              <property name="value">
               <number>10</number>
              </property>
@@ -940,6 +943,19 @@ e.g. 0, -1, -2, ...</string>
          </item>
         </layout>
        </item>
+       <item>
+        <spacer name="horizontalSpacer_29">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_controls">
@@ -949,52 +965,11 @@ e.g. 0, -1, -2, ...</string>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="5" column="2">
-          <spacer name="horizontalSpacer_30">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="1" colspan="2">
-          <layout class="QHBoxLayout" name="horizontalLayout_14">
-           <item>
-            <widget class="QComboBox" name="comboBox_control_rule">
-             <item>
-              <property name="text">
-               <string>1 = catch=f(SSB) west coast</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>2 = F=f(SSB)</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_11">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label_fcast_loops_3">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Forecast loop control #3 (reserved)</string>
            </property>
@@ -1030,7 +1005,7 @@ e.g. 0, -1, -2, ...</string>
          <item row="3" column="0">
           <widget class="QLabel" name="label_ctl_tgt_as_fraction">
            <property name="text">
-            <string>Control rule target as fraction of Flimit</string>
+            <string>Control rule buffer (e.g. 0.75)</string>
            </property>
           </widget>
          </item>
@@ -1041,19 +1016,6 @@ e.g. 0, -1, -2, ...</string>
 (should be after years with fixed inputs)</string>
            </property>
           </widget>
-         </item>
-         <item row="13" column="0">
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="label_num_forecast_loops">
@@ -1282,22 +1244,37 @@ e.g. 0, -1, -2, ...</string>
          <item row="1" column="0">
           <widget class="QLabel" name="label_ctl_rule_const_F">
            <property name="text">
-            <string>Control rule biomass level for constant F
- (must be greater than no F below)</string>
+            <string>Control rule upper limit (e.g. 0.40)</string>
            </property>
           </widget>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_ctl_rule_no_F">
            <property name="text">
-            <string>Control rule biomass level for no F</string>
+            <string>Control rule lower limit (e.g. 0.10)</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="3">
-          <widget class="QLabel" name="label_fcast_loops_5">
-           <property name="text">
-            <string>Forecast loop control #5 (reserved)</string>
+         <item row="11" column="0">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="5" column="4">
+          <widget class="QSpinBox" name="spinBox_fcast_loops_4">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <number>9</number>
            </property>
           </widget>
          </item>
@@ -1311,24 +1288,27 @@ e.g. 0, -1, -2, ...</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="3">
+         <item row="5" column="2" colspan="2">
           <widget class="QLabel" name="label_fcast_loops_4">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Forecast loop control #4 (reserved)</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="4">
-          <widget class="QSpinBox" name="spinBox_fcast_loops_4">
+         <item row="6" column="2" colspan="2">
+          <widget class="QLabel" name="label_fcast_loops_5">
            <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="maximum">
-            <number>9</number>
+           <property name="text">
+            <string>Forecast loop control #5 (reserved)</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="0" colspan="3">
+         <item row="10" column="0" colspan="2">
           <widget class="QGroupBox" name="groupBox_rebuilder">
            <property name="title">
             <string>West Coast Rebuilder</string>
@@ -1373,14 +1353,15 @@ e.g. 0, -1, -2, ...</string>
             <item row="0" column="0">
              <widget class="QLabel" name="label_rebuilder_ydecl">
               <property name="text">
-               <string>Rebuilder:  First year in catch could be set to zero (Ydecl)</string>
+               <string>First year catch should be set to zero (Year Declared)
+(-1 to set to 1999)</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_rebuilder_yinit">
               <property name="text">
-               <string>Rebuilder: Year for current age structure (Yinit)
+               <string>Year for current age structure (Year Initial)
 (-1 to set to end year +1)</string>
               </property>
              </widget>
@@ -1415,7 +1396,63 @@ e.g. 0, -1, -2, ...</string>
            </layout>
           </widget>
          </item>
+         <item row="0" column="1" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QComboBox" name="comboBox_control_rule">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>1</horstretch>
+               <verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>220</width>
+               <height>22</height>
+              </size>
+             </property>
+             <item>
+              <property name="text">
+               <string>1 = catch=F(SSB) US West Coast</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>2 = F = F(SSB)</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_11">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
         </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_28">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -1438,19 +1475,30 @@ e.g. 0, -1, -2, ...</string>
           <layout class="QHBoxLayout" name="horizontalLayout_input_catch_basis">
            <item>
             <widget class="QComboBox" name="comboBox_input_catch_basis">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>1</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <item>
               <property name="text">
-               <string>2 = dead catch</string>
+               <string>-1 = Read basis with each observation</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>3 = retained catch</string>
+               <string>2 = Dead catch</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>99 = input Hrate(F)</string>
+               <string>3 = Retained catch</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>99 = Input harves rate (F)</string>
               </property>
              </item>
             </widget>
@@ -1480,8 +1528,7 @@ e.g. 0, -1, -2, ...</string>
          <item row="2" column="0">
           <widget class="QLabel" name="label_catch_tuning_basis">
            <property name="text">
-            <string>Basis for forecast catch tuning 
-and for forecast catch caps and allocation</string>
+            <string>Basis for forecast catch maximum</string>
            </property>
           </widget>
          </item>
@@ -1518,12 +1565,12 @@ and for forecast catch caps and allocation</string>
             <widget class="QComboBox" name="comboBox_relF">
              <item>
               <property name="text">
-               <string>1 = use first-last alloc year</string>
+               <string>1 = use first-last allocation year</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>2 = read seas(row) x fleet(col) below</string>
+               <string>2 = read season(row) x fleet(col) below</string>
               </property>
              </item>
             </widget>
@@ -1542,19 +1589,6 @@ and for forecast catch caps and allocation</string>
             </spacer>
            </item>
           </layout>
-         </item>
-         <item row="8" column="2">
-          <spacer name="horizontalSpacer_36">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item row="7" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_fcast_levels">
@@ -1593,7 +1627,7 @@ and for forecast catch caps and allocation</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>292</width>
+              <width>285</width>
               <height>134</height>
              </rect>
             </property>
@@ -1639,7 +1673,8 @@ and for forecast catch caps and allocation</string>
          <item row="9" column="0">
           <widget class="QLabel" name="label_input_fixed_catch">
            <property name="text">
-            <string>Input values if choice &gt; 2</string>
+            <string>Input values if choice &gt; 0 
+ Endter one line per number of fixed forecast year catch</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1649,7 +1684,7 @@ and for forecast catch caps and allocation</string>
          <item row="3" column="0">
           <widget class="QLabel" name="label_fleet_max">
            <property name="text">
-            <string>Maximum total catch by fleet
+            <string>Maximum total catch by fleet - including surveys
 (-1 to have no max) must enter value for each fleet</string>
            </property>
           </widget>
@@ -1808,7 +1843,7 @@ and for forecast catch caps and allocation</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>292</width>
+              <width>285</width>
               <height>134</height>
              </rect>
             </property>
@@ -1831,9 +1866,21 @@ and for forecast catch caps and allocation</string>
           <layout class="QHBoxLayout" name="horizontalLayout_tuning_basis">
            <item>
             <widget class="QComboBox" name="comboBox_tuning_basis">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>160</width>
+               <height>0</height>
+              </size>
+             </property>
              <item>
               <property name="text">
-               <string>2 = dead biomass</string>
+               <string>2 = total catch biomass</string>
               </property>
              </item>
              <item>
@@ -1843,7 +1890,7 @@ and for forecast catch caps and allocation</string>
              </item>
              <item>
               <property name="text">
-               <string>5 = dead number</string>
+               <string>5 = total catch number</string>
               </property>
              </item>
              <item>
@@ -1920,14 +1967,28 @@ and for forecast catch caps and allocation</string>
          </item>
         </layout>
        </item>
+       <item>
+        <spacer name="horizontalSpacer_36">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::MinimumExpanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="stock_synth.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

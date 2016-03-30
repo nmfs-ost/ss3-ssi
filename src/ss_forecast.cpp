@@ -209,12 +209,15 @@ void ss_forecast::set_combo_box_catch_input(int basis)
     switch (basis)
     {
     case 0:
-        set_input_catch_basis(2);
+        set_input_catch_basis(-1);
         break;
     case 1:
-        set_input_catch_basis(3);
+        set_input_catch_basis(2);
         break;
     case 2:
+        set_input_catch_basis(3);
+        break;
+    case 3:
         set_input_catch_basis(99);
         break;
     default:

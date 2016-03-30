@@ -708,7 +708,8 @@ bool file_widget::read_starter_file (QString filename)
 
         token = starterFile->next_value("what to write to CumReport.sso");
         temp_int = token.toInt();
-        set_cumrpt_write(temp_int);
+        ui->comboBox_cumreport->setCurrentIndex(temp_int);
+//        set_cumrpt_write(temp_int);
         token = starterFile->next_value("prior likelihood");
         temp_int = token.toInt();
         model_info->set_prior_likelihood (temp_int);
@@ -848,7 +849,7 @@ void file_widget::write_starter_file (QString filename)
         line = QString (QString ("%1 # write parm values to ParmTrace.sso (0=no,1=good,active; 2=good,all; 3=every_iter,all_parms; 4=every,active)" ).arg
                         (QString::number(temp_int)));
         chars += starterFile->writeline (line);
-        temp_int = get_cumrpt_write();
+        temp_int = ui->comboBox_cumreport->currentIndex();//get_cumrpt_write();
         line = QString (QString ("%1 # write to cumreport.sso (0=no,1=like&timeseries; 2=add survey fits)" ).arg
                         (QString::number(temp_int)));
         chars += starterFile->writeline (line);

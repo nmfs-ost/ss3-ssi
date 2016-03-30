@@ -63,7 +63,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -116,13 +116,6 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="0">
-          <widget class="QLabel" name="label_num_genders">
-           <property name="text">
-            <string>Number of genders</string>
-           </property>
-          </widget>
-         </item>
          <item row="3" column="1">
           <widget class="QSpinBox" name="spinBox_year_start">
            <property name="minimum">
@@ -153,40 +146,10 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QSpinBox" name="spinBox_num_genders">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>2</number>
-           </property>
-          </widget>
-         </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_year_start">
            <property name="text">
             <string>Start Year</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1">
-          <widget class="QSpinBox" name="spinBox_num_areas">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>10</number>
-           </property>
-           <property name="value">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="label_num_areas">
-           <property name="text">
-            <string>Number of areas</string>
            </property>
           </widget>
          </item>
@@ -214,36 +177,6 @@
            </property>
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="7">
-          <spacer name="horizontalSpacer_dimen">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="11" column="0">
-          <widget class="QLabel" name="label_max_age">
-           <property name="text">
-            <string>Accumulator age</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QSpinBox" name="spinBox_max_age">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>50</number>
            </property>
           </widget>
          </item>
@@ -395,6 +328,73 @@
            </property>
           </spacer>
          </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_num_genders">
+           <property name="text">
+            <string>Number of genders</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QSpinBox" name="spinBox_num_genders">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>2</number>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_max_age">
+           <property name="text">
+            <string>Number of ages</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QSpinBox" name="spinBox_max_age">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>50</number>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="7">
+          <spacer name="horizontalSpacer_dimen">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_num_areas">
+           <property name="text">
+            <string>Number of areas</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QSpinBox" name="spinBox_num_areas">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -475,17 +475,17 @@
            </item>
            <item>
             <property name="text">
-             <string>1: rel X * B0</string>
+             <string>1: X * B0</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>2: rel X * B_msy</string>
+             <string>2: X * B_msy</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>3: rel X * B_styr</string>
+             <string>3: X * B_styr</string>
             </property>
            </item>
           </widget>
@@ -493,7 +493,7 @@
          <item row="9" column="0">
           <widget class="QLabel" name="label_f_rpt_units">
            <property name="text">
-            <string>F Report units</string>
+            <string>F Report values</string>
            </property>
           </widget>
          </item>
@@ -511,7 +511,7 @@
           <widget class="QComboBox" name="comboBox_f_report_basis">
            <item>
             <property name="text">
-             <string>0: Raw</string>
+             <string>0: Raw vlaues</string>
             </property>
            </item>
            <item>
@@ -538,7 +538,7 @@
           <widget class="QComboBox" name="comboBox_spr_basis">
            <item>
             <property name="text">
-             <string>0:None</string>
+             <string>0: None</string>
             </property>
            </item>
            <item>
@@ -548,7 +548,7 @@
            </item>
            <item>
             <property name="text">
-             <string>2: (1-SPR) ? (1-SPR_MSY)</string>
+             <string>2: (1-SPR) / (1-SPR_MSY)</string>
             </property>
            </item>
            <item>
@@ -558,7 +558,7 @@
            </item>
            <item>
             <property name="text">
-             <string>4: Raw</string>
+             <string>4:  1-SPR values</string>
             </property>
            </item>
           </widget>
@@ -640,7 +640,7 @@
          <item row="7" column="5">
           <widget class="QLabel" name="label_f_dep_denom">
            <property name="text">
-            <string>Depletion denomination</string>
+            <string>Depletion denomination - Frac(X)</string>
            </property>
           </widget>
          </item>
@@ -816,6 +816,13 @@
          </item>
          <item row="4" column="1" colspan="2">
           <widget class="QLineEdit" name="lineEdit_jitter"/>
+         </item>
+         <item row="5" column="4" colspan="3">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>A negative value is year relative to end year</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
