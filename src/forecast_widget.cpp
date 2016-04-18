@@ -322,7 +322,7 @@ void forecast_widget::set_allocation_group_assign()
         for (int i = 0; i < num; i++)
         {
             txt.append(QString("%1 ").arg(
-                     QString::number(model_data->forecast->alloc_group(i))));
+                     QString::number(model_data->getFleet(i)->getAllocGroup())));//forecast->alloc_group(i))));
         }
     }
     ui->lineEdit_alloc_assignments->setText(txt);
@@ -357,7 +357,7 @@ void forecast_widget::alloc_group_assign_changed ()
         }
         else
         {
-            model_data->forecast->set_alloc_group(i, val);
+            model_data->getFleet(i)->setAllocGroup(val);//->forecast->set_alloc_group(i, val);
             if (val > num)
                 num = val;
         }

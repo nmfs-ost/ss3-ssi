@@ -1,5 +1,19 @@
 #include "parametermodel.h"
 
+shortparametermodel::shortparametermodel(QObject *parent)
+    : tablemodel(parent)
+{
+    setColumnCount(7);
+    header << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
+    setHeader(header);
+    setRowCount(0);
+}
+
+shortparametermodel::~shortparametermodel()
+{
+    header.clear();
+}
+
 parametermodel::parametermodel(QObject *parent)
     : tablemodel(parent)
 {

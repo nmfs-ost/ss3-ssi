@@ -177,7 +177,8 @@ HEADERS  += mainwindow.h \
     dialog_about_gui.h \
     fileIOgeneral.h \
     fleet_composition.h \
-    documentdialog.h
+    documentdialog.h \
+    ss_math.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

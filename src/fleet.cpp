@@ -132,6 +132,7 @@ void Fleet::reset()
     setTotalYears(1);
     set_num_seasons(1);
     setNumGenders(2);
+    setAllocGroup(0);
 
     // catch
     set_catch_units(2);

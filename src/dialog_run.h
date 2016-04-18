@@ -48,6 +48,7 @@ public slots:
     void outputLine();
 
     void showWarnFile();
+    void showEchoFile();
 
     void onProcessStarted();
     void onProcessStdOutWrite(QString szOutput);
@@ -61,6 +62,7 @@ signals:
 private:
     Ui::Dialog_run *ui;
     Dialog_fileView *warnview;
+    Dialog_fileView *echoview;
 
     QVBoxLayout *layout;
     QPlainTextEdit *out;

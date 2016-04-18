@@ -74,9 +74,13 @@ public:
     float getFirst_mature_age() const;
     void setFirst_mature_age(float value);
 
-    void setCohortParam (QStringList data) {cohortParam->setRowData (0,data);}
+    void setCohortParam (QStringList data) {cohortParam->setRowData (0, data);}
     QStringList getCohortParam () {return cohortParam->getRowData(0);}
     tablemodel *getCohortParams () {return cohortParam;}
+
+    void setFracFemaleParam (int i, QStringList data) {fracfemaleParams->setRowData (i, data);}
+    QStringList getFracFemaleParam (int i) {return fracfemaleParams->getRowData(i);}
+    tablemodel *getFracFemaleParams () {return fracfemaleParams;}
 
     int getNumDevParams();
 
@@ -177,6 +181,7 @@ private:
     tablemodel *morphdisttable;
 
     parametermodel *cohortParam;
+    parametermodel *fracfemaleParams;
 
 //    QList<longParameter *> params;
     int num_params;

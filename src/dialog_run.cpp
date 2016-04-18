@@ -16,12 +16,15 @@ Dialog_run::Dialog_run(QWidget *parent) :
 
     warnview = new Dialog_fileView(this);//("Warning.sso", this);
     warnview->hide();
+    echoview = new Dialog_fileView(this);
+    echoview->hide();
 
     connect (ui->pushButton_run, SIGNAL(clicked()), SLOT(startRun()));
     connect (ui->pushButton_pause, SIGNAL(clicked()), SLOT(pauseRun()));
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
     connect (ui->pushButton_cancel, SIGNAL(clicked()), SLOT(rejected()));
     connect (ui->pushButton_showWarn, SIGNAL(clicked()), SLOT(showWarnFile()));
+    connect (ui->pushButton_showEcho, SIGNAL(clicked()), SLOT(showEchoFile()));
 
     stocksynth = new QProcess(this);
     connect (stocksynth, SIGNAL(started()), SLOT(runStarted()));
@@ -44,6 +47,12 @@ void Dialog_run::showWarnFile()
 {
     warnview->viewFile("warning.sso");
     warnview->show();
+}
+
+void Dialog_run::showEchoFile()
+{
+    echoview->viewFile("echoinput.sso");
+    echoview->show();
 }
 
 void Dialog_run::runSS()

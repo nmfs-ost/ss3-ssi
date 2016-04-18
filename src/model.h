@@ -71,6 +71,9 @@ public:
     int  iNumAreas;
     ss_forecast *forecast;
 
+    int getSelexAdjustMethod() const;
+    void setSelexAdjustMethod(int value);
+
 public slots:
     void reset();
 
@@ -398,6 +401,7 @@ private:
     int customSelParmDevPhase;
     int customSelParmDevAdjust;
 
+    int selexAdjustMethod;
 };
 
 double checkdoublevalue(QString value);

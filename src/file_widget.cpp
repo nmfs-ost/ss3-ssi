@@ -832,10 +832,10 @@ void file_widget::write_starter_file (QString filename)
         line = QString (QString ("%1 # run display detail (0,1,2)" ).arg
                         (QString::number(ui->comboBox_detail_level->currentIndex())));
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # detailed age-structured reports in REPORT.SSO (0,1)" ).arg
+        line = QString (QString ("%1 # detailed age-structured reports in REPORT.SSO (0,1) " ).arg
                         (ui->checkBox_report->isChecked()?"1":"0"));
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # write detailed checkup.sso file (0,1)" ).arg
+        line = QString (QString ("%1 # write detailed checkup.sso file (0,1) " ).arg
                         (ui->checkBox_checkup->isChecked()?"1":"0"));
         chars += starterFile->writeline (line);
         temp_int = 0;
@@ -853,7 +853,7 @@ void file_widget::write_starter_file (QString filename)
         line = QString (QString ("%1 # write to cumreport.sso (0=no,1=like&timeseries; 2=add survey fits)" ).arg
                         (QString::number(temp_int)));
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Include prior_like for non-estimated parameters (0,1)" ).arg
+        line = QString (QString ("%1 # Include prior_like for non-estimated parameters (0,1) " ).arg
                         (model_info->prior_likelihood()?"1":"0"));
         chars += starterFile->writeline (line);
         line = QString (QString ("%1 # Use Soft Boundaries to aid convergence (0,1) (recommended)" ).arg
@@ -881,7 +881,7 @@ void file_widget::write_starter_file (QString filename)
                         (QString::number(model_info->bio_sd_max_year())));
         chars += starterFile->writeline (line);
         temp_int = model_info->num_std_years();
-        line = QString (QString ("%1 # N individual STD years" ).arg
+        line = QString (QString ("%1 # N individual STD years " ).arg
                         (QString::number(temp_int)));
         chars += starterFile->writeline (line);
         line = QString("#vector of year values " );
@@ -892,7 +892,7 @@ void file_widget::write_starter_file (QString filename)
         }*/
         line.append('\n');
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # final convergence criteria (e.g. 1.0e-04)" ).arg
+        line = QString (QString ("%1 # final convergence criteria (e.g. 1.0e-04) " ).arg
                         (QString::number(model_info->convergence_criteria())));
         chars += starterFile->writeline (line);
         line = QString (QString ("%1 # retrospective year relative to end year (e.g. -4)" ).arg
@@ -919,11 +919,11 @@ void file_widget::write_starter_file (QString filename)
         {
             line = QString ("#COND");
         }
-        line.append(QString(" %1 %2 # min and max age over which average F will be calculated if F_report_units=4" ).arg
+        line.append(QString(" %1 %2 #_min and max age over which average F will be calculated with F_reporting=4" ).arg
                     (QString::number(model_info->f_min_age()),
                      QString::number(model_info->f_max_age())));
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # F_report_basis: 0=raw; 1=F/Fspr; 2=F/Fmsy ; 3=F/Fbtgt" ).arg
+        line = QString (QString ("%1 # F_std_basis: 0=raw_F_report; 1=F/Fspr; 2=F/Fmsy ; 3=F/Fbtgt" ).arg
                         (QString::number(model_info->f_basis())));
         chars += starterFile->writeline (line);
 
@@ -931,7 +931,7 @@ void file_widget::write_starter_file (QString filename)
             line = QString::number(END_OF_DATA);
         else
             line = QString::number(datafile_version, 'g');
-        line.append(" # check value for end of file or version number" );
+        line.append(" # check value for end of file and for version control" );
         chars += starterFile->writeline (line);
 
         starterFile->close();

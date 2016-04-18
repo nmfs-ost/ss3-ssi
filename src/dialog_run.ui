@@ -303,6 +303,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButton_showEcho">
+       <property name="text">
+        <string>Show Echoinput.sso</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="pushButton_showWarn">
        <property name="text">
         <string>Show Warning.sso</string>

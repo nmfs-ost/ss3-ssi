@@ -24,12 +24,9 @@ public:
     void setHeader (QStringList titles);
     void setColumnHeader (int column, QString title);
     void setRowHeader (int row, QString title);
+    QString getRowHeader (int row);
 
 };
 
-class shortParameterModel : public tablemodel
-{
-    shortParameterModel(QObject *parent = 0);
-};
 
 #endif // TABLEMODEL_H

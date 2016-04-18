@@ -59,6 +59,8 @@ public slots:
     int get_num_seasons ();
     void setNumGenders (int num) {i_num_genders = num;}
     int getNumGenders () {return i_num_genders;}
+    void setAllocGroup (int grp) {i_alloc_group = grp;}
+    int getAllocGroup () {return i_alloc_group;}
 
     // catch
     void set_catch_units(int c_units) {i_catch_units = c_units;}
@@ -319,6 +321,7 @@ protected:
     int i_start_year;
     int i_num_seasons;
     int i_num_genders;
+    int i_alloc_group;
 
     // catch
     int i_catch_units;

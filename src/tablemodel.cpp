@@ -97,3 +97,8 @@ void tablemodel::setRowHeader(int row, QString title)
     setHeaderData(row, Qt::Vertical, title);
 }
 
+QString tablemodel::getRowHeader(int row)
+{
+    return headerData(row, Qt::Vertical).toString();
+}
+

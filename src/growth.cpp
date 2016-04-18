@@ -31,6 +31,9 @@ ss_growth::ss_growth()
     cohortParam = new parametermodel();
     cohortParam->setRowCount(1);
 
+    fracfemaleParams = new parametermodel();
+    fracfemaleParams->setRowCount(1);
+
     customBlock = -1;
     blockParams = new parametermodel();
     blockParams->setRowCount(0);
@@ -53,6 +56,7 @@ ss_growth::~ss_growth()
     delete matAgeValues;
     delete maturityParams;
     delete cohortParam;
+    delete fracfemaleParams;
     customEnvLink = -1;
     delete environmentParams;
     customBlock = -1;
@@ -66,6 +70,7 @@ void ss_growth::reset()
     matAgeValues->setRowCount(1);
     maturityParams->setRowCount(2);
     cohortParam->setRowCount(1);
+    fracfemaleParams->setRowCount(1);
     blockParams->setRowCount(0);
     environmentParams->setRowCount(0);
 

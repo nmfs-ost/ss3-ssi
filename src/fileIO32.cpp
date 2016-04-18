@@ -1417,11 +1417,11 @@ bool read32_forecastFile(ss_file *f_file, ss_model *data)
         {
             token = f_file->next_value("alloc group assignment");
             temp_int = token.toInt();
-            fcast->set_alloc_group(i, temp_int);
+            data->getFleet(i)->setAllocGroup(temp_int);//fcast->set_alloc_group(i, temp_int);
             if (f_file->at_eol())
             {
                 for (; i < fcast->num_fleets(); i++)
-                    fcast->set_alloc_group(i, temp_int);
+                    data->getFleet(i)->setAllocGroup(temp_int);//fcast->set_alloc_group(i, temp_int);
             }
         }
 /*        i = 2;
@@ -1666,14 +1666,14 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("# fleet assignment to allocation group (enter group ID# for each fleet, 0 for not included in an alloc group)" );
         chars += f_file->writeline(line);
         line.clear();
-            for (i = 0; i < fcast->num_fleets(); i++)
+        for (i = 0; i < fcast->num_fleets(); i++)
+        {
+            if(data->getFleet(i)->getType() != Fleet::Survey)
             {
-                if(data->getFleet(i)->getType() != Fleet::Survey)
-                {
-                    value = QString::number(fcast->alloc_group(i));
-                    line.append(QString(" %1").arg(value));
-                }
+                value = QString::number(data->getFleet(i)->getAllocGroup());//fcast->alloc_group(i));
+                line.append(QString(" %1").arg(value));
             }
+        }
         line.append('\n');
         chars += f_file->writeline(line);
 
@@ -1863,8 +1863,14 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // fraction female
-        temp_float = c_file->next_value().toFloat();
-        pop->set_frac_female(temp_float);
+        temp_string = c_file->next_value();
+        datalist.clear();
+        datalist <<"0.000001" << "0.999999" << temp_string << temp_string;
+        datalist << "-1" << temp_string << "-99" << "0";
+        datalist << "0" << "0" << "0" << "0" << "0" << "0"; // 0.000001 0.999999 0.5 0.5 -1 0.5 -99 0 0 0 0 0 0 0
+        for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
+            pop->Grow()->setFracFemaleParam(i, datalist);
+ //       pop->set_frac_female(temp_float);
 
         // natural Mort
         temp_int = c_file->next_value().toInt();
@@ -2812,7 +2818,8 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         }
         chars += c_file->writeline("#" );
 
-        temp_float = pop->get_frac_female();
+        str_list = pop->Grow()->getFracFemaleParam(0);
+        temp_float = str_list.at(2).toFloat(); // pop->get_frac_female();
         line = QString(QString("%1 #_fracfemale " ).arg (temp_float));
         chars += c_file->writeline(line);
 
@@ -3188,7 +3195,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                 str_list = data->get_age_composition()->getErrorParam(i);
                 for (int l = 0; l < str_list.count(); l++)
                     line.append(QString(" %1").arg(str_list.at(l)));
-                line.append(QString(" # AgeKeyParam%1" ).arg(QString::number(i+1)));
+                line.append(QString(" # AgeKeyParm%1" ).arg(QString::number(i+1)));
                 chars += c_file->writeline (line);
             }
         }

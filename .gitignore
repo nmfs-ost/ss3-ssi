@@ -1,8 +1,8 @@
+build
 *.bak
 *.autosave.*
 *.temp
-*.pdf
-*.pro.user.*
+*.pro.user
 ui_*.h
 moc_*.*
 rcc_*.*

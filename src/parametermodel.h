@@ -5,6 +5,16 @@
 
 #include <QStringList>
 
+class shortparametermodel : public tablemodel
+{
+public:
+    shortparametermodel (QObject *parent = 0);
+    ~shortparametermodel ();
+
+private:
+    QStringList header;
+};
+
 class parametermodel : public tablemodel
 {
 public:

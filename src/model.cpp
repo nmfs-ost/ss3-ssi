@@ -81,6 +81,8 @@ ss_model::ss_model(QWidget *parent) :
     catchMult->setColumnCount(7);
     catchMult->setRowCount(1);
 
+    selexAdjustMethod = 1;
+
     reset();
 //    QMessageBox::information(this, "Program Flow", "Model set up.");
 }
@@ -952,6 +954,16 @@ int ss_model::getCustomSelParmDevAdjust() const
 void ss_model::setCustomSelParmDevAdjust(int value)
 {
     customSelParmDevAdjust = value;
+}
+
+int ss_model::getSelexAdjustMethod() const
+{
+    return selexAdjustMethod;
+}
+
+void ss_model::setSelexAdjustMethod(int value)
+{
+    selexAdjustMethod = value;
 }
 
 int ss_model::getCustomSelParmDevPhase() const
