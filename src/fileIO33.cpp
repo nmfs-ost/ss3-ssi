@@ -1141,7 +1141,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                         {
                             line.clear();
                             str_lst = flt->getGenObservation(i, k);
-                            str_lst.insert(2, QString::number(j));
+                            str_lst.insert(3, QString::number(j));
                             for (int m = 0; m < str_lst.count(); m++)
                                 line.append(QString (" %1").arg(str_lst.at(m)));
 
