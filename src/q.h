@@ -18,7 +18,10 @@ public:
     q_ratio *copy (q_ratio *rhs);
 
     void setup(QStringList values);
+    void setup(QString str);
     QString getSetup();
+
+    parametermodel *getSetupModel() {return qsetup;}
 
     int getDoPower() const;
     void setDoPower(int value);
@@ -32,8 +35,8 @@ public:
     int getType() const;
     void setType(int value);
 
-    int getOffset() const;
-    void setOffset(int value);
+    float getOffset() const;
+    void setOffset(float value);
 
     QString getPower() const;
     void setPower(QStringList values);
@@ -47,15 +50,19 @@ public:
     QString getBase() const;
     void setBase(QStringList values);
 
+    void setParamHdrs (QString name);
     void setNumParams (int num);
     int getNumParams();
     void setParameter (int index, QStringList values);
     void setParameter (int index, QString text);
     QStringList getParameter(int index);
+    parametermodel *getParamModel() {return params;}
 
-    parametermodel *getModel() {return params;}
+    int getTypeIndex() const;
+    void setTypeIndex(int value);
 
 private:
+    parametermodel *qsetup;
     parametermodel *params;
     int doPower;
     int powerIndex;
@@ -65,7 +72,7 @@ private:
     int ExtraIndex;
     int type;
     int typeIndex;
-    int offset;
+    float offset;
     bool doOffset;
 };
 

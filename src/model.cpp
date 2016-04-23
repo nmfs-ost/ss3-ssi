@@ -366,6 +366,7 @@ void ss_model::set_num_seasons(int seasns)
         }
     }
     forecast->set_num_seasons (seasns);
+    pPopulation->setNumSeas(seasns);
 }
 
 void ss_model::set_months_per_season(int seasn, int months)
@@ -482,6 +483,7 @@ Fleet * ss_model::newFleet(QString name)
     newfl->setTotalYears(totalYears());
     newfl->set_num_seasons(totalSeasons());
     fleets.append(newfl);
+    forecast->set_num_fleets(num_fleets());
     return newfl;
 }
 
@@ -504,8 +506,15 @@ void ss_model::deleteFleet(int index)
 
 Fleet * ss_model::duplicateFleet(Fleet *oldfl)
 {
-    Fleet *dupfl = newFleet();
+    Fleet *dupfl = new Fleet(this);
     dupfl->copy (oldfl);
+    fleets.append(dupfl);
+    if (oldfl->getType() == Fleet::Fishing ||
+            oldfl->getType() == Fleet::Bycatch)
+        iNumFisheries++;
+    else if (oldfl->getType() == Fleet::Survey)
+        iNumSurveys++;
+    forecast->set_num_fleets(num_fleets());
     return dupfl;
 }
 

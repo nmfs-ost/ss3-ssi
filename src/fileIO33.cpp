@@ -2344,6 +2344,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < data->num_fleets(); i++)
         {
             datalist.clear();
+/*            datalist = readParameter (c_file);
+            data->getFleet(i)->Q()->setup(datalist);*/
             for (int j = 0; j < 5; j++)
                 datalist.append(c_file->next_value());
             data->getFleet(i)->Q()->setup(datalist);
@@ -2379,7 +2381,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < data->num_fleets(); i++)
         {
             int tp = data->getFleet(i)->Q()->getType();
-            if (tp > 1 && tp < 5)
+            if (tp > 1 && tp < 6)
             {
                 datalist = readShortParameter(c_file);
                 data->getFleet(i)->Q()->setBase(datalist);
@@ -2389,16 +2391,16 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 temp_int = c_file->next_value().toInt();
                 if (temp_int) // read 1 parameter for each observation
                 {
-                    num = 0;
+                    num = data->getFleet(i)->Q()->getNumParams();//temp_int;
 //                    for (i = 0; i < data->num_fleets(); i++)
   //                      num += data->getFleet(i)->randomEffects();
-                    for (i = 0; i < num; i++)
-                        datalist = readParameter(c_file);
+                    for (int j = 0; j < temp_int; j++, num++)
+                    {
+                        datalist = readShortParameter(c_file);
+                        data->getFleet(i)->Q()->setParameter(num, datalist);
+                    }
                 }
-                else
-                {
-                    datalist = readParameter(c_file);
-                }
+
             }
         }
 

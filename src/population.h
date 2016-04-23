@@ -72,6 +72,8 @@ public slots:
     void setL1(int value);
     int getK() const;
     void setK(int value);
+    void setNumSeas (int seas) {iNumSeas = seas;}
+    int getNumSeas () {return iNumSeas;}
     void setNumSeasParams ();
     int getNumSeasParams () {return seasparamtable->rowCount();}
     void addSeasParam (QStringList data) {setSeasParam(seasparamtable->rowCount(), data);}
@@ -99,6 +101,7 @@ private:
     int malewtlen1, malewtlen2, L1, K;
 
     int iNumYears;
+    int iNumSeas;
     int iStartYear;
     int iNumAges;
 

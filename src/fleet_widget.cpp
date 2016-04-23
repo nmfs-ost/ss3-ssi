@@ -141,6 +141,9 @@ void fleet_widget::disconnectFleet()
     disconnect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
     disconnect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
     disconnect (ui->spinBox_q_type, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_q_type(int)));
+    disconnect (ui->checkBox_q_doPower, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_power(bool)));
+    disconnect (ui->checkBox_q_doEnv, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_env_lnk(bool)));
+    disconnect (ui->checkBox_q_doExtra, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_extra_sd(bool)));
     }
 }
 
@@ -277,6 +280,7 @@ void fleet_widget::set_model (ss_model *model)
 
 void fleet_widget::set_current_fleet(int index)
 {
+    int tabset = ui->tabWidget_fleet->currentIndex();
     if (index >= totalFleets)
         ui->comboBox_fleet_name->setCurrentIndex(totalFleets - 1);
     else if (index < 0)
@@ -356,7 +360,7 @@ void fleet_widget::set_current_fleet(int index)
 
         ui->checkBox_q_doPower->setChecked(current_fleet->q_do_power());
         ui->checkBox_q_doEnv->setChecked(current_fleet->q_do_env_lnk());
-        ui->checkBox_q_doExtra->setChecked(current_fleet->q_do_power());
+        ui->checkBox_q_doExtra->setChecked(current_fleet->q_do_extra_sd());
         ui->spinBox_q_type->setValue(current_fleet->q_type());
         qParamsView->setModel(current_fleet->getQParams());
         qParamsView->resizeColumnsToContents();
@@ -379,6 +383,7 @@ void fleet_widget::set_current_fleet(int index)
         lambdaView->resizeColumnsToContents();
         connectFleet ();
     }
+    ui->tabWidget_fleet->setCurrentIndex(tabset);
 }
 
 void fleet_widget::set_fleet_type(int type)

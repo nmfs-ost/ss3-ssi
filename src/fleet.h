@@ -261,7 +261,7 @@ public slots:
     int q_do_extra_sd() {return Q()->getDoExtraSD();}
     void set_q_type(int qt) {Q()->setType(qt);}
     int q_type() {return Q()->getType();}
-    parametermodel *getQParams() {return Q()->getModel();}
+    parametermodel *getQParams() {return Q()->getParamModel();}
 
     q_ratio *Q() {return q_R;}
 

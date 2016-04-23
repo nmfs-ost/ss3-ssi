@@ -98,7 +98,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>1</number>
+         <number>5</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -1343,28 +1343,7 @@
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
            <layout class="QGridLayout" name="gridLayout_q_info">
-            <item row="1" column="0" colspan="4">
-             <widget class="QCheckBox" name="checkBox_q_doEnv">
-              <property name="text">
-               <string>read a parameer for environmental effects on Q</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="4">
-             <widget class="QCheckBox" name="checkBox_q_doExtra">
-              <property name="text">
-               <string>read a parameter containing an additive constant for survey variability stddev</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="4">
-             <widget class="QCheckBox" name="checkBox_q_doPower">
-              <property name="text">
-               <string>read a parameter for non-linearity in survey abundance linkage</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
+            <item row="6" column="0">
              <widget class="QSpinBox" name="spinBox_q_type">
               <property name="minimum">
                <number>-10</number>
@@ -1377,14 +1356,14 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="6" column="1">
              <widget class="QLabel" name="label_q_type">
               <property name="text">
                <string>Q type </string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
+            <item row="9" column="0">
              <spacer name="verticalSpacer_q_parameters">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -1397,7 +1376,7 @@
               </property>
              </spacer>
             </item>
-            <item row="7" column="2">
+            <item row="10" column="2">
              <spacer name="horizontalSpacer_q_type_info">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1410,17 +1389,17 @@
               </property>
              </spacer>
             </item>
-            <item row="5" column="2" rowspan="2" colspan="2">
+            <item row="8" column="2" rowspan="2" colspan="2">
              <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
             </item>
-            <item row="5" column="0" colspan="2">
+            <item row="8" column="0" colspan="2">
              <widget class="QLabel" name="label_q_parameters">
               <property name="text">
                <string>Parameters</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="7" column="0">
              <spacer name="verticalSpacer_q_type_info">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -1433,23 +1412,28 @@
               </property>
              </spacer>
             </item>
-            <item row="7" column="3">
-             <spacer name="horizontalSpacer_q_parameters">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="5" column="0" colspan="4">
+             <widget class="QCheckBox" name="checkBox_q_doExtra">
+              <property name="text">
+               <string>read a parameter containing an additive constant for survey variability stddev</string>
               </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>200</width>
-                <height>5</height>
-               </size>
-              </property>
-             </spacer>
+             </widget>
             </item>
-            <item row="3" column="2" rowspan="2">
+            <item row="4" column="0" colspan="4">
+             <widget class="QCheckBox" name="checkBox_q_doEnv">
+              <property name="text">
+               <string>read a parameer for environmental effects on Q</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="4">
+             <widget class="QCheckBox" name="checkBox_q_doPower">
+              <property name="text">
+               <string>read a parameter for non-linearity in survey abundance linkage</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2" rowspan="2">
              <widget class="QTextEdit" name="textEdit_q_type_info">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">

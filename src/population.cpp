@@ -53,6 +53,7 @@ void population::reset()
     malewtlen2 = 0.0;
     L1 = 0.0;
     K = 0.0;
+    setNumSeas(1);
     setNumSeasParams();
 }
 
@@ -192,8 +193,11 @@ int population::getFemwtlen1() const
 }
 
 void population::setFemwtlen1(int value)
-{
-    femwtlen1 = value;
+{  
+    if (femwtlen1 != value)
+    {
+        femwtlen1 = value;
+    }
 }
 
 void population::setNumSeasParams()
@@ -203,6 +207,7 @@ void population::setNumSeasParams()
     num += fec1 + fec2;
     num += malewtlen1 + malewtlen2;
     num += L1 + K;
+    num *= iNumSeas;
     seasparamtable->setRowCount(num);
 }
 
