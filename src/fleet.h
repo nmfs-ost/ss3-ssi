@@ -250,19 +250,21 @@ public slots:
     tablemodel *getMorphModel () {return morphComp->getObsTable();}
 
     //  #q_section
-    void setQSetupRead (bool flag) {q_read = flag;}
+    void setQSetupRead (bool flag = false);
     bool getQSetupRead () {return q_read;}
-    void set_q_do_power(int den) {Q()->setDoPower(den);}
-    void set_q_do_power(bool yes) {Q()->setDoPower(yes?1:0);}
+    void set_q_do_power(int den) {Q()->setDoPower(den); setQSetupRead();}
+    void set_q_do_power(bool yes) {Q()->setDoPower(yes?1:0); setQSetupRead();}
     int q_do_power() {return Q()->getDoPower();}
-    void set_q_do_env_lnk(int env_vr) {Q()->setDoEnvLink(env_vr);}
-    void set_q_do_env_lnk(bool yes) {Q()->setDoEnvLink(yes?1:0);}
+    void set_q_do_env_lnk(int env_vr) {Q()->setDoEnvLink(env_vr); setQSetupRead();}
+    void set_q_do_env_lnk(bool yes) {Q()->setDoEnvLink(yes?1:0); setQSetupRead();}
     int q_do_env_lnk() {return Q()->getDoEnvLink();}
-    void set_q_do_extra_sd(int ext_sd) {Q()->setDoExtraSD(ext_sd);}
-    void set_q_do_extra_sd(bool yes) {Q()->setDoExtraSD(yes?1:0);}
+    void set_q_do_extra_sd(int ext_sd) {Q()->setDoExtraSD(ext_sd); setQSetupRead();}
+    void set_q_do_extra_sd(bool yes) {Q()->setDoExtraSD(yes?1:0); setQSetupRead();}
     int q_do_extra_sd() {return Q()->getDoExtraSD();}
-    void set_q_type(int qt) {Q()->setType(qt);}
+    void set_q_type(int qt) {Q()->setType(qt); setQSetupRead();}
     int q_type() {return Q()->getType();}
+    void set_q_offset (float val) {Q()->setOffset(val); setQSetupRead();}
+    int q_offset () {return Q()->getOffset();}
     parametermodel *getQParams() {return Q()->getParamModel();}
 
     q_ratio *Q() {return q_R;}

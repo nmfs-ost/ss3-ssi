@@ -76,10 +76,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->set_area(temp_int);
             temp_int = d_file->next_value("catch units").toInt();
             flt->set_catch_units(temp_int);
-            temp_float = d_file->next_value("equ_catch_se").toFloat();
+/*            temp_float = d_file->next_value("equ_catch_se").toFloat();
             flt->set_equ_catch_se(temp_float);
             temp_float = d_file->next_value("catch_se").toFloat();
-            flt->set_catch_se(temp_float);
+            flt->set_catch_se(temp_float);*/
             temp_int = d_file->next_value("use_catch_mult").toInt();
             flt->set_catch_mult(temp_int);
             temp_str = d_file->next_value("fleet name");
@@ -596,7 +596,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString ("#_rows are fleets" );
         chars += d_file->writeline (line);
-        line = QString ("#_fleet_type, timing, area, units, equ_catch_se, catch_se, need_catch_mult fleetname" );
+        line = QString ("#_fleet_type, timing, area, units, need_catch_mult fleetname" );
         chars += d_file->writeline (line);
 
         for (i = 1; i <= total_fleets; i++)
@@ -607,8 +607,8 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.append(QString(" %1").arg(QString::number(flt->timing())));
             line.append(QString(" %1").arg(QString::number(flt->area())));
             line.append(QString(" %1").arg(QString::number(flt->catch_units())));
-            line.append(QString(" %1").arg(QString::number(flt->equ_catch_se())));
-            line.append(QString(" %1").arg(QString::number(flt->catch_se())));
+//            line.append(QString(" %1").arg(QString::number(flt->equ_catch_se())));
+//            line.append(QString(" %1").arg(QString::number(flt->catch_se())));
             line.append(QString(" %1").arg(QString::number(flt->get_catch_mult())));
             line.append(QString(" %1").arg(flt->get_name()));
 
@@ -2348,22 +2348,28 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist.clear();
             flt = c_file->next_value().toInt();
-            data->getFleet(flt - 1)->setQSetupRead(true);
 /*            datalist = readParameter (c_file);
             data->getFleet(i)->Q()->setup(datalist);*/
             for (int j = 0; j < 5; j++)
                 datalist.append(c_file->next_value());
             if (flt > 0)
+            {
                 data->getFleet(flt - 1)->Q()->setup(datalist);
+                data->getFleet(flt - 1)->setQSetupRead(true);
+            }
         } while (flt > 0);
         for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->getType() != Fleet::Survey)
+            {
                 if (data->getFleet(i)->getQSetupRead())
                     showInputMessage (QString("Q Setup line for non-survey fleet %1").arg(data->getFleet(i)->get_name()));
+            }
             else
+            {
                 if (!data->getFleet(i)->getQSetupRead())
                     showInputMessage (QString("No Q Setup line for survey %1").arg(data->getFleet(i)->get_name()));
+            }
         }
 
         for (i = 0; i < data->num_fleets(); i++)
@@ -3668,10 +3674,12 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
+            data->getFleet(i)->setQSetupRead();
             if (data->getFleet(i)->getType() == Fleet::Survey &&
                     data->getFleet(i)->getQSetupRead())
             {
-                line = data->getFleet(i)->Q()->getSetup();
+                line = QString(QString(" %1").arg(i + 1));
+                line.append(data->getFleet(i)->Q()->getSetup());
                 line.append(QString(" # %1 %2" ).arg(
                                 QString::number(i + 1),
                                 data->getFleet(i)->get_name()));

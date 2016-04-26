@@ -689,6 +689,23 @@ int Fleet::abundance_count()
     }
     return count;*/
 }
+
+void Fleet::setQSetupRead(bool flag)
+{
+    if (!flag)
+    {
+        if (    Q()->getDoPower() ||
+                Q()->getDoEnvLink() ||
+                Q()->getDoExtraSD() ||
+                Q()->getType() > 0 ||
+                Q()->getOffset() > 0)
+            flag = true;
+        else if (abundModel->rowCount() > 0)
+            flag = true;
+    }
+    q_read = flag;
+}
+
 /*
 void Fleet::resetLambdas()
 {

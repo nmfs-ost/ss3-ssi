@@ -97,13 +97,13 @@ void ss_model::clear()
 {
     sdYearsModel->setColumnCount(0);
     iSdValues.clear();
+    set_num_seasons(0);
+
     for (int i = 0; i < fleets.count(); i++)
         deleteFleet(i);
-
     if (pPopulation) delete pPopulation;
     pPopulation = NULL;
  //   populations.clear();
-    set_num_seasons(0);
     if (forecast) delete forecast;
     forecast = NULL;
     if (lengthData) delete lengthData;

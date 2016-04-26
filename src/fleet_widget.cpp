@@ -19,6 +19,12 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->label_selex_age_discard->setVisible(false);
     ui->spinBox_selex_age_discard->setVisible(false);
 
+    ui->label_catch_init_equil->setVisible(false);
+    ui->doubleSpinBox_equ_catch_se->setVisible(false);
+    ui->label_catch_se->setVisible(false);
+    ui->doubleSpinBox_catch_se->setVisible(false);
+    ui->label_se_info->setVisible(false);
+
     catchview = new tableview();
     catchview->setParent(this);
     catchedit = new catchdelegate(this);
