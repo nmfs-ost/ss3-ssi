@@ -250,6 +250,8 @@ public slots:
     tablemodel *getMorphModel () {return morphComp->getObsTable();}
 
     //  #q_section
+    void setQSetupRead (bool flag) {q_read = flag;}
+    bool getQSetupRead () {return q_read;}
     void set_q_do_power(int den) {Q()->setDoPower(den);}
     void set_q_do_power(bool yes) {Q()->setDoPower(yes?1:0);}
     int q_do_power() {return Q()->getDoPower();}
@@ -378,6 +380,7 @@ protected:
     QList<yearIndexMeasure*> f_abundance;
     QList<yearIndexMeasure*> f_abundance_error;
 
+    bool q_read;
     q_ratio * q_R;
 
     float add_to_survey_CV;

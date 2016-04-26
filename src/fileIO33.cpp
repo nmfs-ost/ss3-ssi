@@ -2,6 +2,7 @@
 #include "fileIO33.h"
 #include "model.h"
 #include "fileIOgeneral.h"
+#include "message.h"
 //#include "ss_math.h"
 
 bool read33_dataFile(ss_file *d_file, ss_model *data)
@@ -1832,6 +1833,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     QString temp_string;
     QStringList datalist;
     population * pop = data->pPopulation;
+    int flt;
     int num_fleets = data->num_fleets();
 
     if(c_file->open(QIODevice::ReadOnly))
@@ -2341,17 +2343,30 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->M()->fromFile(c_file, num);
 
         // Q setup
-        for (int i = 0; i < data->num_fleets(); i++)
+//        for (int i = 0; i < data->num_fleets(); i++)
+        do
         {
             datalist.clear();
+            flt = c_file->next_value().toInt();
+            data->getFleet(flt - 1)->setQSetupRead(true);
 /*            datalist = readParameter (c_file);
             data->getFleet(i)->Q()->setup(datalist);*/
             for (int j = 0; j < 5; j++)
                 datalist.append(c_file->next_value());
-            data->getFleet(i)->Q()->setup(datalist);
+            if (flt > 0)
+                data->getFleet(flt - 1)->Q()->setup(datalist);
+        } while (flt > 0);
+        for (i = 0; i < data->num_fleets(); i++)
+        {
+            if (data->getFleet(i)->getType() != Fleet::Survey)
+                if (data->getFleet(i)->getQSetupRead())
+                    showInputMessage (QString("Q Setup line for non-survey fleet %1").arg(data->getFleet(i)->get_name()));
+            else
+                if (!data->getFleet(i)->getQSetupRead())
+                    showInputMessage (QString("No Q Setup line for survey %1").arg(data->getFleet(i)->get_name()));
         }
 
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoPower())
             {
@@ -2360,7 +2375,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setPower(datalist);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoEnvLink())
             {
@@ -2369,7 +2384,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setVariable(datalist);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoExtraSD())
             {
@@ -2378,7 +2393,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setExtra(datalist);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->num_fleets(); i++)
         {
             int tp = data->getFleet(i)->Q()->getType();
             if (tp > 1 && tp < 6)
@@ -3653,12 +3668,18 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            line = data->getFleet(i)->Q()->getSetup();
-            line.append(QString(" # %1 %2" ).arg(
-                            QString::number(i + 1),
-                            data->getFleet(i)->get_name()));
-            chars += c_file->writeline(line);
+            if (data->getFleet(i)->getType() == Fleet::Survey &&
+                    data->getFleet(i)->getQSetupRead())
+            {
+                line = data->getFleet(i)->Q()->getSetup();
+                line.append(QString(" # %1 %2" ).arg(
+                                QString::number(i + 1),
+                                data->getFleet(i)->get_name()));
+                chars += c_file->writeline(line);
+            }
         }
+        line = QString ("-9999 0 0 0 0 0 # terminator");
+        chars += c_file->writeline(line);
         line = QString ("#" );
         chars += c_file->writeline(line);
         line = QString("#_Cond 0 #_If q has random component, then 0=read one parm for each fleet with random q; 1=read a parm for each year of index" );

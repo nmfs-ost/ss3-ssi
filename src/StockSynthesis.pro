@@ -93,7 +93,8 @@ SOURCES += main.cpp\
     metadata.cpp \
     fileIOgeneral.cpp \
     fleet_composition.cpp \
-    documentdialog.cpp
+    documentdialog.cpp \
+    message.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -178,7 +179,8 @@ HEADERS  += mainwindow.h \
     fileIOgeneral.h \
     fleet_composition.h \
     documentdialog.h \
-    ss_math.h
+    ss_math.h \
+    message.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

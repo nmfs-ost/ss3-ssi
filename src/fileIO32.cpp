@@ -2275,6 +2275,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             for (int j = 0; j < 4; j++)
                 datalist.append(c_file->next_value());
             data->getFleet(i)->Q()->setup(datalist);
+            data->getFleet(i)->setQSetupRead(true);
         }
 
         for (int i = 0; i < data->num_fleets(); i++)

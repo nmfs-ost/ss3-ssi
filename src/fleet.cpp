@@ -42,6 +42,7 @@ Fleet::Fleet(QObject *parent) :
     abundanceHeader << "Component" << "Phase" << "Lambda" << "SizeFreq";
     lambdaModel->setHeader(abundanceHeader);
 
+    q_read = false;
     q_R = new q_ratio();
     s_name = NULL;
     size_selex = new selectivity();
@@ -208,6 +209,7 @@ void Fleet::reset()
     setMorphNumMorphs(0);
 
     //  q_section
+    q_read = false;
     q_R->reset();
 
     //   size selex
