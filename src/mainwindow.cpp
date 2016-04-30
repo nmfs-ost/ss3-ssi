@@ -7,7 +7,7 @@
 #include "dialog_about_nft.h"
 #include "dialog_run.h"
 #include "documentdialog.h"
-
+#include "message.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -120,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->currentWidget()->layout()->addWidget(fleets);
     ui->stackedWidget->setCurrentIndex(POPULATION);
     ui->stackedWidget->currentWidget()->layout()->addWidget(population);
+    connect (ui->stackedWidget, SIGNAL(currentChanged(int)), SLOT(mainTabChanged(int)));
     showFiles();
 
     main_font = QFont("Arial", 12);
@@ -286,7 +287,6 @@ void MainWindow::saveDataFile()
 void MainWindow::readFiles()
 {
     bool worked = true;
-//    files->set_default_file_names(current_dir);
     model_one->reset();
     worked = files->read_files(model_one);
     if (worked)
@@ -297,7 +297,10 @@ void MainWindow::readFiles()
         population->refresh();
     }
     else
+    {
+        showInputMessage("Problem reading file, exiting program.");
         close();
+    }
 }
 
 void MainWindow::saveFiles()
@@ -308,6 +311,25 @@ void MainWindow::saveFiles()
 void MainWindow::printFiles()
 {
     files->print_files ();
+}
+
+void MainWindow::mainTabChanged(int tab)
+{
+    switch(tab)
+    {
+    case MODEL:
+        data->refresh();
+        break;
+    case FORECAST:
+        forecast->refresh();
+        break;
+    case FLEETS:
+        fleets->refresh();
+        break;
+    case POPULATION:
+        population->refresh();
+        break;
+    }
 }
 
 void MainWindow::showFiles()

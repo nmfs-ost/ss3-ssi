@@ -240,7 +240,6 @@ QString file_widget::control_file()
 
 void file_widget::set_data_file(QString fname, bool keep)
 {
-//    QStringList commnts;
     if (dataFile == NULL)
     {
         dataFile = new ss_file(fname);\
@@ -248,19 +247,12 @@ void file_widget::set_data_file(QString fname, bool keep)
     else if (dataFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         dataFile->setFileName(fname);
-/*        QStringList comments = model_data_file->comments;
-        delete model_data_file;
-        model_data_file = new ss_file (fname, this);
-        if (keep)
-        for (int i = 0; i < comments.count(); i++)
-            model_data_file->comments.append(comments.at(i));*/
     }
-    if (fname.contains('/'))
-        data_file_name = fname.section('/', -1, -1);
-    else
-        data_file_name = fname.section('\\', -1, -1);
-//    ui->lineEdit_data_file->setText(filename);
-    ui->label_data_file->setText(fname);
+    data_file_name = fname.section('/', -1, -1);
+    data_file_name = data_file_name.section('\\', -1, -1);
+
+    ui->label_data_file->setText(dataFile->fileName());
+    ui->label_data_file->repaint();
 }
 
 QString file_widget::data_file()
@@ -543,9 +535,15 @@ bool file_widget::read_files(ss_model *model_inf)
         setVersion (datafile_version);
         if (datafile_version < 3.30)
         {
-            read32_dataFile(dataFile, model_info);
-            read32_forecastFile(forecastFile, model_info);
-            read32_controlFile(controlFile, model_info);
+            okay = read32_dataFile(dataFile, model_info);
+            if (!okay)
+                return okay;
+            okay = read32_forecastFile(forecastFile, model_info);
+            if (!okay)
+                return okay;
+            okay = read32_controlFile(controlFile, model_info);
+            if (!okay)
+                return okay;
             if (ui->checkBox_par_file->isChecked())
             {
                 read32_parameterFile(parameterFile, model_info);
@@ -622,41 +620,7 @@ void file_widget::print_files()
 
 }
 
-void file_widget::read_comments(ss_file *in_file)
-{
-    QStringList cmts;
-    QString line;
-#ifdef DEBUG
-    QString dbg_msg (QString("Reading file: %1 \n" ).arg(in_file->fileName()));
-    error->write(dbg_msg.toAscii());
-#endif
-    cmts = in_file->read_comments();
-    //in_file->comments.clear();
-    line = in_file->read_line();
-    while (line.startsWith("#C"))
-    {
-        error->write(line.toAscii());
-        line.section('C', 1, -1);
-        in_file->comments.append(line);
-        line = in_file->read_line();
-    }
-}
 
-void file_widget::write_comments(ss_file *out_file)
-{
-    QString line;
-#ifdef DEBUG
-    QString dbg_msg (QString("Writing file: %1 \n" ).arg(out_file->fileName()));
-    error->writeline(dbg_msg);
-#endif
-    for (int i = 0; i < out_file->comments.count(); i++)
-    {
-        line = out_file->comments.at(i);
-        error->write(line.toAscii());
-        line.prepend("#C");
-        out_file->writeline(line);
-    }
-}
 
 bool file_widget::read_starter_file (QString filename)
 {

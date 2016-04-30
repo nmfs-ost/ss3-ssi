@@ -102,9 +102,6 @@ public slots:
     void new_directory (QString dir, bool keep = false);
     bool read_files(ss_model *model_inf = NULL);
 
-    void read_comments (ss_file *file);
-    void write_comments (ss_file *file);
-
     bool read_starter_file(QString filename = QString(""));
 //    int read_m_data_file (QString filename = QString(""));
 //    int read_forecast_file (QString filename = QString(""));

@@ -413,10 +413,10 @@ void ss_model::set_spawn_season(int seasn)
 
 int ss_model::spawn_season()
 {
-    int i, seasn = 0;
-    for (i = 0; i < seasons.count(); i++)
+    int seasn;
+    for (seasn = 0; seasn < seasons.count(); seasn++)
     {
-        if (seasons.at(i)->getSpawning())
+        if (seasons.at(seasn)->getSpawning())
             break;
     }
     return (seasn + 1);

@@ -129,6 +129,7 @@ private:
     QString default_dir;
 
 private slots:
+    void mainTabChanged(int tab);
     void showFiles();
     void showModel();
     void showForecast();

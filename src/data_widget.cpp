@@ -105,12 +105,12 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_year_end, SIGNAL(valueChanged(int)), SLOT(changeTotalYears()));
     connect (ui->spinBox_seas_per_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_seasons(int)));
     connect (ui->spinBox_seas_per_yr, SIGNAL(valueChanged(int)), SLOT(changeMaxSeason(int)));
-//    connect (ui->spinBox_sub_seasons, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_subseasons(int)));
+    connect (ui->spinBox_subseasons, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_subseasons(int)));
     connect (ui->spinBox_season, SIGNAL(valueChanged(int)), SLOT(changeSeason(int)));
     connect (ui->lineEdit_num_mo_season, SIGNAL(textChanged(QString)), SLOT(changeMoPerSeason(QString)));
-    connect (ui->spinBox_spawn_season, SIGNAL(valueChanged(int)), model_data, SLOT(set_spawn_season(int)));
+    connect (ui->spinBox_spawn_season, SIGNAL(valueChanged(int)), SLOT(changeSpawnSeason(int)));// model_data, SLOT(set_spawn_season(int)));
     connect (ui->spinBox_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_ages(int)));
-//    connect (ui->spinBox_num_ages, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_ages(int)));
+    connect (ui->spinBox_num_areas, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_areas(int)));
     connect (ui->spinBox_num_genders, SIGNAL(valueChanged(int)), SLOT(changeNumGenders(int)));
 
     connect (ui->checkBox_soft_bounds, SIGNAL(toggled(bool)), model_data, SLOT(set_use_softbounds(bool)));
@@ -198,7 +198,7 @@ void data_widget::refresh()
         ui->spinBox_year_end->setValue(model_data->end_year());
         changeTotalYears();
         ui->spinBox_seas_per_yr->setValue(model_data->num_seasons());
-//        ui->spinBox_sub_seasons->setValue(model_data->get_num_subseasons());
+        ui->spinBox_subseasons->setValue(model_data->get_num_subseasons());
 //
         ui->spinBox_spawn_season->setValue(model_data->spawn_season());
         ui->spinBox_season->setValue(1);
@@ -324,9 +324,11 @@ int data_widget::setTotalMonths()
 
 void data_widget::changeSpawnSeason(int seas)
 {
-    if (seas > ui->spinBox_seas_per_yr->maximum())
-        seas = ui->spinBox_seas_per_yr->maximum();
-    ui->spinBox_spawn_season->setValue(seas);
+    if (seas > ui->spinBox_seas_per_yr->value())
+    {
+        seas = ui->spinBox_seas_per_yr->value();
+        ui->spinBox_spawn_season->setValue(seas);
+    }
     model_data->set_spawn_season(seas);
 }
 
