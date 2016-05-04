@@ -122,26 +122,27 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     seasonParamsView->resizeColumnsToContents();
     ui->verticalLayout_seasonal_params->addWidget(seasonParamsView);
 
-    connect (ui->spinBox_seas_femWtLen1, SIGNAL(valueChanged(int)), pop, SLOT(setFemwtlen1(int)));
-    connect (ui->spinBox_seas_femWtLen2, SIGNAL(valueChanged(int)), pop, SLOT(setFemwtlen2(int)));
-    connect (ui->spinBox_seas_fecundity1, SIGNAL(valueChanged(int)), pop, SLOT(setFec1(int)));
-    connect (ui->spinBox_seas_fecundity2, SIGNAL(valueChanged(int)), pop, SLOT(setFec2(int)));
-    connect (ui->spinBox_seas_maturity1, SIGNAL(valueChanged(int)), pop, SLOT(setMat1(int)));
-    connect (ui->spinBox_seas_maturity2, SIGNAL(valueChanged(int)), pop, SLOT(setMat2(int)));
-    connect (ui->spinBox_seas_maleWtLen1, SIGNAL(valueChanged(int)), pop, SLOT(setMalewtlen1(int)));
-    connect (ui->spinBox_seas_maleWtLen2, SIGNAL(valueChanged(int)), pop, SLOT(setMalewtlen2(int)));
-    connect (ui->spinBox_seas_L1, SIGNAL(valueChanged(int)), pop, SLOT(setL1(int)));
-    connect (ui->spinBox_seas_K, SIGNAL(valueChanged(int)), pop, SLOT(setK(int)));
-    connect (ui->spinBox_seas_femWtLen1, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_femWtLen2, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_fecundity1, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_fecundity2, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_maturity1, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_maturity2, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_maleWtLen1, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_maleWtLen2, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_L1, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
-    connect (ui->spinBox_seas_K, SIGNAL(valueChanged(int)), SLOT(changeSeasParams()));
+
+    connect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn1(bool)));
+    connect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn2(bool)));
+    connect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity1(bool)));
+    connect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity2(bool)));
+    connect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(changeMaturity1(bool)));
+    connect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(changeMaturity2(bool)));
+    connect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeMaleWtLn1(bool)));
+    connect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeMaleWtLn2(bool)));
+    connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(changeL1(bool)));
+    connect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(changeK(bool)));
+    connect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
+    connect (ui->checkBox_seas_K, SIGNAL(stateChanged(int)), SLOT(changeSeasParams()));
 
     setRecrArea(2);
     setRecrDistParam(1);
@@ -194,7 +195,7 @@ void population_widget::changeGrowthPattern (int num)
 
 void population_widget::reset()
 {
-    ui->lineEdit_fraction_female->setText(QString::number(pop->get_frac_female()));
+//    ui->lineEdit_fraction_female->setText(QString::number(pop->get_frac_female()));
     setFecundityOption(pop->Fec()->getMethod());
     ui->checkBox_fecund_hermaph->setChecked(pop->Fec()->getHermaphroditism());
     ui->spinBox_fecund_hermaph_season->setMaximum(model_data->num_seasons());
@@ -214,16 +215,16 @@ void population_widget::reset()
     ui->spinBox_growth_num_submorphs->setValue(temp_int);
     changeNumSubMorph(temp_int);
 
-    ui->spinBox_seas_femWtLen1->setValue(pop->getFemwtlen1());
-    ui->spinBox_seas_femWtLen2->setValue(pop->getFemwtlen2());
-    ui->spinBox_seas_fecundity1->setValue(pop->getFec1());
-    ui->spinBox_seas_fecundity2->setValue(pop->getFec2());
-    ui->spinBox_seas_maturity1->setValue(pop->getMat1());
-    ui->spinBox_seas_maturity2->setValue(pop->getMat2());
-    ui->spinBox_seas_maleWtLen1->setValue(pop->getMalewtlen1());
-    ui->spinBox_seas_maleWtLen2->setValue(pop->getMalewtlen2());
-    ui->spinBox_seas_L1->setValue(pop->getL1());
-    ui->spinBox_seas_K->setValue(pop->getK());
+    ui->checkBox_seas_femWtLen1->setChecked(pop->getFemwtlen1());
+    ui->checkBox_seas_femWtLen2->setChecked(pop->getFemwtlen2());
+    ui->checkBox_seas_fecundity1->setChecked(pop->getFec1());
+    ui->checkBox_seas_fecundity2->setChecked(pop->getFec2());
+    ui->checkBox_seas_maturity1->setChecked(pop->getMat1());
+    ui->checkBox_seas_maturity2->setChecked(pop->getMat2());
+    ui->checkBox_seas_maleWtLen1->setChecked(pop->getMalewtlen1());
+    ui->checkBox_seas_maleWtLen2->setChecked(pop->getMalewtlen2());
+    ui->checkBox_seas_L1->setChecked(pop->getL1());
+    ui->checkBox_seas_K->setChecked(pop->getK());
     changeSeasParams();
 
     setRecrArea(pop->SR()->getDistribArea());
@@ -459,16 +460,9 @@ void population_widget::changeFirstMatureAge()
 void population_widget::changeSeasParams()
 {
     bool showtable = false;
-    if (ui->spinBox_seas_femWtLen1->value() > 0) showtable = true;
-    if (ui->spinBox_seas_femWtLen2->value() > 0) showtable = true;
-    if (ui->spinBox_seas_maturity1->value() > 0) showtable = true;
-    if (ui->spinBox_seas_maturity2->value() > 0) showtable = true;
-    if (ui->spinBox_seas_fecundity1->value() > 0) showtable = true;
-    if (ui->spinBox_seas_fecundity2->value() > 0) showtable = true;
-    if (ui->spinBox_seas_maleWtLen1->value() > 0) showtable = true;
-    if (ui->spinBox_seas_maleWtLen2->value() > 0) showtable = true;
-    if (ui->spinBox_seas_L1->value() > 0) showtable = true;
-    if (ui->spinBox_seas_K->value() > 0) showtable = true;
+    if (pop->getNumSeasParams() > 0)
+        showtable = true;
+
     seasonParamsView->setVisible(showtable);
 }
 

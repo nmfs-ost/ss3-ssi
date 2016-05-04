@@ -2136,25 +2136,25 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         // seasonal_effects_on_biology_parms
         temp_int = c_file->next_value().toInt();
-        pop->setFemwtlen1(temp_int);
+        pop->setFemwtlen1(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setFemwtlen2(temp_int);
+        pop->setFemwtlen2(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setMat1(temp_int);
+        pop->setMat1(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setMat2(temp_int);
+        pop->setMat2(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setFec1(temp_int);
+        pop->setFec1(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setFec2(temp_int);
+        pop->setFec2(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setMalewtlen1(temp_int);
+        pop->setMalewtlen1(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setMalewtlen1(temp_int);
+        pop->setMalewtlen1(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setL1(temp_int);
+        pop->setL1(temp_int == 1);
         temp_int = c_file->next_value().toInt();
-        pop->setK(temp_int);
+        pop->setK(temp_int == 1);
         pop->setNumSeasParams();
         num = pop->getNumSeasParams();
         for (i = 0; i < num; i++)

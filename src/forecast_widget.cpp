@@ -5,6 +5,7 @@
 
 #include "metadata.h"
 #include "errorfloatdialog.h"
+#include "message.h"
 
 forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     QWidget(parent),
@@ -38,7 +39,7 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_bmark_relf_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_relf_end(int)));
 
     connect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_relf_basis(int)));
-    connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_forecast(int)));
+    connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), SLOT(set_forecast(int)));
     connect (ui->spinBox_fcast_yr_num, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_forecast_years(int)));
     connect (ui->lineEdit_F_scalar, SIGNAL(editingFinished()), SLOT(set_F_scalar()));
     connect (ui->spinBox_fcast_sel_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_begin(int)));
@@ -46,12 +47,12 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_fcast_relf_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_begin(int)));
     connect (ui->spinBox_fcast_relf_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_end(int)));
 
-    connect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_forecast(int)));
+    connect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_cr_method(int)));
     connect (ui->lineEdit_ctl_rule_const_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_const_f()));
     connect (ui->lineEdit_ctl_rule_no_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_no_f()));
     connect (ui->lineEdit_ctl_tgt_as_fraction, SIGNAL(editingFinished()), SLOT(set_cr_target()));
 
-    connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_forecast_loops(int)));
+    connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), SLOT(set_num_forecast_loops(int)));
     connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_recruitment(int)));
 /*    connect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
     connect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
@@ -255,6 +256,21 @@ void forecast_widget::set_biomass_target()
     ui->lineEdit_biomass_target->setText(QString::number(bmt));
 }
 
+void forecast_widget::set_forecast(int fcast)
+{
+    model_data->forecast->set_forecast(fcast);
+    switch(fcast)
+    {
+    case 5:
+        ui->label_F_scalar->setVisible(true);
+        ui->lineEdit_F_scalar->setVisible(true);
+        break;
+    default:
+        ui->label_F_scalar->setVisible(false);
+        ui->lineEdit_F_scalar->setVisible(false);
+    }
+}
+
 void forecast_widget::set_F_scalar()
 {
     QString value(ui->lineEdit_F_scalar->text());
@@ -285,6 +301,12 @@ void forecast_widget::set_cr_target()
     model_data->forecast->set_cr_target(val);
     ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(val));
 
+}
+
+void forecast_widget::set_num_forecast_loops(int num)
+{
+    model_data->forecast->set_num_forecast_loops(num);
+    ui->spinBox_first_loop->setMaximum(num);
 }
 
 void forecast_widget::set_log_catch_std_dev()
@@ -335,39 +357,45 @@ void forecast_widget::alloc_group_assign_changed ()
     int num = -1;
     QStringList ql(txt.split(' ', QString::SkipEmptyParts));
 
-    if (ql.count() != model_data->num_fisheries())
-    {
-
-    }
-//    ui->spinBox_num_alloc_groups->setValue(ql.count());
-
-    for (int i = 0; i < ql.count(); i++)
-    {
-        int val = ql.at(i).toInt(&okay);
-        if (!okay)
-        {
-            ErrorFloatDialog efd (this, "Error in values", "Not all integer values", ql.count(), false);
-            efd.fromText(txt);
-            efd.exec();
-            txt = efd.toText();
-            okay = true;
-            ui->lineEdit_alloc_assignments->setText(txt);
-            alloc_group_assign_changed();
-            break;
-        }
-        else
-        {
-            model_data->getFleet(i)->setAllocGroup(val);//->forecast->set_alloc_group(i, val);
-            if (val > num)
-                num = val;
-        }
-    }
-    if (num < 1)
+    if (ql.count() == 1 && ql.at(0).toInt() < 1)
     {
         ui->groupBox_alloc_groups->setChecked(false);
+        model_data->forecast->set_num_alloc_groups(0);
     }
-    set_num_alloc_groups(num);
-    model_data->forecast->set_num_alloc_groups(num);
+    else if (ql.count() < model_data->num_fleets())
+    {
+        showInputMessage(QString("You must input a group for each fleet, total %1.").arg(model_data->num_fleets()));
+    }
+    else if (ql.count() > model_data->num_fleets())
+    {
+        showInputMessage(QString("Too many values. Max number is %1").arg(model_data->num_fleets()));
+    }
+    else
+    {
+        for (int i = 0; i < ql.count(); i++)
+        {
+            int val = ql.at(i).toInt(&okay);
+            if (!okay)
+            {
+                ErrorFloatDialog efd (this, "Error in values", "Not all integer values", ql.count(), false);
+                efd.fromText(txt);
+                efd.exec();
+                txt = efd.toText();
+                okay = true;
+                ui->lineEdit_alloc_assignments->setText(txt);
+                alloc_group_assign_changed();
+                return;
+            }
+            else
+            {
+                model_data->getFleet(i)->setAllocGroup(val);
+                if (val > num)
+                    num = val;
+            }
+        }
+        set_num_alloc_groups(num);
+        model_data->forecast->set_num_alloc_groups(num);
+    }
 }
 
 void forecast_widget::set_allocation_group_fract()

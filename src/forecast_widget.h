@@ -29,6 +29,7 @@ public slots:
     void refresh();
     void set_spr_target();
     void set_biomass_target();
+    void set_forecast(int fcast);
     void set_F_scalar();
     void set_bmark_bio_begin(int yr);
     void set_bmark_bio_end(int yr);
@@ -46,6 +47,7 @@ public slots:
     void set_cr_biomass_const_f();
     void set_cr_biomass_no_f();
     void set_cr_target();
+    void set_num_forecast_loops (int num);
     void set_log_catch_std_dev();
     void set_num_alloc_groups (int num);
     void set_allocation_groups();

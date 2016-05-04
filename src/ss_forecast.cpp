@@ -163,8 +163,10 @@ void ss_forecast::set_num_alloc_groups(int num)
     {
         i_num_alloc_groups = num;
         alloc_grp_frac->setColumnCount(num);
+        if (num > 0)
+            alloc_grp_frac->setRowCount(i_num_fcast_yrs);
         for (int i = 0; i < num; i++)
-            header << QString("");
+            header << QString("Group %1").arg(i+1);
         alloc_grp_frac->setHeader(header);
     }
 }

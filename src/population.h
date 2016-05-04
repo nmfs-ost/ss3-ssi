@@ -52,27 +52,38 @@ public slots:
 
     QStringList getFractionFemale();
     void setFractionFemale (QStringList data);
-    int getFemwtlen1() const;
-    void setFemwtlen1(int value);
-    int getFemwtlen2() const;
-    void setFemwtlen2(int value);
-    int getMat1() const;
-    void setMat1(int value);
-    int getMat2() const;
-    void setMat2(int value);
-    int getFec1() const;
-    void setFec1(int value);
-    int getFec2() const;
-    void setFec2(int value);
-    int getMalewtlen1() const;
-    void setMalewtlen1(int value);
-    int getMalewtlen2() const;
-    void setMalewtlen2(int value);
-    int getL1() const;
-    void setL1(int value);
-    int getK() const;
-    void setK(int value);
-    void setNumSeas (int seas) {iNumSeas = seas;}
+
+    bool getFemwtlen1() const;
+    void setFemwtlen1(bool value);
+    void changeFemWtLn1 (bool flag);
+    bool getFemwtlen2() const;
+    void setFemwtlen2(bool value);
+    void changeFemWtLn2 (bool flag);
+    bool getMat1() const;
+    void setMat1(bool value);
+    void changeMaturity1 (bool flag);
+    bool getMat2() const;
+    void setMat2(bool value);
+    void changeMaturity2 (bool flag);
+    bool getFec1() const;
+    void setFec1(bool value);
+    void changeFecundity1(bool flag);
+    bool getFec2() const;
+    void setFec2(bool value);
+    void changeFecundity2(bool flag);
+    bool getMalewtlen1() const;
+    void setMalewtlen1(bool value);
+    void changeMaleWtLn1(bool flag);
+    bool getMalewtlen2() const;
+    void setMalewtlen2(bool value);
+    void changeMaleWtLn2(bool flag);
+    bool getL1() const;
+    void setL1(bool value);
+    void changeL1(bool flag);
+    bool getK() const;
+    void setK(bool value);
+    void changeK(bool flag);
+    void setNumSeas (int seas);
     int getNumSeas () {return iNumSeas;}
     void setNumSeasParams ();
     int getNumSeasParams () {return seasparamtable->rowCount();}
@@ -80,6 +91,8 @@ public slots:
     void setSeasParam (int index, QStringList data);
     QStringList getSeasParam (int index);
     parametermodel *getSeasonalParams() {return seasparamtable;}
+    void insertSeasParams (int num);
+    void removeSeasParams (int num);
 
 signals:
 
@@ -97,8 +110,8 @@ private:
     int i_mean_bwt_deg_freedom;
     int i_mean_bwt_count;
 
-    int femwtlen1, femwtlen2, mat1, mat2, fec1, fec2;
-    int malewtlen1, malewtlen2, L1, K;
+    bool femwtlen1, femwtlen2, mat1, mat2, fec1, fec2;
+    bool malewtlen1, malewtlen2, L1, K;
 
     int iNumYears;
     int iNumSeas;
