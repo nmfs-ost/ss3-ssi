@@ -23,7 +23,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    TODO: This is for debugging only, make sure to change them before building release.
+//    TODO: This is for debugging only, make sure to set them to false before building release.
     {
     bool check = false;
     ui->label_version->setVisible(check);
@@ -73,7 +73,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     connect (ui->checkBox_pro_file, SIGNAL(toggled(bool)), SLOT(set_pro_file(bool)));
     connect (ui->pushButton_runnum_file, SIGNAL(clicked()), SLOT(reset_run_num()));
 
-//    connect (ui->doubleSpinBox_version, SIGNAL(valueChanged(double)), SLOT(setVersion(double)));
+    connect (ui->doubleSpinBox_version, SIGNAL(valueChanged(double)), SLOT(setVersion(double)));
     ui->label_version->setVisible(false);
     ui->doubleSpinBox_version->setVisible(false);
 
@@ -125,9 +125,15 @@ file_widget::~file_widget()
 
 void file_widget::setVersion(double ver, bool flag)
 {
+    QString msg;
     datafile_version = ver + .000001;
     if (datafile_version < 3.30)
     {
+        msg.append(QString("This program is reading version 3.24 files, but will\n"));
+        msg.append(QString("save them in version 3.30 format. \n"));
+        msg.append(QString("If you wish to preserve the older files, move to a \n"));
+        msg.append(QString("different directory before saving or running ss."));
+        QMessageBox::information(0, QString("Old version files"),msg);
         model_info->setReadMonths(false);
         ui->label_version_33_note->setVisible(false);
         ui->label_version_32_note->setVisible(true);
@@ -135,7 +141,7 @@ void file_widget::setVersion(double ver, bool flag)
     else
     {
         model_info->setReadMonths(true);
-        ui->label_version_33_note->setVisible(true);
+        ui->label_version_33_note->setVisible(false);
         ui->label_version_32_note->setVisible(false);
     }
     if (!flag)
@@ -747,11 +753,19 @@ bool file_widget::read_starter_file (QString filename)
 
 
         token = starterFile->next_value("check value for end of file");
-        temp_float = get_version_number(token);
-        if (temp_float != END_OF_DATA)
-            datafile_version = temp_float;
-        else
+        temp_int = token.toInt();
+        if (temp_int == END_OF_DATA)
+        {
             datafile_version = 3.2;
+        }
+        else
+        {
+            temp_float = token.toFloat();
+            model_info->setALKTol (temp_float);
+            token = starterFile->next_value("Version");
+            temp_float = get_version_number(token);
+            datafile_version = temp_float;
+        }
         datafile_version += 0.00000001;
         ui->doubleSpinBox_version->setValue(datafile_version);
 
@@ -892,9 +906,15 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->writeline (line);
 
         if (datafile_version < 3.30)
+        {
             line = QString::number(END_OF_DATA);
+        }
         else
+        {
+            line = QString(QString("%1 # ALK tolerance (example 0.0001)").arg(model_info->getALKTol()));
+            chars +=starterFile->writeline(line);
             line = QString::number(datafile_version, 'g');
+        }
         line.append(" # check value for end of file and for version control" );
         chars += starterFile->writeline (line);
 

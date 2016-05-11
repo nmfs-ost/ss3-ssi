@@ -590,10 +590,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString ("#_units of catch:  1=bio; 2=num (ignored for surveys; their units read later)" );
         chars += d_file->writeline (line);
-        line = QString ("#_equ_catch_se:  standard error of log(initial equilibrium catch)" );
-        chars += d_file->writeline (line);
-        line = QString ("#_catch_se:  standard error of log(catch); can be overridden in control file with detailed F input" );
-        chars += d_file->writeline (line);
         line = QString ("#_rows are fleets" );
         chars += d_file->writeline (line);
         line = QString ("#_fleet_type, timing, area, units, need_catch_mult fleetname" );
@@ -617,7 +613,9 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         }
 
 
-        line = QString("#_Catch data: yr, seas, fleet, catch, catch_se" );
+        line = QString("#_Catch data: yr, seas, fleet, catch, catch_se");
+        chars += d_file->writeline (line);
+        line = QString("#_catch_se:  standard error of log(catch); can be overridden in control file with detailed F input");
         chars += d_file->writeline (line);
         for (i = 1; i <= total_fleets; i++)
         {
@@ -855,6 +853,11 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
         }
 
+
+        line = QString("# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
+        chars += d_file->writeline (line);
+        line = QString("# partition codes:  (0=combined; 1=discard; 2=retained");
+        chars += d_file->writeline (line);
         temp_int = l_data->getNumberBins();
         line = QString(QString("%1 #_N_LengthBins; then enter lower edge of each length bin" ).arg(QString::number(temp_int)));
         chars += d_file->writeline (line);
@@ -867,7 +870,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 
         chars += d_file->writeline (line);
 
-        line = QString ("#_yr month fleet gender part Nsamp datavector(female-male)" );
+        line = QString ("#_yr month fleet sex part Nsamp datavector(female-male)" );
         chars += d_file->writeline (line);
 //        for (int type = Fleet::Fishing; type < Fleet::None; type++)
         for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
@@ -968,7 +971,13 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 //        line = QString ("%1 #_N_Agecomp_obs" ).arg(QString::number(temp_int));
 //        chars += d_file->writeline (line);
 
-        line = QString ("#_yr month fleet gender part ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)" );
+
+
+        line = QString ("# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
+        chars += d_file->writeline (line);
+        line = QString ("# partition codes:  (0=combined; 1=discard; 2=retained");
+        chars += d_file->writeline (line);
+        line = QString ("#_yr month fleet sex part ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)");
         chars += d_file->writeline (line);
 //        for (int type = Fleet::Fishing; type < Fleet::None; type++)
         for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
@@ -2354,6 +2363,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->next_value());
             if (flt > 0)
             {
+                datalist.append(data->getFleet(flt - 1)->get_name());
                 data->getFleet(flt - 1)->Q()->setup(datalist);
                 data->getFleet(flt - 1)->setQSetupRead(true);
             }
@@ -2377,7 +2387,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (data->getFleet(i)->Q()->getDoPower())
             {
                 datalist.clear();
-                datalist = readShortParameter(c_file);
+                datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setPower(datalist);
             }
         }
@@ -2386,7 +2396,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (data->getFleet(i)->Q()->getDoEnvLink())
             {
                 datalist.clear();
-                datalist = readShortParameter(c_file);
+                datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setVariable(datalist);
             }
         }
@@ -2395,7 +2405,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (data->getFleet(i)->Q()->getDoExtraSD())
             {
                 datalist.clear();
-                datalist = readShortParameter(c_file);
+                datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setExtra(datalist);
             }
         }
@@ -2404,7 +2414,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             int tp = data->getFleet(i)->Q()->getType();
             if (tp > 1 && tp < 6)
             {
-                datalist = readShortParameter(c_file);
+                datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setBase(datalist);
             }
             if (tp == 3 || tp == 4)
@@ -3050,7 +3060,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                            temp_int));
         chars += c_file->writeline (line);
         temp_int = pop->Grow()->getAdjustment_method();
-        line = QString(QString("%1 #_env/block/dev_adjust_method for MG parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)" ).arg(
+        line = QString(QString("%1 #_env/block/dev_adjust_method for all time-vary parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)" ).arg(
                            temp_int));
         chars += c_file->writeline (line);
         chars += c_file->writeline("#");
@@ -3666,11 +3676,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
         line = QString("#_Q_setup" );
         chars += c_file->writeline(line);
-        line = QString("# Q_type options:  <0=mirror, 0=float_nobiasadj, 1=float_biasadj, 2=parm_nobiasadj, 3=parm_w_random_dev, 4=parm_w_randwalk, 5=mean_unbiased_float_assign_to_parm" );
-        chars += c_file->writeline(line);
-        line = QString("#_for_env-var:_enter_index_of_the_env-var_to_be_linked" );
-        chars += c_file->writeline(line);
-        line = QString("#_Den-dep  env-var  extra_se  Q_type  Q_offset" );
+        line = QString("#_fleet link link_info extra_se biasadj float # fleetname");
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
@@ -3690,11 +3696,9 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString ("#" );
         chars += c_file->writeline(line);
-        line = QString("#_Cond 0 #_If q has random component, then 0=read one parm for each fleet with random q; 1=read a parm for each year of index" );
-        chars += c_file->writeline(line);
         line = QString("#_Q_parms(if_any);Qunits_are_ln(q)" );
         chars += c_file->writeline(line);
-        line = QString("# LO HI INIT PRIOR PR_type SD PHASE" );
+        line = QString("# LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dv_mnyr dv_mxyr dv_stdv Block Blk_Fxn # parm_name" );
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
@@ -3773,9 +3777,9 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                                data->getFleet(i)->get_name()));
             chars += c_file->writeline(line);
         }
-        line = QString(QString ("%1 #_env/block/dev_adjust_method for selex parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)").arg(
+/*        line = QString(QString ("%1 #_env/block/dev_adjust_method for selex parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)").arg(
                     QString::number(data->getSelexAdjustMethod())));
-        chars += c_file->writeline(line);
+        chars += c_file->writeline(line);*/
         line = QString ("#_LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dev_minyr dev_maxyr dev_stddev Block Block_Fxn");
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)

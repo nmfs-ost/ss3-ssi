@@ -3,13 +3,17 @@
 q_ratio::q_ratio()
 {
     QStringList hdr;
-    hdr << "fleet" << "link" << "link_info" << "biasadj" << "float" << "#  fleetname";
+    hdr << "fleet" << "link" << "link_info" << "biasadj" << "float" << "fleetname";
     qsetup = new parametermodel();
-    qsetup->setColumnCount(5);
+    qsetup->setColumnCount(6);
     qsetup->setHeader(hdr);
 
+
+    hdr.clear();
+    hdr << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
+    hdr << "env-var" << "use_dev" << "dv_mnyr" << "dv_mxyr" << "dv_stdv" << "Block" << "Blk_Fxn";
     params = new parametermodel();
-    params->setColumnCount(7);
+    params->setHeader(hdr);
     reset();
 }
 
@@ -61,7 +65,8 @@ q_ratio *q_ratio::copy(q_ratio *rhs)
 
 void q_ratio::setup(QStringList values)
 {
-    reset();
+    qsetup->setRowData(0, values);
+/*    reset();
     setDoPower(values.at(0).toInt());
     setDoEnvLink(values.at(1).toInt());
     setDoExtraSD(values.at(2).toInt());
@@ -70,7 +75,7 @@ void q_ratio::setup(QStringList values)
     {
         doOffset = true;
         setOffset(values.at(4).toFloat());
-    }
+    }*/
 }
 
 void q_ratio::setup (QString str)
@@ -81,26 +86,30 @@ void q_ratio::setup (QString str)
 
 QString q_ratio::getSetup()
 {
+    QStringList sList (qsetup->getRowData(0));
     QString txt("");
-    txt.append(QString(" %1").arg(QString::number(doPower)));
+    for (int i = 0; i < sList.count(); i++)
+        txt.append(QString(" %1").arg(sList.at(i)));
+/*    txt.append(QString(" %1").arg(QString::number(doPower)));
     txt.append(QString(" %1").arg(QString::number(doEnvVar)));
     txt.append(QString(" %1").arg(QString::number(doExtraSD)));
     txt.append(QString(" %1").arg(QString::number(type)));
 //    if (doOffset)
-        txt.append(QString(" %1").arg(QString::number(offset)));
+        txt.append(QString(" %1").arg(QString::number(offset)));*/
     return txt;
 }
 
 void q_ratio::setParamHdrs(QString name)
 {
+    QStringList sList (qsetup->getRowData(0));
     int i = 0;
-    if (getDoPower() == 1)
+    if (sList.at(0).compare("0"))//getDoPower() == 1)
         params->setRowHeader(i++, QString("Q_power_") + name);
-    if (getDoEnvLink() == 1)
+    if (sList.at(0).compare("1"))//getDoEnvLink() == 1)
         params->setRowHeader(i++, QString("Q_envlink_") + name);
-    if (getDoExtraSD() == 1)
+    if (sList.at(0).compare("2"))//getDoExtraSD() == 1)
         params->setRowHeader(i++, QString("Q_extraSD_") + name);
-    if (getType() > 0)
+    if (sList.at(0).compare("3"))//getType() > 0)
         params->setRowHeader(i++, QString("lnQ_base_") + name);
 }
 
@@ -144,11 +153,13 @@ void q_ratio::setTypeIndex(int value)
 
 int q_ratio::getDoPower() const
 {
-    return doPower;
+    return qsetup->getRowData(0).at(0).compare("0");// doPower;
 }
 
 void q_ratio::setDoPower(int value)
 {
+    QStringList sList (qsetup->getRowData(0));
+
     doPower = value;
     if (value == 1)
         powerIndex = 0;

@@ -142,6 +142,7 @@ void ss_model::reset()
     set_f_min_age(13);
     set_f_max_age(17);
     set_f_basis(2);
+    setALKTol(.001);
 //    QMessageBox::information(this, "Program Flow", "Model basic data set up.");
 
     set_start_year(1980);
@@ -294,6 +295,17 @@ QString ss_model::get_std_years_text()
 
     return txt;
 }
+
+void ss_model::setALKTol (float val)
+{
+    if (val < 0.0)
+        val = 0.0;
+    if (val > 0.05)
+        val = 0.05;
+
+    fALKTol = val;
+}
+
 
 Season *ss_model::getSeason (int index)
 {

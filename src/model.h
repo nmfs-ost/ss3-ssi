@@ -137,6 +137,8 @@ public slots:
     int f_max_age () {return iFMaxAge;}
     void set_f_basis (int basis) {iFBasis = basis;}
     int f_basis () {return iFBasis;}
+    void setALKTol (float val);
+    float getALKTol () {return fALKTol;}
 
     void set_start_year (int year);
     int start_year () {return iStartYr;}
@@ -345,6 +347,7 @@ private:
     int iFMinAge;
     int iFMaxAge;
     int iFBasis;
+    float fALKTol;
 
     int iStartYr;
     int iEndYr;
