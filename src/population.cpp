@@ -59,6 +59,9 @@ void population::reset()
 
 void population::setNumSeas(int seas)
 {
+    // default value since insertSeasParams needs it to be > 0
+    iNumSeas = 1;
+
     if (seas >= 1 && seas <= 12)
     {
         if (seas > iNumSeas)
