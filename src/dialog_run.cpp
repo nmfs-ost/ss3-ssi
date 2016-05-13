@@ -225,7 +225,7 @@ void Dialog_run::onProcessStdOutWrite(QString szOutput)
         ui->plainTextEdit_output->insertPlainText(content);
     }
 #else
-    insertPlainText(szOutput);
+    ui->plainTextEdit_output->insertPlainText(szOutput);
 #endif
     fixedPosition = ui->plainTextEdit_output->textCursor().position();
 }
