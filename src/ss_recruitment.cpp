@@ -207,10 +207,6 @@ QString spawn_recruit::toText()
     sr_text.append(QString ("%1 # SR_R1_offset" ).arg(parameters->getRowText(4)));
     sr_text.append(QString ("%1 # SR_autocorr" ).arg(parameters->getRowText(5)));
 
-    sr_text.append(QString ("%1 #_SR_env_link" ).arg(
-                       QString::number(env_link)));
-    sr_text.append(QString ("%1 #_SR_env_target_0=none;1=devs;_2=R0;_3=steepness" ).arg(
-                       QString::number(env_target)));
     sr_text.append(QString ("%1 #_do_rec_dev:  0=none; 1=devvector; 2=simple deviations" ).arg(
                        QString::number(rec_dev)));
     sr_text.append(QString ("%1 #_first_year_of_main_rec_devs; early devs can preceed this era" ).arg(

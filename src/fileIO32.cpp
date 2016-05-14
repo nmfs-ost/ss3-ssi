@@ -1,6 +1,7 @@
 #include "fileIO32.h"
 #include "model.h"
 #include "fileIOgeneral.h"
+#include "message.h"
 
 bool read32_dataFile(ss_file *d_file, ss_model *data)
 {
@@ -702,7 +703,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             line = QString(QString("%1 %2 %3 # %4" ).arg (
                    QString::number(i+1),
                    QString::number(data->getFleet(i)->units()),
-                   QString::number(data->getFleet(i)->error_type()),
+                   QString::number(data->getFleet(i)->get_error_type()),
                    data->getFleet(i)->get_name()));
             chars += d_file->writeline (line);
         }
@@ -2219,6 +2220,10 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         // Spawner-recruitment
         pop->SR()->fromFile(c_file);
+        data->getForecast()->set_benchmark_rec_beg(pop->SR()->rec_dev_start_yr);
+        data->getForecast()->set_benchmark_rec_end(pop->SR()->rec_dev_end_yr);
+        data->getForecast()->set_forecast_rec_beg(pop->SR()->rec_dev_start_yr);
+        data->getForecast()->set_forecast_rec_end(pop->SR()->rec_dev_end_yr);
 
         // Fishing mortality
         pop->M()->setNumFisheries(data->num_fisheries());
@@ -2271,13 +2276,34 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         // Q setup
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            datalist.clear();
-            for (int j = 0; j < 4; j++)
-                datalist.append(c_file->next_value());
-            datalist.append("0");
-            datalist.append(data->getFleet(i)->get_name());
-            data->getFleet(i)->Q()->setup(datalist);
-            data->getFleet(i)->setQSetupRead(true);
+            int doPowr, envVar, extrSD, devTyp;
+            doPowr = c_file->next_value().toInt();
+            envVar = c_file->next_value().toInt();
+            extrSD = c_file->next_value().toInt();
+            devTyp = c_file->next_value().toInt();
+            if (data->getFleet(i)->getAbundanceCount() > 0)
+            {
+                datalist.clear();
+                datalist << "1" << "0" << "0" << "0" << "0" ;
+                data->getFleet(i)->Q()->setup(datalist);
+    /*            for (int j = 0; j < 4; j++)
+                    datalist.append(c_file->next_value());
+                datalist.append("0");*/
+                data->getFleet(i)->set_q_type(devTyp);
+                data->getFleet(i)->set_q_do_power(doPowr);
+                data->getFleet(i)->set_q_do_extra_sd(extrSD);
+                data->getFleet(i)->set_q_do_env_lnk(envVar);
+                switch (devTyp)
+                {
+                case 3:
+                    showInputMessage ("The Gui does not handle random deviations of Q.");
+                    break;
+                case 4:
+                    showInputMessage ("The Gui does not handle random walk on Q.");
+                    break;
+                }
+                data->getFleet(i)->setQSetupRead(true);
+            }
         }
 
         for (int i = 0; i < data->num_fleets(); i++)
@@ -2295,7 +2321,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             {
                 datalist.clear();
                 datalist = readShortParameter(c_file);
-                data->getFleet(i)->Q()->setVariable(datalist);
+                data->getFleet(i)->Q()->setEnvLink(datalist);
             }
         }
         for (int i = 0; i < data->num_fleets(); i++)
@@ -2310,9 +2336,17 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < data->num_fleets(); i++)
         {
             int tp = data->getFleet(i)->Q()->getType();
+            if (data->getFleet(i)->getQSetupRead())
+            {
+                datalist.clear();
+                datalist << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                data->getFleet(i)->Q()->setBase(datalist);
+            }
             if (tp > 1 && tp < 5)
             {
                 datalist = readShortParameter(c_file);
+                while (datalist.count() < 14)
+                    datalist.append("0");
                 data->getFleet(i)->Q()->setBase(datalist);
             }
             if (tp == 3 || tp == 4)
@@ -3343,7 +3377,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < data->num_fleets(); i++)
         {
             line = data->getFleet(i)->Q()->getSetup();
-            line.chop (2);
+//            line.chop (2);
 /*            QString powr, envr, extr, type, offs;
             powr = QString::number(data->getFleet(i)->Q()->getDoPower());
             envr = QString::number(data->getFleet(i)->Q()->getDoEnvVar());

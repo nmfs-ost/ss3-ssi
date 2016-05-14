@@ -98,7 +98,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -910,7 +910,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_comp">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_length">
              <attribute name="title">
@@ -1343,27 +1343,7 @@
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
            <layout class="QGridLayout" name="gridLayout_q_info">
-            <item row="6" column="0">
-             <widget class="QSpinBox" name="spinBox_q_type">
-              <property name="minimum">
-               <number>-10</number>
-              </property>
-              <property name="maximum">
-               <number>5</number>
-              </property>
-              <property name="value">
-               <number>2</number>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLabel" name="label_q_type">
-              <property name="text">
-               <string>Q type </string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
+            <item row="8" column="1">
              <spacer name="verticalSpacer_q_parameters">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -1376,7 +1356,33 @@
               </property>
              </spacer>
             </item>
-            <item row="10" column="2">
+            <item row="4" column="2" rowspan="2" colspan="2">
+             <layout class="QVBoxLayout" name="verticalLayout_q_setup"/>
+            </item>
+            <item row="5" column="1">
+             <spacer name="verticalSpacer_q_setup">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Maximum</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="label_q_setup">
+              <property name="text">
+               <string>Setup</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="2">
              <spacer name="horizontalSpacer_q_type_info">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1389,101 +1395,24 @@
               </property>
              </spacer>
             </item>
-            <item row="8" column="2" rowspan="2" colspan="2">
-             <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
+            <item row="6" column="2">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string> </string>
+              </property>
+             </widget>
             </item>
-            <item row="8" column="0" colspan="2">
+            <item row="7" column="1">
              <widget class="QLabel" name="label_q_parameters">
               <property name="text">
                <string>Parameters</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
-             <spacer name="verticalSpacer_q_type_info">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="5" column="0" colspan="4">
-             <widget class="QCheckBox" name="checkBox_q_doExtra">
-              <property name="text">
-               <string>read a parameter containing an additive constant for survey variability stddev</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0" colspan="4">
-             <widget class="QCheckBox" name="checkBox_q_doEnv">
-              <property name="text">
-               <string>read a parameer for environmental effects on Q</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="4">
-             <widget class="QCheckBox" name="checkBox_q_doPower">
-              <property name="text">
-               <string>read a parameter for non-linearity in survey abundance linkage</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="2" rowspan="2">
-             <widget class="QTextEdit" name="textEdit_q_type_info">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>120</height>
-               </size>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Sunken</enum>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="html">
-               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;lt;0 = mirror the Q from another survey (abs val of type)&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  0 = set Q as a scaling factor such that the estimate is median unbiased.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  2 = read one parameter that will be the ln(Q)&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  3 = read one parameter for base ln(q) and additional for each deviation year&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  4 = read one parameter for base ln(q) and for N-1 survey observations&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  5 = calculate Q according to mean unbiased scaling&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
+            <item row="7" column="2" rowspan="2" colspan="2">
+             <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
             </item>
            </layout>
-          </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </widget>

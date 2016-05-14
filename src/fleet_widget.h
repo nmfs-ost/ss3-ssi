@@ -89,6 +89,7 @@ private:
     tableview *morphObsView;
     tableview *recapObsView;
 
+    tableview *qSetupView;
     tableview *qParamsView;
     tableview *sizeSelexParamsView;
     tableview *ageSelexParamsView;

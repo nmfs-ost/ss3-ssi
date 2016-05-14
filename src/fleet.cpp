@@ -255,7 +255,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
 
     // surveys
     set_units(oldfl->units());
-    set_error_type(oldfl->error_type());
+    set_error_type(oldfl->get_error_type());
 
     set_survey_units(oldfl->survey_units());
     set_survey_error_type(oldfl->survey_error_type());
@@ -692,18 +692,27 @@ int Fleet::abundance_count()
 
 void Fleet::setQSetupRead(bool flag)
 {
-    if (!flag)
+    if (q_read != flag)
     {
-        if (    Q()->getDoPower() ||
-                Q()->getDoEnvLink() ||
-                Q()->getDoExtraSD() ||
-                Q()->getType() > 0 ||
-                Q()->getOffset() > 0)
-            flag = true;
-        else if (abundModel->rowCount() > 0)
-            flag = true;
+        if (!flag)
+        {
+            if (    Q()->getDoPower() ||
+                    Q()->getDoEnvLink() ||
+                    Q()->getDoExtraSD() ||
+                    Q()->getType() > 0 ||
+                    Q()->getOffset() > 0)
+                flag = true;
+            else if (abundModel->rowCount() > 0)
+                flag = true;
+        }
+        q_read = flag;
+        qSetupChanged();
     }
-    q_read = flag;
+}
+
+void Fleet::qSetupChanged()
+{
+    Q()->setupChanged();
 }
 
 /*

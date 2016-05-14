@@ -88,7 +88,7 @@ public slots:
     void set_units(int unt) {i_units = unt;}           // 0=numbers, 1=biomass, 2=F
     int units() {return i_units;}           // 0=numbers, 1=biomass, 2=F
     void set_error_type(int err) {i_error_type = err;}      // -1=normal, 0=lognormal, >0=T
-    int error_type() {return i_error_type;}      // -1=normal, 0=lognormal, >0=T
+    int get_error_type() {return i_error_type;}      // -1=normal, 0=lognormal, >0=T
 
     // surveys
     void set_survey_units(int unt) {i_survey_units = unt;}
@@ -252,6 +252,7 @@ public slots:
     //  #q_section
     void setQSetupRead (bool flag = false);
     bool getQSetupRead () {return q_read;}
+    void qSetupChanged ();
     void set_q_do_power(int den) {Q()->setDoPower(den); setQSetupRead();}
     void set_q_do_power(bool yes) {Q()->setDoPower(yes?1:0); setQSetupRead();}
     int q_do_power() {return Q()->getDoPower();}
@@ -266,7 +267,7 @@ public slots:
     void set_q_offset (float val) {Q()->setOffset(val); setQSetupRead();}
     int q_offset () {return Q()->getOffset();}
     parametermodel *getQParams() {return Q()->getParamModel();}
-
+    parametermodel *getQSetup() {return Q()->getSetupModel();}
     q_ratio *Q() {return q_R;}
 
     //   #size selex

@@ -590,6 +590,8 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString ("#_units of catch:  1=bio; 2=num (ignored for surveys; their units read later)" );
         chars += d_file->writeline (line);
+        line = QString ("#_catch_mult: 0=no; 1=yes" );
+        chars += d_file->writeline (line);
         line = QString ("#_rows are fleets" );
         chars += d_file->writeline (line);
         line = QString ("#_fleet_type, timing, area, units, need_catch_mult fleetname" );
@@ -659,7 +661,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line = QString(QString("%1 %2 %3 # %4" ).arg (
                    QString::number(i),
                    QString::number(flt->units()),
-                   QString::number(flt->error_type()),
+                   QString::number(flt->get_error_type()),
                    flt->get_name()));
             chars += d_file->writeline (line);
         }
@@ -710,10 +712,11 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             flt = data->getActiveFleet(i);
             if (flt->getDiscardCount() > 0)
             {
-                line = QString(QString("%1 %2 %3" ).arg(
+                line = QString(QString("%1 %2 %3 # %4" ).arg(
                             QString::number(i),
                             QString::number(flt->discard_units()),
-                            QString::number(flt->discard_err_type())));
+                            QString::number(flt->discard_err_type()),
+                            flt->get_name()));
                 chars += d_file->writeline (line);
             }
         }
@@ -732,7 +735,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst = flt->getDiscard(j);
                 for (int m = 0; m < str_lst.count(); m++)
                     line.append(QString("%1 ").arg(str_lst.at(m)));
-
+                chars += d_file->writeline (line);
             }
         }
         line.clear();
@@ -751,7 +754,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         if (temp_int == 0)
         {
-            line = QString("#_COND_0 ");
+            line = QString("#_COND_30 ");
         }
         else
         {
@@ -891,7 +894,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         line = QString("-9999");
         for (int j = 1; j < str_lst.count(); j++)
             line.append(QString(" %1").arg (QString::number(0)));
-
+        line.append(' ');
         chars += d_file->writeline (line);
         chars += d_file->writeline ("#" );
         }
@@ -1332,7 +1335,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         temp_float = token.toFloat();
         fcast->set_biomass_target(temp_float);
 
-        for (i = 0; i < 6; i++)
+        for (i = 0; i < 8; i++)
         {
             token = f_file->next_value("benchmark year");
             temp_int = token.toInt();
@@ -1351,7 +1354,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         token = f_file->next_value("F scalar");
         temp_float = token.toFloat();
         fcast->set_f_scalar(temp_float);
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 6; i++)
         {
             token = f_file->next_value("forecast year");
             temp_int = token.toInt();
@@ -1568,12 +1571,12 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString(QString("%1 # Biomass target (e.g. 0.40)" ).arg(value));
         chars += f_file->writeline(line);
 
-        line = QString("#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF");
+        line = QString("#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recruits, end_recruits");
         temp_string = QString ("# ");
         line.append(QString(" (enter actual year, or values of 0 or -integer to be rel. endyr)" ));
         chars += f_file->writeline(line);
         line.clear();
-        for (i = 0; i < 6; i++)
+        for (i = 0; i < 8; i++)
         {
             value = QString::number(fcast->benchmark_year(i));
             line.append(QString(QString(" %1").arg(value)));
@@ -1604,11 +1607,11 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString(QString("%1 # F scalar (only used for Do_Forecast==5)" ).arg(value));
         chars += f_file->writeline(line);
 
-        line = QString("#_Fcast_years:  beg_selex, end_selex, beg_relF, end_relF  (enter actual year, or values of 0 or -integer to be rel. endyr)" );
+        line = QString("#_Fcast_years:  beg_selex, end_selex, beg_relF, end_relF, beg_recruits, end_recruits  (enter actual year, or values of 0 or -integer to be rel. endyr)" );
         chars += f_file->writeline(line);
         line.clear();
         temp_string = QString("# ");
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 6; i++)
         {
             value = QString::number(fcast->forecast_year(i));
             line.append(QString(QString(" %1").arg(value)));
@@ -1628,7 +1631,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString(QString("%1 # Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below) " ).arg(value));
         chars += f_file->writeline(line);
         value = QString::number(fcast->cr_biomass_no_f());
-        line = QString(QString("%1 # Control rule Biomass level for no F (as frac of Bzero, e.g. 0.40) " ).arg(value));
+        line = QString(QString("%1 # Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10) " ).arg(value));
         chars += f_file->writeline(line);
         value = QString::number(fcast->cr_target());
         line = QString(QString("%1 # Control rule target as fraction of Flimit (e.g. 0.75) " ).arg(value));
@@ -2339,7 +2342,58 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setDevPhase (temp_int);
 
         // Spawner-recruitment
-        pop->SR()->fromFile(c_file);
+        temp_int = c_file->next_value().toInt();
+        pop->SR()->setMethod (temp_int);
+        for (i = 0; i < 6; i++)
+        {
+            datalist = readShortParameter(c_file);
+            pop->SR()->setParameter(i, datalist);
+        }
+        if (pop->SR()->getMethod() == 5 ||
+                pop->SR()->getMethod() == 7 ||
+                pop->SR()->getMethod() == 8)
+        {
+            datalist = readShortParameter(c_file);
+            pop->SR()->setParameter(i, datalist);
+        }
+        pop->SR()->rec_dev = c_file->next_value().toInt();
+        pop->SR()->rec_dev_start_yr = c_file->next_value().toInt();
+        pop->SR()->rec_dev_end_yr = c_file->next_value().toInt();
+        pop->SR()->rec_dev_phase = c_file->next_value().toInt();
+        pop->SR()->advanced_opts = (c_file->next_value().compare("0") != 0);
+
+        if (pop->SR()->advanced_opts)
+        {
+            pop->SR()->rec_dev_early_start = c_file->next_value().toInt();
+            pop->SR()->rec_dev_early_phase = c_file->next_value().toInt();
+            pop->SR()->fcast_rec_phase = c_file->next_value().toInt();
+            pop->SR()->fcast_lambda = c_file->next_value().toFloat();
+            pop->SR()->nobias_last_early_yr = c_file->next_value().toInt();
+            pop->SR()->fullbias_first_yr = c_file->next_value().toInt();
+            pop->SR()->fullbias_last_yr = c_file->next_value().toInt();
+            pop->SR()->nobias_first_recent_yr = c_file->next_value().toInt();
+            pop->SR()->max_bias_adjust = c_file->next_value().toFloat();
+            pop->SR()->rec_cycles = c_file->next_value().toInt();
+            pop->SR()->rec_dev_min = c_file->next_value().toInt();
+            pop->SR()->rec_dev_max = c_file->next_value().toInt();
+            pop->SR()->num_rec_dev = c_file->next_value().toInt();
+
+            pop->SR()->setNumAssignmentParams(pop->SR()->rec_cycles);
+            for (i = 0; i < pop->SR()->rec_cycles; i++)
+            {
+                datalist = readParameter(c_file);
+                pop->SR()->setFullParameter(i, datalist);
+            }
+
+            pop->SR()->getRecruitDevs()->setNumRecruitDevs(pop->SR()->num_rec_dev);
+            for (i = 0; i < pop->SR()->num_rec_dev; i++)
+            {
+                datalist.clear();
+                datalist.append(c_file->next_value());
+                datalist.append(c_file->next_value());
+                pop->SR()->getRecruitDevs()->setRecruitDev(i, datalist);
+            }
+        }
 
         // Fishing mortality
         num = 0;
@@ -2357,14 +2411,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist.clear();
             flt = c_file->next_value().toInt();
-/*            datalist = readParameter (c_file);
-            data->getFleet(i)->Q()->setup(datalist);*/
+
             for (int j = 0; j < 5; j++)
                 datalist.append(c_file->next_value());
             if (flt > 0)
             {
-                datalist.append(data->getFleet(flt - 1)->get_name());
+                // datalist.append(data->getFleet(flt - 1)->get_name());
                 data->getFleet(flt - 1)->Q()->setup(datalist);
+                data->getFleet(flt - 1)->Q()->setupChanged();
                 data->getFleet(flt - 1)->setQSetupRead(true);
             }
         } while (flt > 0);
@@ -2377,27 +2431,38 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             else
             {
-                if (!data->getFleet(i)->getQSetupRead())
+                if (!data->getFleet(i)->getQSetupRead() && data->getFleet(i)->abundance_count() > 0)
                     showInputMessage (QString("No Q Setup line for survey %1").arg(data->getFleet(i)->get_name()));
             }
         }
 
+        int id = 0;
+        QString hdr;
         for (i = 0; i < data->num_fleets(); i++)
         {
-            if (data->getFleet(i)->Q()->getDoPower())
+            data->getFleet(i)->Q()->setNumParams(0);
+            // Q Base
+            if (data->getFleet(i)->getQSetupRead())
             {
                 datalist.clear();
                 datalist = readParameter(c_file);
-                data->getFleet(i)->Q()->setPower(datalist);
+                data->getFleet(i)->Q()->setParameter(id, datalist);
+                if (data->getFleet(i)->get_error_type() < 0)
+                    hdr = QString("lnQ_base");
+                else
+                    hdr = QString("Q_base");
+                hdr.append(QString("_%1(%2)").arg(data->getFleet(i)->get_name(), QString::number(i+1)));
+                data->getFleet(i)->Q()->getParamModel()->setRowHeader(id++, hdr);
             }
         }
         for (i = 0; i < data->num_fleets(); i++)
         {
-            if (data->getFleet(i)->Q()->getDoEnvLink())
+            if (data->getFleet(i)->Q()->getDoPower())
             {
-                datalist.clear();
                 datalist = readParameter(c_file);
-                data->getFleet(i)->Q()->setVariable(datalist);
+                data->getFleet(i)->Q()->setPower(datalist);
+                hdr = QString(QString("Q_power_%1(%2)").arg(data->getFleet(i)->get_name(), QString::number(i+1)));
+                data->getFleet(i)->Q()->getParamModel()->setRowHeader(id++, hdr);
             }
         }
         for (i = 0; i < data->num_fleets(); i++)
@@ -2411,6 +2476,15 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
         for (i = 0; i < data->num_fleets(); i++)
         {
+            if (data->getFleet(i)->Q()->getDoEnvLink())
+            {
+                datalist.clear();
+                datalist = readParameter(c_file);
+                data->getFleet(i)->Q()->setEnvLink(datalist);
+            }
+        }
+/*        for (i = 0; i < data->num_fleets(); i++)
+        {
             int tp = data->getFleet(i)->Q()->getType();
             if (tp > 1 && tp < 6)
             {
@@ -2422,18 +2496,19 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 temp_int = c_file->next_value().toInt();
                 if (temp_int) // read 1 parameter for each observation
                 {
-                    num = data->getFleet(i)->Q()->getNumParams();//temp_int;
+                    num = data->getFleet(i)->abundance_count();
+                    id = data->getFleet(i)->Q()->getNumParams();//temp_int;
 //                    for (i = 0; i < data->num_fleets(); i++)
   //                      num += data->getFleet(i)->randomEffects();
-                    for (int j = 0; j < temp_int; j++, num++)
+                    for (int j = 0; j < num; j++, id++)
                     {
-                        datalist = readShortParameter(c_file);
-                        data->getFleet(i)->Q()->setParameter(num, datalist);
+                        datalist = readParameter(c_file);
+                        data->getFleet(i)->Q()->setParameter(id, datalist);
                     }
                 }
 
             }
-        }
+        }*/
 
         // Size selectivity setup
         for (int i = 0; i < num_fleets; i++)
@@ -2859,7 +2934,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         if (data->num_areas() > 1)
         {
             num = pop->Move()->getNumDefs();
-            line = QString(QString("%1 #_N_movement_definitions").arg(
+            line = QString(QString("%1 # N_movement_definitions").arg(
                             QString::number(num)));
             chars += c_file->writeline(line);
             temp_float = pop->Move()->getFirstAge();
@@ -3484,12 +3559,17 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString ("%1 # SR_autocorr" ).arg(pop->SR()->parameters->getRowText(5)));
         chars += c_file->writeline(line);
 
-        line = QString(QString ("%1 #_SR_env_link" ).arg(
+        line = QString("#Next are short parm lines, if requested, for env effects on R0, steepness, and annual dev");
+        chars += c_file->writeline(line);
+        line = QString("#Then short parm lines, if requested, for block/trend effects on R0, steepness, and annual dev");
+        chars += c_file->writeline(line);
+
+/*        line = QString(QString ("%1 #_SR_env_link" ).arg(
                            QString::number(pop->SR()->env_link)));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 #_SR_env_target_0=none;1=devs;_2=R0;_3=steepness" ).arg(
                            QString::number(pop->SR()->env_target)));
-        chars += c_file->writeline(line);
+        chars += c_file->writeline(line);*/
         line = QString(QString ("%1 #_do_recdev:  0=none; 1=devvector; 2=simple deviations" ).arg(
                            QString::number(pop->SR()->rec_dev)));
         chars += c_file->writeline(line);
@@ -3676,23 +3756,21 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
         line = QString("#_Q_setup" );
         chars += c_file->writeline(line);
-        line = QString("#_fleet link link_info extra_se biasadj float # fleetname");
+        line = QString("#_fleet   link link_info extra_se biasadj float # fleetname");
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            data->getFleet(i)->setQSetupRead();
             if (data->getFleet(i)->getType() == Fleet::Survey &&
                     data->getFleet(i)->getQSetupRead())
             {
-                line = QString(QString(" %1").arg(i + 1));
+                line = QString(QString("      %1").arg(i + 1));
                 line.append(data->getFleet(i)->Q()->getSetup());
-                line.append(QString(" # %1 %2" ).arg(
-                                QString::number(i + 1),
+                line.append(QString("  #  %1" ).arg(
                                 data->getFleet(i)->get_name()));
                 chars += c_file->writeline(line);
             }
         }
-        line = QString ("-9999 0 0 0 0 0 # terminator");
+        line = QString ("  -9999      0      0      0      0      0  #  terminator");
         chars += c_file->writeline(line);
         line = QString ("#" );
         chars += c_file->writeline(line);
@@ -3702,10 +3780,27 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            if (data->getFleet(i)->Q()->getDoPower())
+            if (data->getFleet(i)->getQSetupRead())
             {
-                line = data->getFleet(i)->Q()->getPower();
-                line.append(QString(" # Q_den_dep_%2(%1)" ).arg(
+                num = data->getFleet(i)->Q()->getNumParams();
+                for (int j = 0; j < num; j++)
+                {
+                    line.clear();
+                    str_list = data->getFleet(i)->Q()->getParameter(j);
+                    for (int k = 0; k < str_list.count(); k++)
+                        line.append(QString("%1 ").arg(str_list.at(k)));
+                    chars += c_file->writeline(line);
+                }
+            }
+        }
+/*            if (data->getFleet(i)->getQSetupRead())
+            {
+                line = data->getFleet(i)->Q()->getBase();
+                if (data->getFleet(i)->get_error_type() < 0)
+                    line.append(" # lnQ_base");
+                else
+                    line.append(" # Q_base");
+                line.append(QString("_%2(%1)" ).arg(
                                 QString::number(i+1),
                                 data->getFleet(i)->get_name()));
                 chars += c_file->writeline(line);
@@ -3713,10 +3808,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            if (data->getFleet(i)->Q()->getDoEnvLink())
+            if (data->getFleet(i)->Q()->getDoPower())
             {
-                line = data->getFleet(i)->Q()->getVariable();
-                line.append(QString(" # Q_env_var_%2(%1)" ).arg(
+                line = data->getFleet(i)->Q()->getPower();
+                line.append(QString(" # Q_power_%2(%1)" ).arg(
                                 QString::number(i+1),
                                 data->getFleet(i)->get_name()));
                 chars += c_file->writeline(line);
@@ -3735,15 +3830,15 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            if (data->getFleet(i)->Q()->getType() > 0)
+            if (data->getFleet(i)->Q()->getDoEnvLink())
             {
-                line = data->getFleet(i)->Q()->getBase();
-                line.append(QString(" # Q_base_%2(%1)" ).arg(
+                line = data->getFleet(i)->Q()->getVariable();
+                line.append(QString(" # Q_envlink_%2(%1)" ).arg(
                                 QString::number(i+1),
                                 data->getFleet(i)->get_name()));
                 chars += c_file->writeline(line);
             }
-        }
+        }*/
 
 
         line = QString ("#" );
@@ -4015,7 +4110,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString(" #_6=mult_by_size-at-age_N");
         chars += c_file->writeline(line);
-        line = QString(" #_7=mult_by_generalized sizecomp (not implemented yet)");
+        line = QString(" #_7=mult_by_generalized sizecomp");
         chars += c_file->writeline(line);
         line = QString("#_Factor  Fleet  Value");
         chars += c_file->writeline(line);

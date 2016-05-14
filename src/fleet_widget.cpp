@@ -65,6 +65,9 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     recapObsView->setParent(this);
     ui->horizontalLayout_rec_obs->addWidget(recapObsView);
 
+    qSetupView = new tableview();
+    qSetupView->setParent(this);
+    ui->verticalLayout_q_setup->addWidget(qSetupView);
     qParamsView = new tableview();
     qParamsView->setParent(this);
     ui->verticalLayout_q_parameters->addWidget(qParamsView);
@@ -146,10 +149,11 @@ void fleet_widget::disconnectFleet()
     disconnect (ui->spinBox_obs_saa_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setSaaNumObs(int)));
     disconnect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
     disconnect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
-    disconnect (ui->spinBox_q_type, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_q_type(int)));
+    disconnect (current_fleet->getQSetup(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), current_fleet, SLOT(qSetupChanged()));
+/*    disconnect (ui->spinBox_q_type, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_q_type(int)));
     disconnect (ui->checkBox_q_doPower, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_power(bool)));
     disconnect (ui->checkBox_q_doEnv, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_env_lnk(bool)));
-    disconnect (ui->checkBox_q_doExtra, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_extra_sd(bool)));
+    disconnect (ui->checkBox_q_doExtra, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_extra_sd(bool)));*/
     }
 }
 
@@ -191,10 +195,11 @@ void fleet_widget::connectFleet()
     connect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
     connect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
 
-    connect (ui->spinBox_q_type, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_q_type(int)));
+    connect (current_fleet->getQSetup(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), current_fleet, SLOT(qSetupChanged()));
+/*    connect (ui->spinBox_q_type, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_q_type(int)));
     connect (ui->checkBox_q_doPower, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_power(bool)));
     connect (ui->checkBox_q_doEnv, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_env_lnk(bool)));
-    connect (ui->checkBox_q_doExtra, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_extra_sd(bool)));
+    connect (ui->checkBox_q_doExtra, SIGNAL(toggled(bool)), current_fleet, SLOT(set_q_do_extra_sd(bool)));*/
 }
 
 fleet_widget::~fleet_widget()
@@ -315,7 +320,7 @@ void fleet_widget::set_current_fleet(int index)
     //    connect (ui->)
     //    connect (ui->listWidget_init_catch, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(edit_catch_line(QListWidgetItem*)));
         ui->comboBox_abund_units->setCurrentIndex(current_fleet->catch_units());
-        ui->spinBox_abund_err->setValue(current_fleet->error_type());
+        ui->spinBox_abund_err->setValue(current_fleet->get_error_type());
         ui->spinBox_num_adund->setValue(current_fleet->getAbundanceCount());
         catchview->setModel(current_fleet->getCatchModel());
         abundview->setModel(current_fleet->getAbundanceModel());
@@ -364,10 +369,11 @@ void fleet_widget::set_current_fleet(int index)
         recapObsView->resizeColumnsToContents();
         ui->spinBox_obs_rec_numObs->setValue(current_fleet->getRecapNumEvents());
 
-        ui->checkBox_q_doPower->setChecked(current_fleet->q_do_power());
+/*        ui->checkBox_q_doPower->setChecked(current_fleet->q_do_power());
         ui->checkBox_q_doEnv->setChecked(current_fleet->q_do_env_lnk());
         ui->checkBox_q_doExtra->setChecked(current_fleet->q_do_extra_sd());
-        ui->spinBox_q_type->setValue(current_fleet->q_type());
+        ui->spinBox_q_type->setValue(current_fleet->q_type());*/
+        qSetupView->setModel(current_fleet->getQSetup());
         qParamsView->setModel(current_fleet->getQParams());
         qParamsView->resizeColumnsToContents();
 

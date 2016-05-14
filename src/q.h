@@ -42,7 +42,7 @@ public:
     void setPower(QStringList values);
 
     QString getVariable() const;
-    void setVariable(QStringList values);
+    void setEnvLink(QStringList values);
 
     QString getExtra() const;
     void setExtra(QStringList values);
@@ -61,9 +61,21 @@ public:
     int getTypeIndex() const;
     void setTypeIndex(int value);
 
+    int getLinkType ();
+    int getDoBiasAdj ();
+    int getFloatQ ();
+
+public slots:
+    void setupChanged ();
+
 private:
     parametermodel *qsetup;
     parametermodel *params;
+    int BaseIndex;
+    int doBlkTnd;
+    int BlkTndIndex;
+    int doRndWlk;
+    int RndWlkIndex;
     int doPower;
     int powerIndex;
     int doEnvVar;

@@ -142,7 +142,7 @@ void ss_model::reset()
     set_f_min_age(13);
     set_f_max_age(17);
     set_f_basis(2);
-    setALKTol(.001);
+    setALKTol(0.0);
 //    QMessageBox::information(this, "Program Flow", "Model basic data set up.");
 
     set_start_year(1980);
@@ -616,7 +616,7 @@ int ss_model::fleet_err_type(int fleet)
     int err = 0, i_fleet = fleet - 1;
     if (fleet < num_fleets())
     {
-        err = getFleet(fleet)->error_type();
+        err = getFleet(fleet)->get_error_type();
     }
     return err;
 }

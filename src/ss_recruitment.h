@@ -47,6 +47,9 @@ public:
     bool doRecruitInteract;
     QStringList header;
 
+    void setMethod (int value) {method = value;}
+    int getMethod () {return method;}
+
 //    shortParameter parameters[6];
     parametermodel *parameters;
     parametermodel *getSetupModel() {return parameters;}
@@ -106,6 +109,8 @@ public:
     void addInteractParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
     void setInteractParam (int index, QStringList data);
     QStringList getInteractParam(int index) {return interactParams->getRowData(index);}
+
+
 };
 
 #endif // SS_RECRUITMENT_H
