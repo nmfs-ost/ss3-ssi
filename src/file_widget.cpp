@@ -761,10 +761,10 @@ bool file_widget::read_starter_file (QString filename)
         else
         {
             temp_float = token.toFloat();
-            model_info->setALKTol (temp_float);
-            token = starterFile->next_value("Version");
-            temp_float = get_version_number(token);
             datafile_version = temp_float;
+            token = starterFile->next_value("ALK tolerance");
+            temp_float = get_version_number(token);
+            model_info->setALKTol (temp_float);
         }
         datafile_version += 0.00000001;
         ui->doubleSpinBox_version->setValue(datafile_version);
@@ -908,15 +908,17 @@ void file_widget::write_starter_file (QString filename)
         if (datafile_version < 3.30)
         {
             line = QString::number(END_OF_DATA);
+            line.append(" # check value for end of file and for version control" );
+            chars += starterFile->writeline (line);
         }
         else
         {
+            line = QString::number(datafile_version, 'g');
+            line.append(" # check value for end of file and for version control" );
+            chars += starterFile->writeline (line);
             line = QString(QString("%1 # ALK tolerance (example 0.0001)").arg(model_info->getALKTol()));
             chars +=starterFile->writeline(line);
-            line = QString::number(datafile_version, 'g');
         }
-        line.append(" # check value for end of file and for version control" );
-        chars += starterFile->writeline (line);
 
         starterFile->close();
     }

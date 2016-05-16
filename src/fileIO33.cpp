@@ -733,6 +733,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             {
                 line.clear();
                 str_lst = flt->getDiscard(j);
+                str_lst.insert(2, QString::number(i));
                 for (int m = 0; m < str_lst.count(); m++)
                     line.append(QString("%1 ").arg(str_lst.at(m)));
                 chars += d_file->writeline (line);
@@ -2418,7 +2419,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 // datalist.append(data->getFleet(flt - 1)->get_name());
                 data->getFleet(flt - 1)->Q()->setup(datalist);
-                data->getFleet(flt - 1)->Q()->setupChanged();
                 data->getFleet(flt - 1)->setQSetupRead(true);
             }
         } while (flt > 0);

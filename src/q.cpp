@@ -76,6 +76,7 @@ void q_ratio::setup(QStringList values)
         doOffset = true;
         setOffset(values.at(4).toFloat());
     }*/
+    setupChanged();
 }
 
 void q_ratio::setup (QString str)
