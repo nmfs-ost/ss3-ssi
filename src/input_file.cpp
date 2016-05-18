@@ -96,7 +96,7 @@ int ss_file::writeline(QString str)
 {
     int chars = 0;
     if (!str.isEmpty())
-        chars += write (str.toAscii());
+        chars += write (str.toUtf8());
     chars += newline();
     return chars;
 }

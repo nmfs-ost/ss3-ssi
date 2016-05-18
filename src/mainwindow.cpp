@@ -207,7 +207,7 @@ void MainWindow::openDirectory(QString fname)
     do
     {
         if (fname.isEmpty())
-            fname = QFileDialog::getOpenFileName (this, tr(title.toAscii()),
+            fname = QFileDialog::getOpenFileName (this, tr(title.toUtf8()),
                                current_dir, tr("Starter files (starter.ss)"));
 
         files->set_starter_file(fname);
@@ -623,8 +623,8 @@ QString MainWindow::findFile(QString title, QString filters)
     QString filename ("");
     QString str (QString ("Select %1 File").arg(title));
 
-    filename = (QFileDialog::getOpenFileName (this, tr(str.toAscii()),
-        current_dir, tr(filters.toAscii())));
+    filename = (QFileDialog::getOpenFileName (this, tr(str.toUtf8()),
+        current_dir, tr(filters.toUtf8())));
 
     return filename;
 }

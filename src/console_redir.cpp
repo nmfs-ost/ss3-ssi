@@ -52,7 +52,7 @@ int console_redir::ProcessThread()
 
 void console_redir::WriteChildStdIn(QString szInput)
 {
-    process->write(szInput.toAscii().constData(), szInput.count());
+    process->write(szInput.toUtf8().constData(), szInput.count());
 #ifdef Q_OS_UNIX
     process->write("pwd\n");
 #else

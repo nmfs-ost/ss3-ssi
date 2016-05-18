@@ -47,7 +47,7 @@ QString documentDialog::chooseDocument(QString title)
 {
     QString filename ("");
     QString str (QString ("Select %1 File").arg(title));
-    filename = (QFileDialog::getOpenFileName (this, tr(str.toAscii()),
+    filename = (QFileDialog::getOpenFileName (this, tr(str.toUtf8()),
         qApp->applicationDirPath(), tr("documentation files (*.pdf)")));
     return filename;
 }

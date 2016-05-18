@@ -14,6 +14,8 @@ q_ratio::q_ratio()
     params = new parametermodel();
     params->setColumnCount(14);
     params->setHeader(hdr);
+    params->setRowCount(1);
+    params->setRowHeader(0, "LnQ_Base");
     reset();
 }
 
@@ -104,11 +106,9 @@ void q_ratio::setParamHdrs(QString name)
 {
     QStringList sList (qsetup->getRowData(0));
     int i = 0;
-    if (sList.at(0).compare("0"))//getDoPower() == 1)
+    if (getDoPower() == 1)
         params->setRowHeader(i++, QString("Q_power_") + name);
-    if (sList.at(0).compare("0"))//getDoEnvLink() == 1)
-        params->setRowHeader(i++, QString("Q_envlink_") + name);
-    if (sList.at(0).compare("0"))//getDoExtraSD() == 1)
+    if (getDoExtraSD() == 1)
         params->setRowHeader(i++, QString("Q_extraSD_") + name);
     if (sList.at(0).compare("0"))//getType() > 0)
         params->setRowHeader(i++, QString("lnQ_base_") + name);
@@ -154,7 +154,12 @@ void q_ratio::setTypeIndex(int value)
 
 int q_ratio::getDoPower() const
 {
-    return qsetup->getRowData(0).at(0).toInt();// doPower;
+    int val = qsetup->getRowData(0).at(0).toInt();
+    if (val == 3)
+        val = 1;
+    else
+        val = 0;
+    return val;
 }
 
 void q_ratio::setDoPower(int value)
@@ -188,11 +193,14 @@ void q_ratio::setDoEnvLink(int value)
     {
         sList.append("0");
     }
-    sList.removeAt(7);
-    if (value)
-        sList.insert(7, "1");
-    else
-        sList.insert(7, "0");
+    if (sList.at(7).toInt() != value)
+    {
+        sList.removeAt(7);
+        if (value)
+            sList.insert(7, "1");
+        else
+            sList.insert(7, "0");
+    }
 
     /*if (sList.at(1).toInt() != value)
      {
@@ -234,13 +242,14 @@ void q_ratio::setDoExtraSD(int value)
 
 int q_ratio::getType() const // obsolete
 {
-    return 0;//qsetup->getRowData(0).at(3).toInt();//type;
+    return type;
 }
 
 void q_ratio::setType(int value)
 {
+    type = value;
     // assumes setup of "1 0 0 0 0"
-    QStringList sList (qsetup->getRowData(0));
+/*    QStringList sList (qsetup->getRowData(0));
     if (value < 0) // mirror (1 parameter)
     {
         sList.removeAt(0);
@@ -268,7 +277,7 @@ void q_ratio::setType(int value)
         params->setRowHeader(0, "Q_Base");
     }
     setupChanged();
-/*    if (sList.at(3).toInt() != value)
+    if (sList.at(3).toInt() != value)
     {
         sList.removeAt(3);
         sList.insert(3, QString::number(value));
@@ -308,7 +317,7 @@ QString q_ratio::getPower() const
     {
         QStringList values(params->getRowData(powerIndex));
         for (int j = 0; j < values.count(); j++)
-            txt.append(QString(" %1").arg(values.at(j)));
+            txt.append(QString("  %1 ").arg(values.at(j)));
     }
     return txt;
 }
@@ -326,7 +335,7 @@ QString q_ratio::getVariable() const
     {
         QStringList values(params->getRowData(EnvIndex));
         for (int j = 0; j < values.count(); j++)
-            txt.append(QString(" %1").arg(values.at(j)));
+            txt.append(QString("  %1 ").arg(values.at(j)));
     }
     return txt;
 }
@@ -346,7 +355,7 @@ QString q_ratio::getExtra() const
     {
         QStringList values(params->getRowData(ExtraIndex));
         for (int j = 0; j < values.count(); j++)
-            txt.append(QString(" %1").arg(values.at(j)));
+            txt.append(QString("  %1 ").arg(values.at(j)));
     }
     return txt;
 }
@@ -355,6 +364,8 @@ void q_ratio::setExtra(QStringList values)
 {
     if (ExtraIndex > -1)
     {
+        while (values.count() < 14)
+            values.append("0");
         params->setRowData(ExtraIndex, values);
     }
 }
@@ -366,7 +377,7 @@ QString q_ratio::getBase() const
     {
         QStringList values(params->getRowData(typeIndex));
         for (int j = 0; j < values.count(); j++)
-            txt.append(QString(" %1").arg(values.at(j)));
+            txt.append(QString("  %1 ").arg(values.at(j)));
     }
     return txt;
 }
@@ -386,6 +397,7 @@ void q_ratio::setupChanged()
 
     typeIndex = 0;
     option = sList.at(0).toInt();
+    params->setRowHeader(0, QString("LnQ_Base"));
     if (type != option)
     {
         if (type == 3)
@@ -423,7 +435,7 @@ void q_ratio::setupChanged()
         }
     }
 
-    option = sList.at(1).toInt();
+/*    option = sList.at(1).toInt();
     if (option != doEnvVar)
     {
         doEnvVar = option;
@@ -438,7 +450,7 @@ void q_ratio::setupChanged()
             params->removeRow(EnvIndex);
             EnvIndex = -1;
         }
-    }
+    }*/
 }
 
 

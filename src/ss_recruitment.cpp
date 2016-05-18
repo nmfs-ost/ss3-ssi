@@ -4,9 +4,9 @@ spawn_recruit::spawn_recruit()
 {
     parameters = new parametermodel();
     full_parameters = new parametermodel();
-    parameters->setRowCount(6);
+    parameters->setRowCount(0);
     parameters->setColumnCount(7);
-    full_parameters->setRowCount(0);
+    full_parameters->setRowCount(5);
 
     assignments = new tablemodel();
     header << "GP" << "seas" << "area";
@@ -118,23 +118,31 @@ void spawn_recruit::fromFile(ss_file *file)
     float temp_float;
     
     method = file->next_value().toInt();
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < 3; i++)
     {
-        datalist = readShortParameter(file);//.clear();
-//        for (int j = 0; j < 7; j++)
-//            datalist.append(file->next_value());
-        parameters->setRowData(i, datalist);
-//        parameters[i].fromText(token);
-//        token = file->read_line();
+        datalist = readShortParameter(file);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0"); // to fill out long parameter line
+        full_parameters->setRowData(i, datalist);
+    }
+    datalist = readShortParameter(file);
+    for (; i < 5; i++)
+    {
+        datalist = readShortParameter(file);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0"); // to fill out long parameter line
+        full_parameters->setRowData(i, datalist);
     }
     if (method == 5 ||
             method == 7 ||
             method == 8)
     {
         datalist = readShortParameter(file);
-        parameters->setRowData(i, datalist);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0");
+        full_parameters->setRowData(i, datalist);
     }
-    env_link = file->next_value().toFloat();//token.split(' ', QString::SkipEmptyParts).at(0).toFloat();
+    env_link = file->next_value().toFloat();
     env_target = file->next_value().toInt();
     rec_dev = file->next_value().toInt();
     rec_dev_start_yr = file->next_value().toInt();
@@ -158,11 +166,11 @@ void spawn_recruit::fromFile(ss_file *file)
         rec_dev_max = file->next_value().toInt();
         num_rec_dev = file->next_value().toInt();
 
-        full_parameters->setRowCount(rec_cycles);
+        assignmentParams->setRowCount(rec_cycles);
         for (i = 0; i < rec_cycles; i++)
         {
             datalist = readParameter(file);
-            full_parameters->setRowData(i, datalist);
+            assignmentParams->setRowData(i, datalist);
         }
 
         getRecruitDevs()->setNumRecruitDevs(num_rec_dev);

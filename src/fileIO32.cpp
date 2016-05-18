@@ -2284,23 +2284,44 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             if (data->getFleet(i)->getAbundanceCount() > 0)
             {
                 datalist.clear();
-                datalist << "1" << "0" << "0" << "0" << "0" ;
-                data->getFleet(i)->Q()->setup(datalist);
-    /*            for (int j = 0; j < 4; j++)
-                    datalist.append(c_file->next_value());
-                datalist.append("0");*/
                 data->getFleet(i)->set_q_type(devTyp);
                 data->getFleet(i)->set_q_do_power(doPowr);
                 data->getFleet(i)->set_q_do_extra_sd(extrSD);
                 data->getFleet(i)->set_q_do_env_lnk(envVar);
-                switch (devTyp)
+                if (doPowr == 1)
+                    datalist.append("3");
+                else if (devTyp < 0)
+                    datalist.append("2");
+                else
+                    datalist.append("1");
+
+                if (devTyp < 0)
+                    datalist.append(QString::number(abs(devTyp)));
+                else
+                    datalist.append("0");
+
+                if (extrSD == 1)
+                    datalist.append("1");
+                else
+                    datalist.append("0");
+
+                datalist.append("0");
+
+                if (devTyp == 2)
+                    datalist.append("0");
+                else
+                    datalist.append("1");
+                data->getFleet(i)->Q()->setup(datalist);
+
+                if (devTyp == 3)
                 {
-                case 3:
                     showInputMessage ("The Gui does not handle random deviations of Q.");
-                    break;
-                case 4:
+                    temp_int = c_file->next_value().toInt();
+                }
+                if (devTyp == 4)
+                {
                     showInputMessage ("The Gui does not handle random walk on Q.");
-                    break;
+                    temp_int = c_file->next_value().toInt();
                 }
                 data->getFleet(i)->setQSetupRead(true);
             }
@@ -2339,7 +2360,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             if (data->getFleet(i)->getQSetupRead())
             {
                 datalist.clear();
-                datalist << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                datalist << "-15.0" << "15.0" << "0.0" << "0.0" << "-1.0" << "1.0" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
                 data->getFleet(i)->Q()->setBase(datalist);
             }
             if (tp > 1 && tp < 5)
@@ -2351,6 +2372,10 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             }
             if (tp == 3 || tp == 4)
             {
+                if (temp_int == 0)
+                {    // read one parameter
+                    datalist = readShortParameter(c_file);
+                }
                 // read 1 parameter for each observation
             }
         }

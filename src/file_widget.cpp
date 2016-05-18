@@ -760,13 +760,14 @@ bool file_widget::read_starter_file (QString filename)
         }
         else
         {
-            temp_float = token.toFloat();
-            datafile_version = temp_float;
-            token = starterFile->next_value("ALK tolerance");
-            temp_float = get_version_number(token);
+            temp_float = token.toFloat(); //  ALK tolerance
             model_info->setALKTol (temp_float);
+
+            token = starterFile->next_value("Version number");
+            temp_float = get_version_number(token);
+            datafile_version = temp_float;
         }
-        datafile_version += 0.00000001;
+        //datafile_version += 0.00000001;
         ui->doubleSpinBox_version->setValue(datafile_version);
 
         starterFile->close();
@@ -804,7 +805,7 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->writeline (line);
         line = QString (QString ("%1" ).arg(control_file_name));
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # 0=use init values in control file; 1=use ss3.par" ).arg
+        line = QString (QString ("%1 # 0=use init values in control file; 1=use ss.par" ).arg
                         (ui->checkBox_par_file->isChecked()?"1":"0"));
         chars += starterFile->writeline (line);
         line = QString (QString ("%1 # run display detail (0,1,2)" ).arg
@@ -913,11 +914,11 @@ void file_widget::write_starter_file (QString filename)
         }
         else
         {
+            line = QString(QString("%1 # ALK tolerance (example 0.0001)").arg(model_info->getALKTol()));
+            chars +=starterFile->writeline(line);
             line = QString::number(datafile_version, 'g');
             line.append(" # check value for end of file and for version control" );
             chars += starterFile->writeline (line);
-            line = QString(QString("%1 # ALK tolerance (example 0.0001)").arg(model_info->getALKTol()));
-            chars +=starterFile->writeline(line);
         }
 
         starterFile->close();
@@ -992,8 +993,8 @@ bool file_widget::error_no_file(ss_file *file)
     bool okay = true;
     QString fname;
     QString msg(QString("File %1 does not exist.\n").arg(file->fileName()));
-    msg = tr(msg.toAscii());
-    error->write(msg.toAscii()) ;
+    msg = tr(msg.toUtf8());
+    error->write(msg.toUtf8()) ;
     msg.append(tr(" Do you want to select a new file?"));
     int btn = QMessageBox::critical((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
     if (btn == QMessageBox::Ok)
@@ -1016,16 +1017,16 @@ bool file_widget::error_no_file(ss_file *file)
 void file_widget::error_unreadable(QString fname)
 {
     QString msg (QString("File %1 is unreadable.\n").arg(fname));
-    msg = tr(msg.toAscii());
-    error->write (msg.toAscii()) ;
+    msg = tr(msg.toUtf8());
+    error->write (msg.toUtf8()) ;
     QMessageBox::critical((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
 }
 
 void file_widget::error_problem(ss_file *file)
 {
     QString msg (QString("Problem in reading file %1, line %2.\n").arg(file->fileName(), QString::number(file->getLineNum())));
-    msg = tr(msg.toAscii());
-    error->write (msg.toAscii()) ;
+    msg = tr(msg.toUtf8());
+    error->write (msg.toUtf8()) ;
     QMessageBox::critical((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
 }
 
