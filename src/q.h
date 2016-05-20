@@ -67,6 +67,7 @@ public:
 
 public slots:
     void setupChanged ();
+    void setupChanged (int error_type);
 
 private:
     parametermodel *qsetup;

@@ -712,7 +712,7 @@ void Fleet::setQSetupRead(bool flag)
 
 void Fleet::qSetupChanged()
 {
-    Q()->setupChanged();
+    Q()->setupChanged(get_error_type());
 }
 
 /*

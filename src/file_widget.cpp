@@ -42,6 +42,9 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     model_info = mod;
 
     setVersion(3.30, false);  // default version 3.3.0.
+    ui->label_note_check_value->setVisible(false);
+    ui->label_check_value->setVisible(false);
+    ui->label_check_value_info->setVisible(false);
 
 //    connect (ui->lineEdit_starter_file, SIGNAL(textChanged(QString)), SIGNAL(starter_file_changed(QString)));
 //    connect (ui->lineEdit_forecast_file, SIGNAL(textChanged(QString)), SIGNAL(forecast_file_changed(QString)));

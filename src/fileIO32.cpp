@@ -2089,17 +2089,17 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
             datalist = readParameter(c_file); // recr apportion main
-            pop->SR()->setAssignmentParam(i, datalist);
+            pop->Grow()->addMaturityParam(datalist);
         }
         for (num = 0; num < data->num_areas(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to areas
-            pop->SR()->setAssignmentParam(i, datalist);
+            pop->Grow()->addMaturityParam(datalist);
         }
         for (num = 0; num < data->num_seasons(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to seasons
-            pop->SR()->setAssignmentParam(i, datalist);
+            pop->Grow()->addMaturityParam(datalist);
         }
         if (pop->SR()->getDoRecruitInteract())
         {
@@ -2274,6 +2274,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // Q setup
+        QList<int> readQBase;
         for (int i = 0; i < data->num_fleets(); i++)
         {
             int doPowr, envVar, extrSD, devTyp;
@@ -2281,13 +2282,14 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             envVar = c_file->next_value().toInt();
             extrSD = c_file->next_value().toInt();
             devTyp = c_file->next_value().toInt();
+            readQBase.insert(i, devTyp);
             if (data->getFleet(i)->getAbundanceCount() > 0)
             {
                 datalist.clear();
-                data->getFleet(i)->set_q_type(devTyp);
+/*                data->getFleet(i)->set_q_type(devTyp);
                 data->getFleet(i)->set_q_do_power(doPowr);
                 data->getFleet(i)->set_q_do_extra_sd(extrSD);
-                data->getFleet(i)->set_q_do_env_lnk(envVar);
+                data->getFleet(i)->set_q_do_env_lnk(envVar);*/
                 if (doPowr == 1)
                     datalist.append("3");
                 else if (devTyp < 0)
@@ -2311,7 +2313,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     datalist.append("0");
                 else
                     datalist.append("1");
-                data->getFleet(i)->Q()->setup(datalist);
+//                data->getFleet(i)->Q()->setup(datalist);
 
                 if (devTyp == 3)
                 {
@@ -2323,7 +2325,9 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     showInputMessage ("The Gui does not handle random walk on Q.");
                     temp_int = c_file->next_value().toInt();
                 }
+                data->getFleet(i)->Q()->setup(datalist);
                 data->getFleet(i)->setQSetupRead(true);
+                data->getFleet(i)->qSetupChanged();
             }
         }
 
@@ -2356,7 +2360,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            int tp = data->getFleet(i)->Q()->getType();
+            int tp = readQBase.at(i);
             if (data->getFleet(i)->getQSetupRead())
             {
                 datalist.clear();
@@ -3163,31 +3167,38 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        for (num = 0, i = 0; num < pop->Grow()->getNum_patterns(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas()
+                - pop->Grow()->getNum_patterns();
+        for (i = 0; i < pop->Grow()->getNum_patterns(); num++, i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+//            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->Grow()->getMaturityParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # RecrDist_GP_%1" ).arg(QString::number(num + 1)));
+            line.append(QString(" # RecrDist_GP_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        for (num = 0; num < data->num_areas(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas();
+        for (i = 0; i < data->num_areas(); num++, i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+//            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->Grow()->getMaturityParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # RecrDist_Area_%1" ).arg(QString::number(num + 1)));
+            line.append(QString(" # RecrDist_Area_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        for (num = 0; num < data->num_seasons(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->num_seasons();
+        for (i = 0; i < data->num_seasons(); num++, i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+//            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->Grow()->getMaturityParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # RecrDist_Seas_%1" ).arg(QString::number(num + 1)));
+            line.append(QString(" # RecrDist_Seas_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
         if (pop->SR()->getDoRecruitInteract())

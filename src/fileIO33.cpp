@@ -1022,10 +1022,18 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         line = QString ("%1 #_Use_MeanSize-at-Age_obs (0/1)" ).arg (
                     QString::number(temp_int));
         chars += d_file->writeline (line);
+
         if (num > 0)
         {
-            line = QString ("#Yr Month Fleet Gender Part Ageerr Ignore datavector(female-male)" );
-            line.append    ("#                                          samplesize(female-male)" );
+            line = QString ("# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
+            chars += d_file->writeline (line);
+            line = QString ("# partition codes:  (0=combined; 1=discard; 2=retained");
+            chars += d_file->writeline (line);
+            line = QString ("# ageerr codes:  positive means mean length-at-age; negative means mean bodywt_at_age");
+            chars += d_file->writeline (line);
+            line = QString ("#_yr month fleet sex part ageerr ignore datavector(female-male)");
+            chars += d_file->writeline (line);
+            line = QString ("#                                          samplesize(female-male)");
             chars += d_file->writeline (line);
             for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
             {
@@ -1046,7 +1054,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.clear();
             line = QString("-9999 ");
             for (i = 1; i < str_lst.count(); i++)
-                line.append("0 ");
+                line.append(" 0 ");
             chars += d_file->writeline(line);
         }
         chars += d_file->writeline ("#" );
@@ -2421,8 +2429,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 // datalist.append(data->getFleet(flt - 1)->get_name());
                 data->getFleet(flt - 1)->Q()->setup(datalist);
                 data->getFleet(flt - 1)->setQSetupRead(true);
+                data->getFleet(flt - 1)->qSetupChanged();
             }
         } while (flt > 0);
+
         for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->getType() != Fleet::Survey)
@@ -2445,15 +2455,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             // Q Base
             if (data->getFleet(i)->getQSetupRead())
             {
-                datalist.clear();
                 datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setParameter(id, datalist);
-                if (data->getFleet(i)->get_error_type() < 0)
-                    hdr = QString("lnQ_base");
-                else
-                    hdr = QString("Q_base");
-                hdr.append(QString("_%1(%2)").arg(data->getFleet(i)->get_name(), QString::number(i+1)));
-                data->getFleet(i)->Q()->getParamModel()->setRowHeader(id++, hdr);
             }
         }
         for (i = 0; i < data->num_fleets(); i++)
@@ -2462,20 +2465,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setPower(datalist);
-                hdr = QString(QString("Q_power_%1(%2)").arg(data->getFleet(i)->get_name(), QString::number(i+1)));
-                data->getFleet(i)->Q()->getParamModel()->setRowHeader(id++, hdr);
             }
         }
         for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoExtraSD())
             {
-                datalist.clear();
                 datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setExtra(datalist);
             }
         }
-        for (i = 0; i < data->num_fleets(); i++)
+/*        for (i = 0; i < data->num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoEnvLink())
             {
@@ -2484,7 +2484,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setEnvLink(datalist);
             }
         }
-/*        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->num_fleets(); i++)
         {
             int tp = data->getFleet(i)->Q()->getType();
             if (tp > 1 && tp < 6)
@@ -2535,9 +2535,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_int = c_file->next_value().toInt();
             data->getFleet(i)->getAgeSelectivity()->setSpecial(temp_int);
         }
-        temp_int = c_file->next_value().toInt();
+/*        temp_int = c_file->next_value().toInt();
         data->setSelexAdjustMethod (temp_int);
-/*        temp_string = c_file->read_line();
+        temp_string = c_file->read_line();
         while (temp_string.split(' ',QString::SkipEmptyParts).at(0).startsWith('#'))
         {
             temp_string = c_file->read_line();
@@ -2729,14 +2729,16 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // #_Variance_adjustments_to_input_value
-        temp_int = c_file->next_value().toInt();
         data->setInputValueVariance(0);
-        while (temp_int != -9999)
+        do
         {
-            data->setInputValueVariance(1);
-            int flt = c_file->next_value().toInt();
+            id = c_file->next_value().toInt();
+            flt = c_file->next_value().toInt();
             temp_float = c_file->next_value().toFloat();
-            switch (temp_int)
+            if (id == -9999)
+                break;
+            data->setInputValueVariance(1);
+            switch (id)
             {
             case 1:
                 data->getFleet(flt)->setAddToSurveyCV(temp_float);
@@ -2760,11 +2762,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             default:
                 break;
             }
-            temp_int = c_file->next_value().toInt();
-        }
-        c_file->next_value();
-        c_file->next_value();
-
+        } while (id != -9999);
 
         // Max lambda phase
         temp_int = c_file->next_value().toInt();
@@ -3287,33 +3285,41 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        for (num = 0, i = 0; num < pop->Grow()->getNum_patterns(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas()
+                - pop->Grow()->getNum_patterns();
+        for (i = 0; i < pop->Grow()->getNum_patterns(); num++, i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+//            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->Grow()->getMaturityParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # RecrDist_GP_%1" ).arg(QString::number(num + 1)));
+            line.append(QString(" # RecrDist_GP_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        for (num = 0; num < data->num_areas(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas();
+        for (i = 0; i < data->num_areas(); num++, i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+//            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->Grow()->getMaturityParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # RecrDist_Area_%1" ).arg(QString::number(num + 1)));
+            line.append(QString(" # RecrDist_Area_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        for (num = 0; num < data->num_seasons(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->num_seasons();
+        for (i = 0; i < data->num_seasons(); num++, i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+//            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->Grow()->getMaturityParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # RecrDist_Bseas_%1" ).arg(QString::number(num + 1)));
+            line.append(QString(" # RecrDist_Seas_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
+
         if (pop->SR()->getDoRecruitInteract())
         {
             num = pop->SR()->getNumInteractParams();
@@ -3851,6 +3857,8 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 /*        line = QString(QString ("%1 #_env/block/dev_adjust_method for selex parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)").arg(
                     QString::number(data->getSelexAdjustMethod())));
         chars += c_file->writeline(line);*/
+        line = QString ("#");
+        chars += c_file->writeline(line);
         line = QString ("#_LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dev_minyr dev_maxyr dev_stddev Block Block_Fxn");
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
@@ -4086,7 +4094,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString(" #_6=mult_by_size-at-age_N");
         chars += c_file->writeline(line);
-        line = QString(" #_7=mult_by_generalized sizecomp");
+        line = QString(" #_7=mult_by_generalized_sizecomp");
         chars += c_file->writeline(line);
         line = QString("#_Factor  Fleet  Value");
         chars += c_file->writeline(line);
@@ -4157,7 +4165,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        line = QString ("-9999 1 0 # terminator");
+        line = QString (" -9999 1 0 # terminator");
         chars += c_file->writeline(line);
 
 
@@ -4198,7 +4206,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         {
             c_file->error(QString("Problem writing control file. Lambda changes do not match."));
         }
-        line = QString ("-9999  1  1  1  1  # terminator");
+        line = QString (" -9999  1  1  1  1  # terminator");
         chars += c_file->writeline(line);
 
         temp_int = data->getAddSdReporting()->getActive();

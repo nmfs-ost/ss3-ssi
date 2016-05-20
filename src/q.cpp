@@ -78,7 +78,7 @@ void q_ratio::setup(QStringList values)
         doOffset = true;
         setOffset(values.at(4).toFloat());
     }*/
-    setupChanged();
+//    setupChanged();
 }
 
 void q_ratio::setup (QString str)
@@ -177,7 +177,7 @@ void q_ratio::setDoPower(int value)
             sList.insert(1, "0");
             doPower = value;
         }
-        setupChanged();
+//        setupChanged();
     }
 }
 
@@ -229,8 +229,8 @@ void q_ratio::setDoExtraSD(int value)
         sList.removeAt(2);
         sList.insert(2, QString::number(value));
         doExtraSD = value;
-        setupChanged();
-/*        if (value == 1)
+/*        setupChanged();
+        if (value == 1)
         {
             ExtraIndex = (EnvIndex != -1)? EnvIndex + 1: powerIndex + 1;
         }
@@ -388,18 +388,26 @@ void q_ratio::setBase(QStringList values)
     params->setRowData(typeIndex, values);
 }
 
+void q_ratio::setupChanged(int error_type)
+{
+    if (error_type <= 0)
+        params->setRowHeader(0, QString("LnQ_Base"));
+    else
+        params->setRowHeader(0, QString("Q_Base"));
+    setupChanged();
+}
+
 void q_ratio::setupChanged()
 {
     int id = 1;
     int option = 0;
     QStringList sList(getSetupModel()->getRowData(0));
-    QString hdr;
 
     typeIndex = 0;
     option = sList.at(0).toInt();
-    params->setRowHeader(0, QString("LnQ_Base"));
     if (type != option)
     {
+        type = option;
         if (type == 3)
         {
             if (doPower != 1)
