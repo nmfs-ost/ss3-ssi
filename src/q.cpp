@@ -390,9 +390,9 @@ void q_ratio::setBase(QStringList values)
 
 void q_ratio::setupChanged(int error_type)
 {
-    if (error_type <= 0)
-        params->setRowHeader(0, QString("LnQ_Base"));
-    else
+    params->setRowCount(1);
+    params->setRowHeader(0, QString("LnQ_Base"));
+    if (error_type > 0)
         params->setRowHeader(0, QString("Q_Base"));
     setupChanged();
 }
@@ -415,7 +415,6 @@ void q_ratio::setupChanged()
                 doPower = 1;
                 powerIndex = id++;
                 params->insertRow(powerIndex);
-                params->setRowHeader(powerIndex, QString("Q_Power"));
             }
         }
         else if (doPower == 1)
@@ -426,7 +425,7 @@ void q_ratio::setupChanged()
         }
     }
 
-    option = sList.at(2).toInt();
+    option = sList.at(2).toInt() > 0? 1: 0;
     if (option != doExtraSD)
     {
         doExtraSD = option;
@@ -434,7 +433,6 @@ void q_ratio::setupChanged()
         {
             ExtraIndex = id++;
             params->insertRow(ExtraIndex);
-            params->setRowHeader(ExtraIndex, QString("Q_ExtraSD"));
         }
         else
         {
@@ -442,6 +440,11 @@ void q_ratio::setupChanged()
             ExtraIndex = -1;
         }
     }
+    params->setRowCount(id);
+    if (powerIndex > 0)
+        params->setRowHeader(powerIndex, QString("Q_Power"));
+    if (ExtraIndex > 0)
+        params->setRowHeader(ExtraIndex, QString("Q_ExtraSD"));
 
 /*    option = sList.at(1).toInt();
     if (option != doEnvVar)

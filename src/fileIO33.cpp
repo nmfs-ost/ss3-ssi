@@ -71,21 +71,21 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             temp_int = d_file->next_value("fleet type").toInt();
             flt->setTypeInt(temp_int);
             temp_float = d_file->next_value("timing").toFloat();
-            flt->set_timing(temp_float);
+            flt->setSeasTiming(temp_float);
             temp_int = d_file->next_value("area").toInt();
-            flt->set_area(temp_int);
+            flt->setArea(temp_int);
             temp_int = d_file->next_value("catch units").toInt();
-            flt->set_catch_units(temp_int);
+            flt->setCatchUnits(temp_int);
 /*            temp_float = d_file->next_value("equ_catch_se").toFloat();
             flt->set_equ_catch_se(temp_float);
             temp_float = d_file->next_value("catch_se").toFloat();
             flt->set_catch_se(temp_float);*/
             temp_int = d_file->next_value("use_catch_mult").toInt();
-            flt->set_catch_mult(temp_int);
+            flt->setCatchMultiplier(temp_int);
             temp_str = d_file->next_value("fleet name");
-            flt->set_name(temp_str);
+            flt->setName(temp_str);
             flt->setNumGenders(data->num_genders());
-            flt->set_num_seasons(data->num_seasons());
+            flt->setNumSeasons(data->num_seasons());
             flt->setStartYear(data->start_year());
             flt->setTotalYears(data->totalYears());
         }
@@ -93,6 +93,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         n_surveys = data->num_surveys();
         data->assignFleetNumbers();
 
+        // Catch
         do {
             float ctch, ctch_se;
             year   = d_file->next_value("year").toInt();
@@ -116,9 +117,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             if (fleet != (i + 1))
                 d_file->error(QString("Fleet number does not match."));
             units = d_file->next_value().toInt(); // units
-            flt->set_units(units);
+            flt->setAbundUnits(units);
             err_type = d_file->next_value().toInt(); // err_type
-            flt->set_error_type(err_type);
+            flt->setAbundErrType(err_type);
         }
         // here are the abundance numbers
         do
@@ -142,8 +143,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 fleet = abs(d_file->next_value().toInt()) - 1;
                 units = d_file->next_value().toInt();
                 err_type = d_file->next_value().toInt();
-                data->getFleet(fleet)->set_discard_units(units);
-                data->getFleet(fleet)->set_discard_err_type(err_type);
+                data->getFleet(fleet)->setDiscardUnits(units);
+                data->getFleet(fleet)->setDiscardErrType(err_type);
             }
             // observations
             do
@@ -602,13 +603,13 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             flt = data->getActiveFleet(i);
             line.clear();
             line.append(QString(" %1").arg(QString::number(flt->getTypeInt())));
-            line.append(QString(" %1").arg(QString::number(flt->timing())));
-            line.append(QString(" %1").arg(QString::number(flt->area())));
-            line.append(QString(" %1").arg(QString::number(flt->catch_units())));
+            line.append(QString(" %1").arg(QString::number(flt->getSeasTiming())));
+            line.append(QString(" %1").arg(QString::number(flt->getArea())));
+            line.append(QString(" %1").arg(QString::number(flt->getCatchUnits())));
 //            line.append(QString(" %1").arg(QString::number(flt->equ_catch_se())));
 //            line.append(QString(" %1").arg(QString::number(flt->catch_se())));
-            line.append(QString(" %1").arg(QString::number(flt->get_catch_mult())));
-            line.append(QString(" %1").arg(flt->get_name()));
+            line.append(QString(" %1").arg(QString::number(flt->getCatchMultiplier())));
+            line.append(QString(" %1").arg(flt->getName()));
 
             line.append(QString("  # %1" ).arg(QString::number(i)));
             chars += d_file->writeline (line);
@@ -660,9 +661,9 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             flt = data->getActiveFleet(i);
             line = QString(QString("%1 %2 %3 # %4" ).arg (
                    QString::number(i),
-                   QString::number(flt->units()),
-                   QString::number(flt->get_error_type()),
-                   flt->get_name()));
+                   QString::number(flt->getAbundUnits()),
+                   QString::number(flt->getAbundErrType()),
+                   flt->getName()));
             chars += d_file->writeline (line);
         }
 
@@ -685,7 +686,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                                         abund.at(0), abund.at(1),
                                         QString::number(i),
                                         abund.at(2), abund.at(3),
-                                        flt->get_name()));
+                                        flt->getName()));
                     chars += d_file->writeline (line);
                 }
             }
@@ -714,9 +715,9 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             {
                 line = QString(QString("%1 %2 %3 # %4" ).arg(
                             QString::number(i),
-                            QString::number(flt->discard_units()),
-                            QString::number(flt->discard_err_type()),
-                            flt->get_name()));
+                            QString::number(flt->getDiscardUnits()),
+                            QString::number(flt->getDiscardErrType()),
+                            flt->getName()));
                 chars += d_file->writeline (line);
             }
         }
@@ -736,7 +737,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.insert(2, QString::number(i));
                 for (int m = 0; m < str_lst.count(); m++)
                     line.append(QString("%1 ").arg(str_lst.at(m)));
-                line.append(QString(" # %1").arg(flt->get_name()));
+                line.append(QString(" # %1").arg(flt->getName()));
                 chars += d_file->writeline (line);
             }
         }
@@ -854,7 +855,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.append(QString("%1 ").arg(QString::number(flt->getLengthCompressBins())));
             line.append(QString("%1 ").arg(QString::number(flt->getLengthCompError())));
             line.append(QString("%1 ").arg(QString::number(flt->getLengthCompErrorParm())));
-            line.append(QString("#_fleet:%1_%2" ).arg(QString::number(i), flt->get_name()));
+            line.append(QString("#_fleet:%1_%2" ).arg(QString::number(i), flt->getName()));
             chars += d_file->writeline (line);
         }
 
@@ -960,7 +961,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                                QString::number(flt->getAgeCompError()),
                                QString::number(flt->getAgeCompErrorParm()),
                                QString::number(i),
-                               flt->get_name()));
+                               flt->getName()));
             chars += d_file->writeline (line);
         }
         temp_int = a_data->getAltBinMethod();
@@ -1698,7 +1699,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString ("#_Fleet: ");
         for (i = 1; i <= data->getNumActiveFleets(); i++) // for (i = 0; i < data->num_fleets(); i++)
         {
-            line.append(QString(" %1").arg (data->getActiveFleet(i)->get_name()));
+            line.append(QString(" %1").arg (data->getActiveFleet(i)->getName()));
         }
         chars += f_file->writeline(line);
         if (fcast->fleet_rel_f() == 2)
@@ -2438,12 +2439,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (data->getFleet(i)->getType() != Fleet::Survey)
             {
                 if (data->getFleet(i)->getQSetupRead())
-                    showInputMessage (QString("Q Setup line for non-survey fleet %1").arg(data->getFleet(i)->get_name()));
+                    showInputMessage (QString("Q Setup line for non-survey fleet %1").arg(data->getFleet(i)->getName()));
             }
             else
             {
                 if (!data->getFleet(i)->getQSetupRead() && data->getFleet(i)->abundance_count() > 0)
-                    showInputMessage (QString("No Q Setup line for survey %1").arg(data->getFleet(i)->get_name()));
+                    showInputMessage (QString("No Q Setup line for survey %1").arg(data->getFleet(i)->getName()));
             }
         }
 
@@ -2917,7 +2918,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString ("#GPat month area (for each settlement assignment)" );
         chars += c_file->writeline(line);
-        for (int i = 0; i < num; i++)
+        for (i = 0; i < num; i++)
         {
             line.clear();
             str_list = pop->SR()->getAssignment(i);
@@ -3016,7 +3017,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             chars += c_file->writeline(line);
             line.clear();
             str_list = pop->Grow()->getNatMortBreakPts();
-            for (int i = 0; i < num; i++)
+            for (i = 0; i < num; i++)
                 line.append(QString(" %1").arg(str_list.at(i)));
             line.append(" # age(real) at M breakpoints" );
             chars += c_file->writeline(line);
@@ -3751,7 +3752,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 }
                 line = QString(QString(" # InitF_%1 %2" ).arg(
                                    QString::number(data->getFleet(i)->getNumber()),
-                                   data->getFleet(i)->get_name()));
+                                   data->getFleet(i)->getName()));
                 chars += c_file->writeline(line);
             }
         }
@@ -3771,7 +3772,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 line = QString(QString("      %1").arg(i + 1));
                 line.append(data->getFleet(i)->Q()->getSetup());
                 line.append(QString("  #  %1" ).arg(
-                                data->getFleet(i)->get_name()));
+                                data->getFleet(i)->getName()));
                 chars += c_file->writeline(line);
             }
         }
@@ -3791,7 +3792,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 str_list = data->getFleet(i)->Q()->getParameter(0);
                 for (int k = 0; k < str_list.count(); k++)
                     line.append(QString(" %1  ").arg(str_list.at(k)));
-                line.append(QString("#  lnQ_Base_%1(%2)").arg(data->getFleet(i)->get_name(),
+                line.append(QString("#  lnQ_Base_%1(%2)").arg(data->getFleet(i)->getName(),
                                                                QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
@@ -3805,7 +3806,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 for (int k = 0; k < str_list.count(); k++)
                     line.append(QString(" %1  ").arg(str_list.at(k)));*/
                 line.append(QString("%1  #  Q_Power_%2(%3)").arg(data->getFleet(i)->Q()->getPower(),
-                                        data->getFleet(i)->get_name(),
+                                        data->getFleet(i)->getName(),
                                         QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
@@ -3816,7 +3817,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             {
                 line.clear();
                 line.append(QString("%1  #  Q_ExtraSD_%2(%3)").arg(data->getFleet(i)->Q()->getExtra(),
-                                        data->getFleet(i)->get_name(),
+                                        data->getFleet(i)->getName(),
                                         QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
@@ -3836,7 +3837,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             line = QString(QString("%1 # %2 %3").arg (
                                data->getFleet(i)->getSizeSelectivity()->getSetupText(),
                                QString::number(i + 1),
-                               data->getFleet(i)->get_name()));
+                               data->getFleet(i)->getName()));
             chars += c_file->writeline(line);
         }
 
@@ -3851,7 +3852,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             line = QString(QString("%1 # %2 %3").arg (
                                data->getFleet(i)->getAgeSelectivity()->getSetupText(),
                                QString::number(i + 1),
-                               data->getFleet(i)->get_name()));
+                               data->getFleet(i)->getName()));
             chars += c_file->writeline(line);
         }
 /*        line = QString(QString ("%1 #_env/block/dev_adjust_method for selex parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)").arg(
@@ -3869,7 +3870,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                                    data->getFleet(i)->getSizeSelectivity()->getParameterText(j),
                                    QString::number(i+1),
                                    QString::number(j+1),
-                                   data->getFleet(i)->get_name()));
+                                   data->getFleet(i)->getName()));
                 chars += c_file->writeline(line);
             }
         }
@@ -3882,7 +3883,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                                    data->getFleet(i)->getAgeSelectivity()->getParameterText(j),
                                    QString::number(i+1),
                                    QString::number(j+1),
-                                   data->getFleet(i)->get_name()));
+                                   data->getFleet(i)->getName()));
                 chars += c_file->writeline(line);
             }
         }
@@ -3912,7 +3913,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                         line = QString(QString("%1 # SizeSel_P%2_%3(%4)_env_fxn").arg (
                                        data->getFleet(i)->getSizeSelectivity()->getEnvLinkParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                         chars += c_file->writeline(line);
                     }
@@ -3926,7 +3927,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                         line = QString(QString("%1 # AgeSel_P%2_%3(%4)_env_fxn" ).arg (
                                        data->getFleet(i)->getAgeSelectivity()->getEnvLinkParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                         chars += c_file->writeline(line);
                     }
@@ -3968,7 +3969,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     line = QString(QString("%1 # SizeSel_P%2_%3(%4)_blk_setup" ).arg (
                                        data->getFleet(i)->getSizeSelectivity()->getBlockParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     }
@@ -3982,7 +3983,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     line = QString(QString("%1 # AgeSel_P%2_%3(%4)_blk_setup" ).arg (
                                        data->getFleet(i)->getAgeSelectivity()->getBlockParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     }
@@ -4025,13 +4026,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_dev_se" ).arg (
                                        data->getFleet(i)->getSizeSelectivity()->getDevErrParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_dev_rho" ).arg (
                                        data->getFleet(i)->getSizeSelectivity()->getDevRhoParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     }
@@ -4045,13 +4046,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_dev_se" ).arg (
                                        data->getFleet(i)->getAgeSelectivity()->getDevErrParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_dev_rho" ).arg (
                                        data->getFleet(i)->getAgeSelectivity()->getDevRhoParameter(j),
                                        QString::number(j+1),
-                                       data->getFleet(i)->get_name(),
+                                       data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     }

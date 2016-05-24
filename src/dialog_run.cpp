@@ -193,6 +193,7 @@ void Dialog_run::setUiEnabled(bool flag)
 {
     ui->pushButton_cancel->setEnabled(flag);
     ui->pushButton_showWarn->setEnabled(flag);
+    ui->pushButton_showEcho->setEnabled(flag);
     ui->lineEdit_options->setEnabled(flag);
 }
 

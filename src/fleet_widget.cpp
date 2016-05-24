@@ -19,12 +19,6 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->label_selex_age_discard->setVisible(false);
     ui->spinBox_selex_age_discard->setVisible(false);
 
-    ui->label_catch_init_equil->setVisible(false);
-    ui->doubleSpinBox_equ_catch_se->setVisible(false);
-    ui->label_catch_se->setVisible(false);
-    ui->doubleSpinBox_catch_se->setVisible(false);
-    ui->label_se_info->setVisible(false);
-
     catchview = new tableview();
     catchview->setParent(this);
     catchedit = new catchdelegate(this);
@@ -95,6 +89,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->pushButton_delete, SIGNAL(clicked()), SLOT(delete_current_fleet()));
     connect (ui->pushButton_new, SIGNAL(clicked()), SLOT(create_new_fleet()));
     connect (ui->pushButton_duplicate, SIGNAL(clicked()), SLOT(duplicate_current_fleet()));
+    connect (ui->spinBox_units, SIGNAL(valueChanged(int)), ui->spinBox_catch_units, SLOT(setValue(int)));
 
     connect (ui->spinBox_selex_size_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexSizePattern(int)));
     connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
@@ -119,21 +114,16 @@ void fleet_widget::disconnectFleet()
 {
     if (current_fleet)
     {
-    disconnect (ui->doubleSpinBox_timing, SIGNAL(valueChanged(double)), current_fleet, SLOT(set_timing(double)));
-    disconnect (ui->spinBox_area, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_area(int)));
-    disconnect (ui->doubleSpinBox_equ_catch_se, SIGNAL(valueChanged(double)), current_fleet, SLOT(set_equ_catch_se(double)));
-    disconnect (ui->doubleSpinBox_catch_se, SIGNAL(valueChanged(double)), current_fleet, SLOT(set_catch_se(double)));
-    disconnect (ui->spinBox_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_units(int)));
+    disconnect (ui->doubleSpinBox_timing, SIGNAL(valueChanged(double)), current_fleet, SLOT(setSeasTiming(double)));
+    disconnect (ui->spinBox_area, SIGNAL(valueChanged(int)), current_fleet, SLOT(setArea(int)));
+    disconnect (ui->spinBox_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setCatchUnits(int)));
 //    disconnect (ui->spinBox_need_catch_mult, SIGNAL(valueChanged(int)), current_fleet, SLOT()));
-    disconnect (ui->comboBox_catch_units, SIGNAL(currentIndexChanged(int)), current_fleet, SLOT(set_catch_units(int)));
-//    disconnect (ui->)
+    disconnect (ui->checkBox_need_catch_mult, SIGNAL(toggled(bool)), current_fleet, SLOT(setCatchMultiplier(bool)));
 //    disconnect (ui->listWidget_init_catch, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(edit_catch_line(QListWidgetItem*)));
-    disconnect (ui->comboBox_abund_units, SIGNAL(currentIndexChanged(int)), current_fleet, SLOT(set_catch_units(int)));
-    disconnect (ui->spinBox_abund_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_error_type(int)));
-    disconnect (ui->spinBox_num_adund, SIGNAL(valueChanged(int)), current_fleet, SLOT(setNumAbundObs(int)));
-    disconnect (ui->comboBox_discard_units, SIGNAL(currentIndexChanged(int)), current_fleet, SLOT(setComboDiscardUnits(int)));
-    disconnect (ui->spinBox_discard_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_discard_err_type(int)));
-    disconnect (ui->spinBox_num_discard, SIGNAL(valueChanged(int)), current_fleet, SLOT(setNumDiscardObs(int)));
+    disconnect (ui->spinBox_abund_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAbundUnits(int)));
+    disconnect (ui->spinBox_abund_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAbundErrType(int)));
+    disconnect (ui->spinBox_discard_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setDiscardUnits(int)));
+    disconnect (ui->spinBox_discard_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(setDiscardErrType(int)));
     disconnect (ui->spinBox_mbwt_df, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMbwtDF(int)));
     disconnect (ui->spinBox_num_mbwt, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMbwtNumObs(int)));
     disconnect (ui->spinBox_obs_len_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthNumObs(int)));
@@ -159,20 +149,16 @@ void fleet_widget::disconnectFleet()
 
 void fleet_widget::connectFleet()
 {
-    connect (ui->doubleSpinBox_timing, SIGNAL(valueChanged(double)), current_fleet, SLOT(set_timing(double)));
-    connect (ui->spinBox_area, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_area(int)));
-    connect (ui->doubleSpinBox_equ_catch_se, SIGNAL(valueChanged(double)), current_fleet, SLOT(set_equ_catch_se(double)));
-    connect (ui->doubleSpinBox_catch_se, SIGNAL(valueChanged(double)), current_fleet, SLOT(set_catch_se(double)));
-    connect (ui->spinBox_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_units(int)));
+    connect (ui->doubleSpinBox_timing, SIGNAL(valueChanged(double)), current_fleet, SLOT(setSeasTiming(double)));
+    connect (ui->spinBox_area, SIGNAL(valueChanged(int)), current_fleet, SLOT(setArea(int)));
 //    connect (ui->spinBox_need_catch_mult, SIGNAL(valueChanged(int)), current_fleet, SLOT()));
-    connect (ui->comboBox_catch_units, SIGNAL(currentIndexChanged(int)), current_fleet, SLOT(set_catch_units(int)));
+    connect (ui->spinBox_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setCatchUnits(int)));
+    connect (ui->checkBox_need_catch_mult, SIGNAL(toggled(bool)), current_fleet, SLOT(setCatchMultiplier(bool)));
 //    connect (ui->listWidget_init_catch, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(edit_catch_line(QListWidgetItem*)));
-    connect (ui->comboBox_abund_units, SIGNAL(currentIndexChanged(int)), current_fleet, SLOT(set_catch_units(int)));
-    connect (ui->spinBox_abund_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_error_type(int)));
-    connect (ui->spinBox_num_adund, SIGNAL(valueChanged(int)), current_fleet, SLOT(setNumAbundObs(int)));
-    connect (ui->comboBox_discard_units, SIGNAL(currentIndexChanged(int)), current_fleet, SLOT(setComboDiscardUnits(int)));
-    connect (ui->spinBox_discard_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(set_discard_err_type(int)));
-    connect (ui->spinBox_num_discard, SIGNAL(valueChanged(int)), current_fleet, SLOT(setNumDiscardObs(int)));
+    connect (ui->spinBox_abund_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAbundUnits(int)));
+    connect (ui->spinBox_abund_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAbundErrType(int)));
+    connect (ui->spinBox_discard_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setDiscardUnits(int)));
+    connect (ui->spinBox_discard_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(setDiscardErrType(int)));
 
     connect (ui->spinBox_mbwt_df, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMbwtDF(int)));
     connect (ui->spinBox_num_mbwt, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMbwtNumObs(int)));
@@ -217,7 +203,7 @@ void fleet_widget::edit_name()
     if (ok && !text.isEmpty())
     {
         // set name in fleet in model data
-        current_fleet->set_name(text);
+        current_fleet->setName(text);
         // clear list item and set it to new
         ui->comboBox_fleet_name->removeItem(in);
         ui->comboBox_fleet_name->insertItem(in, text);
@@ -252,7 +238,7 @@ void fleet_widget::refreshFleetNames()
 
     for (int i = 0; i < totalFleets; i++)
     {
-        QString str = QString(model_data->getFleet(i)->get_name());
+        QString str = QString(model_data->getFleet(i)->getName());
         ui->comboBox_fleet_name->addItem(str);
     }
     connect (ui->comboBox_fleet_name, SIGNAL(currentIndexChanged(int)), SLOT(set_current_fleet(int)));
@@ -297,37 +283,35 @@ void fleet_widget::set_current_fleet(int index)
     else if (index < 0)
         ui->comboBox_fleet_name->setCurrentIndex(0);
     Fleet *temp_flt = model_data->getFleet(index);
-    if (current_fleet != temp_flt)
+    if (temp_flt)
     {
-        if (current_fleet)
-            disconnectFleet ();
+        disconnectFleet ();
         current_fleet = temp_flt;
-        ui->label_name->setText(current_fleet->get_name());
+
+        ui->label_name->setText(current_fleet->getName());
         ui->checkBox_active->setChecked(current_fleet->isActive());
         ui->spinBox_number->setValue(current_fleet->getNumber());
 //        ui->spinBox_num->setValue(index + 1);
 //        ui->label_title->setText(QString("Fleet Info - %1").arg(*current_fleet->name()));
 //        ui->label_title->setFont(titleFont);
         set_type_fleet(current_fleet->getType());
-        ui->doubleSpinBox_timing->setValue(current_fleet->timing());
+        ui->doubleSpinBox_timing->setValue(current_fleet->getSeasTiming());
 
-        ui->spinBox_area->setValue(current_fleet->area());
-        ui->doubleSpinBox_equ_catch_se->setValue(current_fleet->equ_catch_se());
-        ui->doubleSpinBox_catch_se->setValue(current_fleet->catch_se());
-        ui->spinBox_units->setValue(current_fleet->units());
+        ui->spinBox_area->setValue(current_fleet->getArea());
+//        ui->doubleSpinBox_equ_catch_se->setValue(current_fleet->equ_catch_se());
+//        ui->doubleSpinBox_catch_se->setValue(current_fleet->catch_se());
+        ui->spinBox_units->setValue(current_fleet->getCatchUnits());
     //    ui->spinBox_need_catch_mult->setValue(current_fleet->catch_mult());
-        ui->comboBox_catch_units->setCurrentIndex(current_fleet->catch_units());
-    //    connect (ui->)
-    //    connect (ui->listWidget_init_catch, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(edit_catch_line(QListWidgetItem*)));
-        ui->comboBox_abund_units->setCurrentIndex(current_fleet->catch_units());
-        ui->spinBox_abund_err->setValue(current_fleet->get_error_type());
-        ui->spinBox_num_adund->setValue(current_fleet->getAbundanceCount());
+        ui->spinBox_catch_units->setValue(current_fleet->getCatchUnits());
+        ui->checkBox_need_catch_mult->setChecked (current_fleet->getCatchMultiplier() > 0);
         catchview->setModel(current_fleet->getCatchModel());
+
+        ui->spinBox_abund_units->setValue(current_fleet->getAbundUnits());
+        ui->spinBox_abund_err->setValue(current_fleet->getAbundErrType());
         abundview->setModel(current_fleet->getAbundanceModel());
 
-        ui->comboBox_discard_units->setCurrentIndex(current_fleet->getComboDiscardUnits());
-        ui->spinBox_discard_err->setValue(current_fleet->discard_err_type());
-        ui->spinBox_num_discard->setValue(current_fleet->getDiscardCount());
+        ui->spinBox_discard_units->setValue(current_fleet->getDiscardUnits());
+        ui->spinBox_discard_err->setValue(current_fleet->getDiscardErrType());
         discardview->setModel(current_fleet->getDiscardModel());
 
         ui->spinBox_mbwt_df->setValue(current_fleet->getMbwtDF());
@@ -393,6 +377,7 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_lambda_num_changes->setValue(current_fleet->getNumLambdas());
         lambdaView->setModel(current_fleet->getLambdaModel());
         lambdaView->resizeColumnsToContents();
+
         connectFleet ();
     }
     ui->tabWidget_fleet->setCurrentIndex(tabset);
@@ -485,10 +470,10 @@ void fleet_widget::duplicate_fleet (int index)
 {
     ui->comboBox_fleet_name->setCurrentIndex(index);
     Fleet *newfl, *oldfl = model_data->getFleet(index);
-    QString newname(oldfl->get_name());
+    QString newname(oldfl->getName());
     newname.prepend("Copy_of_");
     newfl = model_data->duplicateFleet(oldfl);
-    newfl->set_name(newname);
+    newfl->setName(newname);
     totalFleets++;
     set_current_fleet(totalFleets);
 }
@@ -498,7 +483,7 @@ void fleet_widget::delete_fleet(int index)
     if (totalFleets == 1)
     {
         model_data->getFleet(0)->reset();
-        model_data->getFleet(0)->set_name("newFleet");
+        model_data->getFleet(0)->setName("newFleet");
     }
     else
     {
@@ -605,12 +590,12 @@ void fleet_widget::changeSelexSizePattern(int pat)
         break;
     default:
         ui->label_selex_size_pattern_info->setText(" ");
-        current_fleet->getSizeSelectivity()->setPattern(pat);
-        ui->spinBox_selex_size_pattern->setValue
-                (current_fleet->getSizeSelectivity()->getPattern());
-        ui->spinBox_selex_size_num_params->setValue
-                (current_fleet->getSizeSelectivity()->getNumParameters());
     }
+    current_fleet->getSizeSelectivity()->setPattern(pat);
+    ui->spinBox_selex_size_pattern->setValue
+            (current_fleet->getSizeSelectivity()->getPattern());
+    ui->spinBox_selex_size_num_params->setValue
+            (current_fleet->getSizeSelectivity()->getNumParameters());
 }
 
 void fleet_widget::showSelexSizeInfo()
@@ -659,12 +644,12 @@ void fleet_widget::changeSelexAgePattern(int pat)
         break;
     default:
         ui->label_selex_age_pattern_info->setText(tr(" "));
-        current_fleet->getAgeSelectivity()->setPattern(pat);
-        ui->spinBox_selex_age_pattern->setValue
-                (current_fleet->getAgeSelectivity()->getPattern());
-        ui->spinBox_selex_age_num_params->setValue
-                (current_fleet->getAgeSelectivity()->getNumParameters());
     }
+    current_fleet->getAgeSelectivity()->setPattern(pat);
+    ui->spinBox_selex_age_pattern->setValue
+            (current_fleet->getAgeSelectivity()->getPattern());
+    ui->spinBox_selex_age_num_params->setValue
+            (current_fleet->getAgeSelectivity()->getNumParameters());
 }
 
 void fleet_widget::showSelexAgeInfo()

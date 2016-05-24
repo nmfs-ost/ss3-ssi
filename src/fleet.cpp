@@ -103,7 +103,7 @@ Fleet::~Fleet()
     lambdas.clear();
 }
 
-void Fleet::set_name(QString fname)
+void Fleet::setName(QString fname)
 {
     if (s_name == NULL)
         s_name = new QString("");
@@ -112,7 +112,7 @@ void Fleet::set_name(QString fname)
     s_name->append(fname);
 }
 
-QString Fleet::get_name()
+QString Fleet::getName()
 {
     QString nm("");
     if (s_name == NULL)
@@ -124,37 +124,35 @@ QString Fleet::get_name()
 
 void Fleet::reset()
 {
-    set_name(QString("new_fleet"));
+    setName(QString("new_fleet"));
     setNumber(1);
     setActive(true);
     setType(Fleet::Fishing);
-    set_area(1);
-    set_timing(0.5);
+    setArea(1);
+    setSeasTiming(0.5);
     setTotalYears(1);
-    set_num_seasons(1);
+    setNumSeasons(1);
     setNumGenders(2);
     setAllocGroup(0);
 
     // catch
-    set_catch_units(2);
+    setCatchUnits(2);
     set_equ_catch_se(0.1);
     set_catch_se(0.1);
-    set_catch_mult(0);
+    setCatchMultiplier(0);
     set_catch_equil(0.0);
     setNumCatchObs(0);
 
     // surveys
-    set_units(0);
-    set_error_type(0);
-    set_survey_units(0);
-    set_survey_error_type(0);
+    setAbundUnits(0);
+    setAbundErrType(0);
 
     // abundance
     setNumAbundObs(0);
 
     // discard
-    set_discard_units(0);
-    set_discard_err_type(0);
+    setDiscardUnits(0);
+    setDiscardErrType(0);
     setNumDiscardObs(0);
 
     // mean bwt
@@ -233,41 +231,36 @@ Fleet *Fleet::copy(Fleet *oldfl)
 {
     ss_model *model = static_cast<ss_model*>(oldfl->parent());
     int i;
-    set_name (QString("%1_Copy").arg(oldfl->get_name()));
+    setName (QString("%1_Copy").arg(oldfl->getName()));
     setActive(true);
     setNumber(oldfl->getNumber());
     setType (oldfl->getType());
-    set_area(oldfl->area());
-    set_timing(oldfl->timing());
+    setArea(oldfl->getArea());
+    setSeasTiming(oldfl->getSeasTiming());
     setStartYear(oldfl->getStartYear());
     setTotalYears(oldfl->getTotalYears());
-    set_num_seasons(oldfl->get_num_seasons());
+    setNumSeasons(oldfl->getNumSeasons());
 
     // catch
-    set_catch_units(oldfl->catch_units());
+    setCatchUnits(oldfl->getCatchUnits());
     set_catch_se(oldfl->catch_se());
     set_equ_catch_se(oldfl->equ_catch_se());
     set_catch_equil(oldfl->catch_equil());
-    set_catch_mult(oldfl->get_catch_mult());
+    setCatchMultiplier(oldfl->getCatchMultiplier());
     setNumCatchObs(oldfl->getNumCatchObs());
     for (int i = 0; i < retainCatch->rowCount(); i++)
         setCatchObservation(i, oldfl->getCatchObservation(i));
 
-    // surveys
-    set_units(oldfl->units());
-    set_error_type(oldfl->get_error_type());
-
-    set_survey_units(oldfl->survey_units());
-    set_survey_error_type(oldfl->survey_error_type());
-
     // abundance
+    setAbundUnits(oldfl->getAbundUnits());
+    setAbundErrType(oldfl->getAbundErrType());
     setNumAbundObs(oldfl->getAbundanceCount());
     for (i = 0; i < abundModel->rowCount(); i++)
         setAbundanceObs(i, oldfl->getAbundanceObs(i));
 
     // discard
-    set_discard_units(oldfl->discard_units());
-    set_discard_err_type(oldfl->discard_err_type());
+    setDiscardUnits(oldfl->getDiscardUnits());
+    setDiscardErrType(oldfl->getDiscardErrType());
     setNumDiscardObs(oldfl->getDiscardCount());
     for (i = 0; i < discardModel->rowCount(); i++)
         setDiscard(i, oldfl->getDiscard(i));
@@ -427,41 +420,6 @@ QStringList Fleet::getCatchObservation (int index)
 }
 
 
-void Fleet::setComboDiscardUnits(int code)
-{
-    switch (code)
-    {
-    case 0:
-        i_discard_units = 1;
-        break;
-    case 1:
-        i_discard_units = 2;
-        break;
-    case 2:
-        i_discard_units = 3;
-    case 3:
-    default:
-        i_discard_units = -1;
-    }
-}
-int Fleet::getComboDiscardUnits()
-{
-    int code;
-    switch (i_discard_units)
-    {
-    default:
-    case 1:
-        code = 0;
-        break;
-    case 2:
-        code = 1;
-        break;
-    case 3:
-        code = 2;
-        break;
-    }
-    return code;
-}
 
 void Fleet::setNumDiscardObs (int num)
 {
@@ -545,12 +503,12 @@ void Fleet::setGenObservation(int index, int row, QStringList data)
     generalComps.at(index)->setObservation(row, data);
 }
 
-void Fleet::set_num_seasons(int n_seasons)
+void Fleet::setNumSeasons(int n_seasons)
 {
     i_num_seasons = n_seasons;
 }
 
-int Fleet::get_num_seasons()
+int Fleet::getNumSeasons()
 {
     return i_num_seasons;
 }
@@ -712,7 +670,7 @@ void Fleet::setQSetupRead(bool flag)
 
 void Fleet::qSetupChanged()
 {
-    Q()->setupChanged(get_error_type());
+    Q()->setupChanged(getAbundErrType());
 }
 
 /*

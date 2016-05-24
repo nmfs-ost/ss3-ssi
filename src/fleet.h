@@ -36,8 +36,8 @@ signals:
 
 public slots:
     // General
-    void set_name(QString fname);
-    QString get_name();
+    void setName(QString fname);
+    QString getName();
     void setNumber (int n) {i_number = n;}
     int getNumber () {return i_number;}
     bool getActive() const;
@@ -47,36 +47,37 @@ public slots:
     int getTypeInt () {return (int)f_type;}
     void setType(FleetType ftype) {f_type = ftype;}
     FleetType getType() {return f_type;}
-    void set_area(int farea) {i_area = farea;}
-    int area() {return i_area;}
-    void set_timing(double ftiming) {f_timing = (float)ftiming;}
-    float timing() {return f_timing;}
+    void setArea(int farea) {i_area = farea;}
+    int getArea() {return i_area;}
+    void setSeasTiming(double ftiming) {f_timing = (float)ftiming;}
+    float getSeasTiming() {return f_timing;}
     void setStartYear (int year) {i_start_year = year;}
     int getStartYear () {return i_start_year;}
     void setTotalYears (int n_years);
     int getTotalYears () {return i_num_years;}
-    void set_num_seasons (int n_seasons);
-    int get_num_seasons ();
+    void setNumSeasons (int n_seasons);
+    int getNumSeasons ();
     void setNumGenders (int num) {i_num_genders = num;}
     int getNumGenders () {return i_num_genders;}
     void setAllocGroup (int grp) {i_alloc_group = grp;}
     int getAllocGroup () {return i_alloc_group;}
 
     // catch
-    void set_catch_units(int c_units) {i_catch_units = c_units;}
-    int catch_units() {return i_catch_units;}
+    void setCatchUnits(int c_units) {i_catch_units = c_units;}
+    int getCatchUnits() {return i_catch_units;}
+    void set_catch_equil (double value) {d_catch_equil = value;}
+    double catch_equil () {return d_catch_equil;}
     void set_catch_se (double c_se) {d_catch_se_of_log = c_se;}
     double catch_se () {return d_catch_se_of_log;}
     void set_equ_catch_se(double c_se_eq) {d_catch_se_eq = c_se_eq;}
     double equ_catch_se() {return d_catch_se_eq;}
-    void set_catch_mult (int mult) {i_catch_mult = mult;}
-    int get_catch_mult () {return i_catch_mult;}
+    void setCatchMultiplier (int mult) {i_catch_mult = mult > 0? 1: 0;}
+    void setCatchMultiplier (bool flag) {i_catch_mult = flag? 1: 0;}
+    int getCatchMultiplier () {return i_catch_mult;}
 
     void add_catch_per_season (int yr, int season, double value, double se);
     void set_catch_per_season (int index, int yr, int season, double value, double se) ;
 //    double catch_per_season (int yr, int season) ;
-    void set_catch_equil (double value) {d_catch_equil = value;}
-    double catch_equil () {return d_catch_equil;}
     void setNumCatchObs (int rows) {retainCatch->setRowCount(rows);}
     int getNumCatchObs () {return retainCatch->rowCount();}
     void addCatchObservation (QStringList data);
@@ -84,17 +85,11 @@ public slots:
     QStringList getCatchObservation(int index);
     tablemodel *getCatchModel() {return retainCatch;}
 
-    // surveys
-    void set_units(int unt) {i_units = unt;}           // 0=numbers, 1=biomass, 2=F
-    int units() {return i_units;}           // 0=numbers, 1=biomass, 2=F
-    void set_error_type(int err) {i_error_type = err;}      // -1=normal, 0=lognormal, >0=T
-    int get_error_type() {return i_error_type;}      // -1=normal, 0=lognormal, >0=T
-
-    // surveys
-    void set_survey_units(int unt) {i_survey_units = unt;}
-    int survey_units() {return i_survey_units;}
-    void set_survey_error_type(int err) {i_survey_error_type = err;}
-    int survey_error_type() {return i_survey_error_type;}
+    // abundance
+    void setAbundUnits(int unt) {i_abund_units = unt;}           // 0=numbers, 1=biomass, 2=F
+    int getAbundUnits() {return i_abund_units;}           // 0=numbers, 1=biomass, 2=F
+    void setAbundErrType(int err) {i_abund_errtype = err;}      // -1=normal, 0=lognormal, >0=T
+    int getAbundErrType() {return i_abund_errtype;}      // -1=normal, 0=lognormal, >0=T
 
     // abundance
     int getYearMonthRow (tablemodel *tm, QString year, QString month);
@@ -115,13 +110,11 @@ public slots:
     tablemodel *getAbundanceModel () {return abundModel;}
 
     // discard
-    void set_discard_units(int dis_unt) {i_discard_units = dis_unt;}   // 1=same_as_catchunits(bio/num), 2=fraction, 3=numbers
-    int discard_units() {return i_discard_units;}
-    void set_discard_err_type(int dis_err) {i_discard_errtype = dis_err;} // >0 for DF of T-dist(read CV below), 0 for normal with CV, -1 for normal_with_se() -2 for lognormal
-    int discard_err_type() {return i_discard_errtype;}
+    void setDiscardUnits(int dis_unt) {i_discard_units = dis_unt;}   // 1=same_as_catchunits(bio/num), 2=fraction, 3=numbers
+    int getDiscardUnits() {return i_discard_units;}
+    void setDiscardErrType(int dis_err) {i_discard_errtype = dis_err;} // >0 for DF of T-dist(read CV below), 0 for normal with CV, -1 for normal_with_se() -2 for lognormal
+    int getDiscardErrType() {return i_discard_errtype;}
 
-    void setComboDiscardUnits (int code);
-    int getComboDiscardUnits();
     void setNumDiscardObs (int num);
     void setDiscardMonth (int year, float month, float obs, float err);
     int getDiscardCount();
@@ -362,8 +355,8 @@ protected:
     double d_catch_equil;
 
     // surveys
-    int i_units;           // 0=numbers, 1=biomass, 2=F
-    int i_error_type;      // -1=normal, 0=lognormal, >0=T
+    int i_abund_units;           // 0=numbers, 1=biomass, 2=F
+    int i_abund_errtype;      // -1=normal, 0=lognormal, >0=T
 
     // discard
     int i_discard_units;   // 1=same_as_catchunits(bio/num), 2=fraction, 3=numbers

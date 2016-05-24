@@ -341,7 +341,7 @@ float ss_model::getMonthBySeasonFleet(int seas, int fleet)
     }
     seasn = getSeason(seas);
     flt = getFleet(fleet);
-    month += ((float)seasn->getNumMonths() * flt->timing()) + 1;
+    month += ((float)seasn->getNumMonths() * flt->getSeasTiming()) + 1;
     return month;
 }
 
@@ -452,7 +452,7 @@ float ss_model::find_month(int fleet, int seas)
     int i;
     float month = 0;
     Fleet *flt = fleets.at(fleet);
-    float time = flt->timing();
+    float time = flt->getSeasTiming();
     for (i = 0; i < (seas-1); i++)
         month += seasons.at(i)->getNumMonths();
     month += seasons.at(i)->getNumMonths() * time + 1.0;
@@ -490,10 +490,10 @@ Fleet * ss_model::newFleet(QString name)
     Fleet *newfl = new Fleet(this);
     if (name.isEmpty())
             name = QString("New_Fleet");
-    newfl->set_name(name);
+    newfl->setName(name);
     newfl->setStartYear(start_year());
     newfl->setTotalYears(totalYears());
-    newfl->set_num_seasons(totalSeasons());
+    newfl->setNumSeasons(totalSeasons());
     fleets.append(newfl);
     forecast->set_num_fleets(num_fleets());
     return newfl;
@@ -596,8 +596,8 @@ void ss_model::set_fleet_units_err_type(int fleet, int units, int err_type)
 //    int i_fleet = fleet - 1;
     if (fleet < num_fleets())
     {
-        getFleet(fleet)->set_units(units);
-        getFleet(fleet)->set_error_type(err_type);
+        getFleet(fleet)->setAbundUnits(units);
+        getFleet(fleet)->setAbundErrType(err_type);
     }
 }
 
@@ -606,7 +606,7 @@ int ss_model::fleet_units(int fleet)
     int units = 0, i_fleet = fleet - 1;
     if (fleet < num_fleets())
     {
-        units = getFleet(fleet)->units();
+        units = getFleet(fleet)->getAbundUnits();
     }
     return units;
 }
@@ -616,7 +616,7 @@ int ss_model::fleet_err_type(int fleet)
     int err = 0, i_fleet = fleet - 1;
     if (fleet < num_fleets())
     {
-        err = getFleet(fleet)->get_error_type();
+        err = getFleet(fleet)->getAbundErrType();
     }
     return err;
 }
@@ -649,8 +649,8 @@ float ss_model::fleet_abund_err(int fleet, int year, int month)
 void ss_model::set_fleet_discard_units_err_type(int fleet, int units, int err_type)
 {
     //int i_fleet = fleet - 1;
-    fleets.at(fleet)->set_discard_units(units);
-    fleets.at(fleet)->set_discard_err_type(err_type);
+    fleets.at(fleet)->setDiscardUnits(units);
+    fleets.at(fleet)->setDiscardErrType(err_type);
 }
 
 int ss_model::fleet_discard_units(int fleet)
@@ -658,7 +658,7 @@ int ss_model::fleet_discard_units(int fleet)
     int units = 0, i_fleet = fleet - 1;
     if (i_fleet < num_fleets())
     {
-        units = getFleet(fleet)->discard_units();
+        units = getFleet(fleet)->getDiscardUnits();
     }
     return units;
 }
@@ -668,7 +668,7 @@ int ss_model::fleet_discard_err_type(int fleet)
     int err = 0, i_fleet = fleet - 1;
     if (i_fleet < num_fleets())
     {
-        err = getFleet(fleet)->discard_err_type();
+        err = getFleet(fleet)->getDiscardErrType();
     }
     return err;
 }
