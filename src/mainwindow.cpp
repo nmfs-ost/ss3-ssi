@@ -580,6 +580,7 @@ void MainWindow::show_webpage(QString pg)
 
 void MainWindow::run()
 {
+    saveFiles();
     Dialog_run drun(this);
     drun.setDir(current_dir);
     drun.setExe(ss_executable);
