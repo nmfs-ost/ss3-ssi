@@ -305,6 +305,7 @@ public slots:
     void setAddVarNumAaBins (int index, float val);
     float getAddVarNumAaBins (int index) {return add_var_Naa_bins[index];}
 
+    int checkyearvalue(QString str);
     int checkyearvalue(int value);
     int refyearvalue(int value);
 

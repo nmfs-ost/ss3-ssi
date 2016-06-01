@@ -107,7 +107,7 @@ yearEditDelegate::yearEditDelegate(QWidget *parent)
  : intEditDelegate(parent)
 {
     rangeSet = false;
-    first_value = -30;
+    first_value = -50;
     last_value = 3000;
 }
 

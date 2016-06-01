@@ -32,15 +32,20 @@ public slots:
     void set_forecast(int fcast);
     void set_F_scalar();
     void set_bmark_bio_begin(int yr);
+    void set_bmark_bio_begin(QString yrStr);
     void set_bmark_bio_end(int yr);
     void set_bmark_sel_begin(int yr);
     void set_bmark_sel_end (int yr);
     void set_bmark_relf_begin(int yr);
     void set_bmark_relf_end(int yr);
+    void set_bmark_recr_begin(int yr);
+    void set_bmark_recr_end(int yr);
     void set_fcast_sel_begin(int yr);
     void set_fcast_sel_end (int yr);
     void set_fcast_relf_begin(int yr);
     void set_fcast_relf_end (int yr);
+    void set_fcast_recr_begin(int yr);
+    void set_fcast_recr_end(int yr);
     void set_combo_box_relf_basis (int);
     void set_combo_box_fixed_catch (int);
 

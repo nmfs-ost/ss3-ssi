@@ -584,7 +584,7 @@ void MainWindow::run()
     drun.setDir(current_dir);
     drun.setExe(ss_executable);
     drun.exec();
-
+    files->read_run_num_file();
 }
 
 void MainWindow::locateDirectory()

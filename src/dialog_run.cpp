@@ -45,13 +45,15 @@ Dialog_run::~Dialog_run()
 
 void Dialog_run::showWarnFile()
 {
-    warnview->viewFile("warning.sso");
+    QString dir (ui->label_directory->text());
+    warnview->viewFile(dir + QString("/warning.sso"));
     warnview->show();
 }
 
 void Dialog_run::showEchoFile()
 {
-    echoview->viewFile("echoinput.sso");
+    QString dir (ui->label_directory->text());
+    echoview->viewFile(dir + QString("/echoinput.sso"));
     echoview->show();
 }
 

@@ -22,19 +22,19 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     catchview = new tableview();
     catchview->setParent(this);
     catchedit = new catchdelegate(this);
-    catchview->setItemDelegate(catchedit);
+//    catchview->setItemDelegate(catchedit);
     ui->verticalLayout_catch_table->addWidget(catchview);
 
     abundview = new tableview();
     abundview->setParent(this);
     abundedit = new abundancedelegate(this);
-    abundview->setItemDelegate(abundedit);
+//    abundview->setItemDelegate(abundedit);
     ui->verticalLayout_abund->addWidget(abundview);
 
     discardview = new tableview();
     discardview->setParent(this);
     discardedit = new abundancedelegate(this);
-    discardview->setItemDelegate(discardedit);
+//    discardview->setItemDelegate(discardedit);
     ui->verticalLayout_discard->addWidget(discardview);
 
     mbwtView = new tableview();
@@ -249,11 +249,11 @@ void fleet_widget::refresh()
     int curr = ui->comboBox_fleet_name->currentIndex();
     catchedit->setYearRange(model_data->start_year(), model_data->end_year());
     catchedit->setNumSeasons(model_data->num_seasons());
-    catchedit->setMaxCatch(199999.0);
+    catchedit->setMaxCatch(1999999.0);
     abundedit->setYearRange(model_data->start_year(), model_data->end_year());
-    abundedit->setMaxCatch(199999.0);
+    abundedit->setValueRange(0, 1999999.0);
     discardedit->setYearRange(model_data->start_year(), model_data->end_year());
-    discardedit->setValueRange(0, 199999.0);
+    discardedit->setValueRange(0, 1999999.0);
 
     totalFleets = model_data->num_fleets();
 //    ui->spinBox_total->setValue(totalFleets);

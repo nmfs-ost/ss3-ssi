@@ -944,11 +944,21 @@ void ss_model::incrementYear()
 {
 }
 
+int ss_model::checkyearvalue(QString str)
+{
+    bool ok;
+    int value = str.toInt(&ok);
+    if (!ok)
+        value = start_year();
+    return checkyearvalue(value);
+}
+
 int ss_model::checkyearvalue(int value)
 {
     int val = value;
-    if (value <= -totalYears())
-        val = -totalYears();
+    int totNeg = start_year() - end_year();
+    if (value <= totNeg)
+        val = totNeg;
     else if (value > 0 && value < start_year())
         val = start_year();
     else if (value > end_year())
@@ -958,13 +968,10 @@ int ss_model::checkyearvalue(int value)
 
 int ss_model::refyearvalue(int value)
 {
-    int year;
+    int year = value;
     if (value <= 0)
         year = end_year() + value;
-    if (year < start_year())
-        year = start_year();
-    else if (year > end_year())
-        year = end_year();
+
     return year;
 }
 int ss_model::getCustomSelParmDevAdjust() const

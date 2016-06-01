@@ -54,7 +54,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_specification">
       <attribute name="title">
@@ -65,17 +65,17 @@
         <layout class="QGridLayout" name="gridLayout_fcast1">
          <item row="4" column="1" colspan="2">
           <layout class="QGridLayout" name="gridLayout_bmark_years">
-           <item row="1" column="3">
-            <layout class="QHBoxLayout" name="horizontalLayout_bio">
+           <item row="3" column="3">
+            <layout class="QHBoxLayout" name="horizontalLayout_bmark_relf_2">
              <item>
-              <widget class="QLabel" name="label_bmark_bio_beg_ref">
+              <widget class="QLabel" name="label_bmark_relf_beg_ref">
                <property name="text">
                 <string>begin:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_bmark_bio_beg_yr_ref">
+              <widget class="QLabel" name="label_bmark_relf_beg_yr_ref">
                <property name="frameShape">
                 <enum>QFrame::Panel</enum>
                </property>
@@ -85,14 +85,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_bmark_bio_end_ref">
+              <widget class="QLabel" name="label_bmark_relf_end_ref">
                <property name="text">
                 <string>end:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_bmark_bio_end_yr_ref">
+              <widget class="QLabel" name="label_bmark_relf_end_yr_ref">
                <property name="frameShape">
                 <enum>QFrame::Panel</enum>
                </property>
@@ -141,17 +141,17 @@
              </item>
             </layout>
            </item>
-           <item row="3" column="3">
-            <layout class="QHBoxLayout" name="horizontalLayout_bmark_relf_2">
+           <item row="1" column="3">
+            <layout class="QHBoxLayout" name="horizontalLayout_bio">
              <item>
-              <widget class="QLabel" name="label_bmark_relf_beg_ref">
+              <widget class="QLabel" name="label_bmark_bio_beg_ref">
                <property name="text">
                 <string>begin:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_bmark_relf_beg_yr_ref">
+              <widget class="QLabel" name="label_bmark_bio_beg_yr_ref">
                <property name="frameShape">
                 <enum>QFrame::Panel</enum>
                </property>
@@ -161,14 +161,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_bmark_relf_end_ref">
+              <widget class="QLabel" name="label_bmark_bio_end_ref">
                <property name="text">
                 <string>end:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_bmark_relf_end_yr_ref">
+              <widget class="QLabel" name="label_bmark_bio_end_yr_ref">
                <property name="frameShape">
                 <enum>QFrame::Panel</enum>
                </property>
@@ -187,6 +187,9 @@
                 <string>begin:</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_bmark_bio_beg"/>
              </item>
              <item>
               <widget class="QSpinBox" name="spinBox_bmark_bio_beg">
@@ -210,6 +213,9 @@
                 <string>end:</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_bmark_bio_end"/>
              </item>
              <item>
               <widget class="QSpinBox" name="spinBox_bmark_bio_end">
@@ -354,6 +360,95 @@
               <string>Resulting years</string>
              </property>
             </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_bmark_recr">
+             <property name="text">
+              <string>Recruits</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_bmark_recr">
+             <item>
+              <widget class="QLabel" name="label_bmark_recr_beg">
+               <property name="text">
+                <string>begin:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_bmark_recr_beg">
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="minimum">
+                <number>-50</number>
+               </property>
+               <property name="maximum">
+                <number>5000</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_bmark_recr_end">
+               <property name="text">
+                <string>end:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_bmark_recr_end">
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="minimum">
+                <number>-50</number>
+               </property>
+               <property name="maximum">
+                <number>5000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="3">
+            <layout class="QHBoxLayout" name="horizontalLayout_bmark_recr_ref">
+             <item>
+              <widget class="QLabel" name="label_bmark_recr_beg_ref">
+               <property name="text">
+                <string>begin:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_bmark_recr_beg_yr_ref">
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
+               </property>
+               <property name="text">
+                <string>year</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_bmark_recr_end_ref">
+               <property name="text">
+                <string>end:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_bmark_recr_end_yr_ref">
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
+               </property>
+               <property name="text">
+                <string>year</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
@@ -560,6 +655,95 @@
              </item>
             </layout>
            </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Recruits</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label_fcast_recr_beg">
+               <property name="text">
+                <string>begin:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_fcast_recr_beg">
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="minimum">
+                <number>-50</number>
+               </property>
+               <property name="maximum">
+                <number>3000</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_fcast_recr_end">
+               <property name="text">
+                <string>end:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_fcast_recr_end">
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="minimum">
+                <number>-50</number>
+               </property>
+               <property name="maximum">
+                <number>3000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="2" colspan="2">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_fcast_recr_beg_ref">
+               <property name="text">
+                <string>begin:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_fcast_recr_beg_yr_ref">
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
+               </property>
+               <property name="text">
+                <string>year</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_fcast_recr_end_ref">
+               <property name="text">
+                <string>end:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_fcast_recr_end_yr_ref">
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
+               </property>
+               <property name="text">
+                <string>year</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
          </item>
          <item row="7" column="2">
@@ -744,22 +928,22 @@
             <widget class="QComboBox" name="comboBox_MSY_options">
              <item>
               <property name="text">
-               <string>1 = F(SPR)</string>
+               <string>1 = set to F(SPR)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>2 = F(MSY)</string>
+               <string>2 = calculate F(MSY)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>3 = F(B target)</string>
+               <string>3 = set to F(B target)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>4 = F(end year)</string>
+               <string>4 = set to F(end year)</string>
               </property>
              </item>
             </widget>
@@ -855,7 +1039,7 @@ e.g. 0, -1, -2, ...</string>
          <item row="1" column="0">
           <widget class="QLabel" name="label_MSY_options">
            <property name="text">
-            <string>Forecast Method</string>
+            <string>Set MSY</string>
            </property>
           </widget>
          </item>
