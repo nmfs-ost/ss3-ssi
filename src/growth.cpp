@@ -175,21 +175,30 @@ void ss_growth::setNum_morphs(int value)
         value = 1;
         setMorph_dist(0, 1);
         setMorph_within_ratio(1.0);
+        morphdisttable->setColumnCount(value);
     }
     else if (value <= 3)
     {
         value = 3;
         setMorph_within_ratio(0.7);
+        morphdisttable->setColumnCount(value);
+        setMorph_dist(0, 0.15);
+        setMorph_dist(1, 0.70);
+        setMorph_dist(2, 0.15);
     }
     else
     {
         value = 5;
-        if (getMorph_within_ratio() == 1.0)
-            setMorph_within_ratio(0.7);
+        setMorph_within_ratio(0.7);
+        morphdisttable->setColumnCount(value);
+        setMorph_dist(0, 0.031);
+        setMorph_dist(1, 0.237);
+        setMorph_dist(2, 0.464);
+        setMorph_dist(3, 0.237);
+        setMorph_dist(4, 0.031);
     }
 
     num_morphs = value;
-    morphdisttable->setColumnCount(value);
 }
 
 void ss_growth::setMorph_dist(QStringList values)

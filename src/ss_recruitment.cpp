@@ -9,10 +9,10 @@ spawn_recruit::spawn_recruit()
     full_parameters->setRowCount(5);
 
     assignments = new tablemodel();
-    header << "GP" << "seas" << "area";
-    assignments->setHeader(header);
-    assignments->setColumnCount(3);
+    assignments->setColumnCount(4);
     assignments->setRowCount(0);
+    header << "GP" << "seas" << "area" << "Settle_age";
+    assignments->setHeader(header);
 
     assignmentParams = new parametermodel();
     interactParams = new parametermodel();

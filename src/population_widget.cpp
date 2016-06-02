@@ -54,12 +54,19 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     recruitDevsView->resizeColumnsToContents();
     ui->verticalLayout_recr_devs->addWidget(recruitDevsView);
 
+    connect (ui->spinBox_num_recr_devs, SIGNAL(valueChanged(int)), SLOT(changeNumRecrDevs(int)));
+
     // Growth
     recruitFullParamsView = new tableview();
     recruitFullParamsView->setParent(this);
     recruitFullParamsView->setModel(pop->SR()->getFullParameterModel());
     recruitFullParamsView->resizeColumnsToContents();
     ui->verticalLayout_recr_full_params->addWidget(recruitFullParamsView);
+
+    growthMorphDistView = new tableview();
+    growthMorphDistView->setParent(this);
+    growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
+    ui->horizontalLayout_growth_submorph_dist->addWidget(growthMorphDistView);
 
     connect (ui->spinBox_growth_pattern, SIGNAL(valueChanged(int)), SLOT(changeGrowthPattern(int)));
     connect (ui->spinBox_growth_num_patterns, SIGNAL(valueChanged(int)), SLOT(changeNumGrowthPat(int)));
@@ -237,7 +244,8 @@ void population_widget::reset()
     ui->spinBox_sr_recr_dev_begin_yr->setValue(pop->SR()->rec_dev_start_yr);
     ui->spinBox_sr_recr_dev_phase->setValue(pop->SR()->rec_dev_phase);
     ui->spinBox_sr_recr_dev_end_yr->setValue(pop->SR()->rec_dev_end_yr);
-    ui->checkBox_recr_dev_adv_opt->setChecked(pop->SR()->advanced_opts);
+//    ui->checkBox_recr_dev_adv_opt->setChecked(pop->SR()->advanced_opts);
+    ui->groupBox_recr_dev_adv_opt->setChecked(pop->SR()->advanced_opts);
     ui->spinBox_recr_dev_early_start->setValue(pop->SR()->rec_dev_early_start);
     ui->spinBox_recr_dev_early_phase->setValue(pop->SR()->rec_dev_early_phase);
     ui->spinBox_recr_dev_fcast_phase->setValue(pop->SR()->fcast_rec_phase);
@@ -251,6 +259,8 @@ void population_widget::reset()
     ui->lineEdit_recr_dev_min_dev->setText(QString::number(pop->SR()->rec_dev_min));
     ui->lineEdit_recr_dev_max_dev->setText(QString::number(pop->SR()->rec_dev_max));
     ui->spinBox_num_recr_devs->setValue(pop->SR()->getRecruitDevs()->getNumObs());
+    changeNumRecrDevs(pop->SR()->getRecruitDevs()->getNumObs());
+
 
 
     ui->spinBox_num_move_defs->setValue(pop->Move()->getNumDefs());
@@ -380,9 +390,16 @@ void population_widget::changeNumGrowthPat(int num)
 void population_widget::changeNumSubMorph(int num)
 {
     bool vis = false;
-    pop->Grow()->setNum_morphs(num);
-    if (num > 1)
-        vis = true;
+    int nmph = pop->Grow()->getNum_morphs();
+    if (nmph != num)
+    {
+        if (num > 1)
+        {
+            vis = true;
+            ui->doubleSpinBox_growth_morph_ratio->setValue(pop->Grow()->getMorph_within_ratio());
+        }
+        pop->Grow()->setNum_morphs(num);
+    }
 //    ui->label_growth_submorph_dist->setVisible(vis);
 //    ui->label_growth_submorph_ratio->setVisible(vis);
 //    ui->doubleSpinBox_growth_morph_ratio->setVisible(vis);
@@ -429,6 +446,19 @@ void population_widget::changeHermaphSeas(int seas)
 void population_widget::changeHermaphMales(int opt)
 {
     pop->Fec()->setHermIncludeMales(opt);
+}
+
+void population_widget::changeNumRecrDevs(int num)
+{
+    if (num == 0)
+    {
+        recruitDevsView->setVisible(false);
+    }
+    else
+    {
+        recruitDevsView->setVisible(true);
+        pop->SR()->recruitDeviations->setNumRecruitDevs(num);
+    }
 }
 
 void population_widget::setMaturityOpt(int opt)

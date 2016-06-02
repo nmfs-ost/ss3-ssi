@@ -74,6 +74,8 @@ private slots:
     void changeFecundityAdjustment(int opt);
     void changeFirstMatureAge();
 
+    void changeNumRecrDevs (int num);
+
     void changeSeasParams();
     void changeRecNumAssigns(int num);
     void changeRecAssignInteract (bool flag);
@@ -88,6 +90,7 @@ private:
     tableview *fecundParamsView;
     tableview *hermaphParamsView;
     tableview *growthParamsView;
+    tableview *growthMorphDistView;
     tableview *seasonParamsView;
     tableview *assignmentView;
     tableview *recruitParamsView;

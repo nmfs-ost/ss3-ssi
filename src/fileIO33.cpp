@@ -488,7 +488,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             data->set_morph_composition (mcps);
             num_input_lines = d_file->next_value().toInt(); // num observations
             mcps->setNumberObs(num_input_lines);
-            temp_int = d_file->next_value().toInt(); // number of stocks
+            temp_int = d_file->next_value().toInt(); // number of platoons
 //            mcps->setNumberMorphs(temp_int);
             for (int j = 0; j < data->num_fleets(); j++)
                 data->getFleet(j)->setMorphNumMorphs(temp_int);
@@ -1868,7 +1868,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         num = c_file->next_value().toInt();
         pop->Grow()->setNum_patterns(num);
         // morphs or platoons
-        num = c_file->next_value().toInt(); // 1, 3, and 5 are best
+        num = c_file->next_value().toInt(); // 1, 3, and 5 are allowed
 /*        if (num > 4) num = 5;
         else if (num > 1) num = 3;
         else num = 1;*/
@@ -1880,8 +1880,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
             temp_float = c_file->next_value().toFloat();
-            if ((int)temp_float == -1) // set to normal dist
-            {
+            if ((int)temp_float != -1) // normal dist is the default
+/*            {
                 if (num == 3)
                 {
                     pop->Grow()->setMorph_dist(0, 0.15);
@@ -1902,7 +1902,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
                 c_file->skip_line();
             }
-            else // read dist values
+            else*/ // read dist values
             {
                 float total = temp_float;
                 pop->Grow()->setMorph_dist(0, temp_float);
@@ -1912,10 +1912,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     total += temp_float;
                     pop->Grow()->setMorph_dist(i, temp_float);
                 }
-                for (i = 0; i < num; i++) // normalizing values so total = 1.0
+                if (total != 1.0)
                 {
-                    temp_float = pop->Grow()->getMorph_dist(i) / total;
-                    pop->Grow()->setMorph_dist(i, temp_float);
+                    for (i = 0; i < num; i++) // normalizing values so total = 1.0
+                    {
+                        temp_float = pop->Grow()->getMorph_dist(i) / total;
+                        pop->Grow()->setMorph_dist(i, temp_float);
+                    }
                 }
             }
         }
@@ -1942,7 +1945,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < num; i++) // gr pat, month, area for each assignment
         {
             datalist.clear();
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 4; j++)
                 datalist.append(c_file->next_value());
             pop->SR()->setAssignment(i, datalist);
         }
@@ -2916,13 +2919,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         line.append(QString("# year_x_area_x_settlement_event interaction requested (only for recr_dist_method=1)" ));
         chars += c_file->writeline(line);
-        line = QString ("#GPat month area (for each settlement assignment)" );
+        line = QString ("#GPat month area Settle_age (for each settlement assignment)" );
         chars += c_file->writeline(line);
         for (i = 0; i < num; i++)
         {
             line.clear();
             str_list = pop->SR()->getAssignment(i);
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < str_list.count(); j++)
                 line.append(QString(" %1").arg(str_list.at(j)));
 
             chars += c_file->writeline(line);
