@@ -214,8 +214,15 @@ void ErrorFloatDialog::setup()
 
 void ErrorFloatDialog::retranslate()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+    setWindowTitle(QApplication::translate("ErrorFloatDialog", "Dialog", 0));
+    label_label->setText(QApplication::translate("ErrorFloatDialog", "Label", 0));
+    label_values->setText(QApplication::translate("ErrorFloatDialog", "Values ", 0));
+    label_sum->setText(QApplication::translate("ErrorFloatDialog", "Sum  ", 0));
+#else
     setWindowTitle(QApplication::translate("ErrorFloatDialog", "Dialog", 0, QApplication::UnicodeUTF8));
     label_label->setText(QApplication::translate("ErrorFloatDialog", "Label", 0, QApplication::UnicodeUTF8));
     label_values->setText(QApplication::translate("ErrorFloatDialog", "Values ", 0, QApplication::UnicodeUTF8));
     label_sum->setText(QApplication::translate("ErrorFloatDialog", "Sum  ", 0, QApplication::UnicodeUTF8));
+#endif
 }

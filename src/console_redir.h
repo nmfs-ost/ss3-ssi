@@ -16,7 +16,7 @@ public:
     ~console_redir();
 
 public slots:
-    bool StartChildProcess(bool bShowChildWindow = FALSE);
+    bool StartChildProcess(bool bShowChildWindow = false);
     bool IsChildRunning() const;
     void TerminateChildProcess();
     void WriteChildStdIn(QString szInput);

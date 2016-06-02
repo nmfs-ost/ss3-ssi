@@ -4,6 +4,19 @@
 //#include <QDialog>
 //#include <QDoubleSpinBox>
 #include <QtCore/QVariant>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QVBoxLayout>
+#else
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
@@ -14,6 +27,8 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
+#endif
+
 #define MAX_FLOAT_VALUES 9
 /*
 namespace Ui {
