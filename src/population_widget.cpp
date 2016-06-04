@@ -43,10 +43,10 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     ui->horizontalLayout_recr_assigns->addWidget(assignmentView);
 
     recruitParamsView = new tableview();
-    recruitParamsView->setParent(this);
+/*    recruitParamsView->setParent(this);
     recruitParamsView->setModel(pop->SR()->getSetupModel());
     recruitParamsView->resizeColumnsToContents();
-    ui->verticalLayout_recr_params->addWidget(recruitParamsView);
+    ui->verticalLayout_recr_params->addWidget(recruitParamsView);*/
 
     recruitDevsView = new tableview();
     recruitDevsView->setParent(this);
@@ -54,20 +54,31 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     recruitDevsView->resizeColumnsToContents();
     ui->verticalLayout_recr_devs->addWidget(recruitDevsView);
 
-    connect (ui->spinBox_num_recr_devs, SIGNAL(valueChanged(int)), SLOT(changeNumRecrDevs(int)));
-
-    // Growth
     recruitFullParamsView = new tableview();
     recruitFullParamsView->setParent(this);
     recruitFullParamsView->setModel(pop->SR()->getFullParameterModel());
     recruitFullParamsView->resizeColumnsToContents();
     ui->verticalLayout_recr_full_params->addWidget(recruitFullParamsView);
 
+    setRecrArea(2);
+    connect (ui->radioButton_area, SIGNAL(clicked()), SLOT(changeRecrArea()));
+    connect (ui->radioButton_global, SIGNAL(clicked()), SLOT(changeRecrArea()));
+    setRecrDistParam(1);
+    ui->checkBox_recr_interaction->setChecked(false);
+    connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
+    connect (ui->checkBox_recr_interaction, SIGNAL(toggled(bool)), SLOT(changeRecAssignInteract(bool)));
+    connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
+    connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
+    connect (ui->spinBox_num_recr_devs, SIGNAL(valueChanged(int)), SLOT(changeNumRecrDevs(int)));
+
+
+    // Growth
     growthMorphDistView = new tableview();
     growthMorphDistView->setParent(this);
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
     ui->horizontalLayout_growth_submorph_dist->addWidget(growthMorphDistView);
 
+    ui->spinBox_growth_pattern->setMinimum(1);
     connect (ui->spinBox_growth_pattern, SIGNAL(valueChanged(int)), SLOT(changeGrowthPattern(int)));
     connect (ui->spinBox_growth_num_patterns, SIGNAL(valueChanged(int)), SLOT(changeNumGrowthPat(int)));
     ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
@@ -151,17 +162,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
     connect (ui->checkBox_seas_K, SIGNAL(stateChanged(int)), SLOT(changeSeasParams()));
 
-    setRecrArea(2);
-    setRecrDistParam(1);
-    ui->checkBox_recr_interaction->setChecked(false);
-    ui->spinBox_growth_pattern->setMinimum(1);
-    connect (ui->radioButton_area, SIGNAL(clicked()), SLOT(changeRecrArea()));
-    connect (ui->radioButton_global, SIGNAL(clicked()), SLOT(changeRecrArea()));
-    connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
-    connect (ui->checkBox_recr_interaction, SIGNAL(toggled(bool)), SLOT(changeRecAssignInteract(bool)));
-    connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
-    connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
-
     connect (ui->spinBox_num_move_defs, SIGNAL(valueChanged(int)), SLOT(changeMoveNumDefs(int)));
     connect (ui->lineEdit_move_age, SIGNAL(editingFinished()), SLOT(changeMoveFirstAge()));
 
@@ -239,8 +239,12 @@ void population_widget::reset()
     ui->checkBox_recr_interaction->setChecked(pop->SR()->getDoRecruitInteract());
     ui->spinBox_recr_num_assigns->setValue(pop->SR()->getNumAssignments());
     setSpawnRecrSpec(pop->SR()->method);
-    ui->spinBox_sr_env_link->setValue(pop->SR()->env_link);
-    ui->spinBox_sr_env_tgt->setValue(pop->SR()->env_target);
+//    ui->spinBox_sr_env_link->setValue(pop->SR()->env_link);
+    ui->spinBox_sr_env_link->setVisible(false);
+    ui->label_sr_env_link->setVisible(false);
+//    ui->spinBox_sr_env_tgt->setValue(pop->SR()->env_target);
+    ui->spinBox_sr_env_tgt->setVisible(false);
+    ui->label_sr_env_tgt->setVisible(false);
     ui->spinBox_sr_recr_dev_begin_yr->setValue(pop->SR()->rec_dev_start_yr);
     ui->spinBox_sr_recr_dev_phase->setValue(pop->SR()->rec_dev_phase);
     ui->spinBox_sr_recr_dev_end_yr->setValue(pop->SR()->rec_dev_end_yr);
@@ -562,7 +566,37 @@ void population_widget::setSpawnRecrSpec(int spec)
 
 void population_widget::changeSpawnRecrSpec(int num)
 {
-    pop->SR()->method = num + 1;
+    int mthd = num + 1;
+    int old_mthd = pop->SR()->method;
+    if (mthd != old_mthd)
+    {
+        pop->SR()->method = mthd;
+        switch (mthd)
+        {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 6:
+            if (old_mthd == 5 ||
+                    old_mthd == 7 ||
+                    old_mthd == 8)
+            {
+                pop->SR()->removeFullParameter(3);
+            }
+            break;
+        case 5:
+        case 7:
+        case 8:
+            if (old_mthd < 5 ||
+                    old_mthd == 6)
+            {
+                QStringList lst = pop->SR()->getFullParameter(2);
+                pop->SR()->insertFullParameter(3);
+            }
+            break;
+        }
+    }
 }
 
 void population_widget::changeMoveNumDefs(int value)

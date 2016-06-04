@@ -71,6 +71,9 @@ public:
     void setNumFullParameters(int num) {full_parameters->setRowCount(num);}
     int getNumFullParameters() {return full_parameters->rowCount();}
     void setFullParameter(int index, QStringList values) {full_parameters->setRowData(index, values);}
+    void insertFullParameter (int index) {full_parameters->insertRow(index, 0);}
+    void removeFullParameter (int index) {full_parameters->removeRow(index);}
+    void setFullParameterHeader(int index, QString hdr) {full_parameters->setRowHeader(index, hdr);}
     QStringList getFullParameter(int index) {return full_parameters->getRowData(index);}
 
 //    QList<longParameter *> full_parameters;

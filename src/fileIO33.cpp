@@ -2358,18 +2358,46 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Spawner-recruitment
         temp_int = c_file->next_value().toInt();
         pop->SR()->setMethod (temp_int);
-        for (i = 0; i < 5; i++)
+        i = 0;
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_LN(R0)");
         }
-        if (pop->SR()->getMethod() == 5 ||
-                pop->SR()->getMethod() == 7 ||
-                pop->SR()->getMethod() == 8)
         {
-            datalist = readShortParameter(c_file);
-            pop->SR()->setParameter(i, datalist);
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_BH_flat_steep");
         }
+        if (temp_int == 5 ||
+                temp_int == 7 ||
+                temp_int == 8)
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_3rd_PARM");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_sigmaR");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_nullparm");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_R1_offset");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_autocorr");
+        }
+
         pop->SR()->rec_dev = c_file->next_value().toInt();
         pop->SR()->rec_dev_start_yr = c_file->next_value().toInt();
         pop->SR()->rec_dev_end_yr = c_file->next_value().toInt();
@@ -2919,7 +2947,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         line.append(QString("# year_x_area_x_settlement_event interaction requested (only for recr_dist_method=1)" ));
         chars += c_file->writeline(line);
-        line = QString ("#GPat month area Settle_age (for each settlement assignment)" );
+        line = QString ("#GPat month area age (for each settlement assignment)" );
         chars += c_file->writeline(line);
         for (i = 0; i < num; i++)
         {
@@ -3561,11 +3589,20 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # SR_BH_flat_steep" ).arg(pop->SR()->full_parameters->getRowText(1)));
         chars += c_file->writeline(line);
+        if (pop->SR()->method == 5 ||
+                pop->SR()->method == 7 ||
+                pop->SR()->method == 8)
+        {
+            line = QString(QString ("%1 # SR_3RDparm" ).arg(pop->SR()->full_parameters->getRowText(2)));
+            chars += c_file->writeline(line);
+        }
         line = QString(QString ("%1 # SR_sigmaR" ).arg(pop->SR()->full_parameters->getRowText(2)));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 # SR_AnnualDevMult" ).arg(pop->SR()->full_parameters->getRowText(3)));
+        line = QString(QString ("%1 # SR_nullparm" ).arg(pop->SR()->full_parameters->getRowText(3)));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 # SR_autocorr" ).arg(pop->SR()->full_parameters->getRowText(4)));
+        line = QString(QString ("%1 # SR_R1_offset" ).arg(pop->SR()->full_parameters->getRowText(4)));
+        chars += c_file->writeline(line);
+        line = QString(QString ("%1 # SR_autocorr" ).arg(pop->SR()->full_parameters->getRowText(5)));
         chars += c_file->writeline(line);
 
         line = QString("#Next are short parm lines, if requested, for env effects on R0, steepness, and annual dev");
