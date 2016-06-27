@@ -127,3 +127,11 @@ void tableview::mousePressEvent(QMouseEvent *event)
         QTableView::mousePressEvent(event);
     }
 }
+
+void tableview::setHeight(tablemodel *tm, int r)
+{
+    int rows = tm->rowCount() - r;
+    int height (40 + rows * 30);
+    setFixedHeight(height);
+}
+

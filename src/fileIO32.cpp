@@ -1933,6 +1933,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
+        pop->Grow()->setExpDecay(0.20);
 
         temp_float = c_file->next_value().toFloat();
         pop->Grow()->setSd_add(temp_float);

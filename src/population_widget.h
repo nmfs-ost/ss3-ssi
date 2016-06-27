@@ -45,6 +45,13 @@ public slots:
     void setGrowthModel(int opt);
     void changeGrowthModel(int opt);
     int getGrowthModel();
+    void changeAmin (double val);
+    void changeAmax (double val);
+    void changeKageMin (double val);
+    void changeKageMax (double val);
+    void changeExpDecay (double val);
+    void changeSDadd (double val);
+    void changeCVmethod (int num);
 
     void setSpawnRecrSpec (int spec);
     void setRecrArea (int value);
@@ -91,6 +98,7 @@ private:
     tableview *hermaphParamsView;
     tableview *growthParamsView;
     tableview *growthMorphDistView;
+    tableview *cvParamsView;
     tableview *seasonParamsView;
     tableview *assignmentView;
     tableview *recruitParamsView;

@@ -51,6 +51,8 @@ public:
     void setAgeMin_for_K (float mink) {age_min_for_K = mink;}
     float getAgeMax_for_K () const {return age_max_for_K;}
     void setAgeMax_for_K (float maxk) {age_max_for_K = maxk;}
+    float getExpDecay ();
+    void setExpDecay (float value);
 
     float getSd_add() const;
     void setSd_add(float value);
@@ -163,6 +165,7 @@ private:
     float age_for_l2;
     float age_min_for_K;
     float age_max_for_K;
+    float age_exp_decay;
     float sd_add;
     int cv_growth_pattern;
     int maturity_option;

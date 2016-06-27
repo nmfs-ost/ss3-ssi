@@ -2061,6 +2061,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
+        temp_float = c_file->next_value().toFloat();
+        pop->Grow()->setExpDecay(temp_float);
 
         temp_float = c_file->next_value().toFloat();
         pop->Grow()->setSd_add(temp_float);
@@ -2099,7 +2101,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->setMethod(temp_int);
 
         temp_int = c_file->next_value().toInt();
-        pop->Fec()->setHermaphroditism(temp_int == 1? true: false);
+        pop->Fec()->setHermaphroditism((temp_int == 1));
         if (temp_int == 1)
         {
             temp_float = c_file->next_value().toFloat();
@@ -2206,7 +2208,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        if (pop->Fec()->getHermaphroditism() == 1)
+        if (pop->Fec()->getHermaphroditism())
         {
             for (i = 0; i < 3; i++)
             {
@@ -2461,7 +2463,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 // datalist.append(data->getFleet(flt - 1)->get_name());
                 data->getFleet(flt - 1)->Q()->setup(datalist);
                 data->getFleet(flt - 1)->setQSetupRead(true);
-                data->getFleet(flt - 1)->qSetupChanged();
+//                data->getFleet(flt - 1)->qSetupChanged();
             }
         } while (flt > 0);
 
@@ -2928,10 +2930,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.clear();
         temp_int = pop->SR()->getDistribMethod();
         line = QString (QString("%1 # recr_dist_method for parameters:").arg(QString::number(temp_int)));
-        line.append(QString(" 1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1" ));
+        line.append(QString("  1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1" ));
         chars += c_file->writeline(line);
         temp_int = pop->SR()->getDistribArea();
-        line = QString (QString("%1 # Recruitment: 1=global; 2=by area" ).arg(QString::number(temp_int)));
+        line = QString (QString("%1 # Recruitment: 1=global; 2=by area (future option)" ).arg(QString::number(temp_int)));
         chars += c_file->writeline(line);
         num = pop->SR()->getNumAssignments();
         line = QString (QString("%1 #  number of recruitment settlement assignments " ).arg(QString::number(num)));
@@ -2965,7 +2967,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         if (data->num_areas() > 1)
         {
             num = pop->Move()->getNumDefs();
-            line = QString(QString("%1 # N_movement_definitions").arg(
+            line = QString(QString("%1 #_N_movement_definitions").arg(
                             QString::number(num)));
             chars += c_file->writeline(line);
             temp_float = pop->Move()->getFirstAge();
@@ -3078,7 +3080,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         temp_int = pop->Grow()->getModel();
-        line = QString(QString("%1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_speciific_K; 4=not implemented" ).arg(
+        line = QString(QString("%1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_specific_K; 4=not implemented" ).arg(
                            temp_int));
         chars += c_file->writeline (line);
         temp_float = pop->Grow()->getAge_for_l1();
@@ -3100,6 +3102,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                                QString::number(temp_float)));
             chars += c_file->writeline (line);
         }
+        temp_float = pop->Grow()->getExpDecay();
+        line = QString(QString("%1 #_exponential decay for growth above maxage (fixed at 0.2 in 3.24; should approx initial Z)").arg (
+                           QString::number(temp_float)));
+        chars += c_file->writeline (line);
 
         temp_float = pop->Grow()->getSd_add();
         line = QString(QString("%1 #_SD_add_to_LAA (set to 0.1 for SS2 V1.x compatibility)" ).arg(
