@@ -17,7 +17,8 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
 
-    void setHeight (tablemodel *tm, int r = 0);
+    void setHeight (tablemodel *tm, int rd = 0);
+    void setHeight (int rows);
 
 private:
     void copy();

@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -662,19 +662,6 @@
              </item>
             </layout>
            </item>
-           <item>
-            <spacer name="verticalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </widget>
         </widget>
@@ -687,264 +674,283 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_14">
        <item>
-        <widget class="QGroupBox" name="groupBox_recr_dev_adv_opt">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>Advanced Options</string>
-         </property>
-         <property name="checkable">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_recr_dev_min_dev">
-            <property name="text">
-             <string>Min recruitment deviation</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_recr_dev_cycles">
-            <property name="text">
-             <string>Period for recruitment cycles</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_recr_dev_max_bias">
-            <property name="text">
-             <string>Max bias adjustment</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_recr_dev_min_dev">
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_recr_dev_last_nobias">
-            <property name="text">
-             <string>Last year with no bias adj</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="5" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_recr_dev_max_dev">
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QLabel" name="label_recr_dev_fcast_lambda">
-            <property name="text">
-             <string>Forecast recruitment devs lambda</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_recr_dev_fcast_phase">
-            <property name="text">
-             <string>forecast recruitment phase</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="7">
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <spacer name="horizontalSpacer_23">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>100</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="8" column="1" colspan="3">
-           <layout class="QVBoxLayout" name="verticalLayout_recr_devs"/>
-          </item>
-          <item row="5" column="1">
-           <widget class="QSpinBox" name="spinBox_recr_dev_cycles"/>
-          </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="spinBox_recr_dev_last_bias">
-            <property name="maximum">
-             <number>3000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="5">
-           <widget class="QSpinBox" name="spinBox_recr_dev_first_nobias">
-            <property name="maximum">
-             <number>3000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="4">
-           <widget class="QLabel" name="label_recr_dev_max_dev">
-            <property name="text">
-             <string>Maximum recruitment deviation</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_recr_dev_early_start">
-            <property name="text">
-             <string>Early recruitment dev start</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="6">
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="2" column="1">
-           <widget class="QSpinBox" name="spinBox_recr_dev_last_nobias">
-            <property name="maximum">
-             <number>3000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QSpinBox" name="spinBox_recr_dev_early_phase"/>
-          </item>
-          <item row="3" column="4">
-           <widget class="QLabel" name="label_recr_dev_first_nobias">
-            <property name="text">
-             <string>First recent year with no bias adj</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
-           <widget class="QLabel" name="label_recr_dev_first_bias">
-            <property name="text">
-             <string>First year with full bias adj</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_recr_dev_early_phase">
-            <property name="text">
-             <string>Early recruitment dev phase</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_recr_dev_last_bias">
-            <property name="text">
-             <string>Last year with full bias adj</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="5" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_recr_dev_fcast_lambda">
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="spinBox_recr_dev_early_start"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="spinBox_recr_dev_fcast_phase"/>
-          </item>
-          <item row="7" column="2">
-           <widget class="QSpinBox" name="spinBox_num_recr_devs"/>
-          </item>
-          <item row="7" column="0" colspan="2">
-           <widget class="QLabel" name="label_num_recr_devs">
-            <property name="text">
-             <string>Number of explicit recruitment deviations</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_recr_dev_max_bias">
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="5">
-           <widget class="QSpinBox" name="spinBox_recr_dev_first_bias">
-            <property name="maximum">
-             <number>3000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+         <widget class="QWidget" name="scrollAreaWidgetContents_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>906</width>
+            <height>432</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_21">
+           <item>
+            <widget class="QGroupBox" name="groupBox_recr_dev_adv_opt">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Advanced Options</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_recr_dev_min_dev">
+                <property name="text">
+                 <string>Min recruitment deviation</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_recr_dev_cycles">
+                <property name="text">
+                 <string>Period for recruitment cycles</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_recr_dev_max_bias">
+                <property name="text">
+                 <string>Max bias adjustment</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1" colspan="2">
+               <widget class="QLineEdit" name="lineEdit_recr_dev_min_dev">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_recr_dev_last_nobias">
+                <property name="text">
+                 <string>Last year with no bias adj</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="5" colspan="2">
+               <widget class="QLineEdit" name="lineEdit_recr_dev_max_dev">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4">
+               <widget class="QLabel" name="label_recr_dev_fcast_lambda">
+                <property name="text">
+                 <string>Forecast recruitment devs lambda</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_recr_dev_fcast_phase">
+                <property name="text">
+                 <string>forecast recruitment phase</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="7">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <spacer name="horizontalSpacer_23">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Minimum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="8" column="1" colspan="3">
+               <layout class="QVBoxLayout" name="verticalLayout_recr_devs"/>
+              </item>
+              <item row="5" column="1">
+               <widget class="QSpinBox" name="spinBox_recr_dev_cycles"/>
+              </item>
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="spinBox_recr_dev_last_bias">
+                <property name="maximum">
+                 <number>3000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="5">
+               <widget class="QSpinBox" name="spinBox_recr_dev_first_nobias">
+                <property name="maximum">
+                 <number>3000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="4">
+               <widget class="QLabel" name="label_recr_dev_max_dev">
+                <property name="text">
+                 <string>Maximum recruitment deviation</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_recr_dev_early_start">
+                <property name="text">
+                 <string>Early recruitment dev start</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="6">
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="spinBox_recr_dev_last_nobias">
+                <property name="maximum">
+                 <number>3000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="5">
+               <widget class="QSpinBox" name="spinBox_recr_dev_early_phase"/>
+              </item>
+              <item row="3" column="4">
+               <widget class="QLabel" name="label_recr_dev_first_nobias">
+                <property name="text">
+                 <string>First recent year with no bias adj</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="4">
+               <widget class="QLabel" name="label_recr_dev_first_bias">
+                <property name="text">
+                 <string>First year with full bias adj</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QLabel" name="label_recr_dev_early_phase">
+                <property name="text">
+                 <string>Early recruitment dev phase</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_recr_dev_last_bias">
+                <property name="text">
+                 <string>Last year with full bias adj</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="5" colspan="2">
+               <widget class="QLineEdit" name="lineEdit_recr_dev_fcast_lambda">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinBox_recr_dev_early_start"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinBox_recr_dev_fcast_phase"/>
+              </item>
+              <item row="7" column="2">
+               <widget class="QSpinBox" name="spinBox_num_recr_devs"/>
+              </item>
+              <item row="7" column="0" colspan="2">
+               <widget class="QLabel" name="label_num_recr_devs">
+                <property name="text">
+                 <string>Number of explicit recruitment deviations</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1" colspan="2">
+               <widget class="QLineEdit" name="lineEdit_recr_dev_max_bias">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="5">
+               <widget class="QSpinBox" name="spinBox_recr_dev_first_bias">
+                <property name="maximum">
+                 <number>3000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <spacer name="verticalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="9" column="2">
+               <spacer name="verticalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>200</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -962,9 +968,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-33</y>
+            <y>-1</y>
             <width>885</width>
-            <height>465</height>
+            <height>433</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -992,9 +998,12 @@
                <property name="text">
                 <string>Growth Parameters</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
               </widget>
              </item>
-             <item row="13" column="1" rowspan="4" colspan="8">
+             <item row="13" column="1" rowspan="2" colspan="8">
               <layout class="QVBoxLayout" name="verticalLayout_growth_params"/>
              </item>
              <item row="12" column="0" colspan="2">
@@ -1083,7 +1092,7 @@
                </item>
               </widget>
              </item>
-             <item row="16" column="0">
+             <item row="18" column="0">
               <spacer name="verticalSpacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -1095,13 +1104,6 @@
                 </size>
                </property>
               </spacer>
-             </item>
-             <item row="14" column="0">
-              <widget class="QLabel" name="label_growth_params_spacer3">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
              </item>
              <item row="9" column="2">
               <widget class="QSpinBox" name="spinBox_growth_pattern">
@@ -1244,7 +1246,7 @@
                </property>
               </widget>
              </item>
-             <item row="15" column="0">
+             <item row="17" column="0">
               <spacer name="verticalSpacer_6">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -1270,21 +1272,17 @@
                </property>
               </spacer>
              </item>
-             <item row="17" column="0">
+             <item row="15" column="0">
               <widget class="QLabel" name="label_cv_parameters">
                <property name="text">
                 <string>CV Parameters</string>
                </property>
-              </widget>
-             </item>
-             <item row="18" column="0">
-              <widget class="QLabel" name="label_cv_params_space">
-               <property name="text">
-                <string> </string>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
                </property>
               </widget>
              </item>
-             <item row="17" column="1" rowspan="2" colspan="8">
+             <item row="15" column="1" rowspan="2" colspan="8">
               <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
              </item>
             </layout>
@@ -1360,7 +1358,7 @@
              <item row="0" column="1">
               <widget class="QSpinBox" name="spinBox_num_move_defs"/>
              </item>
-             <item row="1" column="0" rowspan="2" colspan="5">
+             <item row="1" column="0" rowspan="2" colspan="6">
               <widget class="QFrame" name="frame_definitions">
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
@@ -1568,19 +1566,6 @@
              </item>
              <item row="1" column="2">
               <spacer name="horizontalSpacer_21">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="5">
-              <spacer name="horizontalSpacer_22">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2260,19 +2245,12 @@
                 <string>Seasonal parameters</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
                </property>
               </widget>
              </item>
-             <item row="7" column="1" rowspan="2" colspan="5">
+             <item row="6" column="2" rowspan="2" colspan="4">
               <layout class="QVBoxLayout" name="verticalLayout_seasonal_params"/>
-             </item>
-             <item row="7" column="0">
-              <widget class="QLabel" name="label_seas_effects_2">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
              </item>
              <item row="5" column="4">
               <widget class="QCheckBox" name="checkBox_seas_K">
