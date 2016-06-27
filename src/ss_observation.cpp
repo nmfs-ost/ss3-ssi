@@ -45,7 +45,7 @@ void ssObservation::setNumObs(int obs)
 int ssObservation::getNumObs()
 {
 //    int obs = observations->rowCount();
-    return numObs;
+    return numObs = observations->rowCount();
 }
 
 void ssObservation::addObservation(QStringList txtlst)

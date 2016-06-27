@@ -1809,6 +1809,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 datalist.clear();
                 for (int j = 0; j < 3; j++)
                     datalist.append(c_file->next_value());
+                datalist.append("0");
                 pop->SR()->setAssignment(i, datalist);
             }
         }
@@ -1816,7 +1817,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist.clear();
             pop->SR()->setNumAssignments(1);
-            datalist << "1" << "1" << "1";
+            datalist << "1" << "1" << "1" << "0";
             pop->SR()->setAssignment(0, datalist);
             pop->SR()->setDoRecruitInteract(false);
         }
@@ -1932,6 +1933,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
+        pop->Grow()->setExpDecay(0.20);
 
         temp_float = c_file->next_value().toFloat();
         pop->Grow()->setSd_add(temp_float);

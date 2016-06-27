@@ -9,10 +9,10 @@ spawn_recruit::spawn_recruit()
     full_parameters->setRowCount(5);
 
     assignments = new tablemodel();
-    header << "GP" << "seas" << "area";
-    assignments->setHeader(header);
-    assignments->setColumnCount(3);
+    assignments->setColumnCount(4);
     assignments->setRowCount(0);
+    header << "GP" << "seas" << "area" << "Settle_age";
+    assignments->setHeader(header);
 
     assignmentParams = new parametermodel();
     interactParams = new parametermodel();
@@ -118,20 +118,20 @@ void spawn_recruit::fromFile(ss_file *file)
     float temp_float;
     
     method = file->next_value().toInt();
-    for (i = 0; i < 3; i++)
+    i = 0;
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
         full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_LN(R0)");
     }
-    datalist = readShortParameter(file);
-    for (; i < 5; i++)
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
         full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_BH_flat_steep");
     }
     if (method == 5 ||
             method == 7 ||
@@ -141,7 +141,37 @@ void spawn_recruit::fromFile(ss_file *file)
         for (int j = 0; j < 7; j++)
             datalist.append("0");
         full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_3rd_PARM");
     }
+    {
+        datalist = readShortParameter(file);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0"); // to fill out long parameter line
+        full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_sigmaR");
+    }
+    {
+        datalist = readShortParameter(file);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0"); // to fill out long parameter line
+        full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_nullparm");
+    }
+    {
+        datalist = readShortParameter(file);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0"); // to fill out long parameter line
+        full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_R1_offset");
+    }
+    {
+        datalist = readShortParameter(file);
+        for (int j = 0; j < 7; j++)
+            datalist.append("0"); // to fill out long parameter line
+        full_parameters->setRowData(i, datalist);
+        full_parameters->setRowHeader(i++, "SR_autocorr");
+    }
+
     env_link = file->next_value().toFloat();
     env_target = file->next_value().toInt();
     rec_dev = file->next_value().toInt();

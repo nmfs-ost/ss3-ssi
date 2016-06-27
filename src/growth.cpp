@@ -65,7 +65,19 @@ ss_growth::~ss_growth()
 
 void ss_growth::reset()
 {
+    setModel(1);
+
     setNum_patterns(1);
+    setAge_for_l1(1.66);
+    setAge_for_l2(25);
+    setAgeMin_for_K(5);
+    setAgeMax_for_K(7);
+    setExpDecay(0.2);  // default for 3.24 compatibility
+    setSd_add(0);
+    setCv_growth_pattern(0);
+    setMaturity_option(2);
+    setFirst_mature_age(1);
+
     num_params = 0;
     matAgeValues->setRowCount(1);
     maturityParams->setRowCount(2);
@@ -74,7 +86,6 @@ void ss_growth::reset()
     blockParams->setRowCount(0);
     environmentParams->setRowCount(0);
 
-    setNum_patterns(1);
     setNum_morphs(1);
     setMorph_within_ratio(0.7);
     setMorph_dist(0, 1.0);
@@ -175,21 +186,30 @@ void ss_growth::setNum_morphs(int value)
         value = 1;
         setMorph_dist(0, 1);
         setMorph_within_ratio(1.0);
+        morphdisttable->setColumnCount(value);
     }
     else if (value <= 3)
     {
         value = 3;
         setMorph_within_ratio(0.7);
+        morphdisttable->setColumnCount(value);
+        setMorph_dist(0, 0.15);
+        setMorph_dist(1, 0.70);
+        setMorph_dist(2, 0.15);
     }
     else
     {
         value = 5;
-        if (getMorph_within_ratio() == 1.0)
-            setMorph_within_ratio(0.7);
+        setMorph_within_ratio(0.7);
+        morphdisttable->setColumnCount(value);
+        setMorph_dist(0, 0.031);
+        setMorph_dist(1, 0.237);
+        setMorph_dist(2, 0.464);
+        setMorph_dist(3, 0.237);
+        setMorph_dist(4, 0.031);
     }
 
     num_morphs = value;
-    morphdisttable->setColumnCount(value);
 }
 
 void ss_growth::setMorph_dist(QStringList values)
@@ -362,6 +382,16 @@ float ss_growth::getAge_for_l2() const
 void ss_growth::setAge_for_l2(float value)
 {
     age_for_l2 = value;
+}
+
+float ss_growth::getExpDecay ()
+{
+    return age_exp_decay;
+}
+
+void ss_growth::setExpDecay(float value)
+{
+    age_exp_decay = value;
 }
 
 float ss_growth::getFirst_mature_age() const

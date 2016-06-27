@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 
 #include "lineeditdelegate.h"
+#include "tablemodel.h"
 
 class tableview : public QTableView
 {
@@ -15,6 +16,9 @@ public:
 
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
+
+    void setHeight (tablemodel *tm, int rd = 0);
+    void setHeight (int rows);
 
 private:
     void copy();

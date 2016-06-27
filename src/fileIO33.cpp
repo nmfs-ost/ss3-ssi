@@ -488,7 +488,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             data->set_morph_composition (mcps);
             num_input_lines = d_file->next_value().toInt(); // num observations
             mcps->setNumberObs(num_input_lines);
-            temp_int = d_file->next_value().toInt(); // number of stocks
+            temp_int = d_file->next_value().toInt(); // number of platoons
 //            mcps->setNumberMorphs(temp_int);
             for (int j = 0; j < data->num_fleets(); j++)
                 data->getFleet(j)->setMorphNumMorphs(temp_int);
@@ -1868,7 +1868,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         num = c_file->next_value().toInt();
         pop->Grow()->setNum_patterns(num);
         // morphs or platoons
-        num = c_file->next_value().toInt(); // 1, 3, and 5 are best
+        num = c_file->next_value().toInt(); // 1, 3, and 5 are allowed
 /*        if (num > 4) num = 5;
         else if (num > 1) num = 3;
         else num = 1;*/
@@ -1880,8 +1880,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
             temp_float = c_file->next_value().toFloat();
-            if ((int)temp_float == -1) // set to normal dist
-            {
+            if ((int)temp_float != -1) // normal dist is the default
+/*            {
                 if (num == 3)
                 {
                     pop->Grow()->setMorph_dist(0, 0.15);
@@ -1902,7 +1902,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
                 c_file->skip_line();
             }
-            else // read dist values
+            else*/ // read dist values
             {
                 float total = temp_float;
                 pop->Grow()->setMorph_dist(0, temp_float);
@@ -1912,10 +1912,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     total += temp_float;
                     pop->Grow()->setMorph_dist(i, temp_float);
                 }
-                for (i = 0; i < num; i++) // normalizing values so total = 1.0
+                if (total != 1.0)
                 {
-                    temp_float = pop->Grow()->getMorph_dist(i) / total;
-                    pop->Grow()->setMorph_dist(i, temp_float);
+                    for (i = 0; i < num; i++) // normalizing values so total = 1.0
+                    {
+                        temp_float = pop->Grow()->getMorph_dist(i) / total;
+                        pop->Grow()->setMorph_dist(i, temp_float);
+                    }
                 }
             }
         }
@@ -1942,7 +1945,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < num; i++) // gr pat, month, area for each assignment
         {
             datalist.clear();
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 4; j++)
                 datalist.append(c_file->next_value());
             pop->SR()->setAssignment(i, datalist);
         }
@@ -2058,6 +2061,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
+        temp_float = c_file->next_value().toFloat();
+        pop->Grow()->setExpDecay(temp_float);
 
         temp_float = c_file->next_value().toFloat();
         pop->Grow()->setSd_add(temp_float);
@@ -2096,7 +2101,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->setMethod(temp_int);
 
         temp_int = c_file->next_value().toInt();
-        pop->Fec()->setHermaphroditism(temp_int == 1? true: false);
+        pop->Fec()->setHermaphroditism((temp_int == 1));
         if (temp_int == 1)
         {
             temp_float = c_file->next_value().toFloat();
@@ -2203,7 +2208,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        if (pop->Fec()->getHermaphroditism() == 1)
+        if (pop->Fec()->getHermaphroditism())
         {
             for (i = 0; i < 3; i++)
             {
@@ -2355,18 +2360,46 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Spawner-recruitment
         temp_int = c_file->next_value().toInt();
         pop->SR()->setMethod (temp_int);
-        for (i = 0; i < 5; i++)
+        i = 0;
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_LN(R0)");
         }
-        if (pop->SR()->getMethod() == 5 ||
-                pop->SR()->getMethod() == 7 ||
-                pop->SR()->getMethod() == 8)
         {
-            datalist = readShortParameter(c_file);
-            pop->SR()->setParameter(i, datalist);
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_BH_flat_steep");
         }
+        if (temp_int == 5 ||
+                temp_int == 7 ||
+                temp_int == 8)
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_3rd_PARM");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_sigmaR");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_nullparm");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_R1_offset");
+        }
+        {
+            datalist = readParameter(c_file);
+            pop->SR()->setFullParameter(i, datalist);
+            pop->SR()->setFullParameterHeader(i++, "SR_autocorr");
+        }
+
         pop->SR()->rec_dev = c_file->next_value().toInt();
         pop->SR()->rec_dev_start_yr = c_file->next_value().toInt();
         pop->SR()->rec_dev_end_yr = c_file->next_value().toInt();
@@ -2430,7 +2463,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 // datalist.append(data->getFleet(flt - 1)->get_name());
                 data->getFleet(flt - 1)->Q()->setup(datalist);
                 data->getFleet(flt - 1)->setQSetupRead(true);
-                data->getFleet(flt - 1)->qSetupChanged();
+//                data->getFleet(flt - 1)->qSetupChanged();
             }
         } while (flt > 0);
 
@@ -2897,10 +2930,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.clear();
         temp_int = pop->SR()->getDistribMethod();
         line = QString (QString("%1 # recr_dist_method for parameters:").arg(QString::number(temp_int)));
-        line.append(QString(" 1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1" ));
+        line.append(QString("  1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1" ));
         chars += c_file->writeline(line);
         temp_int = pop->SR()->getDistribArea();
-        line = QString (QString("%1 # Recruitment: 1=global; 2=by area" ).arg(QString::number(temp_int)));
+        line = QString (QString("%1 # Recruitment: 1=global; 2=by area (future option)" ).arg(QString::number(temp_int)));
         chars += c_file->writeline(line);
         num = pop->SR()->getNumAssignments();
         line = QString (QString("%1 #  number of recruitment settlement assignments " ).arg(QString::number(num)));
@@ -2916,13 +2949,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         line.append(QString("# year_x_area_x_settlement_event interaction requested (only for recr_dist_method=1)" ));
         chars += c_file->writeline(line);
-        line = QString ("#GPat month area (for each settlement assignment)" );
+        line = QString ("#GPat month area age (for each settlement assignment)" );
         chars += c_file->writeline(line);
         for (i = 0; i < num; i++)
         {
             line.clear();
             str_list = pop->SR()->getAssignment(i);
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < str_list.count(); j++)
                 line.append(QString(" %1").arg(str_list.at(j)));
 
             chars += c_file->writeline(line);
@@ -2934,7 +2967,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         if (data->num_areas() > 1)
         {
             num = pop->Move()->getNumDefs();
-            line = QString(QString("%1 # N_movement_definitions").arg(
+            line = QString(QString("%1 #_N_movement_definitions").arg(
                             QString::number(num)));
             chars += c_file->writeline(line);
             temp_float = pop->Move()->getFirstAge();
@@ -3047,7 +3080,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         temp_int = pop->Grow()->getModel();
-        line = QString(QString("%1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_speciific_K; 4=not implemented" ).arg(
+        line = QString(QString("%1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_specific_K; 4=not implemented" ).arg(
                            temp_int));
         chars += c_file->writeline (line);
         temp_float = pop->Grow()->getAge_for_l1();
@@ -3069,6 +3102,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                                QString::number(temp_float)));
             chars += c_file->writeline (line);
         }
+        temp_float = pop->Grow()->getExpDecay();
+        line = QString(QString("%1 #_exponential decay for growth above maxage (fixed at 0.2 in 3.24; should approx initial Z)").arg (
+                           QString::number(temp_float)));
+        chars += c_file->writeline (line);
 
         temp_float = pop->Grow()->getSd_add();
         line = QString(QString("%1 #_SD_add_to_LAA (set to 0.1 for SS2 V1.x compatibility)" ).arg(
@@ -3558,11 +3595,20 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # SR_BH_flat_steep" ).arg(pop->SR()->full_parameters->getRowText(1)));
         chars += c_file->writeline(line);
+        if (pop->SR()->method == 5 ||
+                pop->SR()->method == 7 ||
+                pop->SR()->method == 8)
+        {
+            line = QString(QString ("%1 # SR_3RDparm" ).arg(pop->SR()->full_parameters->getRowText(2)));
+            chars += c_file->writeline(line);
+        }
         line = QString(QString ("%1 # SR_sigmaR" ).arg(pop->SR()->full_parameters->getRowText(2)));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 # SR_AnnualDevMult" ).arg(pop->SR()->full_parameters->getRowText(3)));
+        line = QString(QString ("%1 # SR_nullparm" ).arg(pop->SR()->full_parameters->getRowText(3)));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 # SR_autocorr" ).arg(pop->SR()->full_parameters->getRowText(4)));
+        line = QString(QString ("%1 # SR_R1_offset" ).arg(pop->SR()->full_parameters->getRowText(4)));
+        chars += c_file->writeline(line);
+        line = QString(QString ("%1 # SR_autocorr" ).arg(pop->SR()->full_parameters->getRowText(5)));
         chars += c_file->writeline(line);
 
         line = QString("#Next are short parm lines, if requested, for env effects on R0, steepness, and annual dev");
