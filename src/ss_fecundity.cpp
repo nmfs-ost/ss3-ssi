@@ -59,7 +59,7 @@ bool ss_fecundity::getHermaphroditism() const
     return hermaphroditism;
 }
 
-void ss_fecundity::setHermaphroditism(bool value)
+void ss_fecundity::setHermaphroditism(int value)
 {
     hermaphroditism = value;
 }

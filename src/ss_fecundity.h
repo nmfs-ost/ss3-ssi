@@ -29,11 +29,11 @@ public:
     void setHermSeason(int value);
 
     bool getHermaphroditism() const;
-    void setHermaphroditism(bool value);
+    void setHermaphroditism(int value);
 
 private:
     int method;
-    bool hermaphroditism;
+    int hermaphroditism;
     int hermSeason;
     int hermIncludeMales;
 

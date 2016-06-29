@@ -80,10 +80,6 @@ public:
     QStringList getCohortParam () {return cohortParam->getRowData(0);}
     tablemodel *getCohortParams () {return cohortParam;}
 
-    void setFracFemaleParam (int i, QStringList data) {fracfemaleParams->setRowData (i, data);}
-    QStringList getFracFemaleParam (int i) {return fracfemaleParams->getRowData(i);}
-    tablemodel *getFracFemaleParams () {return fracfemaleParams;}
-
     int getNumDevParams();
 
     int getNumEnvLinkParams();

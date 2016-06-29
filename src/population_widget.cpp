@@ -13,19 +13,23 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 //    ui->verticalLayout_fishingMort_2_detail->addWidget();
 
     // Fecundity
-    ui->spinBox_fecund_hermaph_season->setMinimum(-1);
+    fractionFemView = new tableview();
+    fractionFemView->setParent(this);
+    ui->verticalLayout_fraction_female->addWidget(fractionFemView);
 
     fecundParamsView = new tableview();
     fecundParamsView->setParent(this);
     ui->verticalLayout_fec_params->addWidget(fecundParamsView);
 
+    ui->spinBox_fecund_hermaph_season->setMinimum(-1);
+
     hermaphParamsView = new tableview();
     hermaphParamsView->setParent(this);
     ui->verticalLayout_hermaph_params->addWidget(hermaphParamsView);
 
-    connect (ui->lineEdit_fraction_female, SIGNAL(editingFinished()), SLOT(changeFractionFemale()));
+//    connect (ui->lineEdit_fraction_female, SIGNAL(editingFinished()), SLOT(changeFractionFemale()));
     connect (ui->comboBox_fecund_option, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityOption(int)));
-    connect (ui->checkBox_fecund_hermaph, SIGNAL(toggled(bool)), SLOT(changeHermaph(bool)));
+    connect (ui->groupBox_hermaphroditism, SIGNAL(toggled(bool)), SLOT(changeHermaph(bool)));
     connect (ui->spinBox_fecund_hermaph_season, SIGNAL(valueChanged(int)), SLOT(changeHermaphSeas(int)));
     connect (ui->spinBox_fecund_hermaph_male, SIGNAL(valueChanged(int)), SLOT(changeHermaphMales(int)));
     connect (ui->comboBox_fecund_gend_offset, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityOffsetOption(int)));
@@ -71,6 +75,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     cvParamsView = new tableview();
     cvParamsView->setParent(this);
     ui->verticalLayout_cv_parameters->addWidget(cvParamsView);
+    maturityParamsView = new tableview();
+    maturityParamsView->setParent(this);
+    ui->verticalLayout_maturity_params->addWidget(maturityParamsView);
 
     connect (ui->comboBox_growth_model, SIGNAL(currentIndexChanged(int)), SLOT(changeGrowthModel(int)));
     connect (ui->doubleSpinBox_growth_age_Amin, SIGNAL(valueChanged(double)), SLOT(changeAmin (double)));
@@ -88,6 +95,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     moveDefsView = new tableview();
     moveDefsView->setParent(this);
     ui->horizontalLayout_move_defs->addWidget(moveDefsView);
+    moveParamsView = new tableview();
+    moveParamsView->setParent(this);
+    ui->verticalLayout_move_params->addWidget(moveParamsView);
 
     // Maturity
 
@@ -114,6 +124,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_init_F->addWidget(mortInitialParamsView);
 
     connect (ui->comboBox_mort_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMortOption(int)));
+    connect (ui->spinBox_mort_num_breakpoints, SIGNAL(valueChanged(int)), SLOT(changeMortNumBkpts(int)));
 
     // Seasonal
     seasonParamsView = new tableview();
@@ -145,8 +156,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_fishingMort_3_num_iters, SIGNAL(valueChanged(int)), SLOT(changeFMortNumIters(int)));
 
     set_model(m_data);
-//    reset();
-//    refresh();
     ui->tabWidget->setCurrentIndex(0);
 }
 
@@ -193,17 +202,27 @@ void population_widget::changeGrowthPattern (int num)
 {
     growthPattern *gp = pop->Grow()->getPattern(num - 1);
 
+    fractionFemView->setModel(gp->getFractionFemaleParams());
+    fractionFemView->setHeight(1);
+    fractionFemView->resizeColumnsToContents();
+
     growthParamsView->setModel(gp->getGrowthParams());
     growthParamsView->setHeight(gp->getGrowthParams());
-//    growthParamsView->resizeColumnsToContents();
+    growthParamsView->resizeColumnsToContents();
 
     cvParamsView->setModel(gp->getCVParams());
     cvParamsView->setHeight(gp->getCVParams());
-//    cvParamsView->resizeColumnsToContents();
+    cvParamsView->resizeColumnsToContents();
+
+//    maturityParamsView->setModel(gp->get);
 
     mortParamsView->setModel(gp->getNatMParams());
     mortParamsView->setHeight(gp->getNatMParams());
-//    mortParamsView->resizeColumnsToContents();
+    mortParamsView->resizeColumnsToContents();
+    mortAgesView->setModel(gp->getNatMAges());
+    mortAgesView->setHeight(2);
+    mortAgesView->resizeColumnsToContents();
+
 }
 
 void population_widget::refresh()
@@ -214,9 +233,10 @@ void population_widget::refresh()
     fecundParamsView->setHeight(pop->Fec()->getFemaleParams());
     setFecundityOption(pop->Fec()->getMethod());
 
+    setHermaphOptions(pop->Fec()->getHermaphroditism());
+//    ui->groupBox_hermaphroditism->setChecked(pop->Fec()->getHermaphroditism());
     hermaphParamsView->setModel(pop->Fec()->getHermParams());
     hermaphParamsView->setHeight(pop->Fec()->getHermParams());
-    ui->checkBox_fecund_hermaph->setChecked(pop->Fec()->getHermaphroditism());
     ui->spinBox_fecund_hermaph_season->setMaximum(model_data->num_seasons());
     ui->spinBox_fecund_hermaph_season->setValue(pop->Fec()->getHermSeason());
     ui->spinBox_fecund_hermaph_male->setValue(pop->Fec()->getHermIncludeMales());
@@ -228,9 +248,11 @@ void population_widget::refresh()
 
     int temp_int = pop->Grow()->getNum_patterns();
     ui->spinBox_growth_num_patterns->setValue(temp_int);
-    changeNumGrowthPat(temp_int);
-    if (temp_int != 0)
+    if (temp_int > 0)
+    {
+        changeNumGrowthPat(temp_int);
         temp_int = pop->Grow()->getNum_morphs();
+    }
     ui->spinBox_growth_num_submorphs->setValue(temp_int);
     changeNumSubMorph(temp_int);
 
@@ -255,7 +277,7 @@ void population_widget::refresh()
     recruitFullParamsView->setHeight(pop->SR()->getFullParameterModel());
     recruitParamsView->setModel(pop->SR()->getSetupModel());
     recruitParamsView->setHeight(pop->SR()->getSetupModel());
-//    recruitParamsView->resizeColumnsToContents();
+    recruitParamsView->resizeColumnsToContents();
 
     setRecrArea(pop->SR()->getDistribArea());
     setRecrDistParam(pop->SR()->getDistribMethod());
@@ -292,7 +314,7 @@ void population_widget::refresh()
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
     growthMorphDistView->setHeight(pop->Grow()->getMorphDistModel());
 //    growthParamsView->setModel(pop->Grow()->getMaturityParams());
-//    growthMorphDistView->resizeColumnsToContents();
+    growthMorphDistView->resizeColumnsToContents();
     setGrowthModel(pop->Grow()->getModel());
     ui->doubleSpinBox_growth_age_Amin->setValue(pop->Grow()->getAge_for_l1());
     ui->doubleSpinBox_growth_age_Amax->setValue(pop->Grow()->getAge_for_l2());
@@ -302,27 +324,30 @@ void population_widget::refresh()
     ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
     ui->spinBox_growth_num_submorphs->setValue(pop->Grow()->getNum_morphs());
     changeGrowthPattern(1);
+    // Maturity
+
 
     // movement
-    moveDefsView->setModel(pop->Move()->getMovementDefs());
-    moveDefsView->setHeight(pop->Move()->getMovementDefs());
-//    moveDefsView->resizeColumnsToContents();
     ui->spinBox_num_move_defs->setValue(pop->Move()->getNumDefs());
     ui->lineEdit_move_age->setText(QString::number(pop->Move()->getFirstAge()));
-
-    // Maturity
+    moveDefsView->setModel(pop->Move()->getMovementDefs());
+    moveDefsView->setHeight(pop->Move()->getMovementDefs());
+    moveDefsView->resizeColumnsToContents();
+    moveParamsView->setModel(pop->Move()->getMovementParams());
+    moveParamsView->setHeight(pop->Move()->getMovementParams());
+    moveParamsView->resizeColumnsToContents();
 
     // Mortality
     mortBreakPtsView->setModel(pop->Grow()->getNatMortValues());
     mortBreakPtsView->setHeight(pop->Grow()->getNatMortValues());
-    mortAgesView->setModel(pop->Grow()->getNatMortAgeValues());
-    mortAgesView->setHeight(pop->Grow()->getNatMortAgeValues());
+//    mortAgesView->setModel(pop->Grow()->getNatMortAgeValues());
+//    mortAgesView->setHeight(pop->Grow()->getNatMortAgeValues());
 
     mortInputsView->setModel(pop->M()->getInputModel());
     mortInputsView->setHeight(pop->M()->getInputModel());
     mortInitialParamsView->setModel(pop->M()->getInitialParams());
     mortInitialParamsView->setHeight(pop->M()->getInitialParams());
-    changeMortOption (pop->Grow()->getNatural_mortality_type());
+    setMortOption (pop->Grow()->getNatural_mortality_type());
 
     // Seasonality
     seasonParamsView->setModel(pop->getSeasonalParams());
@@ -337,13 +362,13 @@ void population_widget::refresh()
     ui->spinBox_fishingMort_2_num_detail->setValue(pop->M()->getNumInputs());
     ui->spinBox_fishingMort_3_num_iters->setValue(pop->M()->getNumTuningIters());
 
-/*    hermaphParamsView->resizeColumnsToContents();
+    hermaphParamsView->resizeColumnsToContents();
     seasonParamsView->resizeColumnsToContents();
     assignmentView->resizeColumnsToContents();
     recruitParamsView->resizeColumnsToContents();
     recruitDevsView->resizeColumnsToContents();
     recruitFullParamsView->resizeColumnsToContents();
-    mortBreakPtsView->resizeColumnsToContents();*/
+    mortBreakPtsView->resizeColumnsToContents();
     changeMortOption(pop->Grow()->getNatural_mortality_type());
 }
 
@@ -362,7 +387,7 @@ void population_widget::changeFecundityOption(int opt)
     int num = opt + 1;
     pop->Fec()->setMethod(num);
     fecundParamsView->setHeight(2);
-//    fecundParamsView->resizeColumnsToContents();
+    fecundParamsView->resizeColumnsToContents();
 }
 
 int population_widget::getFecundityOption()
@@ -403,28 +428,72 @@ int population_widget::getFecundityAdjustment()
     return (ui->comboBox_fecund_adj_constraint->currentIndex() + 1);
 }
 
+void population_widget::setMortOption(int opt)
+{
+    ui->comboBox_mort_option->setCurrentIndex(opt);
+    ui->widget_mort_breakpoints->setVisible(false);
+    ui->widget_mort_lorenz->setVisible(false);
+    ui->label_mort_age_specific->setVisible(false);
+    mortAgesView->setVisible(false);
+    mortParamsView->setVisible(true);
+    switch (opt)
+    {
+    case 1: // breakpoints
+        ui->widget_mort_breakpoints->setVisible(true);
+        ui->spinBox_mort_num_breakpoints->setValue(pop->Grow()->getNatMortNumBreakPts());
+        break;
+    case 2: // lorenzen
+        ui->widget_mort_lorenz->setVisible(true);
+        ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
+        break;
+    case 3: // specific age
+    case 4:
+        ui->label_mort_age_specific->setVisible(true);
+        mortAgesView->setVisible(true);
+        ui->label_mort_params->setVisible(false);
+        mortParamsView->setVisible(false);
+
+        break;
+    }
+}
+
 void population_widget::changeMortOption(int opt)
 {
     pop->Grow()->setNatural_mortality_type(opt);
     ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);
-    ui->widget_mort_age_specific->setVisible(false);
+    ui->label_mort_age_specific->setVisible(false);
+    mortAgesView->setVisible(false);
+    ui->label_mort_params->setVisible(true);
+    mortParamsView->setVisible(true);
     switch (opt)
     {
-//    case 0:
-//        break;
     case 1:
         ui->widget_mort_breakpoints->setVisible(true);
+        ui->spinBox_mort_num_breakpoints->setValue(pop->Grow()->getNatMortNumBreakPts());
         break;
     case 2:
         ui->widget_mort_lorenz->setVisible(true);
+        ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
         break;
     case 3:
     case 4:
-        ui->widget_mort_age_specific->setVisible(true);
+        ui->label_mort_age_specific->setVisible(true);
+        mortAgesView->setVisible(true);
+        ui->label_mort_params->setVisible(false);
+        mortParamsView->setVisible(false);
         break;
     }
 
+}
+
+void population_widget::changeMortNumBkpts(int num)
+{
+    int pat = ui->spinBox_growth_pattern->value() - 1;
+    pop->Grow()->setNatMortNumBreakPts(num);
+    mortBreakPtsView->resizeColumnsToContents();
+    mortParamsView->setHeight(pop->Grow()->getPattern(pat)->getNatMParams());
+    mortParamsView->resizeColumnsToContents();
 }
 
 void population_widget::changeNumGrowthPat(int num)
@@ -457,7 +526,7 @@ void population_widget::changeNumSubMorph(int num)
     ui->doubleSpinBox_growth_morph_ratio->setVisible(vis);
     ui->label_growth_submorph_dist->setVisible(vis);
     growthMorphDistView->setVisible(vis);
-//    growthMorphDistView->resizeColumnsToContents();
+    growthMorphDistView->resizeColumnsToContents();
 }
 
 void population_widget::setGrowthModel(int opt)
@@ -526,14 +595,36 @@ void population_widget::changeCVmethod (int num)
 
 void population_widget::changeFractionFemale()
 {
-    float value = ui->lineEdit_fraction_female->text().toFloat();
-    pop->set_frac_female(value);
+//    float value = ui->lineEdit_fraction_female->text().toFloat();
+//    pop->set_frac_female(value);
+}
+
+void population_widget::setHermaphOptions(int herm)
+{
+    if (herm != 0)
+    {
+        ui->groupBox_hermaphroditism->setChecked(true);
+        if (herm == 1)
+            ui->radioButton_herm_MtF->setChecked(true);
+        else
+            ui->radioButton_herm_FtM->setChecked(true);
+    }
+    else
+    {
+        ui->groupBox_hermaphroditism->setChecked(false);
+    }
 }
 
 void population_widget::changeHermaph(bool flag)
 {
-    pop->Fec()->setHermaphroditism(flag);
-    ui->frame_fecund_hermaph->setVisible(flag);
+    int doherm = 0;
+    if (flag)
+    {
+        doherm = -1;
+        if (ui->radioButton_herm_MtF->isChecked())
+            doherm = 1;
+     }
+    pop->Fec()->setHermaphroditism(doherm);
 }
 
 void population_widget::changeHermaphSeas(int seas)
@@ -564,7 +655,7 @@ void population_widget::changeMaturityOpt(int opt)
     pop->Grow()->setMaturity_option(opt + 1);
     if (opt == 2 || opt == 3)
         vis = true;
-    ui->frame_growth_age_spec->setVisible(vis);
+//    ui->frame_growth_age_spec->setVisible(vis);
 }
 
 int population_widget::getMaturityOpt()
@@ -693,7 +784,7 @@ void population_widget::changeMoveNumDefs(int value)
 {
     pop->Move()->setNumDefs(value);
     moveDefsView->setHeight(value);
-//    moveDefsView->resizeColumnsToContents();
+    moveDefsView->resizeColumnsToContents();
 }
 
 void population_widget::changeMoveFirstAge()

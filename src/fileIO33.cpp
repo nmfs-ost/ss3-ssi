@@ -2015,29 +2015,39 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             for (int i = 0; i < num_vals; i++) // vector of breakpoints
                 datalist.append(c_file->next_value());
             pop->Grow()->setNatMortBreakPts(datalist);
-            num_vals = data->num_genders(); // read 1 param for each gender for each GP
+            num_vals = num_vals; // read N params for each gender for each GP
             break;
         case 2:
             temp_int = c_file->next_value().toInt(); // ref age for Lorenzen
             pop->Grow()->setNaturnalMortLorenzenRef(temp_int);
-            num_vals = data->num_genders(); // read 1 param for each gender for each GP
+            num_vals = 1; // read 1 param for each gender for each GP
             break;
         case 3:
         case 4:
             // age-specific M values by sex by growth pattern
-            num_vals = pop->Grow()->getNum_patterns();
-            num = data->num_genders();
-            if (num > 2) num = 2;
-            datalist.clear();
-            for (int i = 0; i < num; i++) // first female, then male
+            num = pop->Grow()->getNum_patterns();
+            num_vals = data->get_age_composition()->getNumberBins();
+            for (int i = 0; i < num; i++) // first female M for each growth pattern
             {
+                datalist.clear();
                 for (int j = 0; j < num_vals; j++)
                 {
                     datalist.append(c_file->next_value());
                 }
+                pop->Grow()->getPattern(i)->setNatMFemAgeList(datalist);
             }
-//            pop->Grow()->setNatMortNumAges(datalist.count());
-            pop->Grow()->setNatMortAges(datalist);
+//            if (data->num_genders() > 1)
+            {
+                for (int i = 0; i < num; i++) // now male M for each growth pattern
+                {
+                    datalist.clear();
+                    for (int j = 0; j < num_vals; j++)
+                    {
+                        datalist.append(c_file->next_value());
+                    }
+                    pop->Grow()->getPattern(i)->setNatMMaleAgeList(datalist);
+                }
+            }
             num_vals = 0; // read no additional parameters
             break;
         }
@@ -2101,8 +2111,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->setMethod(temp_int);
 
         temp_int = c_file->next_value().toInt();
-        pop->Fec()->setHermaphroditism((temp_int == 1));
-        if (temp_int == 1)
+        pop->Fec()->setHermaphroditism(temp_int);
+        if (temp_int != 0)
         {
             temp_float = c_file->next_value().toFloat();
             pop->Fec()->setHermSeason(temp_float);
@@ -2117,13 +2127,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setAdjustment_method(temp_int);
 
         // mortality growth parameters
-        pop->Grow()->setNumMaturityParams(0);
+        //pop->Grow()->setNumMaturityParams(0);
         num = pop->Grow()->getNum_patterns();
         for (i = 0; i < num; i++)
         {
             growthPattern *gp = pop->Grow()->getPattern(i);
             gp->setNumGrowthParams(0);
-            gp->setNumCVParams(0);
+//            gp->setNumCVParams(0);
                                               // Female parameters
             num_vals = gp->getNumNatMParams();
             for (int j = 0; j < num_vals; j++)
@@ -2151,9 +2161,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
             datalist = readParameter(c_file); // CV young
-            gp->addCVParam(datalist);
+            gp->setCVParam(0, datalist);
             datalist = readParameter(c_file); // CV old
-            gp->addCVParam(datalist);
+            gp->setCVParam(1, datalist);
 
             pop->Grow()->setNumMaturityParams(0);
             datalist = readParameter(c_file); // fem_wt_len_1
@@ -2270,9 +2280,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
             datalist = readParameter(c_file);
-            pop->Grow()->setFracFemaleParam(i, datalist);
+            pop->Grow()->getPattern(i)->setFractionFemaleParam(datalist);
         }
-//        pop->setFractionFemale(datalist);
 
         // seasonal_effects_on_biology_parms
         temp_int = c_file->next_value().toInt();
@@ -3067,13 +3076,19 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             num_vals = pop->Grow()->getNum_patterns();
             for (i = 0; i < num_vals; i++)
             {
-                line.append(QString(" %1 # F_GP%1" ).arg(str_list.at(i), QString::number(j+1)));
+                str_list = pop->Grow()->getPattern(i)->getNatMFemAgeList();
+                for (int j = 0; j < str_list.count(); j++)
+                    line.append(QString(" %1").arg(str_list.at(i)));
+                line.append(QString(" #_Fem_M_GP%1" ).arg(QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
             if (data->num_genders() > 1)
                 for (int j = 0; j < num_vals; j++, i++)
                 {
-                    line.append(QString(" %1 # M_GP%1" ).arg(str_list.at(i), QString::number(j+1)));
+                    str_list = pop->Grow()->getPattern(i)->getNatMMaleAgeList();
+                    for (int j = 0; j < str_list.count(); j++)
+                        line.append(QString(" %1").arg(str_list.at(i)));
+                    line.append(QString(" #_Male_M_GP%1" ).arg(QString::number(i+1)));
                     chars += c_file->writeline(line);
                 }
             break;
@@ -3310,7 +3325,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        if (pop->Fec()->getHermaphroditism() == 1)
+        if (pop->Fec()->getHermaphroditism() != 0)
         {
             for (i = 0; i < 3; i++)
             {
@@ -3436,7 +3451,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < num; i++)
         {
             line.clear();
-            str_list = pop->Grow()->getFracFemaleParam(i);
+            str_list = pop->Grow()->getPattern(i)->getFractionFemaleParam();
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(QString(" # FracFemale_GP_%1").arg(QString::number(i + 1)));

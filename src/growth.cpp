@@ -17,10 +17,11 @@ ss_growth::ss_growth()
     natMortNumBreakPoints = 0;
     natMortBreakPoints = new tablemodel();
     natMortBreakPoints->setRowCount(1);
-    natMortBreakPoints->setRowHeader(0, QString("Age Breakpoints"));
+    natMortBreakPoints->setRowHeader(0, QString("Age(real) at M Breakpoints"));
     natMortAges = new tablemodel();
     natMortAges->setRowCount(0);
     natMortAges->setColumnCount(1);
+    natMort_lorenzen_ref_age = 0;
 
     matAgeValues = new tablemodel();
     matAgeValues->setRowCount(1);
@@ -286,23 +287,25 @@ int ss_growth::getNatural_mortality_type() const
 void ss_growth::setNatural_mortality_type(int value)
 {
     natural_mortality_type = value;
-    natMort_lorenzen_ref_age = 0;
     switch (natural_mortality_type)
     {
     case 0:
+        for (int i = 0; i < num_patterns; i++)
+            getPattern(i)->getNatMParams()->setRowCount(1);
+        break;
     case 1:
+        for (int i = 0; i < num_patterns; i++)
+            getPattern(i)->getNatMParams()->setRowCount(2 * natMortNumBreakPoints);
         natMortBreakPoints->setColumnCount(natMortNumBreakPoints);
+        break;
+    case 2:
+        for (int i = 0; i < num_patterns; i++)
+            getPattern(i)->getNatMParams()->setRowCount(2);
         break;
     case 3:
     case 4:
-        natMortHeader.clear();
         for (int i = 0; i < num_patterns; i++)
-            natMortHeader << QString("F_GP%1").arg(QString::number(i+1));
-        for (int i = 0; i < num_patterns; i++)
-            natMortHeader << QString("M_GP%1").arg(QString::number(i+1));
-        natMortAges->setRowCount(natMortHeader.count());
-        natMortAges->setVerticalHeaderLabels(natMortHeader);
-        natMortAges->setColumnCount(num_ages);
+            getPattern(i)->getNatMAges()->setColumnCount(num_ages);
         break;
     }
 }
@@ -316,6 +319,8 @@ void ss_growth::setNatMortNumBreakPts(int num)
 {
     natMortNumBreakPoints = num;
     natMortBreakPoints->setColumnCount(num);
+    for (int i = 0; i < num_patterns; i++)
+        getPattern(i)->getNatMParams()->setRowCount(2 * natMortNumBreakPoints);
 }
 
 QStringList ss_growth::getNatMortBreakPts ()
