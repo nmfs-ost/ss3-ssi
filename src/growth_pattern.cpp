@@ -5,11 +5,20 @@ growthPattern::growthPattern()
     morphs.append(new growth_morph());
     num_morphs = 1;
 
-    natMParams = new parametermodel();
-    natMParams->setRowCount(1);
+    fractionFemParams = new parametermodel();
+    fractionFemParams->setRowCount(1);
+    fractionFemParams->setRowHeader(0, QString("FracFemale"));
+
     growthParams = new parametermodel();
     cvParams = new parametermodel();
     cvParams->setRowCount(2);
+
+    natMParams = new parametermodel();
+    natMParams->setRowCount(1);
+    natMAges = new tablemodel ();
+    natMAges->setRowCount(2);
+    natMAges->setRowHeader(0, QString("NatM_Ages_Fem"));
+    natMAges->setRowHeader(1, QString("NatM_Ages_Male"));
 
     devParams = new parametermodel();
     devParams->setColumnCount(7);
@@ -18,9 +27,11 @@ growthPattern::growthPattern()
 growthPattern::~growthPattern()
 {
     clear();
-    delete natMParams;
+    delete fractionFemParams;
     delete growthParams;
     delete cvParams;
+    delete natMParams;
+    delete natMAges;
     delete devParams;
 }
 

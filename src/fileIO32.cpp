@@ -1871,7 +1871,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         datalist << "-1" << temp_string << "-99" << "0";
         datalist << "0" << "0" << "0" << "0" << "0" << "0"; // 0.000001 0.999999 0.5 0.5 -1 0.5 -99 0 0 0 0 0 0 0
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
-            pop->Grow()->setFracFemaleParam(i, datalist);
+            pop->Grow()->getPattern(i)->setFractionFemaleParam(datalist);
  //       pop->set_frac_female(temp_float);
 
         // natural Mort
@@ -1972,8 +1972,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->setMethod(temp_int);
 
         temp_int = c_file->next_value().toInt();
-        pop->Fec()->setHermaphroditism(temp_int == 1? true: false);
-        if (temp_int == 1)
+        pop->Fec()->setHermaphroditism(temp_int);
+        if (temp_int != 0)
         {
             temp_float = c_file->next_value().toFloat();
             pop->Fec()->setHermSeason(temp_float);
@@ -2079,7 +2079,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             pop->Grow()->addMaturityParam(datalist);
         }
 
-        if (pop->Fec()->getHermaphroditism() == 1)
+        if (pop->Fec()->getHermaphroditism() != 0)
         {
             for (i = 0; i < 3; i++)
             {
@@ -2886,7 +2886,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         }
         chars += c_file->writeline("#" );
 
-        str_list = pop->Grow()->getFracFemaleParam(0);
+        str_list = pop->Grow()->getPattern(0)->getFractionFemaleParam();
         temp_float = str_list.at(2).toFloat(); // pop->get_frac_female();
         line = QString(QString("%1 #_fracfemale " ).arg (temp_float));
         chars += c_file->writeline(line);

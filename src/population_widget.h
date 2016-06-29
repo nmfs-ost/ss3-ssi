@@ -39,7 +39,9 @@ public slots:
     void setMaturityOpt(int opt);
     int getMaturityOpt();
 
+    void setMortOption (int opt);
     void changeMortOption (int opt);
+    void changeMortNumBkpts (int num);
     void changeNumGrowthPat(int num);
     void changeNumSubMorph(int num);
     void setGrowthModel(int opt);
@@ -72,6 +74,7 @@ public slots:
 
 private slots:
     void changeFractionFemale();
+    void setHermaphOptions(int herm);
     void changeHermaph(bool flag);
     void changeHermaphSeas(int seas);
     void changeHermaphMales(int opt);
@@ -95,15 +98,20 @@ private:
     Ui::population_widget *ui;
 
     tableview *fecundParamsView;
+    tableview *fractionFemView;
     tableview *hermaphParamsView;
-    tableview *growthParamsView;
+
     tableview *growthMorphDistView;
+    tableview *growthParamsView;
     tableview *cvParamsView;
     tableview *seasonParamsView;
+    tableview *maturityParamsView;
+
     tableview *assignmentView;
     tableview *recruitParamsView;
     tableview *recruitDevsView;
     tableview *recruitFullParamsView;
+
     tableview *mortBreakPtsView;
     tableview *mortAgesView;
     tableview *mortParamsView;
@@ -111,6 +119,7 @@ private:
     tableview *mortInitialParamsView;
 
     tableview *moveDefsView;
+    tableview *moveParamsView;
 
     ss_model *model_data;
     population *pop;

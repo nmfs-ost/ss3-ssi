@@ -26,6 +26,15 @@ public:
     void setNatMParam (int index, QStringList data);
     QStringList getNatMParam(int index) {return natMParams->getRowData(index);}
     tablemodel *getNatMParams() {return natMParams;}
+    void setNatMMaleAgeList (QStringList data) {natMAges->setRowData(1, data);}
+    QStringList getNatMMaleAgeList () {return natMAges->getRowData(1);}
+    void setNatMFemAgeList (QStringList data) {natMAges->setRowData (0, data);}
+    QStringList getNatMFemAgeList () {return natMAges->getRowData(0);}
+    tablemodel *getNatMAges () {return natMAges;}
+
+    void setFractionFemaleParam (QStringList data) {fractionFemParams->setRowData (0, data);}
+    QStringList getFractionFemaleParam () {return fractionFemParams->getRowData(0);}
+    tablemodel *getFractionFemaleParams () {return fractionFemParams;}
 
     void setNumGrowthParams (int num) {growthParams->setRowCount(num);}
     int getNumGrowthParams () {return growthParams->rowCount();}
@@ -56,12 +65,17 @@ private:
     void clear();
     growthPattern& copy (const growthPattern &rhs);
 
-    parametermodel *natMParams;
-    parametermodel *growthParams;
-    parametermodel *cvParams;
+    parametermodel *fractionFemParams;
 
     parametermodel *devParams;
 
+    parametermodel *growthParams;
+    parametermodel *cvParams;
+    parametermodel *cohortDevParams;
+    parametermodel *maturityParams;
+
+    parametermodel *natMParams;
+    tablemodel *natMAges;
 };
 
 #endif // GROWTH_PATTERN_H
