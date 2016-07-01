@@ -80,8 +80,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>836</width>
+            <height>328</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -386,8 +386,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>680</width>
+            <height>316</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -647,8 +647,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>717</width>
+            <height>317</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -932,8 +932,8 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-87</y>
-            <width>913</width>
+            <y>0</y>
+            <width>575</width>
             <height>516</height>
            </rect>
           </property>
@@ -1322,8 +1322,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>462</width>
+            <height>128</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1462,9 +1462,9 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-215</y>
+            <y>0</y>
             <width>913</width>
-            <height>651</height>
+            <height>644</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1941,19 +1941,6 @@ recruitment distribution method = 1)</string>
              </layout>
             </widget>
            </item>
-           <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </widget>
         </widget>
@@ -1975,8 +1962,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>804</width>
+            <height>196</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">

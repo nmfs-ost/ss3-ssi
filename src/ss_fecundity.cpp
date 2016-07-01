@@ -8,10 +8,8 @@ ss_fecundity::ss_fecundity()
 
     hermaphParams = new parametermodel();
     hermaphParams->setRowCount(3);
-    fVHeader << "Intercept" << "Slope";
     femaleParams = new parametermodel();
-    femaleParams->setVerticalHeaderLabels(fVHeader);
-    femaleParams->setRowCount(2);
+    femaleParams->setRowCount(4);
 }
 
 ss_fecundity::~ss_fecundity()
@@ -69,7 +67,6 @@ void ss_fecundity::setFemaleParam(int index, QStringList data)
     if (index >= femaleParams->rowCount())
         femaleParams->setRowCount(index + 1);
     femaleParams->setRowData(index, data);
-    femaleParams->setVerticalHeaderLabels(fVHeader);
 }
 
 

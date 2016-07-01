@@ -39,7 +39,6 @@ private:
 
     QString pHeader;
     parametermodel *hermaphParams;
-    QStringList fVHeader;
     parametermodel *femaleParams;
 };
 
