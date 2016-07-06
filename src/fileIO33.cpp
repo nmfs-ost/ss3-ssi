@@ -2005,7 +2005,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
         default:
         case 0:
-            num_vals = 1;  // 1 parameter only
+            num_vals = 1;  // 1 parameter for each gender only
             break;
         case 1:
             num_vals = c_file->next_value().toInt(); // num breakpoints
@@ -2203,11 +2203,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Grow()->setNumMaturityParams(num);
             datalist = readParameter(c_file); // fem_wt_len_1
 
-            pop->Grow()->addMaturityParam(datalist);
+            pop->Grow()->setMaturityParam(num, datalist);
             pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
             num++;
             datalist = readParameter(c_file); // fem_wt_len_2
-            pop->Grow()->addMaturityParam(datalist);
+            pop->Grow()->setMaturityParam(num, datalist);
             pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Fem"));
 
             num = 0;
@@ -2289,29 +2289,37 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     }
                 }
                 datalist = readParameter(c_file); // CV young
-                gp->addCVParam(datalist);
+                gp->setCVParam(2, datalist);
                 gp->getCVParams()->setRowHeader(2, QString("CV_young_Mal_GP_%1").arg(QString::number(i+1)));
                 datalist = readParameter(c_file); // CV old
-                gp->addCVParam(datalist);
+                gp->setCVParam(3, datalist);
                 gp->getCVParams()->setRowHeader(3, QString("CV_old_Mal_GP_%1").arg(QString::number(i+1)));
+
                 num = pop->Grow()->getNumMaturityParams();
                 datalist = readParameter(c_file); // male_wt_len_1
-                pop->Grow()->addMaturityParam(datalist);
+                pop->Grow()->setMaturityParam(num, datalist);
                 pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
                 num++;
                 datalist = readParameter(c_file); // male_wt_len_2
-                pop->Grow()->addMaturityParam(datalist);
+                pop->Grow()->setMaturityParam(num, datalist);
                 pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
             }
         }
 
         if (pop->Fec()->getHermaphroditism())
         {
-            for (i = 0; i < 3; i++)
-            {
-            datalist = readParameter(c_file); // hermaph_inflect, sd, asymptotic
+            i = 0;
+            datalist = readParameter(c_file); // hermaph_inflect
             pop->Fec()->setHermParam(i, datalist);
-            }
+            pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_inflect_age"));
+            i++;
+            datalist = readParameter(c_file); // hermaph_sd
+            pop->Fec()->setHermParam(i, datalist);
+            pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_std_dev"));
+            i++;
+            datalist = readParameter(c_file); // hermaph_asymptotic
+            pop->Fec()->setHermParam(i, datalist);
+            pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_asymp_rate"));
         }
 
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
@@ -3315,61 +3323,74 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             growthPattern *gp = pop->Grow()->getPattern(i);
             QString gpstr (QString("GP_%1").arg(QString::number(i + 1)));
             QString genstr, parstr;
-            num_vals = data->num_genders();
+            if (data->num_genders() > 1)
+                num_vals = 2;
+            else
+                num_vals = 1;
             {
-                int numpar = 1;
-                if (pop->Grow()->getNatural_mortality_type() > 0)
-                    numpar = 2;
+                int numpar = 2;
+                if (pop->Grow()->getNatural_mortality_type() == 1)
+                    numpar = pop->Grow()->getNatMortNumBreakPts();
+                else if (pop->Grow()->getNatural_mortality_type() > 2)
+                    numpar = 0;
                 genstr = QString ("Fem");
+                numpar = gp->getNumNatMParams()/num_vals;
                 for (int k = 0; k < numpar; k++)
                 {
-                    parstr = QString (QString("NatM_p_%1").arg(QString::number(k + 1)));
+                    parstr = QString (gp->getNatMParams()->getRowHeader(k));
                     line.clear();
                     str_list = gp->getNatMParam(k);
                     for (int l = 0; l < str_list.count(); l++)
                         line.append(QString(" %1").arg(str_list.at(l)));
-                    line.append(QString(" # %1_%2_%3" ).arg (parstr, genstr, gpstr));
+                    line.append(QString(" # %1" ).arg (parstr));
                     chars += c_file->writeline (line);
                 }
                 for (int k = 0; k < gp->getNumGrowthParams()/num_vals; k++)
                 {
-                    parstr = QString(QString("Growth_p_%1").arg(QString::number(k + 1)));
+                    parstr = QString(gp->getGrowthParams()->getRowHeader(k));
                     line.clear();
                     str_list = gp->getGrowthParam(k);
                     for (int l = 0; l < str_list.count(); l++)
                         line.append(QString(" %1").arg(str_list.at(l)));
-                    line.append(QString(" # %1_%2_%3" ).arg (parstr, genstr, gpstr));
+                    line.append(QString(" # %1" ).arg (parstr));
                     chars += c_file->writeline (line);
                 }
                 for (int k = 0; k < gp->getNumCVParams()/num_vals; k++)
                 {
-                    parstr = QString(QString("CV_p_%1").arg(QString::number(k + 1)));
+                    parstr = QString(gp->getCVParams()->getRowHeader(k));
                     line.clear();
                     str_list = gp->getCVParam(k);
                     for (int l = 0; l < str_list.count(); l++)
                         line.append(QString(" %1").arg(str_list.at(l)));
-                    line.append(QString(" # %1_%2_%3" ).arg (parstr, genstr, gpstr));
+                    line.append(QString(" # %1" ).arg (parstr));
                     chars += c_file->writeline (line);
                 }
-                line.clear();
-                str_list = pop->Grow()->getMaturityParam(0);
-                for (int l = 0; l < str_list.count(); l++)
-                    line.append(QString(" %1").arg(str_list.at(l)));
-                line.append(" # Wtlen_1_Fem" );
-                chars += c_file->writeline (line);
-                line.clear();
+                for (int k = 0; k < 2; k++)
+                {
+                    parstr = QString(pop->Grow()->getMaturityParams()->getRowHeader(k));
+                    line.clear();
+                    str_list = pop->Grow()->getMaturityParam(k);
+                    for (int l = 0; l < str_list.count(); l++)
+                        line.append(QString(" %1").arg(str_list.at(l)));
+                    line.append(QString(" # %1" ).arg (parstr));
+                    chars += c_file->writeline (line);
+                }
+/*                line.clear();
                 str_list = pop->Grow()->getMaturityParam(1);
                 for (int l = 0; l < str_list.count(); l++)
                     line.append(QString(" %1").arg(str_list.at(l)));
                 line.append(" # Wtlen_2_Fem" );
-                chars += c_file->writeline (line);
-                line.clear();
-                str_list = pop->Grow()->getMaturityParam(2);
-                for (int l = 0; l < str_list.count(); l++)
-                    line.append(QString(" %1").arg(str_list.at(l)));
-                line.append(" # Mat50%_Fem" );
-                chars += c_file->writeline (line);
-                line.clear();
+                chars += c_file->writeline (line);*/
+                for (int k = 0; k < pop->Fec()->getFemaleParams()->rowCount(); k++)
+                {
+                    line.clear();
+                    str_list = pop->Fec()->getFemaleParam(k);
+                    for (int l = 0; l < str_list.count(); l++)
+                        line.append(QString(" %1").arg(str_list.at(l)));
+                    line.append(QString(" # %1").arg(pop->Fec()->getFemaleParams()->getRowHeader(k)));
+                    chars += c_file->writeline (line);
+                }
+/*                line.clear();
                 str_list = pop->Grow()->getMaturityParam(3);
                 for (int l = 0; l < str_list.count(); l++)
                     line.append(QString(" %1").arg(str_list.at(l)));
@@ -3386,41 +3407,51 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 for (int l = 0; l < str_list.count(); l++)
                     line.append(QString(" %1").arg(str_list.at(l)));
                 line.append(" # Eggs/kg_slope_wt_Fem" );
-                chars += c_file->writeline (line);
+                chars += c_file->writeline (line);*/
                 if (num_vals > 1)
                 {
                     genstr = QString ("Male");
                     for (int k = gp->getNumNatMParams()/2; k < gp->getNumNatMParams(); k++)
                     {
-                        parstr = QString (QString("NatM_p_%1").arg(QString::number(k + 1)));
+                        parstr = QString (gp->getNatMParams()->getRowHeader(k));
                         line.clear();
                         str_list = gp->getNatMParam(k);
                         for (int l = 0; l < str_list.count(); l++)
                             line.append(QString(" %1").arg(str_list.at(l)));
-                        line.append(QString(" # %1_%2_%3" ).arg (parstr, genstr, gpstr));
+                        line.append(QString(" # %1" ).arg (parstr));
                         chars += c_file->writeline (line);
                     }
                     for (int k = gp->getNumGrowthParams()/num_vals; k < gp->getNumGrowthParams(); k++)
                     {
-                        parstr = QString(QString("Growth_p_%1").arg(QString::number(k + 1)));
+                        parstr = QString(gp->getGrowthParams()->getRowHeader(k));
                         line.clear();
                         str_list = gp->getGrowthParam(k);
                         for (int l = 0; l < str_list.count(); l++)
                             line.append(QString(" %1").arg(str_list.at(l)));
-                        line.append(QString(" # %1_%2_%3" ).arg (parstr, genstr, gpstr));
+                        line.append(QString(" # %1" ).arg (parstr));
                         chars += c_file->writeline (line);
                     }
                     for (int k = gp->getNumCVParams()/num_vals; k < gp->getNumCVParams(); k++)
                     {
-                        parstr = QString(QString("CV_p_%1").arg(QString::number(k + 1)));
+                        parstr = QString(gp->getCVParams()->getRowHeader(k));
                         line.clear();
                         str_list = gp->getCVParam(k);
                         for (int l = 0; l < str_list.count(); l++)
                             line.append(QString(" %1").arg(str_list.at(l)));
-                        line.append(QString(" # %1_%2_%3" ).arg (parstr, genstr, gpstr));
+                        line.append(QString(" # %1" ).arg (parstr));
                         chars += c_file->writeline (line);
                     }
-
+                    for (int k = 2; k < 4; k++)
+                    {
+                        parstr = QString(pop->Grow()->getMaturityParams()->getRowHeader(k));
+                        line.clear();
+                        str_list = pop->Grow()->getMaturityParam(k);
+                        for (int l = 0; l < str_list.count(); l++)
+                            line.append(QString(" %1").arg(str_list.at(l)));
+                        line.append(QString(" # %1" ).arg (parstr));
+                        chars += c_file->writeline (line);
+                    }
+/*
                     line.clear();
                     str_list = pop->Grow()->getMaturityParam(4);
                     for (int l = 0; l < str_list.count(); l++)
@@ -3432,7 +3463,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     for (int l = 0; l < str_list.count(); l++)
                         line.append(QString(" %1").arg(str_list.at(l)));
                     line.append(" # Wtlen_2_Male" );
-                    chars += c_file->writeline (line);
+                    chars += c_file->writeline (line);*/
                 }
             }
         }
@@ -3450,17 +3481,18 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        num = pop->SR()->getNumAssignmentParams();
-        for (i = 0; i < num; i++)
+        for (i = 0; i < pop->SR()->getNumAssignmentParams(); i++)
         {
             line.clear();
             str_list = pop->SR()->getAssignmentParam(i);
-            for (int l = 0; i < str_list.count(); l++)
+            for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(" # ");
             line.append(pop->SR()->getAssignmentParams()->getRowHeader(i));
             chars += c_file->writeline (line);
         }
+
+
 /*
         num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas()
                 - pop->Grow()->getNum_patterns();
@@ -3531,14 +3563,14 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             line.clear();
             str_list = pop->Move()->getParameter(par);
             for (int l = 0; l < str_list.count(); l++)
-                line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # MoveParm_A_seas_%1_GP_%2_from_%3_to_%4" ).arg(seas, gp, from, to));
+                line.append(QString(" %1").arg(str_list.at(l))); ;
+            line.append(QString(" # %1" ).arg(pop->Move()->getMovementParams()->getRowHeader(par)));
             chars += c_file->writeline (line);
             line.clear();
             str_list = pop->Move()->getParameter(par + 1);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # MoveParm_B_seas_%1_GP_%2_from_%3_to_%4" ).arg(seas, gp, from, to));
+            line.append(QString(" # %1" ).arg(pop->Move()->getMovementParams()->getRowHeader(par+1)));
             chars += c_file->writeline (line);
         }
 

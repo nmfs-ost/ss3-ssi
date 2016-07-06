@@ -94,7 +94,7 @@ public:
     void setAssignment(int row, QStringList data);
     QStringList getAssignment(int row);
     parametermodel *assignmentParams;
-    parametermodel *getAssignmentParams () {return assignmentParams;}
+    tablemodel *getAssignmentParams () {return assignmentParams;}
     void setNumAssignmentParams (int num) {assignmentParams->setRowCount(num);}
     int getNumAssignmentParams () {return assignmentParams->rowCount();}
     void addAssignmentParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
@@ -106,12 +106,16 @@ public:
     recruitDevs *getRecruitDevs () {return recruitDeviations;}
 
     parametermodel *interactParams;
-    parametermodel *getInteractParams () {return interactParams;}
+    tablemodel *getInteractParams () {return interactParams;}
     void setNumInteractParams (int num) {interactParams->setRowCount(num);}
     int getNumInteractParams () {return interactParams->rowCount();}
     void addInteractParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
     void setInteractParam (int index, QStringList data);
     QStringList getInteractParam(int index) {return interactParams->getRowData(index);}
+
+
+    parametermodel *recruitDistParams;
+    tablemodel *getRecruitDistParams() {return recruitDistParams;}
 
 
 };

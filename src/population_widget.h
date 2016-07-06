@@ -109,7 +109,7 @@ private:
     tableview *maturityParamsView;
 
     tableview *assignmentView;
-    tableview *recruitParamsView;
+    tableview *recruitDistView;
     tableview *recruitDevsView;
     tableview *recruitFullParamsView;
 

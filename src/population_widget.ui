@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>5</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -393,6 +393,13 @@
           <layout class="QVBoxLayout" name="verticalLayout_10">
            <item>
             <layout class="QGridLayout" name="gridLayout_recruitment">
+             <item row="6" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Function parameters</string>
+               </property>
+              </widget>
+             </item>
              <item row="8" column="4">
               <widget class="QLabel" name="label_sr_env_tgt">
                <property name="text">
@@ -488,6 +495,9 @@ recruitment distribution method = 1)</string>
                 <string>Environmental link</string>
                </property>
               </widget>
+             </item>
+             <item row="7" column="0" colspan="9">
+              <layout class="QVBoxLayout" name="verticalLayout_recr_full_params"/>
              </item>
              <item row="3" column="2" colspan="3">
               <layout class="QHBoxLayout" name="horizontalLayout_recr_assigns"/>
@@ -608,23 +618,20 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="12" column="1" colspan="7">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_params"/>
-             </item>
-             <item row="7" column="0" colspan="9">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_full_params"/>
-             </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="label">
+             <item row="12" column="0" colspan="2">
+              <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>Function parameters</string>
+                <string>Assignment Parameters</string>
                </property>
               </widget>
+             </item>
+             <item row="13" column="0" colspan="9">
+              <layout class="QVBoxLayout" name="verticalLayout_recr_params"/>
              </item>
             </layout>
            </item>
            <item>
-            <spacer name="verticalSpacer">
+            <spacer name="verticalSpacer_recr">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
