@@ -8,6 +8,9 @@ ss_fecundity::ss_fecundity()
 
     hermaphParams = new parametermodel();
     hermaphParams->setRowCount(3);
+    hermaphParams->setRowHeader(0, QString("Hermaph_inflect_age"));
+    hermaphParams->setRowHeader(1, QString("Hermaph_std_dev"));
+    hermaphParams->setRowHeader(2, QString("Hermaph_asymp_rate"));
     femaleParams = new parametermodel();
     femaleParams->setRowCount(4);
 }

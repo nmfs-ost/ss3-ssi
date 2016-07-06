@@ -2322,23 +2322,24 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_asymp_rate"));
         }
 
+        pop->SR()->setNumRecruitDistParams(0);
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
             datalist = readParameter(c_file); // recr apportion main
-            pop->SR()->setAssignmentParam(i, datalist);
-            pop->SR()->getAssignmentParams()->setRowHeader(i, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
+            pop->SR()->setRecruitDistParam(i, datalist);
+            pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
         }
         for (num = 0; num < data->num_areas(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to areas
-            pop->SR()->setAssignmentParam(i, datalist);
-            pop->SR()->getAssignmentParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(i+1)));
+            pop->SR()->setRecruitDistParam(i, datalist);
+            pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
         }
         for (num = 0; num < data->num_seasons(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to seasons
-            pop->SR()->setAssignmentParam(i, datalist);
-            pop->SR()->getAssignmentParams()->setRowHeader(i, QString("RecrDist_Bseas_%1").arg(QString::number(i+1)));
+            pop->SR()->setRecruitDistParam(i, datalist);
+            pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_Bseas_%1").arg(QString::number(num+1)));
         }
         if (pop->SR()->getDoRecruitInteract())
         {
@@ -2399,7 +2400,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist = readParameter(c_file);
             pop->Grow()->getPattern(i)->setFractionFemaleParam(datalist);
-            pop->Grow()->getPattern(i)->getFractionFemaleParams()->setRowHeader(num, QString("FracFemale_GP_%1").arg(QString::number(i+1)));
+            pop->Grow()->getPattern(i)->getFractionFemaleParams()->setRowHeader(0, QString("FracFemale_GP_%1").arg(QString::number(i+1)));
         }
 
         // seasonal_effects_on_biology_parms
@@ -3481,14 +3482,14 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        for (i = 0; i < pop->SR()->getNumAssignmentParams(); i++)
+        for (i = 0; i < pop->SR()->getNumRecruitDistParams(); i++)
         {
             line.clear();
-            str_list = pop->SR()->getAssignmentParam(i);
+            str_list = pop->SR()->getRecruitDistParam(i);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(" # ");
-            line.append(pop->SR()->getAssignmentParams()->getRowHeader(i));
+            line.append(pop->SR()->getRecruitDistParams()->getRowHeader(i));
             chars += c_file->writeline (line);
         }
 

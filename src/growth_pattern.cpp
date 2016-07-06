@@ -7,6 +7,7 @@ growthPattern::growthPattern()
 
     fractionFemParams = new parametermodel();
     fractionFemParams->setRowCount(1);
+    fractionFemParams->setRowHeader(0, QString("FracFemale"));
 
     growthParams = new parametermodel();
     cvParams = new parametermodel();

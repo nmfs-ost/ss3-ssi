@@ -116,6 +116,12 @@ public:
 
     parametermodel *recruitDistParams;
     tablemodel *getRecruitDistParams() {return recruitDistParams;}
+    void setNumRecruitDistParams (int num) {recruitDistParams->setRowCount(num);}
+    int getNumRecruitDistParams () {return recruitDistParams->rowCount();}
+    void addRecruitDistParam (QStringList data) {setRecruitDistParam(getNumRecruitDistParams(), data);}
+    void setRecruitDistParam (int index, QStringList data);
+    QStringList getRecruitDistParam(int index) {return recruitDistParams->getRowData(index);}
+
 
 
 };

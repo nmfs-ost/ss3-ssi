@@ -16,6 +16,8 @@ spawn_recruit::spawn_recruit()
 
     assignmentParams = new parametermodel();
     interactParams = new parametermodel();
+    recruitDistParams = new parametermodel();
+    recruitDistParams->setRowCount(2);
 
     method = 3;
     env_link = 0;
@@ -101,6 +103,13 @@ void spawn_recruit::setInteractParam(int index, QStringList data)
     if (index >= interactParams->rowCount())
         interactParams->setRowCount(index + 1);
     interactParams->setRowData(index, data);
+}
+
+void spawn_recruit::setRecruitDistParam(int index, QStringList data)
+{
+    if (index >= recruitDistParams->rowCount())
+        recruitDistParams->setRowCount(index + 1);
+    recruitDistParams->setRowData(index, data);
 }
 
 void spawn_recruit::setAssignmentParam(int index, QStringList data)
