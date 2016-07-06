@@ -105,6 +105,7 @@ private:
     tableview *growthParamsView;
     tableview *cvParamsView;
     tableview *seasonParamsView;
+    tableview *wtlenParamsView;
     tableview *maturityParamsView;
 
     tableview *assignmentView;

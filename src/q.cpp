@@ -325,7 +325,10 @@ QString q_ratio::getPower() const
 void q_ratio::setPower(QStringList values)
 {
     if (powerIndex > 0)
+    {
         params->setRowData(powerIndex, values);
+        params->setRowHeader(powerIndex, QString("Q_Power"));
+    }
 }
 
 QString q_ratio::getVariable() const
@@ -345,6 +348,7 @@ void q_ratio::setEnvLink(QStringList values)
     if (EnvIndex > -1)
     {
         params->setRowData(EnvIndex, values);
+        params->setRowHeader(EnvIndex, QString("Q_env"));
     }
 }
 
@@ -367,6 +371,7 @@ void q_ratio::setExtra(QStringList values)
         while (values.count() < 14)
             values.append("0");
         params->setRowData(ExtraIndex, values);
+        params->setRowHeader(ExtraIndex, QString("Q_extra_SD"));
     }
 }
 
@@ -386,6 +391,7 @@ void q_ratio::setBase(QStringList values)
 {
     typeIndex = 0;
     params->setRowData(typeIndex, values);
+    params->setRowHeader(typeIndex, QString("LnQ_Base"));
 }
 
 void q_ratio::setupChanged(int error_type)

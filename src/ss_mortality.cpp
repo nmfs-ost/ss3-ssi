@@ -91,11 +91,12 @@ void ss_mortality::fromFile(ss_file *file, int num)
         parameterTable->setRowCount(0);
     }
 
-    initialParams->setRowCount(0);
+    initialParams->setRowCount(num);
     for (i = 0; i < num; i++)
     {
         tokenlist = readShortParameter(file);
         initialParams->setRowData(i, tokenlist);
+        initialParams->setRowHeader(i, QString("Fleet%1").arg(QString::number(i+1)));
     }
 
 }

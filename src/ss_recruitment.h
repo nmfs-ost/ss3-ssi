@@ -51,12 +51,12 @@ public:
     int getMethod () {return method;}
 
 //    shortParameter parameters[6];
-    parametermodel *parameters;
-    parametermodel *getSetupModel() {return parameters;}
-    void setNumSetupLines(int lines) {parameters->setRowCount(lines);}
-    int getNumSetupLlines() {return parameters->rowCount();}
-    void setParameter (int index, QStringList values) {parameters->setRowData(index, values);}
-    QStringList getParameter(int index) {return parameters->getRowData(index);}
+//    parametermodel *parameters;
+//    parametermodel *getSetupModel() {return parameters;}
+//    void setNumSetupLines(int lines) {parameters->setRowCount(lines);}
+//    int getNumSetupLlines() {return parameters->rowCount();}
+//    void setParameter (int index, QStringList values) {parameters->setRowData(index, values);}
+//    QStringList getParameter(int index) {return parameters->getRowData(index);}
 
 //    void setParameter(int index, QString line);
     QString toText();

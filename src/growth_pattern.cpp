@@ -7,7 +7,6 @@ growthPattern::growthPattern()
 
     fractionFemParams = new parametermodel();
     fractionFemParams->setRowCount(1);
-    fractionFemParams->setRowHeader(0, QString("FracFemale"));
 
     growthParams = new parametermodel();
     cvParams = new parametermodel();
@@ -17,8 +16,6 @@ growthPattern::growthPattern()
     natMParams->setRowCount(1);
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
-    natMAges->setRowHeader(0, QString("NatM_Ages_Fem"));
-    natMAges->setRowHeader(1, QString("NatM_Ages_Male"));
 
     devParams = new parametermodel();
     devParams->setColumnCount(7);

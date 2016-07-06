@@ -98,7 +98,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -1326,30 +1326,14 @@
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
            <layout class="QGridLayout" name="gridLayout_q_info">
-            <item row="5" column="1">
-             <spacer name="verticalSpacer_q_setup">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Maximum</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="7" column="2">
+            <item row="3" column="2">
              <widget class="QLabel" name="label">
               <property name="text">
                <string/>
               </property>
              </widget>
             </item>
-            <item row="6" column="2">
+            <item row="2" column="2">
              <spacer name="horizontalSpacer_q_type_info">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1362,40 +1346,66 @@
               </property>
              </spacer>
             </item>
-            <item row="8" column="1">
-             <widget class="QLabel" name="label_q_parameters">
-              <property name="text">
-               <string>Parameters</string>
+            <item row="2" column="4">
+             <spacer name="horizontalSpacer_13">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-             </widget>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
-            <item row="1" column="1" rowspan="4">
+            <item row="0" column="1">
              <widget class="QLabel" name="label_q_setup">
               <property name="text">
                <string>Setup</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="2" rowspan="3">
-             <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
-            </item>
-            <item row="1" column="2" rowspan="5">
-             <layout class="QVBoxLayout" name="verticalLayout_q_setup"/>
-            </item>
-            <item row="10" column="1">
-             <spacer name="verticalSpacer_q_parameters">
+            <item row="2" column="3">
+             <spacer name="horizontalSpacer_14">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>20</width>
-                <height>40</height>
+                <width>40</width>
+                <height>20</height>
                </size>
               </property>
              </spacer>
             </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_q_parameters">
+              <property name="text">
+               <string>Parameters</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" colspan="3">
+             <layout class="QVBoxLayout" name="verticalLayout_q_setup"/>
+            </item>
+            <item row="4" column="1" colspan="4">
+             <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
+            </item>
            </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_q_parameters">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>

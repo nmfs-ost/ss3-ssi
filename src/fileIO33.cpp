@@ -2297,11 +2297,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 num = pop->Grow()->getNumMaturityParams();
                 datalist = readParameter(c_file); // male_wt_len_1
                 pop->Grow()->addMaturityParam(datalist);
-                gp->getCVParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
+                pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
                 num++;
                 datalist = readParameter(c_file); // male_wt_len_2
                 pop->Grow()->addMaturityParam(datalist);
-                gp->getCVParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
+                pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
             }
         }
 
@@ -2611,6 +2611,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 datalist = readParameter(c_file);
                 data->getFleet(i)->Q()->setParameter(id, datalist);
+                data->getFleet(i)->Q()->getParamModel()->setRowHeader(id, QString("LnQ_Base"));
             }
         }
         for (i = 0; i < data->num_fleets(); i++)

@@ -40,9 +40,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     assignmentView->setParent(this);
     ui->horizontalLayout_recr_assigns->addWidget(assignmentView);
 
-    recruitParamsView = new tableview();
-    recruitParamsView->setParent(this);
-    ui->verticalLayout_recr_params->addWidget(recruitParamsView);
+//    recruitParamsView = new tableview();
+//    recruitParamsView->setParent(this);
+//    ui->verticalLayout_recr_params->addWidget(recruitParamsView);
 
     recruitDevsView = new tableview();
     recruitDevsView->setParent(this);
@@ -75,6 +75,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     cvParamsView = new tableview();
     cvParamsView->setParent(this);
     ui->verticalLayout_cv_parameters->addWidget(cvParamsView);
+    wtlenParamsView = new tableview();
+    wtlenParamsView->setParent(this);
+    ui->verticalLayout_weightlength->addWidget(wtlenParamsView);
     maturityParamsView = new tableview();
     maturityParamsView->setParent(this);
     ui->verticalLayout_maturity_params->addWidget(maturityParamsView);
@@ -243,6 +246,12 @@ void population_widget::refresh()
     setFecundityOffsetOption(pop->Grow()->getParam_offset_method());
     setFecundityAdjustment(pop->Grow()->getAdjustment_method());
 
+    wtlenParamsView->setModel(pop->Grow()->getMaturityParams());
+    wtlenParamsView->setHeight(pop->Grow()->getMaturityParams());
+    wtlenParamsView->resizeColumnsToContents();
+    maturityParamsView->setModel(pop->Grow()->getCohortParams());
+    maturityParamsView->setHeight(pop->Grow()->getCohortParams());
+    maturityParamsView->resizeColumnsToContents();
     setMaturityOpt(pop->Grow()->getMaturity_option());
     ui->lineEdit_maturity_first_age->setText(QString::number(pop->Grow()->getFirst_mature_age()));
 
@@ -275,9 +284,9 @@ void population_widget::refresh()
     recruitDevsView->setHeight(pop->SR()->getRecruitDevs()->getObservations());
     recruitFullParamsView->setModel(pop->SR()->getFullParameterModel());
     recruitFullParamsView->setHeight(pop->SR()->getFullParameterModel());
-    recruitParamsView->setModel(pop->SR()->getSetupModel());
-    recruitParamsView->setHeight(pop->SR()->getSetupModel());
-    recruitParamsView->resizeColumnsToContents();
+//    recruitParamsView->setModel(pop->SR()->getSetupModel());
+//    recruitParamsView->setHeight(pop->SR()->getSetupModel());
+//    recruitParamsView->resizeColumnsToContents();
 
     setRecrArea(pop->SR()->getDistribArea());
     setRecrDistParam(pop->SR()->getDistribMethod());
@@ -347,6 +356,7 @@ void population_widget::refresh()
     mortInputsView->setHeight(pop->M()->getInputModel());
     mortInitialParamsView->setModel(pop->M()->getInitialParams());
     mortInitialParamsView->setHeight(pop->M()->getInitialParams());
+    mortInitialParamsView->resizeColumnsToContents();
     setMortOption (pop->Grow()->getNatural_mortality_type());
 
     // Seasonality
@@ -365,7 +375,7 @@ void population_widget::refresh()
     hermaphParamsView->resizeColumnsToContents();
     seasonParamsView->resizeColumnsToContents();
     assignmentView->resizeColumnsToContents();
-    recruitParamsView->resizeColumnsToContents();
+//    recruitParamsView->resizeColumnsToContents();
     recruitDevsView->resizeColumnsToContents();
     recruitFullParamsView->resizeColumnsToContents();
     mortBreakPtsView->resizeColumnsToContents();
@@ -787,7 +797,7 @@ void population_widget::changeSpawnRecrSpec(int num)
             break;
         }
     }
-    recruitParamsView->setHeight(pop->SR()->full_parameters);
+    recruitFullParamsView->setHeight(pop->SR()->full_parameters);
 }
 
 void population_widget::changeMoveNumDefs(int value)

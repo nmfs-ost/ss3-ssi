@@ -358,7 +358,9 @@ void fleet_widget::set_current_fleet(int index)
         ui->checkBox_q_doExtra->setChecked(current_fleet->q_do_extra_sd());
         ui->spinBox_q_type->setValue(current_fleet->q_type());*/
         qSetupView->setModel(current_fleet->getQSetup());
+        qSetupView->setHeight(current_fleet->getQSetup());
         qParamsView->setModel(current_fleet->getQParams());
+        qParamsView->setHeight(current_fleet->getQParams());
         qParamsView->resizeColumnsToContents();
 
         ui->spinBox_selex_size_pattern->setValue(current_fleet->getSizeSelectivity()->getPattern());

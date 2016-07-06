@@ -2,10 +2,10 @@
 
 spawn_recruit::spawn_recruit()
 {
-    parameters = new parametermodel();
+//    parameters = new parametermodel();
+//    parameters->setRowCount(0);
+//    parameters->setColumnCount(7);
     full_parameters = new parametermodel();
-    parameters->setRowCount(0);
-    parameters->setColumnCount(7);
     full_parameters->setRowCount(5);
 
     assignments = new tablemodel();
@@ -43,7 +43,7 @@ spawn_recruit::spawn_recruit()
 
 spawn_recruit::~spawn_recruit()
 {
-    delete parameters;
+//    delete parameters;
     delete full_parameters;
     delete assignments;
     delete assignmentParams;
@@ -238,12 +238,12 @@ QString spawn_recruit::toText()
 
         sr_text.append(QString (" # " ));
     }*/
-    sr_text.append(QString ("%1 # SR_LN(R0)" ).arg(parameters->getRowText(0)));
-    sr_text.append(QString ("%1 # SR_BH_steep" ).arg(parameters->getRowText(1)));
-    sr_text.append(QString ("%1 # SR_sigmaR" ).arg(parameters->getRowText(2)));
-    sr_text.append(QString ("%1 # SR_envlink" ).arg(parameters->getRowText(3)));
-    sr_text.append(QString ("%1 # SR_R1_offset" ).arg(parameters->getRowText(4)));
-    sr_text.append(QString ("%1 # SR_autocorr" ).arg(parameters->getRowText(5)));
+    sr_text.append(QString ("%1 # SR_LN(R0)" ).arg(full_parameters->getRowText(0)));
+    sr_text.append(QString ("%1 # SR_BH_steep" ).arg(full_parameters->getRowText(1)));
+    sr_text.append(QString ("%1 # SR_sigmaR" ).arg(full_parameters->getRowText(2)));
+    sr_text.append(QString ("%1 # SR_envlink" ).arg(full_parameters->getRowText(3)));
+    sr_text.append(QString ("%1 # SR_R1_offset" ).arg(full_parameters->getRowText(4)));
+    sr_text.append(QString ("%1 # SR_autocorr" ).arg(full_parameters->getRowText(5)));
 
     sr_text.append(QString ("%1 #_do_rec_dev:  0=none; 1=devvector; 2=simple deviations" ).arg(
                        QString::number(rec_dev)));
