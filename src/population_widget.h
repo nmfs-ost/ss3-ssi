@@ -92,6 +92,9 @@ private slots:
     void changeSpawnRecrSpec(int num);
 
     void changeMoveNumDefs(int value);
+    void defsChanged(QModelIndex tl, QModelIndex br);
+    void setMoveParamTitles();
+    void setMoveParamTitle(int def);
     void changeMoveFirstAge();
 
 private:

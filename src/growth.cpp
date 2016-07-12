@@ -291,7 +291,7 @@ void ss_growth::setNatural_mortality_type(int value)
     {
     case 0:
         for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getNatMParams()->setRowCount(1);
+            getPattern(i)->getNatMParams()->setRowCount(2);
         break;
     case 1:
         for (int i = 0; i < num_patterns; i++)

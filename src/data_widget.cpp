@@ -16,6 +16,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     sdYearsView->showRow(1);
     sdYearsView->setAcceptDrops(true);
     sdYearsView->setModel(model_data->sdYearsModel);
+    sdYearsView->setHeight(1);
     ui->horizontalLayout_sdYears->addWidget(sdYearsView);
 
 /*    mbweightview = new tableview();
@@ -23,6 +24,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     mbweightedit = new mbweightdelegate(this);
     mbweightview->setItemDelegate(mbweightedit);
     mbweightview->setModel(model_data->getMeanBwtModel());
+    mbweightview->setHeight(model_data->getMeanBwtModel());
     ui->horiz  verticalLayout_mbwt->addWidget(mbweightview);*/
 
     lengthBins = new tableview();
@@ -33,6 +35,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     lengthBins->setAcceptDrops(true);
     lengthBins->showRow(1);
     lengthBins->setModel(model_data->get_length_composition()->getBinsModel());
+    lengthBins->setHeight(1);
     ui->horizontalLayout_length_bins->addWidget(lengthBins);
 /*    lengthObs = new tableview();
     lengthObs->setParent(this);
@@ -47,6 +50,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ageBins->setAcceptDrops(true);
     ageBins->showRow(1);
     ageBins->setModel(model_data->get_age_composition()->getBinsModel());
+    ageBins->setHeight(1);
     ui->horizontalLayout_age_bins->addWidget(ageBins);
 /*    ageObs = new tableview();
     ageObs->setParent(this);
@@ -55,6 +59,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ageError = new tableview();
     ageError->setParent(this);
     ageError->setModel(model_data->get_age_composition()->getErrorModel());
+    ageError->setHeight(model_data->get_age_composition()->getErrorModel());
     ui->horizontalLayout_age_error->addWidget(ageError);
 
     genBins = new tableview();
@@ -70,6 +75,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     tagGroups = new tableview();
     tagGroups->setParent(this);
     tagGroups->setModel(model_data->get_tag_observations());
+    tagGroups->setHeight(model_data->get_tag_observations());
     tagGroups->resizeColumnsToContents();
     ui->horizontalLayout_tag_reldata->addWidget(tagGroups);
     connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_tag_groups(int)));
@@ -79,8 +85,9 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     envVariables = new tableview();
     envVariables->setParent(this);
     envVariables->setModel(model_data->getEnvVariables());
+    envVariables->setHeight(model_data->getEnvVariables());
     ui->verticalLayout_env_var_obs->addWidget(envVariables);
-    connect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_environ_var_obs(int)));
+    connect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), SLOT(changeNumEnvVarObs(int)));
     connect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_environ_vars(int)));
 
     timeBlocks = new tableview();
@@ -91,10 +98,12 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     addSdSpecification = new tableview();
     addSdSpecification->setParent(this);
     addSdSpecification->setModel(model_data->getAddSdReporting()->getSpecModel());
+    addSdSpecification->setHeight(model_data->getAddSdReporting()->getSpecModel());
     ui->verticalLayout_8->addWidget(addSdSpecification);
     addSdBinList = new tableview();
     addSdBinList->setParent(this);
     addSdBinList->setModel(model_data->getAddSdReporting()->getBinModel());
+    addSdBinList->setHeight(1);
     ui->verticalLayout_14->addWidget(addSdBinList);
 
 
@@ -155,7 +164,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->pushButton_morph_obs, SIGNAL(clicked()), SIGNAL(showMorphObs()));
 
     connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
-    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_tag_groups(int)));
+    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
     connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
     connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
     connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
@@ -242,6 +251,7 @@ void data_widget::refresh()
         setLengthCompMethod(model_data->get_length_composition()->getAltBinMethod());
         setLengthBins (model_data->get_length_composition()->getNumberBins());
         lengthBins->setModel(model_data->get_length_composition()->getBinsModel());
+        lengthBins->setHeight(1);
         lengthBins->resizeColumnsToContents();
 //        lengthObs->setModel(model_data->get_length_composition()->getObsModel());
 //        lengthObs->resizeColumnsToContents();
@@ -250,11 +260,13 @@ void data_widget::refresh()
         setAgeBins(model_data->get_age_composition()->getNumberBins());
         setAgeError(model_data->get_age_composition()->number_error_defs());
         ageBins->setModel(model_data->get_age_composition()->getBinsModel());
+        ageBins->setHeight(1);
         ageBins->resizeColumnsToContents();
         QSize size (ageBins->size());
         size.setHeight(40);
         ageBins->resize(size);
         ageError->setModel(model_data->get_age_composition()->getErrorModel());
+        ageError->setHeight(model_data->get_age_composition()->getErrorModel());
         ageError->resizeColumnsToContents();
 //        ageObs->setModel(model_data->get_age_composition()->getObsModel());
 //        ageObs->resizeColumnsToContents();
@@ -274,9 +286,11 @@ void data_widget::refresh()
 
         ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
         addSdSpecification->setModel(model_data->getAddSdReporting()->getSpecModel());
+        addSdSpecification->setHeight(model_data->getAddSdReporting()->getSpecModel());
         addSdSpecification->resizeColumnsToContents();
         ui->verticalLayout_add_sd_spec->addWidget(addSdSpecification);
         addSdBinList->setModel(model_data->getAddSdReporting()->getBinModel());
+        addSdBinList->setHeight(model_data->getAddSdReporting()->getBinModel());
         addSdBinList->resizeColumnsToContents();
         ui->verticalLayout_add_sd_bins->addWidget(addSdBinList);
     }
@@ -519,6 +533,12 @@ void data_widget::changeAgeCombine(int gen)
 //    model_data->get_age_composition()->set_combine_genders(gen);
 }
 
+void data_widget::changeNumEnvVarObs(int num)
+{
+    model_data->set_num_environ_var_obs(num);
+    envVariables->setHeight(num);
+}
+
 void data_widget::setGenCompMethod(int method)
 {
     ui->spinBox_gen_comp->setValue(method);
@@ -544,6 +564,7 @@ void data_widget::changeGenCompMethod(int method)
 //            ui->lineEdit_gen_mincomp->setText(QString::number(current_gen_comp->mincomp()));
             ui->spinBox_gen_num_bins->setValue(current_gen_comp->getNumberBins());
             genBins->setModel(current_gen_comp->getBinsModel());
+            genBins->setHeight(1);
             genBins->resizeColumnsToContents();
         }
     }
@@ -658,6 +679,7 @@ void data_widget::changeDoTags(bool flag)
         ui->spinBox_tag_latency->setValue(model_data->get_tag_latency());
         ui->spinBox_tag_max_per->setValue(model_data->get_tag_max_periods());
         tagGroups->setModel(model_data->get_tag_observations());
+        tagGroups->setHeight(model_data->get_tag_observations());
         tagGroups->resizeColumnsToContents();
     }
     else
@@ -667,6 +689,12 @@ void data_widget::changeDoTags(bool flag)
         ui->spinBox_tag_max_per->setValue(0);
         tagGroups->setModel(NULL);
     }
+}
+
+void data_widget::changeNumTagGrps(int num)
+{
+    model_data->set_num_tag_groups(num);
+    tagGroups->setHeight(num);
 }
 
 void data_widget::setBlockPattern(int num)
@@ -692,6 +720,7 @@ void data_widget::changeBlockPattern(int num)
             ui->spinBox_block_pattern_num->setValue(1);
         else
             timeBlocks->setModel(model_data->getBlockPattern(num-1)->getBlocks());
+        timeBlocks->setHeight(model_data->getBlockPattern(num-1)->getBlocks());
     }
 }
 

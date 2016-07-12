@@ -698,7 +698,8 @@ void fleet_widget::changeGenMethodTotal(int num)
 
 void fleet_widget::setGenMethodNum(int num)
 {
-    if (num < 0) num = 0;
+    if (num < 0)
+        num = 0;
     if (num >= ui->spinBox_obs_gen_num_total->value())
         num = ui->spinBox_obs_gen_num_total->value() - 1;
     ui->spinBox_obs_gen_num->setValue(num + 1);
@@ -706,15 +707,21 @@ void fleet_widget::setGenMethodNum(int num)
 
 void fleet_widget::changeGenMethodNum(int num)
 {
-    if (num < 1)
-        ui->spinBox_obs_gen_num->setValue(1);
-    else if (num > ui->spinBox_obs_gen_num_total->value())
-        ui->spinBox_obs_gen_num->setValue(ui->spinBox_obs_gen_num_total->value());
+    int totnum = ui->spinBox_obs_gen_num_total->value();
+    cur_gen_obs = num - 1;
+    if (totnum < 1)
+        ui->spinBox_obs_gen_num->setValue(0);
     else
     {
-        cur_gen_obs = num - 1;
-        ui->spinBox_obs_gen_numObs->setValue(current_fleet->getGenNumObs(cur_gen_obs));
-        genObsView->setModel(current_fleet->getGenModel(cur_gen_obs));
+        if (num < 1)
+            ui->spinBox_obs_gen_num->setValue(1);
+        else if (num > totnum)
+            ui->spinBox_obs_gen_num->setValue(totnum);
+        else
+        {
+            ui->spinBox_obs_gen_numObs->setValue(current_fleet->getGenNumObs(cur_gen_obs));
+            genObsView->setModel(current_fleet->getGenModel(cur_gen_obs));
+        }
     }
 }
 
@@ -726,7 +733,14 @@ void fleet_widget::setGenNumObs(int num)
 
 void fleet_widget::changeGenNumObs(int num)
 {
-    current_fleet->setGenNumObs(cur_gen_obs, num);
+    if (ui->spinBox_obs_gen_num_total->value() < 1)
+    {
+        ui->spinBox_obs_gen_numObs->setValue(0);
+    }
+    else
+    {
+        current_fleet->setGenNumObs(cur_gen_obs, num);
+    }
 }
 
 

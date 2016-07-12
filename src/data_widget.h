@@ -59,6 +59,7 @@ public slots:
     void setAgeError (int numDefs);
     void changeAgeError(int numDefs);
     void changeAgeCombine (int gen);
+    void changeNumEnvVarObs (int num);
     void setGenCompMethod(int method);
     void changeGenCompMethod(int method);
     void changeGenBins(int numBins);
@@ -72,6 +73,7 @@ public slots:
     void changeMorphMincomp ();
     void setDoTags(bool flag);
     void changeDoTags(bool flag);
+    void changeNumTagGrps (int num);
     void changeBlockPattern(int num);
     void setBlockPattern (int num);
 

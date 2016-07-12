@@ -98,7 +98,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -893,7 +893,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_comp">
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="tab_length">
              <attribute name="title">
@@ -1257,7 +1257,7 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>20</width>
+                  <width>6</width>
                   <height>40</height>
                  </size>
                 </property>

@@ -188,6 +188,7 @@ void population_widget::set_model(ss_model *model)
         }
         model_data = model;
         pop = model_data->pPopulation;
+        connect (pop->Move()->getMovementDefs(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(defsChanged(QModelIndex,QModelIndex)));
         connect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn1(bool)));
         connect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn2(bool)));
         connect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity1(bool)));
@@ -359,6 +360,7 @@ void population_widget::refresh()
 
     mortInputsView->setModel(pop->M()->getInputModel());
     mortInputsView->setHeight(pop->M()->getInputModel());
+    mortInputsView->resizeColumnsToContents();
     mortInitialParamsView->setModel(pop->M()->getInitialParams());
     mortInitialParamsView->setHeight(pop->M()->getInitialParams());
     mortInitialParamsView->resizeColumnsToContents();
@@ -809,7 +811,43 @@ void population_widget::changeMoveNumDefs(int value)
 {
     pop->Move()->setNumDefs(value);
     moveDefsView->setHeight(value);
+    pop->Move()->setNumParams(value * 2);
+    moveParamsView->setHeight(value * 2);
+    setMoveParamTitles();
+}
+
+void population_widget::defsChanged(QModelIndex tl, QModelIndex br)
+{
+    int r1 = tl.row();
+    int r2 = br.row();
     moveDefsView->resizeColumnsToContents();
+    for (int i = r1; i <= r2; i++)
+        setMoveParamTitle(i);
+}
+
+void population_widget::setMoveParamTitles()
+{
+    int def, num;
+    num = pop->Move()->getNumDefs();
+    ui->spinBox_num_move_defs->setValue(num);
+
+    for (def = 0; def < num; def++)
+    {
+        setMoveParamTitle(def);
+    }
+    moveParamsView->resizeColumnsToContents();
+}
+
+void population_widget::setMoveParamTitle(int def)
+{
+    QStringList d_list = pop->Move()->getDefinition(def);
+    int index = def * 2;
+    pop->Move()->getMovementParams()->setRowHeader
+            (index, QString("MoveParam_A_seas_%1_GP_%2from_%3to_%4").arg(
+                 d_list.at(0), d_list.at(1), d_list.at(2), d_list.at(3)));
+    pop->Move()->getMovementParams()->setRowHeader
+            (index + 1, QString("MoveParam_B_seas_%1_GP_%2from_%3to_%4").arg(
+                 d_list.at(0), d_list.at(1), d_list.at(2), d_list.at(3)));
 }
 
 void population_widget::changeMoveFirstAge()
@@ -870,6 +908,7 @@ void population_widget::changeFMortPhase (int phs)
 void population_widget::changeFMortNumInput (int num)
 {
     pop->M()->setNumInputs(num);
+    mortInputsView->setHeight(num);
 }
 
 void population_widget::changeFMortNumIters (int num)

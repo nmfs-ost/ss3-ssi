@@ -919,7 +919,7 @@ void file_widget::write_starter_file (QString filename)
         {
             line = QString(QString("%1 # ALK tolerance (example 0.0001)").arg(model_info->getALKTol()));
             chars +=starterFile->writeline(line);
-            line = QString::number(datafile_version, 'g');
+            line = QString::number(datafile_version, 'f', 2);
             line.append(" # check value for end of file and for version control" );
             chars += starterFile->writeline (line);
         }

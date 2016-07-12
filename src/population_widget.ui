@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>6</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -949,7 +949,7 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-120</y>
+            <y>0</y>
             <width>913</width>
             <height>549</height>
            </rect>
@@ -1452,13 +1452,13 @@ recruitment distribution method = 1)</string>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_mortality">
+     <widget class="QWidget" name="tab_natMortality">
       <attribute name="title">
-       <string>Mortality</string>
+       <string>Natural Mortality</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QScrollArea" name="scrollArea_mortality">
+        <widget class="QScrollArea" name="scrollArea_nat_mort">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -1466,264 +1466,12 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-103</y>
-            <width>913</width>
-            <height>662</height>
+            <y>0</y>
+            <width>934</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
-           <item>
-            <widget class="QGroupBox" name="groupBox_fishingMort">
-             <property name="title">
-              <string>Fishing Mortality</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_13">
-              <item>
-               <layout class="QGridLayout" name="gridLayout_fishingMort">
-                <item row="6" column="0" colspan="5">
-                 <widget class="QFrame" name="frame_fishingMort_2">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_2">
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_phase">
-                     <property name="text">
-                      <string>Phase for F params</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_fstart">
-                     <property name="text">
-                      <string>Starting value for each F</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="2">
-                    <spacer name="horizontalSpacer_11">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="0" column="1" colspan="2">
-                    <widget class="QLineEdit" name="lineEdit_fishingMort_2_fstart">
-                     <property name="maximumSize">
-                      <size>
-                       <width>100</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QSpinBox" name="spinBox_fishingMort_2_phase"/>
-                   </item>
-                   <item row="0" column="3">
-                    <spacer name="horizontalSpacer_10">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QSpinBox" name="spinBox_fishingMort_2_num_detail"/>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_spacer">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_num_detail">
-                     <property name="text">
-                      <string>Number of inputs below</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1" colspan="2">
-                    <layout class="QVBoxLayout" name="verticalLayout_mort_inputs"/>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="8" column="0" colspan="2">
-                 <widget class="QLabel" name="label_init_F">
-                  <property name="text">
-                   <string>Initial Fishing Mortality</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QLineEdit" name="lineEdit_fishingMort_bpark">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QSpinBox" name="spinBox_fishingMort_bpark_year">
-                  <property name="minimum">
-                   <number>-2500</number>
-                  </property>
-                  <property name="maximum">
-                   <number>3000</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="2">
-                 <widget class="QLineEdit" name="lineEdit_fishingMort_max">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0" colspan="2">
-                 <widget class="QLabel" name="label_fishingMort_max">
-                  <property name="text">
-                   <string>Maximum mortality</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QLabel" name="label_fishingMort_bpark">
-                  <property name="text">
-                   <string>Ballpark mortality</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0" colspan="2">
-                 <widget class="QLabel" name="label_fishingMort_bpark_year">
-                  <property name="text">
-                   <string>Ballpark year</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1" colspan="3">
-                 <widget class="QComboBox" name="comboBox_fishingMort_method">
-                  <property name="maximumSize">
-                   <size>
-                    <width>300</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>1 = Pope's</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>2 = Continuous F as parameters</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>3 = Hybrid</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_fishingMort_method">
-                  <property name="text">
-                   <string>Method</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="4">
-                 <spacer name="horizontalSpacer_5">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="2" column="3">
-                 <spacer name="horizontalSpacer_16">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="7" column="0" colspan="3">
-                 <widget class="QFrame" name="frame_fishingMort_3">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_4">
-                   <item row="1" column="1">
-                    <widget class="QSpinBox" name="spinBox_fishingMort_3_num_iters"/>
-                   </item>
-                   <item row="1" column="2">
-                    <spacer name="horizontalSpacer_17">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_fishingMort_3_num_iters">
-                     <property name="text">
-                      <string>Number of tuning iterations</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="9" column="0" colspan="4">
-                 <layout class="QVBoxLayout" name="verticalLayout_init_F"/>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
            <item>
             <widget class="QGroupBox" name="groupBox_natMort">
              <property name="title">
@@ -1737,52 +1485,6 @@ recruitment distribution method = 1)</string>
                   <property name="text">
                    <string>Parameters </string>
                   </property>
-                 </widget>
-                </item>
-                <item row="7" column="0">
-                 <spacer name="verticalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="3" column="0" colspan="3">
-                 <widget class="QWidget" name="widget_mort_lorenz" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout">
-                   <item>
-                    <widget class="QLabel" name="label_mort_lorenz_int">
-                     <property name="text">
-                      <string>Reference integer for the Lorenzen function</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSpinBox" name="spinBox_mort_lorenz_int">
-                     <property name="value">
-                      <number>4</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_mort_lorenz_int">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>80</width>
-                       <height>19</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
                  </widget>
                 </item>
                 <item row="0" column="0" rowspan="2" colspan="2">
@@ -1940,10 +1642,360 @@ recruitment distribution method = 1)</string>
                 <item row="6" column="0" colspan="6">
                  <layout class="QVBoxLayout" name="verticalLayout_mort_params"/>
                 </item>
+                <item row="3" column="0" colspan="4">
+                 <widget class="QWidget" name="widget_mort_lorenz" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout">
+                   <item>
+                    <widget class="QLabel" name="label_mort_lorenz_int">
+                     <property name="text">
+                      <string>Reference integer for the Lorenzen function</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spinBox_mort_lorenz_int">
+                     <property name="value">
+                      <number>4</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_mort_lorenz_int">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>80</width>
+                       <height>19</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
             </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_fishMortality">
+      <attribute name="title">
+       <string>Fishing Mortality</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QScrollArea" name="scrollArea_fish_mort">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_6">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>934</width>
+            <height>429</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_16">
+           <item>
+            <widget class="QGroupBox" name="groupBox_fishingMort">
+             <property name="title">
+              <string>Fishing Mortality</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <item>
+               <layout class="QGridLayout" name="gridLayout_fishingMort">
+                <item row="6" column="0" colspan="5">
+                 <widget class="QFrame" name="frame_fishingMort_2">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_2">
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_fishingMort_2_phase">
+                     <property name="text">
+                      <string>Phase for F params</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_fishingMort_2_fstart">
+                     <property name="text">
+                      <string>Starting value for each F</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <spacer name="horizontalSpacer_11">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="0" column="1" colspan="2">
+                    <widget class="QLineEdit" name="lineEdit_fishingMort_2_fstart">
+                     <property name="maximumSize">
+                      <size>
+                       <width>100</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QSpinBox" name="spinBox_fishingMort_2_phase"/>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QSpinBox" name="spinBox_fishingMort_2_num_detail"/>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_fishingMort_2_spacer">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_fishingMort_2_num_detail">
+                     <property name="text">
+                      <string>Number of inputs below</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <spacer name="horizontalSpacer_9">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="4" column="1" colspan="3">
+                    <layout class="QVBoxLayout" name="verticalLayout_mort_inputs"/>
+                   </item>
+                   <item row="0" column="4">
+                    <spacer name="horizontalSpacer_10">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="8" column="0" colspan="2">
+                 <widget class="QLabel" name="label_init_F">
+                  <property name="text">
+                   <string>Initial Fishing Mortality</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QLineEdit" name="lineEdit_fishingMort_bpark">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QSpinBox" name="spinBox_fishingMort_bpark_year">
+                  <property name="minimum">
+                   <number>-2500</number>
+                  </property>
+                  <property name="maximum">
+                   <number>3000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QLineEdit" name="lineEdit_fishingMort_max">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QLabel" name="label_fishingMort_max">
+                  <property name="text">
+                   <string>Maximum mortality</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QLabel" name="label_fishingMort_bpark">
+                  <property name="text">
+                   <string>Ballpark mortality</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QLabel" name="label_fishingMort_bpark_year">
+                  <property name="text">
+                   <string>Ballpark year</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1" colspan="3">
+                 <widget class="QComboBox" name="comboBox_fishingMort_method">
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>1 = Pope's</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>2 = Continuous F as parameters</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>3 = Hybrid</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_fishingMort_method">
+                  <property name="text">
+                   <string>Method</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="4">
+                 <spacer name="horizontalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="3">
+                 <spacer name="horizontalSpacer_16">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="9" column="0" colspan="4">
+                 <layout class="QVBoxLayout" name="verticalLayout_init_F"/>
+                </item>
+                <item row="7" column="0" colspan="4">
+                 <widget class="QFrame" name="frame_fishingMort_3">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_4">
+                   <item row="1" column="1">
+                    <widget class="QSpinBox" name="spinBox_fishingMort_3_num_iters"/>
+                   </item>
+                   <item row="1" column="2">
+                    <spacer name="horizontalSpacer_17">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_fishingMort_3_num_iters">
+                     <property name="text">
+                      <string>Number of tuning iterations</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
