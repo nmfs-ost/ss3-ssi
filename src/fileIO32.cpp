@@ -1710,10 +1710,10 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         line = QString("#Year Seas Fleet Catch(or_F) Basis" );
         chars += f_file->writeline(line);
-        num = fcast->num_catch_values();
+        num = fcast->getNumFixedFcastCatch();//num_catch_values();
         for (i = 0; i < num; i++)
         {
-            QStringList obs = fcast->fixed_catch_value(i);
+            QStringList obs = fcast->getFIxedFcastCatch(i);//fixed_catch_value(i);
             line.clear();
             for (int j = 0; j < obs.count(); j++)
                 line.append(QString(" %1").arg(obs.at(j)));

@@ -54,6 +54,8 @@ public slots:
     void set_cr_target();
     void set_num_forecast_loops (int num);
     void set_log_catch_std_dev();
+
+    void change_use_alloc_groups (bool flag);
     void set_num_alloc_groups (int num);
     void set_allocation_groups();
     void set_allocation_group_assign();
@@ -68,6 +70,9 @@ public slots:
     void set_max_catch_area ();
     void change_max_catch_area ();
 
+    void set_num_input_obs (int num);
+    void change_num_input_obs (int num);
+
 signals:
     
 private:
@@ -78,7 +83,11 @@ private:
     void set_combo_box (QComboBox *cbox, int value);
     QList <QLineEdit *> edit_fixed_catch_list;
 
+    tableview *seasFltRelF;
+    tableview *maxCatchFleets;
+    tableview *maxCatchAreas;
     tableview *allocGrpFracts;
+    tableview *inputFcastCatch;
 };
 
 #endif // FORECAST_WIDGET_H

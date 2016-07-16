@@ -1707,11 +1707,12 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
             temp_string = QString("");
             for (int seas = 0; seas < data->num_seasons(); seas++)
             {
-                for (i = 0; i < data->num_fleets(); i++)
+                str_lst = fcast->getSeasFleetRelF(seas);
+                for (i = 0; i < str_lst.count(); i++)
                 {
                     if (data->getFleet(i)->isActive())
-                    temp_string.append(QString(" %1").arg (
-                                       QString::number(fcast->seas_fleet_rel_f(seas, i))));
+                    temp_string.append(QString(" %1").arg (str_lst.at(i)));
+//                                       QString::number(fcast->seas_fleet_rel_f(seas, i))));
                 }
 
                 chars += f_file->writeline(temp_string);
@@ -1826,10 +1827,10 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         line = QString("#_Year Seas Fleet Catch(or_F)" );
         chars += f_file->writeline(line);
-        num = fcast->num_catch_values();
+        num = fcast->getNumFixedFcastCatch();//num_catch_values();
         for (i = 0; i < num; i++)
         {
-            QStringList obs = fcast->fixed_catch_value(i);
+            QStringList obs = fcast->getFIxedFcastCatch(i);//fixed_catch_value(i);
             line.clear();
             for (int j = 0; j < obs.count(); j++)
                 line.append(QString(" %1").arg(obs.at(j)));

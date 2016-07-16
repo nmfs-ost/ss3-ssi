@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>829</width>
+    <width>870</width>
     <height>790</height>
    </rect>
   </property>
@@ -54,7 +54,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_specification">
       <attribute name="title">
@@ -1655,526 +1655,479 @@ e.g. 0, -1, -2, ...</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <layout class="QGridLayout" name="gridLayout_fcast2">
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_area_max">
-           <property name="text">
-            <string>Maximum total catch by area
-(-1 to have no max) must enter value for each area</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_input_catch_basis">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_4">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>818</width>
+            <height>642</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QComboBox" name="comboBox_input_catch_basis">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>1</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <item>
-              <property name="text">
-               <string>-1 = Read basis with each observation</string>
-              </property>
+            <layout class="QGridLayout" name="gridLayout_fcast2">
+             <item row="10" column="1" colspan="2">
+              <layout class="QVBoxLayout" name="verticalLayout_catch_basis"/>
              </item>
-             <item>
-              <property name="text">
-               <string>2 = Dead catch</string>
-              </property>
+             <item row="9" column="1">
+              <widget class="QSpinBox" name="spinBox_fixed_catch_obs"/>
              </item>
-             <item>
-              <property name="text">
-               <string>3 = Retained catch</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>99 = Input harves rate (F)</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_35">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_input_catch_basis">
-           <property name="text">
-            <string>Basis for input forecast catch (units are from fleet units)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_catch_tuning_basis">
-           <property name="text">
-            <string>Basis for forecast catch maximum</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_fcast_levels">
-           <property name="text">
-            <string>Number of forecast catch levels to input</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_relF">
-           <property name="text">
-            <string>Fleet relative F</string>
-           </property>
-          </widget>
-         </item>
-         <item row="17" column="0">
-          <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="1" colspan="2">
-          <layout class="QHBoxLayout" name="horizontalLayout_relf">
-           <item>
-            <widget class="QComboBox" name="comboBox_relF">
-             <item>
-              <property name="text">
-               <string>1 = use first-last allocation year</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>2 = read season(row) x fleet(col) below</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_18">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="7" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_fcast_levels">
-           <item>
-            <widget class="QSpinBox" name="spinBox_fcast_levels"/>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_fcast_levels_note">
-             <property name="text">
-              <string>(if 0, calculate catch from forecast F)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_34">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <widget class="QScrollArea" name="scrollArea_seas_relf">
-           <property name="widgetResizable">
-            <bool>true</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_2">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>285</width>
-              <height>134</height>
-             </rect>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <widget class="QLabel" name="label_seas_relf">
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_area_max">
                <property name="text">
-                <string>Season, Fleet, RelF </string>
+                <string>Maximum total catch by area
+(-1 to have no max) </string>
                </property>
               </widget>
              </item>
-             <item>
-              <widget class="QListView" name="listView_seas_relf"/>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_area_max">
-           <item>
-            <widget class="QLineEdit" name="lineEdit_max_catch_area">
-             <property name="text">
-              <string>-1</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_17">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="label_input_fixed_catch">
-           <property name="text">
-            <string>Input values if choice &gt; 0 
- Endter one line per number of fixed forecast year catch</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_fleet_max">
-           <property name="text">
-            <string>Maximum total catch by fleet - including surveys
-(-1 to have no max) must enter value for each fleet</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_input_seas_relf">
-           <property name="text">
-            <string>Input fleet relative F for choice 2 above
-(For version 3.3 and above,include surveys)</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="1">
-          <spacer name="horizontalSpacer_33">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="5" column="0" colspan="2">
-          <widget class="QGroupBox" name="groupBox_alloc_groups">
-           <property name="title">
-            <string>Allocation Groups</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0" colspan="2">
-             <layout class="QGridLayout" name="gridLayout_group_assignment">
-              <item row="1" column="1" colspan="2">
-               <layout class="QHBoxLayout" name="horizontalLayout_assignment">
-                <item>
-                 <widget class="QLineEdit" name="lineEdit_alloc_assignments">
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_26">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_alloc_assignment">
-                <property name="text">
-                 <string>Fleet assignment to allocation group</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_num_alloc_groups">
-                <property name="text">
-                 <string>Number of allocation groups</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox_num_alloc_groups">
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="buttonSymbols">
-                 <enum>QAbstractSpinBox::NoButtons</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <spacer name="horizontalSpacer_40">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="2" column="0">
-               <layout class="QVBoxLayout" name="verticalLayout_alloc_grpfrac_label">
-                <item>
-                 <widget class="QLabel" name="label_alloc_fraction">
-                  <property name="text">
-                   <string>Allocation fraction for each group </string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>for each forecast year</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="verticalSpacer_5">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="1" colspan="2">
-               <layout class="QHBoxLayout" name="horizontalLayout_group_fractions"/>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="9" column="1">
-          <widget class="QScrollArea" name="scrollArea_fixed_catch">
-           <property name="widgetResizable">
-            <bool>true</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>285</width>
-              <height>134</height>
-             </rect>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
-             <item>
-              <widget class="QLabel" name="label_fixed_catch">
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_input_catch_basis">
                <property name="text">
-                <string>Year, Season, Fleet, Catch (or F), Basis</string>
+                <string>Basis for input forecast catch 
+(units are from fleet units)</string>
                </property>
               </widget>
              </item>
-             <item>
-              <widget class="QListWidget" name="listWidget_fixed_catch"/>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_catch_tuning_basis">
+               <property name="text">
+                <string>Basis for forecast catch maximum</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_fcast_levels">
+               <property name="text">
+                <string>Number of forecast catch levels to input</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_relF">
+               <property name="text">
+                <string>Fleet relative F</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_relf">
+               <item>
+                <widget class="QComboBox" name="comboBox_relF">
+                 <item>
+                  <property name="text">
+                   <string>1 = use first-last allocation year</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = read season(row) x fleet(col) below</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_18">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="1" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_area_max">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_max_catch_area">
+                 <property name="text">
+                  <string>-1</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_17">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="label_input_fixed_catch">
+               <property name="text">
+                <string>Forecasted catch observation
+(if basis above is &lt; 0)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_fleet_max">
+               <property name="text">
+                <string>Maximum total catch by fleet 
+(include surveys) 
+(-1 to have no max) </string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_input_seas_relf">
+               <property name="text">
+                <string>Input fleet relative F for choice 2 above
+(include surveys)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="3">
+              <widget class="QGroupBox" name="groupBox_alloc_groups">
+               <property name="title">
+                <string>Allocation Groups</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout">
+                <item row="0" column="0" colspan="2">
+                 <layout class="QGridLayout" name="gridLayout_group_assignment">
+                  <item row="1" column="1" colspan="2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_assignment">
+                    <item>
+                     <widget class="QLineEdit" name="lineEdit_alloc_assignments">
+                      <property name="text">
+                       <string>0</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_26">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_alloc_assignment">
+                    <property name="text">
+                     <string>Fleet assignment to allocation group</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_num_alloc_groups">
+                    <property name="text">
+                     <string>Number of allocation groups</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QSpinBox" name="spinBox_num_alloc_groups">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::NoButtons</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <spacer name="horizontalSpacer_40">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="2" column="0">
+                   <layout class="QVBoxLayout" name="verticalLayout_alloc_grpfrac_label">
+                    <item>
+                     <widget class="QLabel" name="label_alloc_fraction">
+                      <property name="text">
+                       <string>Allocation fraction for each group </string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label">
+                      <property name="text">
+                       <string>for each forecast year</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_5">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="1" colspan="2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_group_fractions"/>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_tuning_basis">
+               <item>
+                <widget class="QComboBox" name="comboBox_tuning_basis">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>160</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>2 = total catch biomass</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3 = retained biomass</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>5 = total catch number</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>6 = retained number</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_15">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="3" column="1" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_fleet_max">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_max_catch_fleet">
+                 <property name="text">
+                  <string>-1</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_16">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="3">
+              <spacer name="horizontalSpacer_30">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="7" column="1" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_fcast_levels">
+               <item>
+                <widget class="QSpinBox" name="spinBox_fcast_levels"/>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_fcast_levels_note">
+                 <property name="text">
+                  <string>(if 0, calculate catch from forecast F)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_34">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="8" column="1" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_input_catch_basis">
+               <item>
+                <widget class="QComboBox" name="comboBox_input_catch_basis">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>-1 = Read basis with each observation</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = Dead catch</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3 = Retained catch</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>99 = Input harves rate (F)</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_35">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="10" column="3">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="1" colspan="2">
+              <layout class="QVBoxLayout" name="verticalLayout_seas_flt_relf"/>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_fixed_catch_obs">
+               <property name="text">
+                <string>Number of observations</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
              </item>
             </layout>
-           </widget>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_tuning_basis">
-           <item>
-            <widget class="QComboBox" name="comboBox_tuning_basis">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>160</width>
-               <height>0</height>
-              </size>
-             </property>
-             <item>
-              <property name="text">
-               <string>2 = total catch biomass</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>3 = retained biomass</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>5 = total catch number</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>6 = retained number</string>
-              </property>
-             </item>
-            </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_15">
+            <spacer name="verticalSpacer_6">
              <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+              <enum>Qt::Vertical</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
-               <height>20</height>
+               <width>20</width>
+               <height>40</height>
               </size>
              </property>
             </spacer>
            </item>
           </layout>
-         </item>
-         <item row="10" column="2">
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="10" column="0">
-          <spacer name="horizontalSpacer_32">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="3" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_fleet_max">
-           <item>
-            <widget class="QLineEdit" name="lineEdit_max_catch_fleet">
-             <property name="text">
-              <string>-1</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_16">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_36">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::MinimumExpanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>

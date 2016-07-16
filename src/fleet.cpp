@@ -7,6 +7,7 @@ Fleet::Fleet(QObject *parent) :
     ss_model *model = static_cast<ss_model*>(parent);
     i_start_year = model->start_year();
 
+    set_max_catch(-1);
     retainCatch = new tablemodel(this);
     retainCatch->setColumnCount(4);
     catchHeader << "Year" << "Season" << "Catch" << "Catch_Se";
@@ -786,6 +787,16 @@ void Fleet::appendLambda(QStringList values)
     int rows = lambdaModel->rowCount();
     lambdaModel->setRowCount(rows + 1);
     lambdaModel->setRowData(rows, values);
+}
+
+float Fleet::get_max_catch() const
+{
+    return f_max_catch;
+}
+
+void Fleet::set_max_catch(float value)
+{
+    f_max_catch = value;
 }
 
 bool Fleet::getActive() const

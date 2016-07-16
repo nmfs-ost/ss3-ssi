@@ -26,9 +26,30 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     model_data = m_data;
     ss_forecast *fcast = model_data->forecast;
 
+    seasFltRelF = new tableview();
+    seasFltRelF->setParent(this);
+    ui->verticalLayout_seas_flt_relf->addWidget(seasFltRelF);
+    seasFltRelF->setHeight(0);
+
+    maxCatchFleets = new tableview();
+    maxCatchFleets->setParent(this);
+    ui->horizontalLayout_fleet_max->addWidget(maxCatchFleets);
+    maxCatchFleets->setHeight(1);
+
+    maxCatchAreas = new tableview();
+    maxCatchAreas->setParent(this);
+    ui->horizontalLayout_area_max->addWidget(maxCatchAreas);
+    maxCatchAreas->setHeight(1);
+
     allocGrpFracts = new tableview();
     allocGrpFracts->setParent(this);
     ui->horizontalLayout_group_fractions->addWidget(allocGrpFracts);
+    allocGrpFracts->setHeight(0);
+
+    inputFcastCatch = new tableview();
+    inputFcastCatch->setParent(this);
+    ui->verticalLayout_catch_basis->addWidget(inputFcastCatch);
+    inputFcastCatch->setHeight(0);
 
     connect (ui->checkBox_benchmarks, SIGNAL(toggled(bool)), fcast, SLOT(set_benchmarks(bool)));
     connect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_MSY(int)));
@@ -76,22 +97,14 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
 
     connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), SLOT(set_combo_box_fixed_catch(int)));
+    connect (ui->spinBox_fixed_catch_obs, SIGNAL(valueChanged(int)), SLOT(change_num_input_obs(int)));
 
-    if (fcast->num_catch_values() > 0)
+    if (fcast->getNumFixedFcastCatch() > 0)
     {
-        ui->scrollArea_seas_relf->setVisible(true);
         ui->label_input_seas_relf->setVisible(true);
-/*        for (int i = 0; i < fcast->num_catch_values(); i++)
-        {
-    //        ui->checkBox_fixed_catch->setChecked(true);
-            QLineEdit *qle = new QLineEdit(this);
-            ssObservation *obs = model_data->forecast->fixed_catch_value(i);
-            edit_fixed_catch_list.append(qle);
-//            connect (qle, SIGNAL(textChanged(QString)), SLOT(set_fixed_catch_text(obs, QString)));
-            qle->setText(fixed_catch_text(i));
-        }*/
     }
 
+    connect (ui->groupBox_alloc_groups, SIGNAL(toggled(bool)), SLOT(change_use_alloc_groups(bool)));
     connect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), SLOT(alloc_group_assign_changed()));
 
     connect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
@@ -220,25 +233,34 @@ void forecast_widget::refresh()
     ui->spinBox_rebuilder_ydecl->setValue(fcast->rebuilder_first_year());
     ui->spinBox_rebuilder_yinit->setValue(fcast->rebuilder_curr_year());
 
-    ui->scrollArea_seas_relf->setVisible(false);
     ui->label_input_seas_relf->setVisible(false);
     set_combo_box(ui->comboBox_relF, fcast->fleet_rel_f());
-
+    set_combo_box_relf_basis(fcast->fleet_rel_f());
 
     set_combo_box(ui->comboBox_tuning_basis, fcast->catch_tuning_basis());
     set_max_catch_fleet();
     set_max_catch_area();
+
+    seasFltRelF->setModel(fcast->getSeasFleetRelFTable());
+    seasFltRelF->resizeColumnsToContents();
+
+    maxCatchFleets->setModel(fcast->getMaxCatchFleetTable());
+    maxCatchFleets->resizeColumnsToContents();
+
+    maxCatchAreas->setModel(fcast->getMaxCatchAreaTable());
+    maxCatchAreas->resizeColumnsToContents();
 
     set_allocation_groups();
     set_allocation_group_assign();
     allocGrpFracts->setModel(fcast->getAllocFractModel());
     allocGrpFracts->resizeColumnsToContents();
 
-    ui->scrollArea_fixed_catch->setVisible(false);
-    ui->label_input_fixed_catch->setVisible(false);
+    inputFcastCatch->setModel(fcast->getFixedFcastCatchModel());
+    inputFcastCatch->resizeColumnsToContents();
 
     ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
     set_combo_box(ui->comboBox_input_catch_basis, fcast->input_catch_basis());
+    set_combo_box_fixed_catch(fcast->input_catch_basis());
 
 
     ui->tabWidget->setCurrentIndex(0);
@@ -380,6 +402,8 @@ void forecast_widget::alloc_group_assign_changed ()
     {
         ui->groupBox_alloc_groups->setChecked(false);
         model_data->forecast->set_num_alloc_groups(0);
+        set_num_alloc_groups(0);
+        allocGrpFracts->setHeight(0);
     }
     else if (ql.count() < model_data->num_fleets())
     {
@@ -414,7 +438,23 @@ void forecast_widget::alloc_group_assign_changed ()
         }
         set_num_alloc_groups(num);
         model_data->forecast->set_num_alloc_groups(num);
+        allocGrpFracts->setHeight(model_data->forecast->getAllocFractModel());
+        allocGrpFracts->resizeColumnsToContents();
     }
+}
+
+void forecast_widget::change_use_alloc_groups(bool flag)
+{
+    if (flag)
+    {
+        allocGrpFracts->setHeight(model_data->forecast->getAllocFractModel());
+        allocGrpFracts->resizeColumnsToContents();
+    }
+    else
+    {
+        allocGrpFracts->setHeight(0);
+    }
+
 }
 
 void forecast_widget::set_allocation_group_fract()
@@ -507,24 +547,49 @@ void forecast_widget::set_combo_box_relf_basis (int val)
     model_data->forecast->set_combo_box_fleet_relf(val);
     if (val == 1)
     {
-        ui->scrollArea_seas_relf->setVisible(true);
+        seasFltRelF->setVisible(true);
+        seasFltRelF->setHeight(model_data->num_seasons());
         ui->label_input_seas_relf->setVisible(true);
 //        ui->lineEdit_seas_relf->setVisible(true);
 //        ui->lineEdit_alloc_assignments->setText(model_data->forecast->seas_fleet_rel_f(0,0));
     }
     else
     {
-        ui->scrollArea_seas_relf->setVisible(false);
+        seasFltRelF->setVisible(false);
+        seasFltRelF->setHeight(0);
         ui->label_input_seas_relf->setVisible(false);
 //        ui->lineEdit_seas_relf->setVisible(false);
     }
 }
 
+void forecast_widget::set_num_input_obs(int num)
+{
+    ui->spinBox_fixed_catch_obs->setValue(num);
+}
+
+void forecast_widget::change_num_input_obs(int num)
+{
+    model_data->forecast->setNumFixedFcastCatch(num);
+    inputFcastCatch->setHeight(num);
+}
+
 void forecast_widget::set_combo_box_fixed_catch(int value)
 {
     model_data->forecast->set_combo_box_catch_input(value);
-    ui->scrollArea_fixed_catch->setVisible(value);
-    ui->label_fixed_catch->setVisible(value);
+    if (value > 0)
+    {
+        ui->label_fixed_catch_obs->setVisible(false);
+        ui->spinBox_fixed_catch_obs->setVisible(false);
+        inputFcastCatch->setVisible(false);
+        ui->label_input_fixed_catch->setVisible(false);
+    }
+    else
+    {
+        ui->label_fixed_catch_obs->setVisible(true);
+        ui->spinBox_fixed_catch_obs->setVisible(true);
+        inputFcastCatch->setVisible(true);
+        ui->label_input_fixed_catch->setVisible(true);
+    }
 }
 
 void forecast_widget::set_bmark_bio_begin(int yr)

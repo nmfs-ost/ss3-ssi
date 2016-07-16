@@ -1,11 +1,37 @@
 #include "ss_forecast.h"
 
 ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
-    i_num_fleets(fleets), i_num_seasons(seasons), QObject (parent)
+    QObject (parent)
 {
-    o_fixed_ctch_list = new ssObservation();
-    alloc_grp_frac = new tablemodel(this);
+//    o_fixed_ctch_list = new ssObservation();
+    seasFleetRelF_table = new tablemodel(this);
+    seasFleetRelF_table->setColumnCount(0);
+    seasFleetRelF_table->setRowCount(0);
+
+    maxCatchFleet = new tablemodel(this);
+    maxCatchFleet->setRowCount(1);
+    maxCatchFleet->setColumnCount(0);
+    maxCatchFleet->setRowHeader(0, QString(""));
+
+    maxCatchArea = new tablemodel(this);
+    maxCatchArea->setRowCount(1);
+    maxCatchArea->setColumnCount(0);
+    maxCatchArea->setRowHeader(0, QString(""));
+
+    allocGroupFrac = new tablemodel(this);
+    allocGroupFrac->setRowCount(1);
+    allocGroupFrac->setColumnCount(0);
+
+    fixedFcastCatch = new tablemodel(this);
+    fixedFcastCatch->setRowCount(0);
+    fixedFcastCatch->setColumnCount(5);
+    QStringList header;
+    header << "Year" << "Season" << "Fleet" << "Catch" << "Basis";
+    fixedFcastCatch->setHeader(header);
+
     // set defaults
+    i_num_fleets = 0;
+    i_num_seasons = 0;
     reset ();
     add_seas_fleet_rel_f(seasons, fleets, 0.0);
 }
@@ -13,6 +39,11 @@ ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
 ss_forecast::~ss_forecast()
 {
     clear();
+    delete allocGroupFrac;
+    delete maxCatchFleet;
+    delete maxCatchArea;
+    delete seasFleetRelF_table;
+    delete fixedFcastCatch;
 }
 
 void ss_forecast::set_combo_box_MSY(int msy)
@@ -67,7 +98,9 @@ void ss_forecast::set_combo_box_forecast(int fcast)
 void ss_forecast::set_num_forecast_years (int yrs)
 {
     i_num_fcast_yrs = yrs;
-    alloc_grp_frac->setRowCount(yrs);
+    allocGroupFrac->setRowCount(yrs);
+    for (int i = 0; i < yrs; i++)
+        allocGroupFrac->setRowHeader(i, QString("Year_%1").arg(QString::number(i+1)));
 }
 
 void ss_forecast::set_combo_box_cr_method(int ctl)
@@ -123,37 +156,79 @@ void ss_forecast::set_combo_box_catch_tuning(int basis)
 
 void ss_forecast::set_num_fleets(int flt)
 {
+    seasFleetRelF_table->setColumnCount(flt);
+    maxCatchFleet->setColumnCount(flt);
+    if (i_num_fleets < flt)
+    {
+        QStringList header;
+        for (int j = 0; j < flt; j++)
+        {
+           header.append(QString("Fleet_%1").arg(j+1));
+        }
+        seasFleetRelF_table->setHeader(header);
+        maxCatchFleet->setHeader(header);
+        for (int j = i_num_fleets; j < flt; j++)
+        {
+            for (int i = 0; i < i_num_seasons; i++)
+            {
+                    set_seas_fleet_rel_f(i, j, 0.0);
+            }
+            set_max_catch_fleet(j, -1);
+        }
+    }
+
     i_num_fleets = flt;
-    int start = 0;
-    if (!i_max_catch_fleet.isEmpty())
-        start = i_max_catch_fleet.count();
-    for (int i = start; i < flt; i++)
-        i_max_catch_fleet.append(0);
-    for (int i = flt; i < start; i++)
-        i_max_catch_fleet.takeLast();
+
+}
+
+void ss_forecast::set_num_seasons(int seas)
+{
+    seasFleetRelF_table->setRowCount(seas);
+    if (i_num_seasons < seas)
+    {
+        for (int i = i_num_seasons; i < seas; i++)
+        {
+            seasFleetRelF_table->setRowHeader(i, QString("Season_%1").arg(QString::number(i+1)));
+            for (int j = 0; j < i_num_fleets; j++)
+                set_seas_fleet_rel_f(i, j, 0.0);
+        }
+    }
+    i_num_seasons = seas;
 }
 
 void ss_forecast::set_max_catch_fleet(int flt, int ctch)
 {
-    if (flt < i_max_catch_fleet.count())
-        i_max_catch_fleet[flt] = ctch;
+    QStringList data;
+    if (maxCatchFleet->rowCount() < flt+1)
+        set_num_fleets(flt+1);
+    data = maxCatchFleet->getRowData(0);
+    data.takeAt(flt);
+    data.insert(flt, QString::number(ctch));
 }
 
 void ss_forecast::set_num_areas(int ars)
 {
+    QStringList header;
+    QStringList data;
     int start = 0;
-    if (!i_max_catch_area.isEmpty())
-        start = i_max_catch_area.count();
-    for (int i = start; i < ars; i++)
-        i_max_catch_area.append(0);
-    for (int i = ars; i < start; i++)
-        i_max_catch_area.takeLast();
+    maxCatchArea->setColumnCount(ars);
+    for (int i = 0; i < ars; i++)
+    {
+        header.append(QString("Area_%1").arg(QString::number(i+1)));
+        data.append("-1");
+    }
+    maxCatchArea->setHeader(header);
+    maxCatchArea->setRowData(0, data);
 }
 
 void ss_forecast::set_max_catch_area(int ar, int ctch)
 {
-    if (ar < i_max_catch_area.count())
-        i_max_catch_area[ar] = ctch;
+    QStringList data;
+    if (maxCatchArea->columnCount() < ar+1)
+        set_num_areas(ar+1);
+    data = maxCatchArea->getRowData(0);
+    data.takeAt(ar-1);
+    data.insert(ar-1, QString::number(ctch));
 }
 
 void ss_forecast::set_num_alloc_groups(int num)
@@ -162,18 +237,21 @@ void ss_forecast::set_num_alloc_groups(int num)
     if (num != i_num_alloc_groups)
     {
         i_num_alloc_groups = num;
-        alloc_grp_frac->setColumnCount(num);
+        allocGroupFrac->setColumnCount(num);
         if (num > 0)
-            alloc_grp_frac->setRowCount(i_num_fcast_yrs);
+            allocGroupFrac->setRowCount(i_num_fcast_yrs);
         for (int i = 0; i < num; i++)
             header << QString("Group %1").arg(i+1);
-        alloc_grp_frac->setHeader(header);
+        allocGroupFrac->setHeader(header);
     }
 }
 
 void ss_forecast::set_alloc_group(int flt, int grp)
 {
     int i;
+    if (i_num_fleets < flt+1)
+        set_num_fleets(flt+1);
+
     for (i = i_alloc_grp_list.count(); i <= flt; i++)
         i_alloc_grp_list.append(0);
     i_alloc_grp_list[flt] = grp;
@@ -184,26 +262,61 @@ void ss_forecast::set_alloc_group(int flt, int grp)
 
 void ss_forecast::add_seas_fleet_rel_f (int seas, int flt, float f)
 {
-    int old_seas = 0, old_flt = 0, i = 0;
+    QStringList header;
+    QStringList data;
+    set_num_seasons(seas);
+    set_num_fleets(flt);
+
+    int old_seas = seasFleetRelF_table->rowCount();
+    int old_flt = seasFleetRelF_table->columnCount();
+    int row, col;
+
+    for (row = old_seas; row < seas; row++)
+    {
+        if (old_flt > 0)
+            data = seasFleetRelF_table->getRowData(row);
+        for (col = old_flt; col < flt; col++)
+        {
+            data.append(QString::number(f));
+        }
+        seasFleetRelF_table->setRowData(row, data);
+    }
 //    i_num_seasons = seas;
 //    i_num_fleets = flt;
-    if (!f_seas_fleet_rel_f_list.isEmpty())
+/*    if (!f_seas_fleet_rel_f_list.isEmpty())
         old_seas = f_seas_fleet_rel_f_list.count();
-    for (i = 0; i < old_seas; i++)
+    for (row = 0; row < old_seas; row++)
     {
         QList<float> seas_list;
         for (int j = old_flt; j < flt; j++)
             seas_list.append(0);
         f_seas_fleet_rel_f_list.append(seas_list);
     }
-    for (; i < seas; i++)
+    for (; row < seas; row++)
     {
         QList<float> seas_list;
         for (int j = 0; j < flt; j++)
             seas_list.append(0);
         f_seas_fleet_rel_f_list.append(seas_list);
     }
-    f_seas_fleet_rel_f_list[seas-1][flt-1] = f;
+    f_seas_fleet_rel_f_list[seas-1][flt-1] = f;*/
+}
+
+void ss_forecast::set_seas_fleet_rel_f(int seas, int flt, float f)
+{
+    int old_seas = seasFleetRelF_table->rowCount();
+    int old_flt = seasFleetRelF_table->columnCount();
+    QStringList data;
+    if (seas >= old_seas || flt >= old_flt)
+        add_seas_fleet_rel_f(seas, flt, 0.0);
+
+    data = seasFleetRelF_table->getRowData(seas);
+    data.takeAt(flt);
+    data.insert(flt, QString::number(f));
+    seasFleetRelF_table->setRowData(seas, data);
+/*    {
+        f_seas_fleet_rel_f_list[seas][flt] = f;
+    }*/
 }
 
 void ss_forecast::set_combo_box_catch_input(int basis)
@@ -229,7 +342,8 @@ void ss_forecast::set_combo_box_catch_input(int basis)
 
 void ss_forecast::add_fixed_catch_value(QStringList txtlst)
 {
-    o_fixed_ctch_list->addObservation(txtlst);
+    fixedFcastCatch->setRowData(fixedFcastCatch->rowCount(), txtlst);
+//    o_fixed_ctch_list->addObservation(txtlst);
 }
 
 void ss_forecast::reset()
@@ -269,11 +383,11 @@ void ss_forecast::reset()
     //#  1
     reset_seas_fleet_relf();
     //# max totalcatch by fleet (-1 to have no max) must enter value for each fleet
-    i_max_catch_fleet.clear();//
-    i_max_catch_fleet.append(-1);
+//    i_max_catch_fleet.clear();//
+//    i_max_catch_fleet.append(-1);
     //# max totalcatch by area (-1 to have no max); must enter value for each fleet
-    i_max_catch_area.clear();//
-    i_max_catch_area.append(-1);
+//    i_max_catch_area.clear();//
+//    i_max_catch_area.append(-1);
     //# fleet assignment to allocation group (enter group ID# for each fleet, 0 for not included in an alloc group)
     i_alloc_grp_list.clear();//
     i_alloc_grp_list.append(0);
@@ -289,9 +403,9 @@ void ss_forecast::reset()
         ssObservation *obs = o_fixed_ctch_list.takeFirst();
         delete obs;
     }
-    o_fixed_ctch_list[0]->fromText("2012 1 1 1200");*/
+    o_fixed_ctch_list[0]->fromText("2012 1 1 1200");
     o_fixed_ctch_list->setNumBins(0, 2);
-    o_fixed_ctch_list->setNumObs(0);
+    o_fixed_ctch_list->setNumObs(0);*/
 }
 
 void ss_forecast::clear()
@@ -324,35 +438,27 @@ void ss_forecast::clear()
     i_rebuilder_cur_yr = 0;
     i_fleet_rel_f = 0;
     i_ctch_basis = 0;
-    f_seas_fleet_rel_f_list.clear();
-    i_max_catch_fleet.clear();
-    i_max_catch_area.clear();
     i_alloc_grp_list.clear();
     i_num_alloc_groups = 0;
     i_num_fcast_ctch_levels = 0;
     i_input_fcast_ctch_basis = 0;
-    o_fixed_ctch_list->setNumObs(0);
-    alloc_grp_frac->setRowCount(0);
+    allocGroupFrac->setRowCount(0);
     set_num_alloc_groups(0);
 }
 
 void ss_forecast::reset_seas_fleet_relf()
 {
-    if (!f_seas_fleet_rel_f_list.isEmpty())
-    {
-        for (int i = 0; i < f_seas_fleet_rel_f_list.count(); i++)
-            f_seas_fleet_rel_f_list[i].clear();
-        f_seas_fleet_rel_f_list.clear();
-    }
+    QStringList data;
+    set_num_seasons(i_num_seasons);
 
     for (int i = 0; i < i_num_seasons; i++)
     {
-        QList<float> ql_f;
         for (int j = 0; j < i_num_fleets; j++)
         {
-            ql_f.append(1.0);
+            data.append("1.0");
         }
-        f_seas_fleet_rel_f_list.append(ql_f);
+        seasFleetRelF_table->setRowData(i, data);
+        data.clear();
     }
 }
 
