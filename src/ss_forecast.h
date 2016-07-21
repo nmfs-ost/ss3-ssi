@@ -15,6 +15,7 @@ public:
     ~ss_forecast();
 
 signals:
+    void allocGrpsChanged();
 
 public slots:
     void set_benchmarks (int bmark) {i_bmark = bmark;}
@@ -106,7 +107,7 @@ public slots:
     void setMaxCatchFleets (QStringList data) {maxCatchFleet->setRowData(0, data);}
     float getMaxCatchFleet (int flt) {return maxCatchFleet->getRowData(0).at(flt).toFloat();}
     tablemodel *getMaxCatchFleetTable () {return maxCatchFleet;}
-    void set_max_catch_fleet (int flt, int ctch);
+    void set_max_catch_fleet (int flt, float ctch);
     int num_fleets () {return maxCatchFleet->columnCount();}
     float max_catch_fleet (int flt) {return maxCatchFleet->getRowData(0).at(flt).toFloat();}
 
@@ -114,18 +115,26 @@ public slots:
     void setMaxCatchAreas (QStringList data) {maxCatchArea->setRowData(0, data);}
     float getMaxCatchArea (int flt) {return maxCatchArea->getRowData(0).at(flt).toFloat();}
     tablemodel *getMaxCatchAreaTable () {return maxCatchArea;}
-    void set_max_catch_area (int ar, int ctch);
+    void set_max_catch_area (int ar, float ctch);
 
     void set_num_areas (int ars) ;
     int num_areas () {return maxCatchArea->columnCount();}
     float max_catch_area (int ar) {return maxCatchArea->getRowData(0).at(ar).toFloat();}
 
+    QStringList getAllocGrpList () {return allocGrpList->getRowData(0);}
+    void setAllocGrpList (QStringList data) {allocGrpList->setRowData(0, data);}
+    int getAllocGrp (int flt) {return allocGrpList->getRowData(0).at(flt).toInt();}
+    tablemodel *getAllocGrps () {return allocGrpList;}
+    void setAllocGrp (int flt, int grp);
+    void setAllocGrps ();
+    void changeAllocGrps (QModelIndex tl, QModelIndex br);
     void set_alloc_group (int flt, int grp);
-//    int alloc_group (int flt) {return i_alloc_grp_list.at(flt);}
     void set_num_alloc_groups (int num);
     int num_alloc_groups () {return i_num_alloc_groups;}
     void set_alloc_fractions (int yr, QStringList fractions) {allocGroupFrac->setRowData(yr, fractions);}
     QStringList get_alloc_fractions (int yr) {return allocGroupFrac->getRowData(yr);}
+    void setAllocFractions (int index, QStringList data) {allocGroupFrac->setRowData(index, data);}
+    QStringList getAllocFractions (int index) {return allocGroupFrac->getRowData(index);}
     tablemodel *getAllocFractModel () {return allocGroupFrac;}
 
     void set_num_catch_levels (int lvls) {i_num_fcast_ctch_levels = lvls;}
@@ -135,8 +144,6 @@ public slots:
     int input_catch_basis () {return i_input_fcast_ctch_basis;}
 
     void add_fixed_catch_value (QStringList txtlst);
-//    int num_catch_values () {return o_fixed_ctch_list->getNumObs();}
-//    QStringList fixed_catch_value (int index){return o_fixed_ctch_list->getObservation(index);}
 
     void setNumFixedFcastCatch (int rows) {fixedFcastCatch->setRowCount(rows);}
     int getNumFixedFcastCatch () {return fixedFcastCatch->rowCount();}
@@ -209,25 +216,21 @@ public slots:
     // Fleet relative F:  rows are seasons, columns are fleets
     tablemodel *seasFleetRelF_table;
 
-//    QList<QList<float> > f_seas_fleet_rel_f_list;
     // max totalcatch by fleet (-1 to have no max) must enter value for each fleet
-//    QList<int> i_max_catch_fleet;
     tablemodel *maxCatchFleet;
     // max totalcatch by area (-1 to have no max); must enter value for each fleet
-//    QList<int> i_max_catch_area;
     tablemodel *maxCatchArea;
     // fleet assignment to allocation group (enter group ID# for each fleet, 0 for not included in an alloc group)
-    QList<int> i_alloc_grp_list;
     int   i_num_alloc_groups;
     // Conditional on >1 allocation group
+    tablemodel *allocGrpList;
     // allocation fraction for each of: 0 allocation groups
-    tablemodel * allocGroupFrac;
+    tablemodel *allocGroupFrac;
     // Number of forecast catch levels to input (else calc catch from forecast F)
     int   i_num_fcast_ctch_levels;
     // basis for input Fcast catch:  2=dead catch; 3=retained catch; 99=input Hrate(F) (units are from fleetunits; note new codes in SSV3.20)
     int   i_input_fcast_ctch_basis;
     // Fixed catch values (Year Seas Fleet Catch(or_F))
-//    ssObservation * o_fixed_ctch_list;
     tablemodel *fixedFcastCatch;
 
 };

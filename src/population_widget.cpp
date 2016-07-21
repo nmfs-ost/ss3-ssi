@@ -843,10 +843,10 @@ void population_widget::setMoveParamTitle(int def)
     QStringList d_list = pop->Move()->getDefinition(def);
     int index = def * 2;
     pop->Move()->getMovementParams()->setRowHeader
-            (index, QString("MoveParam_A_seas_%1_GP_%2from_%3to_%4").arg(
+            (index, QString("MoveParm_A_seas_%1_GP_%2from_%3to_%4").arg(
                  d_list.at(0), d_list.at(1), d_list.at(2), d_list.at(3)));
     pop->Move()->getMovementParams()->setRowHeader
-            (index + 1, QString("MoveParam_B_seas_%1_GP_%2from_%3to_%4").arg(
+            (index + 1, QString("MoveParm_B_seas_%1_GP_%2from_%3to_%4").arg(
                  d_list.at(0), d_list.at(1), d_list.at(2), d_list.at(3)));
 }
 

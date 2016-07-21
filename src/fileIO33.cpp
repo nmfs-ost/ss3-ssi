@@ -384,43 +384,43 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < num_vals; i++)
             {
                 compositionGeneral *cps = new compositionGeneral ();
-                data->add_general_comp_method(cps);
-                data->general_comp_method(i)->setNumber(i+1);
+                data->addGeneralCompMethod(cps);
+                data->getGeneralCompMethod(i)->setNumber(i+1);
             }
             for (int j = 0; j < total_fleets; j++)
                 data->getFleet(j)->setGenModelTotal(num_vals);
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setNumberBins(temp_int);
+                data->getGeneralCompMethod(i)->setNumberBins(temp_int);
                 for (int j = 0; j < total_fleets; j++)
                     data->getFleet(j)->setGenNumBins(i, temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setUnits(temp_int);
+                data->getGeneralCompMethod(i)->setUnits(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setScale(temp_int);
+                data->getGeneralCompMethod(i)->setScale(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
                 temp_str = d_file->next_value();//.toFloat();
-                for (int j = 0; j < total_fleets; j++)
-                    data->getFleet(j)->setGenAddToData(i, temp_str);
-//                data->general_comp_method(i)->set_mincomp(temp_float);
+//                for (int j = 0; j < total_fleets; j++)
+//                    data->getFleet(j)->setGenAddToData(i, temp_str);
+                data->getGeneralCompMethod(i)->setMinComp(temp_float);
             }
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setNumberObs(temp_int);
+                data->getGeneralCompMethod(i)->setNumberObs(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
-                compositionGeneral *cps = data->general_comp_method(i);
+                compositionGeneral *cps = data->getGeneralCompMethod(i);
                 str_lst.clear();
                 for (int j = 0; j < cps->getNumberBins(); j++)
                 {
@@ -428,23 +428,26 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 }
                 cps->getBinsModel()->setRowData(0, str_lst);
             }
+            num_input_lines = 0;
             for (i = 0; i < num_vals; i++)
             {
-                compositionGeneral *cps = data->general_comp_method(i);
-                obslength = data->getFleet(0)->getGenObsLength(i) + 1;//cps->get_obs_length();
-                num_input_lines = cps->getNumberObs();
-                for (int j = 0; j < num_input_lines; j++)
+                compositionGeneral *cps = data->getGeneralCompMethod(i);
+                num_input_lines += cps->getNumberObs();
+            }
+            for (i = 0; i < num_input_lines; i++)
+            {
+                str_lst.clear();
+                str_lst.append(d_file->next_value());
+                temp_int = str_lst.at(0).toInt();
+                obslength = data->getFleet(0)->getGenObsLength(temp_int-1);
+
+                for (int k = 0; k < obslength; k++)
                 {
-                    str_lst.clear();
-                    for (int k = 0; k < obslength; k++)
-                    {
-                        str_lst.append(d_file->next_value());
-                    }
-                    temp_int = str_lst.at(0).toInt();
-                    fleet = abs(str_lst.takeAt(3).toInt());
-                    data->getFleet(fleet-1)->addGenObservation(temp_int-1, str_lst);
-                    cps = data->general_comp_method(temp_int-1);
+                    str_lst.append(d_file->next_value());
                 }
+
+                fleet = abs(str_lst.takeAt(3).toInt());
+                data->getFleet(fleet-1)->addGenObservation(temp_int-1, str_lst);
             }
         }
 
@@ -481,11 +484,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         // morph composition data
         temp_int = d_file->next_value().toInt();
-        data->set_do_morph_comp(temp_int == 1);
-        if (data->get_do_morph_comp())
+        data->setDoMorphComp(temp_int == 1);
+        compositionMorph *mcps = new compositionMorph();
+        data->set_morph_composition (mcps);
+        if (data->getDoMorphComp())
         {
-            compositionMorph *mcps = new compositionMorph();
-            data->set_morph_composition (mcps);
             num_input_lines = d_file->next_value().toInt(); // num observations
             mcps->setNumberObs(num_input_lines);
             temp_int = d_file->next_value().toInt(); // number of platoons
@@ -1086,7 +1089,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline ("#" );
 
         // general composition methods
-        num = data->num_general_comp_methods();
+        num = data->getNumGeneralCompMethods();
         line = QString (QString("%1 # N sizefreq methods to read " ).arg(
                             QString::number(num)));
         chars += d_file->writeline (line);
@@ -1095,40 +1098,40 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = QString::number(data->general_comp_method(i)->getNumberBins());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getNumberBins());
                 line.append(QString("%1 ").arg(temp_str));
             }
-            line.append("#_nbins_per_method" );
+            line.append("#_Sizefreq N bins per method" );
             chars += d_file->writeline (line);
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = QString::number(data->general_comp_method(i)->getUnits());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getUnits());
                 line.append(QString("%1 ").arg(temp_str));
             }
-            line.append("#_units_per_each_method (1=biomass, 2=numbers)" );
+            line.append("#_Sizetfreq units (bio/num) per method" );
             chars += d_file->writeline (line);
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = QString::number(data->general_comp_method(i)->getScale());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getScale());
                 line.append(QString("%1 ").arg(temp_str));
             }
-            line.append("#_scale_per_each_method (1=kg, 2=lbs, 3=cm, 4=in)" );
+            line.append("#_Sizefreq scale (kg/lbs/cm/inches) per method" );
             chars += d_file->writeline (line);
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = data->getActiveFleet(1)->getGenMinTailComp(i);//QString::number(general_comp_method(i)->mincomp());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getMinComp());
                 line.append(QString("%1 ").arg(temp_str));
             }
-            line.append("#_mincomp_to_add_to_each_obs (entry for each method)" );
+            line.append("#_Sizefreq mincomp per method " );
             chars += d_file->writeline (line);
             line.clear();
             for (i = 0; i < num; i++)
             {
                 temp_int = 0;
-                for (j = 1; j <= total_fleets; j++) // for (int j = 0; j < data->num_fleets(); j++)
+                for (j = 1; j <= total_fleets; j++)
                 {
                     flt = data->getActiveFleet(j);
 //                    if (data->getFleet(j)->isActive())
@@ -1138,14 +1141,14 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 }
                 line.append(QString("%1 ").arg(QString::number(temp_int)));
             }
-            line.append("#_N_observations (entry for each method)" );
+            line.append("#_Sizefreq N obs per method" );
             chars += d_file->writeline (line);
-            line = QString("#_lower edge of bins for each method" );
+            line = QString("#_Sizefreq bins" );
             chars += d_file->writeline (line);
             for (i = 0; i < num; i++)
             {
                 line.clear();
-                str_lst = data->general_comp_method(i)->getBinsModel()->getRowData(0);
+                str_lst = data->getGeneralCompMethod(i)->getBinsModel()->getRowData(0);
                 for (int j = 0; j < str_lst.count(); j++)
                     line.append(QString (" %1").arg (str_lst.at(j)));
 
@@ -1175,7 +1178,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 }
             }
         }
-        chars += d_file->writeline ("#" );
+        chars += d_file->writeline ("#");
 
         // tag recapture
         temp_int = data->get_do_tags()? 1: 0;
@@ -1245,7 +1248,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline(QString("#"));
 
         // morph composition
-        if (data->get_do_morph_comp())
+        if (data->getDoMorphComp())
         {
             line = QString (QString("%1 # Do_morphcomp" ).arg(QString("1")));
             chars += d_file->writeline (line);
@@ -1286,14 +1289,14 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line = QString (QString("%1 # no morphcomp data " ).arg(QString::number(0)));
             chars += d_file->writeline (line);
         }
-        chars += d_file->writeline ("#" );
+        chars += d_file->writeline ("#");
         d_file->newline();
 
         //end of data
-        line = QString (QString("%1" ).arg (QString::number(END_OF_DATA)));
+        line = QString (QString("%1").arg (QString::number(END_OF_DATA)));
         chars += d_file->writeline (line);
         d_file->newline();
-        chars += d_file->writeline ("ENDDATA" );
+        chars += d_file->writeline ("ENDDATA");
 
 
         d_file->close();
@@ -1442,31 +1445,18 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         // max catch fleet
         do {
             fleet = f_file->next_value().toInt();
-            temp_int = f_file->next_value().toInt();
+            temp_float = f_file->next_value().toFloat();
             if (fleet != -9999)
-                fcast->set_max_catch_fleet((fleet - 1), temp_int);
+                fcast->set_max_catch_fleet((fleet - 1), temp_float);
         } while (fleet != -9999);
+
         // max catch area
         do {
             area = f_file->next_value().toInt();
-            temp_int = f_file->next_value().toInt();
-            if (fleet != -9999)
-                fcast->set_max_catch_area((area - 1), temp_int);
+            temp_float = f_file->next_value().toFloat();
+            if (area != -9999)
+                fcast->set_max_catch_area((area - 1), temp_float);
         } while (area != -9999);
-        /*
-        for (i = 0; i < fcast->num_fleets(); i++)
-        {
-            token = f_file->next_value("max catch by fleet");
-            temp_int = token.toInt();
-            fcast->set_max_catch_fleet(i, temp_int);
-        }
-
-        for (i = 0; i < fcast->num_areas(); i++)
-        {
-            token = f_file->next_value("max catch by area");
-            temp_int = token.toInt();
-            fcast->set_max_catch_area(i, temp_int);
-        }*/
 
         // Allocation groups
         fcast->set_num_alloc_groups(0);
@@ -1474,43 +1464,34 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             fleet = f_file->next_value().toInt();
             temp_int = f_file->next_value().toInt();
             if (fleet != -9999)
-                data->getFleet(fleet - 1)->setAllocGroup(temp_int);//fcast->set_alloc_group((fleet - 1), temp_int);
+            {
+                data->getFleet(fleet - 1)->setAllocGroup(temp_int);
+                fcast->setAllocGrp(fleet - 1, temp_int);
+            }
         } while (fleet != -9999);
-        /*
-        for (i = 0; i < fcast->num_fleets(); i++)
-        {
-            token = f_file->next_value("alloc group assignment");
-            temp_int = token.toInt();
-            fcast->set_alloc_group(i, temp_int);
-        }*/
+
         if (fcast->num_alloc_groups() > 0)
         {
-            do {
-                temp_int = f_file->next_value().toInt();
+            int j = 0;
+            do
+            {
+                str_lst.clear();
+                str_lst.append(f_file->next_value("alloc grp frac year"));
                 for (i = 0; i < fcast->num_alloc_groups(); i++)
                 {
                     token = f_file->next_value("alloc group fraction");
                     str_lst.append(token);
                 }
-                if (temp_int != -9999)
-                    fcast->set_alloc_fractions(temp_int, str_lst);
-            } while (temp_int != -9999);
+                if (str_lst.at(0).toInt() != -9999)
+                    fcast->setAllocFractions(j++, str_lst);
+            } while (str_lst.at(0).toInt() != -9999);
         }
-        /*
-        for (int j = 0; j < fcast->num_forecast_years(); j++)
-        {
-            str_lst.clear();
-            if (str_lst.at(0).toInt() == -9999)
-                break;
-        }*/
 
 
         token = f_file->next_value("input catch basis");
         temp_int = token.toInt();
         fcast->set_input_catch_basis(temp_int);
 
-        if (temp_int > 0)
-        {
             do
             {
                 str_lst.clear();
@@ -1520,11 +1501,11 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 str_lst.append(f_file->next_value()); // Season
                 str_lst.append(f_file->next_value()); // Fleet
                 str_lst.append(f_file->next_value()); // Catch
+                str_lst.append(f_file->next_value()); // Basis
                 if (temp_int != -9999)
                     fcast->add_fixed_catch_value(str_lst);
 
             } while (temp_int != -9999);
-        }
 
         token = f_file->next_value();
         temp_int = token.toInt();
@@ -1732,13 +1713,15 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         line = QString("# enter list of fleet number and max for fleets with max annual catch; terminate with fleet=-9999" );
         chars += f_file->writeline(line);
+        str_lst = fcast->getMaxCatchFleets();
         line.clear();
         for (i = 0; i < fcast->num_fleets(); i++)
         {
             line.clear();
+            value = str_lst.at(i);
             if (data->getFleet(i)->isActive())
             {
-                value = QString::number(fcast->max_catch_fleet(i));
+//                value = QString::number(fcast->max_catch_fleet(i));
 
                 if (value.toFloat() > 0)
                 {
@@ -1752,10 +1735,11 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         line = QString("# enter list of area ID and max annual catch; terminate with area=-9999" );
         chars += f_file->writeline(line);
+        str_lst = fcast->getMaxCatchAreas();
         for (i = 0; i < fcast->num_areas(); i++)
         {
             line.clear();
-            value = QString::number(fcast->max_catch_area(i));
+            value = str_lst.at(i);//QString::number(fcast->max_catch_area(i));
             if (value.toFloat() > 0)
             {
                 line.append(QString("%1 %2").arg(QString::number(i+1), value));
@@ -1768,13 +1752,14 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         // allocation groups
         line = QString("# enter list of fleet number and allocation group assignment, if any; terminate with fleet=-9999" );
         chars += f_file->writeline(line);
+        str_lst = fcast->getAllocGrpList();
         line.clear();
         for (i = 0; i < fcast->num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive())
             {
                 line.clear();
-                value = QString::number(data->getFleet(i)->getAllocGroup());
+                value = str_lst.at(i);//QString::number(fcast->getAllocGrp(i));
 //                value = QString::number(data->getFleet(i)->getAllocGroup());//fcast->alloc_group(i));
                 if (value.toInt() > 0)
                 {
@@ -1786,6 +1771,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString ("-9999 -1");
         chars += f_file->writeline(line);
 
+        fcast->getAllocFractModel()->sort(0);
         temp_string = QString::number(fcast->num_alloc_groups());
         line = QString("#_if N allocation groups >0, list year, allocation fraction for each group " );
         chars += f_file->writeline(line);
@@ -1797,18 +1783,24 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         if (fcast->num_alloc_groups() > 0)
         {
             line = QString(QString("#Yr alloc frac for each of: %1 alloc grps").arg(temp_string));
+            chars += f_file->writeline(line);
+            line.clear();
             for (yr = 0; yr < fcast->num_forecast_years(); yr++)
             {
-                line = QString::number(yr);
-                str_lst = fcast->get_alloc_fractions(yr);
+                line.clear();
+                str_lst = fcast->getAllocFractions(yr);
+//                line = QString::number(yr);
+//                str_lst = fcast->get_alloc_fractions(yr);
                 for (i = 0; i < str_lst.count(); i++)
                 {
                     line.append(QString(QString(" %1").arg(str_lst.at(i))));
                 }
                 chars += f_file->writeline(line);
-                if (str_lst.at(0).toInt() == -9999)
-                    break;
-             }
+            }
+            line = QString("-9999");
+            for (i = 0; i < fcast->num_alloc_groups(); i++)
+                line.append(QString(" 0"));
+            chars += f_file->writeline(line);
         }
         else
         {
@@ -1825,7 +1817,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         line = QString("#enter list of Fcast catches; terminate with line having year=-9999" );
         chars += f_file->writeline(line);
-        line = QString("#_Year Seas Fleet Catch(or_F)" );
+        line = QString("#_Year Seas Fleet Catch(or_F) Basis" );
         chars += f_file->writeline(line);
         num = fcast->getNumFixedFcastCatch();//num_catch_values();
         for (i = 0; i < num; i++)
@@ -1836,7 +1828,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
                 line.append(QString(" %1").arg(obs.at(j)));
             chars += f_file->writeline(line);
         }
-        line = QString("-9999 1 1 0 " );
+        line = QString("-9999 1 1 0 2" );
         chars += f_file->writeline(line);
 
         f_file->writeline("#" );
@@ -1874,36 +1866,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         else if (num > 1) num = 3;
         else num = 1;*/
         pop->Grow()->setNum_morphs(num);
-        pop->Grow()->setMorph_within_ratio(0.0);
-        pop->Grow()->setMorph_dist(0, 1.0);
+        pop->Grow()->setMorph_within_ratio(1.0);
         if (num > 1)
         {
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
             temp_float = c_file->next_value().toFloat();
             if ((int)temp_float != -1) // normal dist is the default
-/*            {
-                if (num == 3)
-                {
-                    pop->Grow()->setMorph_dist(0, 0.15);
-                    pop->Grow()->setMorph_dist(1, 0.70);
-                    pop->Grow()->setMorph_dist(2, 0.15);
-                }
-                else if (num == 5)
-                {
-                    pop->Grow()->setMorph_dist(0, 0.031);
-                    pop->Grow()->setMorph_dist(1, 0.237);
-                    pop->Grow()->setMorph_dist(2, 0.464);
-                    pop->Grow()->setMorph_dist(3, 0.237);
-                    pop->Grow()->setMorph_dist(4, 0.031);
-                }
-                else
-                {
-                    return false;
-                }
-                c_file->skip_line();
-            }
-            else*/ // read dist values
             {
                 float total = temp_float;
                 pop->Grow()->setMorph_dist(0, temp_float);
@@ -1995,10 +1964,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-//        // fraction female
-//        temp_float = c_file->next_value().toFloat();
-//        pop->set_frac_female(temp_float);
-//
         // natural Mort
         temp_int = c_file->next_value().toInt();
         pop->Grow()->setNatural_mortality_type(temp_int);
@@ -2162,14 +2127,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
 
             gp->setNumGrowthParams(0);
-//            gp->setNumCVParams(0);
                                               // Female parameters
-/*            num_vals = gp->getNumNatMParams();
-            for (int j = 0; j < num_vals; j++)
-            {
-                datalist = readParameter(c_file); // natMort
-                gp->setNatMParam(j, datalist);
-            }*/
             datalist = readParameter(c_file); // L at Amin
             gp->addGrowthParam(datalist);
             gp->getGrowthParams()->setRowHeader(0, QString("L_at_Amin_Fem_GP_%1").arg(QString::number(i+1)));
@@ -2203,7 +2161,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             num = 0;
             pop->Grow()->setNumMaturityParams(num);
             datalist = readParameter(c_file); // fem_wt_len_1
-
             pop->Grow()->setMaturityParam(num, datalist);
             pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
             num++;

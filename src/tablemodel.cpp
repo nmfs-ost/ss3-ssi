@@ -49,14 +49,6 @@ void tablemodel::setRowData(int &row, QString rowstring)
 {
     QStringList datalist (rowstring.split(' ', QString::SkipEmptyParts));
     setRowData(row, datalist);
-/*    QList<QStandardItem *> px;
-    for (int i = 0; i < datalist.count(); i++)
-    {
-        QStandardItem *pxi = new QStandardItem(datalist.at(i));
-        px << pxi;
-    }
-    insertRow(row, px);
-    removeRow(row + 1);*/
 }
 
 QStringList tablemodel::getRowData(int row)
@@ -90,6 +82,11 @@ void tablemodel::setHeader(QStringList titles)
 void tablemodel::setColumnHeader(int column, QString title)
 {
     setHeaderData(column, Qt::Horizontal, title);
+}
+
+QString tablemodel::getColumnHeader(int column)
+{
+    return headerData(column, Qt::Horizontal).toString();
 }
 
 void tablemodel::setRowHeader(int row, QString title)

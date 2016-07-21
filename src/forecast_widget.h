@@ -86,6 +86,7 @@ private:
     tableview *seasFltRelF;
     tableview *maxCatchFleets;
     tableview *maxCatchAreas;
+    tableview *allocGrpList;
     tableview *allocGrpFracts;
     tableview *inputFcastCatch;
 };

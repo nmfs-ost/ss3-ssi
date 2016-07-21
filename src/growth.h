@@ -127,6 +127,7 @@ public:
     QStringList getMorphDist_str();
     float getMorph_dist (int index);
     void setMorph_dist (int index, float value);
+    void setMorphDist ();
     tablemodel *getMorphDistModel() {return morphdisttable;}
 
     int getDevPhase() const;

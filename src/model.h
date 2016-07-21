@@ -227,10 +227,14 @@ public slots:
     QStringList get_environ_var_obs (int index) {return obsEnvironVars->getObservation(index);}
     tablemodel *getEnvVariables() {return obsEnvironVars->getObservations();}
 
-    void set_num_general_comp_methods(int num);
-    int num_general_comp_methods () {return cListGeneralMethods.count();}
-    void add_general_comp_method (compositionGeneral *method) {cListGeneralMethods.append (method);}
-    compositionGeneral *general_comp_method (int index) {return cListGeneralMethods.at(index);}
+    void setNumGeneralCompMethods(int num);
+    int getNumGeneralCompMethods () {return cListGeneralMethods.count();}
+    void addGeneralCompMethod (compositionGeneral *method) {cListGeneralMethods.append (method);}
+    compositionGeneral *getGeneralCompMethod (int index) {return cListGeneralMethods.at(index);}
+    void copyGeneralCompMethod (compositionGeneral *method);
+    void deleteGeneralCompMethod (compositionGeneral *method);
+    void deleteGeneralCompMethod (int index);
+
 
     void set_do_tags (bool flag) {doTags = flag;}
     bool get_do_tags () {return doTags;}
@@ -244,8 +248,8 @@ public slots:
     QStringList get_tag_observation (int index) {return tagData->getObservation(index);}
     tablemodel *get_tag_observations () {return tagData->getObservations();}
 
-    void set_do_morph_comp (bool flag) {doMorphComp = flag;}
-    bool get_do_morph_comp () {return doMorphComp;}
+    void setDoMorphComp (bool flag) {doMorphComp = flag;}
+    bool getDoMorphComp () {return doMorphComp;}
 
     void setNumBlockPatterns (int num);// {iNumBlockPatterns = num;}
     int getNumBlockPatterns() {return iNumBlockPatterns;}

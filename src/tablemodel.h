@@ -14,6 +14,7 @@ public:
 
     void reset() {setRowCount(0);}
 
+public slots:
     void setRowData(int &row, QString rowstring);
     void setRowData(int row, QStringList &rowstringlist);
     void setRowData(int row, QVector<double> rowdata);
@@ -23,6 +24,7 @@ public:
 
     void setHeader (QStringList titles);
     void setColumnHeader (int column, QString title);
+    QString getColumnHeader (int column);
     void setRowHeader (int row, QString title);
     QString getRowHeader (int row);
 

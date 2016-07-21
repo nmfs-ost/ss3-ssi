@@ -67,6 +67,9 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ui->horizontalLayout_gen_bins->addWidget(genBins);
     current_gen_comp = NULL;
     connect (ui->spinBox_gen_comp, SIGNAL(valueChanged(int)), SLOT(changeGenCompMethod(int)));
+    connect (ui->pushButton_gen_new, SIGNAL(released()), SLOT(newGenCompMethod()));
+    connect (ui->pushButton_gen_copy, SIGNAL(released()), SLOT(copyGenCompMethod()));
+    connect (ui->pushButton_gen_delete, SIGNAL(released()), SLOT(deleteGenCompMethod()));
     connect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), SLOT(changeGenUnits(int)));
     connect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), SLOT(changeGenScale(int)));
     connect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), SLOT(changeGenMinComp()));
@@ -159,7 +162,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->pushButton_gen_obs, SIGNAL(clicked()), SLOT(showGenObs()));
 
     connect (ui->groupBox_comp_morph, SIGNAL(toggled(bool)), SLOT(changeDoMorphs(bool)));
-    connect (ui->spinBox_morph_num_stocks, SIGNAL(valueChanged(int)), SLOT(changeMorphs(int)));
+    connect (ui->spinBox_morph_num_stocks, SIGNAL(valueChanged(int)), SLOT(changeNumMorphs(int)));
     connect (ui->lineEdit_morph_min_comp, SIGNAL(editingFinished()), SLOT(changeMorphMincomp()));
     connect (ui->pushButton_morph_obs, SIGNAL(clicked()), SIGNAL(showMorphObs()));
 
@@ -270,10 +273,10 @@ void data_widget::refresh()
         ageError->resizeColumnsToContents();
 //        ageObs->setModel(model_data->get_age_composition()->getObsModel());
 //        ageObs->resizeColumnsToContents();
-        ui->label_gen_comp_total->setText(QString::number(model_data->num_general_comp_methods()));
+        ui->label_gen_comp_total->setText(QString::number(model_data->getNumGeneralCompMethods()));
         setGenCompMethod(0);
 
-        setDoMorphs(model_data->get_do_morph_comp());
+        setDoMorphs(model_data->getDoMorphComp());
 
         setDoTags(model_data->get_do_tags());
 
@@ -391,8 +394,8 @@ void data_widget::changeNumGenders(int val)
         bins = model_data->get_age_composition()->getNumberBins();
         if (bins > 0)
             model_data->getFleet(i)->setAgeNumBins(bins);
-        for (int j = 0; j < model_data->num_general_comp_methods(); j++)
-            model_data->getFleet(i)->setGenNumBins(j, model_data->general_comp_method(j)->getNumberBins());
+        for (int j = 0; j < model_data->getNumGeneralCompMethods(); j++)
+            model_data->getFleet(i)->setGenNumBins(j, model_data->getGeneralCompMethod(j)->getNumberBins());
     }
 }
 
@@ -547,7 +550,7 @@ void data_widget::setGenCompMethod(int method)
 
 void data_widget::changeGenCompMethod(int method)
 {
-    int total = model_data->num_general_comp_methods();
+    int total = model_data->getNumGeneralCompMethods();
     if (total > 0)
     {
         if (method < 1)
@@ -557,11 +560,11 @@ void data_widget::changeGenCompMethod(int method)
 
         else
         {
-            ui->label_gen_comp_total->setText(QString::number(model_data->num_general_comp_methods()));
-            current_gen_comp = model_data->general_comp_method(method - 1);
-//            ui->spinBox_gen_units->setValue(current_gen_comp->getUnits());
-//            ui->spinBox_gen_scale->setValue(current_gen_comp->getScale());
-//            ui->lineEdit_gen_mincomp->setText(QString::number(current_gen_comp->mincomp()));
+            ui->label_gen_comp_total->setText(QString::number(total));
+            current_gen_comp = model_data->getGeneralCompMethod(method - 1);
+            ui->spinBox_gen_units->setValue(current_gen_comp->getUnits());
+            ui->spinBox_gen_scale->setValue(current_gen_comp->getScale());
+            ui->lineEdit_gen_mincomp->setText(QString::number(current_gen_comp->getMinComp()));
             ui->spinBox_gen_num_bins->setValue(current_gen_comp->getNumberBins());
             genBins->setModel(current_gen_comp->getBinsModel());
             genBins->setHeight(1);
@@ -570,6 +573,7 @@ void data_widget::changeGenCompMethod(int method)
     }
     else
     {
+        ui->spinBox_gen_comp->setValue(0);
         ui->label_gen_comp_total->setText("0");
         current_gen_comp = NULL;
         ui->spinBox_gen_units->setValue(0);
@@ -580,6 +584,49 @@ void data_widget::changeGenCompMethod(int method)
     }
 }
 
+void data_widget::newGenCompMethod()
+{
+    int index = ui->spinBox_gen_comp->value();
+    int total = model_data->getNumGeneralCompMethods();
+    compositionGeneral *genMethod = new compositionGeneral(model_data);
+//    genMethod->set
+    model_data->addGeneralCompMethod(genMethod);
+    model_data->getGeneralCompMethod(index)->setNumber(index+1);
+    for (int j = 0; j < model_data->num_fleets(); j++)
+        model_data->getFleet(j)->setGenModelTotal(total+1);
+    ui->spinBox_gen_comp->setValue(index+1);
+}
+
+void data_widget::copyGenCompMethod()
+{
+    int index = ui->spinBox_gen_comp->value();
+    int total = model_data->getNumGeneralCompMethods();
+    if (total == 0)
+        newGenCompMethod();
+    else
+    {
+        model_data->copyGeneralCompMethod(model_data->getGeneralCompMethod(index-1));
+    }
+    ui->spinBox_gen_comp->setValue(total+1);
+}
+
+void data_widget::deleteGenCompMethod()
+{
+    int index = ui->spinBox_gen_comp->value();
+    int total = model_data->getNumGeneralCompMethods();
+    if (total != 0)
+        model_data->deleteGeneralCompMethod(index - 1);
+    index--; if (index < 0) index = 0;
+    total--; if (total < 0) total = 0;
+    if (index >= 0)
+    {
+        if (index < total)
+            ui->spinBox_gen_comp->setValue(index);
+        else
+            ui->spinBox_gen_comp->setValue(total);
+    }
+}
+
 void data_widget::changeGenUnits(int units)
 {
     if (units < 1)
@@ -587,8 +634,8 @@ void data_widget::changeGenUnits(int units)
     else if (units > 2)
         ui->spinBox_gen_units->setValue(2);
 
-//    else if (current_gen_comp != NULL)
-//        current_gen_comp->set_units(units);
+    if (current_gen_comp != NULL)
+        current_gen_comp->setUnits(units);
 }
 
 void data_widget::changeGenScale(int scale)
@@ -598,15 +645,15 @@ void data_widget::changeGenScale(int scale)
     else if (scale > 4)
         ui->spinBox_gen_scale->setValue(4);
 
-//    else if (current_gen_comp != NULL)
-//        current_gen_comp->set_scale(scale);
+    if (current_gen_comp != NULL)
+        current_gen_comp->setScale(scale);
 }
 
 void data_widget::changeGenMinComp()
 {
     float temp = ui->lineEdit_gen_mincomp->text().toFloat();
-//    if (current_gen_comp != NULL)
-//        current_gen_comp->set_mincomp(temp);
+    if (current_gen_comp != NULL)
+        current_gen_comp->setMinComp(temp);
 }
 
 void data_widget::changeGenBins(int numBins)
@@ -636,7 +683,7 @@ void data_widget::setDoMorphs(bool flag)
 
 void data_widget::changeDoMorphs(bool flag)
 {
-    model_data->set_do_morph_comp(flag);
+    model_data->setDoMorphComp(flag);
     if (flag)
     {
         ui->groupBox_comp_morph->setChecked(true);
@@ -651,7 +698,7 @@ void data_widget::changeDoMorphs(bool flag)
     }
 }
 
-void data_widget::changeMorphs(int num)
+void data_widget::changeNumMorphs(int num)
 {
     model_data->get_morph_composition()->setNumberMorphs(num);
     for (int i = 0; i < model_data->num_fleets(); i++)
@@ -660,8 +707,9 @@ void data_widget::changeMorphs(int num)
 
 void data_widget::changeMorphMincomp()
 {
-    double val = ui->lineEdit_morph_min_comp->text().toDouble();
-//    model_data->get_morph_composition()->set_mincomp(val);
+    QString val = ui->lineEdit_morph_min_comp->text();
+    for (int i = 0; i < model_data->num_fleets(); i++)
+        model_data->getFleet(i)->setMorphMinTailComp(val);
 }
 
 void data_widget::setDoTags(bool flag)

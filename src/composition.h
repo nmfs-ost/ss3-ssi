@@ -149,9 +149,13 @@ public:
     void setScale (int scale) {i_scale = scale;}
     int getScale () {return i_scale;}
 
+    float getMinComp() const;
+    void setMinComp(float value);
+
 private:
     int i_scale;
     int i_units;
+    float min_comp;
 };
 
 #endif // COMPOSITION_H

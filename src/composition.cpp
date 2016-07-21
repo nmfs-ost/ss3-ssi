@@ -247,9 +247,20 @@ void compositionGeneral::reset()
     composition::reset();
     i_scale = 0;
     i_units = 0;
+    min_comp = 0.000000001;
 }
 
 void compositionGeneral::setNumberBins(int num)
 {
     binsModel->setColumnCount(num);
+}
+
+float compositionGeneral::getMinComp() const
+{
+    return min_comp;
+}
+
+void compositionGeneral::setMinComp(float value)
+{
+    min_comp = value;
 }

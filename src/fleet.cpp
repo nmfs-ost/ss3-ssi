@@ -312,7 +312,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
         setGenCompressBins(mod, oldfl->getGenCompressBins(mod));
         setGenCompError(mod, oldfl->getGenCompError(mod));
         setGenCompErrorParm(mod, oldfl->getGenCompErrorParm(mod));
-        setGenNumBins(mod, model->general_comp_method(mod)->getNumberBins());
+        setGenNumBins(mod, model->getGeneralCompMethod(mod)->getNumberBins());
         setGenNumObs(mod, oldfl->getGenNumObs(mod));
         for (i = 0; i < getGenNumObs(mod); i++)
             setGenObservation(mod, i, oldfl->getGenObservation(mod, i));
@@ -324,7 +324,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
         setRecapObservation(i, oldfl->getRecapObservation(i));
 
     // morph data
-    if (model->get_do_morph_comp())
+    if (model->getDoMorphComp())
     {
         setMorphMinTailComp(oldfl->getMorphMinTailComp());
         setMorphAddToData(oldfl->getMorphAddToData());

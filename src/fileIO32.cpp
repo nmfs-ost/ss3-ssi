@@ -407,33 +407,33 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
 
         // generalized size composition
         num_vals = d_file->next_value().toInt();
-        data->set_num_general_comp_methods(0);
+        data->setNumGeneralCompMethods(0);
         if (num_vals > 0)
         {
             for (i = 0; i < num_vals; i++)
             {
                 compositionGeneral *cps = new compositionGeneral ();
-                data->add_general_comp_method(cps);
-                data->general_comp_method(i)->setNumber(i+1);
+                data->addGeneralCompMethod(cps);
+                data->getGeneralCompMethod(i)->setNumber(i+1);
             }
             for (int j = 0; j < total_fleets; j++)
                 data->getFleet(j)->setGenModelTotal(num_vals);
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setNumberBins(temp_int);
+                data->getGeneralCompMethod(i)->setNumberBins(temp_int);
                 for (int j = 0; j < total_fleets; j++)
                     data->getFleet(j)->setGenNumBins(i, temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setUnits(temp_int);
+                data->getGeneralCompMethod(i)->setUnits(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setScale(temp_int);
+                data->getGeneralCompMethod(i)->setScale(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
@@ -445,11 +445,11 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->next_value().toInt();
-                data->general_comp_method(i)->setNumberObs(temp_int);
+                data->getGeneralCompMethod(i)->setNumberObs(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
-                compositionGeneral *cps = data->general_comp_method(i);
+                compositionGeneral *cps = data->getGeneralCompMethod(i);
                 str_lst.clear();
                 for (int j = 0; j < cps->getNumberBins(); j++)
                 {
@@ -459,7 +459,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             }
             for (i = 0; i < num_vals; i++)
             {
-                compositionGeneral *cps = data->general_comp_method(i);
+                compositionGeneral *cps = data->getGeneralCompMethod(i);
                 obslength = data->getFleet(0)->getGenObsLength(i) + 1;
                 num_input_lines = cps->getNumberObs();
                 for (int j = 0; j < num_input_lines; j++)
@@ -475,7 +475,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
                     month = data->getMonthBySeasonFleet(season, (fleet - 1));
                     str_lst.insert(2, QString::number(month));
                     data->getFleet(fleet-1)->addGenObservation(temp_int-1, str_lst);
-                    cps = data->general_comp_method(temp_int-1);
+                    cps = data->getGeneralCompMethod(temp_int-1);
                 }
             }
         }
@@ -513,8 +513,8 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
 
         // stock composition data
         temp_int = d_file->next_value().toInt();
-        data->set_do_morph_comp(temp_int == 1);
-        if (data->get_do_morph_comp())
+        data->setDoMorphComp(temp_int == 1);
+        if (data->getDoMorphComp())
         {
             compositionMorph *mcps = new compositionMorph();
             data->set_morph_composition (mcps);
@@ -1050,7 +1050,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         d_file->newline();
 
         // general composition methods
-        num = data->num_general_comp_methods();
+        num = data->getNumGeneralCompMethods();
         line = QString (QString("%1 #_N_general_comp_methods_to_read" ).arg(
                             QString::number(num)));
         chars += d_file->writeline (line);
@@ -1059,7 +1059,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = QString::number(data->general_comp_method(i)->getNumberBins());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getNumberBins());
                 line.append(QString(" %1").arg(temp_str));
             }
             line.append(" #_nbins_per_method" );
@@ -1067,7 +1067,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = QString::number(data->general_comp_method(i)->getUnits());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getUnits());
                 line.append(QString(" %1").arg(temp_str));
             }
             line.append(" #_units_per_each_method (1=biomass, 2=numbers)" );
@@ -1075,7 +1075,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             line.clear();
             for (i = 0; i < num; i++)
             {
-                temp_str = QString::number(data->general_comp_method(i)->getScale());
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getScale());
                 line.append(QString(" %1").arg(temp_str));
             }
             line.append(" #_scale_per_each_method (1=kg, 2=lbs, 3=cm, 4=in)" );
@@ -1107,7 +1107,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < num; i++)
             {
                 line.clear();
-                str_lst = data->general_comp_method(i)->getBinsModel()->getRowData(0);
+                str_lst = data->getGeneralCompMethod(i)->getBinsModel()->getRowData(0);
                 for (int j = 0; j < str_lst.count(); j++)
                     line.append(QString (" %1").arg (str_lst.at(j)));
                 line.append('\n');
@@ -1204,7 +1204,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         d_file->newline();
 
         // morph composition
-        if (data->get_do_morph_comp())
+        if (data->getDoMorphComp())
         {
             line = QString (QString("%1 # Do_morphcomp" ).arg(QString("1")));
             chars += d_file->writeline (line);
@@ -1734,7 +1734,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
 
 bool read32_controlFile(ss_file *c_file, ss_model *data)
 {
-    int i, temp_int, num, num_vals;
+    int i, temp_int, num, num_vals, index;
     float temp_float;
     QString temp_string;
     QStringList datalist;
@@ -1758,31 +1758,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         else if (num > 1) num = 3;
         else num = 1;
         pop->Grow()->setNum_morphs(num);
-        pop->Grow()->setMorph_within_ratio(0.0);
-        pop->Grow()->setMorph_dist(0, 1.0);
+        pop->Grow()->setMorph_within_ratio(1.0);
         if (num > 1)
         {
             temp_float = c_file->next_value().toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
             temp_float = c_file->next_value().toFloat();
-            if ((int)temp_float == -1)
-            {
-                if (num == 3)
-                {
-                    pop->Grow()->setMorph_dist(0, 0.15);
-                    pop->Grow()->setMorph_dist(1, 0.70);
-                    pop->Grow()->setMorph_dist(2, 0.15);
-                }
-                else if (num == 5)
-                {
-                    pop->Grow()->setMorph_dist(0, 0.031);
-                    pop->Grow()->setMorph_dist(1, 0.237);
-                    pop->Grow()->setMorph_dist(2, 0.464);
-                    pop->Grow()->setMorph_dist(3, 0.237);
-                    pop->Grow()->setMorph_dist(4, 0.031);
-                }
-            }
-            else
+            if ((int)temp_float != -1)
             {
                 pop->Grow()->setMorph_dist(0, temp_float);
                 for (i = 1; i < num; i++)
@@ -1823,6 +1805,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // movement definitions
+        pop->Move()->setNumDefs(0);
+        pop->Move()->setFirstAge(0);
         if (data->num_areas() > 1)
         {
             num = c_file->next_value().toInt();
@@ -1886,7 +1870,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         case 1:
             num_vals = c_file->next_value().toInt(); // num breakpoints
             pop->Grow()->setNatMortNumBreakPts(num_vals);
-            num = pop->Grow()->getNatMortNumBreakPts();
+//            num = pop->Grow()->getNatMortNumBreakPts();
             datalist.clear();
             for (int i = 0; i < num_vals; i++) // vector of breakpoints
                 datalist.append(c_file->next_value());
@@ -1900,7 +1884,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         case 3:
         case 4:
             // age-specific M values by sex by growth pattern
-            num_vals = pop->Grow()->getNum_patterns();
+            num = pop->Grow()->getNum_patterns();
             datalist.clear();
             for (int i = 0; i < 2; i++) // first female, then male
             {
@@ -1909,6 +1893,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     datalist.append(c_file->next_value());
                 }
             }
+            num_vals = 0;  // no parameters
 //            pop->Grow()->setNatMortNumAges(datalist.count());
             pop->Grow()->setNatMortAges(datalist);
             break;
@@ -1919,38 +1904,38 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // growth model
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();  // growth model
         pop->Grow()->setModel(temp_int);
 
-        temp_float = c_file->next_value().toFloat();
+        temp_float = c_file->next_value().toFloat();  // growth Amin (A1)
         pop->Grow()->setAge_for_l1(temp_float);
-        temp_float = c_file->next_value().toFloat();
+        temp_float = c_file->next_value().toFloat();  // growth Amax
         pop->Grow()->setAge_for_l2(temp_float);
         if (pop->Grow()->getModel() == 3)
         {
-            temp_float = c_file->next_value().toFloat();
+            temp_float = c_file->next_value().toFloat(); // min age for age-specific K
             pop->Grow()->setAgeMin_for_K(temp_float);
-            temp_float = c_file->next_value().toFloat();
+            temp_float = c_file->next_value().toFloat(); // max age for age-specific K
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
-        pop->Grow()->setExpDecay(0.20);
+        pop->Grow()->setExpDecay(0.20);   // Exponential decay - added in 3.30
 
-        temp_float = c_file->next_value().toFloat();
+        temp_float = c_file->next_value().toFloat(); // SD_add to LAA
         pop->Grow()->setSd_add(temp_float);
 
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();    // CV pattern
         pop->Grow()->setCv_growth_pattern(temp_int);
 
         // maturity
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();    // maturity option
         pop->Grow()->setMaturity_option(temp_int);
         if (temp_int == 3 ||
             temp_int == 4)
         {
             datalist.clear();
-            num = data->get_age_composition()->getNumber();
+            num = data->get_age_composition()->getNumber(); // N ages + 1
             for (i = 0; i <= num; i++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->next_value()); // vector of age-specific maturity or fecundity
             pop->Grow()->setNumMatAgeValues(datalist.count());
             pop->Grow()->setMatAgeVals(datalist);
         }
@@ -1964,27 +1949,27 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             pop->Grow()->setMatAgeVals(datalist);
         }
 
-        temp_float = c_file->next_value().toFloat();
+        temp_float = c_file->next_value().toFloat();   // first mature age
         pop->Grow()->setFirst_mature_age(temp_float);
 
         // fecundity
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();     // fecundity option
         pop->Fec()->setMethod(temp_int);
 
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();     // hermaphroditisim option
         pop->Fec()->setHermaphroditism(temp_int);
         if (temp_int != 0)
         {
-            temp_float = c_file->next_value().toFloat();
+            temp_float = c_file->next_value().toFloat();  // hermaph season
             pop->Fec()->setHermSeason(temp_float);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->next_value().toInt();      // include males in spawn
             pop->Fec()->setHermIncludeMales(temp_int);
         }
 
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();          // offset method
         pop->Grow()->setParam_offset_method(temp_int);
 
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->next_value().toInt();         // time-vary adjustment constraint
         pop->Grow()->setAdjustment_method(temp_int);
 
         // mortality growth parameters
@@ -1994,23 +1979,50 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             growthPattern *gp = pop->Grow()->getPattern(i);
             gp->setNumGrowthParams(0);
             gp->setNumCVParams(0);
-                                              // Female parameters
-            num = gp->getNumNatMParams();
-            for (int j = 0; j < num; j++)
+                                          // Female parameters
+            // nat Mort
+            index = 0;
+            temp_int = pop->Grow()->getNatural_mortality_type();
+            switch (temp_int)
             {
-                datalist = readParameter(c_file); // natMort
-                gp->setNatMParam(j, datalist);
+            case 0:
+            case 2:
+                datalist = readParameter (c_file);
+                gp->setNatMParam(index, datalist);
+                gp->getNatMParams()->setRowHeader(index, QString("NatM_p_1_Fem_GP_%1").arg(QString::number(i+1)));
+                index++;
+                break;
+            case 1:
+                num_vals = pop->Grow()->getNatMortNumBreakPts();
+                for (int j = 0; j < num_vals; j++)
+                {
+                    datalist = readParameter (c_file);
+                    gp->setNatMParam(index, datalist);
+                    gp->getNatMParams()->setRowHeader(index, QString("NatM_p_%1_Fem_GP_%2").arg(QString::number(j+1), QString::number(i+1)));
+                    index++;
+                }
+                break;
+            case 3:
+            case 4:
+                break;
             }
+
+            gp->setNumGrowthParams(0);
+
             datalist = readParameter(c_file); // L at Amin
             gp->addGrowthParam(datalist);
+            gp->getGrowthParams()->setRowHeader(0, QString("L_at_Amin_Fem_GP_%1").arg(QString::number(i+1)));
             datalist = readParameter(c_file); // L at Amax
             gp->addGrowthParam(datalist);
+            gp->getGrowthParams()->setRowHeader(1, QString("L_at_Amax_Fem_GP_%1").arg(QString::number(i+1)));
             datalist = readParameter(c_file); // von Bertalanffy
             gp->addGrowthParam(datalist);
+            gp->getGrowthParams()->setRowHeader(2, QString("VonBert_K_Fem_GP_%1").arg(QString::number(i+1)));
             if (pop->Grow()->getModel() == 2)
             {
                 datalist = readParameter(c_file); // Richards coefficient
                 gp->addGrowthParam(datalist);
+                gp->getGrowthParams()->setRowHeader(3, QString("Richards_coeff_Fem_GP_%1").arg(QString::number(i+1)));
             }
             if (pop->Grow()->getModel() == 3)
             {
@@ -2021,27 +2033,58 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
             datalist = readParameter(c_file); // CV young
-            gp->addCVParam(datalist);
+            gp->setCVParam(0, datalist);
+            gp->getCVParams()->setRowHeader(0, QString("CV_young_Fem_GP_%1").arg(QString::number(i+1)));
             datalist = readParameter(c_file); // CV old
-            gp->addCVParam(datalist);
+            gp->setCVParam(1, datalist);
+            gp->getCVParams()->setRowHeader(1, QString("CV_old_Fem_GP_%1").arg(QString::number(i+1)));
+
             if (data->num_genders() > 1)          // Male parameters
             {
-                for (int j = 0; j < num; j++)
+                temp_int = pop->Grow()->getNatural_mortality_type();
+                switch (temp_int)
                 {
-                    datalist = readParameter(c_file); // natMort
-                    gp->setNatMParam(j + num, datalist);
+                case 0:
+                case 2:
+                    num = gp->getNatMParams()->rowCount();
+                    datalist = readParameter (c_file);
+                    gp->setNatMParam(num, datalist);
+                    gp->getNatMParams()->setRowHeader(num, QString("NatM_p_1_Mal_GP_%1").arg(QString::number(i+1)));
+                    break;
+                case 1:
+                    num = gp->getNatMParams()->rowCount();
+                    num_vals = pop->Grow()->getNatMortNumBreakPts();
+                    for (int j = 0; j < num_vals; j++)
+                    {
+                        datalist = readParameter (c_file);
+                        gp->setNatMParam(j+num, datalist);
+                        gp->getNatMParams()->setRowHeader(j+num, QString("NatM_p_%1_Mal_GP_%2").arg(QString::number(j+1), QString::number(i+1)));
+                    }
+                    break;
+                case 3:
+                case 4:
+                    break;
                 }
 
+                num = gp->getNumGrowthParams();
                 datalist = readParameter(c_file); // L at Amin
-                gp->addGrowthParam(datalist);
+                gp->setGrowthParam(num, datalist);
+                gp->getGrowthParams()->setRowHeader(num, QString("L_at_Amin_Mal_GP_%1").arg(QString::number(i+1)));
+                num++;
                 datalist = readParameter(c_file); // L at Amax
-                gp->addGrowthParam(datalist);
+                gp->setGrowthParam(num, datalist);
+                gp->getGrowthParams()->setRowHeader(num, QString("L_at_Amax_Mal_GP_%1").arg(QString::number(i+1)));
+                num++;
                 datalist = readParameter(c_file); // von Bertalanffy
                 gp->addGrowthParam(datalist);
+                gp->getGrowthParams()->setRowHeader(num, QString("VonBert_K_Mal_GP_%1").arg(QString::number(i+1)));
+                num++;
                 if (pop->Grow()->getModel() == 2)
                 {
                     datalist = readParameter(c_file); // Richards coefficient
                     gp->addGrowthParam(datalist);
+                    gp->getGrowthParams()->setRowHeader(num, QString("Richards_coeff_Mal_GP_%1").arg(QString::number(i+1)));
+                    num++;
                 }
                 if (pop->Grow()->getModel() == 3)
                 {
@@ -2052,65 +2095,109 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     }
                 }
                 datalist = readParameter(c_file); // CV young
-                gp->addCVParam(datalist);
+                gp->setCVParam(2, datalist);
+                gp->getCVParams()->setRowHeader(2, QString("CV_young_Mal_GP_%1").arg(QString::number(i+1)));
                 datalist = readParameter(c_file); // CV old
-                gp->addCVParam(datalist);
+                gp->setCVParam(3, datalist);
+                gp->getCVParams()->setRowHeader(3, QString("CV_old_Mal_GP_%1").arg(QString::number(i+1)));
             }
         }
-        pop->Grow()->setNumMaturityParams(0);
+        num = 0;
+        pop->Grow()->setNumMaturityParams(num);
         datalist = readParameter(c_file); // fem_wt_len_1
-        pop->Grow()->addMaturityParam(datalist);
+        pop->Grow()->setMaturityParam(num, datalist);
+        pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
+        num++;
         datalist = readParameter(c_file); // fem_wt_len_2
-        pop->Grow()->addMaturityParam(datalist);
+        pop->Grow()->setMaturityParam(num, datalist);
+        pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Fem"));
+
+        num = 0;
         datalist = readParameter(c_file); // fem_mat_inflect
-        pop->Grow()->addMaturityParam(datalist);
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Mat50%_Fem"));
+        num++;
         datalist = readParameter(c_file); // fem_mat_slope
-        pop->Grow()->addMaturityParam(datalist);
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Mat_slope_Fem"));
+        num++;
         datalist = readParameter(c_file); // fem_fec_alpha
-        pop->Fec()->setFemaleParam(0, datalist);
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_inter_Fem"));
+        num++;
         datalist = readParameter(c_file); // fem_fec_beta
-        pop->Fec()->setFemaleParam(1, datalist);
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_slope_wt_Fem"));
+        num++;
 
         if (data->num_genders() > 1)
         {
+            num = pop->Grow()->getNumMaturityParams();
             datalist = readParameter(c_file); // male_wt_len_1
-            pop->Grow()->addMaturityParam(datalist);
+            pop->Grow()->setMaturityParam(num, datalist);
+            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
+            num++;
             datalist = readParameter(c_file); // male_wt_len_2
-            pop->Grow()->addMaturityParam(datalist);
+            pop->Grow()->setMaturityParam(num, datalist);
+            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
         }
 
         if (pop->Fec()->getHermaphroditism() != 0)
         {
-            for (i = 0; i < 3; i++)
-            {
-            datalist = readParameter(c_file); // hermaph_inflect, sd, asymptotic
+            i = 0;
+            datalist = readParameter(c_file); // hermaph_inflect
             pop->Fec()->setHermParam(i, datalist);
-            }
+            pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_inflect_age"));
+            i++;
+            datalist = readParameter(c_file); // hermaph_sd
+            pop->Fec()->setHermParam(i, datalist);
+            pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_std_dev"));
+            i++;
+            datalist = readParameter(c_file); // hermaph_asymptotic
+            pop->Fec()->setHermParam(i, datalist);
+            pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_asymp_rate"));
         }
 
+        pop->SR()->setNumRecruitDistParams(0);
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
             datalist = readParameter(c_file); // recr apportion main
-            pop->Grow()->addMaturityParam(datalist);
+            pop->SR()->setRecruitDistParam(i, datalist);
+            pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
         }
         for (num = 0; num < data->num_areas(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to areas
-            pop->Grow()->addMaturityParam(datalist);
+            pop->SR()->setRecruitDistParam(i, datalist);
+            pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
         }
         for (num = 0; num < data->num_seasons(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to seasons
-            pop->Grow()->addMaturityParam(datalist);
+            pop->SR()->setRecruitDistParam(i, datalist);
+            pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_Bseas_%1").arg(QString::number(num+1)));
         }
         if (pop->SR()->getDoRecruitInteract())
         {
-            pop->SR()->setNumInteractParams(0);
-            num = pop->Grow()->getNum_patterns() * data->num_areas() * data->num_seasons();
-            for (i = 0; i < num; i++)
+            index = 0;
+            pop->SR()->setNumInteractParams(index);
+            for (i = 0; i < pop->Grow()->getNum_patterns(); i++, index++)
             {
-                datalist = readParameter(c_file); // recr interaction
-                pop->SR()->addInteractParam(datalist);
+                datalist = readParameter(c_file); // recr interaction growth pattern
+                pop->SR()->setInteractParam(index, datalist);
+                pop->SR()->getInteractParams()->setRowHeader(index, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
+            }
+            for (i = 0; i < data->num_areas(); i++, index++)
+            {
+                datalist = readParameter(c_file); // recr interaction area
+                pop->SR()->setInteractParam(index, datalist);
+                pop->SR()->getInteractParams()->setRowHeader(index, QString("RecrDist_Area_%1").arg(QString::number(i+1)));
+            }
+            for (i = 0; i < data->num_seasons(); i++, index++)
+            {
+                datalist = readParameter(c_file); // recr interaction season
+                pop->SR()->setInteractParam(index, datalist);
+                pop->SR()->getInteractParams()->setRowHeader(index, QString("RecrDist_Bseas_%1").arg(QString::number(i+1)));
             }
         }
         datalist = readParameter(c_file); // cohort growth deviation

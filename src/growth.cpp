@@ -88,8 +88,7 @@ void ss_growth::reset()
     environmentParams->setRowCount(0);
 
     setNum_morphs(1);
-    setMorph_within_ratio(0.7);
-    setMorph_dist(0, 1.0);
+    setMorph_within_ratio(1.0);
 }
 
 /*
@@ -183,34 +182,14 @@ int ss_growth::getNum_morphs() const
 void ss_growth::setNum_morphs(int value)
 {
     if (value <= 1)
-    {
         value = 1;
-        setMorph_dist(0, 1);
-        setMorph_within_ratio(1.0);
-        morphdisttable->setColumnCount(value);
-    }
     else if (value <= 3)
-    {
-        value = 3;
-        setMorph_within_ratio(0.7);
-        morphdisttable->setColumnCount(value);
-        setMorph_dist(0, 0.15);
-        setMorph_dist(1, 0.70);
-        setMorph_dist(2, 0.15);
-    }
+        value = 1;
     else
-    {
         value = 5;
-        setMorph_within_ratio(0.7);
-        morphdisttable->setColumnCount(value);
-        setMorph_dist(0, 0.031);
-        setMorph_dist(1, 0.237);
-        setMorph_dist(2, 0.464);
-        setMorph_dist(3, 0.237);
-        setMorph_dist(4, 0.031);
-    }
-
     num_morphs = value;
+    morphdisttable->setColumnCount(value);
+    setMorphDist();
 }
 
 void ss_growth::setMorph_dist(QStringList values)
@@ -226,6 +205,28 @@ void ss_growth::setMorph_dist(int index, float value)
     strlst[index] = QString::number(value);
     morphdisttable->setRowData(0, strlst);
 }
+
+void ss_growth::setMorphDist()
+{
+    switch (num_morphs)
+    {
+        case 1:
+            setMorph_dist(0, 1);
+            break;
+        case 3:
+            setMorph_dist(0, 0.15);
+            setMorph_dist(1, 0.70);
+            setMorph_dist(2, 0.15);
+            break;
+        case 5:
+            setMorph_dist(0, 0.031);
+            setMorph_dist(1, 0.237);
+            setMorph_dist(2, 0.464);
+            setMorph_dist(3, 0.237);
+            setMorph_dist(4, 0.031);
+    }
+}
+
 int ss_growth::getDevPhase() const
 {
     return devPhase;

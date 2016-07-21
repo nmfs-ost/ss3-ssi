@@ -343,8 +343,9 @@ void fleet_widget::set_current_fleet(int index)
         saaObsView->resizeColumnsToContents();
         ui->spinBox_obs_saa_numObs->setValue(current_fleet->getSaaNumObs());
 
-        setGenMethodTotal(current_fleet->getGenModelTotal());
-        setGenMethodNum(0);
+        int genmod = ui->spinBox_obs_gen_num->value();
+        if (genmod > 0)
+            genObsView->setModel(current_fleet->getGenModel(genmod-1));
 
         morphObsView->setModel(current_fleet->getMorphModel());
         morphObsView->resizeColumnsToContents();
@@ -702,7 +703,7 @@ void fleet_widget::setGenMethodNum(int num)
         num = 0;
     if (num >= ui->spinBox_obs_gen_num_total->value())
         num = ui->spinBox_obs_gen_num_total->value() - 1;
-    ui->spinBox_obs_gen_num->setValue(num + 1);
+    changeGenMethodNum(num + 1);
 }
 
 void fleet_widget::changeGenMethodNum(int num)

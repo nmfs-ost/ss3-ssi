@@ -41,6 +41,11 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui->horizontalLayout_area_max->addWidget(maxCatchAreas);
     maxCatchAreas->setHeight(1);
 
+    allocGrpList = new tableview();
+    allocGrpList->setParent(this);
+    ui->horizontalLayout_assignment->addWidget(allocGrpList);
+    allocGrpList->setHeight(0);
+
     allocGrpFracts = new tableview();
     allocGrpFracts->setParent(this);
     ui->horizontalLayout_group_fractions->addWidget(allocGrpFracts);
@@ -104,14 +109,14 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
         ui->label_input_seas_relf->setVisible(true);
     }
 
+    connect (fcast, SIGNAL(allocGrpsChanged()), SLOT(alloc_group_assign_changed()));
     connect (ui->groupBox_alloc_groups, SIGNAL(toggled(bool)), SLOT(change_use_alloc_groups(bool)));
-    connect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), SLOT(alloc_group_assign_changed()));
+//    connect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), SLOT(alloc_group_assign_changed()));
 
-    connect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
-//    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_input(int)));
+//    connect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
 
-    connect (ui->lineEdit_max_catch_fleet, SIGNAL(editingFinished()), SLOT(change_max_catch_fleet()));
-    connect (ui->lineEdit_max_catch_area, SIGNAL(editingFinished()), SLOT(change_max_catch_area()));
+//    connect (ui->lineEdit_max_catch_fleet, SIGNAL(editingFinished()), SLOT(change_max_catch_fleet()));
+//    connect (ui->lineEdit_max_catch_area, SIGNAL(editingFinished()), SLOT(change_max_catch_area()));
 
     refresh();
     ui->tabWidget->setCurrentIndex(0);
@@ -160,14 +165,14 @@ void forecast_widget::reset()
     ui->spinBox_rebuilder_ydecl->setValue(-1);
     ui->comboBox_relF->setCurrentIndex(0);
     ui->comboBox_input_catch_basis->setCurrentIndex(0);
-    ui->lineEdit_max_catch_fleet->setText("-1");
-    ui->lineEdit_max_catch_area->setText("-1");
+//    ui->lineEdit_max_catch_fleet->setText("-1");
+//    ui->lineEdit_max_catch_area->setText("-1");
 }
 
 void forecast_widget::set_model(ss_model *m_data)
 {
 //    ss_model *old_model = model_data;
-//    model_data = m_data;
+    model_data = m_data;
 //    delete old_model;
 
     refresh ();
@@ -235,11 +240,11 @@ void forecast_widget::refresh()
 
     ui->label_input_seas_relf->setVisible(false);
     set_combo_box(ui->comboBox_relF, fcast->fleet_rel_f());
-    set_combo_box_relf_basis(fcast->fleet_rel_f());
+    set_combo_box_relf_basis(ui->comboBox_relF->currentIndex());
 
     set_combo_box(ui->comboBox_tuning_basis, fcast->catch_tuning_basis());
-    set_max_catch_fleet();
-    set_max_catch_area();
+//    set_max_catch_fleet();
+//    set_max_catch_area();
 
     seasFltRelF->setModel(fcast->getSeasFleetRelFTable());
     seasFltRelF->resizeColumnsToContents();
@@ -252,16 +257,22 @@ void forecast_widget::refresh()
 
     set_allocation_groups();
     set_allocation_group_assign();
+    allocGrpList->setModel(fcast->getAllocGrps());
+    allocGrpList->setHeight(1);
+    allocGrpList->resizeColumnsToContents();
     allocGrpFracts->setModel(fcast->getAllocFractModel());
+    allocGrpFracts->setHeight(fcast->getAllocFractModel());
     allocGrpFracts->resizeColumnsToContents();
+    change_use_alloc_groups (ui->groupBox_alloc_groups->isChecked());
 
+    ui->spinBox_fixed_catch_obs->setValue(fcast->getFixedFcastCatchModel()->rowCount());
     inputFcastCatch->setModel(fcast->getFixedFcastCatchModel());
+    inputFcastCatch->setHeight(fcast->getFixedFcastCatchModel());
     inputFcastCatch->resizeColumnsToContents();
 
-    ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
+//    ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
     set_combo_box(ui->comboBox_input_catch_basis, fcast->input_catch_basis());
-    set_combo_box_fixed_catch(fcast->input_catch_basis());
-
+    set_combo_box_fixed_catch(ui->comboBox_input_catch_basis->currentIndex());
 
     ui->tabWidget->setCurrentIndex(0);
 }
@@ -388,12 +399,13 @@ void forecast_widget::set_allocation_group_assign()
                      QString::number(model_data->getFleet(i)->getAllocGroup())));//forecast->alloc_group(i))));
         }
     }
-    ui->lineEdit_alloc_assignments->setText(txt);
+    alloc_group_assign_changed ();
+//    ui->lineEdit_alloc_assignments->setText(txt);
 }
 
 void forecast_widget::alloc_group_assign_changed ()
 {
-    QString txt (ui->lineEdit_alloc_assignments->text());
+/*    QString txt (ui->lineEdit_alloc_assignments->text());
     bool okay = true;
     int num = -1;
     QStringList ql(txt.split(' ', QString::SkipEmptyParts));
@@ -438,23 +450,20 @@ void forecast_widget::alloc_group_assign_changed ()
         }
         set_num_alloc_groups(num);
         model_data->forecast->set_num_alloc_groups(num);
-        allocGrpFracts->setHeight(model_data->forecast->getAllocFractModel());
-        allocGrpFracts->resizeColumnsToContents();
-    }
+    }*/
+    set_num_alloc_groups(model_data->forecast->getAllocFractModel()->columnCount() - 1);
+    allocGrpList->setHeight(model_data->forecast->getAllocGrps());
+    allocGrpList->resizeColumnsToContents();
+    allocGrpFracts->setHeight(model_data->forecast->getAllocFractModel());
+    allocGrpFracts->resizeColumnsToContents();
 }
 
 void forecast_widget::change_use_alloc_groups(bool flag)
 {
-    if (flag)
-    {
-        allocGrpFracts->setHeight(model_data->forecast->getAllocFractModel());
-        allocGrpFracts->resizeColumnsToContents();
-    }
-    else
-    {
-        allocGrpFracts->setHeight(0);
-    }
-
+    ui->label_alloc_assignment->setVisible(flag);
+    allocGrpList->setVisible(flag);
+    ui->label_alloc_fraction->setVisible(flag);
+    allocGrpFracts->setVisible(flag);
 }
 
 void forecast_widget::set_allocation_group_fract()
@@ -504,19 +513,19 @@ void forecast_widget::set_max_catch_fleet ()
     {
         vals.append(QString(" %1").arg(QString::number(model_data->forecast->max_catch_fleet(i))));
     }
-    ui->lineEdit_max_catch_fleet->setText(vals);
+//    ui->lineEdit_max_catch_fleet->setText(vals);
 }
 
 void forecast_widget::change_max_catch_fleet ()
 {
-    QString txt (ui->lineEdit_max_catch_fleet->text());
+/*    QString txt (ui->lineEdit_max_catch_fleet->text());
     QStringList vals(txt.split(' ', QString::SkipEmptyParts));
     for (int i = 0; i < vals.count(), i < model_data->num_fleets(); i++)
     {
         int val = checkintvalue(vals.at(i));
         model_data->forecast->set_max_catch_fleet(i, val);
     }
-    set_max_catch_fleet();
+    set_max_catch_fleet();*/
 }
 
 void forecast_widget::set_max_catch_area ()
@@ -526,19 +535,20 @@ void forecast_widget::set_max_catch_area ()
     {
         vals.append(QString(" %1").arg(QString::number(model_data->forecast->max_catch_area(i))));
     }
-    ui->lineEdit_max_catch_area->setText(vals);
+
+//    ui->lineEdit_max_catch_area->setText(vals);
 }
 
 void forecast_widget::change_max_catch_area ()
 {
-    QString txt (ui->lineEdit_max_catch_area->text());
+/*    QString txt (ui->lineEdit_max_catch_area->text());
     QStringList vals(txt.split(' ', QString::SkipEmptyParts));
     for (int i = 0; i < vals.count(), i < model_data->num_areas(); i++)
     {
         int val = checkintvalue(vals.at(i));
         model_data->forecast->set_max_catch_area(i, val);
     }
-    set_max_catch_area();
+    set_max_catch_area();*/
 }
 
 

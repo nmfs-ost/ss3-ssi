@@ -199,7 +199,7 @@ void ss_model::reset()
     setCustomEnviroLink(0);
     setCustomSelParmDevAdjust(0);
 
-    set_do_morph_comp(false);
+    setDoMorphComp(false);
     if (morphData)
         delete morphData;
     morphData = NULL;
@@ -783,7 +783,7 @@ void ss_model::set_environ_var_obs(int index, QStringList txtlst)
     obsEnvironVars->setObservation(index, txtlst);
 }
 
-void ss_model::set_num_general_comp_methods(int num)
+void ss_model::setNumGeneralCompMethods(int num)
 {
     if (cListGeneralMethods.count() != num)
     {
@@ -794,11 +794,38 @@ void ss_model::set_num_general_comp_methods(int num)
         while (num < cListGeneralMethods.count())
         {
             compositionGeneral *cg = cListGeneralMethods.takeLast();
-            delete cg;
+            deleteGeneralCompMethod(cg);
         }
     }
     for (int i = 0; i < fleets.count(); i++)
         getFleet(i)->setGenModelTotal(num);
+}
+
+void ss_model::copyGeneralCompMethod(compositionGeneral *method)
+{
+    compositionGeneral *method_new = new compositionGeneral(this);
+    addGeneralCompMethod(method_new);
+    method_new->setUnits(method->getUnits());
+    method_new->setNumber(method->getNumber());
+    method_new->setNumberBins(method->getNumberBins());
+    method_new->setNumberAltBins(method->getNumberAltBins());
+    method_new->setBins(method->getBins());
+    method_new->setAltBins(method->getAltBins());
+    method_new->setAltBinMax(method->getAltBinMax());
+    method_new->setAltBinMethod(method->getAltBinMethod());
+    method_new->setScale(method->getScale());
+
+}
+
+void ss_model::deleteGeneralCompMethod(compositionGeneral *method)
+{
+    delete method;
+}
+
+void ss_model::deleteGeneralCompMethod(int index)
+{
+    compositionGeneral *method = cListGeneralMethods.takeAt(index);
+    deleteGeneralCompMethod(method);
 }
 
 void ss_model::setTagLossParameter(longParameter *lp)
