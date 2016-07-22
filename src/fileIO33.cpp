@@ -1799,7 +1799,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
             }
             line = QString("-9999");
             for (i = 0; i < fcast->num_alloc_groups(); i++)
-                line.append(QString(" 0"));
+                line.append(QString(" 1"));
             chars += f_file->writeline(line);
         }
         else
@@ -1819,10 +1819,10 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         line = QString("#_Year Seas Fleet Catch(or_F) Basis" );
         chars += f_file->writeline(line);
-        num = fcast->getNumFixedFcastCatch();//num_catch_values();
+        num = fcast->getNumFixedFcastCatch();
         for (i = 0; i < num; i++)
         {
-            QStringList obs = fcast->getFIxedFcastCatch(i);//fixed_catch_value(i);
+            QStringList obs = fcast->getFIxedFcastCatch(i);
             line.clear();
             for (int j = 0; j < obs.count(); j++)
                 line.append(QString(" %1").arg(obs.at(j)));
