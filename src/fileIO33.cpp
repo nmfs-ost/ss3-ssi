@@ -1315,6 +1315,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
     if(f_file->open(QIODevice::ReadOnly))
     {
         ss_forecast *fcast = data->forecast;
+        fcast->reset();
         f_file->seek(0);
         f_file->read_comments();
 
@@ -1488,24 +1489,33 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         }
 
 
+        fcast->setNumFixedFcastCatch(0);
         token = f_file->next_value("input catch basis");
-        temp_int = token.toInt();
-        fcast->set_input_catch_basis(temp_int);
-
-            do
+        num = token.toInt();
+        fcast->set_input_catch_basis(num);
+        if (num > 0)
+        {
+            fcast->getFixedFcastCatchModel()->setColumnCount(4);
+            if (num == 99)
             {
-                str_lst.clear();
-                token = f_file->next_value();
-                temp_int = token.toInt();
-                str_lst.append(token);                // Year
-                str_lst.append(f_file->next_value()); // Season
-                str_lst.append(f_file->next_value()); // Fleet
-                str_lst.append(f_file->next_value()); // Catch
+                fcast->getFixedFcastCatchModel()->setColumnHeader(3, QString("Hrate"));
+            }
+        }
+        do
+        {
+            str_lst.clear();
+            token = f_file->next_value();
+            temp_int = token.toInt();
+            str_lst.append(token);                // Year
+            str_lst.append(f_file->next_value()); // Season
+            str_lst.append(f_file->next_value()); // Fleet
+            str_lst.append(f_file->next_value()); // Catch
+            if (num < 0)
                 str_lst.append(f_file->next_value()); // Basis
-                if (temp_int != -9999)
-                    fcast->add_fixed_catch_value(str_lst);
+            if (temp_int != -9999)
+                fcast->addFixedFcastCatch(str_lst);
 
-            } while (temp_int != -9999);
+        } while (temp_int != -9999);
 
         token = f_file->next_value();
         temp_int = token.toInt();
@@ -1532,7 +1542,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
 int write33_forecastFile(ss_file *f_file, ss_model *data)
 {
-    int num, i, chars = 0;
+    int temp_int, num, i, chars = 0;
     int yr, j;
     QString value, line, temp_string;
     QStringList str_lst;
@@ -1812,23 +1822,35 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 //        value = QString::number(num);
 //        line = QString(QString("%1 # Number of forecast catch levels to input (else calc catch from forecast F)" ).arg(value));
 //        chars += f_file->writeline(line);
-        value = QString::number(fcast->input_catch_basis());
+        temp_int = fcast->input_catch_basis();
+        value = QString::number(temp_int);
         line = QString(QString("%1 # basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input Hrate(F)" ).arg(value));
         chars += f_file->writeline(line);
         line = QString("#enter list of Fcast catches; terminate with line having year=-9999" );
         chars += f_file->writeline(line);
-        line = QString("#_Year Seas Fleet Catch(or_F) Basis" );
+        line = QString("#_Year Seas Fleet Catch(or_F)" );
+        if (temp_int < 0)
+            line.append(QString(" Basis"));
         chars += f_file->writeline(line);
         num = fcast->getNumFixedFcastCatch();
         for (i = 0; i < num; i++)
         {
-            QStringList obs = fcast->getFIxedFcastCatch(i);
+            str_lst = fcast->getFixedFcastCatch(i);
             line.clear();
-            for (int j = 0; j < obs.count(); j++)
-                line.append(QString(" %1").arg(obs.at(j)));
+            for (int j = 0; j < 4; j++)
+                line.append(QString(" %1").arg(str_lst.at(j)));
+            if (temp_int < 0)
+            {
+                if (str_lst.count() > 4)
+                    line.append(QString(" %1").arg(str_lst.at(4)));
+                else
+                    line.append("2");
+            }
             chars += f_file->writeline(line);
         }
-        line = QString("-9999 1 1 0 2" );
+        line = QString("-9999 1 1 0" );
+        if (temp_int < 0)
+            line.append(" 2");
         chars += f_file->writeline(line);
 
         f_file->writeline("#" );

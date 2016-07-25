@@ -588,17 +588,25 @@ void forecast_widget::set_combo_box_fixed_catch(int value)
     model_data->forecast->set_combo_box_catch_input(value);
     if (value > 0)
     {
-        ui->label_fixed_catch_obs->setVisible(false);
-        ui->spinBox_fixed_catch_obs->setVisible(false);
-        inputFcastCatch->setVisible(false);
-        ui->label_input_fixed_catch->setVisible(false);
+        model_data->forecast->getFixedFcastCatchModel()->setColumnCount(4);
+        if (value == 3)
+            model_data->forecast->getFixedFcastCatchModel()->setColumnHeader(3, QString("Hrate"));
+        else
+            model_data->forecast->getFixedFcastCatchModel()->setColumnHeader(3, QString("Catch"));
+//        ui->label_fixed_catch_obs->setVisible(false);
+//        ui->spinBox_fixed_catch_obs->setVisible(false);
+//        inputFcastCatch->setVisible(false);
+//        ui->label_input_fixed_catch->setVisible(false);
     }
     else
     {
-        ui->label_fixed_catch_obs->setVisible(true);
-        ui->spinBox_fixed_catch_obs->setVisible(true);
-        inputFcastCatch->setVisible(true);
-        ui->label_input_fixed_catch->setVisible(true);
+        model_data->forecast->getFixedFcastCatchModel()->setColumnCount(5);
+        model_data->forecast->getFixedFcastCatchModel()->setColumnHeader(3, QString("Catch"));
+        model_data->forecast->getFixedFcastCatchModel()->setColumnHeader(4, QString("Basis"));
+//        ui->label_fixed_catch_obs->setVisible(true);
+//        ui->spinBox_fixed_catch_obs->setVisible(true);
+//        inputFcastCatch->setVisible(true);
+//        ui->label_input_fixed_catch->setVisible(true);
     }
 }
 

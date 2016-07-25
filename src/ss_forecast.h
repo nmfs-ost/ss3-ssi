@@ -147,8 +147,9 @@ public slots:
 
     void setNumFixedFcastCatch (int rows) {fixedFcastCatch->setRowCount(rows);}
     int getNumFixedFcastCatch () {return fixedFcastCatch->rowCount();}
+    void addFixedFcastCatch (QStringList data) {setFixedFcastCatch (getNumFixedFcastCatch(), data);}
     void setFixedFcastCatch (int row, QStringList data) {fixedFcastCatch->setRowData(row, data);}
-    QStringList getFIxedFcastCatch (int row) {return fixedFcastCatch->getRowData(row);}
+    QStringList getFixedFcastCatch (int row) {return fixedFcastCatch->getRowData(row);}
     tablemodel *getFixedFcastCatchModel () {return fixedFcastCatch;}
 
     void clear();

@@ -1452,18 +1452,18 @@ bool read32_forecastFile(ss_file *f_file, ss_model *data)
         temp_int = token.toInt();
         fcast->set_input_catch_basis(temp_int);
 
+        fcast->setNumFixedFcastCatch(0);
+
         token = f_file->next_value();
         temp_int = token.toInt();
         if (temp_int != END_OF_DATA)
         {
             str_lst.clear();
-            str_lst.append(token);                  // Year
+            str_lst.append(token);                // Year
             str_lst.append(f_file->next_value()); // Season
             str_lst.append(f_file->next_value()); // Fleet
             str_lst.append(f_file->next_value()); // Catch
-            temp_int = str_lst.at(2).toInt();
-            fcast->add_fixed_catch_value(str_lst);
-//            data->getFleet(temp_int)->add_forecast_catch
+            fcast->addFixedFcastCatch(str_lst);
 
             token = f_file->next_value();
             temp_int = token.toInt();
@@ -1713,7 +1713,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         num = fcast->getNumFixedFcastCatch();//num_catch_values();
         for (i = 0; i < num; i++)
         {
-            QStringList obs = fcast->getFIxedFcastCatch(i);//fixed_catch_value(i);
+            QStringList obs = fcast->getFixedFcastCatch(i);//fixed_catch_value(i);
             line.clear();
             for (int j = 0; j < obs.count(); j++)
                 line.append(QString(" %1").arg(obs.at(j)));

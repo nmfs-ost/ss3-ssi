@@ -465,20 +465,9 @@ void ss_forecast::reset()
 //    i_max_catch_area.append(-1);
     //# fleet assignment to allocation group (enter group ID# for each fleet, 0 for not included in an alloc group)
     set_num_alloc_groups(0);//
-    //# no allocation groups
-//    i_num_fcast_ctch_levels = 0;// Number of forecast catch levels to input (else calc catch from forecast F)
-    i_input_fcast_ctch_basis = 3;// basis for input Fcast catch:  2=dead catch; 3=retained catch; 99=input Hrate(F) (units are from fleetunits; note new codes in SSV3.20)
     //# Input fixed catch values
-    //#Year Seas Fleet Catch(or_F)
-/*    o_fixed_ctch_list.append(new ssObservation(0)); // make sure there's something to delete
-    while(o_fixed_ctch_list.count() > 1)
-    {
-        ssObservation *obs = o_fixed_ctch_list.takeFirst();
-        delete obs;
-    }
-    o_fixed_ctch_list[0]->fromText("2012 1 1 1200");
-    o_fixed_ctch_list->setNumBins(0, 2);
-    o_fixed_ctch_list->setNumObs(0);*/
+    set_input_catch_basis(3);
+    setNumFixedFcastCatch(0);
 }
 
 void ss_forecast::clear()
