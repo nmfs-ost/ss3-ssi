@@ -216,7 +216,6 @@ public slots:
     // Conditional input if relative F choice = 2
     // Fleet relative F:  rows are seasons, columns are fleets
     tablemodel *seasFleetRelF_table;
-
     // max totalcatch by fleet (-1 to have no max) must enter value for each fleet
     tablemodel *maxCatchFleet;
     // max totalcatch by area (-1 to have no max); must enter value for each fleet
@@ -229,9 +228,9 @@ public slots:
     tablemodel *allocGroupFrac;
     // Number of forecast catch levels to input (else calc catch from forecast F)
     int   i_num_fcast_ctch_levels;
-    // basis for input Fcast catch:  2=dead catch; 3=retained catch; 99=input Hrate(F) (units are from fleetunits; note new codes in SSV3.20)
+    // basis for input Fcast catch: -1=read basis; 2=dead catch; 3=retained catch; 99=input Hrate(F) (units are from fleetunits; note new codes in SSV3.20)
     int   i_input_fcast_ctch_basis;
-    // Fixed catch values (Year Seas Fleet Catch(or_F))
+    // Fixed catch values (Year Seas Fleet Catch(or_F) [Basis])
     tablemodel *fixedFcastCatch;
 
 };
