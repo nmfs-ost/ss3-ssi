@@ -139,6 +139,13 @@ public:
     int getCustomEnvLink() const;
     void setCustomEnvLink(int value);
 
+    int getTimeVaryMethod() const;
+    void setTimeVaryMethod(int value);
+
+    int getTimeVaryReadParams() const;
+    void setTimeVaryReadParams(int value);
+    void autogenerateTimeVaryParams ();
+
 private:
     QList<growthPattern *> patterns;
     int num_patterns;
@@ -192,6 +199,9 @@ private:
     parametermodel *environmentParams;
     int customBlock;
     parametermodel *blockParams;
+
+    int timeVaryMethod;
+    int timeVaryReadParams;
 };
 
 #endif // GROWTH_H

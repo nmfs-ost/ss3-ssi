@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -949,46 +949,110 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-181</y>
             <width>913</width>
-            <height>549</height>
+            <height>610</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <layout class="QGridLayout" name="gridLayout_growth">
-             <item row="20" column="7">
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="15" column="0" colspan="9">
-              <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
-             </item>
-             <item row="16" column="0">
-              <widget class="QLabel" name="label_maturity_option">
+             <item row="8" column="0" colspan="3">
+              <widget class="QLabel" name="label_growth_age_spec_min">
                <property name="text">
-                <string>Maturity Option</string>
+                <string>Minimum age for age-specific K</string>
                </property>
               </widget>
              </item>
-             <item row="17" column="0">
+             <item row="10" column="0" colspan="3">
+              <widget class="QLabel" name="label_growth_sd_add">
+               <property name="text">
+                <string>Standard Deviation added to length-at-age</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_growth_model">
+               <property name="text">
+                <string>Growth Model</string>
+               </property>
+              </widget>
+             </item>
+             <item row="16" column="1" colspan="5">
+              <widget class="QComboBox" name="comboBox_growth_cv_pattern">
+               <item>
+                <property name="text">
+                 <string>0 - CV=f(LAA)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - CV=f(A)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - SD=f(LAA)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 - SD=f(A)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4 - SAA Lognormal dist</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_growth_submorph_dist">
+               <property name="text">
+                <string>Distribution among sub-morphs </string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="3">
+              <widget class="QLabel" name="label_growth_secnd_saa_age">
+               <property name="text">
+                <string>Reference age for second size-at-age param (Amax)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="3">
+              <widget class="QLabel" name="label_growth_first_saa_age">
+               <property name="text">
+                <string>Reference age for first size-at-age parameter (Amin)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3" colspan="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amin"/>
+             </item>
+             <item row="20" column="0">
               <widget class="QLabel" name="label_maturity_first_age">
                <property name="text">
                 <string>First mature age</string>
                </property>
               </widget>
              </item>
-             <item row="21" column="0" colspan="9">
+             <item row="19" column="0">
+              <widget class="QLabel" name="label_maturity_option">
+               <property name="text">
+                <string>Maturity Option</string>
+               </property>
+              </widget>
+             </item>
+             <item row="24" column="0" colspan="9">
               <layout class="QVBoxLayout" name="verticalLayout_maturity_params"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_morph_ratio"/>
+             </item>
+             <item row="3" column="1" colspan="6">
+              <layout class="QHBoxLayout" name="horizontalLayout_growth_submorph_dist"/>
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_growth_num_patterns">
@@ -1029,81 +1093,6 @@ recruitment distribution method = 1)</string>
                 <string>Number of platoons within growth patterns </string>
                </property>
               </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QSpinBox" name="spinBox_growth_num_submorphs">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>5</number>
-               </property>
-               <property name="singleStep">
-                <number>2</number>
-               </property>
-               <property name="value">
-                <number>1</number>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_growth_submorph_dist">
-               <property name="text">
-                <string>Distribution among sub-morphs </string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_morph_ratio"/>
-             </item>
-             <item row="3" column="1" colspan="6">
-              <layout class="QHBoxLayout" name="horizontalLayout_growth_submorph_dist"/>
-             </item>
-             <item row="13" column="1" colspan="5">
-              <widget class="QComboBox" name="comboBox_growth_cv_pattern">
-               <item>
-                <property name="text">
-                 <string>0 - CV=f(LAA)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>1 - CV=f(A)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2 - SD=f(LAA)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>3 - SD=f(A)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>4 - SAA Lognormal dist</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="6" column="0" colspan="3">
-              <widget class="QLabel" name="label_growth_secnd_saa_age">
-               <property name="text">
-                <string>Reference age for second size-at-age param (Amax)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0" colspan="3">
-              <widget class="QLabel" name="label_growth_first_saa_age">
-               <property name="text">
-                <string>Reference age for first size-at-age parameter (Amin)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="3" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amin"/>
              </item>
              <item row="6" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amax"/>
@@ -1159,7 +1148,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="13" column="0">
+             <item row="16" column="0">
               <widget class="QLabel" name="label_growth_cv_pattern">
                <property name="text">
                 <string>CV Pattern</string>
@@ -1173,17 +1162,19 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_growth_model">
-               <property name="text">
-                <string>Growth Model</string>
+             <item row="1" column="2">
+              <widget class="QSpinBox" name="spinBox_growth_num_submorphs">
+               <property name="minimum">
+                <number>1</number>
                </property>
-              </widget>
-             </item>
-             <item row="10" column="0" colspan="3">
-              <widget class="QLabel" name="label_growth_sd_add">
-               <property name="text">
-                <string>Standard Deviation added to length-at-age</string>
+               <property name="maximum">
+                <number>5</number>
+               </property>
+               <property name="singleStep">
+                <number>2</number>
+               </property>
+               <property name="value">
+                <number>1</number>
                </property>
               </widget>
              </item>
@@ -1194,34 +1185,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="0" colspan="3">
-              <widget class="QLabel" name="label_growth_age_spec_min">
-               <property name="text">
-                <string>Minimum age for age-specific K</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_growth_submorph_ratio">
-               <property name="text">
-                <string>Platoon between/within std-dev ratio </string>
-               </property>
-              </widget>
-             </item>
-             <item row="20" column="8">
-              <spacer name="horizontalSpacer_growth">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="17" column="1">
+             <item row="20" column="1">
               <widget class="QLineEdit" name="lineEdit_maturity_first_age">
                <property name="maximumSize">
                 <size>
@@ -1234,7 +1198,7 @@ recruitment distribution method = 1)</string>
              <item row="12" column="0" colspan="9">
               <layout class="QVBoxLayout" name="verticalLayout_growth_params"/>
              </item>
-             <item row="14" column="0">
+             <item row="17" column="0">
               <widget class="QLabel" name="label_cv_parameters">
                <property name="text">
                 <string>CV Parameters</string>
@@ -1244,7 +1208,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="16" column="1" colspan="5">
+             <item row="19" column="1" colspan="5">
               <widget class="QComboBox" name="comboBox_maturity_option">
                <item>
                 <property name="text">
@@ -1273,7 +1237,7 @@ recruitment distribution method = 1)</string>
                </item>
               </widget>
              </item>
-             <item row="20" column="0">
+             <item row="23" column="0">
               <widget class="QLabel" name="label_maturity_params">
                <property name="text">
                 <string>Cohort Growth Parameter</string>
@@ -1293,15 +1257,108 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="18" column="0">
+             <item row="21" column="0">
               <widget class="QLabel" name="label_weightlength">
                <property name="text">
                 <string>Weight to Length Parameters</string>
                </property>
               </widget>
              </item>
-             <item row="19" column="0" colspan="9">
+             <item row="22" column="0" colspan="9">
               <layout class="QVBoxLayout" name="verticalLayout_weightlength"/>
+             </item>
+             <item row="23" column="8">
+              <spacer name="horizontalSpacer_growth">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_growth_submorph_ratio">
+               <property name="text">
+                <string>Platoon between/within std-dev ratio </string>
+               </property>
+              </widget>
+             </item>
+             <item row="23" column="7">
+              <spacer name="horizontalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="18" column="0" colspan="9">
+              <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLabel" name="label_growth_time_vay">
+               <property name="text">
+                <string>Time-varying method</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="1" colspan="5">
+              <widget class="QComboBox" name="comboBox_growth_time_vary">
+               <item>
+                <property name="text">
+                 <string>1 = Standard</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 =Llogistic transform in bounds</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 = Standard with no bound check</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="14" column="0" colspan="2">
+              <widget class="QLabel" name="label_growth_time_vary_read">
+               <property name="text">
+                <string>Read time varying parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="2">
+              <widget class="QCheckBox" name="checkBox_growth_time_vary_read">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="0" colspan="8">
+              <layout class="QVBoxLayout" name="verticalLayout_growth_time_vary_params"/>
+             </item>
+             <item row="13" column="6" colspan="3">
+              <widget class="QLabel" name="label_growth_time_vary_info">
+               <property name="text">
+                <string>For all Environmental, Block and Deviation adjustment parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="6" colspan="3">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Unchecked means to autogenerate</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

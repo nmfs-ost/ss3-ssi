@@ -83,6 +83,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     maturityParamsView = new tableview();
     maturityParamsView->setParent(this);
     ui->verticalLayout_maturity_params->addWidget(maturityParamsView);
+    timeVaryParamsView = new tableview();
+    timeVaryParamsView->setParent(this);
+    ui->verticalLayout_growth_time_vary_params->addWidget(timeVaryParamsView);
 
     connect (ui->comboBox_growth_model, SIGNAL(currentIndexChanged(int)), SLOT(changeGrowthModel(int)));
     connect (ui->doubleSpinBox_growth_age_Amin, SIGNAL(valueChanged(double)), SLOT(changeAmin (double)));
@@ -215,6 +218,10 @@ void population_widget::changeGrowthPattern (int num)
     growthParamsView->setModel(gp->getGrowthParams());
     growthParamsView->setHeight(gp->getGrowthParams());
     growthParamsView->resizeColumnsToContents();
+
+    timeVaryParamsView->setModel(gp->getTimeVaryParams());
+    timeVaryParamsView->setHeight(gp->getTimeVaryParams());
+    timeVaryParamsView->resizeColumnsToContents();
 
     cvParamsView->setModel(gp->getCVParams());
     cvParamsView->setHeight(gp->getCVParams());

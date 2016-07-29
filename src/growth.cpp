@@ -28,6 +28,8 @@ ss_growth::ss_growth()
 
     maturityParams = new parametermodel();
     maturityParams->setRowCount(2);
+    timeVaryMethod = 1;
+    timeVaryReadParams = 0;
 
     cohortParam = new parametermodel();
     cohortParam->setRowCount(1);
@@ -49,8 +51,7 @@ ss_growth::~ss_growth()
 {
     setNum_morphs(0);
     setNum_patterns(0);
-//    setNum_params(0);
-//    delete paramtable;
+
     delete morphdisttable;
     delete natMortBreakPoints;
     delete natMortAges;
@@ -82,6 +83,8 @@ void ss_growth::reset()
     num_params = 0;
     matAgeValues->setRowCount(1);
     maturityParams->setRowCount(2);
+    setTimeVaryMethod(1);
+    setTimeVaryReadParams(0);
     cohortParam->setRowCount(1);
     fracfemaleParams->setRowCount(1);
     blockParams->setRowCount(0);
@@ -255,7 +258,32 @@ void ss_growth::setCustomEnvLink(int value)
     customEnvLink = value;
 }
 
+int ss_growth::getTimeVaryMethod() const
+{
+    return timeVaryMethod;
+}
 
+void ss_growth::setTimeVaryMethod(int value)
+{
+    timeVaryMethod = value;
+}
+
+int ss_growth::getTimeVaryReadParams() const
+{
+    return timeVaryReadParams;
+}
+
+void ss_growth::setTimeVaryReadParams(int value)
+{
+    timeVaryReadParams = value;
+    if (value == 0) // autogenerate
+        autogenerateTimeVaryParams();
+}
+
+void ss_growth::autogenerateTimeVaryParams()
+{
+
+}
 
 
 QStringList ss_growth::getMorphDist_str()

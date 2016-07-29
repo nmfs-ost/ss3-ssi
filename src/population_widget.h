@@ -111,6 +111,8 @@ private:
     tableview *wtlenParamsView;
     tableview *maturityParamsView;
 
+    tableview *timeVaryParamsView;
+
     tableview *assignmentView;
     tableview *recruitDistView;
     tableview *recruitDevsView;
