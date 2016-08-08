@@ -12,6 +12,9 @@ selectivity::selectivity(int method)
     equation = NULL;
     parameters = new parametermodel();
 
+    timeVaryParameters = new parametermodel();
+    timeVaryParameters->setColumnCount(7);
+
     envLinkParameters = new parametermodel();
     envLinkParameters->setColumnCount(7);
     devErrParameters = new parametermodel();
@@ -182,54 +185,71 @@ int selectivity::getNumParameters()
 void selectivity::setNumParameters(int num)
 {
     parameters->setRowCount(num);
-    envLinkParameters->setRowCount(num);
+/*    envLinkParameters->setRowCount(num);
     devErrParameters->setRowCount(num);
     devRhoParameters->setRowCount(num);
-    blockParameters->setRowCount(num);
+    blockParameters->setRowCount(num);*/
 }
 
 void selectivity::setParameter(int index, QString text)
 {
     QStringList strList (text.split(' '));
     setParameter(index, strList);
-/*    longParameter *lp = NULL;
-    if (index > 0 && index < mParams.count())
-    {
-        lp = mParams.at(index);
-        lp->fromText(text);
-    }*/
 }
 
 void selectivity::setParameter(int index, QStringList strList)
 {
     parameters->setRowData(index, strList);
 }
-/*
-longParameter * selectivity::getParameter(int index)
-{
-    longParameter *lp = NULL;
-    if (index >= 0 && index < mParams.count())
-    {
-        lp = mParams.at(index);
-    }
 
-    return lp;
-}*/
 
 QString selectivity::getParameterText(int index)
 {
-//    longParameter *lp = NULL;
+
     QString text("");
     QStringList strList(parameters->getRowData(index));
     for (int i = 0; i < strList.count(); i++)
         text.append(QString(" %1").arg(strList.at(i)));
-/*    if (index > 0 && index < mParams.count())
-    {
-        lp = mParams.at(index);
-        text = lp->toText();
-    }
-*/
+
     return text;
+}
+
+QStringList selectivity::getParameter(int index)
+{
+    return parameters->getRowData(index);
+}
+
+void selectivity::setParameterLabel(int index, QString label)
+{
+    parameters->setRowHeader(index, label);
+}
+
+QString selectivity::getParameterLabel(int index)
+{
+    return parameters->getRowHeader(index);
+}
+
+void selectivity::setTimeVaryParameter (int index, QStringList strList)
+{
+    timeVaryParameters->setRowData(index, strList);
+}
+
+QString selectivity::getTimeVaryParameterText (int index)
+{
+    QString text("");
+    for (int i = 0; i < 7; i++)
+        text.append(QString (" %1").arg(timeVaryParameters->getRowData(index).at(i)));
+    return text;
+}
+
+QStringList selectivity::getTimeVaryParameter (int index)
+{
+    return timeVaryParameters->getRowData(index);
+}
+
+int selectivity::getNumTimeVaryParameters ()
+{
+    return timeVaryParameters->rowCount();
 }
 
 int selectivity::getNumEnvLink()

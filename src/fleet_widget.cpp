@@ -69,9 +69,15 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     sizeSelexParamsView = new tableview();
     sizeSelexParamsView->setParent(this);
     ui->verticalLayout_selex_size_params->addWidget(sizeSelexParamsView);
+    sizeSelexTimeVaryParamsView = new tableview();
+    sizeSelexTimeVaryParamsView->setParent(this);
+    ui->verticalLayout_selex_size_timevary_parms->addWidget(sizeSelexTimeVaryParamsView);
     ageSelexParamsView = new tableview();
     ageSelexParamsView->setParent(this);
     ui->verticalLayout_selex_age_params->addWidget(ageSelexParamsView);
+    ageSelexTimeVaryParamsView = new tableview();
+    ageSelexTimeVaryParamsView->setParent(this);
+    ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
 
     lambdaView = new tableview();
     lambdaView->setParent(this);
@@ -369,11 +375,21 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_selex_size_male->setValue(current_fleet->getSizeSelectivity()->getMale());
         ui->spinBox_selex_size_special->setValue(current_fleet->getSizeSelectivity()->getSpecial());
         sizeSelexParamsView->setModel(current_fleet->getSizeSelectivity()->getParameterModel());
+        sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel());
+        sizeSelexParamsView->resizeColumnsToContents();
+        sizeSelexTimeVaryParamsView->setModel(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
+        sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
+        sizeSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
         ui->spinBox_selex_age_male->setValue(current_fleet->getAgeSelectivity()->getMale());
         ui->spinBox_selex_age_special->setValue(current_fleet->getAgeSelectivity()->getSpecial());
         ageSelexParamsView->setModel(current_fleet->getAgeSelectivity()->getParameterModel());
+        ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel());
+        ageSelexParamsView->resizeColumnsToContents();
+        ageSelexTimeVaryParamsView->setModel(current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
+        ageSelexTimeVaryParamsView->setHeight(current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
+        ageSelexTimeVaryParamsView->resizeColumnsToContents();
 
         ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());

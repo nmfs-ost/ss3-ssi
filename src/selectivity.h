@@ -31,6 +31,9 @@ public:
     void setParameter (int index, QString text);
     void setParameter (int index, QStringList strList);
     QString getParameterText (int index);
+    QStringList getParameter (int index);
+    void setParameterLabel (int index, QString label);
+    QString getParameterLabel (int index);
     int getNumParameters();
     void setNumParameters (int num);
     parametermodel *getParameterModel() {return parameters;}
@@ -53,6 +56,11 @@ public:
     QString getBlockParameter (int index);
     parametermodel *getBlockParamModel () {return blockParameters;}
 
+    void setTimeVaryParameter (int index, QStringList strList);
+    QString getTimeVaryParameterText (int index);
+    QStringList getTimeVaryParameter (int index);
+    int getNumTimeVaryParameters ();
+    parametermodel *getTimeVaryParameterModel() {return timeVaryParameters;}
 
     double operator()() {return evaluate();}
     double evaluate();
@@ -70,6 +78,8 @@ protected:
     int numAges;
 
     parametermodel *parameters;
+
+    parametermodel *timeVaryParameters;
 
     parametermodel *envLinkParameters;
     parametermodel *blockParameters;

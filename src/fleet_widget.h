@@ -91,8 +91,12 @@ private:
 
     tableview *qSetupView;
     tableview *qParamsView;
+
     tableview *sizeSelexParamsView;
+    tableview *sizeSelexTimeVaryParamsView;
     tableview *ageSelexParamsView;
+    tableview *ageSelexTimeVaryParamsView;
+
     tableview *lambdaView;
 
     void refreshFleetNames();
