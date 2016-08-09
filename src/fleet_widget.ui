@@ -1359,7 +1359,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_selex">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_selex_size">
              <attribute name="title">
@@ -1367,7 +1367,7 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
-               <widget class="QScrollArea" name="scrollArea">
+               <widget class="QScrollArea" name="scrollArea_sel_size">
                 <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
@@ -1383,7 +1383,43 @@
                  <layout class="QVBoxLayout" name="verticalLayout_17">
                   <item>
                    <layout class="QGridLayout" name="selex_size">
-                    <item row="8" column="5">
+                    <item row="1" column="6">
+                     <widget class="QSpinBox" name="spinBox_selex_size_male">
+                      <property name="maximum">
+                       <number>4</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="0" colspan="4">
+                     <widget class="QLabel" name="label_3">
+                      <property name="text">
+                       <string>Retain parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="10" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_male"/>
+                    </item>
+                    <item row="5" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_retain"/>
+                    </item>
+                    <item row="3" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_params"/>
+                    </item>
+                    <item row="0" column="6">
+                     <widget class="QSpinBox" name="spinBox_selex_size_num_params">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                      <property name="prefix">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="13" column="9">
                      <spacer name="verticalSpacer_5">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -1395,13 +1431,6 @@
                        </size>
                       </property>
                      </spacer>
-                    </item>
-                    <item row="7" column="0" colspan="2">
-                     <widget class="QLabel" name="label_selex_size_timevary_parms">
-                      <property name="text">
-                       <string>Block parameters</string>
-                      </property>
-                     </widget>
                     </item>
                     <item row="0" column="2">
                      <widget class="QLabel" name="label_selex_size_pattern_info">
@@ -1420,50 +1449,30 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_selex_size_discard">
-                      <property name="text">
-                       <string>Discard</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="0">
+                    <item row="1" column="7">
                      <widget class="QLabel" name="label_selex_size_special">
                       <property name="text">
                        <string>Special</string>
                       </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
                      </widget>
                     </item>
-                    <item row="1" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_size_discard"/>
-                    </item>
-                    <item row="2" column="0">
+                    <item row="1" column="5">
                      <widget class="QLabel" name="label_selex_size_male">
                       <property name="text">
                        <string>Male</string>
                       </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
                      </widget>
                     </item>
-                    <item row="2" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_size_male"/>
-                    </item>
-                    <item row="3" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_size_special"/>
-                    </item>
-                    <item row="4" column="0">
+                    <item row="0" column="5">
                      <widget class="QLabel" name="label_selex_size_num_params">
                       <property name="text">
                        <string>Number of parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="4" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_size_num_params">
-                      <property name="readOnly">
-                       <bool>true</bool>
-                      </property>
-                      <property name="prefix">
-                       <string/>
                       </property>
                      </widget>
                     </item>
@@ -1474,20 +1483,10 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="5" column="0">
-                     <widget class="QLabel" name="label_selex_size_params">
-                      <property name="text">
-                       <string>Parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="6" column="0" colspan="6">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_params"/>
-                    </item>
-                    <item row="8" column="0" colspan="5">
+                    <item row="13" column="0" colspan="8">
                      <layout class="QVBoxLayout" name="verticalLayout_selex_size_timevary_parms"/>
                     </item>
-                    <item row="0" column="5">
+                    <item row="0" column="9">
                      <spacer name="horizontalSpacer_23">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1507,7 +1506,7 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="0" column="4">
+                    <item row="0" column="7">
                      <spacer name="horizontalSpacer_15">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1520,6 +1519,60 @@
                       </property>
                      </spacer>
                     </item>
+                    <item row="7" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_discard"/>
+                    </item>
+                    <item row="12" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_size_timevary_parms">
+                      <property name="text">
+                       <string>Time varying parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0" colspan="4">
+                     <widget class="QLabel" name="label_sel_size_pattern_params">
+                      <property name="text">
+                       <string>Pattern parameters </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="0" colspan="4">
+                     <widget class="QLabel" name="label_sel_size_discard_params">
+                      <property name="text">
+                       <string>Discard parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="0" colspan="4">
+                     <widget class="QLabel" name="label_sel_size_male_params">
+                      <property name="text">
+                       <string>Male parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="8">
+                     <widget class="QSpinBox" name="spinBox_selex_size_special"/>
+                    </item>
+                    <item row="1" column="4">
+                     <widget class="QSpinBox" name="spinBox_selex_size_discard">
+                      <property name="minimum">
+                       <number>-4</number>
+                      </property>
+                      <property name="maximum">
+                       <number>4</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1" colspan="3">
+                     <widget class="QLabel" name="label_selex_size_discard">
+                      <property name="text">
+                       <string>Discard</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
                   </item>
                   <item>
@@ -1530,7 +1583,7 @@
                     <property name="sizeHint" stdset="0">
                      <size>
                       <width>20</width>
-                      <height>142</height>
+                      <height>40</height>
                      </size>
                     </property>
                    </spacer>
@@ -1563,28 +1616,8 @@
                  <layout class="QVBoxLayout" name="verticalLayout_18">
                   <item>
                    <layout class="QGridLayout" name="gridLayout_selex_age">
-                    <item row="7" column="0">
-                     <widget class="QLabel" name="label_selex_age_timevary_parms">
-                      <property name="text">
-                       <string>Time vary parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="8" column="5">
-                     <spacer name="verticalSpacer_7">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item row="8" column="0" colspan="5">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_timevary_parms"/>
+                    <item row="6" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_age_male"/>
                     </item>
                     <item row="0" column="2">
                      <widget class="QLabel" name="label_selex_age_pattern_info">
@@ -1597,13 +1630,6 @@
                      <widget class="QLabel" name="label_selex_age_pattern">
                       <property name="text">
                        <string>Pattern</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_selex_age_discard">
-                      <property name="text">
-                       <string>Discard</string>
                       </property>
                      </widget>
                     </item>
@@ -1620,57 +1646,37 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="3" column="0">
+                    <item row="1" column="7">
                      <widget class="QLabel" name="label_selex_age_special">
                       <property name="text">
                        <string>Special</string>
                       </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
                      </widget>
                     </item>
-                    <item row="1" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_age_discard"/>
-                    </item>
-                    <item row="2" column="0">
+                    <item row="1" column="5">
                      <widget class="QLabel" name="label_selex_age_male">
                       <property name="text">
                        <string>Male</string>
                       </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
                      </widget>
                     </item>
-                    <item row="2" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_age_male"/>
-                    </item>
-                    <item row="3" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_age_special"/>
-                    </item>
-                    <item row="4" column="0">
+                    <item row="0" column="5">
                      <widget class="QLabel" name="label_selex_age_num_params">
                       <property name="text">
                        <string>Number of parameters</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="4" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_age_num_params">
-                      <property name="readOnly">
-                       <bool>true</bool>
-                      </property>
-                      <property name="prefix">
-                       <string/>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="5" column="0">
-                     <widget class="QLabel" name="label_selex_age_params">
-                      <property name="text">
-                       <string>Parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="6" column="0" colspan="6">
+                    <item row="3" column="0" colspan="10">
                      <layout class="QVBoxLayout" name="verticalLayout_selex_age_params"/>
                     </item>
-                    <item row="0" column="4">
+                    <item row="0" column="7">
                      <spacer name="horizontalSpacer_22">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1690,7 +1696,7 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="0" column="5">
+                    <item row="0" column="9">
                      <spacer name="horizontalSpacer_7">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1702,6 +1708,79 @@
                        </size>
                       </property>
                      </spacer>
+                    </item>
+                    <item row="0" column="6">
+                     <widget class="QSpinBox" name="spinBox_selex_age_num_params">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                      <property name="prefix">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="9">
+                     <spacer name="verticalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="9" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_timevary_parms"/>
+                    </item>
+                    <item row="8" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_age_timevary_parms">
+                      <property name="text">
+                       <string>Time vary parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="4">
+                     <widget class="QSpinBox" name="spinBox_selex_age_discard">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="6">
+                     <widget class="QSpinBox" name="spinBox_selex_age_male"/>
+                    </item>
+                    <item row="1" column="8">
+                     <widget class="QSpinBox" name="spinBox_selex_age_special"/>
+                    </item>
+                    <item row="4" column="0" colspan="4">
+                     <widget class="QLabel" name="label_4">
+                      <property name="text">
+                       <string>Male Parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_age_params">
+                      <property name="text">
+                       <string>Pattern Parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1" colspan="3">
+                     <widget class="QLabel" name="label_selex_age_discard">
+                      <property name="text">
+                       <string>Discard</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </item>

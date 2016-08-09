@@ -116,6 +116,13 @@ void growthPattern::setTimeVaryParam(int index, QStringList data)
     timeVaryParams->setRowData(index, data);
 }
 
+void growthPattern::setTimeVaryParamHeader(int index, QString header)
+{
+    if (index >= timeVaryParams->rowCount())
+        timeVaryParams->setRowCount(index + 1);
+    timeVaryParams->setRowHeader(index, header);
+}
+
 void growthPattern::setCVParam(int index, QStringList data)
 {
     if (index >= cvParams->rowCount())

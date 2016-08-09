@@ -47,7 +47,9 @@ public:
     int getNumTimeVaryParams () {return timeVaryParams->rowCount();}
     void addTimeVaryParam (QStringList data) {setGrowthParam(timeVaryParams->rowCount(), data);}
     void setTimeVaryParam (int index, QStringList data);
+    void setTimeVaryParamHeader (int index, QString header);
     QStringList getTimeVaryParam(int index) {return timeVaryParams->getRowData(index);}
+    QString getTimeVaryParamHeader (int index) {return timeVaryParams->getRowHeader(index);}
     tablemodel *getTimeVaryParams() {return timeVaryParams;}
 
     void setNumCVParams (int num) {cvParams->setRowCount(num);}

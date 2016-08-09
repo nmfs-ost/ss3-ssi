@@ -345,9 +345,10 @@ void population_widget::refresh()
     ui->comboBox_growth_cv_pattern->setCurrentIndex(pop->Grow()->getCv_growth_pattern());
     ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
     ui->spinBox_growth_num_submorphs->setValue(pop->Grow()->getNum_morphs());
+    ui->comboBox_growth_time_vary->setCurrentIndex(pop->Grow()->getTimeVaryMethod()-1);
+    ui->checkBox_growth_time_vary_read->setChecked(pop->Grow()->getTimeVaryReadParams() == 1);
     changeGrowthPattern(1);
     // Maturity
-
 
     // movement
     ui->spinBox_num_move_defs->setValue(pop->Move()->getNumDefs());
@@ -625,6 +626,16 @@ void population_widget::changeSDadd (double val)
 void population_widget::changeCVmethod (int num)
 {
     pop->Grow()->setCv_growth_pattern(num);
+}
+
+void population_widget::changeTimeVaryMethod(int num)
+{
+    pop->Grow()->setTimeVaryMethod(num+1);
+}
+
+void population_widget::changeTimeVaryRead(bool flag)
+{
+    pop->Grow()->setTimeVaryReadParams(flag? 1: 0);
 }
 
 void population_widget::changeFractionFemale()

@@ -59,7 +59,12 @@ public slots:
 
     void changeSelexSizePattern(int pat);
     void showSelexSizeInfo();
+    void changeSelexSizeDiscard(int disc);
+    void changeSelexSizeMale (int mal);
+    void changeSelexSizeSpecial (int spc);
     void changeSelexAgePattern(int pat);
+    void changeSelexAgeMale (int mal);
+    void changeSelexAgeSpecial (int spc);
     void showSelexAgeInfo();
 
 private:
@@ -93,8 +98,12 @@ private:
     tableview *qParamsView;
 
     tableview *sizeSelexParamsView;
+    tableview *sizeSelexRetainView;
+    tableview *sizeSelexDiscardView;
+    tableview *sizeSelexMaleView;
     tableview *sizeSelexTimeVaryParamsView;
     tableview *ageSelexParamsView;
+    tableview *ageSelexMaleView;
     tableview *ageSelexTimeVaryParamsView;
 
     tableview *lambdaView;

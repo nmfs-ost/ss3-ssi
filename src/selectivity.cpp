@@ -15,14 +15,14 @@ selectivity::selectivity(int method)
     timeVaryParameters = new parametermodel();
     timeVaryParameters->setColumnCount(7);
 
-    envLinkParameters = new parametermodel();
-    envLinkParameters->setColumnCount(7);
-    devErrParameters = new parametermodel();
-    devErrParameters->setColumnCount(7);
-    devRhoParameters = new parametermodel();
-    devRhoParameters->setColumnCount(7);
-    blockParameters = new parametermodel();
-    blockParameters->setColumnCount(7);
+    discardParameters = new parametermodel();
+    discardParameters->setColumnCount(7);
+    specialParameters = new parametermodel();
+    specialParameters->setColumnCount(7);
+    retainParameters = new parametermodel();
+    retainParameters->setColumnCount(7);
+    maleParameters = new parametermodel();
+    maleParameters->setColumnCount(7);
 
     setMethod(method);
 }
@@ -185,10 +185,6 @@ int selectivity::getNumParameters()
 void selectivity::setNumParameters(int num)
 {
     parameters->setRowCount(num);
-/*    envLinkParameters->setRowCount(num);
-    devErrParameters->setRowCount(num);
-    devRhoParameters->setRowCount(num);
-    blockParameters->setRowCount(num);*/
 }
 
 void selectivity::setParameter(int index, QString text)
@@ -229,9 +225,59 @@ QString selectivity::getParameterLabel(int index)
     return parameters->getRowHeader(index);
 }
 
+void selectivity::setDiscard(int value)
+{
+    discard = value;
+    switch (discard)
+    {
+    case 1:
+        retainParameters->setRowCount(4);
+        discardParameters->setRowCount(0);
+        break;
+    case 2:
+        retainParameters->setRowCount(4);
+        discardParameters->setRowCount(4);
+        break;
+    case 3:
+        retainParameters->setRowCount(0);
+        discardParameters->setRowCount(0);
+        break;
+    case 4:
+        retainParameters->setRowCount(7);
+        discardParameters->setRowCount(4);
+        break;
+    default:
+        retainParameters->setRowCount(0);
+        discardParameters->setRowCount(0);
+    }
+}
+
+void selectivity::setMale(int value)
+{
+    male = value;
+    switch (male)
+    {
+    case 1:
+        maleParameters->setRowCount(4);
+        break;
+    default:
+        maleParameters->setRowCount(0);
+    }
+}
+
+void selectivity::setSpecial(int value)
+{
+    special = value;
+}
+
 void selectivity::setTimeVaryParameter (int index, QStringList strList)
 {
     timeVaryParameters->setRowData(index, strList);
+}
+
+void selectivity::setTimeVaryParameterLabel(int index, QString label)
+{
+    timeVaryParameters->setRowHeader(index, label);
 }
 
 QString selectivity::getTimeVaryParameterText (int index)
@@ -242,99 +288,117 @@ QString selectivity::getTimeVaryParameterText (int index)
     return text;
 }
 
-QStringList selectivity::getTimeVaryParameter (int index)
-{
-    return timeVaryParameters->getRowData(index);
-}
-
 int selectivity::getNumTimeVaryParameters ()
 {
     return timeVaryParameters->rowCount();
 }
 
-int selectivity::getNumEnvLink()
+int selectivity::getNumDiscardParameters()
 {
-    int num = 0;
+    return discardParameters->rowCount();
+/*    int num = 0;
     QStringList data;
     for (int i = 0; i < parameters->rowCount(); i++)
     {
         num += parameters->envLink(i)? 1: 0;
     }
-    return num;
+    return num;*/
 }
 
-void selectivity::setEnvLinkParameter(int index, QStringList strList)
+void selectivity::setDiscardParameter(int index, QStringList strList)
 {
-    envLinkParameters->setRowData(index, strList);
+    discardParameters->setRowData(index, strList);
 }
 
-QString selectivity::getEnvLinkParameter (int index)
+void selectivity::setDiscardParameterLabel(int index, QString label)
 {
-    QStringList data = envLinkParameters->getRowData(index);
+    discardParameters->setRowHeader(index, label);
+}
+
+QString selectivity::getDiscardParameterText (int index)
+{
+    QStringList data = discardParameters->getRowData(index);
     QString text (data.at(0));
     for (int i = 1; i < data.count(); i++)
         text.append(QString(" %1").arg(data.at(i)));
     return text;
 }
 
-int selectivity::getNumUseDev()
+int selectivity::getNumSpecialParameters()
 {
-    int num = 0;
+    return specialParameters->rowCount();
+/*    int num = 0;
     QStringList data;
     for (int i = 0; i < parameters->rowCount(); i++)
     {
         num += parameters->useDev(i)? 1: 0;
     }
-    return num;
+    return num;*/
 }
 
-void selectivity::setDevErrParameter(int index, QStringList strList)
+void selectivity::setSpecialParameter(int index, QStringList strList)
 {
-    devErrParameters->setRowData(index, strList);
+    specialParameters->setRowData(index, strList);
 }
 
-QString selectivity::getDevErrParameter (int index)
+void selectivity::setSpecialParameterLabel(int index, QString label)
 {
-    QStringList data = devErrParameters->getRowData(index);
+    specialParameters->setRowHeader(index, label);
+}
+
+QString selectivity::getSpecialParameterText (int index)
+{
+    QStringList data = specialParameters->getRowData(index);
     QString text (data.at(0));
     for (int i = 1; i < data.count(); i++)
         text.append(QString(" %1").arg(data.at(i)));
     return text;
 }
 
-void selectivity::setDevRhoParameter(int index, QStringList strList)
+void selectivity::setRetainParameter(int index, QStringList strList)
 {
-    devRhoParameters->setRowData(index, strList);
+    retainParameters->setRowData(index, strList);
 }
 
-QString selectivity::getDevRhoParameter (int index)
+void selectivity::setRetainParameterLabel(int index, QString label)
 {
-    QStringList data = devRhoParameters->getRowData(index);
+    retainParameters->setRowHeader(index, label);
+}
+
+QString selectivity::getRetainParameterText (int index)
+{
+    QStringList data = retainParameters->getRowData(index);
     QString text (data.at(0));
     for (int i = 1; i < data.count(); i++)
         text.append(QString(" %1").arg(data.at(i)));
     return text;
 }
 
-int selectivity::getNumUseBlock()
+int selectivity::getNumMaleParameters()
 {
-    int num = 0;
+    return maleParameters->rowCount();
+/*    int num = 0;
     QStringList data;
     for (int i = 0; i < parameters->rowCount(); i++)
     {
         num += parameters->useBlock(i)? 1: 0;
     }
-    return num;
+    return num;*/
 }
 
-void selectivity::setBlockParameter(int index, QStringList strList)
+void selectivity::setMaleParameter(int index, QStringList strList)
 {
-    blockParameters->setRowData(index, strList);
+    maleParameters->setRowData(index, strList);
 }
 
-QString selectivity::getBlockParameter (int index)
+void selectivity::setMaleParameterLabel(int index, QString label)
 {
-    QStringList data = blockParameters->getRowData(index);
+    maleParameters->setRowHeader(index, label);
+}
+
+QString selectivity::getMaleParameterText (int index)
+{
+    QStringList data = maleParameters->getRowData(index);
     QString text (data.at(0));
     for (int i = 1; i < data.count(); i++)
         text.append(QString(" %1").arg(data.at(i)));

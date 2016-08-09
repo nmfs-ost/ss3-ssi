@@ -17,11 +17,11 @@ public:
 
     void setPattern (int value);
     int getPattern () {return pattern;}
-    void setDiscard (int value) {discard = value;}
+    void setDiscard (int value);
     int getDiscard () {return discard;}
-    void setMale (int value) {male = value;}
+    void setMale (int value);
     int getMale () {return male;}
-    void setSpecial (int value) {special = value;}
+    void setSpecial (int value);
     int getSpecial () {return special;}
     void setNumAges(int ages) {numAges = ages;}
     void setSetup(QString text);
@@ -38,28 +38,44 @@ public:
     void setNumParameters (int num);
     parametermodel *getParameterModel() {return parameters;}
 
-    int getNumEnvLink();
-    void setEnvLinkParameter(int index, QStringList strList);
-    QString getEnvLinkParameter (int index);
-    parametermodel *getEnvLinkParamModel () {return envLinkParameters;}
+    int getNumRetainParameters() {return retainParameters->rowCount();}
+    void setRetainParameter(int index, QStringList strList);
+    void setRetainParameterLabel (int index, QString label);
+    QString getRetainParameterText (int index);
+    QStringList getRetainParameter (int index) {return retainParameters->getRowData(index);}
+    QString getRetainParameterLabel (int index) {return retainParameters->getRowHeader(index);}
+    parametermodel *getRetainParameterModel () {return retainParameters;}
 
-    int getNumUseDev();
-    void setDevErrParameter(int index, QStringList strList);
-    QString getDevErrParameter (int index);
-    parametermodel *getDevErrParamModel () {return devErrParameters;}
-    void setDevRhoParameter(int index, QStringList strList);
-    QString getDevRhoParameter (int index);
-    parametermodel *getDevRhoParamModel () {return devRhoParameters;}
+    int getNumDiscardParameters();
+    void setDiscardParameter(int index, QStringList strList);
+    void setDiscardParameterLabel (int index, QString label);
+    QString getDiscardParameterText (int index);
+    QStringList getDiscardParameter (int index) {return discardParameters->getRowData(index);}
+    QString getDiscardParameterLabel (int index) {return discardParameters->getRowHeader(index);}
+    parametermodel *getDiscardParameterModel () {return discardParameters;}
 
-    int getNumUseBlock();
-    void setBlockParameter(int index, QStringList strList);
-    QString getBlockParameter (int index);
-    parametermodel *getBlockParamModel () {return blockParameters;}
+    int getNumSpecialParameters();
+    void setSpecialParameter(int index, QStringList strList);
+    void setSpecialParameterLabel (int index, QString label);
+    QString getSpecialParameterText (int index);
+    QStringList getSpecialParameter (int index) {return specialParameters->getRowData(index);}
+    QString getSpecialParameterLabel (int index) {return specialParameters->getRowHeader(index);}
+    parametermodel *getSpecialParameterModel () {return specialParameters;}
 
-    void setTimeVaryParameter (int index, QStringList strList);
-    QString getTimeVaryParameterText (int index);
-    QStringList getTimeVaryParameter (int index);
+    int getNumMaleParameters();
+    void setMaleParameter(int index, QStringList strList);
+    void setMaleParameterLabel (int index, QString label);
+    QString getMaleParameterText (int index);
+    QStringList getMaleParameter (int index) {return maleParameters->getRowData(index);}
+    QString getMaleParameterLabel (int index) {return maleParameters->getRowHeader(index);}
+    parametermodel *getMaleParameterModel () {return maleParameters;}
+
     int getNumTimeVaryParameters ();
+    void setTimeVaryParameter (int index, QStringList strList);
+    void setTimeVaryParameterLabel (int index, QString label);
+    QString getTimeVaryParameterText (int index);
+    QStringList getTimeVaryParameter (int index) {return timeVaryParameters->getRowData(index);}
+    QString getTimeVaryParameterLabel (int index) {return timeVaryParameters->getRowHeader(index);}
     parametermodel *getTimeVaryParameterModel() {return timeVaryParameters;}
 
     double operator()() {return evaluate();}
@@ -81,10 +97,10 @@ protected:
 
     parametermodel *timeVaryParameters;
 
-    parametermodel *envLinkParameters;
-    parametermodel *blockParameters;
-    parametermodel *devErrParameters;
-    parametermodel *devRhoParameters;
+    parametermodel *retainParameters;
+    parametermodel *discardParameters;
+    parametermodel *maleParameters;
+    parametermodel *specialParameters;
 
     double evaluate(int f, float m);
 

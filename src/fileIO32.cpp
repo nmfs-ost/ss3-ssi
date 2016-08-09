@@ -2542,8 +2542,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumEnvLink();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumEnvLink();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumDiscardParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumDiscardParameters();
         }
         if (num_vals > 0)
         {
@@ -2553,7 +2553,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             for (int i = 0; i < data->num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
-                pml = data->getFleet(i)->getSizeSelectivity()->getEnvLinkParamModel();
+                pml = data->getFleet(i)->getSizeSelectivity()->getDiscardParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
                 {
                     datalist.clear();
@@ -2565,7 +2565,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     }
                 }
                 pm = data->getFleet(i)->getAgeSelectivity()->getParameterModel();
-                pml = data->getFleet(i)->getAgeSelectivity()->getEnvLinkParamModel();
+                pml = data->getFleet(i)->getAgeSelectivity()->getDiscardParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
                 {
                     datalist.clear();
@@ -2583,8 +2583,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumUseBlock();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumUseBlock();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumMaleParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumMaleParameters();
         }
         if (num_vals > 0)
         {
@@ -2594,7 +2594,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             for (int i = 0; i < data->num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
-                pmb = data->getFleet(i)->getSizeSelectivity()->getBlockParamModel();
+                pmb = data->getFleet(i)->getSizeSelectivity()->getMaleParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
                 {
                     datalist.clear();
@@ -2606,7 +2606,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     }
                 }
                 pm = data->getFleet(i)->getAgeSelectivity()->getParameterModel();
-                pmb = data->getFleet(i)->getAgeSelectivity()->getBlockParamModel();
+                pmb = data->getFleet(i)->getAgeSelectivity()->getMaleParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
                 {
                     datalist.clear();
@@ -2626,8 +2626,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumUseDev();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumUseDev();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumSpecialParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumSpecialParameters();
         }
         if (num_vals > 0)
         {
@@ -2635,8 +2635,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             for (int i = 0; i < data->num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
-                pme = data->getFleet(i)->getSizeSelectivity()->getDevErrParamModel();
-                pmr = data->getFleet(i)->getSizeSelectivity()->getDevRhoParamModel();
+                pme = data->getFleet(i)->getSizeSelectivity()->getSpecialParameterModel();
+                pmr = data->getFleet(i)->getSizeSelectivity()->getRetainParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
                 {
                     datalist.clear();
@@ -2652,8 +2652,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     }
                 }
                 pm = data->getFleet(i)->getAgeSelectivity()->getParameterModel();
-                pme = data->getFleet(i)->getAgeSelectivity()->getDevErrParamModel();
-                pmr = data->getFleet(i)->getAgeSelectivity()->getDevRhoParamModel();
+                pme = data->getFleet(i)->getAgeSelectivity()->getSpecialParameterModel();
+                pmr = data->getFleet(i)->getAgeSelectivity()->getRetainParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
                 {
                     datalist.clear();
@@ -3630,8 +3630,8 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumEnvLink();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumEnvLink();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumDiscardParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumDiscardParameters();
         }
         if (num_vals > 0)
         {
@@ -3648,7 +3648,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->envLink(j) > 0)
                     {
                     line = QString(QString("%1 # SizeSel_P%2_%3(%4)_env_fxn" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getEnvLinkParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getDiscardParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName()));
                                        QString::number(i+1),
@@ -3662,7 +3662,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->envLink(j) > 0)
                     {
                     line = QString(QString("%1 # AgeSel_P%2_%3(%4)_env_fxn" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getEnvLinkParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getDiscardParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName()));
                                        QString::number(i+1),
@@ -3684,8 +3684,8 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumUseBlock();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumUseBlock();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumMaleParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumMaleParameters();
         }
         if (num_vals > 0)
         {
@@ -3703,7 +3703,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useBlock(j) > 0)
                     {
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_blk_setup" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getBlockParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getMaleParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName()));
                                        QString::number(i+1),
@@ -3717,7 +3717,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useBlock(j) > 0)
                     {
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_blk_setup" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getBlockParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getMaleParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName()));
                                        QString::number(i+1),
@@ -3743,8 +3743,8 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumUseDev();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumUseDev();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumSpecialParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumSpecialParameters();
         }
         if (num_vals > 0)
         {
@@ -3759,13 +3759,13 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useDev(j) > 0)
                     {
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_dev_se" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getDevErrParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getSpecialParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName()));
                                        QString::number(i+1),
                     chars += c_file->writeline(line);
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_dev_rho" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getDevRhoParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getRetainParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName()));
                                        QString::number(i+1),
@@ -3779,13 +3779,13 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useDev(j) > 0)
                     {
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_dev_se" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getDevErrParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getSpecialParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_dev_rho" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getDevRhoParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getRetainParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
