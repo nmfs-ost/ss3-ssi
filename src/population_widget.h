@@ -54,6 +54,8 @@ public slots:
     void changeExpDecay (double val);
     void changeSDadd (double val);
     void changeCVmethod (int num);
+    void changeTimeVaryMethod (int num);
+    void changeTimeVaryRead (bool flag);
 
     void setSpawnRecrSpec (int spec);
     void setRecrArea (int value);
@@ -110,6 +112,8 @@ private:
     tableview *seasonParamsView;
     tableview *wtlenParamsView;
     tableview *maturityParamsView;
+
+    tableview *timeVaryParamsView;
 
     tableview *assignmentView;
     tableview *recruitDistView;

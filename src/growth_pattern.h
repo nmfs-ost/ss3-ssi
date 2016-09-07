@@ -43,6 +43,15 @@ public:
     QStringList getGrowthParam(int index) {return growthParams->getRowData(index);}
     tablemodel *getGrowthParams() {return growthParams;}
 
+    void setNumTimeVaryParams (int num) {timeVaryParams->setRowCount(num);}
+    int getNumTimeVaryParams () {return timeVaryParams->rowCount();}
+    void addTimeVaryParam (QStringList data) {setGrowthParam(timeVaryParams->rowCount(), data);}
+    void setTimeVaryParam (int index, QStringList data);
+    void setTimeVaryParamHeader (int index, QString header);
+    QStringList getTimeVaryParam(int index) {return timeVaryParams->getRowData(index);}
+    QString getTimeVaryParamHeader (int index) {return timeVaryParams->getRowHeader(index);}
+    tablemodel *getTimeVaryParams() {return timeVaryParams;}
+
     void setNumCVParams (int num) {cvParams->setRowCount(num);}
     int getNumCVParams () {return cvParams->rowCount();}
     void addCVParam (QStringList data) {setCVParam(cvParams->rowCount(), data);}
@@ -76,6 +85,7 @@ private:
 
     parametermodel *natMParams;
     tablemodel *natMAges;
+    parametermodel *timeVaryParams;
 };
 
 #endif // GROWTH_PATTERN_H

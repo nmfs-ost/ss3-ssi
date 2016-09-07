@@ -20,6 +20,9 @@ growthPattern::growthPattern()
 
     devParams = new parametermodel();
     devParams->setColumnCount(7);
+
+    timeVaryParams = new parametermodel();
+    timeVaryParams->setColumnCount(7);
 }
 
 growthPattern::~growthPattern()
@@ -31,6 +34,7 @@ growthPattern::~growthPattern()
     delete natMParams;
     delete natMAges;
     delete devParams;
+    delete timeVaryParams;
 }
 
 growthPattern::growthPattern (const growthPattern &rhs)
@@ -103,6 +107,20 @@ void growthPattern::setGrowthParam(int index, QStringList data)
     if (index >= growthParams->rowCount())
         growthParams->setRowCount(index + 1);
     growthParams->setRowData(index, data);
+}
+
+void growthPattern::setTimeVaryParam(int index, QStringList data)
+{
+    if (index >= timeVaryParams->rowCount())
+        timeVaryParams->setRowCount(index + 1);
+    timeVaryParams->setRowData(index, data);
+}
+
+void growthPattern::setTimeVaryParamHeader(int index, QString header)
+{
+    if (index >= timeVaryParams->rowCount())
+        timeVaryParams->setRowCount(index + 1);
+    timeVaryParams->setRowHeader(index, header);
 }
 
 void growthPattern::setCVParam(int index, QStringList data)

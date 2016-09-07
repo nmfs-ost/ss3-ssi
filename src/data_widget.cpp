@@ -285,7 +285,7 @@ void data_widget::refresh()
         ui->spinBox_num_evn_var->setValue(model_data->num_environ_vars());
 
         ui->spinBox_block_patterns_total->setValue(model_data->getNumBlockPatterns());
-        setBlockPattern(0);
+        setBlockPattern(1);
 
         ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
         addSdSpecification->setModel(model_data->getAddSdReporting()->getSpecModel());
@@ -760,15 +760,24 @@ void data_widget::setBlockPattern(int num)
 
 void data_widget::changeBlockPattern(int num)
 {
-    if (model_data->getNumBlockPatterns() > 0)
+    int numpat = model_data->getNumBlockPatterns();
+    if (numpat > 0)
     {
-        if (num > model_data->getNumBlockPatterns())
-            ui->spinBox_block_pattern_num->setValue(model_data->getNumBlockPatterns());
+        if (num > numpat)
+            ui->spinBox_block_pattern_num->setValue(numpat);
         else if (num < 1)
             ui->spinBox_block_pattern_num->setValue(1);
         else
+        {
             timeBlocks->setModel(model_data->getBlockPattern(num-1)->getBlocks());
-        timeBlocks->setHeight(model_data->getBlockPattern(num-1)->getBlocks());
+            timeBlocks->setHeight(model_data->getBlockPattern(num-1)->getBlocks());
+            ui->spinBox_blocks_count->setValue(model_data->getBlockPattern(num-1)->getNumBlocks());
+        }
+    }
+    else
+    {
+        ui->spinBox_block_patterns_total->setValue(0);
+        ui->spinBox_block_pattern_num->setValue(0);
     }
 }
 

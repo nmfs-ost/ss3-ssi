@@ -69,9 +69,27 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     sizeSelexParamsView = new tableview();
     sizeSelexParamsView->setParent(this);
     ui->verticalLayout_selex_size_params->addWidget(sizeSelexParamsView);
+    sizeSelexRetainView = new tableview();
+    sizeSelexRetainView->setParent(this);
+    ui->verticalLayout_sel_size_retain->addWidget(sizeSelexRetainView);
+    sizeSelexDiscardView = new tableview();
+    sizeSelexDiscardView->setParent(this);
+    ui->verticalLayout_sel_size_discard->addWidget(sizeSelexDiscardView);
+    sizeSelexMaleView = new tableview();
+    sizeSelexMaleView->setParent(this);
+    ui->verticalLayout_sel_size_male->addWidget(sizeSelexMaleView);
+    sizeSelexTimeVaryParamsView = new tableview();
+    sizeSelexTimeVaryParamsView->setParent(this);
+    ui->verticalLayout_selex_size_timevary_parms->addWidget(sizeSelexTimeVaryParamsView);
     ageSelexParamsView = new tableview();
     ageSelexParamsView->setParent(this);
     ui->verticalLayout_selex_age_params->addWidget(ageSelexParamsView);
+    ageSelexMaleView = new tableview();
+    ageSelexMaleView->setParent(this);
+    ui->verticalLayout_sel_age_male->addWidget(ageSelexMaleView);
+    ageSelexTimeVaryParamsView = new tableview();
+    ageSelexTimeVaryParamsView->setParent(this);
+    ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
 
     lambdaView = new tableview();
     lambdaView->setParent(this);
@@ -91,10 +109,16 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->pushButton_duplicate, SIGNAL(clicked()), SLOT(duplicate_current_fleet()));
     connect (ui->spinBox_units, SIGNAL(valueChanged(int)), ui->spinBox_catch_units, SLOT(setValue(int)));
 
-    connect (ui->spinBox_selex_size_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexSizePattern(int)));
-    connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
     connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), SLOT(showSelexSizeInfo()));
+    connect (ui->spinBox_selex_size_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexSizePattern(int)));
+    connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
+    connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
+    connect (ui->spinBox_selex_size_special, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeSpecial(int)));
+
     connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), SLOT(showSelexAgeInfo()));
+    connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
+    connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
+    connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
 
     connect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), SLOT(changeLengthMinTailComp()));
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
@@ -256,6 +280,7 @@ void fleet_widget::refresh()
     discardedit->setValueRange(0, 1999999.0);
 
     totalFleets = model_data->num_fleets();
+    ui->spinBox_selex_size_discard->setMinimum(-totalFleets);
 //    ui->spinBox_total->setValue(totalFleets);
     ui->spinBox_area->setMaximum(model_data->num_areas());
     refreshFleetNames();
@@ -369,11 +394,33 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_selex_size_male->setValue(current_fleet->getSizeSelectivity()->getMale());
         ui->spinBox_selex_size_special->setValue(current_fleet->getSizeSelectivity()->getSpecial());
         sizeSelexParamsView->setModel(current_fleet->getSizeSelectivity()->getParameterModel());
+        sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel());
+        sizeSelexParamsView->resizeColumnsToContents();
+        sizeSelexRetainView->setModel(current_fleet->getSizeSelectivity()->getRetainParameterModel());
+        sizeSelexRetainView->setHeight(current_fleet->getSizeSelectivity()->getRetainParameterModel());
+        sizeSelexRetainView->resizeColumnsToContents();
+        sizeSelexDiscardView->setModel(current_fleet->getSizeSelectivity()->getDiscardParameterModel());
+        sizeSelexDiscardView->setHeight(current_fleet->getSizeSelectivity()->getDiscardParameterModel());
+        sizeSelexDiscardView->resizeColumnsToContents();
+        sizeSelexMaleView->setModel(current_fleet->getSizeSelectivity()->getMaleParameterModel());
+        sizeSelexMaleView->setHeight(current_fleet->getSizeSelectivity()->getMaleParameterModel());
+        sizeSelexMaleView->resizeColumnsToContents();
+        sizeSelexTimeVaryParamsView->setModel(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
+        sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
+        sizeSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
         ui->spinBox_selex_age_male->setValue(current_fleet->getAgeSelectivity()->getMale());
         ui->spinBox_selex_age_special->setValue(current_fleet->getAgeSelectivity()->getSpecial());
         ageSelexParamsView->setModel(current_fleet->getAgeSelectivity()->getParameterModel());
+        ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel());
+        ageSelexParamsView->resizeColumnsToContents();
+        ageSelexMaleView->setModel(current_fleet->getAgeSelectivity()->getMaleParameterModel());
+        ageSelexMaleView->setHeight(current_fleet->getAgeSelectivity()->getMaleParameterModel());
+        ageSelexMaleView->resizeColumnsToContents();
+        ageSelexTimeVaryParamsView->setModel(current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
+        ageSelexTimeVaryParamsView->setHeight(current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
+        ageSelexTimeVaryParamsView->resizeColumnsToContents();
 
         ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());
@@ -599,6 +646,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
             (current_fleet->getSizeSelectivity()->getPattern());
     ui->spinBox_selex_size_num_params->setValue
             (current_fleet->getSizeSelectivity()->getNumParameters());
+    sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel());
 }
 
 void fleet_widget::showSelexSizeInfo()
@@ -630,6 +678,24 @@ void fleet_widget::showSelexSizeInfo()
     /*int button = */QMessageBox::information(this, title, msg, QMessageBox::Ok);
 }
 
+void fleet_widget::changeSelexSizeDiscard(int disc)
+{
+    current_fleet->getSizeSelectivity()->setDiscard(disc);
+    sizeSelexRetainView->setHeight(current_fleet->getSizeSelectivity()->getRetainParameterModel());
+    sizeSelexDiscardView->setHeight(current_fleet->getSizeSelectivity()->getDiscardParameterModel());
+}
+
+void fleet_widget::changeSelexSizeMale(int mal)
+{
+    current_fleet->getSizeSelectivity()->setMale(mal);
+    sizeSelexMaleView->setHeight(current_fleet->getSizeSelectivity()->getMaleParameterModel());
+}
+
+void fleet_widget::changeSelexSizeSpecial(int spc)
+{
+    current_fleet->getSizeSelectivity()->setSpecial(spc);
+}
+
 void fleet_widget::changeSelexAgePattern(int pat)
 {
     switch (pat)
@@ -653,6 +719,18 @@ void fleet_widget::changeSelexAgePattern(int pat)
             (current_fleet->getAgeSelectivity()->getPattern());
     ui->spinBox_selex_age_num_params->setValue
             (current_fleet->getAgeSelectivity()->getNumParameters());
+    ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel());
+}
+
+void fleet_widget::changeSelexAgeMale(int mal)
+{
+    current_fleet->getAgeSelectivity()->setMale(mal);
+    ageSelexMaleView->setHeight(current_fleet->getAgeSelectivity()->getMaleParameterModel());
+}
+
+void fleet_widget::changeSelexAgeSpecial(int spc)
+{
+    current_fleet->getAgeSelectivity()->setSpecial(spc);
 }
 
 void fleet_widget::showSelexAgeInfo()

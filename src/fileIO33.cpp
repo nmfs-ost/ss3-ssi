@@ -4,6 +4,7 @@
 #include "fileIOgeneral.h"
 #include "message.h"
 //#include "ss_math.h"
+#include "block_pattern.h"
 
 bool read33_dataFile(ss_file *d_file, ss_model *data)
 {
@@ -1985,6 +1986,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
         }
+        // controls for time-varying params
+        temp_int = c_file->next_value().toInt();
+        pop->Grow()->setTimeVaryMethod(temp_int);
+        temp_int = c_file->next_value().toInt();
+        pop->Grow()->setTimeVaryReadParams(temp_int);
 
         // natural Mort
         temp_int = c_file->next_value().toInt();
@@ -2111,8 +2117,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         temp_int = c_file->next_value().toInt();
         pop->Grow()->setParam_offset_method(temp_int);
 
-        temp_int = c_file->next_value().toInt();
-        pop->Grow()->setAdjustment_method(temp_int);
+//        temp_int = c_file->next_value().toInt();
+//        pop->Grow()->setAdjustment_method(temp_int);
 
         // mortality growth parameters
         //pop->Grow()->setNumMaturityParams(0);
@@ -2171,6 +2177,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 {
                     datalist = readParameter(c_file); // K deviations per age
                     gp->addGrowthParam(datalist);
+                    gp->getGrowthParams()->setRowHeader(3, QString("Dev_age_Fem_GP_%1").arg(QString::number(i+1)));
                 }
             }
             datalist = readParameter(c_file); // CV young
@@ -2179,37 +2186,41 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist = readParameter(c_file); // CV old
             gp->setCVParam(1, datalist);
             gp->getCVParams()->setRowHeader(1, QString("CV_old_Fem_GP_%1").arg(QString::number(i+1)));
+        }
 
-            num = 0;
-            pop->Grow()->setNumMaturityParams(num);
-            datalist = readParameter(c_file); // fem_wt_len_1
-            pop->Grow()->setMaturityParam(num, datalist);
-            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
-            num++;
-            datalist = readParameter(c_file); // fem_wt_len_2
-            pop->Grow()->setMaturityParam(num, datalist);
-            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Fem"));
+        num = 0;
+        pop->Grow()->setNumMaturityParams(num);
+        datalist = readParameter(c_file); // fem_wt_len_1
+        pop->Grow()->setMaturityParam(num, datalist);
+        pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
+        num++;
+        datalist = readParameter(c_file); // fem_wt_len_2
+        pop->Grow()->setMaturityParam(num, datalist);
+        pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Fem"));
 
-            num = 0;
-            datalist = readParameter(c_file); // fem_mat_inflect
-            pop->Fec()->setFemaleParam(num, datalist);
-            pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Mat50%_Fem"));
-            num++;
-            datalist = readParameter(c_file); // fem_mat_slope
-            pop->Fec()->setFemaleParam(num, datalist);
-            pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Mat_slope_Fem"));
-            num++;
-            datalist = readParameter(c_file); // fem_fec_alpha
-            pop->Fec()->setFemaleParam(num, datalist);
-            pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_inter_Fem"));
-            num++;
-            datalist = readParameter(c_file); // fem_fec_beta
-            pop->Fec()->setFemaleParam(num, datalist);
-            pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_slope_wt_Fem"));
-            num++;
+        num = 0;
+        datalist = readParameter(c_file); // fem_mat_inflect
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Mat50%_Fem"));
+        num++;
+        datalist = readParameter(c_file); // fem_mat_slope
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Mat_slope_Fem"));
+        num++;
+        datalist = readParameter(c_file); // fem_fec_alpha
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_inter_Fem"));
+        num++;
+        datalist = readParameter(c_file); // fem_fec_beta
+        pop->Fec()->setFemaleParam(num, datalist);
+        pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_slope_wt_Fem"));
+        num++;
 
-            if (data->num_genders() > 1)          // Male parameters
+        if (data->num_genders() > 1)          // Male parameters
+        {
+            for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
             {
+                growthPattern *gp = pop->Grow()->getPattern(i);
                 temp_int = pop->Grow()->getNatural_mortality_type();
                 switch (temp_int)
                 {
@@ -2274,16 +2285,16 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist = readParameter(c_file); // CV old
                 gp->setCVParam(3, datalist);
                 gp->getCVParams()->setRowHeader(3, QString("CV_old_Mal_GP_%1").arg(QString::number(i+1)));
-
-                num = pop->Grow()->getNumMaturityParams();
-                datalist = readParameter(c_file); // male_wt_len_1
-                pop->Grow()->setMaturityParam(num, datalist);
-                pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
-                num++;
-                datalist = readParameter(c_file); // male_wt_len_2
-                pop->Grow()->setMaturityParam(num, datalist);
-                pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
             }
+
+            num = pop->Grow()->getNumMaturityParams();
+            datalist = readParameter(c_file); // male_wt_len_1
+            pop->Grow()->setMaturityParam(num, datalist);
+            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
+            num++;
+            datalist = readParameter(c_file); // male_wt_len_2
+            pop->Grow()->setMaturityParam(num, datalist);
+            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
         }
 
         if (pop->Fec()->getHermaphroditism())
@@ -2383,6 +2394,95 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Grow()->getPattern(i)->getFractionFemaleParams()->setRowHeader(0, QString("FracFemale_GP_%1").arg(QString::number(i+1)));
         }
 
+        // timevary MG Parameters
+        for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
+        {
+            int index = 0;
+            QString header;
+            growthPattern *gp = pop->Grow()->getPattern(i);
+            temp_int = pop->Grow()->getNatural_mortality_type();
+            switch (temp_int)
+            {
+            case 0:
+            case 2:
+                datalist = gp->getNatMParam(index);
+                header = gp->getNatMParams()->getRowHeader(index);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                break;
+            case 1:
+            case 3:
+            case 4:
+                break;
+            }
+            index = 0;
+            datalist = gp->getGrowthParam(index); // L at Amin
+            header = gp->getGrowthParams()->getRowHeader(index ++);
+            readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+            datalist = gp->getGrowthParam(index); // L at Amax
+            header = gp->getGrowthParams()->getRowHeader(index ++);
+            readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+            datalist = gp->getGrowthParam(index); // von Bertalanffy
+            header = gp->getGrowthParams()->getRowHeader(index ++);
+            readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+            if (pop->Grow()->getModel() == 2)
+            {
+                datalist = gp->getGrowthParam(index); // Richards coefficient
+                header = gp->getGrowthParams()->getRowHeader(index ++);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+            }
+
+            index = 0;
+            datalist = gp->getCVParam(index); // CV young
+            header = gp->getGrowthParams()->getRowHeader(index ++);
+            readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+            datalist = gp->getCVParam(index); // CV old
+            header = gp->getGrowthParams()->getRowHeader(index ++);
+            readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+
+            if (data->num_genders() > 1)
+            {
+                index = gp->getNumNatMParams() / 2;
+                switch (temp_int)
+                {
+                case 0:
+                case 2:
+                    datalist = gp->getNatMParam(index);
+                    header = gp->getNatMParams()->getRowHeader(index);
+                    readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                    break;
+                case 1:
+                case 3:
+                case 4:
+                    break;
+                }
+                index = gp->getNumGrowthParams() / 2;
+                datalist = gp->getGrowthParam(index); // L at Amin
+                header = gp->getGrowthParams()->getRowHeader(index ++);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                datalist = gp->getGrowthParam(index); // L at Amax
+                header = gp->getGrowthParams()->getRowHeader(index ++);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                datalist = gp->getGrowthParam(index); // von Bertalanffy
+                header = gp->getGrowthParams()->getRowHeader(index ++);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                if (pop->Grow()->getModel() == 2)
+                {
+                    datalist = gp->getGrowthParam(index); // Richards coefficient
+                    header = gp->getGrowthParams()->getRowHeader(index ++);
+                    readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                }
+
+                index = gp->getNumCVParams() / 2;
+                datalist = gp->getCVParam(index); // CV young
+                header = gp->getGrowthParams()->getRowHeader(index ++);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+                datalist = gp->getCVParam(index); // CV old
+                header = gp->getGrowthParams()->getRowHeader(index ++);
+                readGrowthTimeVaryParams (c_file, data, i, datalist, header);
+            }
+        }
+
+
         // seasonal_effects_on_biology_parms
         temp_int = c_file->next_value().toInt();
         pop->setFemwtlen1(temp_int == 1);
@@ -2416,55 +2516,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // ageing error if requested in data file
-
-        // natM dev params
-        num = 0;
-        for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
-        {
-            growthPattern *gp = pop->Grow()->getPattern(i);
-            gp->setNumDevParams(0);
-            for (int j = 0; j < gp->getNumNatMParams(); j++)
-            {
-                datalist = gp->getNatMParam(j);
-                if (datalist.at(8).toInt() == 2)
-                {
-                    num ++;
-                    datalist = readShortParameter(c_file);
-                    gp->addDevParam(datalist);
-                    datalist = readShortParameter(c_file);
-                    gp->addDevParam(datalist);
-                }
-            }
-            for (int j = 0; j < gp->getNumGrowthParams(); j++)
-            {
-                datalist = gp->getGrowthParam(j);
-                if (datalist.at(8).toInt() == 2)
-                {
-                    num ++;
-                    datalist = readShortParameter(c_file);
-                    gp->addDevParam(datalist);
-                    datalist = readShortParameter(c_file);
-                    gp->addDevParam(datalist);
-                }
-            }
-            for (int j = 0; j < gp->getNumCVParams(); j++)
-            {
-                datalist = gp->getCVParam(j);
-                if (datalist.at(8).toInt() == 2)
-                {
-                    num ++;
-                    datalist = readShortParameter(c_file);
-                    gp->addDevParam(datalist);
-                    datalist = readShortParameter(c_file);
-                    gp->addDevParam(datalist);
-                }
-            }
-        }
-        if (num > 0)
-            temp_int = c_file->next_value().toInt();
-        else
-            temp_int = 0;
-        pop->Grow()->setDevPhase (temp_int);
 
         // Spawner-recruitment
         temp_int = c_file->next_value().toInt();
@@ -2619,41 +2670,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setExtra(datalist);
             }
         }
-/*        for (i = 0; i < data->num_fleets(); i++)
-        {
-            if (data->getFleet(i)->Q()->getDoEnvLink())
-            {
-                datalist.clear();
-                datalist = readParameter(c_file);
-                data->getFleet(i)->Q()->setEnvLink(datalist);
-            }
-        }
-        for (i = 0; i < data->num_fleets(); i++)
-        {
-            int tp = data->getFleet(i)->Q()->getType();
-            if (tp > 1 && tp < 6)
-            {
-                datalist = readParameter(c_file);
-                data->getFleet(i)->Q()->setBase(datalist);
-            }
-            if (tp == 3 || tp == 4)
-            {
-                temp_int = c_file->next_value().toInt();
-                if (temp_int) // read 1 parameter for each observation
-                {
-                    num = data->getFleet(i)->abundance_count();
-                    id = data->getFleet(i)->Q()->getNumParams();//temp_int;
-//                    for (i = 0; i < data->num_fleets(); i++)
-  //                      num += data->getFleet(i)->randomEffects();
-                    for (int j = 0; j < num; j++, id++)
-                    {
-                        datalist = readParameter(c_file);
-                        data->getFleet(i)->Q()->setParameter(id, datalist);
-                    }
-                }
 
-            }
-        }*/
 
         // Size selectivity setup
         for (int i = 0; i < num_fleets; i++)
@@ -2679,50 +2696,165 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_int = c_file->next_value().toInt();
             data->getFleet(i)->getAgeSelectivity()->setSpecial(temp_int);
         }
-/*        temp_int = c_file->next_value().toInt();
-        data->setSelexAdjustMethod (temp_int);
-        temp_string = c_file->read_line();
-        while (temp_string.split(' ',QString::SkipEmptyParts).at(0).startsWith('#'))
-        {
-            temp_string = c_file->read_line();
-        }*/
+        // read size selectivity parameters
         for (int i = 0; i < num_fleets; i++)
         {
- //           longParameter *lp;
-            int num_params = data->getFleet(i)->getSizeSelectivity()->getNumParameters();
+            selectivity *sizesel = data->getFleet(i)->getSizeSelectivity();
+            int num = sizesel->getNumParameters();
             //read num_params parameters
-            for (int j = 0; j < num_params; j++)
+            for (int j = 0; j < num; j++)
             {
                 datalist = readParameter (c_file);
-//                datalist.clear();
-//                for (int k = 0; k < 14; k++)
-//                    datalist.append(c_file->next_value());
-                data->getFleet(i)->getSizeSelectivity()->setParameter(j, datalist);
-/*               lp = data->getFleet(i)->getSizeSelectivity()->getParameter(j);
-               lp->fromText(temp_string);
-               temp_string = c_file->read_line();*/
+                sizesel->setParameter(j, datalist);
+                sizesel->setParameterLabel(j,
+                           QString("SizeSel_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
             }
+            // read retention and discard parameters
+            num = sizesel->getNumRetainParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = readParameter (c_file);
+                sizesel->setRetainParameter(j, datalist);
+                sizesel->setRetainParameterLabel(j,
+                           QString("Retain_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
+            num = sizesel->getNumDiscardParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = readParameter (c_file);
+                sizesel->setDiscardParameter(j, datalist);
+                sizesel->setDiscardParameterLabel(j,
+                           QString("DiscMort_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
+            // read male offset
+            num = sizesel->getNumMaleParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = readParameter (c_file);
+                sizesel->setMaleParameter(j, datalist);
+                sizesel->setMaleParameterLabel(j,
+                           QString("Male_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
+            // check special
+            num = sizesel->getSpecial();
+            if (sizesel->getPattern() == 7)
+                sizesel->setSpecial(1);
         }
-
+        // read age selectivity parameters
         for (int i = 0; i < num_fleets; i++)
         {
-//            longParameter *lp;
-            int num_params = data->getFleet(i)->getAgeSelectivity()->getNumParameters();
+            selectivity *agesel = data->getFleet(i)->getAgeSelectivity();
+            int num = agesel->getNumParameters();
             //read num_params parameters
-            for (int j = 0; j < num_params; j++)
+            for (int j = 0; j < num; j++)
             {
                 datalist = readParameter(c_file);
-//                datalist.clear();
-//                for (int k = 0; k < 14; k++)
-//                    datalist.append(c_file->next_value());
-                data->getFleet(i)->getAgeSelectivity()->setParameter(j, datalist);
-/*               lp = data->getFleet(i)->getAgeSelectivity()->getParameter(j);
-               lp->fromText(temp_string);
-               temp_string = c_file->read_line();*/
+                agesel->setParameter(j, datalist);
+                agesel->setParameterLabel(j,
+                           QString("AgeSel_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
+            // check discard
+            if (agesel->getDiscard() != 0)
+                agesel->setDiscard(0);
+            // read male offset
+            num = agesel->getNumMaleParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = readParameter (c_file);
+                agesel->setMaleParameter(j, datalist);
+                agesel->setMaleParameterLabel(j,
+                           QString("Male_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
+            // check special
+            num = agesel->getSpecial();
+            if (temp_int == 7)
+                agesel->setSpecial(1);
+        }
+
+        for (i = 0; i < data->num_fleets(); i++)
+        {
+            // size selex time varying
+            selectivity *slx = data->getFleet(i)->getSizeSelectivity();
+            num = slx->getNumParameters();
+            slx->getTimeVaryParameterModel()->setRowCount(0);
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getParameter(j);
+                temp_string = slx->getParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            num = slx->getNumRetainParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getRetainParameter(j);
+                temp_string = slx->getRetainParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            num = slx->getNumDiscardParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getDiscardParameter(j);
+                temp_string = slx->getDiscardParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            num = slx->getNumMaleParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getMaleParameter(j);
+                temp_string = slx->getMaleParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            // age selex time varying
+            slx = data->getFleet(i)->getAgeSelectivity();
+            num = slx->getNumParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getParameter(j);
+                temp_string = slx->getParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            num = slx->getNumRetainParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getRetainParameter(j);
+                temp_string = slx->getRetainParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            num = slx->getNumDiscardParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getDiscardParameter(j);
+                temp_string = slx->getDiscardParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
+            }
+            num = slx->getNumMaleParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = slx->getMaleParameter(j);
+                temp_string = slx->getMaleParameterLabel(j);
+                readSelexTimeVaryParams(c_file, data, slx->getTimeVaryParameterModel(), datalist, temp_string);
             }
         }
 
-        // Environmental Linkage
+/*        // Environmental Linkage
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
@@ -2857,7 +2989,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             data->setCustomSelParmDevPhase(temp_int);
             temp_int = c_file->next_value().toInt();
             data->setCustomSelParmDevAdjust(temp_int);
-        }
+        }*/
 
         // Tag loss and Tag reporting parameters go next
         temp_int = c_file->next_value().toInt();
@@ -2971,7 +3103,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         c_file->close();
     }
     else
+    {
         c_file->error(QString("Control file is unreadable."));
+    }
     return 1;
 }
 
@@ -3135,15 +3269,28 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             temp_int = blk->getNumBlocks();
             for (int j = 0; j < temp_int; j++)
                 line.append(blk->getBlockText(j));
-            line.append(QString(" #" ));
+            line.append(QString(" #"));
             chars += c_file->writeline(line);
         }
-        chars += c_file->writeline("#" );
+        chars += c_file->writeline("#");
 
-/*        temp_float = pop->get_frac_female();
-        line = QString(QString("%1 #_fracfemale " ).arg (temp_float));
-        chars += c_file->writeline(line);*/
+        // time-vary controls
+        line = QString("# controls for all timevary parameters ");
+        chars += c_file->writeline(line);
+        temp_int = pop->Grow()->getTimeVaryMethod();
+        line = QString(QString("%1 #_env/block/dev_adjust_method for all time-vary parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)").arg (
+                           QString::number(temp_int)));
+        chars += c_file->writeline(line);
+        temp_int = pop->Grow()->getTimeVaryReadParams();
+        line = QString(QString("%1 # timevarying parameter autogenerate (0) or read (1)").arg (
+                           QString::number(temp_int)));
+        chars += c_file->writeline(line);
+        chars += c_file->writeline("#");
+        line = QString("# setup for M, growth, maturity, fecundity, recruitment distibution, movement ");
+        chars += c_file->writeline(line);
+        chars += c_file->writeline("#");
 
+        // natM and growth
         temp_int = pop->Grow()->getNatural_mortality_type();
         line = QString(QString("%1 #_natM_type:_0=1Parm; 1=N_breakpoints;_2=Lorenzen;_3=agespecific;_4=agespec_withseasinterpolate" ).arg(
                            temp_int));
@@ -3287,16 +3434,16 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("%1 #_parameter_offset_approach (1=none, 2= M, G, CV_G as offset from female-GP1, 3=like SS2 V1.x)" ).arg(
                            temp_int));
         chars += c_file->writeline (line);
-        temp_int = pop->Grow()->getAdjustment_method();
-        line = QString(QString("%1 #_env/block/dev_adjust_method for all time-vary parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)" ).arg(
-                           temp_int));
-        chars += c_file->writeline (line);
+//        temp_int = pop->Grow()->getAdjustment_method();
+//        line = QString(QString("%1 #_env/block/dev_adjust_method for all time-vary parms (1=standard; 2=logistic transform keeps in base parm bounds; 3=standard w/ no bound check)" ).arg(
+//                           temp_int));
+//        chars += c_file->writeline (line);
         chars += c_file->writeline("#");
 
         // growth parameters
         line = QString("#_growth_parms" );
         chars += c_file->writeline(line);
-        line = QString("#_LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dev_minyr dev_maxyr dev_stddev Block Block_Fxn" );
+        line = QString("#_LO HI INIT PRIOR PR_type SD PHASE env_var&link dev_link dev_minyr dev_maxyr dev_phase Block Block_Fxn" );
         chars += c_file->writeline(line);
         num = pop->Grow()->getNum_patterns();
         for (i = 0; i < num; i++)
@@ -3429,7 +3576,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                         str_list = pop->Grow()->getMaturityParam(k);
                         for (int l = 0; l < str_list.count(); l++)
                             line.append(QString(" %1").arg(str_list.at(l)));
-                        line.append(QString(" # %1" ).arg (parstr));
+                        line.append(QString(" # %1").arg (parstr));
                         chars += c_file->writeline (line);
                     }
 /*
@@ -3457,7 +3604,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 str_list = pop->Fec()->getHermParam(i); // hermaph_inflect, sd, asymptotic
                 for (int l = 0; l < str_list.count(); l++)
                     line.append(QString(" %1").arg(str_list.at(l)));
-                line.append(QString(" # Hermaph_p_%1" ).arg(QString::number(i + 1)));
+                line.append(QString(" # Hermaph_p_%1").arg(QString::number(i + 1)));
                 chars += c_file->writeline (line);
             }
         }
@@ -3528,7 +3675,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         str_list = pop->Grow()->getCohortParam();
         for (int l = 0; l < str_list.count(); l++)
             line.append(QString(" %1").arg(str_list.at(l)));
-        line.append(QString(" # CohortGrowDev" ));
+        line.append(QString(" # CohortGrowDev"));
         chars += c_file->writeline (line);
 
         // movement parameters
@@ -3545,13 +3692,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             str_list = pop->Move()->getParameter(par);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l))); ;
-            line.append(QString(" # %1" ).arg(pop->Move()->getMovementParams()->getRowHeader(par)));
+            line.append(QString(" # %1").arg(pop->Move()->getMovementParams()->getRowHeader(par)));
             chars += c_file->writeline (line);
             line.clear();
             str_list = pop->Move()->getParameter(par + 1);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" # %1" ).arg(pop->Move()->getMovementParams()->getRowHeader(par+1)));
+            line.append(QString(" # %1").arg(pop->Move()->getMovementParams()->getRowHeader(par+1)));
             chars += c_file->writeline (line);
         }
 
@@ -3579,7 +3726,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 str_list = data->get_age_composition()->getErrorParam(i);
                 for (int l = 0; l < str_list.count(); l++)
                     line.append(QString(" %1").arg(str_list.at(l)));
-                line.append(QString(" # AgeKeyParm%1" ).arg(QString::number(i+1)));
+                line.append(QString(" # AgeKeyParm%1").arg(QString::number(i+1)));
                 chars += c_file->writeline (line);
             }
         }
@@ -3596,73 +3743,35 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             chars += c_file->writeline (line);
         }
 
-        chars += c_file->writeline ("#" );
-        temp_int = pop->Grow()->getCustomEnvLink();
-        line = QString ("# custom_MG-env_setup (0/1)" );
-        if (temp_int == -1)
-        {
-            line.prepend("#_Cond 0 ");
-            chars += c_file->writeline (line);
-            line = QString("#_Cond -2 2 0 0 -1 99 -2 #_placeholder when no MG-environ parameters" );
-            chars += c_file->writeline (line);
-        }
-        else if (temp_int == 0)
-        {
-            line.prepend("0 ");
-            chars += c_file->writeline (line);
-        }
-        else if (temp_int == 1)
-        {
-            line.prepend("1 ");
-            chars += c_file->writeline (line);
-        }
-        num = pop->Grow()->getNumEnvLinkParams();
-        for (i = 0; i < num; i++)
-        {
-            str_list = pop->Grow()->getEnvironParam(i);
-            for (int l = 0; l < str_list.count(); l++)
-                line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(QString(" " ).arg(QString::number(i)));
-            chars += c_file->writeline (line);
-        }
-
-        chars += c_file->writeline ("#" );
-        temp_int = pop->Grow()->getCustomBlock();
-        line = QString ("# custom_MG-blocktrend_setup (0/1)" );
-        if (temp_int == -1)
-        {
-            line.prepend("#_Cond 0 ");
-            chars += c_file->writeline (line);
-        }
-        else if (temp_int == 0)
-        {
-            line.prepend("0 ");
-            chars += c_file->writeline (line);
-        }
-        else if (temp_int == 1)
-        {
-            line.prepend("1 ");
-            chars += c_file->writeline (line);
-        }
-        line = QString("#_LO HI INIT PRIOR PR_type SD PHASE" );
+        // time varying MG parameters
+        chars += c_file->writeline ("#");
+        line = QString ("# timevary MG parameters ");
         chars += c_file->writeline (line);
-        if (temp_int == -1)
+        line = QString("#_LO HI INIT PRIOR PR_type SD PHASE");
+        chars += c_file->writeline (line);
+        temp_int = 0;
+        for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
-            line = QString("#_Cond -2 2 0 0 -1 99 -2 #_placeholder when no MG-block or trend parameters" );
-            chars += c_file->writeline (line);
-        }
-        else
-        {
-            num = pop->Grow()->getNumBlockParams();
-            for (i = 0; i < num; i++)
+            growthPattern * gp = pop->Grow()->getPattern(i);
+            num = gp->getNumTimeVaryParams();
+            for (int j = 0; j < num; j++)
             {
-                str_list = pop->Grow()->getBlockParam(i);
+                line.clear();
+                str_list = gp->getTimeVaryParam(j);
                 for (int l = 0; l < str_list.count(); l++)
-                    line.append(QString(" %1").arg(str_list.at(l)));
-                line.append(QString(" " ).arg(QString::number(i)));
+                    line.append(QString(" %1").arg(str_list.at(l))); ;
+                line.append(QString(" # %1" ).arg(gp->getTimeVaryParamHeader(j)));
                 chars += c_file->writeline (line);
             }
+            temp_int += num;
         }
+        if (temp_int == 0)
+        {
+            line = QString("#_Cond -2 2 0 0 -1 99 -2 #_placeholder when no time-vary parameters");
+            chars += c_file->writeline (line);
+        }
+        line = QString ("# info on dev vectors created for MGparms are reported with other devs after tag parameter section ");
+        chars += c_file->writeline (line);
         chars += c_file->writeline ("#" );
 
         line = QString("#_seasonal_effects_on_biology_parms" );
@@ -3701,8 +3810,9 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline (line);
             }
         }
+        chars += c_file->writeline ("#");
 
-        // deviation error params
+/*        // deviation error params
         chars += c_file->writeline("#");
         line = QString("# standard error parameters for MG devs" );
         chars += c_file->writeline(line);
@@ -3732,7 +3842,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             line = QString(QString("#_Cond -4 #_MGparm_Dev_Phase" ));
             chars += c_file->writeline(line);
         }
-        chars += c_file->writeline("#");
+        chars += c_file->writeline("#");*/
 
         // Spawner-recruitment
         line = QString("#_Spawner-Recruitment");
@@ -3746,7 +3856,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
         line = QString(QString ("%1 # SR_LN(R0)" ).arg(pop->SR()->full_parameters->getRowText(0)));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 # SR_BH_flat_steep" ).arg(pop->SR()->full_parameters->getRowText(1)));
+        line = QString(QString ("%1 # SR_BH_steep" ).arg(pop->SR()->full_parameters->getRowText(1)));
         chars += c_file->writeline(line);
         if (pop->SR()->method == 5 ||
                 pop->SR()->method == 7 ||
@@ -3757,7 +3867,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         line = QString(QString ("%1 # SR_sigmaR" ).arg(pop->SR()->full_parameters->getRowText(2)));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 # SR_nullparm" ).arg(pop->SR()->full_parameters->getRowText(3)));
+        line = QString(QString ("%1 # SR_notused" ).arg(pop->SR()->full_parameters->getRowText(3)));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # SR_R1_offset" ).arg(pop->SR()->full_parameters->getRowText(4)));
         chars += c_file->writeline(line);
@@ -4059,41 +4169,67 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);*/
         line = QString ("#");
         chars += c_file->writeline(line);
-        line = QString ("#_LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dev_minyr dev_maxyr dev_stddev Block Block_Fxn");
+        line = QString ("#_LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dev_minyr dev_maxyr dev_stddev Block Block_Fxn # parm_name");
         chars += c_file->writeline(line);
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            for (int j = 0; j < data->getFleet(i)->getSizeSelectivity()->getNumParameters(); j++)
+            selectivity *slx = data->getFleet(i)->getSizeSelectivity();
+            for (int j = 0; j < slx->getNumParameters(); j++)
             {
-                line = QString(QString("%1 # SizeSel_P%3_%4(%2)").arg (
-                                   data->getFleet(i)->getSizeSelectivity()->getParameterText(j),
-                                   QString::number(i+1),
-                                   QString::number(j+1),
-                                   data->getFleet(i)->getName()));
+                line = QString(QString("%1 # %2").arg (
+                                   slx->getParameterText(j),
+                                   slx->getParameterLabel(j)));
+                chars += c_file->writeline(line);
+            }
+            for (int j = 0; j < slx->getNumRetainParameters(); j++)
+            {
+                line = QString(QString("%1 # %2").arg (
+                                   slx->getRetainParameterText(j),
+                                   slx->getRetainParameterLabel(j)));
+                chars += c_file->writeline(line);
+            }
+            for (int j = 0; j < slx->getNumDiscardParameters(); j++)
+            {
+                line = QString(QString("%1 # %2").arg (
+                                   slx->getDiscardParameterText(j),
+                                   slx->getDiscardParameterLabel(j)));
+                chars += c_file->writeline(line);
+            }
+            for (int j = 0; j < slx->getNumMaleParameters(); j++)
+            {
+                line = QString(QString("%1 # %2").arg (
+                                   slx->getMaleParameterText(j),
+                                   slx->getMaleParameterLabel(j)));
                 chars += c_file->writeline(line);
             }
         }
 
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            for (int j = 0; j < data->getFleet(i)->getAgeSelectivity()->getNumParameters(); j++)
+            selectivity *slx = data->getFleet(i)->getAgeSelectivity();
+            for (int j = 0; j < slx->getNumParameters(); j++)
             {
-                line = QString(QString("%1 # AgeSel_P%3_%4(%2)").arg (
-                                   data->getFleet(i)->getAgeSelectivity()->getParameterText(j),
-                                   QString::number(i+1),
-                                   QString::number(j+1),
-                                   data->getFleet(i)->getName()));
+                line = QString(QString("%1 # %2").arg (
+                                   slx->getParameterText(j),
+                                   slx->getParameterLabel(j)));
+                chars += c_file->writeline(line);
+            }
+            for (int j = 0; j < slx->getNumMaleParameters(); j++)
+            {
+                line = QString(QString("%1 # %2").arg (
+                                   slx->getMaleParameterText(j),
+                                   slx->getMaleParameterLabel(j)));
                 chars += c_file->writeline(line);
             }
         }
 
         // Environmental Linkage
-        line = QString (" #_custom_sel-env_setup (0/1) " );
+/*        line = QString (" #_custom_sel-env_setup (0/1) " );
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumEnvLink();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumEnvLink();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumDiscardParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumDiscardParameters();
         }
         if (num_vals > 0)
         {
@@ -4110,7 +4246,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->envLink(j) > 0)
                     {
                         line = QString(QString("%1 # SizeSel_P%2_%3(%4)_env_fxn").arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getEnvLinkParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getDiscardParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
@@ -4124,7 +4260,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->envLink(j) > 0)
                     {
                         line = QString(QString("%1 # AgeSel_P%2_%3(%4)_env_fxn" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getEnvLinkParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getDiscardParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
@@ -4147,8 +4283,8 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumUseBlock();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumUseBlock();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumMaleParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumMaleParameters();
         }
         if (num_vals > 0)
         {
@@ -4166,7 +4302,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useBlock(j) > 0)
                     {
                     line = QString(QString("%1 # SizeSel_P%2_%3(%4)_blk_setup" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getBlockParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getMaleParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
@@ -4180,7 +4316,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useBlock(j) > 0)
                     {
                     line = QString(QString("%1 # AgeSel_P%2_%3(%4)_blk_setup" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getBlockParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getMaleParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
@@ -4195,20 +4331,20 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             chars += c_file->writeline(line);
             line = QString("#_Cond -2 2 0 0 -1 99 -2 #_placeholder when no block usage" );
             chars += c_file->writeline(line);
-        }
+        }*/
 
         // Selex parm trends
 //        line = QString ("#_Cond No selex parm trends " );
 //        chars += c_file->writeline(line);
 
         // Parameter Deviations
-        line = QString ("#_Cond -4 # placeholder for selparm_Dev_Phase" );
+/*        line = QString ("#_Cond -4 # placeholder for selparm_Dev_Phase" );
         chars += c_file->writeline(line);
         num_vals = 0;
         for (int i = 0; i < data->num_fleets(); i++)
         {
-            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumUseDev();
-            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumUseDev();
+            num_vals += data->getFleet(i)->getSizeSelectivity()->getNumSpecialParameters();
+            num_vals += data->getFleet(i)->getAgeSelectivity()->getNumSpecialParameters();
         }
         if (num_vals > 0)
         {
@@ -4223,13 +4359,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useDev(j) > 0)
                     {
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_dev_se" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getDevErrParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getSpecialParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     line = QString(QString(" %1 # SizeSel_P%2_%3(%4)_dev_rho" ).arg (
-                                       data->getFleet(i)->getSizeSelectivity()->getDevRhoParameter(j),
+                                       data->getFleet(i)->getSizeSelectivity()->getRetainParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
@@ -4243,13 +4379,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useDev(j) > 0)
                     {
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_dev_se" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getDevErrParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getSpecialParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
                     chars += c_file->writeline(line);
                     line = QString(QString(" %1 # AgeSel_P%2_%3(%4)_dev_rho" ).arg (
-                                       data->getFleet(i)->getAgeSelectivity()->getDevRhoParameter(j),
+                                       data->getFleet(i)->getAgeSelectivity()->getRetainParameterText(j),
                                        QString::number(j+1),
                                        data->getFleet(i)->getName(),
                                        QString::number(i+1)));
@@ -4257,7 +4393,39 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     }
                 }
             }
+        }*/
+
+        line = QString(QString("# timevary selex parameters"));
+        chars += c_file->writeline(line);
+        line = QString(QString("#_      LO        HI      INIT     PRIOR   PR_type        SD   PHASE"));
+        chars += c_file->writeline(line);
+        for (i = 0; i < data->num_fleets(); i++)
+        { // size selectivity
+            selectivity *slx = data->getFleet(i)->getSizeSelectivity();
+            num = slx->getNumTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                line.clear();
+                line.append(QString("%1 # %2").arg(slx->getTimeVaryParameterText(j),
+                                                 slx->getTimeVaryParameterLabel(j)));
+                chars += c_file->writeline(line);
+            }
         }
+        for (i = 0; i < data->num_fleets(); i++)
+        { // age selectivity
+            selectivity *slx = data->getFleet(i)->getAgeSelectivity();
+            num = slx->getNumTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                line.clear();
+                line.append(QString("%1 # %2").arg(slx->getTimeVaryParameterText(j),
+                                                 slx->getTimeVaryParameterLabel(j)));
+                chars += c_file->writeline(line);
+            }
+        }
+
+        line = QString(QString("# info on dev vectors created for selex parms are reported with other devs after tag parameter section "));
+        chars += c_file->writeline(line);
         chars += c_file->writeline("#");
 
         // Tag Recapture Parameters
@@ -4544,3 +4712,112 @@ int write33_profileFile (ss_file *pf_file, ss_model *data)
 
     return code;
 }
+
+void readGrowthTimeVaryParams (ss_file *infile, ss_model *data, int gpat, QStringList parmlist, QString header)
+{
+    int blk = parmlist.at(12).toInt();
+    growthPattern *gp = data->getPopulation()->Grow()->getPattern(gpat);
+    QStringList p_list;
+    int index = gp->getNumTimeVaryParams();
+
+    if (blk != 0)
+    {
+        // read parameters for block or trend
+        if (blk > 0)
+        {
+            int n_blks = data->getBlockPattern(blk-1)->getNumBlocks();
+            for (int i = 0; i < n_blks; i++)
+            {
+                int yr = data->getBlockPattern(blk-1)->getBlockBegin(i);
+                p_list = readShortParameter (infile);
+                gp->setTimeVaryParam(index, p_list);
+                gp->setTimeVaryParamHeader(index++, QString("%1_BLK%2add_%3").arg(
+                                        header, QString::number(blk), QString::number(yr)));
+            }
+        }
+        else
+        {
+            // read trend parameters
+            p_list = readShortParameter (infile);
+            gp->setTimeVaryParam(index, p_list);
+            gp->setTimeVaryParamHeader(index++, QString("%1_TrendFinal_frac_").arg(header));
+            p_list = readShortParameter (infile);
+            gp->setTimeVaryParam(index, p_list);
+            gp->setTimeVaryParamHeader(index++, QString("%1_TrendInfl_frac_").arg(header));
+            p_list = readShortParameter (infile);
+            gp->setTimeVaryParam(index, p_list);
+            gp->setTimeVaryParamHeader(index++, QString("%1_TrendWidth_yr_").arg(header));
+        }
+    }
+    if (parmlist.at(8).toInt() != 0)
+    {
+        // read parameters for dev
+        p_list = readShortParameter (infile);
+        gp->setTimeVaryParam(index, p_list);
+        gp->setTimeVaryParamHeader(index++, QString("%1_dev_se").arg(header));
+        p_list = readShortParameter (infile);
+        gp->setTimeVaryParam(index, p_list);
+        gp->setTimeVaryParamHeader(index++, QString("%1_dev_autocorr").arg(header));
+    }
+    if (parmlist.at(7).toInt() != 0)
+    {
+        // read parameter for env
+        p_list = readShortParameter (infile);
+        gp->setTimeVaryParam(index, p_list);
+        gp->setTimeVaryParamHeader(index, QString("%1_ENV_add").arg(header));
+    }
+}
+
+void readSelexTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *table, QStringList parmlist, QString header)
+{
+    int blk = parmlist.at(12).toInt();
+    QStringList p_list;
+    int index = table->rowCount();
+
+    // read parameters for block or trend
+    if (blk > 0)
+    {
+        int n_blks = data->getBlockPattern(blk-1)->getNumBlocks();
+        for (int i = 0; i < n_blks; i++)
+        {
+            int yr = data->getBlockPattern(blk-1)->getBlockBegin(i);
+            p_list = readShortParameter (infile);
+            table->setRowData(index, p_list);
+            table->setRowHeader(index++, QString("%1_BLK%2add_%3").arg(
+                                    header, QString::number(blk), QString::number(yr)));
+        }
+    }
+    else if (blk < 0)
+    {
+        // read trend parameters
+        p_list = readShortParameter (infile);
+        table->setRowData(index, p_list);
+        table->setRowHeader(index++, QString("%1_TrendFinal_frac_").arg(header));
+        p_list = readShortParameter (infile);
+        table->setRowData(index, p_list);
+        table->setRowHeader(index++, QString("%1_TrendInfl_frac_").arg(header));
+        p_list = readShortParameter (infile);
+        table->setRowData(index, p_list);
+        table->setRowHeader(index++, QString("%1_TreandWidth_yr_").arg(header));
+    }
+
+    if (parmlist.at(7).toInt() != 0)
+    {
+        // read parameter for env
+        p_list = readShortParameter (infile);
+        table->setRowData(index, p_list);
+        table->setRowHeader(index++, QString("%1_ENV_add").arg(header));
+    }
+
+    if (parmlist.at(8).toInt() != 0)
+    {
+        // read parameters for dev
+        p_list = readShortParameter (infile);
+        table->setRowData(index, p_list);
+        table->setRowHeader(index++, QString("%1_dev_se").arg(header));
+        p_list = readShortParameter (infile);
+        table->setRowData(index, p_list);
+        table->setRowHeader(index++, QString("%1_dev_autocorr").arg(header));
+    }
+}
+
