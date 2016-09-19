@@ -187,7 +187,7 @@ void ss_growth::setNum_morphs(int value)
     if (value <= 1)
         value = 1;
     else if (value <= 3)
-        value = 1;
+        value = 3;
     else
         value = 5;
     num_morphs = value;

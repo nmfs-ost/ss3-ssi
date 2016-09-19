@@ -686,7 +686,6 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->next_value("prior likelihood");
         temp_int = token.toInt();
         model_info->set_prior_likelihood (temp_int);
-    //    ui->checkBox_prior_likelihood->setChecked(temp_int);
         token = starterFile->next_value("soft bounds");
         temp_int = token.toInt();
         model_info->set_use_softbounds(temp_int);
@@ -704,13 +703,13 @@ bool file_widget::read_starter_file (QString filename)
         model_info->set_mc_thin(temp_int);
         token = starterFile->next_value("jitter value");
         model_info->set_jitter_param(token.toDouble());
-        token = starterFile->next_value("min year for sd reports");
+        token = starterFile->next_value("sd report begin year");
         temp_int = token.toInt();
         model_info->set_bio_sd_min_year(temp_int);
-        token = starterFile->next_value("max year for sd reports");
+        token = starterFile->next_value("sd report end year");
         temp_int = token.toInt();
         model_info->set_bio_sd_max_year(temp_int);
-        token = starterFile->next_value("N individual sd years");
+        token = starterFile->next_value("extra sd report years");
         temp_int = token.toInt();
         model_info->set_num_std_years(temp_int);
         for (int i = 0; i < model_info->num_std_years(); i++) // vector of year values
@@ -719,14 +718,14 @@ bool file_widget::read_starter_file (QString filename)
             model_info->set_std_year(i, token);
         }
         starterFile->skip_line();
-    //    token = starter->next_value("blank");
+
         token = starterFile->next_value("convergence criteria");
         temp_int = token.toInt();
         model_info->set_convergence_criteria(token.toDouble());
         token = starterFile->next_value("retrospective year");
         temp_int = token.toInt();
         model_info->set_retrospect_year(temp_int);
-        token = starterFile->next_value("biomass min age for calc");
+        token = starterFile->next_value("summary biomass min age");
         temp_int = token.toInt();
         model_info->set_biomass_min_age(temp_int);
         token = starterFile->next_value("depletion basis");
@@ -737,7 +736,7 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->next_value("SPR report basis");
         temp_int = token.toInt();
         model_info->set_spr_basis(temp_int);
-        token = starterFile->next_value("F report units");
+        token = starterFile->next_value("F std report");
         temp_int = token.toInt();
         model_info->set_f_units(temp_int);
         // min and max age over which average F will be calculated with F_reporting=4
@@ -750,7 +749,7 @@ bool file_widget::read_starter_file (QString filename)
             temp_int = token.toInt();
             model_info->set_f_max_age(temp_int);
         }
-        token = starterFile->next_value("F std basis");
+        token = starterFile->next_value("F std report basis");
         temp_int = token.toInt();
         model_info->set_f_basis(temp_int);
 
@@ -770,7 +769,6 @@ bool file_widget::read_starter_file (QString filename)
             temp_float = get_version_number(token);
             datafile_version = temp_float;
         }
-        //datafile_version += 0.00000001;
         ui->doubleSpinBox_version->setValue(datafile_version);
 
         starterFile->close();
@@ -779,6 +777,7 @@ bool file_widget::read_starter_file (QString filename)
     else
     {
         error_unreadable(starter_file());
+        okay = false;
     }
     return okay;
 }
@@ -868,10 +867,6 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->writeline (line);
         line = QString("#vector of year values " );
         line.append(model_info->get_std_years_text());
-/*        for (int i = 0; i < model_info->num_std_years(); i++)
-        {
-            line.append(QString("%1 ").arg(QString::number(model_info->std_year(i))));
-        }*/
         line.append('\n');
         chars += starterFile->writeline (line);
         line = QString (QString ("%1 # final convergence criteria (e.g. 1.0e-04) " ).arg
@@ -897,13 +892,14 @@ void file_widget::write_starter_file (QString filename)
                         (QString::number(temp_int)));
         chars += starterFile->writeline (line);
         line.clear();
-        if (temp_int < 4)
-        {
-            line = QString ("#COND");
-        }
-        line.append(QString(" %1 %2 #_min and max age over which average F will be calculated with F_reporting=4" ).arg
+        line.append(QString(" %1 %2 #_min and max age over which average F will be calculated" ).arg
                     (QString::number(model_info->f_min_age()),
                      QString::number(model_info->f_max_age())));
+        if (temp_int < 4)
+        {
+            line.prepend(QString ("#COND"));
+            line.append(QString(" with F_reporting=4"));
+        }
         chars += starterFile->writeline (line);
         line = QString (QString ("%1 # F_std_basis: 0=raw_F_report; 1=F/Fspr; 2=F/Fmsy ; 3=F/Fbtgt" ).arg
                         (QString::number(model_info->f_basis())));

@@ -313,6 +313,15 @@ void MainWindow::printFiles()
     files->print_files ();
 }
 
+QString MainWindow::getDataFile()
+{
+    return files->getDataFileName();
+}
+QString MainWindow::getControlFile()
+{
+    return files->getControlFileName();
+}
+
 void MainWindow::mainTabChanged(int tab)
 {
     switch(tab)

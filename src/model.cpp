@@ -2,6 +2,7 @@
 #include "tablemodel.h"
 #include "tableview.h"
 #include "composition.h"
+#include "mainwindow.h"
 
 #include <QMessageBox>
 
@@ -1009,6 +1010,18 @@ int ss_model::getCustomSelParmDevAdjust() const
 void ss_model::setCustomSelParmDevAdjust(int value)
 {
     customSelParmDevAdjust = value;
+}
+
+QString ss_model::getDataFileName()
+{
+    MainWindow *mw = (MainWindow *)parent();
+    return mw->getDataFile();
+}
+
+QString ss_model::getControlFileName()
+{
+    MainWindow *mw = (MainWindow *)parent();
+    return mw->getControlFile();
 }
 
 int ss_model::getSelexAdjustMethod() const

@@ -60,6 +60,9 @@ public slots:
     void readFiles ();
     void saveFiles ();
     void printFiles();
+    QString getDataFile();
+    QString getControlFile();
+
     void helpGUI();
     void helpSS();
     void helpNFT();

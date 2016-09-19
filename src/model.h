@@ -325,6 +325,9 @@ public slots:
     int getCustomSelParmDevAdjust() const;
     void setCustomSelParmDevAdjust(int value);
 
+    QString getDataFileName ();
+    QString getControlFileName ();
+
 signals:
     void data_file_changed (QString fname);
     void control_file_changed (QString fname);

@@ -90,7 +90,8 @@ public slots:
     QString param_file ();
     QString profile_file ();
     QString run_num_file ();
-
+    QString getDataFileName () {return data_file_name;}
+    QString getControlFileName () {return control_file_name;}
     ss_model *this_model() {return model_info;}
 
     void setVersion(double ver, bool flag = true);
