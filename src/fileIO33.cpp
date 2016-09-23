@@ -1683,7 +1683,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 /*        value = QString::number(fcast->forecast_loop_ctl4());
         line = QString(QString("%1 #_Forecast loop control #4 (reserved for future bells&whistles) " ).arg(value));
         chars += f_file->writeline(line);*/
-        chars += f_file->write_val(fcast->forecast_loop_ctl5(), 5, QString("Forecast loop control #4 (reserved for future bells&whistles) "));
+        chars += f_file->write_val(fcast->forecast_loop_ctl5(), 5, QString("Forecast loop control #5 (reserved for future bells&whistles) "));
 /*        value = QString::number(fcast->forecast_loop_ctl5());
         line = QString(QString("%1 #_Forecast loop control #5 (reserved for future bells&whistles) " ).arg(value));
         chars += f_file->writeline(line);*/
