@@ -158,7 +158,6 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 if (year != -9999)
                     data->getFleet(fleet)->setDiscardMonth(year, month, obs, err);
             } while (year != -9999);
-
         }
 
         // mean body weight
@@ -358,7 +357,6 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             } while (str_lst.at(0).toInt() != -9999);
         }
 
-
         // environment variables
         temp_int = d_file->next_value().toInt();
         data->set_num_environ_vars (temp_int);
@@ -531,9 +529,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
 int write33_dataFile(ss_file *d_file, ss_model *data)
 {
-    bool read_seasons = false;
     QString temp_str, line, index_str = QString("month");
-    QStringList str_lst;
+    QStringList str_lst, tmp_lst;
     int i, j, chars = 0;
     int num_years = 1 + data->end_year() - data->start_year();
     int start_yr = data->start_year();
@@ -605,7 +602,15 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         for (i = 1; i <= total_fleets; i++)
         {
             flt = data->getActiveFleet(i);
-            line.clear();
+            str_lst.clear();
+            str_lst.append(QString::number(flt->getTypeInt()));
+            str_lst.append(QString::number(flt->getSeasTiming()));
+            str_lst.append(QString::number(flt->getArea()));
+            str_lst.append(QString::number(flt->getCatchUnits()));
+            str_lst.append(QString::number(flt->getCatchMultiplier()));
+            str_lst.append(flt->getName());
+            chars += d_file->write_vector(str_lst, 5, QString::number(i));
+/*            line.clear();
             line.append(QString(" %1").arg(QString::number(flt->getTypeInt())));
             line.append(QString(" %1").arg(QString::number(flt->getSeasTiming())));
             line.append(QString(" %1").arg(QString::number(flt->getArea())));
@@ -616,7 +621,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.append(QString(" %1").arg(flt->getName()));
 
             line.append(QString("  # %1" ).arg(QString::number(i)));
-            chars += d_file->writeline (line);
+            chars += d_file->writeline (line);*/
         }
 
 
@@ -636,34 +641,35 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                     if (str_lst.at(0).isEmpty())
                         break;
                     str_lst.insert(2, QString::number(i));
-                    line.clear();
+                    chars += d_file->write_vector(str_lst, 5);
+/*                    line.clear();
                     for (int k = 0; k < str_lst.count(); k++)
                     {
                         line.append(QString("%1 ").arg (str_lst.at(k)));
                     }
                     line.chop(1);
 
-                    chars += d_file->writeline (line);
+                    chars += d_file->writeline (line);*/
                 }
             }
         }
         line = QString("-9999 0 0 0 0" );
         chars += d_file->writeline (line);
-        chars += d_file->writeline ("#" );
+        chars += d_file->writeline ("#");
 
         // CPUE Abundance
-        line = QString (" #_CPUE_and_surveyabundance_observations" );
+        line = QString (" #_CPUE_and_surveyabundance_observations");
         chars += d_file->writeline(line);
         line = QString ("#_Units:  0=numbers; 1=biomass; 2=F; >=30 for special types" );
         chars += d_file->writeline(line);
-        line = QString ("#_Errtype:  -1=normal; 0=lognormal; >0=T" );
+        line = QString ("#_Errtype:  -1=normal; 0=lognormal; >0=T");
         chars += d_file->writeline(line);
         line = QString ("#_Fleet Units Errtype" );
         chars += d_file->writeline(line);
         for (i = 1; i <= total_fleets; i++)
         {
             flt = data->getActiveFleet(i);
-            line = QString(QString("%1 %2 %3 # %4" ).arg (
+            line = QString(QString("%1 %2 %3 # %4").arg (
                    QString::number(i),
                    QString::number(flt->getAbundUnits()),
                    QString::number(flt->getAbundErrType()),
@@ -671,7 +677,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
         }
 
-        line = QString("#_yr month fleet obs stderr" );
+        line = QString("#_yr month fleet obs stderr");
         chars += d_file->writeline (line);
         for (i = 1; i <= total_fleets; i++)//data->num_fisheries();i < data->num_fleets(); i++)
         {
@@ -1538,7 +1544,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
     int temp_int, num, i, chars = 0;
     int yr, j;
     QString value, line, temp_string;
-    QStringList str_lst;
+    QStringList str_lst, tmp_lst;
     ss_forecast *fcast = data->forecast;
 
 
@@ -1550,131 +1556,172 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("# for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr" );
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->benchmarks());
+        chars += f_file->write_val(fcast->benchmarks(), 5,
+                                   QString("Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy "));
+/*        value = QString::number(fcast->benchmarks());
         line = QString(QString ("%1 # Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy " ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->MSY());
+        chars += f_file->write_val(fcast->MSY(), 5,
+                                   QString("MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt); 4=set to F(endyr) "));
+/*        value = QString::number(fcast->MSY());
         line = QString(QString ("%1 # MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt); 4=set to F(endyr) " ).arg (value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->spr_target());
+        chars += f_file->write_val(fcast->spr_target(), 5, QString("SPR target (e.g. 0.40)"));
+/*        value = QString::number(fcast->spr_target());
         line = QString(QString("%1 # SPR target (e.g. 0.40)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->biomass_target());
+        chars += f_file->write_val(fcast->biomass_target(), 5, QString("Biomass target (e.g. 0.40)"));
+/*        value = QString::number(fcast->biomass_target());
         line = QString(QString("%1 # Biomass target (e.g. 0.40)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
         line = QString("#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recruits, end_recruits");
-        temp_string = QString ("# ");
+//        temp_string = QString ("# ");
         line.append(QString(" (enter actual year, or values of 0 or -integer to be rel. endyr)" ));
         chars += f_file->writeline(line);
+        tmp_lst.append(QString("#"));
         line.clear();
         for (i = 0; i < 8; i++)
         {
             value = QString::number(fcast->benchmark_year(i));
-            line.append(QString(QString(" %1").arg(value)));
+            str_lst.append(value);
+//            line.append(QString(QString(" %1").arg(value)));
             if (fcast->benchmark_year(i) <= 0)
-                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->benchmark_year(i))));
+                tmp_lst.append(QString::number(data->end_year() + fcast->benchmark_year(i)));
+//                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->benchmark_year(i))));
             else
-                temp_string.append(QString(" %1").arg(value));
+                tmp_lst.append(value);
+//                temp_string.append(QString(" %1").arg(value));
         }
-        chars += f_file->writeline(line);
+        chars += f_file->write_vector(str_lst, 4);
+        chars += f_file->write_vector(tmp_lst, 2, QString("after processing"));
+/*        chars += f_file->writeline(line);
         temp_string.append(" # after processing " );
-        chars += f_file->writeline(temp_string.toUtf8());
+        chars += f_file->writeline(temp_string.toUtf8());*/
 
-        value = QString::number(fcast->benchmark_rel_f());
+        chars += f_file->write_val(fcast->benchmark_rel_f(), 5,
+                                   QString("Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below"));
+/*        value = QString::number(fcast->benchmark_rel_f());
         line = QString(QString("%1 #_Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
         chars += f_file->writeline("#" );
 
-        value = QString::number(fcast->forecast());
+        chars += f_file->write_val(fcast->forecast(), 5, QString("Forecast: 0=none; 1=F(SPR); 2=F(MSY) 3=F(Btgt); 4=Ave F (uses first-last relF yrs); 5=input annual F scalar"));
+/*        value = QString::number(fcast->forecast());
         line = QString(QString("%1 # Forecast: 0=none; 1=F(SPR); 2=F(MSY) 3=F(Btgt); 4=Ave F (uses first-last relF yrs); 5=input annual F scalar" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->num_forecast_years());
+        chars += f_file->write_val(fcast->num_forecast_years(), 5, QString("N forecast years "));
+/*        value = QString::number(fcast->num_forecast_years());
         line = QString(QString("%1 # N forecast years " ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->f_scalar());
+        chars += f_file->write_val(fcast->f_scalar(), 5, QString("F scalar (only used for Do_Forecast==5)"));
+/*        value = QString::number(fcast->f_scalar());
         line = QString(QString("%1 # F scalar (only used for Do_Forecast==5)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
         line = QString("#_Fcast_years:  beg_selex, end_selex, beg_relF, end_relF, beg_recruits, end_recruits  (enter actual year, or values of 0 or -integer to be rel. endyr)" );
         chars += f_file->writeline(line);
+        tmp_lst.clear();
+        str_lst.clear();
         line.clear();
-        temp_string = QString("# ");
+        tmp_lst.append(QString("#"));
+//        temp_string = QString("# ");
         for (int i = 0; i < 6; i++)
         {
             value = QString::number(fcast->forecast_year(i));
-            line.append(QString(QString(" %1").arg(value)));
+            str_lst.append(value);
+//            line.append(QString(QString(" %1").arg(value)));
             if (fcast->forecast_year(i) <= 0)
-                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->forecast_year(i))));
+                tmp_lst.append(QString::number(data->end_year() + fcast->forecast_year(i)));
+//                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->forecast_year(i))));
             else
-                temp_string.append(QString(" %1").arg(value));
+                tmp_lst.append(value);
+//                temp_string.append(QString(" %1").arg(value));
         }
-        chars += f_file->writeline(line);
+        chars += f_file->write_vector(str_lst, 4);
+        chars += f_file->write_vector(tmp_lst, 2, QString("after processing"));
+/*        chars += f_file->writeline(line);
         temp_string.append(" # after processing " );
-        chars += f_file->writeline(temp_string.toUtf8());
+        chars += f_file->writeline(temp_string.toUtf8());*/
 
-        value = QString::number(fcast->cr_method());
-        line = QString(QString("%1 # Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB) ) " ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->cr_biomass_const_f());
+        chars += f_file->write_val(fcast->cr_method(), 5, QString("Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB) ) "));
+/*        value = QString::number();
+        line = QString(QString("%1 # " ).arg(value));
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->cr_biomass_const_f(), 5, QString("Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below) "));
+/*        value = QString::number(fcast->cr_biomass_const_f());
         line = QString(QString("%1 # Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below) " ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->cr_biomass_no_f());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->cr_biomass_no_f(), 5, QString("Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10) "));
+/*        value = QString::number(fcast->cr_biomass_no_f());
         line = QString(QString("%1 # Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10) " ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->cr_target());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->cr_target(), 5, QString("Control rule target as fraction of Flimit (e.g. 0.75) "));
+/*        value = QString::number(fcast->cr_target());
         line = QString(QString("%1 # Control rule target as fraction of Flimit (e.g. 0.75) " ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->num_forecast_loops());
+        chars += f_file->write_val(fcast->num_forecast_loops(), 5, QString("N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)"));
+/*        value = QString::number(fcast->num_forecast_loops());
         line = QString(QString("%1 #_N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)" ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_recruitment());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->forecast_loop_recruitment(), 5, QString("First forecast loop with stochastic recruitment"));
+/*        value = QString::number(fcast->forecast_loop_recruitment());
         line = QString(QString("%1 #_First forecast loop with stochastic recruitment" ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_ctl3());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->forecast_loop_ctl3(), 5, QString("Forecast loop control #3 (reserved for future bells&whistles) "));
+/*        value = QString::number(fcast->forecast_loop_ctl3());
         line = QString(QString("%1 #_Forecast loop control #3 (reserved for future bells&whistles) " ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_ctl4());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->forecast_loop_ctl4(), 5, QString("Forecast loop control #4 (reserved for future bells&whistles) "));
+/*        value = QString::number(fcast->forecast_loop_ctl4());
         line = QString(QString("%1 #_Forecast loop control #4 (reserved for future bells&whistles) " ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_ctl5());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->forecast_loop_ctl5(), 5, QString("Forecast loop control #4 (reserved for future bells&whistles) "));
+/*        value = QString::number(fcast->forecast_loop_ctl5());
         line = QString(QString("%1 #_Forecast loop control #5 (reserved for future bells&whistles) " ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->caps_alloc_st_year());
+        chars += f_file->write_val(fcast->caps_alloc_st_year(), 5, QString("First Year for caps and allocations (should be after years with fixed inputs) "));
+/*        value = QString::number(fcast->caps_alloc_st_year());
         line = QString(QString("%1 # First Year for caps and allocations (should be after years with fixed inputs) " ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->log_catch_std_dev());
+        chars += f_file->write_val(fcast->log_catch_std_dev(), 5, QString("stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)"));
+/*        value = QString::number(fcast->log_catch_std_dev());
         line = QString(QString("%1 # stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->rebuilder()? 1: 0);
+        chars += f_file->write_val((fcast->rebuilder()? 1: 0), 5, QString("Do West Coast gfish rebuilder output (0/1) "));
+/*        value = QString::number(fcast->rebuilder()? 1: 0);
         line = QString(QString("%1 # Do West Coast gfish rebuilder output (0/1) " ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->rebuilder_first_year());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->rebuilder_first_year(), 5, QString ("Rebuilder: first year catch could have been set to zero (Ydecl)(-1 to set to 1999)"));
+/*        value = QString::number(fcast->rebuilder_first_year());
         line = QString(QString("%1 # Rebuilder: first year catch could have been set to zero (Ydecl)(-1 to set to 1999)" ).arg(value));
-        chars += f_file->writeline(line);
-        value = QString::number(fcast->rebuilder_curr_year());
+        chars += f_file->writeline(line);*/
+        chars += f_file->write_val(fcast->rebuilder_curr_year(), 5, QString ("Rebuilder: year for current age structure (Yinit) (-1 to set to endyear+1)"));
+/*        value = QString::number(fcast->rebuilder_curr_year());
         line = QString(QString("%1 # Rebuilder: year for current age structure (Yinit) (-1 to set to endyear+1)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
-        value = QString::number(fcast->fleet_rel_f());
+        chars += f_file->write_val(fcast->fleet_rel_f(), 5, QString ("fleet relative F: 1=use first-last alloc year; 2=read seas(row) x fleet(col) below"));
+/*        value = QString::number(fcast->fleet_rel_f());
         line = QString(QString("%1 # fleet relative F: 1=use first-last alloc year; 2=read seas(row) x fleet(col) below" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
         line = QString("# Note that fleet allocation is used directly as average F if Do_Forecast=4 " );
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->catch_tuning_basis());
+        chars += f_file->write_val(fcast->catch_tuning_basis(), 5, QString ("basis for fcast catch tuning and for fcast catch caps and allocation  (2=deadbio; 3=retainbio; 5=deadnum; 6=retainnum)"));
+/*        value = QString::number(fcast->catch_tuning_basis());
         line = QString(QString("%1 # basis for fcast catch tuning and for fcast catch caps and allocation  (2=deadbio; 3=retainbio; 5=deadnum; 6=retainnum)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
         line = QString("# Conditional input if relative F choice = 2" );
         chars += f_file->writeline(line);
@@ -1692,13 +1739,14 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
             for (int seas = 0; seas < data->num_seasons(); seas++)
             {
                 str_lst = fcast->getSeasFleetRelF(seas);
-                for (i = 0; i < str_lst.count(); i++)
+                chars += f_file->write_vector(str_lst, 5, QString("Season %1").arg(QString::number(seas+1)));
+/*                for (i = 0; i < str_lst.count(); i++)
                 {
                     if (data->getFleet(i)->isActive())
                     temp_string.append(QString(" %1").arg (str_lst.at(i)));
                 }
 
-                chars += f_file->writeline(temp_string);
+                chars += f_file->writeline(temp_string);*/
             }
         }
         else
@@ -1811,9 +1859,10 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         }
 
         temp_int = fcast->input_catch_basis();
-        value = QString::number(temp_int);
+        chars += f_file->write_val(temp_int, 5, QString("basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input Hrate(F)"));
+/*        value = QString::number(temp_int);
         line = QString(QString("%1 # basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input Hrate(F)" ).arg(value));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
         line = QString("#enter list of Fcast catches; terminate with line having year=-9999" );
         chars += f_file->writeline(line);
         line = QString("#_Year Seas Fleet Catch(or_F)" );
@@ -1829,23 +1878,27 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
                 line.append(QString(" %1").arg(str_lst.at(j)));
             if (temp_int < 0)
             {
-                if (str_lst.count() > 4)
+                if (str_lst.count() == 4)
+                    str_lst.append(QString("2"));
+/*                if (str_lst.count() > 4)
                     line.append(QString(" %1").arg(str_lst.at(4)));
                 else
-                    line.append("2");
+                    line.append("2");*/
             }
-            chars += f_file->writeline(line);
+            chars += f_file->write_vector(str_lst, 5);
+//            chars += f_file->writeline(line);
         }
-        line = QString("-9999 1 1 0 " );
+        line = QString("-9999  1    1    0 " );
         if (temp_int < 0)
-            line.append(" 2");
+            line.append("   2");
         chars += f_file->writeline(line);
 
         f_file->writeline("#" );
 
-        line = QString(QString("%1 # verify end of input " ).arg (
+        chars += f_file->write_val(END_OF_DATA, 6, QString("verify end of input "));
+/*        line = QString(QString("%1 # verify end of input " ).arg (
                            QString::number(END_OF_DATA)));
-        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);*/
 
 
         f_file->close();

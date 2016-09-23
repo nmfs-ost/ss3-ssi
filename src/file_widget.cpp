@@ -29,6 +29,8 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     ui->label_version->setVisible(check);
     ui->doubleSpinBox_version->setVisible(check);
     }
+    ui->checkBox_cumrpt_fits->setVisible(false);
+    ui->checkBox_cumrpt_like->setVisible(false);
 
     starterFile = new ss_file(STARTER_FILE, this);
     forecastFile = new ss_file(FORECAST_FILE, this);
@@ -665,7 +667,6 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->next_value("ss3.par choice");
         temp_int = token.toInt();
         set_par_file(temp_int != 0);
-    //    ui->checkBox_par_file->setChecked(temp_int);
         token = starterFile->next_value("run display detail");
         temp_int = token.toInt();
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
@@ -682,7 +683,6 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->next_value("what to write to CumReport.sso");
         temp_int = token.toInt();
         ui->comboBox_cumreport->setCurrentIndex(temp_int);
-//        set_cumrpt_write(temp_int);
         token = starterFile->next_value("prior likelihood");
         temp_int = token.toInt();
         model_info->set_prior_likelihood (temp_int);
@@ -803,121 +803,105 @@ void file_widget::write_starter_file (QString filename)
 
         starterFile->write_comments();//write_comments(starter);
 
-        line = QString (QString ("%1" ).arg(data_file_name));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1" ).arg(control_file_name));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # 0=use init values in control file; 1=use ss.par" ).arg
-                        (ui->checkBox_par_file->isChecked()?"1":"0"));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # run display detail (0,1,2)" ).arg
-                        (QString::number(ui->comboBox_detail_level->currentIndex())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # detailed age-structured reports in REPORT.SSO (0,1) " ).arg
-                        (ui->checkBox_report->isChecked()?"1":"0"));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # write detailed checkup.sso file (0,1) " ).arg
-                        (ui->checkBox_checkup->isChecked()?"1":"0"));
-        chars += starterFile->writeline (line);
-        temp_int = 0;
-    /*    if (ui->checkBox_parm_trace->isChecked())
-        {
-            int iter = ui->comboBox_parm_trace_iter->currentIndex();
-            int parm = ui->comboBox_parm_trace_param->currentIndex();
-            temp_int = (iter == 0)? ((parm == 0)? 1: 2) : ((parm == 0)? 4: 3);
-        }*/
-        temp_int = get_parmtr_write();
-        line = QString (QString ("%1 # write parm values to ParmTrace.sso (0=no,1=good,active; 2=good,all; 3=every_iter,all_parms; 4=every,active)" ).arg
-                        (QString::number(temp_int)));
-        chars += starterFile->writeline (line);
-        temp_int = ui->comboBox_cumreport->currentIndex();//get_cumrpt_write();
-        line = QString (QString ("%1 # write to cumreport.sso (0=no,1=like&timeseries; 2=add survey fits)" ).arg
-                        (QString::number(temp_int)));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Include prior_like for non-estimated parameters (0,1) " ).arg
-                        (model_info->prior_likelihood()?"1":"0"));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Use Soft Boundaries to aid convergence (0,1) (recommended)" ).arg
-                        (model_info->use_softbounds()?"1":"0"));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Number of datafiles to produce: 1st is input, 2nd is estimates, 3rd and higher are bootstrap" ).arg
-                        (QString::number(ui->spinBox_datafiles->value())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Turn off estimation for parameters entering after this phase" ).arg
-                        (QString::number(model_info->last_estim_phase())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # MCeval burn interval" ).arg
-                        (QString::number(model_info->mc_burn())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # MCeval thin interval" ).arg
-                        (QString::number(model_info->mc_thin())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # jitter initial parm value by this fraction" ).arg
-                        (QString::number(model_info->jitter_param())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # min yr for sdreport outputs (-1 for styr)" ).arg
-                        (QString::number(model_info->bio_sd_min_year())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # max yr for sdreport outputs (-1 for endyr; -2 for endyr+Nforecastyrs)" ).arg
-                        (QString::number(model_info->bio_sd_max_year())));
-        chars += starterFile->writeline (line);
-        temp_int = model_info->num_std_years();
-        line = QString (QString ("%1 # N individual STD years " ).arg
-                        (QString::number(temp_int)));
-        chars += starterFile->writeline (line);
-        line = QString("#vector of year values " );
-        line.append(model_info->get_std_years_text());
-        line.append('\n');
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # final convergence criteria (e.g. 1.0e-04) " ).arg
-                        (QString::number(model_info->convergence_criteria())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # retrospective year relative to end year (e.g. -4)" ).arg
-                        (QString::number(model_info->retrospect_year())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # min age for calc of summary biomass" ).arg
-                        (QString::number(model_info->biomass_min_age())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Depletion basis:  denom is: 0=skip; 1=rel X*B0; 2=rel X*Bmsy; 3=rel X*B_styr" ).arg
-                        (QString::number(model_info->depletion_basis())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # Fraction (X) for Depletion denominator (e.g. 0.4)" ).arg
-                        (QString::number(model_info->depletion_denom())));
-        chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # SPR_report_basis:  0=skip; 1=(1-SPR)/(1-SPR_tgt); 2=(1-SPR)/(1-SPR_MSY); 3=(1-SPR)/(1-SPR_Btarget); 4=rawSPR" ).arg
-                        (QString::number(model_info->spr_basis())));
-        chars += starterFile->writeline (line);
-        temp_int = model_info->f_units();
-        line = QString (QString ("%1 # F_report_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Frates); 4=true F for range of ages" ).arg
-                        (QString::number(temp_int)));
-        chars += starterFile->writeline (line);
+        chars += starterFile->write_val(data_file_name, 24, QString("data file name"));
+        chars += starterFile->write_val(control_file_name, 24, QString("control file name"));
+
+        temp_int = ui->checkBox_par_file->isChecked()? 1: 0;
+        chars += starterFile->write_val(temp_int, 5, QString("0=use init vales in control file; 1=use ss.par"));
+
+        chars += starterFile->write_val(ui->comboBox_detail_level->currentIndex(), 5,
+                                        QString("run display detail (0,1,2)"));
+
+        chars += starterFile->write_val(QString(ui->checkBox_report->isChecked()?"1":"0"), 5,
+                                        QString("detailed age-structured reports in REPORT.SSO (0,1) "));
+
+        chars += starterFile->write_val(QString(ui->checkBox_checkup->isChecked()?"1":"0"), 5,
+                                        QString("write detailed checkup.sso file (0,1) "));
+
+        chars += starterFile->write_val(get_parmtr_write(), 5,
+                                        QString("write parm values to ParmTrace.sso (0=no,1=good,active; 2=good,all; 3=every_iter,all_parms; 4=every,active)"));
+
+        chars += starterFile->write_val(ui->comboBox_cumreport->currentIndex(), 5,
+                                        QString("write to cumreport.sso (0=no,1=like&timeseries; 2=add survey fits)"));
+
+        chars += starterFile->write_val(QString(model_info->prior_likelihood()?"1":"0"), 5,
+                                     QString("Include prior_like for non-estimated parameters (0,1) "));
+
+        chars += starterFile->write_val(QString(model_info->use_softbounds()?"1":"0"), 5,
+                                     QString("Use Soft Boundaries to aid convergence (0,1) (recommended) "));
+
+        chars += starterFile->write_val(ui->spinBox_datafiles->value(), 5,
+                                     QString("Number of datafiles to produce: 1st is input, 2nd is estimates, 3rd and higher are bootstrap"));
+
+        chars += starterFile->write_val(model_info->last_estim_phase(), 5,
+                                     QString("Turn off estimation for parameters entering after this phase"));
+
+        chars += starterFile->write_val(model_info->mc_burn(), 5,
+                                     QString("MCeval burn interval"));
+
+        chars += starterFile->write_val(model_info->mc_thin(), 5,
+                                     QString("MCeval thin interval"));
+
+        chars += starterFile->write_val(model_info->jitter_param(), 5,
+                                     QString("jitter initial parm value by this fraction"));
+
+        chars += starterFile->write_val(model_info->bio_sd_min_year(), 5,
+                                     QString("min yr for sdreport outputs (-1 for styr)"));
+
+        chars += starterFile->write_val(model_info->bio_sd_max_year(), 5,
+                                     QString("max yr for sdreport outputs (-1 for endyr; -2 for endyr+Nforecastyrs)"));
+
+        chars += starterFile->write_val(model_info->num_std_years(), 5,
+                                     QString("N individual STD years "));
+
+        chars += starterFile->write_val(QString("#vector of year values "));
+//        chars += starterFile->write_val(model_info->get_std_years_text());
+        chars += starterFile->write_vector(model_info->get_std_years(), 6);
+
+        chars += starterFile->write_val(model_info->convergence_criteria(), 5,
+                                        QString("final convergence criteria (e.g. 1.0e-04) "));
+
+        chars += starterFile->write_val(model_info->retrospect_year(), 5,
+                                        QString("retrospective year relative to end year (e.g. -4)"));
+
+        chars += starterFile->write_val(model_info->biomass_min_age(), 5,
+                                        QString("min age for calc of summary biomass"));
+
+        chars += starterFile->write_val(model_info->depletion_basis(), 5,
+                                        QString("Depletion basis:  denom is: 0=skip; 1=rel X*B0; 2=rel X*Bmsy; 3=rel X*B_styr"));
+
+        chars += starterFile->write_val(model_info->depletion_denom(), 5,
+                                        QString("Fraction (X) for Depletion denominator (e.g. 0.4)"));
+
+        chars += starterFile->write_val(model_info->spr_basis(), 5,
+                                        QString("SPR_report_basis:  0=skip; 1=(1-SPR)/(1-SPR_tgt); 2=(1-SPR)/(1-SPR_MSY); 3=(1-SPR)/(1-SPR_Btarget); 4=rawSPR"));
+
+        chars += starterFile->write_val(model_info->f_units(), 5,
+                                        QString("F_report_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Frates); 4=true F for range of ages"));
+
         line.clear();
         line.append(QString(" %1 %2 #_min and max age over which average F will be calculated" ).arg
                     (QString::number(model_info->f_min_age()),
                      QString::number(model_info->f_max_age())));
-        if (temp_int < 4)
+        if (model_info->f_units() < 4)
         {
             line.prepend(QString ("#COND"));
             line.append(QString(" with F_reporting=4"));
         }
         chars += starterFile->writeline (line);
-        line = QString (QString ("%1 # F_std_basis: 0=raw_F_report; 1=F/Fspr; 2=F/Fmsy ; 3=F/Fbtgt" ).arg
-                        (QString::number(model_info->f_basis())));
-        chars += starterFile->writeline (line);
+        chars += starterFile->write_val (model_info->f_basis(), 5,
+                                         QString("F_std_basis: 0=raw_F_report; 1=F/Fspr; 2=F/Fmsy ; 3=F/Fbtgt"));
 
         if (datafile_version < 3.30)
         {
-            line = QString::number(END_OF_DATA);
-            line.append(" # check value for end of file and for version control" );
-            chars += starterFile->writeline (line);
+            chars += starterFile->write_val(END_OF_DATA, 5, QString("check value for end of file and for version control"));
         }
         else
         {
-            line = QString(QString("%1 # ALK tolerance (example 0.0001)").arg(model_info->getALKTol()));
-            chars +=starterFile->writeline(line);
-            line = QString::number(datafile_version, 'f', 2);
-            line.append(" # check value for end of file and for version control" );
-            chars += starterFile->writeline (line);
+            chars += starterFile->write_val(model_info->getALKTol(), 5,
+                                            QString ("ALK tolerance (example 0.0001)"));
+            chars += starterFile->write_val(QString::number(datafile_version, 'f', 2), 5,
+                                            QString("check value for end of file and for version control"));
         }
 
         starterFile->close();

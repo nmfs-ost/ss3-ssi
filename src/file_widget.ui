@@ -57,7 +57,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_input">
       <attribute name="title">
@@ -610,7 +610,7 @@
          <item>
           <widget class="QLabel" name="label_detail_level">
            <property name="text">
-            <string>Display run detail level</string>
+            <string>Run display detail level</string>
            </property>
           </widget>
          </item>
@@ -618,12 +618,12 @@
           <widget class="QComboBox" name="comboBox_detail_level">
            <item>
             <property name="text">
-             <string>0 - ADMB outputs only</string>
+             <string>0 - none other than ADMB outputs</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>1 - brief display for each iteration</string>
+             <string>1 - one brief display line for each iteration</string>
             </property>
            </item>
            <item>

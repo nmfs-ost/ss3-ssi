@@ -56,8 +56,9 @@ public:
     observation *read_mean_bw_obs (QString info = QString(""));
     observation *read_abund_obs (QString info = QString(""));
   */
-    int write_int (int i_val, QString info = QString(""));
-    int write_float (float f_val, QString info = QString(""));
+    int write_val (int i_val, int spcng = 0, QString info = QString(""));
+    int write_val (double f_val, int spcng = 0, QString info = QString(""));
+    int write_val (QString val, int spcng = 0, QString info = QString(""));
 /*    int write_environ_obs (observation *obs);
     int write_length_obs (observation *obs);
     int write_age_obs (observation *obs);
@@ -66,6 +67,7 @@ public:
     int write_mean_bw_obs (observation *obs);
     int write_abund_obs (observation *obs);
   */
+    int write_vector (QStringList vect, int spcng = 0, QString info = QString(""));
 
     bool at_eol ();
 

@@ -225,3 +225,44 @@ int ss_file::message(QString msg)
     int btn = QMessageBox::information((QWidget*)parent(), tr("Information"), msg, QMessageBox::Ok);
     return btn;
 }
+
+int ss_file::write_val(int i_val, int spcng, QString info)
+{
+    QString val = QString::number(i_val);
+    return write_val (val, spcng, info);
+}
+
+int ss_file::write_val(double f_val, int spcng, QString info)
+{
+    QString val = QString::number(f_val);
+    return write_val (val, spcng, info);
+}
+
+int ss_file::write_val(QString val, int spcng, QString info)
+{
+    if (!info.isEmpty())
+    {
+        do {
+            val.append(' ');
+        } while (val.count() < spcng);
+        val.append(QString("# %1").arg(info));
+    }
+    return writeline(val);
+}
+
+int ss_file::write_vector(QStringList vect, int spcng, QString info)
+{
+    QString line;
+    QString item;
+    int num = vect.count();
+    for (int i = 0; i < num; i++)
+    {
+        item = vect.at(i);
+        while (item.count() < spcng)
+            item.prepend (' ');
+        line.append(QString("%1 ").arg(item));
+    }
+    if (!info.isEmpty())
+        line.append(QString("# %1").arg(info));
+    return writeline(line);
+}

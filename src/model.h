@@ -114,6 +114,7 @@ public slots:
     void set_std_years_text (QString txt);
     void set_std_year (int index, QString year);
     QString std_year (int index) {return sdYearsModel->getRowData(0).at(index);}
+    QStringList get_std_years ();
     QString get_std_years_text ();
 
     void set_convergence_criteria (double value) {dConvergence = value;}

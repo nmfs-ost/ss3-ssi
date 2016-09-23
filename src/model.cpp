@@ -279,10 +279,15 @@ void ss_model::set_std_year(int index, QString year)
         iSdValues[i] = ql.at(i).toInt();
     }*/
 
+QStringList ss_model::get_std_years ()
+{
+    return sdYearsModel->getRowData(0);
+}
+
 QString ss_model::get_std_years_text()
 {
     QString txt("");
-    QStringList ql (sdYearsModel->getRowData(0));
+    QStringList ql (get_std_years());// sdYearsModel->getRowData(0));
     for (int i = 0; i < ql.count(); i++)
     {
         if (ql.at(i).isEmpty())
