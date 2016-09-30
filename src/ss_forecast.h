@@ -20,14 +20,14 @@ signals:
 public slots:
     void set_benchmarks (int bmark) {i_bmark = bmark;}
     void set_benchmarks (bool flag) {i_bmark = flag? 1: 0;}
-    int benchmarks () {return i_bmark;}
+    int get_benchmarks () {return i_bmark;}
     void set_MSY (int msy) {i_msy = msy;}
     void set_combo_box_MSY (int msy);
-    int MSY () {return i_msy;}
+    int get_MSY () {return i_msy;}
     void set_spr_target (double spr) {f_spr_tgt = (float)spr;}
-    float spr_target () {return f_spr_tgt;}
+    float get_spr_target () {return f_spr_tgt;}
     void set_biomass_target (double bmss) {f_bmass_tgt = (float)bmss;}
-    float biomass_target () {return f_bmass_tgt;}
+    float get_biomass_target () {return f_bmass_tgt;}
     void set_benchmark_years (int i, int yr) {i_bmark_yrs[i] = yr;}
     void set_benchmark_bio_beg (int yr) {i_bmark_yrs[0] = yr;}
     void set_benchmark_bio_end (int yr) {i_bmark_yrs[1] = yr;}
@@ -37,15 +37,15 @@ public slots:
     void set_benchmark_relf_end (int yr) {i_bmark_yrs[5] = yr;}
     void set_benchmark_rec_beg (int yr) {i_bmark_yrs[6] = yr;}
     void set_benchmark_rec_end (int yr) {i_bmark_yrs[7] = yr;}
-    int benchmark_year (int i) {return i_bmark_yrs[i];}
+    int get_benchmark_year (int i) {return i_bmark_yrs[i];}
     void set_benchmark_rel_f (int relf) {i_bmark_rel_f = relf;}
     void set_combo_box_relf_basis (int relf);
-    int benchmark_rel_f () {return i_bmark_rel_f;}
+    int get_benchmark_rel_f () {return i_bmark_rel_f;}
     void set_forecast (int fcast) {i_method = fcast;}
     void set_combo_box_forecast(int fcast);
-    int forecast () {return i_method;}
+    int get_forecast () {return i_method;}
     void set_num_forecast_years (int yrs);// {i_num_fcast_yrs = yrs;}
-    int num_forecast_years () {return i_num_fcast_yrs;}
+    int get_num_forecast_years () {return i_num_fcast_yrs;}
     void set_forecast_year (int i, int yr) {i_fcast_yrs[i] = yr;}
     void set_forecast_sel_beg (int yr) {i_fcast_yrs[0] = yr;}
     void set_forecast_sel_end (int yr) {i_fcast_yrs[1] = yr;}
@@ -53,41 +53,41 @@ public slots:
     void set_forecast_relf_end (int yr) {i_fcast_yrs[3] = yr;}
     void set_forecast_rec_beg (int yr) {i_fcast_yrs[4] = yr;}
     void set_forecast_rec_end (int yr) {i_fcast_yrs[5] = yr;}
-    int forecast_year (int i) {return i_fcast_yrs[i];}
+    int get_forecast_year (int i) {return i_fcast_yrs[i];}
     void set_cr_method (int ctl) {i_ctl_rule_method = ctl;}
     void set_combo_box_cr_method (int ctl);
-    int cr_method () {return i_ctl_rule_method;}
+    int get_cr_method () {return i_ctl_rule_method;}
     void set_f_scalar (double f) {f_f_scalar = (float)f;}
-    float f_scalar () {return f_f_scalar;}
+    float get_f_scalar () {return f_f_scalar;}
     void set_cr_biomass_const_f (double cr) {f_ctl_rule_bmass_const_f = (float)cr;}
-    float cr_biomass_const_f () {return f_ctl_rule_bmass_const_f;}
+    float get_cr_biomass_const_f () {return f_ctl_rule_bmass_const_f;}
     void set_cr_biomass_no_f (double cr) {f_ctl_rule_bmass_no_f = (float)cr;}
-    float cr_biomass_no_f () {return f_ctl_rule_bmass_no_f;}
+    float get_cr_biomass_no_f () {return f_ctl_rule_bmass_no_f;}
     void set_cr_target (double targ) {f_ctl_rule_tgt = (float)targ;}
-    float cr_target () {return f_ctl_rule_tgt;}
+    float get_cr_target () {return f_ctl_rule_tgt;}
     void set_num_forecast_loops (int loops) {i_num_fcast_loops = loops;}
-    int num_forecast_loops () {return i_num_fcast_loops;}
+    int get_num_forecast_loops () {return i_num_fcast_loops;}
     void set_forecast_loop_recruitment (int loop) {i_fcast_loop_stch_recruit = loop;}
-    int forecast_loop_recruitment () {return i_fcast_loop_stch_recruit;}
+    int get_forecast_loop_recruitment () {return i_fcast_loop_stch_recruit;}
     void set_forecast_loop_ctl3 (int floop) {i_fcast_loop_3 = floop;}
-    int forecast_loop_ctl3 () {return i_fcast_loop_3;}
+    int get_forecast_loop_ctl3 () {return i_fcast_loop_3;}
     void set_forecast_loop_ctl4 (int floop) {i_fcast_loop_4 = floop;}
-    int forecast_loop_ctl4 () {return i_fcast_loop_4;}
+    int get_forecast_loop_ctl4 () {return i_fcast_loop_4;}
     void set_forecast_loop_ctl5 (int floop) {i_fcast_loop_5 = floop;}
-    int forecast_loop_ctl5 () {return i_fcast_loop_5;}
+    int get_forecast_loop_ctl5 () {return i_fcast_loop_5;}
     void set_caps_alloc_st_year (int yr) {i_caps_st_year = yr;}
-    int caps_alloc_st_year () {return i_caps_st_year;}
+    int get_caps_alloc_st_year () {return i_caps_st_year;}
     void set_log_catch_std_dev (double sd) {f_log_ctch_stdv = (float)sd;}
-    float log_catch_std_dev () {return f_log_ctch_stdv;}
-    void set_rebuilder (bool flag) {b_rebuilder = flag;}
-    bool rebuilder () {return b_rebuilder;}
+    float get_log_catch_std_dev () {return f_log_ctch_stdv;}
+    void set_do_rebuilder (bool flag) {b_rebuilder = flag;}
+    bool get_do_rebuilder () {return b_rebuilder;}
     void set_rebuilder_first_year (int yr) {i_rebuilder_st_yr = yr;}
-    int rebuilder_first_year () {return i_rebuilder_st_yr;}
+    int get_rebuilder_first_year () {return i_rebuilder_st_yr;}
     void set_rebuilder_curr_year (int yr) {i_rebuilder_cur_yr = yr;}
-    int rebuilder_curr_year () {return i_rebuilder_cur_yr;}
+    int get_rebuilder_curr_year () {return i_rebuilder_cur_yr;}
     void set_fleet_rel_f (int f) {i_fleet_rel_f = f;}
     void set_combo_box_fleet_relf (int relf);
-    int fleet_rel_f () {return i_fleet_rel_f;}
+    int get_fleet_rel_f () {return i_fleet_rel_f;}
     void add_seas_fleet_rel_f (int seas, int flt, float f);
     void set_seas_fleet_rel_f (int seas, int flt, float f);
 //    float seas_fleet_rel_f (int seas, int flt) {return f_seas_fleet_rel_f_list.at(seas).at(flt);}
@@ -95,20 +95,20 @@ public slots:
     void setSeasFleetRelF (int seas, QStringList data) {seasFleetRelF_table->setRowData(seas, data);}
     float get_seas_fleet_rel_f (int seas, int flt) {return seasFleetRelF_table->getRowData(seas).at(flt).toFloat();}
     tablemodel *getSeasFleetRelFTable () {return seasFleetRelF_table;}
-    void set_catch_tuning_basis (int basis) {i_ctch_basis = basis;}
+    void set_catch_tuning_basis (int basis); // {i_ctch_basis = basis;}
     void set_combo_box_catch_tuning (int basis);
-    int catch_tuning_basis () {return i_ctch_basis;}
+    int get_catch_tuning_basis () {return i_ctch_basis;}
     void set_num_seasons (int seas);
     void set_num_fleets (int flt);
     void set_num_genders (int gen) {i_num_genders = gen;}
-    int num_seasons () {return i_num_seasons;}
+    int get_num_seasons () {return i_num_seasons;}
 
     QStringList getMaxCatchFleets () {return maxCatchFleet->getRowData(0);}
     void setMaxCatchFleets (QStringList data) {maxCatchFleet->setRowData(0, data);}
     float getMaxCatchFleet (int flt) {return maxCatchFleet->getRowData(0).at(flt).toFloat();}
     tablemodel *getMaxCatchFleetTable () {return maxCatchFleet;}
     void set_max_catch_fleet (int flt, float ctch);
-    int num_fleets () {return maxCatchFleet->columnCount();}
+    int get_num_fleets () {return maxCatchFleet->columnCount();}
     float max_catch_fleet (int flt) {return maxCatchFleet->getRowData(0).at(flt).toFloat();}
 
     QStringList getMaxCatchAreas () {return maxCatchArea->getRowData(0);}
@@ -118,7 +118,7 @@ public slots:
     void set_max_catch_area (int ar, float ctch);
 
     void set_num_areas (int ars) ;
-    int num_areas () {return maxCatchArea->columnCount();}
+    int get_num_areas () {return maxCatchArea->columnCount();}
     float max_catch_area (int ar) {return maxCatchArea->getRowData(0).at(ar).toFloat();}
 
     QStringList getAllocGrpList () {return allocGrpList->getRowData(0);}
@@ -130,7 +130,7 @@ public slots:
     void changeAllocGrps (QModelIndex tl, QModelIndex br);
     void set_alloc_group (int flt, int grp);
     void set_num_alloc_groups (int num);
-    int num_alloc_groups () {return i_num_alloc_groups;}
+    int get_num_alloc_groups () {return i_num_alloc_groups;}
     void set_alloc_fractions (int yr, QStringList fractions) {allocGroupFrac->setRowData(yr, fractions);}
     QStringList get_alloc_fractions (int yr) {return allocGroupFrac->getRowData(yr);}
     void setAllocFractions (int index, QStringList data) {allocGroupFrac->setRowData(index, data);}
@@ -139,9 +139,9 @@ public slots:
 
     void set_num_catch_levels (int lvls) {i_num_fcast_ctch_levels = lvls;}
     int num_catch_levels () {return i_num_fcast_ctch_levels;}
-    void set_input_catch_basis (int basis) {i_input_fcast_ctch_basis = basis;}
+    void set_input_catch_basis (int &basis); // {i_input_fcast_ctch_basis = basis;}
     void set_combo_box_catch_input (int basis);
-    int input_catch_basis () {return i_input_fcast_ctch_basis;}
+    int get_input_catch_basis () {return i_input_fcast_ctch_basis;}
 
     void add_fixed_catch_value (QStringList txtlst);
 

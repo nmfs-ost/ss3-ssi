@@ -1,6 +1,9 @@
 
 #include "metadata.h"
 
+QString datafile_version_str;
+
+
 QString getAppVersion ()
 {
     QString str(QString("%1.%2.%3").arg(
@@ -46,3 +49,13 @@ QString getAppTechDescription ()
     return str;
 }
 
+QString getDatafileVersionString()
+{
+    return datafile_version_str;
+}
+
+void setDatafileVersionString(float ver)
+{
+    int major = (int)(ver * 100.0);
+    datafile_version_str = QString(QString("%1.0.0").arg(QString::number(major)));
+}

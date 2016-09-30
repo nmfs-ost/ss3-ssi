@@ -783,16 +783,16 @@ QStringList population::getSeasParam(int index)
 
 void population::readSeasonalEffects(ss_file *input)
 {
-    femwtlen1 = input->next_value().toInt() == 1? true:false;
-    femwtlen2 = input->next_value().toInt() == 1? true:false;
-    mat1 = input->next_value().toInt() == 1? true:false;
-    mat2 = input->next_value().toInt() == 1? true:false;
-    fec1 = input->next_value().toInt() == 1? true:false;
-    fec2 = input->next_value().toInt() == 1? true:false;
-    malewtlen1 = input->next_value().toInt() == 1? true:false;
-    malewtlen2 = input->next_value().toInt() == 1? true:false;
-    L1 = input->next_value().toInt() == 1? true:false;
-    K = input->next_value().toInt() == 1? true:false;
+    femwtlen1 = input->get_next_value().toInt() == 1? true:false;
+    femwtlen2 = input->get_next_value().toInt() == 1? true:false;
+    mat1 = input->get_next_value().toInt() == 1? true:false;
+    mat2 = input->get_next_value().toInt() == 1? true:false;
+    fec1 = input->get_next_value().toInt() == 1? true:false;
+    fec2 = input->get_next_value().toInt() == 1? true:false;
+    malewtlen1 = input->get_next_value().toInt() == 1? true:false;
+    malewtlen2 = input->get_next_value().toInt() == 1? true:false;
+    L1 = input->get_next_value().toInt() == 1? true:false;
+    K = input->get_next_value().toInt() == 1? true:false;
 }
 
 QString population::writeSeasonalEffects()

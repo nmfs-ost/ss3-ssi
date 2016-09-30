@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>6</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -949,7 +949,7 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-181</y>
+            <y>0</y>
             <width>913</width>
             <height>610</height>
            </rect>
@@ -1029,7 +1029,11 @@ recruitment distribution method = 1)</string>
               </widget>
              </item>
              <item row="5" column="3" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amin"/>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amin">
+               <property name="maximum">
+                <double>999.000000000000000</double>
+               </property>
+              </widget>
              </item>
              <item row="20" column="0">
               <widget class="QLabel" name="label_maturity_first_age">
@@ -1095,10 +1099,21 @@ recruitment distribution method = 1)</string>
               </widget>
              </item>
              <item row="6" column="3" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amax"/>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amax">
+               <property name="minimum">
+                <double>0.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>999.000000000000000</double>
+               </property>
+              </widget>
              </item>
              <item row="7" column="3" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_exp_decay"/>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_exp_decay">
+               <property name="minimum">
+                <double>-999.000000000000000</double>
+               </property>
+              </widget>
              </item>
              <item row="8" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_min"/>

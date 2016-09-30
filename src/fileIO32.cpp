@@ -11,7 +11,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
     float temp_float;
     int temp_int = 0, num_input_lines = 0;
     int i, j, num_vals, total_fleets;
-    int n_fisheries = 0, n_surveys = 0, n_predators = 0;
+    int n_fisheries = 0, n_surveys = 0; //, n_predators = 0;
     int n_areas = 0, n_ages = 0, n_genders = 0;
     int units, err_type, year, season, fleet, obslength;
     float obs, err;
@@ -24,28 +24,29 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         d_file->seek(0);
         d_file->read_comments();
 
-        token = d_file->next_value("start year");
+        token = d_file->get_next_value("start year");
         temp_int = token.toInt();
         data->set_start_year (temp_int);
-        token = d_file->next_value("end year");
+        token = d_file->get_next_value("end year");
         temp_int = token.toInt();
         data->set_end_year(temp_int);
-        token = d_file->next_value("seasons per year");
+        token = d_file->get_next_value("seasons per year");
         temp_int = token.toInt();
         data->set_num_seasons(temp_int);
-        for (i = 1; i <= data->num_seasons(); i++)
+        for (i = 1; i <= data->get_num_seasons(); i++)
         {
-            token = d_file->next_value("months per season");
+            token = d_file->get_next_value("months per season");
             temp_int = token.toInt();
             data->set_months_per_season(i, temp_int);
         }
+        data->rescale_months_per_season();
         data->set_num_subseasons(2);
-        token = d_file->next_value("spawning season");
+        token = d_file->get_next_value("spawning season");
         temp_int = token.toInt();
         data->set_spawn_season(temp_int);
-        token = d_file->next_value("number of fisheries");
+        token = d_file->get_next_value("number of fisheries");
         n_fisheries = token.toInt();
-        token = d_file->next_value("number of surveys");
+        token = d_file->get_next_value("number of surveys");
         n_surveys = token.toInt();
         total_fleets = n_fisheries + n_surveys;
         data->set_num_fleets(total_fleets);
@@ -58,13 +59,13 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         if (j != n_surveys)
             d_file->error("The number of survey fleets is incorrect.");
         data->assignFleetNumbers();
-        token = d_file->next_value("number of areas");
+        token = d_file->get_next_value("number of areas");
         temp_int = token.toInt();
         n_areas = temp_int;
         data->set_num_areas(n_areas);
 
         QStringList names;
-        token = d_file->next_value("fleet names");
+        token = d_file->get_next_value("fleet names");
         names = token.split('%');
         for (i = 0; i < total_fleets; i++)
         {
@@ -75,40 +76,40 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         }
         for (i = 0; i < total_fleets; i++)
         {
-            token = d_file->next_value("fishery timing in season");
+            token = d_file->get_next_value("fishery timing in season");
             temp_float = token.toFloat();
             data->getFleet(i)->setSeasTiming (temp_float);
         }
         for (i = 0; i < total_fleets; i++)
         {
-            token = d_file->next_value("fishery area");
+            token = d_file->get_next_value("fishery area");
             temp_int = token.toInt();
             data->getFleet(i)->setArea (temp_int);
         }
         for (i = 0; i < n_fisheries; i++)
         {
-            token = d_file->next_value("catch units");
+            token = d_file->get_next_value("catch units");
             temp_int = token.toInt();
             data->getFleet(i)->setCatchUnits (temp_int);
         }
         for (i = 0; i < n_fisheries; i++)
         {
-            token = d_file->next_value("se of log (catch)");
+            token = d_file->get_next_value("se of log (catch)");
             temp_float = token.toFloat();
             data->getFleet(i)->set_catch_se (temp_float);
             data->getFleet(i)->set_equ_catch_se(temp_float);
         }
-        token = d_file->next_value("number of genders");
+        token = d_file->get_next_value("number of genders");
         temp_int = token.toInt();
         n_genders = temp_int;
         data->set_num_genders(n_genders);
-        token = d_file->next_value("number of ages");
+        token = d_file->get_next_value("number of ages");
         temp_int = token.toInt();
         n_ages = temp_int;
         data->set_num_ages(n_ages);
         for (i = 0; i < n_fisheries; i++)
         {
-            token = d_file->next_value("equilibrium catch");
+            token = d_file->get_next_value("equilibrium catch");
             temp_float = token.toFloat();
             data->getFleet(i)->set_catch_equil (temp_float);
         }
@@ -116,7 +117,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         for (i = 0; i < n_fisheries; i++)
             data->add_fleet_catch_per_season(i, -999, 1, data->getFleet(i)->catch_equil(), data->getFleet(i)->catch_se());
 
-        token = d_file->next_value("number catch input lines");
+        token = d_file->get_next_value("number catch input lines");
         num_input_lines = token.toInt();
 /*        for (i = 0; i < n_fisheries; i++)
         {
@@ -129,12 +130,12 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
                 int j;
                 for (j = 0; j < n_fisheries; j++)
                 {
-                    token = d_file->next_value();
+                    token = d_file->get_next_value();
                     numbs[j] = token.toFloat();
                 }
-                token = d_file->next_value("year");
+                token = d_file->get_next_value("year");
                 year = token.toInt(); // year
-                token = d_file->next_value("season");
+                token = d_file->get_next_value("season");
                 season = token.toInt(); // season
                 for (j = 0; j < n_fisheries; j++)
                 {
@@ -145,76 +146,76 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         }
 
         // Abundance
-        token = d_file->next_value("number abundance input lines");
+        token = d_file->get_next_value("number abundance input lines");
         num_input_lines = token.toInt();
 
         // before we record abundance, get units and error type for all fleets
         for (i = 0; i < total_fleets; i++)
         {
-            fleet = abs(d_file->next_value().toInt()) - 1; // fishery
+            fleet = abs(d_file->get_next_value().toInt()) - 1; // fishery
             Fleet *flt = data->getFleet(fleet);
-            units = d_file->next_value().toInt(); // units
+            units = d_file->get_next_value().toInt(); // units
             flt->setAbundUnits(units);
-            err_type = d_file->next_value().toInt(); // err_type
+            err_type = d_file->get_next_value().toInt(); // err_type
             flt->setAbundErrType(err_type);
         }
         // here are the abundance numbers
         for (i = 0; i < num_input_lines; i++)
         {    // year, season, fleet_number, observation, error
-            year = d_file->next_value().toInt();
-            season = d_file->next_value().toInt();
-            fleet = abs(d_file->next_value().toInt()) - 1;
-            obs = d_file->next_value().toFloat();
-            err = d_file->next_value().toFloat();
+            year = d_file->get_next_value().toInt();
+            season = d_file->get_next_value().toInt();
+            fleet = abs(d_file->get_next_value().toInt()) - 1;
+            obs = d_file->get_next_value().toFloat();
+            err = d_file->get_next_value().toFloat();
             month = data->getMonthBySeasonFleet(season, fleet);
             data->getFleet(fleet)->addAbundByMonth(year, month, obs, err);
         }
 
         // Discard
-        token = d_file->next_value("num fleets with discard");
+        token = d_file->get_next_value("num fleets with discard");
         num_vals = token.toInt();
         if (num_vals > 0)
         {
             for (i = 0; i < num_vals; i++)
             {
-                fleet = abs(d_file->next_value().toInt()) - 1;
-                units = d_file->next_value().toInt();
-                err_type = d_file->next_value().toInt();
+                fleet = abs(d_file->get_next_value().toInt()) - 1;
+                units = d_file->get_next_value().toInt();
+                err_type = d_file->get_next_value().toInt();
                 data->getFleet(fleet)->setDiscardUnits(units);
                 data->getFleet(fleet)->setDiscardErrType(err_type);
             }
-            token = d_file->next_value("number of discard observations");
+            token = d_file->get_next_value("number of discard observations");
             // observations
             num_input_lines = token.toInt();
             for (i = 0; i < num_input_lines; i++)
             {
-                year = d_file->next_value().toInt();
-                season = abs(d_file->next_value().toInt());
-                fleet = abs(d_file->next_value().toInt()) - 1;
-                obs = d_file->next_value().toFloat();
-                err = d_file->next_value().toFloat();
+                year = d_file->get_next_value().toInt();
+                season = abs(d_file->get_next_value().toInt());
+                fleet = abs(d_file->get_next_value().toInt()) - 1;
+                obs = d_file->get_next_value().toFloat();
+                err = d_file->get_next_value().toFloat();
                 month = data->getMonthBySeasonFleet(season, fleet);
                 data->getFleet(fleet)->setDiscardMonth(year, month, obs, err);
             }
         }
         else
         {
-            temp_int = d_file->next_value("num discard observations").toInt();
+            temp_int = d_file->get_next_value("num discard observations").toInt();
             if (temp_int != 0)
                 d_file->error("Reading number discard observations. No fleets.");
         }
 
         // mean body weight
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         num_input_lines = token.toInt();
-        temp_int = d_file->next_value().toInt();
-        for (i = 0; i < data->num_fleets(); i++)
+        temp_int = d_file->get_next_value().toInt();
+        for (i = 0; i < data->get_num_fleets(); i++)
             data->getFleet(i)->setMbwtDF(temp_int);
         for (i = 0; i < num_input_lines; i++)
         {
             str_lst.clear();
             for (int j = 0; j < 6; j++)
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             fleet = abs(str_lst.takeAt(2).toInt()) - 1;
             season = abs(str_lst.takeAt(1).toInt());
             month = data->getMonthBySeasonFleet(season, temp_int-1);
@@ -230,7 +231,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             l_data = new compositionLength();
             data->set_length_composition(l_data);
         }
-        temp_int = d_file->next_value().toInt();
+        temp_int = d_file->get_next_value().toInt();
         l_data->setAltBinMethod(temp_int);
         switch (temp_int)
         {
@@ -238,62 +239,62 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             break;
         case 2:  // generate from min, max, width
             float min, max, width;
-            token = d_file->next_value();
+            token = d_file->get_next_value();
             width = token.toFloat();
             l_data->setAltBinWidth(width);
-            token = d_file->next_value();
+            token = d_file->get_next_value();
             min = token.toFloat();
             l_data->setAltBinMin(min);
-            token = d_file->next_value();
+            token = d_file->get_next_value();
             max = token.toFloat();
             l_data->setAltBinMax(max);
             l_data->generateAltBins();
             break;
         case 3:  // read vector
             str_lst.clear();
-            temp_int = d_file->next_value().toInt();
+            temp_int = d_file->get_next_value().toInt();
             l_data->setNumberAltBins(temp_int);
             for (int j = 0; j < temp_int; j++)
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             l_data->setAltBins(str_lst);
             break;
         }
 
-        token = d_file->next_value();
-        for (i = 0; i < data->num_fleets(); i++)
+        token = d_file->get_next_value();
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             data->getFleet(i)->setLengthMinTailComp(token);
             data->getFleet(i)->setAgeMinTailComp(token);
         }
 //        l_data->set_compress_tails(token.toFloat());
-        token = d_file->next_value();
-        for (i = 0; i < data->num_fleets(); i++)
+        token = d_file->get_next_value();
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             data->getFleet(i)->setLengthAddToData(token);
             data->getFleet(i)->setAgeAddToData(token);
         }
 //        l_data->set_add_to_compression(token.toFloat());
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         temp_int = token.toInt();
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             data->getFleet(i)->setLengthCombineGen(temp_int);
         }
 //        l_data->set_combine_genders(token.toInt());
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         num_vals = token.toInt();
         l_data->setNumberBins(num_vals);
-        for (int j = 0; j < data->num_fleets(); j++)
+        for (int j = 0; j < data->get_num_fleets(); j++)
             data->getFleet(j)->setLengthNumBins(num_vals);
         temp_str.clear();
         for (i = 0; i < num_vals; i++)
         {
-            str_lst.append(d_file->next_value());
+            str_lst.append(d_file->get_next_value());
 //            token = d_file->next_value();
 //            temp_str.append(QString("%1 ").arg(token));
         }
         l_data->setBins(str_lst);//setBin(0, temp_str);
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         num_input_lines = token.toInt();
         obslength = data->getFleet(0)->getLengthObsLength() + 1;//l_data->get_obs_length();
         for (i = 0; i < num_input_lines; i++)
@@ -301,7 +302,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             str_lst.clear();
             for (int j = 0; j < obslength; j++)
             {
-                token = d_file->next_value();
+                token = d_file->get_next_value();
                 str_lst.append(token);
             }
             temp_int = abs(str_lst.takeAt(2).toInt());
@@ -320,10 +321,10 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             a_data = new compositionAge ();
             data->set_age_composition(a_data);
         }
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         num_vals = token.toInt();
         a_data->setNumberBins(num_vals);
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             data->getFleet(i)->setAgeNumBins(num_vals);
             data->getFleet(i)->setSaaNumBins(num_vals);
@@ -332,32 +333,32 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         temp_str.clear();
         for (i = 0; i < num_vals; i++)
         {
-            str_lst.append(d_file->next_value());
+            str_lst.append(d_file->get_next_value());
 //            token = d_file->next_value();
 //            temp_str.append(QString("%1 ").arg(token));
         }
         a_data->setBins(str_lst);//0, temp_str);
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         temp_int = token.toInt();
         a_data->set_num_error_defs(temp_int);
         for (i = 0; i < temp_int; i++)
         {
-            int numAges = data->num_ages();
+            int numAges = data->get_num_ages();
             str_lst.clear();
             for (int j = 0; j <= numAges; j++)
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             a_data->set_error_def_ages(i, str_lst);
             str_lst.clear();
             for (int j = 0; j <= numAges; j++)
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             a_data->set_error_def(i, str_lst);
         }
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         num_input_lines = token.toInt();
  //       data->get_age_composition()->set_number_obs(num_input_lines);
-        token = d_file->next_value();
+        token = d_file->get_next_value();
         a_data->setAltBinMethod(token.toInt());
-        temp_int = d_file->next_value().toInt();
+        temp_int = d_file->get_next_value().toInt();
         for (i = 0; i < total_fleets; i++)
             data->getFleet(i)->setAgeCombineGen(temp_int);
 
@@ -366,7 +367,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         {
             str_lst.clear();
             for (int j = 0; j < obslength; j++)
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             temp_int = abs(str_lst.takeAt(2).toInt());
             season = abs(str_lst.takeAt(1).toInt());
             month = data->getMonthBySeasonFleet(season, temp_int-1);
@@ -375,13 +376,13 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         }
 
         // mean size at age
-        num_input_lines = d_file->next_value().toInt();
+        num_input_lines = d_file->get_next_value().toInt();
         obslength = a_data->getSaaModel()->columnCount() + 1;
         for (i = 0; i < num_input_lines; i++)
         {
             str_lst.clear();
             for (int j = 0; j < obslength; j++)
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             temp_int = abs(str_lst.takeAt(2).toInt());
             season = abs(str_lst.takeAt(1).toInt());
             month = data->getMonthBySeasonFleet(season, temp_int-1);
@@ -391,22 +392,22 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         }
 
         // environment variables
-        temp_int = d_file->next_value().toInt();
+        temp_int = d_file->get_next_value().toInt();
         data->set_num_environ_vars (temp_int);
-        num_input_lines = d_file->next_value().toInt();
+        num_input_lines = d_file->get_next_value().toInt();
         obslength = data->getEnvVariables()->columnCount();
         for (i = 0; i < num_input_lines; i++)
         {
             str_lst.clear();
             for(int j = 0; j < 3; j++)
             {
-                str_lst.append(d_file->next_value());
+                str_lst.append(d_file->get_next_value());
             }
             data->set_environ_var_obs (i, str_lst);
         }
 
         // generalized size composition
-        num_vals = d_file->next_value().toInt();
+        num_vals = d_file->get_next_value().toInt();
         data->setNumGeneralCompMethods(0);
         if (num_vals > 0)
         {
@@ -420,31 +421,31 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(j)->setGenModelTotal(num_vals);
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->next_value().toInt();
+                temp_int = d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setNumberBins(temp_int);
                 for (int j = 0; j < total_fleets; j++)
                     data->getFleet(j)->setGenNumBins(i, temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->next_value().toInt();
+                temp_int = d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setUnits(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->next_value().toInt();
+                temp_int = d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setScale(temp_int);
             }
             for (i = 0; i < num_vals; i++)
             {
-                temp_str = d_file->next_value();
+                temp_str = d_file->get_next_value();
                 for (int j = 0; j < total_fleets; j++)
                     data->getFleet(j)->setGenMinTailComp(i, temp_str);
 //                data->general_comp_method(i)->set_mincomp(temp_float);
             }
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->next_value().toInt();
+                temp_int = d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setNumberObs(temp_int);
             }
             for (i = 0; i < num_vals; i++)
@@ -453,7 +454,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.clear();
                 for (int j = 0; j < cps->getNumberBins(); j++)
                 {
-                    str_lst.append(d_file->next_value());
+                    str_lst.append(d_file->get_next_value());
                 }
                 cps->getBinsModel()->setRowData(0, str_lst);
             }
@@ -467,7 +468,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
                     str_lst.clear();
                     for (int k = 0; k < obslength; k++)
                     {
-                        str_lst.append(d_file->next_value());
+                        str_lst.append(d_file->get_next_value());
                     }
                     temp_int = str_lst.at(0).toInt();
                     fleet = abs(str_lst.takeAt(3).toInt());
@@ -481,23 +482,23 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
         }
 
         // tag-recapture data
-        temp_int = d_file->next_value().toInt();
+        temp_int = d_file->get_next_value().toInt();
         data->set_do_tags(temp_int == 1);
         if (data->get_do_tags())
         {
-            temp_int = d_file->next_value().toInt();
+            temp_int = d_file->get_next_value().toInt();
             data->set_num_tag_groups(temp_int);
-            num_input_lines = d_file->next_value().toInt();
-            temp_int = d_file->next_value().toInt();
+            num_input_lines = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value().toInt();
             data->set_tag_latency(temp_int);
-            temp_int = d_file->next_value().toInt();
+            temp_int = d_file->get_next_value().toInt();
             data->set_tag_max_periods(temp_int);
             // release data
             for (i = 0; i < data->get_num_tag_groups(); i++)
             {
                 str_lst.clear();
                 for (int j = 0; j < 8; j++)
-                    str_lst.append(d_file->next_value());
+                    str_lst.append(d_file->get_next_value());
                 data->set_tag_observation(i, str_lst);
             }
             // recapture data
@@ -505,26 +506,26 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             {
                 str_lst.clear();
                 for (int j = 0; j < 5; j++)
-                    str_lst.append(d_file->next_value());
+                    str_lst.append(d_file->get_next_value());
                 temp_int = abs(str_lst.at(3).toInt());
                 data->getFleet(temp_int - 1)->addRecapObservation(str_lst);
             }
         }
 
         // stock composition data
-        temp_int = d_file->next_value().toInt();
+        temp_int = d_file->get_next_value().toInt();
         data->setDoMorphComp(temp_int == 1);
         if (data->getDoMorphComp())
         {
             compositionMorph *mcps = new compositionMorph();
             data->set_morph_composition (mcps);
-            num_input_lines = d_file->next_value().toInt();
+            num_input_lines = d_file->get_next_value().toInt();
             mcps->setNumberObs(num_input_lines);
-            temp_int = d_file->next_value().toInt();
+            temp_int = d_file->get_next_value().toInt();
 //            mcps->set_number_morphs(temp_int);
-            for (int j = 0; j < data->num_fleets(); j++)
+            for (int j = 0; j < data->get_num_fleets(); j++)
                 data->getFleet(j)->setMorphNumMorphs(temp_int);
-            temp_str = d_file->next_value();
+            temp_str = d_file->get_next_value();
             for (i = 0; i < total_fleets; i++)
                 data->getFleet(i)->setMorphMinTailComp(temp_str);
 //            mcps->set_mincomp(temp_float);
@@ -534,14 +535,14 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.clear();
                 for (int j = 0; j < obslength; j++)
                 {
-                    str_lst.append(d_file->next_value());
+                    str_lst.append(d_file->get_next_value());
                 }
                 temp_int = abs(str_lst.at(2).toInt());
                 data->getFleet(temp_int - 1)->addMorphObservation(str_lst);
             }
         }
 
-        temp_int = d_file->next_value().toInt();
+        temp_int = d_file->get_next_value().toInt();
         if (temp_int != END_OF_DATA)
         {
             d_file->error(QString("Found incorrect end of data marker."));
@@ -563,94 +564,94 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
     QString temp_str, line;
     QStringList str_lst;
     int i, chars = 0;
-    int num_years = 1 + data->end_year() - data->start_year();
+//    int num_years = 1 + data->get_end_year() - data->get_start_year();
     int year, season;
     int temp_int = 0, num, num_lines;
-    float temp_float = 0.0;
-    int totalFleets = data->getNumActiveFleets();
+//    float temp_float = 0.0;
+//    int totalFleets = data->getNumActiveFleets();
 
 
     if(d_file->open(QIODevice::WriteOnly))
     {
-        chars += write_version_comment(d_file);
+        chars += writeVersionComment(d_file);
         chars += d_file->write_comments();
 
         line = QString (QString ("#_observed data:"));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_styr" ).arg
-                        (QString::number(data->start_year())));
+                        (QString::number(data->get_start_year())));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_endyr" ).arg
-                        (QString::number(data->end_year())));
+                        (QString::number(data->get_end_year())));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_N_seasons" ).arg
-                        (QString::number(data->num_seasons())));
+                        (QString::number(data->get_num_seasons())));
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_seasons(); i++)
+        for (i = 0; i < data->get_num_seasons(); i++)
             line.append (QString(" %1").arg
-                         (QString::number(data->months_per_season(i))));
+                         (QString::number(data->get_months_per_season(i))));
         line.append (" #_N_months/season" );
         chars += d_file->writeline (line);
 
         line = QString (QString ("%1 #_spawn_season" ).arg
-                            (QString::number(data->spawn_season())));
+                            (QString::number(data->get_spawn_season())));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_N_fleets" ).arg
-                        (QString::number(data->num_fisheries())));
+                        (QString::number(data->get_num_fisheries())));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_N_surveys" ).arg
-                        (QString::number(data->num_surveys())));
+                        (QString::number(data->get_num_surveys())));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_N_areas" ).arg
-                        (QString::number(data->num_areas())));
+                        (QString::number(data->get_num_areas())));
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
             line.append(QString("%1%").arg(data->getFleet(i)->getName()));
         line.chop(1);
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
             line.append(QString(" %1").arg
                         (QString::number(data->getFleet(i)->getSeasTiming())));
         line.append(" #_surveytiming_in_season" );
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
             line.append(QString(" %1").arg
                         (QString::number(data->getFleet(i)->getArea())));
         line.append(" #_area_assignments_for_each_fishery_and_survey" );
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_fisheries(); i++)
+        for (i = 0; i < data->get_num_fisheries(); i++)
             line.append(QString(" %1").arg
                         (QString::number(data->getFleet(i)->getCatchUnits())));
         line.append(" #_units of catch: 1=bio; 2=num" );
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_fisheries(); i++)
+        for (i = 0; i < data->get_num_fisheries(); i++)
             line.append(QString(" %1").arg
                         (QString::number(data->getFleet(i)->catch_se())));
         line.append(" #_se of log(catch) only used for init_eq_catch and for Fmethod 2 and 3; use -1 for discard only fleets" );
         chars += d_file->writeline (line);
 
         line = QString (QString ("%1 #_N_genders" ).arg
-                        (QString::number(data->num_genders())));
+                        (QString::number(data->get_num_genders())));
         chars += d_file->writeline (line);
 
         line = QString (QString ("%1 #_N_ages" ).arg
-                        (QString::number(data->num_ages())));
+                        (QString::number(data->get_num_ages())));
         chars += d_file->writeline (line);
 
         line.clear();
-        for (i = 0; i < data->num_fisheries(); i++)
+        for (i = 0; i < data->get_num_fisheries(); i++)
             line.append(QString(" %1").arg
                         (QString::number(data->getFleet(i)->catch_equil())));
         line.append(" #_init_equil_catch_for_each_fishery" );
@@ -669,7 +670,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             QString yr, ss;
             {
                 line.clear();
-                for (int k = 0; k < data->num_fisheries(); k++)
+                for (int k = 0; k < data->get_num_fisheries(); k++)
                 {
                     temp_str = data->getFleet(k)->getCatchObservation(i).at(2);
                     line.append(QString(" %1").arg (temp_str));
@@ -686,7 +687,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 
         // Abundance
         temp_int = 0;
-        for (i = data->num_fisheries(); i < data->num_fleets(); i++)
+        for (i = data->get_num_fisheries(); i < data->get_num_fleets(); i++)
             temp_int += data->getFleet(i)->abundance_count();
 
         line = QString(QString ("#\n%1 #_N_cpue_and_surveyabundance_observations" ).arg(
@@ -698,7 +699,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline(line);
         line = QString ("#_Fleet Units Errtype" );
         chars += d_file->writeline(line);
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             line = QString(QString("%1 %2 %3 # %4" ).arg (
                    QString::number(i+1),
@@ -710,7 +711,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 
         line = QString("#_year seas fleet obs stderr" );
         chars += d_file->writeline (line);
-        for (i = data->num_fisheries();i < data->num_fleets(); i++)
+        for (i = data->get_num_fisheries();i < data->get_num_fleets(); i++)
         {
             int num_lines = data->getFleet(i)->getAbundanceCount();
             for (int j = 0; j < num_lines; j++)
@@ -757,7 +758,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString("#Fleet Disc_units err_type" );
         chars += d_file->writeline (line);
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->getDiscardCount() > 0)
             {
@@ -774,7 +775,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString("#_year seas fleet obs stderr" );
         chars += d_file->writeline (line);
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             for (int j = 0; j < data->getFleet(i)->getDiscardCount(); j++)
             {
@@ -795,7 +796,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 
         // mean body weight
         temp_int = 0;
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
             temp_int += data->getFleet(i)->getMbwtNumObs();
         line = QString (QString("%1 #_N_meanbodywt_obs" ).arg(QString::number(temp_int)));
         chars += d_file->writeline (line);
@@ -804,7 +805,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString ("#_year seas type part obs cv" );
         chars += d_file->writeline (line);
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             num = data->getFleet(i)->getMbwtNumObs();
             for (int j = 0; j < num; j++)
@@ -878,7 +879,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
 
         temp_int = 0;
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive())
             {
@@ -890,7 +891,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         line = QString ("#Yr Seas Flt/Svy Gender Part Nsamp datavector(female-male)" );
         chars += d_file->writeline (line);
         for (int type = Fleet::Fishing; type < Fleet::None; type++)
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive() &&
                     data->getFleet(i)->getType() == (Fleet::FleetType)type)
@@ -949,7 +950,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 //            write_error_vector(a_data->error_def(i));
         }
         temp_int = 0;
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive())
             {
@@ -968,7 +969,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         line = QString ("#Yr Seas Flt/Svy Gender Part Ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)" );
         chars += d_file->writeline (line);
         for (int type = Fleet::Fishing; type < Fleet::None; type++)
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive() &&
                     data->getFleet(i)->getType() == (Fleet::FleetType)type)
@@ -993,7 +994,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 
         // mean size at age
         num = 0;
-        for (i =0; i < data->num_fleets(); i++)
+        for (i =0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive())
                 num += data->getFleet(i)->getSaaModel()->rowCount();
@@ -1004,7 +1005,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
         line = QString ("#Yr Seas Flt/Svy Gender Part Ageerr Ignore datavector(female-male)" );
         line.append    ("#                                          samplesize(female-male)" );
         chars += d_file->writeline (line);
-        for (i = 0; i < data->num_fleets(); i++)
+        for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->isActive())
             {
@@ -1091,7 +1092,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < num; i++)
             {
                 temp_int = 0;
-                for (int j = 0; j < data->num_fleets(); j++)
+                for (int j = 0; j < data->get_num_fleets(); j++)
                 {
                     if (data->getFleet(j)->isActive())
                     {
@@ -1117,7 +1118,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
             for (i = 0; i < num; i++)
             {
-                for (int j = 0; j < data->num_fleets(); j++)
+                for (int j = 0; j < data->get_num_fleets(); j++)
                 {
                     if (data->getFleet(j)->isActive())
                     {
@@ -1149,7 +1150,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             line = QString (QString("%1 # N_tag_groups" ).arg(QString::number(num)));
             chars += d_file->writeline (line);
             temp_int = 0;
-            for (i = 0; i < data->num_fleets(); i++)
+            for (i = 0; i < data->get_num_fleets(); i++)
             {
                 if (data->getFleet(i)->isActive())
                     temp_int += data->getFleet(i)->getRecapNumEvents();
@@ -1176,7 +1177,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
             for (i = 0; i < num; i++)
             {
-                for (int j = 0; j < data->num_fleets(); j++)
+                for (int j = 0; j < data->get_num_fleets(); j++)
                 {
                     if (data->getFleet(j)->isActive())
                     {
@@ -1209,7 +1210,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             line = QString (QString("%1 # Do_morphcomp" ).arg(QString("1")));
             chars += d_file->writeline (line);
             num_lines = 0;
-            for (i = 0; i < data->num_fleets(); i++)
+            for (i = 0; i < data->get_num_fleets(); i++)
                 num_lines += data->getFleet(i)->getMorphNumObs();
             line = QString (QString("%1 # N_observations" ).arg(QString::number(num_lines)));
             chars += d_file->writeline (line);
@@ -1222,7 +1223,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
             temp_int = data->get_tag_latency();
             line = QString("#Year seas fleet partition Nsamp data_vector" );
             chars += d_file->writeline (line);
-            for (num = 0; num < data->num_fleets(); num++)
+            for (num = 0; num < data->get_num_fleets(); num++)
             {
                 if (data->fleets.at(num)->isActive())
                 {
@@ -1255,6 +1256,7 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 
         d_file->close();
     }
+    return chars;
 }
 
 bool read32_forecastFile(ss_file *f_file, ss_model *data)
@@ -1271,122 +1273,122 @@ bool read32_forecastFile(ss_file *f_file, ss_model *data)
         ss_forecast *fcast = data->forecast;
         f_file->read_comments();
 
-        token = f_file->next_value("benchmarks type");
+        token = f_file->get_next_value("benchmarks type");
         temp_int = token.toInt();
         fcast->set_benchmarks(temp_int);
 
-        token = f_file->next_value("MSY");
+        token = f_file->get_next_value("MSY");
         temp_int = token.toInt();
         fcast->set_MSY(temp_int);
 
-        token = f_file->next_value("SPR target");
+        token = f_file->get_next_value("SPR target");
         temp_float = token.toFloat();
         fcast->set_spr_target(temp_float);
 
-        token = f_file->next_value("biomass target");
+        token = f_file->get_next_value("biomass target");
         temp_float = token.toFloat();
         fcast->set_biomass_target(temp_float);
 
         for (i = 0; i < 6; i++)
         {
-            token = f_file->next_value("benchmark year");
+            token = f_file->get_next_value("benchmark year");
             temp_int = token.toInt();
             fcast->set_benchmark_years(i, temp_int);
         }
 
-        token = f_file->next_value("rel f basis");
+        token = f_file->get_next_value("rel f basis");
         temp_int = token.toInt();
         fcast->set_benchmark_rel_f(temp_int);
-        token = f_file->next_value("forecast type");
+        token = f_file->get_next_value("forecast type");
         temp_int = token.toInt();
         fcast->set_forecast(temp_int);
-        token = f_file->next_value("number of forecast years");
+        token = f_file->get_next_value("number of forecast years");
         temp_int = token.toInt();
         fcast->set_num_forecast_years(temp_int);
-        token = f_file->next_value("F scalar");
+        token = f_file->get_next_value("F scalar");
         temp_float = token.toFloat();
         fcast->set_f_scalar(temp_float);
         for (i = 0; i < 4; i++)
         {
-            token = f_file->next_value("forecast year");
+            token = f_file->get_next_value("forecast year");
             temp_int = token.toInt();
             fcast->set_forecast_year(i, temp_int);
         }
 
-        token = f_file->next_value("control rule method");
+        token = f_file->get_next_value("control rule method");
         temp_int = token.toInt();
         fcast->set_cr_method(temp_int);
-        token = f_file->next_value("control rule biomass const f");
+        token = f_file->get_next_value("control rule biomass const f");
         temp_float = token.toFloat();
         fcast->set_cr_biomass_const_f(temp_float);
-        token = f_file->next_value("control rule biomass no f");
+        token = f_file->get_next_value("control rule biomass no f");
         temp_float = token.toFloat();
         fcast->set_cr_biomass_no_f(temp_float);
-        token = f_file->next_value("control rule target");
+        token = f_file->get_next_value("control rule target");
         temp_float = token.toFloat();
         fcast->set_cr_target(temp_float);
 
-        token = f_file->next_value("number of loops");
+        token = f_file->get_next_value("number of loops");
         temp_int = token.toInt();
         fcast->set_num_forecast_loops(temp_int);
-        token = f_file->next_value("loop with recruitment");
+        token = f_file->get_next_value("loop with recruitment");
         temp_int = token.toInt();
         fcast->set_forecast_loop_recruitment(temp_int);
-        token = f_file->next_value("loop control 3");
+        token = f_file->get_next_value("loop control 3");
         temp_int = token.toInt();
         fcast->set_forecast_loop_ctl3(temp_int);
-        token = f_file->next_value("loop control 4");
+        token = f_file->get_next_value("loop control 4");
         temp_int = token.toInt();
         fcast->set_forecast_loop_ctl4(temp_int);
-        token = f_file->next_value("loop control 5");
+        token = f_file->get_next_value("loop control 5");
         temp_int = token.toInt();
         fcast->set_forecast_loop_ctl5(temp_int);
 
-        token = f_file->next_value("caps and allocs first yr");
+        token = f_file->get_next_value("caps and allocs first yr");
         temp_int = token.toInt();
         fcast->set_caps_alloc_st_year(temp_int);
 
-        token = f_file->next_value("std dev log(catch/tgt)");
+        token = f_file->get_next_value("std dev log(catch/tgt)");
         temp_float = token.toFloat();
         fcast->set_log_catch_std_dev(temp_float);
-        token = f_file->next_value("West Coast rebuilder");
+        token = f_file->get_next_value("West Coast rebuilder");
         temp_int = token.toInt();
-        fcast->set_rebuilder(temp_int == 1? true: false);
-        token = f_file->next_value("rebuilder: first year");
+        fcast->set_do_rebuilder(temp_int == 1? true: false);
+        token = f_file->get_next_value("rebuilder: first year");
         temp_int = token.toInt();
         fcast->set_rebuilder_first_year(temp_int);
-        token = f_file->next_value("rebuilder: curr year");
+        token = f_file->get_next_value("rebuilder: curr year");
         temp_int = token.toInt();
         fcast->set_rebuilder_curr_year(temp_int);
 
-        token = f_file->next_value("fleet relative F");
+        token = f_file->get_next_value("fleet relative F");
         temp_int = token.toInt();
         fcast->set_fleet_rel_f(temp_int);
 
-        token = f_file->next_value("catch tuning basis");
+        token = f_file->get_next_value("catch tuning basis");
         temp_int = token.toInt();
         fcast->set_catch_tuning_basis(temp_int);
 
-        if (fcast->fleet_rel_f() == 2)
+        if (fcast->get_fleet_rel_f() == 2)
         {
-            for (int s = 0; s < fcast->num_seasons(); s++)
+            for (int s = 0; s < fcast->get_num_seasons(); s++)
             {
-                for (i = 0; i < fcast->num_fleets(); i++)
+                for (i = 0; i < fcast->get_num_fleets(); i++)
                 {
-                    temp_float = f_file->next_value().toFloat();
+                    temp_float = f_file->get_next_value().toFloat();
                     fcast->set_seas_fleet_rel_f(s, i, temp_float);
                 }
             }
         }
 
-        for (i = 0; i < fcast->num_fleets(); i++)
+        for (i = 0; i < fcast->get_num_fleets(); i++)
         {
-            token = f_file->next_value("max catch by fleet");
+            token = f_file->get_next_value("max catch by fleet");
             temp_int = token.toInt();
             fcast->set_max_catch_fleet(i, temp_int);
             if (f_file->at_eol())
             {
-                for (; i < fcast->num_fleets(); i++)
+                for (; i < fcast->get_num_fleets(); i++)
                     fcast->set_max_catch_fleet(i, temp_int);
             }
         }
@@ -1402,26 +1404,26 @@ bool read32_forecastFile(ss_file *f_file, ss_model *data)
             i++;
         }*/
 
-        for (i = 0; i < fcast->num_areas(); i++)
+        for (i = 0; i < fcast->get_num_areas(); i++)
         {
-            token = f_file->next_value("max catch by area");
+            token = f_file->get_next_value("max catch by area");
             temp_int = token.toInt();
             fcast->set_max_catch_area(i, temp_int);
             if (f_file->at_eol())
             {
-                for (; i < fcast->num_areas(); i++)
+                for (; i < fcast->get_num_areas(); i++)
                     fcast->set_max_catch_area(i, temp_int);
             }
         }
 
-        for (i = 0; i < fcast->num_fleets(); i++)
+        for (i = 0; i < fcast->get_num_fleets(); i++)
         {
-            token = f_file->next_value("alloc group assignment");
+            token = f_file->get_next_value("alloc group assignment");
             temp_int = token.toInt();
             data->getFleet(i)->setAllocGroup(temp_int);//fcast->set_alloc_group(i, temp_int);
             if (f_file->at_eol())
             {
-                for (; i < fcast->num_fleets(); i++)
+                for (; i < fcast->get_num_fleets(); i++)
                     data->getFleet(i)->setAllocGroup(temp_int);//fcast->set_alloc_group(i, temp_int);
             }
         }
@@ -1434,38 +1436,38 @@ bool read32_forecastFile(ss_file *f_file, ss_model *data)
             i++;
         }*/
 
-        if (fcast->num_alloc_groups() > 1)
+        if (fcast->get_num_alloc_groups() > 1)
         {
-        for (i = 0; i < fcast->num_alloc_groups(); i++)
+        for (i = 0; i < fcast->get_num_alloc_groups(); i++)
         {
-            token = f_file->next_value("alloc group fraction");
+            token = f_file->get_next_value("alloc group fraction");
             str_lst.append(token);
             fcast->set_alloc_fractions(0, str_lst);
         }
         }
 
-        token = f_file->next_value("number forecast catch levels");
+        token = f_file->get_next_value("number forecast catch levels");
         temp_int = token.toInt();
         fcast->set_num_catch_levels(temp_int);
 
-        token = f_file->next_value("input catch basis");
+        token = f_file->get_next_value("input catch basis");
         temp_int = token.toInt();
         fcast->set_input_catch_basis(temp_int);
 
         fcast->setNumFixedFcastCatch(0);
 
-        token = f_file->next_value();
+        token = f_file->get_next_value();
         temp_int = token.toInt();
         if (temp_int != END_OF_DATA)
         {
             str_lst.clear();
             str_lst.append(token);                // Year
-            str_lst.append(f_file->next_value()); // Season
-            str_lst.append(f_file->next_value()); // Fleet
-            str_lst.append(f_file->next_value()); // Catch
+            str_lst.append(f_file->get_next_value()); // Season
+            str_lst.append(f_file->get_next_value()); // Fleet
+            str_lst.append(f_file->get_next_value()); // Catch
             fcast->addFixedFcastCatch(str_lst);
 
-            token = f_file->next_value();
+            token = f_file->get_next_value();
             temp_int = token.toInt();
         }
 
@@ -1488,25 +1490,25 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
 
     if(f_file->open(QIODevice::WriteOnly))
     {
-        chars += write_version_comment(f_file);
+        chars += writeVersionComment(f_file);
         chars += f_file->write_comments();
 
         line = QString("# for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr" );
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->benchmarks());
+        value = QString::number(fcast->get_benchmarks());
         line = QString(QString ("%1 # Benchmarks: 0=skip; 1=calc F_spr, F_btgt, and F_msy " ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->MSY());
+        value = QString::number(fcast->get_MSY());
         line = QString(QString ("%1 # MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt); 4=set to F(endyr) " ).arg (value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->spr_target());
+        value = QString::number(fcast->get_spr_target());
         line = QString(QString("%1 # SPR target (e.g. 0.40) " ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->biomass_target());
+        value = QString::number(fcast->get_biomass_target());
         line = QString(QString("%1 # Biomass target (e.g. 0.40)" ).arg(value));
         chars += f_file->writeline(line);
 
@@ -1515,10 +1517,10 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         line.append(QString("enter actual year, or values of 0 or -integer to be rel. endyr) " ));
         for (int i = 0; i < 6; i++)
         {
-            value = QString::number(fcast->benchmark_year(i));
+            value = QString::number(fcast->get_benchmark_year(i));
             line.append(QString(QString(" %1").arg(value)));
-            if (fcast->benchmark_year(i) <= 0)
-                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->benchmark_year(i))));
+            if (fcast->get_benchmark_year(i) <= 0)
+                temp_string.append(QString(" %1").arg(QString::number(data->get_end_year() + fcast->get_benchmark_year(i))));
             else
                 temp_string.append(QString(" %1").arg(value));
         }
@@ -1526,19 +1528,19 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         temp_string.append(" # after processing ");
         chars += f_file->writeline(temp_string);
 
-        value = QString::number(fcast->benchmark_rel_f());
+        value = QString::number(fcast->get_benchmark_rel_f());
         line = QString(QString("%1 #_Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->forecast());
+        value = QString::number(fcast->get_forecast());
         line = QString(QString("%1 # Forecast: 0=none; 1=F(SPR); 2=F(MSY) 3=F(Btgt); 4=Ave F (uses first-last relF yrs); 5=input annual F scalar" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->num_forecast_years());
+        value = QString::number(fcast->get_num_forecast_years());
         line = QString(QString("%1 # N forecast years" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->f_scalar());
+        value = QString::number(fcast->get_f_scalar());
         line = QString(QString("%1 # F scalar (only used for Do_Forecast==5)" ).arg(value));
         chars += f_file->writeline(line);
 
@@ -1546,10 +1548,10 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         temp_string = QString("# ");
         for (int i = 0; i < 4; i++)
         {
-            value = QString::number(fcast->forecast_year(i));
+            value = QString::number(fcast->get_forecast_year(i));
             line.append(QString(QString(" %1").arg(value)));
-            if (fcast->forecast_year(i) <= 0)
-                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->forecast_year(i))));
+            if (fcast->get_forecast_year(i) <= 0)
+                temp_string.append(QString(" %1").arg(QString::number(data->get_end_year() + fcast->get_forecast_year(i))));
             else
                 temp_string.append(QString(" %1").arg(value));
         }
@@ -1557,60 +1559,60 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         temp_string.append(" # after processing ");
         chars += f_file->writeline(temp_string);
 
-        value = QString::number(fcast->cr_method());
+        value = QString::number(fcast->get_cr_method());
         line = QString(QString("%1 # Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB) )" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->cr_biomass_const_f());
+        value = QString::number(fcast->get_cr_biomass_const_f());
         line = QString(QString("%1 # Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below)" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->cr_biomass_no_f());
+        value = QString::number(fcast->get_cr_biomass_no_f());
         line = QString(QString("%1 # Control rule Biomass level for no F (as frac of Bzero, e.g. 0.40)" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->cr_target());
+        value = QString::number(fcast->get_cr_target());
         line = QString(QString("%1 # Control rule target as fraction of Flimit (e.g. 0.75)" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->num_forecast_loops());
+        value = QString::number(fcast->get_num_forecast_loops());
         line = QString(QString("%1 #_N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_recruitment());
+        value = QString::number(fcast->get_forecast_loop_recruitment());
         line = QString(QString("%1 #_First forecast loop with stochastic recruitment" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_ctl3());
+        value = QString::number(fcast->get_forecast_loop_ctl3());
         line = QString(QString("%1 #_Forecast loop control #3 (reserved for future bells&whistles) " ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_ctl4());
+        value = QString::number(fcast->get_forecast_loop_ctl4());
         line = QString(QString("%1 #_Forecast loop control #4 (reserved for future bells&whistles) " ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->forecast_loop_ctl5());
+        value = QString::number(fcast->get_forecast_loop_ctl5());
         line = QString(QString("%1 #_Forecast loop control #5 (reserved for future bells&whistles) " ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->caps_alloc_st_year());
+        value = QString::number(fcast->get_caps_alloc_st_year());
         line = QString(QString("%1 # First Year for caps and allocations (should be after years with fixed inputs)" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->log_catch_std_dev());
+        value = QString::number(fcast->get_log_catch_std_dev());
         line = QString(QString("%1 # stddev of log (realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->rebuilder()? 1: 0);
+        value = QString::number(fcast->get_do_rebuilder()? 1: 0);
         line = QString(QString("%1 # Do West Coast gfish rebuilder output (0/1)" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->rebuilder_first_year());
+        value = QString::number(fcast->get_rebuilder_first_year());
         line = QString(QString("%1 # Rebuilder: first year catch could have been set to zero (Ydecl)(-1 to set to 1999)" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->rebuilder_curr_year());
+        value = QString::number(fcast->get_rebuilder_curr_year());
         line = QString(QString("%1 # Rebuilder: year for current age structure (Yinit) (-1 to set to endyear+1)" ).arg(value));
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->fleet_rel_f());
+        value = QString::number(fcast->get_fleet_rel_f());
         line = QString(QString("%1 # fleet relative F: 1=use first-last alloc year; 2=read seas(row) x fleet(col) below" ).arg(value));
         chars += f_file->writeline(line);
         line = QString("# Note that fleet allocation is used directly as average F if Do_Forecast=4" );
         chars += f_file->writeline(line);
 
-        value = QString::number(fcast->catch_tuning_basis());
+        value = QString::number(fcast->get_catch_tuning_basis());
         line = QString(QString("%1 # basis for fcast catch tuning and for fcast catch caps and allocation  (2=deadbio; 3=retainbio; 5=deadnum; 6=retainnum)" ).arg(value));
         chars += f_file->writeline(line);
 
@@ -1620,7 +1622,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         line = QString ("#_Fleet: ");
         temp_string = QString("# ");
-            for (i = 0; i < data->num_fisheries(); i++)
+            for (i = 0; i < data->get_num_fisheries(); i++)
             {
                 line.append(QString(" %1").arg (data->getFleet(i)->getName()));
                 temp_string.append(" -1");
@@ -1630,10 +1632,10 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(temp_string);
         chars += f_file->newline();
         line.clear();
-        if (fcast->fleet_rel_f() == 2)
+        if (fcast->get_fleet_rel_f() == 2)
         {
-            for (i = 0; i < fcast->num_seasons(); i++)
-                for (int j = 0; j < fcast->num_fleets(); i++)
+            for (i = 0; i < fcast->get_num_seasons(); i++)
+                for (int j = 0; j < fcast->get_num_fleets(); i++)
                     line.append(QString(" %1").arg(QString::number(0)));
         }
         chars += f_file->writeline(line);
@@ -1641,7 +1643,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("# max totalcatch by fleet (-1 to have no max) must enter value for each fleet" );
         chars += f_file->writeline(line);
         line.clear();
-            for (i = 0; i < fcast->num_fleets(); i++)
+            for (i = 0; i < fcast->get_num_fleets(); i++)
             {
                 if(data->getFleet(i)->getType() != Fleet::Survey)
                 {
@@ -1655,7 +1657,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("# max totalcatch by area (-1 to have no max); must enter value for each area" );
         chars += f_file->writeline(line);
         line.clear();
-        for (i = 0; i < fcast->num_areas(); i++)
+        for (i = 0; i < fcast->get_num_areas(); i++)
         {
             value = QString::number(fcast->max_catch_area(i));
             line.append(QString(" %1").arg(value));
@@ -1667,7 +1669,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("# fleet assignment to allocation group (enter group ID# for each fleet, 0 for not included in an alloc group)" );
         chars += f_file->writeline(line);
         line.clear();
-        for (i = 0; i < fcast->num_fleets(); i++)
+        for (i = 0; i < fcast->get_num_fleets(); i++)
         {
             if(data->getFleet(i)->getType() != Fleet::Survey)
             {
@@ -1681,7 +1683,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("#_Conditional on >1 allocation group" );
         chars += f_file->writeline(line);
         line.clear();
-        if (fcast->num_alloc_groups() > 1)
+        if (fcast->get_num_alloc_groups() > 1)
         {
             str_lst = fcast->get_alloc_fractions(0);
 
@@ -1703,7 +1705,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
         value = QString::number(num);
         line = QString(QString("%1 # Number of forecast catch levels to input (else calc catch from forecast F)" ).arg(value));
         chars += f_file->writeline(line);
-        value = QString::number(fcast->input_catch_basis());
+        value = QString::number(fcast->get_input_catch_basis());
         line = QString(QString("%1 # basis for input Fcast catch:  2=dead catch; 3=retained catch; 99=input Hrate(F) (units are from fleetunits; note new codes in SSV3.20)" ).arg(value));
         chars += f_file->writeline(line);
         line = QString("# Input fixed catch values" );
@@ -1730,6 +1732,7 @@ int write32_forecastFile(ss_file *f_file, ss_model *data)
 
         f_file->close();
     }
+    return chars;
 }
 
 bool read32_controlFile(ss_file *c_file, ss_model *data)
@@ -1739,7 +1742,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
     QString temp_string;
     QStringList datalist;
     population * pop = data->pPopulation;
-    int num_fleets = data->num_fleets();
+    int num_fleets = data->get_num_fleets();
 
     if(c_file->open(QIODevice::ReadOnly))
     {
@@ -1747,13 +1750,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         c_file->read_comments();
 
         // growth patterns
-        num = c_file->next_value().toInt();
+        num = c_file->get_next_value().toInt();
         if (data->get_morph_composition() != NULL &&
                 num != data->get_morph_composition()->getNumberMorphs())
             c_file->error(QString("Number of growth patterns doesn't match number of stocks."));
         pop->Grow()->setNum_patterns(num);
         // morphs or platoons
-        num = c_file->next_value().toInt(); // only 1, 3, and 5 are allowed
+        num = c_file->get_next_value().toInt(); // only 1, 3, and 5 are allowed
         if (num > 4) num = 5;
         else if (num > 1) num = 3;
         else num = 1;
@@ -1761,15 +1764,15 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setMorph_within_ratio(1.0);
         if (num > 1)
         {
-            temp_float = c_file->next_value().toFloat();
+            temp_float = c_file->get_next_value().toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
-            temp_float = c_file->next_value().toFloat();
+            temp_float = c_file->get_next_value().toFloat();
             if ((int)temp_float != -1)
             {
                 pop->Grow()->setMorph_dist(0, temp_float);
                 for (i = 1; i < num; i++)
                 {
-                    temp_float = c_file->next_value().toFloat();
+                    temp_float = c_file->get_next_value().toFloat();
                     pop->Grow()->setMorph_dist(i, temp_float);
                 }
             }
@@ -1779,18 +1782,18 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setDistribArea(1);
 
         // recruitment designs
-        num_vals = pop->Grow()->getNum_patterns() * data->num_seasons() * data->num_areas();
+        num_vals = pop->Grow()->getNum_patterns() * data->get_num_seasons() * data->get_num_areas();
         if (num_vals > 1)
         {
-            num = c_file->next_value().toInt();
+            num = c_file->get_next_value().toInt();
             pop->SR()->setNumAssignments(num);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             pop->SR()->setDoRecruitInteract(temp_int);
             for (i = 0; i < num; i++)
             {
                 datalist.clear();
                 for (int j = 0; j < 3; j++)
-                    datalist.append(c_file->next_value());
+                    datalist.append(c_file->get_next_value());
                 datalist.append("0");
                 pop->SR()->setAssignment(i, datalist);
             }
@@ -1807,17 +1810,17 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         // movement definitions
         pop->Move()->setNumDefs(0);
         pop->Move()->setFirstAge(0);
-        if (data->num_areas() > 1)
+        if (data->get_num_areas() > 1)
         {
-            num = c_file->next_value().toInt();
+            num = c_file->get_next_value().toInt();
             pop->Move()->setNumDefs(num);
-            temp_float = c_file->next_value().toFloat();
+            temp_float = c_file->get_next_value().toFloat();
             pop->Move()->setFirstAge(temp_float);
             for (i = 0; i < num; i++)
             {
                 datalist.clear();
                 for (int j = 0; j < 6; j++)
-                    datalist.append(c_file->next_value());
+                    datalist.append(c_file->get_next_value());
                 pop->Move()->setDefinition(i, datalist);
             }
         }
@@ -1827,13 +1830,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // time block definitions
-        num = c_file->next_value().toInt();
+        num = c_file->get_next_value().toInt();
         data->setNumBlockPatterns(num);
         if (num > 0)
         {
             for (i = 0; i < num; i++)
             {
-                temp_int = c_file->next_value().toInt();
+                temp_int = c_file->get_next_value().toInt();
                 data->getBlockPattern(i)->setNumBlocks(temp_int);
             }
             for (i = 0; i < num; i++)
@@ -1841,15 +1844,15 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 for (int j = 0; j < data->getBlockPattern(i)->getNumBlocks(); j++)
                 {
                     datalist.clear();
-                    datalist.append(c_file->next_value());
-                    datalist.append(c_file->next_value());
+                    datalist.append(c_file->get_next_value());
+                    datalist.append(c_file->get_next_value());
                     data->getBlockPattern(i)->setBlock(j, datalist);
                 }
             }
         }
 
         // fraction female
-        temp_string = c_file->next_value();
+        temp_string = c_file->get_next_value();
         datalist.clear();
         datalist <<"0.000001" << "0.999999" << temp_string << temp_string;
         datalist << "-1" << temp_string << "-99" << "0";
@@ -1859,7 +1862,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
  //       pop->set_frac_female(temp_float);
 
         // natural Mort
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->Grow()->setNatural_mortality_type(temp_int);
         switch (temp_int)
         {
@@ -1868,16 +1871,16 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             num_vals = 1;  // 1 parameter per gender
             break;
         case 1:
-            num_vals = c_file->next_value().toInt(); // num breakpoints
+            num_vals = c_file->get_next_value().toInt(); // num breakpoints
             pop->Grow()->setNatMortNumBreakPts(num_vals);
 //            num = pop->Grow()->getNatMortNumBreakPts();
             datalist.clear();
             for (int i = 0; i < num_vals; i++) // vector of breakpoints
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             pop->Grow()->setNatMortBreakPts(datalist);
             break;
         case 2:
-            temp_int = c_file->next_value().toInt(); // ref age for Lorenzen
+            temp_int = c_file->get_next_value().toInt(); // ref age for Lorenzen
             pop->Grow()->setNaturnalMortLorenzenRef(temp_int);
             num_vals = 2;
             break;
@@ -1890,7 +1893,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             {
                 for (int j = 0; j < num; j++)
                 {
-                    datalist.append(c_file->next_value());
+                    datalist.append(c_file->get_next_value());
                 }
             }
             num_vals = 0;  // no parameters
@@ -1904,30 +1907,30 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // growth model
-        temp_int = c_file->next_value().toInt();  // growth model
+        temp_int = c_file->get_next_value().toInt();  // growth model
         pop->Grow()->setModel(temp_int);
 
-        temp_float = c_file->next_value().toFloat();  // growth Amin (A1)
+        temp_float = c_file->get_next_value().toFloat();  // growth Amin (A1)
         pop->Grow()->setAge_for_l1(temp_float);
-        temp_float = c_file->next_value().toFloat();  // growth Amax
+        temp_float = c_file->get_next_value().toFloat();  // growth Amax
         pop->Grow()->setAge_for_l2(temp_float);
         if (pop->Grow()->getModel() == 3)
         {
-            temp_float = c_file->next_value().toFloat(); // min age for age-specific K
+            temp_float = c_file->get_next_value().toFloat(); // min age for age-specific K
             pop->Grow()->setAgeMin_for_K(temp_float);
-            temp_float = c_file->next_value().toFloat(); // max age for age-specific K
+            temp_float = c_file->get_next_value().toFloat(); // max age for age-specific K
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
         pop->Grow()->setExpDecay(0.20);   // Exponential decay - added in 3.30
 
-        temp_float = c_file->next_value().toFloat(); // SD_add to LAA
+        temp_float = c_file->get_next_value().toFloat(); // SD_add to LAA
         pop->Grow()->setSd_add(temp_float);
 
-        temp_int = c_file->next_value().toInt();    // CV pattern
+        temp_int = c_file->get_next_value().toInt();    // CV pattern
         pop->Grow()->setCv_growth_pattern(temp_int);
 
         // maturity
-        temp_int = c_file->next_value().toInt();    // maturity option
+        temp_int = c_file->get_next_value().toInt();    // maturity option
         pop->Grow()->setMaturity_option(temp_int);
         if (temp_int == 3 ||
             temp_int == 4)
@@ -1935,7 +1938,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             datalist.clear();
             num = data->get_age_composition()->getNumber(); // N ages + 1
             for (i = 0; i <= num; i++)
-                datalist.append(c_file->next_value()); // vector of age-specific maturity or fecundity
+                datalist.append(c_file->get_next_value()); // vector of age-specific maturity or fecundity
             pop->Grow()->setNumMatAgeValues(datalist.count());
             pop->Grow()->setMatAgeVals(datalist);
         }
@@ -1944,32 +1947,32 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             datalist.clear();
             num = data->get_length_composition()->getNumberBins();
             for (i = 0; i < num; i++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             pop->Grow()->setNumMatAgeValues(datalist.count());
             pop->Grow()->setMatAgeVals(datalist);
         }
 
-        temp_float = c_file->next_value().toFloat();   // first mature age
+        temp_float = c_file->get_next_value().toFloat();   // first mature age
         pop->Grow()->setFirst_mature_age(temp_float);
 
         // fecundity
-        temp_int = c_file->next_value().toInt();     // fecundity option
+        temp_int = c_file->get_next_value().toInt();     // fecundity option
         pop->Fec()->setMethod(temp_int);
 
-        temp_int = c_file->next_value().toInt();     // hermaphroditisim option
+        temp_int = c_file->get_next_value().toInt();     // hermaphroditisim option
         pop->Fec()->setHermaphroditism(temp_int);
         if (temp_int != 0)
         {
-            temp_float = c_file->next_value().toFloat();  // hermaph season
+            temp_float = c_file->get_next_value().toFloat();  // hermaph season
             pop->Fec()->setHermSeason(temp_float);
-            temp_int = c_file->next_value().toInt();      // include males in spawn
+            temp_int = c_file->get_next_value().toInt();      // include males in spawn
             pop->Fec()->setHermIncludeMales(temp_int);
         }
 
-        temp_int = c_file->next_value().toInt();          // offset method
+        temp_int = c_file->get_next_value().toInt();          // offset method
         pop->Grow()->setParam_offset_method(temp_int);
 
-        temp_int = c_file->next_value().toInt();         // time-vary adjustment constraint
+        temp_int = c_file->get_next_value().toInt();         // time-vary adjustment constraint
         pop->Grow()->setAdjustment_method(temp_int);
 
         // mortality growth parameters
@@ -2026,7 +2029,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             }
             if (pop->Grow()->getModel() == 3)
             {
-                for (int k = 0; k < data->num_ages(); k++)
+                for (int k = 0; k < data->get_num_ages(); k++)
                 {
                     datalist = readParameter(c_file); // K deviations per age
                     gp->addGrowthParam(datalist);
@@ -2039,7 +2042,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             gp->setCVParam(1, datalist);
             gp->getCVParams()->setRowHeader(1, QString("CV_old_Fem_GP_%1").arg(QString::number(i+1)));
 
-            if (data->num_genders() > 1)          // Male parameters
+            if (data->get_num_genders() > 1)          // Male parameters
             {
                 temp_int = pop->Grow()->getNatural_mortality_type();
                 switch (temp_int)
@@ -2088,7 +2091,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 }
                 if (pop->Grow()->getModel() == 3)
                 {
-                    for (int k = 0; k < data->num_ages(); k++)
+                    for (int k = 0; k < data->get_num_ages(); k++)
                     {
                         datalist = readParameter(c_file); // K deviations per age
                         gp->addGrowthParam(datalist);
@@ -2130,7 +2133,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_slope_wt_Fem"));
         num++;
 
-        if (data->num_genders() > 1)
+        if (data->get_num_genders() > 1)
         {
             num = pop->Grow()->getNumMaturityParams();
             datalist = readParameter(c_file); // male_wt_len_1
@@ -2165,13 +2168,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setRecruitDistParam(i, datalist);
             pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
         }
-        for (num = 0; num < data->num_areas(); num++, i++)
+        for (num = 0; num < data->get_num_areas(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to areas
             pop->SR()->setRecruitDistParam(i, datalist);
             pop->SR()->getRecruitDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
         }
-        for (num = 0; num < data->num_seasons(); num++, i++)
+        for (num = 0; num < data->get_num_seasons(); num++, i++)
         {
             datalist = readParameter(c_file); // recr apportion to seasons
             pop->SR()->setRecruitDistParam(i, datalist);
@@ -2187,13 +2190,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 pop->SR()->setInteractParam(index, datalist);
                 pop->SR()->getInteractParams()->setRowHeader(index, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
             }
-            for (i = 0; i < data->num_areas(); i++, index++)
+            for (i = 0; i < data->get_num_areas(); i++, index++)
             {
                 datalist = readParameter(c_file); // recr interaction area
                 pop->SR()->setInteractParam(index, datalist);
                 pop->SR()->getInteractParams()->setRowHeader(index, QString("RecrDist_Area_%1").arg(QString::number(i+1)));
             }
-            for (i = 0; i < data->num_seasons(); i++, index++)
+            for (i = 0; i < data->get_num_seasons(); i++, index++)
             {
                 datalist = readParameter(c_file); // recr interaction season
                 pop->SR()->setInteractParam(index, datalist);
@@ -2225,25 +2228,25 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // seasonal_effects_on_biology_parms
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setFemwtlen1(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setFemwtlen2(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setMat1(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setMat2(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setFec1(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setFec2(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setMalewtlen1(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setMalewtlen1(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setL1(temp_int == 1);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->setK(temp_int == 1);
         pop->setNumSeasParams();
         num = pop->getNumSeasParams();
@@ -2252,7 +2255,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             datalist.clear();
             // read seasonal parameter
             for (int j = 0; j < 7; j++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             pop->addSeasParam(datalist);
         }
 
@@ -2302,7 +2305,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
         if (num > 0)
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
         else
             temp_int = 0;
         pop->Grow()->setDevPhase (temp_int);
@@ -2315,14 +2318,14 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         data->getForecast()->set_forecast_rec_end(pop->SR()->rec_dev_end_yr);
 
         // Fishing mortality
-        pop->M()->setNumFisheries(data->num_fisheries());
-        temp_float = c_file->next_value().toFloat();
+        pop->M()->setNumFisheries(data->get_num_fisheries());
+        temp_float = c_file->get_next_value().toFloat();
         pop->M()->setBparkF(temp_float);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->M()->setBparkYr(temp_int);
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         pop->M()->setMethod(temp_int);
-        temp_float = c_file->next_value().toFloat();
+        temp_float = c_file->get_next_value().toFloat();
         pop->M()->setMaxF(temp_float);
         pop->M()->setStartF(0);
         pop->M()->setPhase(0);
@@ -2331,15 +2334,15 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         switch (pop->M()->getMethod())
         {
         case 2:
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toFloat();
             pop->M()->setStartF(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             pop->M()->setPhase(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             pop->M()->setNumInputs(temp_int);
             break;
         case 3:
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             pop->M()->setNumTuningIters(temp_int);
             break;
         }
@@ -2349,13 +2352,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         {
             for (int i = 0; i < 6; i++)
             {
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             }
             pop->M()->setInputLine(0, datalist);
         }
 
         pop->M()->setNumInitialParams(0);
-        for (i = 0; i < data->num_fisheries(); i++)
+        for (i = 0; i < data->get_num_fisheries(); i++)
         {
             datalist = readShortParameter(c_file);
             if (!datalist.at(2).isEmpty() && datalist.at(2).compare("0"))
@@ -2364,13 +2367,13 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         // Q setup
         QList<int> readQBase;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             int doPowr, envVar, extrSD, devTyp;
-            doPowr = c_file->next_value().toInt();
-            envVar = c_file->next_value().toInt();
-            extrSD = c_file->next_value().toInt();
-            devTyp = c_file->next_value().toInt();
+            doPowr = c_file->get_next_value().toInt();
+            envVar = c_file->get_next_value().toInt();
+            extrSD = c_file->get_next_value().toInt();
+            devTyp = c_file->get_next_value().toInt();
             readQBase.insert(i, devTyp);
             if (data->getFleet(i)->getAbundanceCount() > 0)
             {
@@ -2407,12 +2410,12 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 if (devTyp == 3)
                 {
                     showInputMessage ("The Gui does not handle random deviations of Q.");
-                    temp_int = c_file->next_value().toInt();
+                    temp_int = c_file->get_next_value().toInt();
                 }
                 if (devTyp == 4)
                 {
                     showInputMessage ("The Gui does not handle random walk on Q.");
-                    temp_int = c_file->next_value().toInt();
+                    temp_int = c_file->get_next_value().toInt();
                 }
                 data->getFleet(i)->Q()->setup(datalist);
                 data->getFleet(i)->setQSetupRead(true);
@@ -2420,7 +2423,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoPower())
             {
@@ -2429,7 +2432,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setPower(datalist);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoEnvLink())
             {
@@ -2438,7 +2441,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setEnvLink(datalist);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoExtraSD())
             {
@@ -2447,7 +2450,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(i)->Q()->setExtra(datalist);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             int tp = readQBase.at(i);
             if (data->getFleet(i)->getQSetupRead())
@@ -2475,25 +2478,25 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         for (int i = 0; i < num_fleets; i++)
         {
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getSizeSelectivity()->setPattern(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getSizeSelectivity()->setDiscard(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getSizeSelectivity()->setMale(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getSizeSelectivity()->setSpecial(temp_int);
         }
 
         for (int i = 0; i < num_fleets; i++)
         {
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getAgeSelectivity()->setPattern(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getAgeSelectivity()->setDiscard(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getAgeSelectivity()->setMale(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->getFleet(i)->getAgeSelectivity()->setSpecial(temp_int);
         }
 
@@ -2540,7 +2543,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         // Environmental Linkage
         num_vals = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             num_vals += data->getFleet(i)->getSizeSelectivity()->getNumDiscardParameters();
             num_vals += data->getFleet(i)->getAgeSelectivity()->getNumDiscardParameters();
@@ -2548,9 +2551,9 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         if (num_vals > 0)
         {
             parametermodel *pm, *pml;
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->setCustomEnviroLink(temp_int);
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
                 pml = data->getFleet(i)->getSizeSelectivity()->getDiscardParameterModel();
@@ -2560,7 +2563,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->envLink(j))
                     {
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pml->setRowData(j, datalist);
                     }
                 }
@@ -2572,7 +2575,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->envLink(j))
                     {
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pml->setRowData(j, datalist);
                     }
                 }
@@ -2581,7 +2584,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         // Custom Block Setup
         num_vals = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             num_vals += data->getFleet(i)->getSizeSelectivity()->getNumMaleParameters();
             num_vals += data->getFleet(i)->getAgeSelectivity()->getNumMaleParameters();
@@ -2589,9 +2592,9 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         if (num_vals > 0)
         {
             parametermodel *pm, *pmb;
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->setCustomBlockSetup(temp_int);
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
                 pmb = data->getFleet(i)->getSizeSelectivity()->getMaleParameterModel();
@@ -2601,7 +2604,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useBlock(j))
                     {
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pmb->setRowData(j, datalist);
                     }
                 }
@@ -2613,7 +2616,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useBlock(j))
                     {
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pmb->setRowData(j, datalist);
                     }
                 }
@@ -2624,7 +2627,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         // Parameter Deviations
         num_vals = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             num_vals += data->getFleet(i)->getSizeSelectivity()->getNumSpecialParameters();
             num_vals += data->getFleet(i)->getAgeSelectivity()->getNumSpecialParameters();
@@ -2632,7 +2635,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         if (num_vals > 0)
         {
             parametermodel *pm, *pme, *pmr;
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
                 pme = data->getFleet(i)->getSizeSelectivity()->getSpecialParameterModel();
@@ -2643,11 +2646,11 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useDev(j))
                     {
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pme->setRowData(j, datalist);
                         datalist.clear();
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pmr->setRowData(j, datalist);
                     }
                 }
@@ -2660,23 +2663,23 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
                     if (pm->useDev(j))
                     {
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pme->setRowData(j, datalist);
                         datalist.clear();
                         for (int k = 0; k < 7; k++)
-                            datalist.append(c_file->next_value());
+                            datalist.append(c_file->get_next_value());
                         pmr->setRowData(j, datalist);
                     }
                 }
             }
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->setCustomSelParmDevPhase(temp_int);
-            temp_int = c_file->next_value().toInt();
+            temp_int = c_file->get_next_value().toInt();
             data->setCustomSelParmDevAdjust(temp_int);
         }
 
         // Tag loss and Tag reporting parameters go next
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         data->setTagLoss(temp_int);
         if (temp_int == 1)
         {
@@ -2689,48 +2692,48 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         //1 #_Variance_adjustments_to_input_value
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         data->setInputValueVariance(0);
         if (temp_int == 1)
         {
             for (int i = 0; i < num_fleets; i++)
             {
-                temp_float = c_file->next_value().toFloat();
+                temp_float = c_file->get_next_value().toFloat();
                 data->getFleet(i)->setAddToSurveyCV(temp_float);
                 if (floatEquals (temp_float, 0.0))
                     data->setInputValueVariance(1);
             }
             for (int i = 0; i < num_fleets; i++)
             {
-                temp_float = c_file->next_value().toFloat();
+                temp_float = c_file->get_next_value().toFloat();
                 data->getFleet(i)->setAddToDiscardSD(temp_float);
                 if (floatEquals (temp_float, 0.0))
                     data->setInputValueVariance(1);
             }
             for (int i = 0; i < num_fleets; i++)
             {
-                temp_float = c_file->next_value().toFloat();
+                temp_float = c_file->get_next_value().toFloat();
                 data->getFleet(i)->setAddToBodyWtCV(temp_float);
                 if (floatEquals (temp_float, 0.0))
                     data->setInputValueVariance(1);
             }
             for (int i = 0; i < num_fleets; i++)
             {
-                temp_float = c_file->next_value().toFloat();
+                temp_float = c_file->get_next_value().toFloat();
                 data->getFleet(i)->setMultByLenCompN(temp_float);
                 if (floatEquals (temp_float, 1.0))
                     data->setInputValueVariance(1);
             }
             for (int i = 0; i < num_fleets; i++)
             {
-                temp_float = c_file->next_value().toFloat();
+                temp_float = c_file->get_next_value().toFloat();
                 data->getFleet(i)->setMultByAgeCompN(temp_float);
                 if (floatEquals (temp_float, 1.0))
                     data->setInputValueVariance(1);
             }
             for (int i = 0; i < num_fleets; i++)
             {
-                temp_float = c_file->next_value().toFloat();
+                temp_float = c_file->get_next_value().toFloat();
                 data->getFleet(i)->setMultBySAA(temp_float);
                 if (floatEquals (temp_float, 1.0))
                     data->setInputValueVariance(1);
@@ -2738,15 +2741,15 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // Max lambda phase
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         data->setLambdaMaxPhase(temp_int);
 
         // sd offset
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         data->setLambdaSdOffset(temp_int);
 
         // number of changes
-        num = c_file->next_value().toInt();
+        num = c_file->get_next_value().toInt();
         data->setLambdaNumChanges(num);
 
         // change info
@@ -2757,48 +2760,49 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         for(int i = 0; i < num; i++)
         {
-            int cmp, flt = 1, phs, sf;
-            float val;
+//            int cmp, phs, sf;
+            int flt = 1;
+//            float val;
             datalist.clear();
-            datalist.append(c_file->next_value());
-            flt = abs(c_file->next_value().toInt());
-            datalist.append(c_file->next_value());
-            datalist.append(c_file->next_value());
-            datalist.append(c_file->next_value());
+            datalist.append(c_file->get_next_value());
+            flt = abs(c_file->get_next_value().toInt());
+            datalist.append(c_file->get_next_value());
+            datalist.append(c_file->get_next_value());
+            datalist.append(c_file->get_next_value());
 
             data->getFleet(flt-1)->appendLambda(datalist);
         }
 
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         data->getAddSdReporting()->setActive(temp_int);
         if (temp_int == 1)
         {
             // read 9 more values
             datalist.clear();
             for (i = 0; i < 9; i++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setSpecs(datalist);
 
             datalist.clear();
             temp_int = data->getAddSdReporting()->getNumSelexBins();
             for (i = 0; i < temp_int; i++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setSelexBins(datalist);
 
             datalist.clear();
             temp_int = data->getAddSdReporting()->getNumGrowthBins();
             for (i = 0; i < temp_int; i++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setGrowthBins(datalist);
 
             datalist.clear();
             temp_int = data->getAddSdReporting()->getNumNatAgeBins();
             for (i = 0; i < temp_int; i++)
-                datalist.append(c_file->next_value());
+                datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setNatAgeBins(datalist);
         }
 
-        temp_int = c_file->next_value().toInt();
+        temp_int = c_file->get_next_value().toInt();
         if (temp_int != 999)
         {
             temp_string = QString("Problem reading control file. The end of data token '%1' does not match '999'").arg(
@@ -2816,7 +2820,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 int write32_controlFile(ss_file *c_file, ss_model *data)
 {
     int temp_int, num, num_vals, chars = 0;
-    int i, j;
+    int i; //, j;
     float temp_float;
     QString line, temp_string;
     QStringList str_list;
@@ -2824,7 +2828,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
 
     if(c_file->open(QIODevice::WriteOnly))
     {
-        chars += write_version_comment(c_file);
+        chars += writeVersionComment(c_file);
         chars += c_file->write_comments();
 
         line = QString("#" );
@@ -2876,7 +2880,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
 
         // recruitment designs
         line.clear();
-        num = pop->Grow()->getNum_patterns() * data->num_seasons() * data->num_areas();
+        num = pop->Grow()->getNum_patterns() * data->get_num_seasons() * data->get_num_areas();
         if (num > 1)
         {
             num = pop->SR()->getNumAssignments();
@@ -2909,7 +2913,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
 
         // movement definitions
         line.clear();
-        if (data->num_areas() > 1)
+        if (data->get_num_areas() > 1)
         {
             num = pop->Move()->getNumDefs();
             line = QString(QString("%1 # N_movement_definitions" ).arg(
@@ -3015,7 +3019,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                 line = (QString(" %1" ).arg(str_list.at(i).toFloat()));
                 chars += c_file->writeline(line);
             }
-            if (data->num_genders() > 1)
+            if (data->get_num_genders() > 1)
                 for (; i < num; i++)
                 {
                     line = (QString(" %1" ).arg(str_list.at(i).toFloat()));
@@ -3118,7 +3122,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             growthPattern *gp = pop->Grow()->getPattern(i);
             QString gpstr (QString("GP_%1").arg(QString::number(i + 1)));
             QString genstr, parstr;
-            num_vals = data->num_genders();
+            num_vals = data->get_num_genders();
             {
                 int numpar = 1;
                 if (pop->Grow()->getNatural_mortality_type() > 0)
@@ -3228,7 +3232,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line.append(" # Eggs/kg_slope_wt_Fem" );
         chars += c_file->writeline (line);
 
-        if (data->num_genders() > 1)
+        if (data->get_num_genders() > 1)
         {
             line.clear();
             str_list = pop->Grow()->getMaturityParam(4);
@@ -3256,7 +3260,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas()
+        num = pop->Grow()->getNumMaturityParams() - data->get_num_seasons() - data->get_num_areas()
                 - pop->Grow()->getNum_patterns();
         for (i = 0; i < pop->Grow()->getNum_patterns(); num++, i++)
         {
@@ -3268,8 +3272,8 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             line.append(QString(" # RecrDist_GP_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        num = pop->Grow()->getNumMaturityParams() - data->num_seasons() - data->num_areas();
-        for (i = 0; i < data->num_areas(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->get_num_seasons() - data->get_num_areas();
+        for (i = 0; i < data->get_num_areas(); num++, i++)
         {
             line.clear();
 //            str_list = pop->SR()->getAssignmentParam(i);
@@ -3279,8 +3283,8 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             line.append(QString(" # RecrDist_Area_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        num = pop->Grow()->getNumMaturityParams() - data->num_seasons();
-        for (i = 0; i < data->num_seasons(); num++, i++)
+        num = pop->Grow()->getNumMaturityParams() - data->get_num_seasons();
+        for (i = 0; i < data->get_num_seasons(); num++, i++)
         {
             line.clear();
 //            str_list = pop->SR()->getAssignmentParam(i);
@@ -3499,7 +3503,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("#_for_env-var:_enter_index_of_the_env-var_to_be_linked" ));
         line.append(QString("#_Den-dep  env-var  extra_se  Q_type  Q_offset" ));
         chars += c_file->writeline(line);
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             line = data->getFleet(i)->Q()->getSetup();
 //            line.chop (2);
@@ -3525,7 +3529,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("#_Q_parms(if_any);Qunits_are_ln(q)" ));
         line.append(QString("# LO HI INIT PRIOR PR_type SD PHASE" ));
         chars += c_file->writeline(line);
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoPower())
             {
@@ -3536,7 +3540,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline(line);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoEnvLink())
             {
@@ -3547,7 +3551,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline(line);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getDoExtraSD())
             {
@@ -3558,7 +3562,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline(line);
             }
         }
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->Q()->getType() > 0)
             {
@@ -3576,7 +3580,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("#discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead" ));
         line.append(QString("#_Pattern Discard Male Special" ));
         chars += c_file->writeline(line);
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             line = QString(QString("%1 # %2 %3" ).arg (
                                data->getFleet(i)->getSizeSelectivity()->getSetupText(),
@@ -3589,7 +3593,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("#_age_selex_types" ));
         line.append(QString("#_Pattern ___ Male Special" ));
         chars += c_file->writeline(line);
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             line = QString(QString("%1 # %2 %3" ).arg (
                                data->getFleet(i)->getAgeSelectivity()->getSetupText(),
@@ -3599,7 +3603,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         }
         line = QString ("#_LO HI INIT PRIOR PR_type SD PHASE env-var use_dev dev_minyr dev_maxyr dev_stddev Block Block_Fxn" );
         chars += c_file->writeline(line);
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             for (int j = 0; j < data->getFleet(i)->getSizeSelectivity()->getNumParameters(); j++)
             {
@@ -3612,7 +3616,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             for (int j = 0; j < data->getFleet(i)->getAgeSelectivity()->getNumParameters(); j++)
             {
@@ -3628,7 +3632,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         // Environmental Linkage
         line = QString (" #_custom_sel-env_setup (0/1) " );
         num_vals = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             num_vals += data->getFleet(i)->getSizeSelectivity()->getNumDiscardParameters();
             num_vals += data->getFleet(i)->getAgeSelectivity()->getNumDiscardParameters();
@@ -3639,7 +3643,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             temp_int = data->getCustomEnviroLink();
             line.prepend(QString::number(temp_int));
             chars += c_file->writeline(line);
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
                 for (int j = 0; j < pm->rowCount(); j++)
@@ -3682,7 +3686,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         // Custom Block Setup
         line = QString (" #_custom_sel-blk_setup (0/1) " );
         num_vals = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             num_vals += data->getFleet(i)->getSizeSelectivity()->getNumMaleParameters();
             num_vals += data->getFleet(i)->getAgeSelectivity()->getNumMaleParameters();
@@ -3693,7 +3697,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             temp_int = data->getCustomBlockSetup();
             line.prepend(QString::number(temp_int));
             chars += c_file->writeline(line);
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
                 num = data->getFleet(i)->getSizeSelectivity()->getNumParameters();
@@ -3741,7 +3745,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line = QString ("# standard error parameters for selparm devs" );
         chars += c_file->writeline(line);
         num_vals = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             num_vals += data->getFleet(i)->getSizeSelectivity()->getNumSpecialParameters();
             num_vals += data->getFleet(i)->getAgeSelectivity()->getNumSpecialParameters();
@@ -3749,7 +3753,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         if (num_vals > 0)
         {
             parametermodel *pm;
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
                 num = data->getFleet(i)->getSizeSelectivity()->getNumParameters();
@@ -3822,7 +3826,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
                     QString::number(temp_int)));
         chars += c_file->writeline(line);
         line = QString ("#_fleet");
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
             line.append(QString(" %1").arg(QString::number(i+1)));
         line.append('\n');
         chars += c_file->writeline(line);
@@ -3830,37 +3834,37 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         if (temp_int == 1)
         {
             line = QString(" ");
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 line.append(QString("%1 ").arg(
                                 QString::number(data->getFleet(i)->getAddToSurveyCV())));
             }
             line.append(QString("#_add_to_survey_CV\n "));
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 line.append(QString("%1 ").arg(
                                 QString::number(data->getFleet(i)->getAddToDiscardSD())));
             }
             line.append(QString("#_add_to_discard_stddev\n "));
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 line.append(QString("%1 ").arg(
                                 QString::number(data->getFleet(i)->getAddToBodyWtCV())));
             }
             line.append(QString("#_add_to_bodywt_CV\n "));
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 line.append(QString("%1 ").arg(
                                 QString::number(data->getFleet(i)->getMultByLenCompN())));
             }
             line.append(QString("#_mult_by_lencomp_N\n "));
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 line.append(QString("%1 ").arg(
                                 QString::number(data->getFleet(i)->getMultByAgeCompN())));
             }
             line.append(QString("#_mult_by_agecomp_N\n "));
-            for (int i = 0; i < data->num_fleets(); i++)
+            for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 line.append(QString("%1 ").arg(
                                 QString::number(data->getFleet(i)->getMultBySAA())));
@@ -3883,7 +3887,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("#like_comp fleet/survey  phase  value  sizefreq_method" ));
         chars += c_file->writeline(line);
         num = 0;
-        for (int i = 0; i < data->num_fleets(); i++)
+        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             int j = 0;
             for (j = 0; j < data->getFleet(i)->getNumLambdas(); j++)
@@ -3964,6 +3968,8 @@ bool read32_parameterFile(ss_file *pr_file, ss_model *data)
         pr_file->seek(0);
         pr_file->read_comments();
 
+        data->getActiveFleet(0);
+
         pr_file->close();
     }
     else
@@ -3979,6 +3985,9 @@ int write32_parameterFile(ss_file *pr_file, ss_model *data)
     if(pr_file->open(QIODevice::WriteOnly))
     {
         pr_file->write_comments();
+
+        data->getActiveFleet(0);
+
         pr_file->close();
     }
     else
@@ -3988,49 +3997,72 @@ int write32_parameterFile(ss_file *pr_file, ss_model *data)
 
 bool read32_userDataFile (ss_file *ud_file, ss_model *data)
 {
-    return true;
+    bool flag = false;
+    if(ud_file->open(QIODevice::ReadOnly))
+    {
+        flag = true;
+        ud_file->seek(0);
+        ud_file->read_comments();
+
+        data->getActiveFleet(0);
+
+        ud_file->close();
+    }
+    else
+        ud_file->error("File is not readable.");
+
+    return flag;
 }
 
-int write32_userDataFile (ss_file ud_file, ss_model *data)
+int write32_userDataFile (ss_file *ud_file, ss_model *data)
 {
-    return 0;
+    int chars = 0;
+
+    if(ud_file->open(QIODevice::WriteOnly))
+    {
+        ud_file->write_comments();
+
+        data->getActiveFleet(0);
+
+        ud_file->close();
+    }
+    else
+        ud_file->error("File is not writeable.");
+    return chars;
 }
 
 bool read32_profileFile (ss_file *pf_file, ss_model *data)
 {
-    bool okay;
-
-
+    bool flag = false;
     if(pf_file->open(QIODevice::ReadOnly))
     {
+        flag = true;
         pf_file->seek(0);
         pf_file->read_comments();
+
+        data->getActiveFleet(0);
+
         pf_file->close();
-        okay = true;
     }
     else
-    {
-        pf_file->error(QString("File is not readable."));
-        okay = false;
-    }
+        pf_file->error("File is not readable.");
 
-    return okay;
+    return flag;
 }
 
 int write32_profileFile (ss_file *pf_file, ss_model *data)
 {
-    int code = 0;
+    int chars = 0;
 
     if(pf_file->open(QIODevice::WriteOnly))
     {
         pf_file->write_comments();
+
+        data->getActiveFleet(0);
+
         pf_file->close();
     }
     else
-    {
-        pf_file->error(QString("File is not writeable."));
-        code = 1;
-    }
-
-    return code;
+        pf_file->error("File is not writeable.");
+    return chars;
 }

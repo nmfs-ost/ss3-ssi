@@ -26,8 +26,8 @@ public:
     explicit ss_file(QString name, QObject *parent = 0);
     ~ss_file();
 
-    QString next_value ();
-    QString next_value (QString prompt);
+    QString get_next_value ();
+    QString get_next_value (QString prompt);
     QString get_next_token();
     QString get_next_token(QString line);
     void return_token (QString tokn);
@@ -45,7 +45,7 @@ public:
     int write_comments();
     int newline();
     int writeline(QString str = QString(""));
-
+    int writechar(QChar chr);
     int read_int (QString info = QString(""));
     float read_float (QString info = QString(""));
 /*    observation *read_environ_obs (QString info = QString(""));

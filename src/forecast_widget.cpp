@@ -183,66 +183,66 @@ void forecast_widget::refresh()
     QString txt("");
     ss_forecast *fcast = model_data->forecast;
 
-    ui->checkBox_benchmarks->setChecked(fcast->benchmarks() == 1);
-    set_combo_box(ui->comboBox_MSY_options, fcast->MSY());
-    ui->lineEdit_SPR_target->setText(QString::number(fcast->spr_target()));
-    ui->lineEdit_biomass_target->setText(QString::number(fcast->biomass_target()));
-    ui->spinBox_bmark_bio_beg->setValue(fcast->benchmark_year(0));
-    set_bmark_bio_begin(fcast->benchmark_year(0));
-    ui->spinBox_bmark_bio_end->setValue(fcast->benchmark_year(1));
-    set_bmark_bio_end(fcast->benchmark_year(1));
-    ui->spinBox_bmark_sel_beg->setValue(fcast->benchmark_year(2));
-    set_bmark_sel_begin(fcast->benchmark_year(2));
-    ui->spinBox_bmark_sel_end->setValue(fcast->benchmark_year(3));
-    set_bmark_sel_end(fcast->benchmark_year(3));
-    ui->spinBox_bmark_relf_beg->setValue(fcast->benchmark_year(4));
-    set_bmark_relf_begin(fcast->benchmark_year(4));
-    ui->spinBox_bmark_relf_end->setValue(fcast->benchmark_year(5));
-    set_bmark_relf_end(fcast->benchmark_year(5));
-    ui->spinBox_bmark_recr_beg->setValue(fcast->benchmark_year(6));
-    set_bmark_recr_begin(fcast->benchmark_year(6));
-    ui->spinBox_bmark_recr_end->setValue(fcast->benchmark_year(7));
-    set_bmark_recr_end(fcast->benchmark_year(7));
+    ui->checkBox_benchmarks->setChecked(fcast->get_benchmarks() == 1);
+    set_combo_box(ui->comboBox_MSY_options, fcast->get_MSY());
+    ui->lineEdit_SPR_target->setText(QString::number(fcast->get_spr_target()));
+    ui->lineEdit_biomass_target->setText(QString::number(fcast->get_biomass_target()));
+    ui->spinBox_bmark_bio_beg->setValue(fcast->get_benchmark_year(0));
+    set_bmark_bio_begin(fcast->get_benchmark_year(0));
+    ui->spinBox_bmark_bio_end->setValue(fcast->get_benchmark_year(1));
+    set_bmark_bio_end(fcast->get_benchmark_year(1));
+    ui->spinBox_bmark_sel_beg->setValue(fcast->get_benchmark_year(2));
+    set_bmark_sel_begin(fcast->get_benchmark_year(2));
+    ui->spinBox_bmark_sel_end->setValue(fcast->get_benchmark_year(3));
+    set_bmark_sel_end(fcast->get_benchmark_year(3));
+    ui->spinBox_bmark_relf_beg->setValue(fcast->get_benchmark_year(4));
+    set_bmark_relf_begin(fcast->get_benchmark_year(4));
+    ui->spinBox_bmark_relf_end->setValue(fcast->get_benchmark_year(5));
+    set_bmark_relf_end(fcast->get_benchmark_year(5));
+    ui->spinBox_bmark_recr_beg->setValue(fcast->get_benchmark_year(6));
+    set_bmark_recr_begin(fcast->get_benchmark_year(6));
+    ui->spinBox_bmark_recr_end->setValue(fcast->get_benchmark_year(7));
+    set_bmark_recr_end(fcast->get_benchmark_year(7));
 
-    set_combo_box(ui->comboBox_bmark_relF_basis, fcast->benchmark_rel_f());
-    set_combo_box(ui->comboBox_fcast_options, fcast->forecast());
-    ui->spinBox_fcast_yr_num->setValue(fcast->num_forecast_years());
-    ui->lineEdit_F_scalar->setText(QString::number(fcast->f_scalar()));
-    ui->spinBox_fcast_sel_beg->setValue(fcast->forecast_year(0));
-    set_fcast_sel_begin(fcast->forecast_year(0));
-    ui->spinBox_fcast_sel_end->setValue(fcast->forecast_year(1));
-    set_fcast_sel_end(fcast->forecast_year(1));
-    ui->spinBox_fcast_relf_beg->setValue(fcast->forecast_year(2));
-    set_fcast_relf_begin(fcast->forecast_year(2));
-    ui->spinBox_fcast_relf_end->setValue(fcast->forecast_year(3));
-    set_fcast_relf_end(fcast->forecast_year(3));
-    ui->spinBox_fcast_recr_beg->setValue(fcast->forecast_year(4));
-    set_fcast_recr_begin(fcast->forecast_year(4));
-    ui->spinBox_fcast_recr_end->setValue(fcast->forecast_year(5));
-    set_fcast_recr_end(fcast->forecast_year(5));
+    set_combo_box(ui->comboBox_bmark_relF_basis, fcast->get_benchmark_rel_f());
+    set_combo_box(ui->comboBox_fcast_options, fcast->get_forecast());
+    ui->spinBox_fcast_yr_num->setValue(fcast->get_num_forecast_years());
+    ui->lineEdit_F_scalar->setText(QString::number(fcast->get_f_scalar()));
+    ui->spinBox_fcast_sel_beg->setValue(fcast->get_forecast_year(0));
+    set_fcast_sel_begin(fcast->get_forecast_year(0));
+    ui->spinBox_fcast_sel_end->setValue(fcast->get_forecast_year(1));
+    set_fcast_sel_end(fcast->get_forecast_year(1));
+    ui->spinBox_fcast_relf_beg->setValue(fcast->get_forecast_year(2));
+    set_fcast_relf_begin(fcast->get_forecast_year(2));
+    ui->spinBox_fcast_relf_end->setValue(fcast->get_forecast_year(3));
+    set_fcast_relf_end(fcast->get_forecast_year(3));
+    ui->spinBox_fcast_recr_beg->setValue(fcast->get_forecast_year(4));
+    set_fcast_recr_begin(fcast->get_forecast_year(4));
+    ui->spinBox_fcast_recr_end->setValue(fcast->get_forecast_year(5));
+    set_fcast_recr_end(fcast->get_forecast_year(5));
 
-    set_combo_box(ui->comboBox_control_rule, fcast->cr_method());
-    ui->lineEdit_ctl_rule_const_F->setText(QString::number(fcast->cr_biomass_const_f()));
-    ui->lineEdit_ctl_rule_no_F->setText(QString::number(fcast->cr_biomass_no_f()));
-    ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(fcast->cr_target()));
+    set_combo_box(ui->comboBox_control_rule, fcast->get_cr_method());
+    ui->lineEdit_ctl_rule_const_F->setText(QString::number(fcast->get_cr_biomass_const_f()));
+    ui->lineEdit_ctl_rule_no_F->setText(QString::number(fcast->get_cr_biomass_no_f()));
+    ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(fcast->get_cr_target()));
 
-    ui->spinBox_num_forecast_loops->setValue(fcast->num_forecast_loops());
-    ui->spinBox_first_loop->setValue(fcast->forecast_loop_recruitment());
-    ui->spinBox_fcast_loops_3->setValue(fcast->forecast_loop_ctl3());
-    ui->spinBox_fcast_loops_4->setValue(fcast->forecast_loop_ctl4());
-    ui->spinBox_fcast_loops_5->setValue(fcast->forecast_loop_ctl5());
+    ui->spinBox_num_forecast_loops->setValue(fcast->get_num_forecast_loops());
+    ui->spinBox_first_loop->setValue(fcast->get_forecast_loop_recruitment());
+    ui->spinBox_fcast_loops_3->setValue(fcast->get_forecast_loop_ctl3());
+    ui->spinBox_fcast_loops_4->setValue(fcast->get_forecast_loop_ctl4());
+    ui->spinBox_fcast_loops_5->setValue(fcast->get_forecast_loop_ctl5());
 
-    ui->spinBox_first_caps_yr->setValue(fcast->caps_alloc_st_year());
-    ui->lineEdit_log_sd->setText(QString::number(fcast->log_catch_std_dev()));
-    ui->groupBox_rebuilder->setChecked(fcast->rebuilder());
-    ui->spinBox_rebuilder_ydecl->setValue(fcast->rebuilder_first_year());
-    ui->spinBox_rebuilder_yinit->setValue(fcast->rebuilder_curr_year());
+    ui->spinBox_first_caps_yr->setValue(fcast->get_caps_alloc_st_year());
+    ui->lineEdit_log_sd->setText(QString::number(fcast->get_log_catch_std_dev()));
+    ui->groupBox_rebuilder->setChecked(fcast->get_do_rebuilder());
+    ui->spinBox_rebuilder_ydecl->setValue(fcast->get_rebuilder_first_year());
+    ui->spinBox_rebuilder_yinit->setValue(fcast->get_rebuilder_curr_year());
 
     ui->label_input_seas_relf->setVisible(false);
-    set_combo_box(ui->comboBox_relF, fcast->fleet_rel_f());
+    set_combo_box(ui->comboBox_relF, fcast->get_fleet_rel_f());
     set_combo_box_relf_basis(ui->comboBox_relF->currentIndex());
 
-    set_combo_box(ui->comboBox_tuning_basis, fcast->catch_tuning_basis());
+    set_combo_box(ui->comboBox_tuning_basis, fcast->get_catch_tuning_basis());
 //    set_max_catch_fleet();
 //    set_max_catch_area();
 
@@ -271,7 +271,7 @@ void forecast_widget::refresh()
     inputFcastCatch->resizeColumnsToContents();
 
 //    ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
-    set_combo_box(ui->comboBox_input_catch_basis, fcast->input_catch_basis());
+    set_combo_box(ui->comboBox_input_catch_basis, fcast->get_input_catch_basis());
     set_combo_box_fixed_catch(ui->comboBox_input_catch_basis->currentIndex());
 
     ui->tabWidget->setCurrentIndex(0);
@@ -372,7 +372,7 @@ void forecast_widget::set_log_catch_std_dev()
 
 void forecast_widget::set_allocation_groups()
 {
-    set_num_alloc_groups(model_data->forecast->num_alloc_groups());
+    set_num_alloc_groups(model_data->forecast->get_num_alloc_groups());
 }
 
 void forecast_widget::set_num_alloc_groups(int num)
@@ -389,7 +389,7 @@ void forecast_widget::set_num_alloc_groups(int num)
 
 void forecast_widget::set_allocation_group_assign()
 {
-    int num = model_data->forecast->num_fleets();
+    int num = model_data->forecast->get_num_fleets();
     QString txt("");
     if (ui->spinBox_num_alloc_groups->value() > 0)
     {
@@ -509,7 +509,7 @@ void forecast_widget::alloc_group_fract_changed ()
 void forecast_widget::set_max_catch_fleet ()
 {
     QString vals;
-    for (int i = 0; i < model_data->num_fleets(); i++)
+    for (int i = 0; i < model_data->get_num_fleets(); i++)
     {
         vals.append(QString(" %1").arg(QString::number(model_data->forecast->max_catch_fleet(i))));
     }
@@ -531,7 +531,7 @@ void forecast_widget::change_max_catch_fleet ()
 void forecast_widget::set_max_catch_area ()
 {
     QString vals;
-    for (int i = 0; i < model_data->num_areas(); i++)
+    for (int i = 0; i < model_data->get_num_areas(); i++)
     {
         vals.append(QString(" %1").arg(QString::number(model_data->forecast->max_catch_area(i))));
     }
@@ -558,7 +558,7 @@ void forecast_widget::set_combo_box_relf_basis (int val)
     if (val == 1)
     {
         seasFltRelF->setVisible(true);
-        seasFltRelF->setHeight(model_data->num_seasons());
+        seasFltRelF->setHeight(model_data->get_num_seasons());
         ui->label_input_seas_relf->setVisible(true);
 //        ui->lineEdit_seas_relf->setVisible(true);
 //        ui->lineEdit_alloc_assignments->setText(model_data->forecast->seas_fleet_rel_f(0,0));
@@ -811,15 +811,15 @@ void forecast_widget::set_rebuilder_first_year(int yr)
     {
         year = 1999;
     }
-    else if (yr < model_data->start_year())
+    else if (yr < model_data->get_start_year())
     {
-        yr = model_data->start_year();
+        yr = model_data->get_start_year();
         ui->spinBox_rebuilder_ydecl->setValue(yr);
         return;
     }
-    else if (yr > model_data->end_year())
+    else if (yr > model_data->get_end_year())
     {
-        yr = model_data->end_year();
+        yr = model_data->get_end_year();
         ui->spinBox_rebuilder_ydecl->setValue(yr);
         return;
     }
@@ -832,17 +832,17 @@ void forecast_widget::set_rebuilder_curr_year(int yr)
     int year = yr;
     if (yr == -1)
     {
-        year = model_data->end_year() + 1;
+        year = model_data->get_end_year() + 1;
     }
-    else if (yr < model_data->start_year())
+    else if (yr < model_data->get_start_year())
     {
-        yr = model_data->start_year();
+        yr = model_data->get_start_year();
         ui->spinBox_rebuilder_yinit->setValue(yr);
         return;
     }
-    else if (yr > (model_data->end_year() + 1))
+    else if (yr > (model_data->get_end_year() + 1))
     {
-        yr = model_data->end_year() + 1;
+        yr = model_data->get_end_year() + 1;
         ui->spinBox_rebuilder_yinit->setValue(yr);
         return;
     }

@@ -109,6 +109,8 @@ void ss_forecast::set_combo_box_forecast(int fcast)
 
 void ss_forecast::set_num_forecast_years (int yrs)
 {
+    if (yrs < 1)
+        yrs = 1;
     i_num_fcast_yrs = yrs;
     allocGroupFrac->setRowCount(yrs);
     for (int i = 0; i < yrs; i++)
@@ -320,8 +322,6 @@ void ss_forecast::changeAllocGrps (QModelIndex tl, QModelIndex br)
 
 void ss_forecast::set_alloc_group(int flt, int grp)
 {
-    QStringList data = getAllocGrpList();
-    int i;
     if (i_num_fleets < flt+1)
         set_num_fleets(flt+1);
     else
@@ -372,25 +372,65 @@ void ss_forecast::set_seas_fleet_rel_f(int seas, int flt, float f)
     }*/
 }
 
+void ss_forecast::set_catch_tuning_basis(int basis)
+{
+    if (basis < 2)
+        basis = 2;
+    if (basis > 6)
+        basis = 6;
+    if (basis == 4)
+        basis = 3;
+    i_ctch_basis = basis;
+}
+
+void ss_forecast::set_input_catch_basis(int &basis)
+{
+    i_input_fcast_ctch_basis = basis;
+    getFixedFcastCatchModel()->setColumnCount(4);
+    switch (basis)
+    {
+    case -1:
+        getFixedFcastCatchModel()->setColumnCount(5);
+        getFixedFcastCatchModel()->setColumnHeader(3, "Catch or F");
+        getFixedFcastCatchModel()->setColumnHeader(4, "Basis");
+        break;
+    default:
+        i_input_fcast_ctch_basis = basis = 2;
+    case 2:
+        getFixedFcastCatchModel()->setColumnHeader(3, QString("Dead Catch"));
+        break;
+    case 3:
+        getFixedFcastCatchModel()->setColumnHeader(3, QString("Ret. Catch"));
+        break;
+    case 99:
+        getFixedFcastCatchModel()->setColumnHeader(3, QString("Hrate"));
+        break;
+    }
+}
+
 void ss_forecast::set_combo_box_catch_input(int basis)
 {
+    int val = 2;
     switch (basis)
     {
     case 0:
-        set_input_catch_basis(-1);
+        val = -1;
+//        set_input_catch_basis(-1);
         break;
     case 1:
-        set_input_catch_basis(2);
+        val = 2;
+//        set_input_catch_basis(2);
         break;
     case 2:
-        set_input_catch_basis(3);
+        val = 3;
+//        set_input_catch_basis(3);
         break;
     case 3:
-        set_input_catch_basis(99);
+        val = 99;
+//        set_input_catch_basis(99);
         break;
-    default:
-        set_input_catch_basis(2);
     }
+    set_input_catch_basis(val);
 }
 
 void ss_forecast::add_fixed_catch_value(QStringList txtlst)
@@ -432,13 +472,13 @@ void ss_forecast::reset()
     //# Fleet relative F:  rows are seasons, columns are fleets
     reset_seas_fleet_relf();
     //# max totalcatch by fleet (-1 to have no max) must enter value for each fleet
-    maxCatchFleet->setRowCount(1);
+    maxCatchFleet->setRowCount(0);
     //# max totalcatch by area (-1 to have no max); must enter value for each fleet
-    maxCatchArea->setRowCount(1);
+    maxCatchArea->setRowCount(0);
     //# fleet assignment to allocation group (enter group ID# for each fleet, 0 for not included in an alloc group)
     set_num_alloc_groups(0);//
     //# Input fixed catch values
-    set_input_catch_basis(3);
+    set_input_catch_basis(i_ctch_basis);
     setNumFixedFcastCatch(0);
 }
 

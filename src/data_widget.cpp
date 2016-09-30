@@ -131,6 +131,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_mc_burn, SIGNAL(valueChanged(int)), model_data, SLOT(set_mc_burn(int)));
     connect (ui->spinBox_mc_thin, SIGNAL(valueChanged(int)), model_data, SLOT(set_mc_thin(int)));
     connect (ui->lineEdit_jitter, SIGNAL(editingFinished()), SLOT(changeJitter()));
+    connect (ui->lineEdit_alktol, SIGNAL(editingFinished()), SLOT(changeAlkTol()));
     connect (ui->lineEdit_convergence, SIGNAL(editingFinished()), SLOT(changeConvergence()));
     connect (ui->spinBox_retrospect_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_retrospect_year(int)));
     connect (ui->spinBox_f_bmass_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_biomass_min_age(int)));
@@ -206,43 +207,44 @@ void data_widget::refresh()
 {
     if (model_data != NULL)
     {
-        ui->spinBox_year_start->setValue(model_data->start_year());
-        ui->spinBox_year_end->setValue(model_data->end_year());
+        ui->spinBox_year_start->setValue(model_data->get_start_year());
+        ui->spinBox_year_end->setValue(model_data->get_end_year());
         changeTotalYears();
-        ui->spinBox_seas_per_yr->setValue(model_data->num_seasons());
+        ui->spinBox_seas_per_yr->setValue(model_data->get_num_seasons());
         ui->spinBox_subseasons->setValue(model_data->get_num_subseasons());
 //
-        ui->spinBox_spawn_season->setValue(model_data->spawn_season());
+        ui->spinBox_spawn_season->setValue(model_data->get_spawn_season());
         ui->spinBox_season->setValue(1);
         setMoPerSeason();
         setTotalMonths();
-        ui->spinBox_num_fisheries->setValue(model_data->num_fisheries());
-        ui->spinBox_num_surveys->setValue(model_data->num_surveys());
-        ui->spinBox_total_fleets->setValue(model_data->num_fleets());
-        ui->spinBox_num_areas->setValue(model_data->num_areas());
+        ui->spinBox_num_fisheries->setValue(model_data->get_num_fisheries());
+        ui->spinBox_num_surveys->setValue(model_data->get_num_surveys());
+        ui->spinBox_total_fleets->setValue(model_data->get_num_fleets());
+        ui->spinBox_num_areas->setValue(model_data->get_num_areas());
 //        ui->spinBox_num_ages->setValue(model_data->num_ages());
-        ui->spinBox_max_age->setValue(model_data->num_ages());
-        ui->spinBox_num_genders->setValue(model_data->num_genders());
+        ui->spinBox_max_age->setValue(model_data->get_num_ages());
+        ui->spinBox_num_genders->setValue(model_data->get_num_genders());
 
-        ui->checkBox_soft_bounds->setChecked(model_data->use_softbounds());
-        ui->checkBox_priors->setChecked(model_data->prior_likelihood());
-        ui->spinBox_last_phase->setValue(model_data->last_estim_phase());
+        ui->checkBox_soft_bounds->setChecked(model_data->get_use_softbounds());
+        ui->checkBox_priors->setChecked(model_data->get_prior_likelihood());
+        ui->spinBox_last_phase->setValue(model_data->get_last_estim_phase());
         ui->spinBox_mc_burn->setValue(model_data->mc_burn());
         ui->spinBox_mc_thin->setValue(model_data->mc_thin());
         ui->lineEdit_jitter->setText(QString::number(model_data->jitter_param()));
-        ui->lineEdit_convergence->setText(QString::number(model_data->convergence_criteria()));
-        ui->spinBox_f_bmass_min_age->setValue(model_data->biomass_min_age());
-        ui->comboBox_f_dep->setCurrentIndex(model_data->depletion_basis());
-        ui->lineEdit_dep_denom->setText(QString::number(model_data->depletion_denom()));
-        ui->comboBox_spr_basis->setCurrentIndex(model_data->spr_basis());
-        ui->comboBox_f_rpt_units->setCurrentIndex(model_data->f_units());
-        ui->spinBox_f_min_age->setValue(model_data->f_min_age());
-        ui->spinBox_f_max_age->setValue(model_data->f_max_age());
-        ui->comboBox_f_report_basis->setCurrentIndex(model_data->f_basis());
+        ui->lineEdit_alktol->setText(QString::number(model_data->getALKTol()));
+        ui->lineEdit_convergence->setText(QString::number(model_data->get_convergence_criteria()));
+        ui->spinBox_f_bmass_min_age->setValue(model_data->get_biomass_min_age());
+        ui->comboBox_f_dep->setCurrentIndex(model_data->get_depletion_basis());
+        ui->lineEdit_dep_denom->setText(QString::number(model_data->get_depletion_denom()));
+        ui->comboBox_spr_basis->setCurrentIndex(model_data->get_spr_basis());
+        ui->comboBox_f_rpt_units->setCurrentIndex(model_data->get_f_units());
+        ui->spinBox_f_min_age->setValue(model_data->get_f_min_age());
+        ui->spinBox_f_max_age->setValue(model_data->get_f_max_age());
+        ui->comboBox_f_report_basis->setCurrentIndex(model_data->get_f_basis());
 
         ui->spinBox_sdrpt_min_yr->setValue(model_data->bio_sd_min_year());
         ui->spinBox_sdrpt_max_yr->setValue(model_data->bio_sd_max_year());
-        ui->spinBox_num_std_yrs->setValue(model_data->num_std_years());
+        ui->spinBox_num_std_yrs->setValue(model_data->get_num_std_years());
         sdYearsView->setModel(model_data->sdYearsModel);
         sdYearsView->resizeColumnsToContents();
 
@@ -308,7 +310,7 @@ void data_widget::changeMaxSeason(int num)
     ui->spinBox_season->setMaximum(num);
 }
 
-void data_widget::changeSeason(int seas)
+void data_widget::changeSeason()
 {
     setMoPerSeason();
 //    setNumSubSeasons();
@@ -331,7 +333,7 @@ void data_widget::changeMoPerSeason(QString txt)
 
 int data_widget::setTotalMonths()
 {
-    int num_seas = model_data->num_seasons();
+    int num_seas = model_data->get_num_seasons();
     int tot_months = 0;
     for (int i = 1; i <= num_seas; i++)
         tot_months += model_data->getSeason(i)->getNumMonths();
@@ -378,7 +380,7 @@ void data_widget::setNumSdYears(int val)
     sdYearsView->setVisible(val);
 }
 
-void data_widget::numSdYearsChanged(QWidget *qw)
+void data_widget::numSdYearsChanged()
 {
 
 }
@@ -386,7 +388,7 @@ void data_widget::numSdYearsChanged(QWidget *qw)
 void data_widget::changeNumGenders(int val)
 {
     model_data->set_num_genders(val);
-    for (int i = 0; i < model_data->num_fleets(); i++)
+    for (int i = 0; i < model_data->get_num_fleets(); i++)
     {
         int bins = model_data->get_length_composition()->getNumberBins();
         if (bins > 0)
@@ -456,7 +458,7 @@ void data_widget::changeLengthBins(int numBins)
     if (numBins != model_data->get_length_composition()->getNumberBins())
     {
         model_data->get_length_composition()->setNumberBins(numBins);
-        for (int i = 0; i < model_data->num_fleets(); i++)
+        for (int i = 0; i < model_data->get_num_fleets(); i++)
             model_data->getFleet(i)->setLengthNumBins(numBins);
     }
     setLengthBins(numBins);
@@ -474,7 +476,7 @@ void data_widget::changeLengthAdd()
 //    model_data->get_length_composition()->set_add_to_compression(add);
 }
 
-void data_widget::changeLengthCombine(int gen)
+void data_widget::changeLengthCombine()
 {
 //    model_data->get_length_composition()->set_combine_genders(gen);
 }
@@ -507,7 +509,7 @@ void data_widget::changeAgeBins(int numBins)
     if (numBins != model_data->get_age_composition()->getNumberBins())
     {
         model_data->get_age_composition()->setNumberBins(numBins);
-        for (int i = 0; i < model_data->num_fleets(); i++)
+        for (int i = 0; i < model_data->get_num_fleets(); i++)
             model_data->getFleet(i)->setAgeNumBins(numBins);
     }
     setAgeBins(numBins);
@@ -531,7 +533,7 @@ void data_widget::changeAgeError(int numDefs)
     model_data->get_age_composition()->set_num_error_defs(numDefs);
 }
 
-void data_widget::changeAgeCombine(int gen)
+void data_widget::changeAgeCombine()
 {
 //    model_data->get_age_composition()->set_combine_genders(gen);
 }
@@ -592,7 +594,7 @@ void data_widget::newGenCompMethod()
 //    genMethod->set
     model_data->addGeneralCompMethod(genMethod);
     model_data->getGeneralCompMethod(index)->setNumber(index+1);
-    for (int j = 0; j < model_data->num_fleets(); j++)
+    for (int j = 0; j < model_data->get_num_fleets(); j++)
         model_data->getFleet(j)->setGenModelTotal(total+1);
     ui->spinBox_gen_comp->setValue(index+1);
 }
@@ -664,7 +666,7 @@ void data_widget::changeGenBins(int numBins)
     {
         int method = ui->spinBox_gen_comp->value();
         current_gen_comp->setNumberBins(numBins);
-        for (int i = 0; i < model_data->num_fleets(); i++)
+        for (int i = 0; i < model_data->get_num_fleets(); i++)
             model_data->getFleet(i)->setGenNumBins(method-1, numBins);
     }
 }
@@ -701,14 +703,14 @@ void data_widget::changeDoMorphs(bool flag)
 void data_widget::changeNumMorphs(int num)
 {
     model_data->get_morph_composition()->setNumberMorphs(num);
-    for (int i = 0; i < model_data->num_fleets(); i++)
+    for (int i = 0; i < model_data->get_num_fleets(); i++)
         model_data->getFleet(i)->setMorphNumMorphs(num);
 }
 
 void data_widget::changeMorphMincomp()
 {
     QString val = ui->lineEdit_morph_min_comp->text();
-    for (int i = 0; i < model_data->num_fleets(); i++)
+    for (int i = 0; i < model_data->get_num_fleets(); i++)
         model_data->getFleet(i)->setMorphMinTailComp(val);
 }
 
@@ -786,15 +788,27 @@ void data_widget::changeJitter()
     QString value(ui->lineEdit_jitter->text());
     bool okay = true;
     double fl = value.toDouble(&okay);
-    if (okay)
-        model_data->set_jitter_param(fl);
-    else
-        while (!okay)
-        {
-            value.truncate(value.count() - 1);
-            fl = value.toDouble(&okay);
-        }
+    while (!okay)
+    {
+        value.truncate(value.count() - 1);
+        fl = value.toDouble(&okay);
+    }
+    model_data->set_jitter_param(fl);
     ui->lineEdit_jitter->setText(QString::number(fl));
+}
+
+void data_widget::changeAlkTol()
+{
+    QString value(ui->lineEdit_alktol->text());
+    bool okay = true;
+    float fl = value.toFloat(&okay);
+    while (!okay)
+    {
+        value.truncate(value.count() - 1);
+        fl = value.toFloat(&okay);
+    }
+    model_data->setALKTol(fl);
+    ui->lineEdit_alktol->setText(QString::number(fl));
 }
 
 void data_widget::changeConvergence()

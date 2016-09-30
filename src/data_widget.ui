@@ -63,7 +63,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -445,7 +445,7 @@
          <item row="4" column="6" colspan="2">
           <widget class="QLineEdit" name="lineEdit_convergence"/>
          </item>
-         <item row="12" column="1">
+         <item row="13" column="1">
           <widget class="QSpinBox" name="spinBox_sdrpt_min_yr">
            <property name="minimum">
             <number>-5</number>
@@ -462,7 +462,7 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="5">
+         <item row="11" column="5">
           <widget class="QLabel" name="label_f_max_age">
            <property name="text">
             <string>F calculation max age</string>
@@ -476,17 +476,17 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="0">
+         <item row="8" column="0">
           <widget class="QLabel" name="label_f_dep">
            <property name="text">
             <string>Depletion basis</string>
            </property>
           </widget>
          </item>
-         <item row="13" column="1">
+         <item row="14" column="1">
           <widget class="QSpinBox" name="spinBox_num_std_yrs"/>
          </item>
-         <item row="7" column="1" colspan="4">
+         <item row="8" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_f_dep">
            <item>
             <property name="text">
@@ -510,24 +510,24 @@
            </item>
           </widget>
          </item>
-         <item row="9" column="0">
+         <item row="10" column="0">
           <widget class="QLabel" name="label_f_rpt_units">
            <property name="text">
             <string>F Report values</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="0">
+         <item row="11" column="0">
           <widget class="QLabel" name="label_f_min_age">
            <property name="text">
             <string>F calculation min age</string>
            </property>
           </widget>
          </item>
-         <item row="7" column="6" colspan="2">
+         <item row="8" column="6" colspan="2">
           <widget class="QLineEdit" name="lineEdit_dep_denom"/>
          </item>
-         <item row="11" column="1" colspan="4">
+         <item row="12" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_f_report_basis">
            <item>
             <property name="text">
@@ -551,10 +551,10 @@
            </item>
           </widget>
          </item>
-         <item row="10" column="6">
+         <item row="11" column="6">
           <widget class="QSpinBox" name="spinBox_f_max_age"/>
          </item>
-         <item row="8" column="1" colspan="4">
+         <item row="9" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_spr_basis">
            <item>
             <property name="text">
@@ -590,14 +590,14 @@
            </property>
           </widget>
          </item>
-         <item row="12" column="0">
+         <item row="13" column="0">
           <widget class="QLabel" name="label_sdrpt_min_yr">
            <property name="text">
             <string>Min year for sdreport output</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="0">
+         <item row="12" column="0">
           <widget class="QLabel" name="label_f_report_basis">
            <property name="text">
             <string>F Report basis</string>
@@ -637,7 +637,7 @@
            </property>
           </widget>
          </item>
-         <item row="14" column="0" colspan="2">
+         <item row="15" column="0" colspan="2">
           <widget class="QLabel" name="label_std_yrs">
            <property name="text">
             <string>Vector of years </string>
@@ -647,7 +647,7 @@
            </property>
           </widget>
          </item>
-         <item row="12" column="6">
+         <item row="13" column="6">
           <widget class="QSpinBox" name="spinBox_sdrpt_max_yr">
            <property name="minimum">
             <number>-10</number>
@@ -657,7 +657,7 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="5">
+         <item row="8" column="5">
           <widget class="QLabel" name="label_f_dep_denom">
            <property name="text">
             <string>Depletion denomination - Frac(X)</string>
@@ -684,21 +684,21 @@
            </property>
           </widget>
          </item>
-         <item row="12" column="5">
+         <item row="13" column="5">
           <widget class="QLabel" name="label_sdrpt_max_yr">
            <property name="text">
             <string>Max year for sdreport output</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="0">
+         <item row="9" column="0">
           <widget class="QLabel" name="label_spr_basis">
            <property name="text">
             <string>SPR Report basis</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
+         <item row="11" column="1">
           <widget class="QSpinBox" name="spinBox_f_min_age"/>
          </item>
          <item row="6" column="1">
@@ -752,7 +752,7 @@
            </item>
           </layout>
          </item>
-         <item row="13" column="0">
+         <item row="14" column="0">
           <widget class="QLabel" name="label_num_std_yrs">
            <property name="text">
             <string>Num of individual sd report years</string>
@@ -773,7 +773,7 @@
            </property>
           </widget>
          </item>
-         <item row="9" column="1" colspan="4">
+         <item row="10" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_f_rpt_units">
            <item>
             <property name="text">
@@ -844,8 +844,18 @@
            </property>
           </widget>
          </item>
-         <item row="14" column="2" colspan="7">
+         <item row="15" column="2" colspan="7">
           <layout class="QHBoxLayout" name="horizontalLayout_sdYears"/>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_alktol">
+           <property name="text">
+            <string>Age Length Key tolerance</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1" colspan="2">
+          <widget class="QLineEdit" name="lineEdit_alktol"/>
          </item>
         </layout>
        </item>

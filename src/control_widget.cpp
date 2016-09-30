@@ -69,9 +69,9 @@ void control_widget::write_file(QString fname)
 int control_widget::read_data()
 {
     QString token = in_file->get_next_token();
-    QString temp_str;
-    int temp_int = 0, param = 1;
-    double temp_dbl;
+//    QString temp_str;
+    int param = 1;
+//    double temp_dbl;
 
     while (token.compare("EOF", Qt::CaseInsensitive) != 0)
     {
@@ -96,7 +96,7 @@ int control_widget::read_data()
 int control_widget::write_data()
 {
     QString line("");
-    int temp_int = 0, chars = 0;
+    int chars = 0;
     line = QString ("%1 #_N_Growth_Patterns ").arg
             (QString::number(ui->spinBox_lambda_num->value()));
     chars += out_file->writeline (line);

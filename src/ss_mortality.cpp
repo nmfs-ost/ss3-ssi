@@ -52,15 +52,15 @@ void ss_mortality::setYears(int f_year, int num)
 
 void ss_mortality::fromFile(ss_file *file, int num)
 {
-    QString token('#');
+//    QString token('#');
     QStringList tokenlist;
-    int i, temp_int, num_lines;
-    float temp_float;
+    int i;//, temp_int, num_lines;
+//    float temp_float;
 
-    bparkF = file->next_value().toFloat();
-    bparkYr = file->next_value().toInt();
-    method = file->next_value().toInt();
-    maxF = file->next_value().toFloat();
+    bparkF = file->get_next_value().toFloat();
+    bparkYr = file->get_next_value().toInt();
+    method = file->get_next_value().toInt();
+    maxF = file->get_next_value().toFloat();
     startF = 0;
     phase = 0;
     numInputs = 0;
@@ -68,12 +68,12 @@ void ss_mortality::fromFile(ss_file *file, int num)
     switch (method)
     {
     case 2:
-        startF = file->next_value().toInt();
-        phase = file->next_value().toInt();
-        numInputs = file->next_value().toInt();
+        startF = file->get_next_value().toFloat();
+        phase = file->get_next_value().toInt();
+        numInputs = file->get_next_value().toInt();
         break;
     case 3:
-        numTuningIters = file->next_value().toInt();
+        numTuningIters = file->get_next_value().toInt();
         break;
     }
 
@@ -82,7 +82,7 @@ void ss_mortality::fromFile(ss_file *file, int num)
     {
         for (int i = 0; i < 6; i++)
         {
-            tokenlist.append(file->next_value());
+            tokenlist.append(file->get_next_value());
         }
         parameterTable->setRowData(0, tokenlist);
     }

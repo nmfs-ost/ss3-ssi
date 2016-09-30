@@ -52,7 +52,6 @@ public:
     ~file_widget();
 
     void reset();
-    QString writeDatafileComment();
 
 private:
     Ui::file_widget *ui;
@@ -80,21 +79,22 @@ private:
 
 public slots:
     void set_starter_file (QString fname, bool keep = false);
-    QString starter_file();
+    QString get_starter_file();
     void set_forecast_file (QString fname, bool keep = false);
-    QString forecast_file ();
+    QString get_forecast_file ();
     void set_control_file (QString fname, bool keep = false);
-    QString control_file ();
+    QString get_control_file ();
     void set_data_file (QString fname, bool keep = false);
-    QString data_file ();
-    QString param_file ();
-    QString profile_file ();
-    QString run_num_file ();
+    QString get_data_file ();
+    QString get_param_file ();
+    QString get_profile_file ();
+    QString get_run_num_file ();
     QString getDataFileName () {return data_file_name;}
     QString getControlFileName () {return control_file_name;}
     ss_model *this_model() {return model_info;}
 
-    void setVersion(double ver, bool flag = true);
+    QString getDatafileVersion ();
+    void setDatafileVersion(double ver, bool flag = true);
 
     void increase_font();
     void decrease_font();

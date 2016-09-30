@@ -101,6 +101,18 @@ int ss_file::writeline(QString str)
     return chars;
 }
 
+int ss_file::writechar (QChar chr)
+{
+    char ch = chr.toLatin1();
+    int chars = 0;
+    if (!chr.isNull())
+    {
+        write (&ch);
+        chars = 1;
+    }
+    return  chars;
+}
+
 int ss_file::newline()
 {
     return write (ENDLINE);
@@ -145,7 +157,7 @@ QStringList *ss_file::get_line_tokens(QString *line)
     return current_tokens;
 }
 
-QString ss_file::next_value()
+QString ss_file::get_next_value()
 {
     QString tk (get_next_token());
     while (tk.startsWith("#"))
@@ -156,9 +168,9 @@ QString ss_file::next_value()
     return tk;
 }
 
-QString ss_file::next_value(QString prompt)
+QString ss_file::get_next_value(QString prompt)
 {
-    QString tk (next_value());
+    QString tk (get_next_value());
     if (tk.compare("EOF") == 0)
     {
         QString msg(QString("Found EOF when looking for %1 in file %2.")

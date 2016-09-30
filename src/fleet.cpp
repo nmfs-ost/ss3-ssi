@@ -5,7 +5,7 @@ Fleet::Fleet(QObject *parent) :
     QObject(parent)
 {
     ss_model *model = static_cast<ss_model*>(parent);
-    i_start_year = model->start_year();
+    i_start_year = model->get_start_year();
 
     set_max_catch(-1);
     retainCatch = new tablemodel(this);
@@ -616,12 +616,14 @@ int Fleet::getAbundanceCount()
 
 float Fleet::getAbundanceAmt(int yr, float mn)
 {
-
+    float dat = yr+mn/12.0;
+    return dat;
 }
 
 float Fleet::getAbundanceErr(int yr, float mn)
 {
-
+    float dat = yr + mn / 12.0;
+    return dat;
 }
 
 int Fleet::abundance_count()

@@ -14,6 +14,7 @@
 #define app_manual        ("SS_User_Manual_3.30.pdf")
 #define app_technical     ("SS_technical_description_2012.pdf")
 
+
 QString getAppVersion ();
 QString getAppAppliesTo ();
 QString getAppName ();
@@ -21,5 +22,8 @@ QString getAppCopyright ();
 QString getAppOrg ();
 QString getAppUserManual ();
 QString getAppTechDescription ();
+
+QString getDatafileVersionString ();
+void setDatafileVersionString (float ver);
 
 #endif // METADATA_H

@@ -18,12 +18,12 @@ void Season::reset()
     numSubSeasons = 2;
 }
 
-int Season::getNumMonths() const
+float Season::getNumMonths() const
 {
     return numMonths;
 }
 
-void Season::setNumMonths(int value)
+void Season::setNumMonths(float value)
 {
     numMonths = value;
 }
@@ -46,6 +46,16 @@ bool Season::getSpawning() const
 void Season::setSpawning(bool value)
 {
     spawning = value;
+}
+
+float Season::getDuration() const
+{
+    return duration;
+}
+
+void Season::setDuration(float value)
+{
+    duration = value;
 }
 
 
@@ -222,7 +232,7 @@ void ss_model::reset()
 void ss_model::set_start_year(int year)
 {
     iStartYr = year;
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
     {
         getFleet(i)->setStartYear (iStartYr);
     }
@@ -233,7 +243,7 @@ void ss_model::set_end_year(int year)
 {
     iEndYr = year;
     iTotalYears = iEndYr - iStartYr + 1;
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
     {
         getFleet(i)->setTotalYears(iTotalYears);
     }
@@ -247,7 +257,7 @@ void ss_model::set_num_std_years(int num_yrs)
 
 void ss_model::set_std_years_text(QString txt)
 {
-    int i;
+//    int i;
     QStringList ql (txt.split(' ', QString::SkipEmptyParts));
     sdYearsModel->setRowData(0, ql);
 }
@@ -306,8 +316,8 @@ void ss_model::setALKTol (float val)
 {
     if (val < 0.0)
         val = 0.0;
-    if (val > 0.05)
-        val = 0.05;
+    if (val > 0.1)
+        val = 0.1;
 
     fALKTol = val;
 }
@@ -387,11 +397,33 @@ void ss_model::set_num_seasons(int seasns)
     pPopulation->setNumSeas(seasns);
 }
 
-void ss_model::set_months_per_season(int seasn, int months)
+void ss_model::set_months_per_season(int seasn, float months)
 {
-    if (months > 0 && months < 13)
+    if (months > 0.0 && months < 12.1)
     {
         seasons.at(seasn-1)->setNumMonths(months);
+    }
+}
+
+void ss_model::rescale_months_per_season()
+{
+    float sum = 0;
+    float dur = 0;
+    float months = 0;
+    for (int i = 0; i < get_num_seasons(); i++)
+        sum += get_months_per_season(i);
+    if (sum > 0.0)
+    {
+        if (sum < 11.9)
+            sum = 12;
+        for (int i = 0; i < get_num_seasons(); i++)
+        {
+            months = get_months_per_season(i);
+            dur = months / sum;
+            seasons.at(i)->setDuration(dur);
+            months = dur * 12.0;
+            seasons.at(i)->setNumMonths(months);
+        }
     }
 }
 
@@ -409,10 +441,10 @@ void ss_model::set_num_subseasons(int value)
         seasons.at(i)->setNumSubSeasons(value);
 }
 
-int ss_model::totalMonths()
+int ss_model::getTotalMonths()
 {
     int total = 0;
-    for (int i = 0; i < num_seasons(); i++)
+    for (int i = 0; i < get_num_seasons(); i++)
     {
         total += seasons.at(i)->getNumMonths();
     }
@@ -429,7 +461,7 @@ void ss_model::set_spawn_season(int seasn)
     }
 }
 
-int ss_model::spawn_season()
+int ss_model::get_spawn_season()
 {
     int seasn;
     for (seasn = 0; seasn < seasons.count(); seasn++)
@@ -443,7 +475,7 @@ int ss_model::spawn_season()
 int ss_model::find_season(float month)
 {
     int itr = 0, seasn = 0;
-    int mn = (int)month;
+//    int mn = (int)month;
     for (seasn = 0; seasn < seasons.count(); seasn++)
     {
         itr += seasons.at(seasn)->getNumMonths();
@@ -466,7 +498,7 @@ float ss_model::find_month(int fleet, int seas)
 }
 
 
-int ss_model::totalSeasons()
+int ss_model::getTotalSeasons()
 {
     return seasons.count();
 }
@@ -497,11 +529,11 @@ Fleet * ss_model::newFleet(QString name)
     if (name.isEmpty())
             name = QString("New_Fleet");
     newfl->setName(name);
-    newfl->setStartYear(start_year());
-    newfl->setTotalYears(totalYears());
-    newfl->setNumSeasons(totalSeasons());
+    newfl->setStartYear(get_start_year());
+    newfl->setTotalYears(getTotalYears());
+    newfl->setNumSeasons(getTotalSeasons());
     fleets.append(newfl);
-    forecast->set_num_fleets(num_fleets());
+    forecast->set_num_fleets(get_num_fleets());
     return newfl;
 }
 
@@ -519,7 +551,7 @@ void ss_model::deleteFleet(int index)
         delete flt;
         flt = NULL;
     }
-    forecast->set_num_fleets(num_fleets());
+    forecast->set_num_fleets(get_num_fleets());
 }
 
 Fleet * ss_model::duplicateFleet(Fleet *oldfl)
@@ -532,13 +564,13 @@ Fleet * ss_model::duplicateFleet(Fleet *oldfl)
         iNumFisheries++;
     else if (oldfl->getType() == Fleet::Survey)
         iNumSurveys++;
-    forecast->set_num_fleets(num_fleets());
+    forecast->set_num_fleets(get_num_fleets());
     return dupfl;
 }
 
 void ss_model::set_num_fleets(int n_fleets)
 {
-    int i = n_fleets;
+//    int i = n_fleets;
     Fleet *fleet;
 
     if (fleets.isEmpty())
@@ -557,7 +589,7 @@ void ss_model::set_num_fleets(int n_fleets)
     forecast->set_num_fleets(n_fleets);
 }
 
-int ss_model::num_fisheries()
+int ss_model::get_num_fisheries()
 {
     int i = 0, num = 0;
     for (; i < fleets.count(); i++)
@@ -567,7 +599,7 @@ int ss_model::num_fisheries()
     return num;
 }
 
-int ss_model::num_surveys()
+int ss_model::get_num_surveys()
 {
     int i = 0, num = 0;
     for (; i < fleets.count(); i++)
@@ -580,7 +612,7 @@ int ss_model::num_surveys()
 int ss_model::getNumLinesCatch()
 {
     int num = 0;
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
     {
         num += getFleet(i)->getNumCatchObs();
     }
@@ -600,7 +632,7 @@ double ss_model::fleet_catch_per_season(int fleet, int yr, int season)
 void ss_model::set_fleet_units_err_type(int fleet, int units, int err_type)
 {
 //    int i_fleet = fleet - 1;
-    if (fleet < num_fleets())
+    if (fleet < get_num_fleets())
     {
         getFleet(fleet)->setAbundUnits(units);
         getFleet(fleet)->setAbundErrType(err_type);
@@ -609,8 +641,8 @@ void ss_model::set_fleet_units_err_type(int fleet, int units, int err_type)
 
 int ss_model::fleet_units(int fleet)
 {
-    int units = 0, i_fleet = fleet - 1;
-    if (fleet < num_fleets())
+    int units = 0;
+    if (fleet < get_num_fleets())
     {
         units = getFleet(fleet)->getAbundUnits();
     }
@@ -619,8 +651,8 @@ int ss_model::fleet_units(int fleet)
 
 int ss_model::fleet_err_type(int fleet)
 {
-    int err = 0, i_fleet = fleet - 1;
-    if (fleet < num_fleets())
+    int err = 0;
+    if (fleet < get_num_fleets())
     {
         err = getFleet(fleet)->getAbundErrType();
     }
@@ -629,26 +661,17 @@ int ss_model::fleet_err_type(int fleet)
 
 void ss_model::set_fleet_abundance(int fleet, int year, int month, float obs, float err)
 {
-    int i_fleet = fleet - 1;
-    int i_yr = year - iStartYr;
-    int i_seas = month - 1;
     getFleet(fleet)->set_abundance(year, month, obs);
     getFleet(fleet)->set_abundance_error(year, month, err);
 }
 
 float ss_model::fleet_abundance(int fleet, int year, int month)
 {
-    int i_fleet = fleet - 1;
-    int i_yr = year - iStartYr;
-    int i_seas = month - 1;
     return getFleet(fleet)->abundance(year, month);
 }
 
 float ss_model::fleet_abund_err(int fleet, int year, int month)
 {
-    int i_fleet = fleet - 1;
-    int i_yr = year - iStartYr;
-    int i_seas = month - 1;
     return getFleet(fleet)->abundance_error(year, month);
 }
 
@@ -662,7 +685,7 @@ void ss_model::set_fleet_discard_units_err_type(int fleet, int units, int err_ty
 int ss_model::fleet_discard_units(int fleet)
 {
     int units = 0, i_fleet = fleet - 1;
-    if (i_fleet < num_fleets())
+    if (i_fleet < get_num_fleets())
     {
         units = getFleet(fleet)->getDiscardUnits();
     }
@@ -672,7 +695,7 @@ int ss_model::fleet_discard_units(int fleet)
 int ss_model::fleet_discard_err_type(int fleet)
 {
     int err = 0, i_fleet = fleet - 1;
-    if (i_fleet < num_fleets())
+    if (i_fleet < get_num_fleets())
     {
         err = getFleet(fleet)->getDiscardErrType();
     }
@@ -682,7 +705,7 @@ int ss_model::fleet_discard_err_type(int fleet)
 int ss_model::fleet_discard_count()
 {
     int i = 0, count = 0;
-    for (i = 0; i < num_fleets(); i++)
+    for (i = 0; i < get_num_fleets(); i++)
     {
         if (getFleet(i)->getDiscardCount() > 0)
             count++;
@@ -693,7 +716,7 @@ int ss_model::fleet_discard_count()
 int ss_model::fleet_discard_obs_count()
 {
     int i = 0, count = 0;
-    for (i = 0; i < num_fleets(); i++)
+    for (i = 0; i < get_num_fleets(); i++)
     {
         count += getFleet(i)->getDiscardCount();
     }
@@ -705,7 +728,7 @@ void ss_model::set_num_genders(int genders)
     int num = (genders == 1)? 1: 2;
     iNumGenders = genders;
     getPopulation()->set_gender(genders);
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
     {
         getFleet(i)->setNumGenders(num);
     }
@@ -847,7 +870,7 @@ void ss_model::setTagLossParameter(QString text)
 int ss_model::getLambdaNumChanges()
 {
     int num = 0;
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
         num += getFleet(i)->getNumLambdas();
     return num;
 }
@@ -982,20 +1005,20 @@ int ss_model::checkyearvalue(QString str)
     bool ok;
     int value = str.toInt(&ok);
     if (!ok)
-        value = start_year();
+        value = get_start_year();
     return checkyearvalue(value);
 }
 
 int ss_model::checkyearvalue(int value)
 {
     int val = value;
-    int totNeg = start_year() - end_year();
+    int totNeg = get_start_year() - get_end_year();
     if (value <= totNeg)
         val = totNeg;
-    else if (value > 0 && value < start_year())
-        val = start_year();
-    else if (value > end_year())
-        val = end_year();
+    else if (value > 0 && value < get_start_year())
+        val = get_start_year();
+    else if (value > get_end_year())
+        val = get_end_year();
     return val;
 }
 
@@ -1003,7 +1026,7 @@ int ss_model::refyearvalue(int value)
 {
     int year = value;
     if (value <= 0)
-        year = end_year() + value;
+        year = get_end_year() + value;
 
     return year;
 }
@@ -1027,6 +1050,16 @@ QString ss_model::getControlFileName()
 {
     MainWindow *mw = (MainWindow *)parent();
     return mw->getControlFile();
+}
+
+bool ss_model::getReadWtAtAge() const
+{
+    return readWtAtAge;
+}
+
+void ss_model::setReadWtAtAge(bool value)
+{
+    readWtAtAge = value;
 }
 
 int ss_model::getSelexAdjustMethod() const
@@ -1075,7 +1108,7 @@ void ss_model::assignFleetNumbers()
     int num = 1;
     for (int t = Fleet::Fishing; t < Fleet::None; t += 1)
     {
-        for (int i = 0; i < num_fleets(); i++)
+        for (int i = 0; i < get_num_fleets(); i++)
         {
             if (t == getFleet(i)->getTypeInt() &&
                     getFleet(i)->isActive())
@@ -1090,7 +1123,7 @@ void ss_model::assignFleetNumbers()
 int ss_model::getNumActiveFleets()
 {
     int num = 0;
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
     {
         if (getFleet(i)->isActive())
         {
@@ -1103,7 +1136,7 @@ int ss_model::getNumActiveFleets()
 Fleet *ss_model::getActiveFleet(int num)
 {
     Fleet *flt = NULL;
-    for (int i = 0; i < num_fleets(); i++)
+    for (int i = 0; i < get_num_fleets(); i++)
     {
         flt = getFleet(i);
         if (flt->isActive())
@@ -1165,11 +1198,21 @@ bool floatEquals(float a, float b)
     bool equals = false;
     float aa = abs(a);
     float bb = abs(b);
-    if (a < 0 && b < 0 ||
-            a >= 0 && b >= 0)
-        if (aa > bb - .0000001 && aa < bb + .0000001)
+    if ((a < 0 && b < 0) ||
+            (a >= 0 && b >= 0))
+        if ((aa > bb - .0000001) && (aa < bb + .0000001))
             equals = true;
 
     return equals;
+}
+
+bool ss_model::getReadSelectivityPriors()
+{
+    return readSelxPriors;
+}
+
+void ss_model::setReadSelectivityPriors(bool flag)
+{
+    readSelxPriors = flag;
 }
 

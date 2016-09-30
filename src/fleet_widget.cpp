@@ -96,7 +96,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_lambda_changes->addWidget(lambdaView);
 
     model_data = m_data;
-    totalFleets = m_data->num_fleets();
+    totalFleets = m_data->get_num_fleets();
 
     connect (ui->comboBox_fleet_name, SIGNAL(currentIndexChanged(int)), SLOT(set_current_fleet(int)));
     connect (ui->pushButton_edit_name, SIGNAL(clicked()), SLOT(edit_name()));
@@ -250,7 +250,7 @@ void fleet_widget::setActive(bool flag)
 
 void fleet_widget::reset ()
 {
-    totalFleets = model_data->num_fleets();
+    totalFleets = model_data->get_num_fleets();
     refresh();
 }
 
@@ -271,18 +271,18 @@ void fleet_widget::refreshFleetNames()
 void fleet_widget::refresh()
 {
     int curr = ui->comboBox_fleet_name->currentIndex();
-    catchedit->setYearRange(model_data->start_year(), model_data->end_year());
-    catchedit->setNumSeasons(model_data->num_seasons());
+    catchedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
+    catchedit->setNumSeasons(model_data->get_num_seasons());
     catchedit->setMaxCatch(1999999.0);
-    abundedit->setYearRange(model_data->start_year(), model_data->end_year());
+    abundedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
     abundedit->setValueRange(0, 1999999.0);
-    discardedit->setYearRange(model_data->start_year(), model_data->end_year());
+    discardedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
     discardedit->setValueRange(0, 1999999.0);
 
-    totalFleets = model_data->num_fleets();
+    totalFleets = model_data->get_num_fleets();
     ui->spinBox_selex_size_discard->setMinimum(-totalFleets);
 //    ui->spinBox_total->setValue(totalFleets);
-    ui->spinBox_area->setMaximum(model_data->num_areas());
+    ui->spinBox_area->setMaximum(model_data->get_num_areas());
     refreshFleetNames();
 
     ui->comboBox_fleet_name->setCurrentIndex(curr);
@@ -761,7 +761,7 @@ void fleet_widget::setGenMethodTotal(int num)
 void fleet_widget::changeGenMethodTotal(int num)
 {
 
-    if (ui->spinBox_obs_gen_num_total->value() > 0)
+    if (num > 0)
     {
         setGenMethodNum(0);
         ui->spinBox_obs_gen_numObs->setVisible(true);

@@ -123,10 +123,9 @@ void spawn_recruit::fromFile(ss_file *file)
 {
     QString token('#'), temp_str;
     QStringList datalist;
-    int i, temp_int, num_lines;
-    float temp_float;
+    int i;
     
-    method = file->next_value().toInt();
+    method = file->get_next_value().toInt();
     i = 0;
     {
         datalist = readShortParameter(file);
@@ -181,29 +180,29 @@ void spawn_recruit::fromFile(ss_file *file)
         full_parameters->setRowHeader(i++, "SR_autocorr");
     }
 
-    env_link = file->next_value().toFloat();
-    env_target = file->next_value().toInt();
-    rec_dev = file->next_value().toInt();
-    rec_dev_start_yr = file->next_value().toInt();
-    rec_dev_end_yr = file->next_value().toInt();
-    rec_dev_phase = file->next_value().toInt();
-    advanced_opts = (file->next_value().compare("0") != 0);
+    env_link = file->get_next_value().toFloat();
+    env_target = file->get_next_value().toInt();
+    rec_dev = file->get_next_value().toInt();
+    rec_dev_start_yr = file->get_next_value().toInt();
+    rec_dev_end_yr = file->get_next_value().toInt();
+    rec_dev_phase = file->get_next_value().toInt();
+    advanced_opts = (file->get_next_value().compare("0") != 0);
 
     if (advanced_opts)
     {
-        rec_dev_early_start = file->next_value().toInt();
-        rec_dev_early_phase = file->next_value().toInt();
-        fcast_rec_phase = file->next_value().toInt();
-        fcast_lambda = file->next_value().toFloat();
-        nobias_last_early_yr = file->next_value().toInt();
-        fullbias_first_yr = file->next_value().toInt();
-        fullbias_last_yr = file->next_value().toInt();
-        nobias_first_recent_yr = file->next_value().toInt();
-        max_bias_adjust = file->next_value().toFloat();
-        rec_cycles = file->next_value().toInt();
-        rec_dev_min = file->next_value().toInt();
-        rec_dev_max = file->next_value().toInt();
-        num_rec_dev = file->next_value().toInt();
+        rec_dev_early_start = file->get_next_value().toInt();
+        rec_dev_early_phase = file->get_next_value().toInt();
+        fcast_rec_phase = file->get_next_value().toInt();
+        fcast_lambda = file->get_next_value().toFloat();
+        nobias_last_early_yr = file->get_next_value().toInt();
+        fullbias_first_yr = file->get_next_value().toInt();
+        fullbias_last_yr = file->get_next_value().toInt();
+        nobias_first_recent_yr = file->get_next_value().toInt();
+        max_bias_adjust = file->get_next_value().toFloat();
+        rec_cycles = file->get_next_value().toInt();
+        rec_dev_min = file->get_next_value().toInt();
+        rec_dev_max = file->get_next_value().toInt();
+        num_rec_dev = file->get_next_value().toInt();
 
         assignmentParams->setRowCount(rec_cycles);
         for (i = 0; i < rec_cycles; i++)
@@ -216,8 +215,8 @@ void spawn_recruit::fromFile(ss_file *file)
         for (i = 0; i < num_rec_dev; i++)
         {
             datalist.clear();
-            datalist.append(file->next_value());
-            datalist.append(file->next_value());
+            datalist.append(file->get_next_value());
+            datalist.append(file->get_next_value());
             getRecruitDevs()->setRecruitDev(i, datalist);
 /*            temp_int = file->next_value().toInt();
             temp_float = file->next_value().toFloat();

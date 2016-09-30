@@ -34,8 +34,11 @@ public:
 
 public slots:
     void reset();
-    int getNumMonths() const;
-    void setNumMonths(int value);
+    float getNumMonths() const;
+    void setNumMonths(float value);
+
+    float getDuration() const;
+    void setDuration(float value);
     int getNumSubSeasons () const;
     void setNumSubSeasons(int value);
 
@@ -43,7 +46,8 @@ public slots:
     void setSpawning(bool value);
 
 private:
-    int numMonths; /**< The number of months in this season */
+    float numMonths; /**< The number of months in this season */
+    float duration; /**< The fraction of the year for this season */
     int numSubSeasons; /**< The number of sub seasons, always even */
     bool spawning;  /**< Whether spawning occurs in this season (only one per year) */
 };
@@ -74,6 +78,9 @@ public:
     int getSelexAdjustMethod() const;
     void setSelexAdjustMethod(int value);
 
+    bool getReadWtAtAge() const;
+    void setReadWtAtAge(bool value);
+
 public slots:
     void reset();
 
@@ -92,12 +99,12 @@ public slots:
 
     void set_use_softbounds (int flag) {bUseSoftBounds = flag;}
     void set_use_softbounds (bool flag) {bUseSoftBounds = flag;}
-    bool use_softbounds () {return bUseSoftBounds;}
+    bool get_use_softbounds () {return bUseSoftBounds;}
     void set_prior_likelihood (int flag) {bPriorLikelihood = (flag == 1);}
     void set_prior_likelihood (bool flag) {bPriorLikelihood = flag;}
-    bool prior_likelihood () {return bPriorLikelihood;}
+    bool get_prior_likelihood () {return bPriorLikelihood;}
     void set_last_estim_phase (int phase) {iLastEstimPhase = phase;}
-    int last_estim_phase () {return iLastEstimPhase;}
+    int get_last_estim_phase () {return iLastEstimPhase;}
     void set_mc_burn (int interval) {iMcBurn = interval;}
     int mc_burn () {return iMcBurn;}
     void set_mc_thin (int interval) {iMcThin = interval;}
@@ -110,68 +117,69 @@ public slots:
     int bio_sd_max_year () {return iBioSdMaxYr;}
 
     void set_num_std_years (int num_yrs);
-    int num_std_years () {return sdYearsModel->columnCount();}
+    int get_num_std_years () {return sdYearsModel->columnCount();}
     void set_std_years_text (QString txt);
     void set_std_year (int index, QString year);
-    QString std_year (int index) {return sdYearsModel->getRowData(0).at(index);}
+    QString get_std_year (int index) {return sdYearsModel->getRowData(0).at(index);}
     QStringList get_std_years ();
     QString get_std_years_text ();
 
     void set_convergence_criteria (double value) {dConvergence = value;}
-    double convergence_criteria () {return dConvergence;}
+    double get_convergence_criteria () {return dConvergence;}
 
     void set_retrospect_year (int year) {iRetrospectYr = year;}
-    int retrospect_year () {return iRetrospectYr;}
+    int get_retrospect_year () {return iRetrospectYr;}
     void set_biomass_min_age (int age) {iBiomassMinAge = age;}
-    int biomass_min_age () {return iBiomassMinAge;}
+    int get_biomass_min_age () {return iBiomassMinAge;}
     void set_depletion_basis (int basis) {iDepletionBasis = basis;}
-    int depletion_basis () {return iDepletionBasis;}
+    int get_depletion_basis () {return iDepletionBasis;}
     void set_depletion_denom (double denom) {dDeplDenom = denom;}
-    double depletion_denom () {return dDeplDenom;}
+    double get_depletion_denom () {return dDeplDenom;}
     void set_spr_basis (int basis) {iSprBasis = basis;}
-    int spr_basis () {return iSprBasis;}
+    int get_spr_basis () {return iSprBasis;}
     void set_f_units (int units) {iFUnits = units;}
-    int f_units () {return iFUnits;}
+    int get_f_units () {return iFUnits;}
     void set_f_min_age (int age) {iFMinAge = age;}
-    int f_min_age () {return iFMinAge;}
+    int get_f_min_age () {return iFMinAge;}
     void set_f_max_age (int age) {iFMaxAge = age;}
-    int f_max_age () {return iFMaxAge;}
+    int get_f_max_age () {return iFMaxAge;}
     void set_f_basis (int basis) {iFBasis = basis;}
-    int f_basis () {return iFBasis;}
+    int get_f_basis () {return iFBasis;}
     void setALKTol (float val);
     float getALKTol () {return fALKTol;}
 
     void set_start_year (int year);
-    int start_year () {return iStartYr;}
+    int get_start_year () {return iStartYr;}
     void set_end_year (int year);
-    int end_year () {return iEndYr;}
-    int totalYears() {return iTotalYears;}
+    int get_end_year () {return iEndYr;}
+    int getTotalYears() {return iTotalYears;}
     void set_num_seasons (int seasns) ;
     Season *getSeason(int index);
     int getSeasonByMonth(float month);
     float getMonthBySeasonFleet(int seas, int fleet);
-    int num_seasons () {return seasons.count();}
-    void set_months_per_season (int seasn, int months);
-    int months_per_season (int seasn) {return seasons.at(seasn)->getNumMonths();}
-    int totalMonths();
+    int get_num_seasons () {return seasons.count();}
+    void set_months_per_season (int seasn, float months);
+    float get_months_per_season (int seasn) {return seasons.at(seasn)->getNumMonths();}
+    void rescale_months_per_season ();
+    int getTotalMonths();
     void set_spawn_season (int seasn) ;
-    int spawn_season () ;
+    int get_spawn_season () ;
     int find_season (float month);
     float find_month (int fleet, int season);
-    int totalSeasons();
+    int getTotalSeasons();
     void set_num_subseasons(int value);
     int get_num_subseasons () const;
     void set_num_fisheries (int n_fisheries) {iNumFisheries = n_fisheries;}
-    int num_fisheries ();
+    int get_num_fisheries ();
     void set_num_surveys (int n_surveys) {iNumSurveys = n_surveys;}
-    int num_surveys ();
+    int get_num_surveys ();
     void set_num_fleets (int n_fleets = 0);
-    int num_fleets () {return fleets.count();}
+    int get_num_fleets () {return fleets.count();}
     void assignFleetNumbers ();
     int getNumActiveFleets ();
     Fleet *getActiveFleet (int num);
     void set_num_areas (int n_areas);
-    int num_areas () {return iNumAreas;}
+    int get_num_areas () {return iNumAreas;}
     int getNumLinesCatch ();
     void add_fleet_catch_per_season (int fishery, int yr, int season, double num, double se = 0);
 //    double fleet_catch_per_season (int fishery, int yr, int season);
@@ -201,12 +209,12 @@ public slots:
     QStringList getMeanBwtObs (int index) {return mbweightModel->getRowData(index);}
 
     void set_num_ages (int ages);
-    int num_ages () {return iNumAges;}
+    int get_num_ages () {return iNumAges;}
     void set_num_genders (int genders);
-    int num_genders () {return iNumGenders;}
+    int get_num_genders () {return iNumGenders;}
 
     void set_run_number (int r_num) {iNumRuns = r_num;}
-    int run_number () {return iNumRuns;}
+    int get_run_number () {return iNumRuns;}
 
     void setUseLengthComp (int flag) {useLenCompData = (flag == 1)? true: false;}
     bool getUseLengthComp () {return useLenCompData;}
@@ -326,6 +334,9 @@ public slots:
     int getCustomSelParmDevAdjust() const;
     void setCustomSelParmDevAdjust(int value);
 
+    bool getReadSelectivityPriors();
+    void setReadSelectivityPriors(bool flag);
+
     QString getDataFileName ();
     QString getControlFileName ();
 
@@ -336,6 +347,8 @@ signals:
 
 private:
     bool readMonths;
+    bool readSelxPriors;
+    bool readWtAtAge;
     bool bUseSoftBounds;
     bool bPriorLikelihood;
     int iLastEstimPhase;

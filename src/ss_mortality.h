@@ -49,6 +49,7 @@ public:
     QStringList getInputLine (int index) {return parameterTable->getRowData(index);}
     tablemodel *getInputModel () {return parameterTable;}
 
+    int getNumInitialParams () {return initialParams->rowCount();}
     void setNumInitialParams (int num) {initialParams->setRowCount(num);}
     void setInitialParam (int index, QStringList data) {initialParams->setRowData(index, data);}
     QStringList getInitialParam (int index) {return initialParams->getRowData(index);}

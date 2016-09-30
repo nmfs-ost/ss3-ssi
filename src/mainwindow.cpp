@@ -212,7 +212,7 @@ void MainWindow::openDirectory(QString fname)
 
         files->set_starter_file(fname);
 
-        start_file = QFileInfo(files->starter_file());
+        start_file = QFileInfo(files->get_starter_file());
         if (start_file.isReadable())
             repeat = false;
         else
@@ -229,7 +229,7 @@ void MainWindow::openDirectory(QString fname)
         }
      }while (repeat);
 
-    if (!files->starter_file().isEmpty())
+    if (!files->get_starter_file().isEmpty())
     {
         current_dir = start_file.absolutePath();
         QDir::setCurrent(current_dir);
@@ -251,7 +251,7 @@ void MainWindow::openControlFile()
 
 void MainWindow::saveControlFile()
 {
-    QString fname = files->control_file();
+    QString fname = files->get_control_file();
     fname = QFileDialog::getSaveFileName(this, tr("Select Control File"),
             current_dir, tr("data files (*.ctl);;SS files (*.ss);;all files (*.*)"));
     if (!fname.isEmpty())
@@ -274,7 +274,7 @@ void MainWindow::openDataFile()
 
 void MainWindow::saveDataFile()
 {
-    QString fname = files->data_file();
+    QString fname = files->get_data_file();
     fname = QFileDialog::getSaveFileName(this, tr("Select Data File"),
             current_dir, tr("data files (*.dat);;SS files (*.ss);;all files (*.*)"));
     if (!fname.isEmpty())
@@ -642,6 +642,10 @@ QString MainWindow::findFile(QString title, QString filters)
 
 void MainWindow::change_control_file(QString fname)
 {
+    if (control_file.compare(fname) != 0)
+    {
+        control_file = fname;
+    }
 }
 
 void MainWindow::change_data_file(QString fname)
@@ -666,11 +670,11 @@ void MainWindow::writeProfileFile()
 
 }
 
-void MainWindow::set_start_age_rept(bool flag)
+void MainWindow::set_start_age_rept()
 {
 }
 
-void MainWindow::set_start_use_values(int flag)
+void MainWindow::set_start_use_values()
 {
 }
 

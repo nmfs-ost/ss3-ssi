@@ -142,8 +142,8 @@ private slots:
     void showSurveys();
 
     int ask_missing_file(QString fn);
-    void set_start_age_rept(bool flag);
-    void set_start_use_values(int flag);
+    void set_start_age_rept();
+    void set_start_use_values();
     void increase_font();
     void decrease_font();
 

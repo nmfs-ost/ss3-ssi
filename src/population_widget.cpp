@@ -250,7 +250,7 @@ void population_widget::refresh()
 //    ui->groupBox_hermaphroditism->setChecked(pop->Fec()->getHermaphroditism());
     hermaphParamsView->setModel(pop->Fec()->getHermParams());
     hermaphParamsView->setHeight(pop->Fec()->getHermParams());
-    ui->spinBox_fecund_hermaph_season->setMaximum(model_data->num_seasons());
+    ui->spinBox_fecund_hermaph_season->setMaximum(model_data->get_num_seasons());
     ui->spinBox_fecund_hermaph_season->setValue(pop->Fec()->getHermSeason());
     ui->spinBox_fecund_hermaph_male->setValue(pop->Fec()->getHermIncludeMales());
     setFecundityOffsetOption(pop->Grow()->getParam_offset_method());
@@ -696,11 +696,11 @@ void population_widget::setMaturityOpt(int opt)
 
 void population_widget::changeMaturityOpt(int opt)
 {
-    bool vis = false;
+//    bool vis = true;
     pop->Grow()->setMaturity_option(opt + 1);
-    if (opt == 2 || opt == 3)
+/*    if (opt == 2 || opt == 3)
         vis = true;
-//    ui->frame_growth_age_spec->setVisible(vis);
+    ui->frame_growth_age_spec->setVisible(vis);*/
 }
 
 int population_widget::getMaturityOpt()

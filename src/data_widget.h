@@ -34,7 +34,7 @@ public slots:
     void refresh();
 
     void changeMaxSeason (int num);
-    void changeSeason (int seas);
+    void changeSeason ();
     void setMoPerSeason ();
     void changeMoPerSeason (QString txt);
     void changeSpawnSeason (int seas);
@@ -49,7 +49,7 @@ public slots:
     void changeLengthCompMethod(int method);
     void setLengthBins(int numBins);
     void changeLengthBins(int numBins);
-    void changeLengthCombine(int gen);
+    void changeLengthCombine();
     void changeLengthCompress();
     void changeLengthAdd ();
     void setAgeCompMethod (int method);
@@ -58,7 +58,7 @@ public slots:
     void changeAgeBins(int numBins);
     void setAgeError (int numDefs);
     void changeAgeError(int numDefs);
-    void changeAgeCombine (int gen);
+    void changeAgeCombine ();
     void changeNumEnvVarObs (int num);
     void setGenCompMethod(int method);
     void changeGenCompMethod(int method);
@@ -81,6 +81,7 @@ public slots:
     void setBlockPattern (int num);
 
     void changeJitter();
+    void changeAlkTol();
     void changeConvergence();
     void changeDepDenom();
 
@@ -94,7 +95,7 @@ signals:
 
 private slots:
     void changeTotalYears();
-    void numSdYearsChanged(QWidget *qw);
+    void numSdYearsChanged();
 
 private:
     Ui::data_widget *ui;
