@@ -405,7 +405,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
             for (i = 0; i < num_vals; i++)
             {
-                temp_str = d_file->get_next_value();//.toFloat();
+                temp_float = d_file->get_next_value().toFloat();
 //                for (int j = 0; j < total_fleets; j++)
 //                    data->getFleet(j)->setGenAddToData(i, temp_str);
                 data->getGeneralCompMethod(i)->setMinComp(temp_float);

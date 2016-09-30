@@ -6,7 +6,7 @@
 #define app_name          ("Stock Synthesis Interface")
 #define app_version_major  2
 #define app_version_minor  3
-#define app_version_bugfix 1
+#define app_version_bugfix 2
 #define app_version_apply ("3.30")
 #define app_copyright_date  __DATE__
 #define app_copyright_org ("NOAA")

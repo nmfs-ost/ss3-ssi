@@ -7,11 +7,11 @@ int writeSSVersion(ss_file *file)
 
 int writeVersionComment(ss_file *file)
 {
-    int chars;
+    int chars = 0;
     QString line;
     line = QString ("# File written by GUI version %1 for SS version %2").arg
             (getAppVersion(), getAppAppliesTo());
-    chars += file->writeline (line);
+    chars = file->writeline (line);
     return chars;
 }
 

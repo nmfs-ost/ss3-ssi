@@ -81,7 +81,7 @@ void ss_file::set_comments(QStringList cmts)
 
 int ss_file::write_comments()
 {
-    int chars;
+    int chars = 0;
     QString cmt, line;
     for (int i = 0; i < comments.count(); i++)
     {
