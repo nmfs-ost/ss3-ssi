@@ -804,6 +804,11 @@ void forecast_widget::set_fcast_recr_end(int yr)
     }
 }
 
+void forecast_widget::set_rebuilder(bool flag)
+{
+    model_data->forecast->set_do_rebuilder(flag);
+}
+
 void forecast_widget::set_rebuilder_first_year(int yr)
 {
     int year = yr;

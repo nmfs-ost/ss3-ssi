@@ -145,7 +145,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_sdrpt_min_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_min_year(int)));
     connect (ui->spinBox_sdrpt_max_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_max_year(int)));
     connect (ui->spinBox_num_std_yrs, SIGNAL(valueChanged(int)), SLOT(setNumSdYears(int)));
-    connect (sdYearsDelegate, SIGNAL(commitData(QWidget*)), SLOT(numSdYearsChanged(QWidget *)));
+//    connect (sdYearsDelegate, SIGNAL(commitData(QWidget*)), SLOT(numSdYearsChanged(QWidget *)));
 
 //    connect (ui->spinBox_length_bin_method, SIGNAL(valueChanged(int)), SLOT(changeLengthCompMethod(int)));
     connect (ui->spinBox_length_num_bins, SIGNAL(valueChanged(int)), SLOT(changeLengthBins(int)));
@@ -215,7 +215,7 @@ void data_widget::refresh()
 //
         ui->spinBox_spawn_season->setValue(model_data->get_spawn_season());
         ui->spinBox_season->setValue(1);
-        setMoPerSeason();
+        setMoPerSeason(1);
         setTotalMonths();
         ui->spinBox_num_fisheries->setValue(model_data->get_num_fisheries());
         ui->spinBox_num_surveys->setValue(model_data->get_num_surveys());
@@ -310,15 +310,15 @@ void data_widget::changeMaxSeason(int num)
     ui->spinBox_season->setMaximum(num);
 }
 
-void data_widget::changeSeason()
+void data_widget::changeSeason(int seas)
 {
-    setMoPerSeason();
+    setMoPerSeason(seas);
 //    setNumSubSeasons();
 }
 
-void data_widget::setMoPerSeason()
+void data_widget::setMoPerSeason(int seas)
 {
-    int seas = ui->spinBox_season->value();
+//    int seas = ui->spinBox_season->value();
     double months = model_data->getSeason(seas)->getNumMonths();
     ui->lineEdit_num_mo_season->setText(QString::number(months));
 }

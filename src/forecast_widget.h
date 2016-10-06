@@ -62,6 +62,7 @@ public slots:
     void alloc_group_assign_changed ();
     void set_allocation_group_fract();
     void alloc_group_fract_changed ();
+    void set_rebuilder (bool flag);
     void set_rebuilder_first_year(int yr);
     void set_rebuilder_curr_year(int yr);
 

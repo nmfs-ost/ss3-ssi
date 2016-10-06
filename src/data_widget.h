@@ -34,8 +34,8 @@ public slots:
     void refresh();
 
     void changeMaxSeason (int num);
-    void changeSeason ();
-    void setMoPerSeason ();
+    void changeSeason (int seas);
+    void setMoPerSeason (int seas);
     void changeMoPerSeason (QString txt);
     void changeSpawnSeason (int seas);
 //    QString get_mo_per_seas ();
