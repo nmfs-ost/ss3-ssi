@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 2.3.1
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.3
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -9,9 +9,20 @@ allow for changes to the data, run the executable, and display results.
 Currently, the only results displayed are the warnings.sso and echoinput.sso.
 
 ============================================================================
-Changes for 2.3.1 
-	2016-07-25
-1. Data dislpays and is interactive. 
+Changes for 3.3.3
+        2016-10-26
+1. Changed the major version number to prevent user's confusion.
+2. Many fixes to read/write routines and displays.
+3. Model/Views are used for most parameters.
+4. Dropped support for 3.24 files. Now, the user is given the opportunity
+   to either convert the files using ss_trans.exe, picking a different
+   model, or exiting the GUI. If converting, a new dialog opens to run
+   ss_trans (the same as the run command brings up but with different
+   executable), and when done, prompts the user for a new directory.
+============================================================================
+Changes for 3.3.1
+        2016-07-25
+1. Data displays and is interactive.
 2. Four main data files read/write correctly. 
 
 ============================================================================

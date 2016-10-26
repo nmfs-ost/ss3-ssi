@@ -223,3 +223,6 @@ OTHER_FILES +=
 
 RESOURCES += \
     stock_synth.qrc
+
+DISTFILES += \
+    ../readme.txt
