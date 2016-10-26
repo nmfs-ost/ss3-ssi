@@ -19,7 +19,8 @@ public:
     spawn_recruit();
     ~spawn_recruit();
 
-    int   method; // 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm
+    int   method; // 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm
+    int   use_steepness; // 0/1 to use steepness in initial equ recruitment calculation
     float env_link;     //
     int   env_target;   // 0=none;1=devs;_2=R0;_3=steepness
     int   rec_dev;      // recruitment deviations: 0=none; 1=devvector; 2=simple deviations
@@ -49,6 +50,9 @@ public:
 
     void setMethod (int value) {method = value;}
     int getMethod () {return method;}
+
+    void setUseSteepness (int value) {use_steepness = value;}
+    int getUseSteepness () {return use_steepness;}
 
 //    shortParameter parameters[6];
 //    parametermodel *parameters;

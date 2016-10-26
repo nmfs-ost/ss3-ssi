@@ -3,6 +3,7 @@
 #include "dialog_view.h"
 #include "dialog_fileview.h"
 
+#include <QFileDialog>
 #include <QProcess>
 #include <QDebug>
 
@@ -19,6 +20,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     echoview = new Dialog_fileView(this);
     echoview->hide();
 
+    connect (ui->pushButton_changeExe, SIGNAL(clicked()), SLOT(changeExe()));
     connect (ui->pushButton_run, SIGNAL(clicked()), SLOT(startRun()));
     connect (ui->pushButton_pause, SIGNAL(clicked()), SLOT(pauseRun()));
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
@@ -171,9 +173,27 @@ void Dialog_run::setDir(QString dir)
     ui->label_directory->setText(dir);
 }
 
+void Dialog_run::changeExe()
+{
+    QString filename;
+    QString dir = ui->label_executable->text();
+    dir = QApplication::applicationDirPath();
+    filename = (QFileDialog::getOpenFileName (this, tr("Executable"),
+        dir, tr("applications (*.exe)")));
+    setExe(filename);
+}
+
 void Dialog_run::setExe(QString exe)
 {
     ui->label_executable->setText(exe);
+}
+
+void Dialog_run::setOptions(QString opt)
+{
+    if (!opt.isEmpty())
+    {
+        ui->lineEdit_options->setText(opt);
+    }
 }
 
 void Dialog_run::stdOutput()

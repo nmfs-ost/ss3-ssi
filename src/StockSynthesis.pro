@@ -96,7 +96,8 @@ SOURCES += main.cpp\
     fileIOgeneral.cpp \
     fleet_composition.cpp \
     documentdialog.cpp \
-    message.cpp
+    message.cpp \
+    fileconversiondialog.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -182,7 +183,8 @@ HEADERS  += mainwindow.h \
     fleet_composition.h \
     documentdialog.h \
     ss_math.h \
-    message.h
+    message.h \
+    fileconversiondialog.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -214,7 +216,8 @@ FORMS    += mainwindow.ui \
     dialog_fileview.ui \
     newfleetdialog.ui \
     dialog_about_gui.ui \
-    documentdialog.ui
+    documentdialog.ui \
+    fileconversiondialog.ui
 
 OTHER_FILES +=
 

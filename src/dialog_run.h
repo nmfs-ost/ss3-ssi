@@ -42,6 +42,8 @@ public slots:
 
     void setDir(QString dir);
     void setExe(QString exe);
+    void setOptions (QString opt = QString(""));
+    void changeExe ();
 
     void stdOutput();
     void stdError();

@@ -169,7 +169,7 @@ public slots:
     // Biomass target (e.g. 0.40)
     float f_bmass_tgt;
     // Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF (enter actual year, or values of 0 or -integer to be rel. endyr)
-    int   i_bmark_yrs[8];
+    int   i_bmark_yrs[10];
     // Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below
     int   i_bmark_rel_f;
     // Forecast: 0=none; 1=F(SPR); 2=F(MSY) 3=F(Btgt); 4=Ave F (uses first-last relF yrs); 5=input annual F scalar

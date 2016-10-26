@@ -151,7 +151,8 @@ void MainWindow::writeSettings()
     settings.setValue("size", size());
     settings.setValue("pos", pos());
     settings.setValue("defaultDir", default_dir);
-    settings.setValue("executable", ss_executable);
+    settings.setValue("executable", ss_exe);
+    settings.setValue("converter", ss_trans_exe);
     settings.endGroup();
     settings.beginGroup ("HelpWindow");
     settings.setValue("size", ui->dockWidget_help->size());
@@ -164,19 +165,32 @@ void MainWindow::readSettings()
 {
     QSettings settings(app_copyright_org, app_name);
     QString dir (qApp->applicationDirPath());
-    QString exe (dir + "/ss3.exe");
+    QString exe (dir + "/ss.exe");
+    QString trans_exe ("");
     settings.beginGroup("MainWindow");
     resize(settings.value("size", QSize(700, 600)).toSize());
     move(settings.value("pos", QPoint(200, 200)).toPoint());
     default_dir = settings.value("defaultDir", dir).toString();
     current_dir = default_dir;
-    ss_executable = settings.value("executable", exe).toString();
+    ss_exe = settings.value("executable", exe).toString();
+    ss_trans_exe = settings.value("converter", trans_exe).toString();
     settings.endGroup();
     settings.beginGroup("HelpWindow");
     ui->dockWidget_help->resize(settings.value("size").toSize());
     ui->dockWidget_help->move(settings.value("pos", QPoint(300,300)).toPoint());
     ui->dockWidget_help->setVisible(settings.value("visible", true).toBool());
     settings.endGroup();
+}
+
+void MainWindow::openNewDirectory()
+{
+    QString newdir(QFileDialog::getExistingDirectory(this, tr("Select New Directory"),
+                                current_dir, QFileDialog::ShowDirsOnly));
+    if (!newdir.isEmpty() && newdir != current_dir)
+    {
+        current_dir = newdir;
+        files->new_directory(current_dir, true);
+    }
 }
 
 void MainWindow::createNewDirectory()
@@ -187,15 +201,9 @@ void MainWindow::createNewDirectory()
                           QMessageBox::Yes, QMessageBox::No);
     if (btn == QMessageBox::Yes)
     {
-        QString newdir(QFileDialog::getExistingDirectory(this, tr("Select New Directory"),
-                                    current_dir, QFileDialog::ShowDirsOnly));
-        if (!newdir.isEmpty() && newdir != current_dir)
-        {
-            current_dir = newdir;
-            files->new_directory(current_dir, true);
-            saveFiles();
-        }
+        openNewDirectory();
     }
+    saveFiles();
 }
 
 void MainWindow::openDirectory(QString fname)
@@ -210,11 +218,15 @@ void MainWindow::openDirectory(QString fname)
             fname = QFileDialog::getOpenFileName (this, tr(title.toUtf8()),
                                current_dir, tr("Starter files (starter.ss)"));
 
+        if (fname.isEmpty())
+            break;
         files->set_starter_file(fname);
 
         start_file = QFileInfo(files->get_starter_file());
         if (start_file.isReadable())
+        {
             repeat = false;
+        }
         else
         {
             int btn;
@@ -229,7 +241,7 @@ void MainWindow::openDirectory(QString fname)
         }
      }while (repeat);
 
-    if (!files->get_starter_file().isEmpty())
+    if (!fname.isEmpty())
     {
         current_dir = start_file.absolutePath();
         QDir::setCurrent(current_dir);
@@ -287,6 +299,7 @@ void MainWindow::saveDataFile()
 void MainWindow::readFiles()
 {
     bool worked = true;
+    int choice = 1;
     model_one->reset();
     worked = files->read_files(model_one);
     if (worked)
@@ -298,8 +311,39 @@ void MainWindow::readFiles()
     }
     else
     {
-        showInputMessage("Problem reading file, exiting program.");
-        close();
+        float ver = files->get_version_number(files->getDatafileVersion());
+        if (ver < 330)
+        {
+            QString normal ("This program does not support datafiles earlier than 3.30\nWhat do you wish to do?");
+            QString detail ("You may proceed in one of three ways:\n 1) convert the model (the program will use ss_trans.exe)\n    (select Run, then Exit, then select a new directory),\n 2) choose another starter.ss (a different model), or\n 3) quit the program.");
+            QMessageBox msgbx (this);
+            QRect rect(this->geometry());
+            msgbx.setIcon(QMessageBox::Question);
+            msgbx.setWindowTitle("Datafile version mis-match");
+            msgbx.setText(normal);
+            msgbx.setDetailedText(detail);
+            msgbx.addButton("Convert Model", QMessageBox::AcceptRole);
+            msgbx.addButton("Choose Another", QMessageBox::RejectRole);
+            msgbx.addButton("Quit GUI", QMessageBox::NoRole);
+            choice = msgbx.exec();
+                 if (choice == 0)
+            {
+                run_trans();
+            }
+            else if (choice == 1)
+            {
+                openDirectory();
+            }
+            else if (choice == 2)
+            {
+                close();
+            }
+        }
+        else
+        {
+            showInputMessage("Problem reading files!");
+//            close();
+        }
     }
 }
 
@@ -592,9 +636,48 @@ void MainWindow::run()
     saveFiles();
     Dialog_run drun(this);
     drun.setDir(current_dir);
-    drun.setExe(ss_executable);
+    drun.setExe(ss_exe);
     drun.exec();
     files->read_run_num_file();
+}
+
+void MainWindow::run_trans()
+{
+    Dialog_run drun(this);
+    drun.setDir(current_dir);
+    if (ss_trans_exe.isEmpty())
+        locateConverter();
+    drun.setExe(ss_trans_exe);
+    drun.setOptions("-nohess");
+    drun.exec();
+    {
+        // save old directory
+        QString old_dir (current_dir);
+        // open new directory and move there
+        openNewDirectory();
+        if (old_dir == current_dir)
+        {
+            int btn =
+            QMessageBox::question(this, tr("Same Directory"), tr("You may not select the same directory.\nDo you wish to try again?"), QMessageBox::Yes, QMessageBox::No);
+            if (btn == QMessageBox::Yes)
+                openNewDirectory();
+        }
+        if (old_dir != current_dir)
+        {
+            // copy files
+            copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
+            copy_file (old_dir + QString("/forecast.ss_new"), current_dir + QString("/forecast.ss"));
+            copy_file (old_dir + QString("/data.ss_new"), current_dir + QString("/") + files->getDataFileName());
+            copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
+
+            if (model_one->getReadWtAtAge())
+            {
+                copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
+            }
+
+            readFiles();
+        }
+    }
 }
 
 void MainWindow::locateDirectory()
@@ -618,11 +701,23 @@ void MainWindow::locateDocuments()
 
 void MainWindow::locateExecutable()
 {
-    // locate ss??.exe
+    // locate ss.exe
     QSettings settings (app_copyright_org, app_name);
     QString filename (findFile ("Executable", "applications (*.exe)"));
     if (!filename.isEmpty())
-        ss_executable = filename;
+        ss_exe = filename;
+    settings.beginGroup("MainWindow");
+    settings.setValue("executable", filename);
+    settings.endGroup();
+}
+
+void MainWindow::locateConverter()
+{
+    // locate ss_trans.exe
+    QSettings settings (app_copyright_org, app_name);
+    QString filename (findFile ("Converter", "applications (*.exe)"));
+    if (!filename.isEmpty())
+        ss_trans_exe = filename;
     settings.beginGroup("MainWindow");
     settings.setValue("executable", filename);
     settings.endGroup();
@@ -729,4 +824,15 @@ void MainWindow::set_checks_false()
     ui->action_Fleets->setChecked(false);
     ui->action_Surveys->setChecked(false);
     ui->action_Populations->setChecked(false);
+}
+
+// copies a file, first deleting the target file if it exists
+// (new_file is either in current_dir or is fully qualified)
+void MainWindow::copy_file(QString old_file, QString new_file)
+{
+    QDir cur(current_dir);
+    QFile old(old_file);
+    if (cur.exists(new_file))
+        cur.remove(new_file);
+    old.copy(new_file);
 }

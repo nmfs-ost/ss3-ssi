@@ -93,6 +93,7 @@ public slots:
     QString getControlFileName () {return control_file_name;}
     ss_model *this_model() {return model_info;}
 
+    float get_version_number(QString token);
     QString getDatafileVersion ();
     void setDatafileVersion(double ver, bool flag = true);
 
@@ -150,7 +151,6 @@ signals:
 
 
 private slots:
-    float get_version_number(QString token);
 
     void parm_trace_changed(bool flag);
     void cumrpt_fits_changed(bool flag);

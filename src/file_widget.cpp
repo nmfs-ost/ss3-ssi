@@ -141,14 +141,14 @@ void file_widget::setDatafileVersion(double ver, bool flag)
     datafile_version = ver + .000001;
     if (datafile_version < 3.30)
     {
-        msg.append(QString("This program is reading version 3.24 files, but will\n"));
+/*        msg.append(QString("This program is reading version 3.24 files, but will\n"));
         msg.append(QString("save them in version 3.30 format. \n"));
         msg.append(QString("If you wish to preserve the older files, move to a \n"));
         msg.append(QString("different directory before saving or running ss."));
-        QMessageBox::information(0, QString("Old version files"),msg);
+        QMessageBox::information(0, QString("Old version files"),msg);*/
         model_info->setReadMonths(false);
         ui->label_version_33_note->setVisible(false);
-        ui->label_version_32_note->setVisible(true);
+        ui->label_version_32_note->setVisible(false);
     }
     else
     {
@@ -189,8 +189,8 @@ void file_widget::set_starter_file(QString fname, bool keep)
     {
         starterFile->setFileName(fname);
     }
-    if (starterFile->exists() && starterFile->isReadable())
-        read_starter_file(fname);
+//    if (starterFile->exists() && starterFile->isReadable())
+//        read_starter_file(fname);
 }
 
 
@@ -546,7 +546,7 @@ bool file_widget::read_files(ss_model *model_inf)
     if (model_inf == NULL)
     {
         if (model_info == NULL)
-            return false;
+            model_info = new ss_model((QWidget*)this->parent());
         else
             model_inf = model_info;
     }
@@ -558,7 +558,8 @@ bool file_widget::read_files(ss_model *model_inf)
         setDatafileVersion (datafile_version);
         if (datafile_version < 3.30)
         {
-            okay = read32_dataFile(dataFile, model_info);
+            okay = false;
+/*            okay = read32_dataFile(dataFile, model_info);
             if (!okay)
                 return okay;
             okay = read32_forecastFile(forecastFile, model_info);
@@ -574,7 +575,7 @@ bool file_widget::read_files(ss_model *model_inf)
             if (ui->checkBox_pro_file->isChecked())
             {
                 read32_profileFile(profileFile, model_info);
-            }
+            }*/
         }
         else if (datafile_version < 3.40)
         {
@@ -590,9 +591,11 @@ bool file_widget::read_files(ss_model *model_inf)
                 read33_profileFile(profileFile, model_info);
             }
         }
-
-        read_run_num_file(QString ("%1/%2").arg
+        if (okay)
+        {
+            read_run_num_file(QString ("%1/%2").arg
                            (current_dir_name, QString(RUN_NUMBER_FILE)));
+        }
     }
     return okay;
 }

@@ -8,6 +8,7 @@
 
 bool read33_dataFile(ss_file *d_file, ss_model *data)
 {
+    //  SS_Label_Info_2.0 #READ DATA FILE
     QString token;
     QString temp_str;
     QStringList str_lst;
@@ -21,9 +22,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
     if(d_file->open(QIODevice::ReadOnly))
     {
+        //  SS_Label_Info_2.1.1 #Read comments
         d_file->seek(0);
         d_file->read_comments();
 
+        //  SS_Label_Info_2.1.2 #Read model time dimensions
         token = d_file->get_next_value("start year");
         temp_int = token.toInt();
         data->set_start_year (temp_int);
@@ -39,6 +42,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             temp_float = token.toFloat();
             data->set_months_per_season(i, temp_float);
         }
+        //  SS_Label_Info_2.1.3 #Set up seasons
         data->rescale_months_per_season();
         token = d_file->get_next_value("subseasons");
         temp_int = token.toInt();
@@ -59,6 +63,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         n_areas = temp_int;
         data->set_num_areas(n_areas);
         data->getPopulation()->Move()->setNumAreas(n_areas);
+        //  SS_Label_Info_2.1.5  #Define fleets, surveys and areas
         token = d_file->get_next_value("number of fleets");
         temp_int = token.toInt();
         total_fleets = temp_int;
@@ -92,6 +97,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         data->assignFleetNumbers();
 
+        //  ProgLabel_2.2  Read CATCH amount by fleet
         // Catch
         do {
             float ctch, ctch_se;
@@ -106,8 +112,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(fleet-1)->add_catch_per_season(year, season, ctch, ctch_se);
         } while (year != -9999);
 
-        // CPUE Abundance
-
+        //  SS_Label_Info_2.3 #Read fishery CPUE, effort, and Survey index or abundance
         // before we record abundance, get units and error type for all fleets
         for (i = 0; i < total_fleets; i++)
         {
@@ -132,7 +137,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(fleet)->addAbundByMonth(year, month, obs, err);
         } while (year != -9999);
 
-        // Discard
+        //  SS_Label_Info_2.4 #read Discard data
         token = d_file->get_next_value("num fleets with discard");
         num_vals = token.toInt();
         if (num_vals > 0)
@@ -158,16 +163,17 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             } while (year != -9999);
         }
 
-        // mean body weight
+        //  SS_Label_Info_2.5 #Read Mean Body Weight data
+        //  note that syntax for storing this info internal is done differently than for surveys and discard
         temp_int = d_file->get_next_value().toInt();
         data->setUseMeanBwt(temp_int);
-        if (temp_int != 0)
+        if (temp_int > 0)
         {
             temp_int = d_file->get_next_value().toInt();
             for (i = 0; i < data->get_num_fleets(); i++)
                 data->getFleet(i)->setMbwtDF(temp_int);
             do
-            {    // year, month, fleet_number, partition, value, CV
+            {    // year, month, fleet_number, partition, obs, stderr
                 str_lst.clear();
                 for (int j = 0; j < 6; j++)
                     str_lst.append(d_file->get_next_value());
@@ -178,7 +184,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             } while (year != -9999);
         }
 
-        // length data
+        //  SS_Label_Info_2.6 #Setup population Length bins
         {
         compositionLength *l_data = data->get_length_composition();
         if (l_data == NULL)
@@ -212,6 +218,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             l_data->setAltBins(str_lst);
             break;
         }
+        //  SS_Label_Info_2.7 #Start length data section
         temp_int = d_file->get_next_value().toInt();
         data->setUseLengthComp(temp_int);
         if (temp_int == 1)
@@ -245,6 +252,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 l_data->setAltBins(l_data->getBins());
             }
 
+            //  SS_Label_Info_2.7.4 #Read Length composition data
             obslength = data->getFleet(0)->getLengthObsLength() + 1;
             do
             {
@@ -263,7 +271,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         }
 
-        // age data
+        //  SS_Label_Info_2.8 #Start age composition data section
         {
         compositionAge *a_data = data->get_age_composition();
         if (a_data == NULL)
@@ -314,6 +322,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         token = d_file->get_next_value();
         a_data->setAltBinMethod(token.toInt());
+
+        //  SS_Label_Info_2.8.2 #Read Age data
         obslength = data->getFleet(0)->getAgeObsLength() + 1;
         do
         {
@@ -334,10 +344,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             data->getFleet(fleet - 1)->addAgeObservation(str_lst);
         } while (str_lst.at(0).toInt() != -9999);
 
-        // mean size at age
+        //  SS_Label_Info_2.9 #Read mean Size_at_Age data
         temp_int = d_file->get_next_value().toInt();
         data->setUseMeanSAA(temp_int);
-        if (temp_int == 1)
+        if (temp_int > 0)
         {
             obslength = data->getFleet(0)->getSaaObservation(0).count() + 1;
             do
@@ -355,7 +365,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             } while (str_lst.at(0).toInt() != -9999);
         }
 
-        // environment variables
+        //  SS_Label_Info_2.10 #Read environmental data that will be used to modify processes and expected values
         temp_int = d_file->get_next_value().toInt();
         data->set_num_environ_vars (temp_int);
         if (temp_int > 0)
@@ -374,7 +384,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         }
 
-        // generalized size composition
+        //  SS_Label_Info_2.11 #Start generalized size composition section
         num_vals = d_file->get_next_value().toInt();
         if (num_vals > 0)
         {
@@ -448,7 +458,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
         }
 
-        // tag-recapture data
+        //  SS_Label_Info_2.12 #Read tag release and recapture data
         temp_int = d_file->get_next_value().toInt();
         data->set_do_tags(temp_int == 1);
         if (temp_int == 1)
@@ -479,7 +489,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
         }
 
-        // morph composition data
+        //  SS_Label_Info_2.13 #Morph composition data
         temp_int = d_file->get_next_value().toInt();
         data->setDoMorphComp(temp_int == 1);
         compositionMorph *mcps = new compositionMorph();
@@ -511,6 +521,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         temp_int = d_file->get_next_value().toInt();
         data->setReadSelectivityPriors(temp_int == 1? true: false);
 
+        //  SS_Label_Info_2.14 #End of datafile indicator
         temp_int = d_file->get_next_value().toInt();
         if (temp_int != END_OF_DATA)
         {
@@ -1332,6 +1343,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
     if(f_file->open(QIODevice::ReadOnly))
     {
+        //  SS_Label_Info_3.0 #Read forecast.ss
         ss_forecast *fcast = data->forecast;
         fcast->reset();
         f_file->seek(0);
@@ -1357,7 +1369,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         temp_float = token.toFloat();
         fcast->set_biomass_target(temp_float);
 
-        for (i = 0; i < 8; i++)
+        for (i = 0; i < 10; i++)
         {
             token = f_file->get_next_value("benchmark year");
             temp_int = token.toInt();
@@ -1499,7 +1511,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             } while (temp_int != -9999);
         }
 
-
+        // Forecast Catch
         fcast->setNumFixedFcastCatch(0);
         token = f_file->get_next_value("input catch basis");
         num = token.toInt();
@@ -1519,17 +1531,19 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 fcast->addFixedFcastCatch(str_lst);
         } while (temp_int != -9999);
 
+        //  SS_Label_Info_3.5 #End of datafile indicator
         token = f_file->get_next_value();
         temp_int = token.toInt();
         if (temp_int != END_OF_DATA)
         {
             if (f_file->atEnd())
             {
-                f_file->error(QString("No end of data marker!"));
+                f_file->error(QString("Must have 999 to verify end of forecast inputs!"));
             }
             else
             {
-                f_file->error(QString("Stopped reading before end of data marker!"));
+                if (fcast->get_forecast() > 0)
+                    f_file->error(QString("Stopped reading before end of data marker!"));
             }
         }
 
@@ -1589,7 +1603,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         tmp_lst.clear();
         str_lst.clear();
         line.clear();
-        for (i = 0; i < 8; i++)
+        for (i = 0; i < 10; i++)
         {
             temp_int = fcast->get_benchmark_year(i);
             value = QString::number(temp_int);
@@ -2116,6 +2130,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         // future feature
         temp_float = c_file->get_next_value().toFloat();
+//        pop->Grow()->setFeature(temp_float);
 
         // SD add to LAA
         temp_float = c_file->get_next_value().toFloat();
@@ -2562,6 +2577,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Spawner-recruitment
         temp_int = c_file->get_next_value().toInt();
         pop->SR()->setMethod (temp_int);
+        temp_int = c_file->get_next_value().toInt();
+        pop->SR()->setUseSteepness (temp_int);
+        // future feature
+        temp_int = c_file->get_next_value().toInt();
+//        pop->SR()->setFeature (temp_int);
         i = 0;
         {
             datalist = readParameter(c_file);
@@ -2571,7 +2591,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, "SR_BH_flat_steep");
+            pop->SR()->setFullParameterHeader(i++, "SR_BH_steep");
         }
         if (temp_int == 5 ||
                 temp_int == 7 ||
@@ -2589,12 +2609,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, "SR_nullparm");
-        }
-        {
-            datalist = readParameter(c_file);
-            pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, "SR_R1_offset");
+            pop->SR()->setFullParameterHeader(i++, "SR_regime");
         }
         {
             datalist = readParameter(c_file);
@@ -3842,6 +3857,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                            QString::number(pop->SR()->method)));
         line.append(": 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm");
         chars += c_file->writeline(line);
+        line = QString(QString("%1 # 0/1 to use steepness in initial equ recruitment calculation").arg(
+                           QString::number(pop->SR()->getUseSteepness())));
+        chars += c_file->writeline(line);
+        line = QString(QString("%1 # future feature:  0/1 to make realized sigmaR a function of SR curvature").arg(
+                           QString::number(0)));
+        chars += c_file->writeline(line);
+
         line = QString("#_ LO HI INIT PRIOR PR_SD PR_type PHASE env-var use_dev dev_mnyr dev_mxyr dev_PH Block Blk_Fxn  #  parm_name");
         chars += c_file->writeline(line);
 

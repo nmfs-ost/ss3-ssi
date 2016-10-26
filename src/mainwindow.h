@@ -51,6 +51,7 @@ public:
 
     
 public slots:
+    void openNewDirectory();
     void createNewDirectory();
     void openDirectory(QString fname = QString(""));
     void openControlFile();
@@ -69,6 +70,7 @@ public slots:
     void helpADMB();
     void helpQt();
     void run();
+    void run_trans();
 
     void change_data_file (QString fname);
     void change_control_file (QString fname);
@@ -86,6 +88,7 @@ public slots:
     void locateDirectory ();
     void locateDocuments ();
     void locateExecutable ();
+    void locateConverter ();
     QString findFile (QString title, QString filters);
 
 signals:
@@ -128,7 +131,8 @@ private:
     QString profile_file;
     QString run_num_file;
 
-    QString ss_executable;
+    QString ss_exe;
+    QString ss_trans_exe;
     QString default_dir;
 
 private slots:
@@ -141,6 +145,7 @@ private slots:
     void showFisheries();
     void showSurveys();
 
+    void copy_file(QString old_file, QString new_file);
     int ask_missing_file(QString fn);
     void set_start_age_rept();
     void set_start_use_values();
