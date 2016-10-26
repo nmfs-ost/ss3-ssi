@@ -455,6 +455,7 @@ int population_widget::getFecundityAdjustment()
 
 void population_widget::setMortOption(int opt)
 {
+    int numgen = model_data->get_num_genders() > 1? 2: 1;
     ui->comboBox_mort_option->setCurrentIndex(opt);
     ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);
@@ -464,7 +465,7 @@ void population_widget::setMortOption(int opt)
     switch (opt)
     {
     case 0:
-        mortParamsView->setHeight(2);
+        mortParamsView->setHeight(numgen);
         break;
     case 1: // breakpoints
         ui->widget_mort_breakpoints->setVisible(true);
@@ -474,7 +475,7 @@ void population_widget::setMortOption(int opt)
     case 2: // lorenzen
         ui->widget_mort_lorenz->setVisible(true);
         ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
-        mortParamsView->setHeight(2);
+        mortParamsView->setHeight(numgen);
         break;
     case 3: // specific age
     case 4:
@@ -489,6 +490,7 @@ void population_widget::setMortOption(int opt)
 
 void population_widget::changeMortOption(int opt)
 {
+    int numgen = model_data->get_num_genders() > 1? 2: 1;
     pop->Grow()->setNatural_mortality_type(opt);
     ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);
@@ -499,7 +501,7 @@ void population_widget::changeMortOption(int opt)
     switch (opt)
     {
     case 0:
-        mortParamsView->setHeight(2);
+        mortParamsView->setHeight(numgen);
         break;
     case 1:
         ui->widget_mort_breakpoints->setVisible(true);
@@ -509,7 +511,7 @@ void population_widget::changeMortOption(int opt)
     case 2:
         ui->widget_mort_lorenz->setVisible(true);
         ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
-        mortParamsView->setHeight(2);
+        mortParamsView->setHeight(numgen);
         break;
     case 3:
     case 4:
