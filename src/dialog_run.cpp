@@ -68,6 +68,9 @@ void Dialog_run::runSS()
 
     QString cmd("cmd.exe /k");
 
+    ui->plainTextEdit_output->clear();
+    ui->plainTextEdit_error->clear();
+
     line = QString (QString("%1 %2\n").arg(ss3, opts));
     ui->plainTextEdit_output->appendPlainText(line);
     // run command in box

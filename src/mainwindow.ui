@@ -126,7 +126,6 @@
     <addaction name="action_About_NFT"/>
     <addaction name="separator"/>
     <addaction name="action_User_Manual"/>
-    <addaction name="action_Using_SS"/>
     <addaction name="separator"/>
     <addaction name="action_About_ADMB"/>
     <addaction name="separator"/>

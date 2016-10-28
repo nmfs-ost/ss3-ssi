@@ -184,11 +184,17 @@ void MainWindow::readSettings()
 
 void MainWindow::openNewDirectory()
 {
-    QString newdir(QFileDialog::getExistingDirectory(this, tr("Select New Directory"),
-                                current_dir, QFileDialog::ShowDirsOnly));
-    if (!newdir.isEmpty() && newdir != current_dir)
+    QString old_dir(current_dir);
+    QString new_dir(QFileDialog::getExistingDirectory(this, tr("Select New Directory"),
+                                old_dir, QFileDialog::ShowDirsOnly));
+    if (!new_dir.isEmpty() && new_dir != old_dir)
     {
-        current_dir = newdir;
+        QString waa_str ("/wtatage.ss");
+        QFile waa (old_dir + waa_str);
+        if (waa.exists())
+            waa.copy (new_dir + waa_str);
+
+        current_dir = new_dir;
         files->new_directory(current_dir, true);
     }
 }

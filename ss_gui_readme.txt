@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.3
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.4
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -8,6 +8,11 @@ allow for changes to the data, run the executable, and display results.
 
 Currently, the only results displayed are the warnings.sso and echoinput.sso.
 
+============================================================================
+Changes for 3.3.4
+        2016-10-28
+1. Able to convert old 3.24 files and read in new 3.30 files and
+   run ss.exe to get results.
 ============================================================================
 Changes for 3.3.3
         2016-10-26

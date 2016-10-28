@@ -327,6 +327,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_run</tabstop>
+  <tabstop>pushButton_pause</tabstop>
+  <tabstop>pushButton_stop</tabstop>
+  <tabstop>lineEdit_options</tabstop>
+  <tabstop>pushButton_cancel</tabstop>
+  <tabstop>pushButton_showEcho</tabstop>
+  <tabstop>pushButton_showWarn</tabstop>
+  <tabstop>pushButton_changeExe</tabstop>
+  <tabstop>plainTextEdit_output</tabstop>
+  <tabstop>plainTextEdit_error</tabstop>
+ </tabstops>
  <resources>
   <include location="stock_synth.qrc"/>
  </resources>

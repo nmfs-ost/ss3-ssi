@@ -276,7 +276,7 @@ void ss_forecast::set_num_alloc_groups(int num)
 
 void ss_forecast::setAllocGrp (int flt, int grp)
 {
-    if (grp >= i_num_alloc_groups)
+    if (grp > i_num_alloc_groups)
         set_num_alloc_groups(grp);
     QStringList data = getAllocGrpList();
     data.takeAt(flt);
@@ -386,24 +386,26 @@ void ss_forecast::set_catch_tuning_basis(int basis)
 void ss_forecast::set_input_catch_basis(int &basis)
 {
     i_input_fcast_ctch_basis = basis;
-    getFixedFcastCatchModel()->setColumnCount(4);
     switch (basis)
     {
     case -1:
-        getFixedFcastCatchModel()->setColumnCount(5);
-        getFixedFcastCatchModel()->setColumnHeader(3, "Catch or F");
-        getFixedFcastCatchModel()->setColumnHeader(4, "Basis");
+        fixedFcastCatch->setColumnCount(5);
+        fixedFcastCatch->setColumnHeader(3, "Catch or F");
+        fixedFcastCatch->setColumnHeader(4, "Basis");
         break;
     default:
         i_input_fcast_ctch_basis = basis = 2;
     case 2:
-        getFixedFcastCatchModel()->setColumnHeader(3, QString("Dead Catch"));
+        fixedFcastCatch->setColumnCount(4);
+        fixedFcastCatch->setColumnHeader(3, QString("Dead Catch"));
         break;
     case 3:
-        getFixedFcastCatchModel()->setColumnHeader(3, QString("Ret. Catch"));
+        fixedFcastCatch->setColumnCount(4);
+        fixedFcastCatch->setColumnHeader(3, QString("Ret. Catch"));
         break;
     case 99:
-        getFixedFcastCatchModel()->setColumnHeader(3, QString("Hrate"));
+        fixedFcastCatch->setColumnCount(4);
+        fixedFcastCatch->setColumnHeader(3, QString("Hrate"));
         break;
     }
 }

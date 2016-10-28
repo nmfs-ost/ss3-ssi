@@ -71,6 +71,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
+            flt->reset();
             flt->setActive(true);
             flt->getSizeSelectivity()->setNumAges(data->get_num_ages());
             flt->getAgeSelectivity()->setNumAges (data->get_num_ages());
@@ -1475,6 +1476,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         } while (fleet != -9999);
 
         // max catch area
+        for (i = 0; i < fcast->get_num_areas(); i++)
+            fcast->set_max_catch_area(i, 0);
         do {
             area = f_file->get_next_value().toInt();
             temp_float = f_file->get_next_value().toFloat();
@@ -1484,6 +1487,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
         // Allocation groups
         fcast->set_num_alloc_groups(0);
+        for (i = 0; i < data->get_num_fleets(); i++)
+            data->getFleet(i)->setAllocGroup(0);
         do {
             fleet = f_file->get_next_value().toInt();
             temp_int = f_file->get_next_value().toInt();
@@ -1598,7 +1603,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString(QString("%1 # Biomass target (e.g. 0.40)").arg(value));
         chars += f_file->writeline(line);*/
 
-        line = QString("#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recruits, end_recruits");
+        line = QString("#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recr_dist, end_recr_dist, beg_SRparm, end_SRparm");
 //        temp_string = QString ("# ");
         line.append(QString(" (enter actual year, or values of 0 or -integer to be rel. endyr)"));
         chars += f_file->writeline(line);
@@ -1817,7 +1822,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         {
             line.clear();
             value = str_lst.at(i);
-            if (value.toFloat() > 0)
+            if (value.toFloat() != 0)
             {
                 line.append(QString("%1 %2").arg(QString::number(i+1), value));
                 chars += f_file->writeline(line);
@@ -1831,16 +1836,19 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         str_lst = fcast->getAllocGrpList();
         line.clear();
-        for (i = 0; i < fcast->get_num_fleets(); i++)
+        if (fcast->get_num_alloc_groups() > 0)
         {
-            if (data->getFleet(i)->isActive())
+            for (i = 0; i < fcast->get_num_fleets(); i++)
             {
-                line.clear();
-                value = str_lst.at(i);
-                if (value.toInt() > 0)
+                if (data->getFleet(i)->isActive())
                 {
-                    line = QString("%1 %2").arg(QString::number(i+1), value);
-                    chars += f_file->writeline(line);
+                    line.clear();
+                    value = str_lst.at(i);
+                    if (value.toInt() > 0)
+                    {
+                        line = QString("%1 %2").arg(QString::number(i+1), value);
+                        chars += f_file->writeline(line);
+                    }
                 }
             }
         }
@@ -3592,7 +3600,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 else if (pop->Grow()->getNatural_mortality_type() > 2)
                     numpar = 0;*/
                 genstr = QString ("Fem");
-                numpar *= data->get_num_genders() > 1? 2: 1;//gp->getNumNatMParams()/num_vals;
+//                numpar *= data->get_num_genders() > 1? 2: 1;//gp->getNumNatMParams()/num_vals;
                 for (int k = 0; k < numpar; k++)
                 {
                     parstr = QString (gp->getNatMParams()->getRowHeader(k));
@@ -4097,7 +4105,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         for (int i = 0; i < data->get_num_fleets(); i++)
         {
-            if (data->getFleet(i)->getType() == Fleet::Survey &&
+            if (/*data->getFleet(i)->getType() == Fleet::Survey &&*/
                     data->getFleet(i)->getQSetupRead())
             {
                 line = QString(QString("      %1").arg(i + 1));

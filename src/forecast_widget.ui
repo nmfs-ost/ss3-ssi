@@ -200,7 +200,7 @@
                 <string/>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -223,7 +223,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -247,7 +247,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -267,7 +267,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -291,7 +291,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -311,7 +311,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -383,7 +383,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>5000</number>
@@ -403,7 +403,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>5000</number>
@@ -469,7 +469,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -489,7 +489,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -520,7 +520,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -543,7 +543,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -677,7 +677,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>
@@ -697,7 +697,7 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
-                <number>-50</number>
+                <number>-999</number>
                </property>
                <property name="maximum">
                 <number>3000</number>

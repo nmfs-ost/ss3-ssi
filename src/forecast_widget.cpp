@@ -272,7 +272,7 @@ void forecast_widget::refresh()
 
 //    ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
     set_combo_box(ui->comboBox_input_catch_basis, fcast->get_input_catch_basis());
-    set_combo_box_fixed_catch(ui->comboBox_input_catch_basis->currentIndex());
+//    set_combo_box_fixed_catch(ui->comboBox_input_catch_basis->currentIndex());
 
     ui->tabWidget->setCurrentIndex(0);
 }
