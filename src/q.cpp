@@ -63,6 +63,7 @@ q_ratio *q_ratio::copy(q_ratio *rhs)
     setDoExtraSD(rhs->getDoExtraSD());
     setType     (rhs->getType());
     setOffset   (rhs->getOffset());
+    return this;
 }
 
 void q_ratio::setup(QStringList values)

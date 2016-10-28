@@ -54,7 +54,7 @@ void composition::setAltBinMethod (int method)
 int composition::generateAltBins ()
 {
     QStringList bins;
-    int num, bin;
+    int num = 0, bin;
     if (i_method == 2)
     {
         num = (i_bin_max - i_bin_min) / i_bin_width + 1;
@@ -128,11 +128,11 @@ void compositionAge::reset()
     }
     i_num_error_defs = 0;
 
-    while (o_saa_obs_list.count() > 0)
+/*    while (o_saa_obs_list.count() > 0)
     {
         ssObservation *obs = o_saa_obs_list.takeFirst();
         delete obs;
-    }
+    }*/
     i_num_saa_obs = 0;
 
     useParameters = false;
@@ -142,7 +142,7 @@ void compositionAge::reset()
 
 void compositionAge::setNumberBins(int num)
 {
-    int obsCount, saaCount;
+    int saaCount;
     QStringList saaHeader;
     binsModel->setColumnCount(num);
 

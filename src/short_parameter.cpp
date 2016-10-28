@@ -16,6 +16,7 @@ shortParameter& shortParameter::copy(const shortParameter &rhs)
     pr_type = rhs.getPriorType();
     sd = rhs.getSd();
     phase = rhs.getPhase();
+    return *this;
 }
 
 void shortParameter::clear()

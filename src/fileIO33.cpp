@@ -797,10 +797,12 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             {
                 line.clear();
                 str_lst = flt->getMbwtObservation(j);
-                for (int m = 0; m < str_lst.count(); m++)
+                str_lst.insert(2, QString::number(i));
+                chars += d_file->write_vector(str_lst, 4);
+/*                for (int m = 0; m < str_lst.count(); m++)
                     line.append(QString(" %1").arg(str_lst.at(m)));
 
-                chars += d_file->writeline (line);
+                chars += d_file->writeline (line);*/
             }
         }
         line.clear();

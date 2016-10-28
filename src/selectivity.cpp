@@ -407,7 +407,7 @@ QString selectivity::getMaleParameterText (int index)
 
 double selectivity::evaluate()
 {
-    double val;
+    double val = 0;
     return val;
 }
 

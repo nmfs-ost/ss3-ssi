@@ -643,13 +643,20 @@ void MainWindow::run()
 
 void MainWindow::run_trans()
 {
+    QMessageBox::information(this, "NOTICE", "If the model has complex features, it may not convert completely.");
     Dialog_run drun(this);
+    // edit starter.ss to set max phase 0 and turn off reading parameter file
+    model_one->set_last_estim_phase(0);
+    files->set_par_file(false);
+    files->write_starter_file();
+    // use run dialog to run ss_trans
     drun.setDir(current_dir);
     if (ss_trans_exe.isEmpty())
         locateConverter();
     drun.setExe(ss_trans_exe);
     drun.setOptions("-nohess");
     drun.exec();
+    // ask user for new directory and copy files there
     {
         // save old directory
         QString old_dir (current_dir);
@@ -674,7 +681,7 @@ void MainWindow::run_trans()
             {
                 copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
             }
-
+            // read data into GUI
             readFiles();
         }
     }

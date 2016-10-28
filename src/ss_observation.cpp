@@ -32,7 +32,7 @@ void ssObservation::setNumBins(int bins, int numGenders)
 
 int ssObservation::getNumBins()
 {
-    int obsCount = observations->columnCount() - obsHeader.count();
+//    int obsCount = observations->columnCount() - obsHeader.count();
     return numBins; //obsCount / 2;
 }
 

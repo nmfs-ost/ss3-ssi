@@ -101,9 +101,9 @@ public:
 //    error_vector * error_def (int index) {return error_defs.at(index);}
 
     void set_number_saa_observations (int num) {i_num_saa_obs = num;}
-    int number_saa_observations () {return o_saa_obs_list.count();}
-    void add_saa_observation (class ssObservation *obs) {o_saa_obs_list.append (obs);}
-    ssObservation * saa_observation (int index) {return o_saa_obs_list.at(index);}
+//    int number_saa_observations () {return o_saa_obs_list.count();}
+//    void add_saa_observation (class ssObservation *obs) {o_saa_obs_list.append (obs);}
+//    ssObservation * saa_observation (int index) {return o_saa_obs_list.at(index);}
 
     void setErrorParam (int index, QStringList data) {errorParam->setRowData(index, data);}
     QStringList getErrorParam (int index) {return errorParam->getRowData(index);}
@@ -117,7 +117,7 @@ private:
     QList<error_vector *> error_defs;
 
     int i_num_saa_obs;
-    QList<ssObservation *> o_saa_obs_list;
+//    QList<ssObservation *> o_saa_obs_list;
 
     bool useParameters;
     parametermodel *errorParam;
