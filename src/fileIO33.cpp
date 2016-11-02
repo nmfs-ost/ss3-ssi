@@ -18,7 +18,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     int n_areas = 0, n_ages = 0, n_genders = 0;
     int units, err_type, year, season, fleet, obslength;
     float obs, err;
-    float month;
+//    float month;
 
     if(d_file->open(QIODevice::ReadOnly))
     {
@@ -102,15 +102,24 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         // Catch
         do {
             float ctch, ctch_se;
-            year   = d_file->get_next_value("year").toInt();
-            season = d_file->get_next_value("season").toInt();
+            str_lst.clear();
+            str_lst.append(d_file->get_next_value("year"));
+            str_lst.append(d_file->get_next_value("season"));
+            str_lst.append(d_file->get_next_value("fleet"));
+            str_lst.append(d_file->get_next_value("catch"));
+            str_lst.append(d_file->get_next_value("catch_se"));
+            year   = str_lst.at(0).toInt();
+            fleet  = abs(str_lst.at(2).toInt()) - 1;
+            ctch   = str_lst.at(3).toFloat();
+/*            season = d_file->get_next_value("season").toInt();
             fleet = d_file->get_next_value("fleet").toInt();
             ctch = d_file->get_next_value("catch").toFloat();
-            ctch_se = d_file->get_next_value("catch_se").toFloat();
+            ctch_se = d_file->get_next_value("catch_se").toFloat();*/
             if (year == -999)
-                data->getFleet(fleet-1)->set_catch_equil(ctch);
+                data->getFleet(fleet)->set_catch_equil(ctch);
             if (year != -9999)
-                data->getFleet(fleet-1)->add_catch_per_season(year, season, ctch, ctch_se);
+                data->getFleet(fleet)->addCatchObservation(str_lst);
+//                data->getFleet(fleet-1)->add_catch_per_season(year, season, ctch, ctch_se);
         } while (year != -9999);
 
         //  SS_Label_Info_2.3 #Read fishery CPUE, effort, and Survey index or abundance
@@ -123,19 +132,28 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 d_file->error(QString("Fleet number does not match."));
             units = d_file->get_next_value().toInt(); // units
             flt->setAbundUnits(units);
-            err_type = d_file->get_next_value().toInt(); // err_type
+            err_type = d_file->get_next_value().toInt(); // err_flt->setAbundErrType(err_type);
             flt->setAbundErrType(err_type);
         }
         // here are the abundance numbers
         do
         {    // year, month, fleet_number, observation, error
-            year = d_file->get_next_value().toInt();
+            str_lst.clear();
+            str_lst.append(d_file->get_next_value("year"));
+            str_lst.append(d_file->get_next_value("month"));
+            str_lst.append(d_file->get_next_value("fleet"));
+            str_lst.append(d_file->get_next_value("obs"));
+            str_lst.append(d_file->get_next_value("err"));
+            year = str_lst.at(0).toInt();
+            fleet = abs(str_lst.at(2).toInt()) - 1;
+/*            year = d_file->get_next_value().toInt();
             month = d_file->get_next_value().toFloat();
             fleet = abs(d_file->get_next_value().toInt()) - 1;
             obs = d_file->get_next_value().toFloat();
-            err = d_file->get_next_value().toFloat();
+            err = d_file->get_next_value().toFloat();*/
             if (year != -9999)
-                data->getFleet(fleet)->addAbundByMonth(year, month, obs, err);
+                data->getFleet(fleet)->addAbundanceObs(str_lst);
+//                data->getFleet(fleet)->addAbundByMonth(year, month, obs, err);
         } while (year != -9999);
 
         //  SS_Label_Info_2.4 #read Discard data
@@ -154,13 +172,22 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             // observations
             do
             {    // year, month, fleet_number, observation, error
-                year = d_file->get_next_value().toInt();
+                str_lst.clear();
+                str_lst.append(d_file->get_next_value("year"));
+                str_lst.append(d_file->get_next_value("month"));
+                str_lst.append(d_file->get_next_value("fleet"));
+                str_lst.append(d_file->get_next_value("obs"));
+                str_lst.append(d_file->get_next_value("err"));
+                year = str_lst.at(0).toInt();
+                fleet = abs(str_lst.at(2).toInt()) - 1;
+/*                year = d_file->get_next_value().toInt();
                 month = d_file->get_next_value().toFloat();
                 fleet = abs(d_file->get_next_value().toInt()) - 1;
                 obs = d_file->get_next_value().toFloat();
-                err = d_file->get_next_value().toFloat();
+                err = d_file->get_next_value().toFloat();*/
                 if (year != -9999)
-                    data->getFleet(fleet)->setDiscardMonth(year, month, obs, err);
+                    data->getFleet(fleet)->addDiscard(str_lst);
+//                    data->getFleet(fleet)->setDiscardMonth(year, month, obs, err);
             } while (year != -9999);
         }
 
@@ -179,7 +206,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 for (int j = 0; j < 6; j++)
                     str_lst.append(d_file->get_next_value());
                 year = str_lst.at(0).toInt();
-                fleet = abs(str_lst.takeAt(2).toInt()) - 1;
+                fleet = abs(str_lst.at(2).toInt()) - 1;
                 if (year != -9999)
                     data->getFleet(fleet)->addMbwtObservation(str_lst);
             } while (year != -9999);
@@ -254,7 +281,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
 
             //  SS_Label_Info_2.7.4 #Read Length composition data
-            obslength = data->getFleet(0)->getLengthObsLength() + 1;
+            obslength = data->getFleet(0)->getLengthObsLength();
             do
             {
                 str_lst.clear();
@@ -265,7 +292,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 }
                 if (str_lst.at(0).toInt() == -9999)
                     break;
-                temp_int = abs(str_lst.takeAt(2).toInt());
+                temp_int = abs(str_lst.at(2).toInt());
                 data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
             } while (str_lst.at(0).toInt() != -9999);
             data->set_length_composition(l_data);
@@ -325,7 +352,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         a_data->setAltBinMethod(token.toInt());
 
         //  SS_Label_Info_2.8.2 #Read Age data
-        obslength = data->getFleet(0)->getAgeObsLength() + 1;
+        obslength = data->getFleet(0)->getAgeObsLength();
         do
         {
             str_lst.clear();
@@ -341,7 +368,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
             if (str_lst.at(0).toInt() == -9999)
                 break;
-            fleet = abs(str_lst.takeAt(2).toInt());
+            fleet = abs(str_lst.at(2).toInt());
             data->getFleet(fleet - 1)->addAgeObservation(str_lst);
         } while (str_lst.at(0).toInt() != -9999);
 
@@ -350,7 +377,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         data->setUseMeanSAA(temp_int);
         if (temp_int > 0)
         {
-            obslength = data->getFleet(0)->getSaaObservation(0).count() + 1;
+            obslength = data->getFleet(0)->getSaaObservation(0).count();
             do
             {
                 str_lst.clear();
@@ -361,7 +388,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 }
                 if (str_lst.at(0).toInt() == -9999)
                     break;
-                fleet = abs(str_lst.takeAt(2).toInt());
+                fleet = abs(str_lst.at(2).toInt());
                 data->getFleet(fleet - 1)->addSaaObservation(str_lst);
             } while (str_lst.at(0).toInt() != -9999);
         }
@@ -454,7 +481,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     str_lst.append(d_file->get_next_value());
                 }
 
-                fleet = abs(str_lst.takeAt(3).toInt());
+                fleet = abs(str_lst.at(3).toInt());
                 data->getFleet(fleet-1)->addGenObservation(temp_int-1, str_lst);
             }
         }
@@ -485,7 +512,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.clear();
                 for (int j = 0; j < 5; j++)
                     str_lst.append(d_file->get_next_value());
-                temp_int = abs(str_lst.takeAt(3).toInt());
+                temp_int = abs(str_lst.at(3).toInt());
                 data->getFleet(temp_int - 1)->addRecapObservation(str_lst);
             }
         }
@@ -515,7 +542,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 {
                     str_lst.append(d_file->get_next_value());
                 }
-                temp_int = abs(str_lst.takeAt(2).toInt());
+                temp_int = abs(str_lst.at(2).toInt());
                 data->getFleet(temp_int - 1)->addMorphObservation(str_lst);
             }
         }
@@ -650,7 +677,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                     str_lst = flt->getCatchObservation(j);
                     if (str_lst.at(0).isEmpty())
                         break;
-                    str_lst.insert(2, QString::number(i));
+//                    str_lst.insert(2, QString::number(i));
                     chars += d_file->write_vector(str_lst, 5);
 /*                    line.clear();
                     for (int k = 0; k < str_lst.count(); k++)
@@ -698,7 +725,8 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 QStringList abund (flt->getAbundanceObs(j));
                 if (!abund.at(0).isEmpty())
                 {
-                    if (abund.at(1).isEmpty()) abund[1].append("1");
+                    chars += d_file->write_vector(abund, 4, flt->getName());
+/*                    if (abund.at(1).isEmpty()) abund[1].append("1");
 
                     if (abund.at(2).isEmpty()) abund[2].append("0");
                     if (abund.at(3).isEmpty()) abund[3].append("0");
@@ -707,7 +735,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                                         QString::number(i),
                                         abund.at(2), abund.at(3),
                                         flt->getName()));
-                    chars += d_file->writeline (line);
+                    chars += d_file->writeline (line);*/
                 }
             }
         }
@@ -754,11 +782,12 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             {
                 line.clear();
                 str_lst = flt->getDiscard(j);
-                str_lst.insert(2, QString::number(i));
+                chars += d_file->write_vector(str_lst, 5, flt->getName());
+/*                str_lst.insert(2, QString::number(i));
                 for (int m = 0; m < str_lst.count(); m++)
                     line.append(QString("%1 ").arg(str_lst.at(m)));
                 line.append(QString(" # %1").arg(flt->getName()));
-                chars += d_file->writeline (line);
+                chars += d_file->writeline (line);*/
             }
         }
         line.clear();
@@ -798,7 +827,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             {
                 line.clear();
                 str_lst = flt->getMbwtObservation(j);
-                str_lst.insert(2, QString::number(i));
+//                str_lst.insert(2, QString::number(i));
                 chars += d_file->write_vector(str_lst, 4);
 /*                for (int m = 0; m < str_lst.count(); m++)
                     line.append(QString(" %1").arg(str_lst.at(m)));
@@ -908,12 +937,13 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             for( int j = 0; j < num; j++)
             {
                 str_lst = flt->getLengthObservation(j);
-                str_lst.insert(2, QString::number(i));
+                chars += d_file->write_vector(str_lst, 4);
+/*                str_lst.insert(2, QString::number(i));
                 line.clear();
                 for (int j = 0; j < str_lst.count(); j++)
                     line.append(QString (" %1").arg(str_lst.at(j)));
 
-                chars += d_file->writeline (line);
+                chars += d_file->writeline (line);*/
             }
         }
         line = QString("-9999");
@@ -1015,12 +1045,13 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 for( int j = 0; j < temp_int; j++)
                 {
                     str_lst = flt->getAgeObservation(j);
-                    str_lst.insert(2, QString::number(i));
+                    chars += d_file->write_vector(str_lst, 4);
+/*                    str_lst.insert(2, QString::number(i));
                     line.clear();
                     for (int j = 0; j < str_lst.count(); j++)
                         line.append(QString (" %1").arg(str_lst.at(j)));
 
-                    chars += d_file->writeline (line);
+                    chars += d_file->writeline (line);*/
                 }
             }
         }
@@ -1069,11 +1100,12 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                     {
                         line.clear();
                         str_lst = flt->getSaaModel()->getRowData(j);
-                        str_lst.insert(2, QString::number(i));
+                        chars += d_file->write_vector(str_lst, 4);
+/*                        str_lst.insert(2, QString::number(i));
                         for (int m = 0; m < str_lst.count(); m++)
                             line.append(QString(" %1").arg(str_lst.at(m)));
 
-                        chars += d_file->writeline (line);
+                        chars += d_file->writeline (line);*/
                     }
                 }
             }
@@ -1190,11 +1222,12 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                         {
                             line.clear();
                             str_lst = flt->getGenObservation(i, k);
-                            str_lst.insert(3, QString::number(j));
+                            chars += d_file->write_vector(str_lst, 4);
+/*                            str_lst.insert(3, QString::number(j));
                             for (int m = 0; m < str_lst.count(); m++)
                                 line.append(QString (" %1").arg(str_lst.at(m)));
 
-                            chars += d_file->writeline (line);
+                            chars += d_file->writeline (line);*/
                         }
                     }
                 }
@@ -1235,9 +1268,10 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             {
                 line.clear();
                 str_lst = data->get_tag_observation(i);
-                for (int j = 0; j < str_lst.count(); j++)
+                chars += d_file->write_vector(str_lst, 4);
+/*                for (int j = 0; j < str_lst.count(); j++)
                     line.append(QString(" %1").arg(str_lst.at(j)));
-                chars += d_file->writeline (line);
+                chars += d_file->writeline (line);*/
             }
             line = QString("#Recapture_Data");
             chars += d_file->writeline (line);
@@ -1255,13 +1289,17 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                         {
                             line.clear();
                             str_lst = flt->getRecapObservation(k);
-                            str_lst.insert(3, QString::number(j));
+                            if (str_lst.at(0).toInt() == i)
+                            {
+                                chars += d_file->write_vector(str_lst, 4);
+                            }
+/*                            str_lst.insert(3, QString::number(j));
                             if (str_lst.at(0).toInt() == i)
                             {
                             for (int m = 0; m < str_lst.count(); m++)
                                 line.append(QString(" %1").arg(str_lst.at(m)));
                             chars += d_file->writeline (line);
-                            }
+                            }*/
                         }
                     }
                 }
@@ -1303,10 +1341,11 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                     {
                         line.clear();
                         str_lst = flt->getMorphObservation(j);
-                        str_lst.insert(2, QString::number(i));
+                        chars += d_file->write_vector(str_lst, 4);
+/*                        str_lst.insert(2, QString::number(i));
                         for (int k = 0; k < str_lst.count(); k++)
                             line.append(QString(" %1").arg(str_lst.at(k)));
-                        chars += d_file->writeline (line);
+                        chars += d_file->writeline (line);*/
                     }
                 }
             }

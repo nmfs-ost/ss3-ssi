@@ -93,7 +93,7 @@ meanBwtObservation::meanBwtObservation()
   : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Part" << "Value" << "CV";
+    obsHeader << "Year" << "Month" << "Fleet" << "Part" << "Value" << "CV";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -103,7 +103,7 @@ lengthObservation::lengthObservation()
   : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -114,7 +114,7 @@ ageObservation::ageObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader  << "Year" << "Month" << "Gen" << "Part" << "AgeErr" << "Lbin_lo" << "Lbin_hi" << "NSamp";
+    obsHeader  << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "Lbin_lo" << "Lbin_hi" << "NSamp";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -125,7 +125,7 @@ saaObservation::saaObservation()
   : ssObservation()
 {
     obsHeader.clear();
-    obsHeader  << "Year" << "Month" << "Gen" << "Part" << "AgeErr" << "NSamp";
+    obsHeader  << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "NSamp";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -190,7 +190,7 @@ recapObservation::recapObservation()
 morphObservation::morphObservation()
 {
     obsHeader.clear();
-    obsHeader << "year" << "month" << "part" << "Nsamp";
+    obsHeader << "year" << "month" << "fleet" << "part" << "Nsamp";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -216,7 +216,7 @@ int morphObservation::getNumMorphs()
 generalObservation::generalObservation()
 {
     obsHeader.clear();
-    obsHeader << "Method" << "Year" << "Month" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Method" << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
