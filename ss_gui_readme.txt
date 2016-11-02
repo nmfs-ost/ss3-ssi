@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.4
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.5
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -8,6 +8,10 @@ allow for changes to the data, run the executable, and display results.
 
 Currently, the only results displayed are the warnings.sso and echoinput.sso.
 
+============================================================================
+Changes for 3.3.5
+        2016-11-01
+1. Added fleet number to all observations to allow for negative fleet number.
 ============================================================================
 Changes for 3.3.4
         2016-10-28
