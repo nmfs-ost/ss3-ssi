@@ -393,7 +393,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
 
         // environment variables
         temp_int = d_file->get_next_value().toInt();
-        data->set_num_environ_vars (temp_int);
+        data->setNumEnvironVars (temp_int);
         num_input_lines = d_file->get_next_value().toInt();
         obslength = data->getEnvVariables()->columnCount();
         for (i = 0; i < num_input_lines; i++)
@@ -403,7 +403,7 @@ bool read32_dataFile(ss_file *d_file, ss_model *data)
             {
                 str_lst.append(d_file->get_next_value());
             }
-            data->set_environ_var_obs (i, str_lst);
+            data->setEnvironVarObs (i, str_lst);
         }
 
         // generalized size composition
@@ -1029,9 +1029,9 @@ int write32_dataFile(ss_file *d_file, ss_model *data)
 
         // environment observations
         line = QString (QString("%1 #_N_environ_variables" ).arg(
-                            QString::number(data->num_environ_vars())));
+                            QString::number(data->getNumEnvironVars())));
         chars += d_file->writeline (line);
-        temp_int = data->num_environ_var_obs();
+        temp_int = data->getNumEnvironVarObs();
         line = QString (QString("%1 #_N_environ_observations" ).arg(
                             QString::number(temp_int)));
         chars += d_file->writeline (line);

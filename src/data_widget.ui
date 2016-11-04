@@ -63,7 +63,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -882,7 +882,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_comp">
          <property name="currentIndex">
-          <number>0</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="tab_length">
           <attribute name="title">
@@ -922,7 +922,11 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QSpinBox" name="spinBox_length_num_bins"/>
+              <widget class="QSpinBox" name="spinBox_length_num_bins">
+               <property name="maximum">
+                <number>200</number>
+               </property>
+              </widget>
              </item>
              <item row="3" column="1">
               <widget class="QSpinBox" name="spinBox_length_pop_bin_method">
@@ -1109,7 +1113,11 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QSpinBox" name="spinBox_age_num_bins"/>
+              <widget class="QSpinBox" name="spinBox_age_num_bins">
+               <property name="maximum">
+                <number>200</number>
+               </property>
+              </widget>
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_age_bins">
@@ -1249,7 +1257,11 @@
               <widget class="QLineEdit" name="lineEdit_gen_mincomp"/>
              </item>
              <item row="4" column="1">
-              <widget class="QSpinBox" name="spinBox_gen_num_bins"/>
+              <widget class="QSpinBox" name="spinBox_gen_num_bins">
+               <property name="maximum">
+                <number>200</number>
+               </property>
+              </widget>
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_gen_num_bins">
@@ -1558,7 +1570,11 @@
            <item>
             <layout class="QGridLayout" name="gridLayout_environment">
              <item row="0" column="2">
-              <widget class="QSpinBox" name="spinBox_num_evn_var"/>
+              <widget class="QSpinBox" name="spinBox_num_evn_var">
+               <property name="maximum">
+                <number>100</number>
+               </property>
+              </widget>
              </item>
              <item row="0" column="0" colspan="2">
               <widget class="QLabel" name="label_num_env_var">
@@ -1568,7 +1584,11 @@
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QSpinBox" name="spinBox_env_var_obs"/>
+              <widget class="QSpinBox" name="spinBox_env_var_obs">
+               <property name="maximum">
+                <number>300</number>
+               </property>
+              </widget>
              </item>
              <item row="1" column="0" colspan="2">
               <widget class="QLabel" name="label_env_var_obs">

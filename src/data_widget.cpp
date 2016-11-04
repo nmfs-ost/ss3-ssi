@@ -283,8 +283,8 @@ void data_widget::refresh()
         setDoTags(model_data->get_do_tags());
 
 
-        ui->spinBox_env_var_obs->setValue(model_data->num_environ_var_obs());
-        ui->spinBox_num_evn_var->setValue(model_data->num_environ_vars());
+        ui->spinBox_env_var_obs->setValue(model_data->getNumEnvironVarObs());
+        ui->spinBox_num_evn_var->setValue(model_data->getNumEnvironVars());
 
         ui->spinBox_block_patterns_total->setValue(model_data->getNumBlockPatterns());
         setBlockPattern(1);
@@ -540,7 +540,7 @@ void data_widget::changeAgeCombine()
 
 void data_widget::changeNumEnvVarObs(int num)
 {
-    model_data->set_num_environ_var_obs(num);
+    model_data->setNumEnvironVarObs(num);
     envVariables->setHeight(num);
 }
 

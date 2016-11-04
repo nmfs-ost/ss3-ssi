@@ -395,7 +395,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  SS_Label_Info_2.10 #Read environmental data that will be used to modify processes and expected values
         temp_int = d_file->get_next_value().toInt();
-        data->set_num_environ_vars (temp_int);
+        data->setNumEnvironVars (temp_int);
+        data->setNumEnvironVarObs(0);
         if (temp_int > 0)
         {
             obslength = data->getEnvVariables()->columnCount();
@@ -407,7 +408,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     str_lst.append(d_file->get_next_value());
                 }
                 if (str_lst.at(0).toInt() != -9999)
-                    data->set_environ_var_obs (i, str_lst);
+                    data->addEnvironVarObs (str_lst);
             } while (str_lst.at(0).toInt() != -9999);
         }
         }
@@ -868,7 +869,8 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
             break;
         case 3:
-            line = QString("# vector of population bin edges.");
+            line = QString("%1 # number of population size bins ").arg(
+                        QString::number(l_data->getNumberAltBins()));
             chars += d_file->writeline (line);
             line.clear();
             str_lst = l_data->getAltBins();
@@ -1119,16 +1121,13 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 
 
         // environment observations
-        temp_int = data->num_environ_vars();
+        temp_int = data->getNumEnvironVars();
         line = QString (QString("%1 #_N_environ_variables").arg(
                             QString::number(temp_int)));
         chars += d_file->writeline (line);
         if (temp_int > 0)
         {
-            temp_int = data->num_environ_var_obs();
-            line = QString (QString("%1 #_N_environ_observations").arg(
-                                QString::number(temp_int)));
-            chars += d_file->writeline (line);
+            temp_int = data->getNumEnvironVarObs();
         }
         line = QString ("#Year Variable Value");
         chars += d_file->writeline (line);
@@ -1140,6 +1139,10 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 line.append(QString(" %1").arg(str_lst.at(j)));
             chars += d_file->writeline (line);
         }
+        line = QString("-9999 ");
+        for (i = 1; i < str_lst.count(); i++)
+            line.append(" 0 ");
+        chars += d_file->writeline(line);
         chars += d_file->writeline ("#");
 
         // general composition methods
@@ -1646,28 +1649,21 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 //        temp_string = QString ("# ");
         line.append(QString(" (enter actual year, or values of 0 or -integer to be rel. endyr)"));
         chars += f_file->writeline(line);
-        tmp_lst.clear();
-        str_lst.clear();
         line.clear();
+        temp_string = QString("# ");
         for (i = 0; i < 10; i++)
         {
             temp_int = fcast->get_benchmark_year(i);
             value = QString::number(temp_int);
-            str_lst.append(value);
-//            line.append(QString(QString(" %1").arg(value)));
+            line.append(QString(QString(" %1").arg(value)));
             if (temp_int <= 0)
-                tmp_lst.append(QString::number(data->get_end_year() + temp_int));
-//                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->benchmark_year(i))));
+                temp_string.append(QString(" %1").arg(QString::number(data->get_end_year() + temp_int)));
             else
-                tmp_lst.append(value);
-//                temp_string.append(QString(" %1").arg(value));
+                temp_string.append(QString(" %1").arg(value));
         }
-        chars += f_file->write_vector(str_lst, 5);
-        chars += f_file->writechar('#');
-        chars += f_file->write_vector(tmp_lst, 5, QString("after processing"));
-/*        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);
         temp_string.append(" # after processing ");
-        chars += f_file->writeline(temp_string.toUtf8());*/
+        chars += f_file->writeline(temp_string);
 
         chars += f_file->write_val(fcast->get_benchmark_rel_f(), 5,
                                    QString("Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below"));
@@ -1694,29 +1690,20 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         line = QString("#_Fcast_years:  beg_selex, end_selex, beg_relF, end_relF, beg_recruits, end_recruits  (enter actual year, or values of 0 or -integer to be rel. endyr)");
         chars += f_file->writeline(line);
-        tmp_lst.clear();
-        str_lst.clear();
         line.clear();
-//        tmp_lst.append(QString("#"));
-//        temp_string = QString("# ");
+        temp_string = QString("# ");
         for (int i = 0; i < 6; i++)
         {
             value = QString::number(fcast->get_forecast_year(i));
-            str_lst.append(value);
-//            line.append(QString(QString(" %1").arg(value)));
+            line.append(QString(QString(" %1").arg(value)));
             if (fcast->get_forecast_year(i) <= 0)
-                tmp_lst.append(QString::number(data->get_end_year() + fcast->get_forecast_year(i)));
-//                temp_string.append(QString(" %1").arg(QString::number(data->end_year() + fcast->forecast_year(i))));
+                temp_string.append(QString(" %1").arg(QString::number(data->get_end_year() + fcast->get_forecast_year(i))));
             else
-                tmp_lst.append(value);
-//                temp_string.append(QString(" %1").arg(value));
+                temp_string.append(QString(" %1").arg(value));
         }
-        chars += f_file->write_vector(str_lst, 5);
-        chars += f_file->writechar('#');
-        chars += f_file->write_vector(tmp_lst, 5, QString("after processing"));
-/*        chars += f_file->writeline(line);
+        chars += f_file->writeline(line);
         temp_string.append(" # after processing ");
-        chars += f_file->writeline(temp_string.toUtf8());*/
+        chars += f_file->writeline(temp_string);
 
         chars += f_file->write_val(fcast->get_cr_method(), 5, QString("Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB))"));
 /*        value = QString::number();
@@ -2279,7 +2266,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 datalist = readParameter(c_file); // Richards coefficient
                 gp->addGrowthParam(datalist);
-                gp->getGrowthParams()->setRowHeader(3, QString("Richards_coeff_Fem_GP_%1").arg(QString::number(i+1)));
+                gp->getGrowthParams()->setRowHeader(3, QString("Richards_Fem_GP_%1").arg(QString::number(i+1)));
             }
             if (pop->Grow()->getModel() == 3)
             {
@@ -2373,7 +2360,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 {
                     datalist = readParameter(c_file); // Richards coefficient
                     gp->addGrowthParam(datalist);
-                    gp->getGrowthParams()->setRowHeader(num, QString("Richards_coeff_Mal_GP_%1").arg(QString::number(i+1)));
+                    gp->getGrowthParams()->setRowHeader(num, QString("Richards_Mal_GP_%1").arg(QString::number(i+1)));
                     num++;
                 }
                 if (pop->Grow()->getModel() == 3)

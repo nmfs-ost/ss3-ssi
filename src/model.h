@@ -227,12 +227,12 @@ public slots:
 
     void setUseMeanSAA (int flag) {useMeanSAAData = (flag == 1)? true: false;}
     bool getUseMeanSAA () {return useMeanSAAData;}
-    void set_num_environ_vars (int num) {obsEnvironVars->setNumVars(num);}
-    int num_environ_vars () {return obsEnvironVars->getNumVars();}
-    void set_num_environ_var_obs (int num) {obsEnvironVars->setNumObs(num);}
-    int num_environ_var_obs () {return obsEnvironVars->getNumObs();}
-    void add_environ_var_obs (QStringList txtlst);
-    void set_environ_var_obs (int index, QStringList txtlst);
+    void setNumEnvironVars (int num) {obsEnvironVars->setNumVars(num);}
+    int getNumEnvironVars () {return obsEnvironVars->getNumVars();}
+    void setNumEnvironVarObs (int num) {obsEnvironVars->setNumObs(num);}
+    int getNumEnvironVarObs () {return obsEnvironVars->getNumObs();}
+    void addEnvironVarObs (QStringList txtlst);
+    void setEnvironVarObs (int index, QStringList txtlst);
     QStringList get_environ_var_obs (int index) {return obsEnvironVars->getObservation(index);}
     tablemodel *getEnvVariables() {return obsEnvironVars->getObservations();}
 

@@ -800,14 +800,14 @@ void ss_model::set_num_ages(int ages)
     pPopulation->setNumAges(ages);
 }
 
-void ss_model::add_environ_var_obs(QStringList txtlst)
+void ss_model::addEnvironVarObs(QStringList txtlst)
 {
     int num = obsEnvironVars->getNumObs();
     obsEnvironVars->setNumObs(num + 1);
-    set_environ_var_obs(num, txtlst);
+    setEnvironVarObs(num, txtlst);
 }
 
-void ss_model::set_environ_var_obs(int index, QStringList txtlst)
+void ss_model::setEnvironVarObs(int index, QStringList txtlst)
 {
     obsEnvironVars->setObservation(index, txtlst);
 }
