@@ -157,7 +157,7 @@ QStringList *ss_file::get_line_tokens(QString *line)
     return current_tokens;
 }
 
-QString ss_file::get_next_value()
+/*QString ss_file::get_next_value()
 {
     QString tk (get_next_token());
     while (tk.startsWith("#"))
@@ -166,16 +166,25 @@ QString ss_file::get_next_value()
         tk = get_next_token();
     }
     return tk;
-}
+}*/
 
 QString ss_file::get_next_value(QString prompt)
 {
-    QString tk (get_next_value());
+    QString msg ("Found EOF when ");
+    QString tk (get_next_token());
+    while (tk.startsWith("#"))
+    {
+        skip_line();
+        tk = get_next_token();
+    }
     if (tk.compare("EOF") == 0)
     {
-        QString msg(QString("Found EOF when looking for %1 in file %2.")
-                       .arg(prompt, this->fileName()));
- //       QMessageBox::critical(0, tr("Input File unexpected EOF"), msg);
+        if (prompt.isEmpty())
+            msg.append(QString(" reading "));
+        else
+            msg.append(QString("looking for %1 in ").arg(prompt));
+        msg.append(QString("file %2.").arg(this->fileName()));
+        QMessageBox::critical(0, tr("Input File unexpected EOF"), msg);
     }
     return tk;
 }

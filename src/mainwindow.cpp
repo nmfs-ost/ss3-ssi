@@ -42,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_gui_ver->setFont(title_font);
     ui->label_gui_ver->setText(tr("For use with Stock Synthesis ") + getAppAppliesTo());
 
+//    mainMenu = new QMenuBar(this);
+    setupMenus(ui->menuBar);
+
     connect (ui->pushButton_about_gui, SIGNAL(clicked()), SLOT(helpGUI()));
     connect (ui->pushButton_about_ss, SIGNAL(clicked()), SLOT(helpSS()));
     connect (ui->pushButton_about_ftb, SIGNAL(clicked()), SLOT(helpNFT()));
@@ -55,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // set up the default model
     model_one = new ss_model(this);
+    model_one->setVisible(false);
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Model data set up finished.");
 #endif
@@ -141,6 +145,60 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeSettings();
     event->accept();
+}
+void MainWindow::setupMenus (QMenuBar *main)
+{
+    main->clear();
+    QMenu *fileMenu = new QMenu(QString("&File"), main); // fileMenu () (ui->menu_File);
+//    fileMenu.addAction (ui->action_New);
+    fileMenu->addAction (ui->action_Open);
+    fileMenu->addAction (ui->action_Save_data);
+    fileMenu->addAction (ui->action_Save_As);
+    fileMenu->addSeparator();
+//    fileMenu.addAction (ui->action_Print);
+//    fileMenu.addSeparator();
+    fileMenu->addAction (ui->action_Exit);
+    QMenu *dataMenu = new QMenu(QString("&Data"), main); // dataMenu (ui->menuData);
+//    dataMenu.addAction (ui->action_Import_Additional_Data_Observations);
+//    dataMenu.addAction (ui->action_Add_Rows_to_Data_Grids);
+    dataMenu->addAction (ui->action_Remove_blank_lines_from_data_grids);
+//    dataMenu.addAction (ui->action_Display_data_snapshot);
+//    dataMenu.addAction (ui->action_Display_selected_data_observations);
+    QMenu *viewMenu = new QMenu(QString("&View"), main); // viewMenu (ui->menuView);
+    viewMenu->addAction (ui->action_Report_File);
+    QMenu *run_Menu = new QMenu(QString("&Run"), main); // run_Menu (ui->menu_Run);
+    run_Menu->addAction (ui->action_Run_Stock_Synthesis);
+    QMenu *optsMenu = new QMenu(QString("&Options"), main); // opt_Menu (ui->menu_Options);
+    optsMenu->addAction (ui->actionSelect_default_directory);
+    optsMenu->addAction (ui->actionLocate_SS_executable);
+    optsMenu->addAction (ui->actionLocate_documents);
+    QMenu *windMenu = new QMenu(QString("&Windows"), main); // windMenu (ui->menu_Windows);
+    windMenu->addAction (ui->action_Files);
+    windMenu->addAction (ui->action_Model_Data);
+    windMenu->addAction (ui->action_Fleets);
+    windMenu->addAction (ui->action_Populations);
+    windMenu->addAction (ui->action_Forecast);
+    windMenu->addSeparator();
+    windMenu->addAction (ui->actionTitle_Window);
+    QMenu *helpMenu = new QMenu(QString("&Help"), main); // helpMenu (ui->menu_Help);
+    helpMenu->addAction (ui->actionAbout_SS_GUI);
+    helpMenu->addAction (ui->action_About);
+    helpMenu->addAction (ui->action_About_NFT);
+    helpMenu->addSeparator();
+    helpMenu->addAction (ui->action_About_ADMB);
+    helpMenu->addAction (ui->action_About_Qt);
+    helpMenu->addSeparator();
+    helpMenu->addAction (ui->action_User_Manual);
+//    helpMenu.addAction (ui->action_Using_SS);
+    //    mainMenu.clear();
+    main->addMenu(fileMenu);
+    main->addMenu(dataMenu);
+    main->addMenu(viewMenu);
+    main->addMenu(run_Menu);
+    main->addMenu(optsMenu);
+    main->addMenu(windMenu);
+    main->addSeparator();
+    main->addMenu(helpMenu);
 }
 
 void MainWindow::writeSettings()
@@ -642,6 +700,8 @@ void MainWindow::run()
     saveFiles();
     Dialog_run drun(this);
     drun.setDir(current_dir);
+    while (!QFileInfo(ss_exe).exists())
+        locateExecutable();
     drun.setExe(ss_exe);
     drun.exec();
     files->read_run_num_file();
@@ -659,6 +719,11 @@ void MainWindow::run_trans()
     drun.setDir(current_dir);
     if (ss_trans_exe.isEmpty())
         locateConverter();
+    else
+    {
+        if (!QFileInfo(ss_trans_exe).exists())
+            locateConverter();
+    }
     drun.setExe(ss_trans_exe);
     drun.setOptions("-nohess");
     drun.exec();

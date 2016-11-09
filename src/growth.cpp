@@ -26,8 +26,11 @@ ss_growth::ss_growth()
     matAgeValues = new tablemodel();
     matAgeValues->setRowCount(1);
 
-    maturityParams = new parametermodel();
-    maturityParams->setRowCount(2);
+    wtLenParams = new parametermodel();
+    wtLenParams->setRowCount(0);
+    wtLenTVParams = new parametermodel();
+    wtLenTVParams->setRowCount(0);
+    wtLenTVParams->setColumnCount(7);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
@@ -56,7 +59,8 @@ ss_growth::~ss_growth()
     delete natMortBreakPoints;
     delete natMortAges;
     delete matAgeValues;
-    delete maturityParams;
+    delete wtLenParams;
+    delete wtLenTVParams;
     delete cohortParam;
     delete fracfemaleParams;
     customEnvLink = -1;
@@ -82,7 +86,7 @@ void ss_growth::reset()
 
     num_params = 0;
     matAgeValues->setRowCount(1);
-    maturityParams->setRowCount(2);
+    wtLenParams->setRowCount(2);
     setTimeVaryMethod(1);
     setTimeVaryReadParams(0);
     cohortParam->setRowCount(1);
@@ -468,11 +472,18 @@ void ss_growth::setMaturity_option(int value)
     maturity_option = value;
 }
 
-void ss_growth::setMaturityParam(int index, QStringList data)
+void ss_growth::setWtLenParam(int index, QStringList data)
 {
-    if (index >= maturityParams->rowCount())
-        maturityParams->setRowCount(index + 1);
-    maturityParams->setRowData(index, data);
+    if (index >= wtLenParams->rowCount())
+        wtLenParams->setRowCount(index + 1);
+    wtLenParams->setRowData(index, data);
+}
+
+void ss_growth::setWtLenTVParam(int index, QStringList data)
+{
+    if (index >= wtLenTVParams->rowCount())
+        wtLenTVParams->setRowCount(index + 1);
+    wtLenTVParams->setRowData(index, data);
 }
 
 /*
@@ -546,9 +557,9 @@ int ss_growth::getNumDevParams()
 {
     int num = 0;
     QStringList data;
-    for (int i = 0; i < maturityParams->rowCount(); i++)
+    for (int i = 0; i < wtLenParams->rowCount(); i++)
     {
-        if (maturityParams->useDev(i))
+        if (wtLenParams->useDev(i))
             num++;
     }
     return num;
@@ -558,9 +569,9 @@ int ss_growth::getNumEnvLinkParams()
 {
     int num = 0;
     QStringList data;
-    for (int i = 0; i < maturityParams->rowCount(); i++)
+    for (int i = 0; i < wtLenParams->rowCount(); i++)
     {
-        if (maturityParams->envLink(i))
+        if (wtLenParams->envLink(i))
             num++;
     }
     return num;
@@ -570,9 +581,9 @@ int ss_growth::getNumBlockParams()
 {
     int num = 0;
     QStringList data;
-    for (int i = 0; i < maturityParams->rowCount(); i++)
+    for (int i = 0; i < wtLenParams->rowCount(); i++)
     {
-        if (maturityParams->useBlock(i))
+        if (wtLenParams->useBlock(i))
             num++;
     }
     return num;

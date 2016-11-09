@@ -16,6 +16,9 @@ q_ratio::q_ratio()
     params->setHeader(hdr);
     params->setRowCount(1);
     params->setRowHeader(0, "LnQ_Base");
+    tvParams = new parametermodel();
+    tvParams->setColumnCount(7);
+    tvParams->setRowCount(0);
     reset();
 }
 
@@ -471,6 +474,12 @@ void q_ratio::setupChanged()
     }*/
 }
 
+void q_ratio::setTVParam(int index, QStringList data)
+{
+    if (index < tvParams->rowCount())
+        tvParams->setRowCount(index + 1);
+    tvParams->setRowData(index, data);
+}
 
 
 

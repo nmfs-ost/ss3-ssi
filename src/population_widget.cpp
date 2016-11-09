@@ -19,7 +19,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
     fecundParamsView = new tableview();
     fecundParamsView->setParent(this);
-    ui->verticalLayout_fec_params->addWidget(fecundParamsView);
+    ui->verticalLayout_fecund_params->addWidget(fecundParamsView);
 
     ui->spinBox_fecund_hermaph_season->setMinimum(-1);
 
@@ -33,7 +33,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_fecund_hermaph_season, SIGNAL(valueChanged(int)), SLOT(changeHermaphSeas(int)));
     connect (ui->spinBox_fecund_hermaph_male, SIGNAL(valueChanged(int)), SLOT(changeHermaphMales(int)));
     connect (ui->comboBox_fecund_gend_offset, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityOffsetOption(int)));
-    connect (ui->comboBox_fecund_adj_constraint, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityAdjustment(int)));
+//    connect (ui->comboBox_fecund_adj_constraint, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityAdjustment(int)));
 
     // Recruitment
     assignmentView = new tableview();
@@ -74,15 +74,27 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     growthParamsView = new tableview();
     growthParamsView->setParent(this);
     ui->verticalLayout_growth_params->addWidget(growthParamsView);
+    growthTVParamsView = new tableview();
+    growthTVParamsView->setParent(this);
+    ui->verticalLayout_growth_time_vary_params->addWidget(growthTVParamsView);
     cvParamsView = new tableview();
     cvParamsView->setParent(this);
     ui->verticalLayout_cv_parameters->addWidget(cvParamsView);
+    cvTVParamsView = new tableview();
+    cvTVParamsView->setParent(this);
+    ui->verticalLayout_cv_time_vary_params->addWidget(cvTVParamsView);
     wtlenParamsView = new tableview();
     wtlenParamsView->setParent(this);
-    ui->verticalLayout_weightlength->addWidget(wtlenParamsView);
+    ui->verticalLayout_wtlen_params->addWidget(wtlenParamsView);
+    wtlenTVParamsView = new tableview();
+    wtlenTVParamsView->setParent(this);
+    ui->verticalLayout_wtlen_time_vary_params->addWidget(wtlenTVParamsView);
     maturityParamsView = new tableview();
     maturityParamsView->setParent(this);
-    ui->verticalLayout_maturity_params->addWidget(maturityParamsView);
+    ui->verticalLayout_cohort_params->addWidget(maturityParamsView);
+    mortTVParamsView = new tableview();
+    mortTVParamsView->setParent(this);
+    ui->verticalLayout_cohort_time_vary_params->addWidget(mortTVParamsView);
     timeVaryParamsView = new tableview();
     timeVaryParamsView->setParent(this);
     ui->verticalLayout_growth_time_vary_params->addWidget(timeVaryParamsView);
@@ -218,6 +230,9 @@ void population_widget::changeGrowthPattern (int num)
     growthParamsView->setModel(gp->getGrowthParams());
     growthParamsView->setHeight(gp->getGrowthParams());
     growthParamsView->resizeColumnsToContents();
+    growthTVParamsView->setModel(gp->getGrowthTVParams());
+    growthTVParamsView->setHeight(gp->getGrowthTVParams());
+    growthTVParamsView->resizeColumnsToContents();
 
     timeVaryParamsView->setModel(gp->getTimeVaryParams());
     timeVaryParamsView->setHeight(gp->getTimeVaryParams());
@@ -226,12 +241,18 @@ void population_widget::changeGrowthPattern (int num)
     cvParamsView->setModel(gp->getCVParams());
     cvParamsView->setHeight(gp->getCVParams());
     cvParamsView->resizeColumnsToContents();
+    cvTVParamsView->setModel(gp->getCVTVParams());
+    cvTVParamsView->setHeight(gp->getCVTVParams());
+    cvTVParamsView->resizeColumnsToContents();
 
 //    maturityParamsView->setModel(gp->get);
 
     mortParamsView->setModel(gp->getNatMParams());
     mortParamsView->setHeight(gp->getNatMParams());
     mortParamsView->resizeColumnsToContents();
+    mortTVParamsView->setModel(gp->getNatMTVParams());
+    mortTVParamsView->setHeight(gp->getNatMTVParams());
+    mortTVParamsView->resizeColumnsToContents();
     mortAgesView->setModel(gp->getNatMAges());
     mortAgesView->setHeight(2);
     mortAgesView->resizeColumnsToContents();
@@ -256,8 +277,8 @@ void population_widget::refresh()
     setFecundityOffsetOption(pop->Grow()->getParam_offset_method());
     setFecundityAdjustment(pop->Grow()->getAdjustment_method());
 
-    wtlenParamsView->setModel(pop->Grow()->getMaturityParams());
-    wtlenParamsView->setHeight(pop->Grow()->getMaturityParams());
+    wtlenParamsView->setModel(pop->Grow()->getWtLenParams());
+    wtlenParamsView->setHeight(pop->Grow()->getWtLenParams());
     wtlenParamsView->resizeColumnsToContents();
     maturityParamsView->setModel(pop->Grow()->getCohortParams());
     maturityParamsView->setHeight(pop->Grow()->getCohortParams());
@@ -439,7 +460,7 @@ int population_widget::getFecundityOffsetOption()
 
 void population_widget::setFecundityAdjustment(int opt)
 {
-    ui->comboBox_fecund_adj_constraint->setCurrentIndex(opt - 1);
+//    ui->comboBox_fecund_adj_constraint->setCurrentIndex(opt - 1);
 }
 
 void population_widget::changeFecundityAdjustment(int opt)
@@ -450,7 +471,7 @@ void population_widget::changeFecundityAdjustment(int opt)
 
 int population_widget::getFecundityAdjustment()
 {
-    return (ui->comboBox_fecund_adj_constraint->currentIndex() + 1);
+//    return (ui->comboBox_fecund_adj_constraint->currentIndex() + 1);
 }
 
 void population_widget::setMortOption(int opt)

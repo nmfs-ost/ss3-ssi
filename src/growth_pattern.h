@@ -26,6 +26,13 @@ public:
     void setNatMParam (int index, QStringList data);
     QStringList getNatMParam(int index) {return natMParams->getRowData(index);}
     tablemodel *getNatMParams() {return natMParams;}
+    void setNumNatMTVParams (int num) {natMTVParams->setRowCount(num);}
+    int getNumNatMTVParams () {return natMTVParams->rowCount();}
+    void addNatMTVParam (QStringList data) {setNatMParam(natMTVParams->rowCount(), data);}
+    void setNatMTVParam (QStringList data) {setNatMParam(0, data);}
+    void setNatMTVParam (int index, QStringList data);
+    QStringList getNatMTVParam(int index) {return natMTVParams->getRowData(index);}
+    tablemodel *getNatMTVParams() {return natMTVParams;}
     void setNatMMaleAgeList (QStringList data) {natMAges->setRowData(1, data);}
     QStringList getNatMMaleAgeList () {return natMAges->getRowData(1);}
     void setNatMFemAgeList (QStringList data) {natMAges->setRowData (0, data);}
@@ -42,6 +49,12 @@ public:
     void setGrowthParam (int index, QStringList data);
     QStringList getGrowthParam(int index) {return growthParams->getRowData(index);}
     tablemodel *getGrowthParams() {return growthParams;}
+    void setNumGrowthTVParams (int num) {growthTVParams->setRowCount(num);}
+    int getNumGrowthTVParams () {return growthTVParams->rowCount();}
+    void addGrowthTVParam (QStringList data) {setGrowthParam(growthTVParams->rowCount(), data);}
+    void setGrowthTVParam (int index, QStringList data);
+    QStringList getGrowthTVParam(int index) {return growthTVParams->getRowData(index);}
+    tablemodel *getGrowthTVParams() {return growthTVParams;}
 
     void setNumTimeVaryParams (int num) {timeVaryParams->setRowCount(num);}
     int getNumTimeVaryParams () {return timeVaryParams->rowCount();}
@@ -58,6 +71,12 @@ public:
     void setCVParam (int index, QStringList data);
     QStringList getCVParam(int index) {return cvParams->getRowData(index);}
     tablemodel *getCVParams() {return cvParams;}
+    void setNumCVTVParams (int num) {cvTVParams->setRowCount(num);}
+    int getNumCVTVParams () {return cvTVParams->rowCount();}
+    void addCVTVParam (QStringList data) {setCVParam(cvTVParams->rowCount(), data);}
+    void setCVTVParam (int index, QStringList data);
+    QStringList getCVTVParam(int index) {return cvTVParams->getRowData(index);}
+    tablemodel *getCVTVParams() {return cvTVParams;}
 
     void setNumDevParams (int num) {devParams->setRowCount(num);}
     int getNumDevParams () {return devParams->rowCount();}
@@ -79,11 +98,16 @@ private:
     parametermodel *devParams;
 
     parametermodel *growthParams;
+    parametermodel *growthTVParams;
     parametermodel *cvParams;
+    parametermodel *cvTVParams;
     parametermodel *cohortDevParams;
+    parametermodel *cohortTVDevParams;
     parametermodel *maturityParams;
+    parametermodel *maturityTVParams;
 
     parametermodel *natMParams;
+    parametermodel *natMTVParams;
     tablemodel *natMAges;
     parametermodel *timeVaryParams;
 };

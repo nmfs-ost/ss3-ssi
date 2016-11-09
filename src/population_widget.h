@@ -108,10 +108,15 @@ private:
 
     tableview *growthMorphDistView;
     tableview *growthParamsView;
+    tableview *growthTVParamsView;
     tableview *cvParamsView;
+    tableview *cvTVParamsView;
     tableview *seasonParamsView;
+    tableview *seasonTVParamsView;
     tableview *wtlenParamsView;
+    tableview *wtlenTVParamsView;
     tableview *maturityParamsView;
+    tableview *mortTVParamsView;
 
     tableview *timeVaryParamsView;
 

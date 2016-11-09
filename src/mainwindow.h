@@ -32,6 +32,7 @@ public:
     ~MainWindow();
 
     void closeEvent(QCloseEvent *event);
+    void setupMenus(QMenuBar *menu);
     void readSettings();
     void writeSettings();
 
@@ -95,6 +96,7 @@ signals:
 
 private:
     Ui::MainWindow *ui;
+    QMenuBar *mainMenu;
 
     ss_model *model_one;
     file_widget *files;

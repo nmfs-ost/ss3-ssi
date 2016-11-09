@@ -91,7 +91,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     envVariables->setHeight(model_data->getEnvVariables());
     ui->verticalLayout_env_var_obs->addWidget(envVariables);
     connect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), SLOT(changeNumEnvVarObs(int)));
-    connect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_environ_vars(int)));
+    connect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(setNumEnvironVars(int)));
 
     timeBlocks = new tableview();
     timeBlocks->setParent(this);

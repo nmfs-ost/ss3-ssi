@@ -58,6 +58,13 @@ public:
     QStringList getParameter(int index);
     parametermodel *getParamModel() {return params;}
 
+    void setNumTVParams (int num) {tvParams->setRowCount(num);}
+    int getNumTVParams () {return tvParams->rowCount();}
+    void addTVParam (QStringList data) {setTVParam(getNumTVParams(), data);}
+    void setTVParam (int index, QStringList data);
+    QStringList getTVParam (int index) {return tvParams->getRowData(index);}
+    parametermodel *getTVParams () {return tvParams;}
+
     int getTypeIndex() const;
     void setTypeIndex(int value);
 
@@ -72,6 +79,7 @@ public slots:
 private:
     parametermodel *qsetup;
     parametermodel *params;
+    parametermodel *tvParams;
     int BaseIndex;
     int doBlkTnd;
     int BlkTndIndex;

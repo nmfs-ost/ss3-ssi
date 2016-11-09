@@ -26,8 +26,8 @@ public:
     explicit ss_file(QString name, QObject *parent = 0);
     ~ss_file();
 
-    QString get_next_value ();
-    QString get_next_value (QString prompt);
+//    QString get_next_value ();
+    QString get_next_value (QString prompt = QString(""));
     QString get_next_token();
     QString get_next_token(QString line);
     void return_token (QString tokn);

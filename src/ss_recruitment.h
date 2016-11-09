@@ -126,7 +126,14 @@ public:
     void setRecruitDistParam (int index, QStringList data);
     QStringList getRecruitDistParam(int index) {return recruitDistParams->getRowData(index);}
 
-
+    parametermodel *tvParameters;
+    parametermodel *getTVParameterModel() {return tvParameters;}
+    void setNumTVParameters(int num) {tvParameters->setRowCount(num);}
+    int getNumTVParameters() {return tvParameters->rowCount();}
+    void addTVParameter(QStringList values) {setTVParameter(tvParameters->rowCount(), values);}
+    void setTVParameter(int index, QStringList values);
+    void setTVParameterHeader(int index, QString hdr) {tvParameters->setRowHeader(index, hdr);}
+    QStringList getTVParameter(int index) {return tvParameters->getRowData(index);}
 
 };
 

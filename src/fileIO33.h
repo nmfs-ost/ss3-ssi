@@ -14,7 +14,8 @@ bool read33_controlFile (ss_file *c_file, ss_model *data);
 int write33_controlFile (ss_file *c_file, ss_model *data);
 
 void readGrowthTimeVaryParams (ss_file *infile, ss_model *data, int gpat, QStringList parmlist, QString header);
-void readSelexTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *table, QStringList parmlist, QString header);
+void readTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *table, QStringList parmlist, QString header);
+int writeTimeVaryParams (ss_file *outfile, ss_model *data, tablemodel *table, QStringList parmlist, QString header);
 
 bool read33_forecastFile (ss_file *f_file, ss_model *data);
 int write33_forecastFile (ss_file *f_file, ss_model *data);

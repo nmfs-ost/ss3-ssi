@@ -1976,7 +1976,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setAdjustment_method(temp_int);
 
         // mortality growth parameters
-        pop->Grow()->setNumMaturityParams(0);
+        pop->Grow()->setNumWtLenParams(0);
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
             growthPattern *gp = pop->Grow()->getPattern(i);
@@ -2106,14 +2106,14 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
         num = 0;
-        pop->Grow()->setNumMaturityParams(num);
+        pop->Grow()->setNumWtLenParams(num);
         datalist = readParameter(c_file); // fem_wt_len_1
-        pop->Grow()->setMaturityParam(num, datalist);
-        pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
+        pop->Grow()->setWtLenParam(num, datalist);
+        pop->Grow()->getWtLenParams()->setRowHeader(num, QString("Wtlen_1_Fem"));
         num++;
         datalist = readParameter(c_file); // fem_wt_len_2
-        pop->Grow()->setMaturityParam(num, datalist);
-        pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Fem"));
+        pop->Grow()->setWtLenParam(num, datalist);
+        pop->Grow()->getWtLenParams()->setRowHeader(num, QString("Wtlen_2_Fem"));
 
         num = 0;
         datalist = readParameter(c_file); // fem_mat_inflect
@@ -2135,14 +2135,14 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
 
         if (data->get_num_genders() > 1)
         {
-            num = pop->Grow()->getNumMaturityParams();
+            num = pop->Grow()->getNumWtLenParams();
             datalist = readParameter(c_file); // male_wt_len_1
-            pop->Grow()->setMaturityParam(num, datalist);
-            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
+            pop->Grow()->setWtLenParam(num, datalist);
+            pop->Grow()->getWtLenParams()->setRowHeader(num, QString("Wtlen_1_Mal"));
             num++;
             datalist = readParameter(c_file); // male_wt_len_2
-            pop->Grow()->setMaturityParam(num, datalist);
-            pop->Grow()->getMaturityParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
+            pop->Grow()->setWtLenParam(num, datalist);
+            pop->Grow()->getWtLenParams()->setRowHeader(num, QString("Wtlen_2_Mal"));
         }
 
         if (pop->Fec()->getHermaphroditism() != 0)
@@ -3196,25 +3196,25 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
         line.clear();
-        str_list = pop->Grow()->getMaturityParam(0);
+        str_list = pop->Grow()->getWtLenParam(0);
         for (int l = 0; l < str_list.count(); l++)
             line.append(QString(" %1").arg(str_list.at(l)));
         line.append(" # Wtlen_1_Fem" );
         chars += c_file->writeline (line);
         line.clear();
-        str_list = pop->Grow()->getMaturityParam(1);
+        str_list = pop->Grow()->getWtLenParam(1);
         for (int l = 0; l < str_list.count(); l++)
             line.append(QString(" %1").arg(str_list.at(l)));
         line.append(" # Wtlen_2_Fem" );
         chars += c_file->writeline (line);
         line.clear();
-        str_list = pop->Grow()->getMaturityParam(2);
+        str_list = pop->Grow()->getWtLenParam(2);
         for (int l = 0; l < str_list.count(); l++)
             line.append(QString(" %1").arg(str_list.at(l)));
         line.append(" # Mat50%_Fem" );
         chars += c_file->writeline (line);
         line.clear();
-        str_list = pop->Grow()->getMaturityParam(3);
+        str_list = pop->Grow()->getWtLenParam(3);
         for (int l = 0; l < str_list.count(); l++)
             line.append(QString(" %1").arg(str_list.at(l)));
         line.append(" # Mat_slope_Fem" );
@@ -3235,13 +3235,13 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         if (data->get_num_genders() > 1)
         {
             line.clear();
-            str_list = pop->Grow()->getMaturityParam(4);
+            str_list = pop->Grow()->getWtLenParam(4);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(" # Wtlen_1_Male" );
             chars += c_file->writeline (line);
             line.clear();
-            str_list = pop->Grow()->getMaturityParam(5);
+            str_list = pop->Grow()->getWtLenParam(5);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(" # Wtlen_2_Male" );
@@ -3260,35 +3260,35 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        num = pop->Grow()->getNumMaturityParams() - data->get_num_seasons() - data->get_num_areas()
+        num = pop->Grow()->getNumWtLenParams() - data->get_num_seasons() - data->get_num_areas()
                 - pop->Grow()->getNum_patterns();
         for (i = 0; i < pop->Grow()->getNum_patterns(); num++, i++)
         {
             line.clear();
 //            str_list = pop->SR()->getAssignmentParam(i);
-            str_list = pop->Grow()->getMaturityParam(num);
+            str_list = pop->Grow()->getWtLenParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(QString(" # RecrDist_GP_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        num = pop->Grow()->getNumMaturityParams() - data->get_num_seasons() - data->get_num_areas();
+        num = pop->Grow()->getNumWtLenParams() - data->get_num_seasons() - data->get_num_areas();
         for (i = 0; i < data->get_num_areas(); num++, i++)
         {
             line.clear();
 //            str_list = pop->SR()->getAssignmentParam(i);
-            str_list = pop->Grow()->getMaturityParam(num);
+            str_list = pop->Grow()->getWtLenParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(QString(" # RecrDist_Area_%1" ).arg(QString::number(i + 1)));
             chars += c_file->writeline (line);
         }
-        num = pop->Grow()->getNumMaturityParams() - data->get_num_seasons();
+        num = pop->Grow()->getNumWtLenParams() - data->get_num_seasons();
         for (i = 0; i < data->get_num_seasons(); num++, i++)
         {
             line.clear();
 //            str_list = pop->SR()->getAssignmentParam(i);
-            str_list = pop->Grow()->getMaturityParam(num);
+            str_list = pop->Grow()->getWtLenParam(num);
             for (int l = 0; l < str_list.count(); l++)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(QString(" # RecrDist_Seas_%1" ).arg(QString::number(i + 1)));

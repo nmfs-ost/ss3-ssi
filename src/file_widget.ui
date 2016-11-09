@@ -57,11 +57,11 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_input">
       <attribute name="title">
-       <string>Inputs</string>
+       <string>Input Files</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="18" column="0">
@@ -508,7 +508,7 @@
      </widget>
      <widget class="QWidget" name="tab_output">
       <attribute name="title">
-       <string>Outputs</string>
+       <string>Output File Settings</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="10" column="0" colspan="3">

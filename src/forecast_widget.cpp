@@ -93,7 +93,7 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
 
     connect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
     connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), SLOT(set_log_catch_std_dev()));
-    connect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), fcast, SLOT(set_rebuilder(bool)));
+    connect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), fcast, SLOT(set_do_rebuilder(bool)));
     connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_first_year(int)));
     connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_curr_year(int)));
 

@@ -19,6 +19,9 @@ spawn_recruit::spawn_recruit()
     recruitDistParams = new parametermodel();
     recruitDistParams->setRowCount(2);
 
+    tvParameters = new parametermodel();
+    tvParameters->setColumnCount(7);
+
     method = 3;
     env_link = 0;
     env_target = 0;
@@ -117,6 +120,13 @@ void spawn_recruit::setAssignmentParam(int index, QStringList data)
     if (index >= assignmentParams->rowCount())
         assignmentParams->setRowCount(index + 1);
     assignmentParams->setRowData(index, data);
+}
+
+void spawn_recruit::setTVParameter(int index, QStringList values)
+{
+    if (index >= tvParameters->rowCount())
+        tvParameters->setRowCount(index + 1);
+    tvParameters->setRowData(index, values);
 }
 
 void spawn_recruit::fromFile(ss_file *file)

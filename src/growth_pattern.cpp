@@ -10,11 +10,18 @@ growthPattern::growthPattern()
     fractionFemParams->setRowHeader(0, QString("FracFemale"));
 
     growthParams = new parametermodel();
+    growthTVParams = new parametermodel();
+    growthTVParams->setColumnCount(7);
+
     cvParams = new parametermodel();
     cvParams->setRowCount(2);
+    cvTVParams = new parametermodel();
+    cvTVParams->setColumnCount(7);
 
     natMParams = new parametermodel();
     natMParams->setRowCount(1);
+    natMTVParams = new parametermodel();
+    natMTVParams->setColumnCount(7);
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
 
@@ -30,8 +37,11 @@ growthPattern::~growthPattern()
     clear();
     delete fractionFemParams;
     delete growthParams;
+    delete growthTVParams;
     delete cvParams;
+    delete cvTVParams;
     delete natMParams;
+    delete natMTVParams;
     delete natMAges;
     delete devParams;
     delete timeVaryParams;
@@ -102,11 +112,25 @@ void growthPattern::setNatMParam(int index, QStringList data)
     natMParams->setRowData(index, data);
 }
 
+void growthPattern::setNatMTVParam(int index, QStringList data)
+{
+    if (index >= natMTVParams->rowCount())
+        natMTVParams->setRowCount(index + 1);
+    natMTVParams->setRowData(index, data);
+}
+
 void growthPattern::setGrowthParam(int index, QStringList data)
 {
     if (index >= growthParams->rowCount())
         growthParams->setRowCount(index + 1);
     growthParams->setRowData(index, data);
+}
+
+void growthPattern::setGrowthTVParam(int index, QStringList data)
+{
+    if (index >= growthTVParams->rowCount())
+        growthTVParams->setRowCount(index + 1);
+    growthTVParams->setRowData(index, data);
 }
 
 void growthPattern::setTimeVaryParam(int index, QStringList data)
@@ -128,6 +152,13 @@ void growthPattern::setCVParam(int index, QStringList data)
     if (index >= cvParams->rowCount())
         cvParams->setRowCount(index + 1);
     cvParams->setRowData(index, data);
+}
+
+void growthPattern::setCVTVParam(int index, QStringList data)
+{
+    if (index >= cvTVParams->rowCount())
+        cvTVParams->setRowCount(index + 1);
+    cvTVParams->setRowData(index, data);
 }
 
 void growthPattern::setDevParam(int index, QStringList data)
