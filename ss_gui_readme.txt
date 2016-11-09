@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.5
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.7
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -11,6 +11,24 @@ Currently, the only results displayed are the warnings.sso and echoinput.sso.
 Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
+============================================================================
+      3.3.7
+      2016-11-01
+1. Corrected reading/writing of time-varying params for all but tagging.
+2. Corrected reading/writing of general size composition params.
+3. Added error message when EOF encountered prematurely.
+4. Fixed Mainwindow File and Data menu access.
+============================================================================
+      3.3.6
+      2016-11-04
+1. Changed max number of bins to 200.
+2. Changed max number of environment variables to 100,
+    and max number of environment observations to 300.
+3. In writing data file:
+     Added number of population size bins,
+     Changed output of environment observations to current format, and
+     Corrected output of benchmark and forecast years.
+
 ============================================================================
       3.3.5
       2016-11-01
