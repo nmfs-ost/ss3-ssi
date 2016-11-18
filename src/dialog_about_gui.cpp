@@ -20,13 +20,13 @@ Dialog_about_gui::Dialog_about_gui(QWidget *parent) :
 
     qf.setPointSize(10);
     QString txt("This interface will let the user read and examine data files for Stock Synthesis, ");
-    txt.append(QString("run the SS3.exe program, and check for errors.\n\n"));
+    txt.append(QString("run the ss.exe program, and check for errors.\n\n"));
     txt.append(QString("The interface was designed and programmed by Neal Schindler using the following tools:\n"));
-    txt.append(QString("    Qt ver 4.8.5 graphics libraries,\n"));
+    txt.append(QString("    Qt ver 5.7 graphics libraries,\n"));
     txt.append(QString("    Qt Creator (a cross platform IDE), and\n"));
 //    txt.append(QString("    Inno Setup (for Windows installer),\n"));
 //    txt.append(QString("    Doxygen (for documentation), and\n"));
-    txt.append(QString("    MinGW 4.4 (GCC for Windows)."));
+    txt.append(QString("    MinGW 5.3 (GCC for Windows)."));
     ui->textEdit->setText(txt);
     ui->textEdit->setFont(qf);
 

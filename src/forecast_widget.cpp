@@ -14,14 +14,10 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui->setupUi(this);
     ui->label_fcast_loops_3->setVisible(false);
     ui->spinBox_fcast_loops_3->setVisible(false);
-//    ui->horizontalSpacer_fcast_loops_3->
     ui->label_fcast_loops_4->setVisible(false);
     ui->spinBox_fcast_loops_4->setVisible(false);
     ui->label_fcast_loops_5->setVisible(false);
     ui->spinBox_fcast_loops_5->setVisible(false);
-
-    ui->lineEdit_bmark_bio_beg->setVisible(false);
-    ui->lineEdit_bmark_bio_end->setVisible(false);
 
     model_data = m_data;
     ss_forecast *fcast = model_data->forecast;
@@ -68,6 +64,8 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_bmark_relf_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_relf_end(int)));
     connect (ui->spinBox_bmark_recr_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_recr_begin(int)));
     connect (ui->spinBox_bmark_recr_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_recr_end(int)));
+    connect (ui->spinBox_bmark_srparm_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_begin(int)));
+    connect (ui->spinBox_bmark_srparm_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_end(int)));
 
     connect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_relf_basis(int)));
     connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), SLOT(set_forecast(int)));
@@ -203,6 +201,10 @@ void forecast_widget::refresh()
     set_bmark_recr_begin(fcast->get_benchmark_year(6));
     ui->spinBox_bmark_recr_end->setValue(fcast->get_benchmark_year(7));
     set_bmark_recr_end(fcast->get_benchmark_year(7));
+    ui->spinBox_bmark_srparm_beg->setValue(fcast->get_benchmark_year(8));
+    set_bmark_srparm_begin(fcast->get_benchmark_year(8));
+    ui->spinBox_bmark_srparm_end->setValue(fcast->get_benchmark_year(9));
+    set_bmark_srparm_end(fcast->get_benchmark_year(9));
 
     set_combo_box(ui->comboBox_bmark_relF_basis, fcast->get_benchmark_rel_f());
     set_combo_box(ui->comboBox_fcast_options, fcast->get_forecast());
@@ -614,12 +616,13 @@ void forecast_widget::set_bmark_bio_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_bio_beg->setValue(year);
+        set_bmark_bio_begin(year);
     else
     {
         QString yrStr(QString::number(year));
-        ui->lineEdit_bmark_bio_beg->setText(yrStr);
         model_data->forecast->set_benchmark_bio_beg(year);
+        ui->spinBox_bmark_bio_beg->setValue(year);
+//        ui->lineEdit_bmark_bio_beg->setText(yrStr);
         year = model_data->refyearvalue(year);
         yrStr =  QString::number(year);
         ui->label_bmark_bio_beg_yr_ref->setText (yrStr);
@@ -636,12 +639,14 @@ void forecast_widget::set_bmark_bio_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_bio_end->setValue(year);
+        set_bmark_bio_end(year);
+//        ui->spinBox_bmark_bio_end->setValue(year);
     else
     {
         QString yrStr(QString::number(year));
-        ui->lineEdit_bmark_bio_end->setText(yrStr);
         model_data->forecast->set_benchmark_bio_end(year);
+        ui->spinBox_bmark_bio_end->setValue(year);
+//        ui->lineEdit_bmark_bio_end->setText(yrStr);
         year = model_data->refyearvalue(year);
         yrStr =  QString::number(year);
         ui->label_bmark_bio_end_yr_ref->setText (yrStr);
@@ -723,6 +728,32 @@ void forecast_widget::set_bmark_recr_end(int yr)
         model_data->forecast->set_benchmark_rec_end(year);
         year = model_data->refyearvalue(year);
         ui->label_bmark_recr_end_yr_ref->setText(QString::number(year));
+    }
+}
+
+void forecast_widget::set_bmark_srparm_begin(int yr)
+{
+    int year = model_data->checkyearvalue(yr);
+    if (yr != year)
+        ui->spinBox_bmark_srparm_beg->setValue(year);
+    else
+    {
+        model_data->forecast->set_benchmark_srpar_beg(year);
+        year = model_data->refyearvalue(year);
+        ui->label_bmark_srparm_beg_yr_ref->setText(QString::number(year));
+    }
+}
+
+void forecast_widget::set_bmark_srparm_end(int yr)
+{
+    int year = model_data->checkyearvalue(yr);
+    if (yr != year)
+        ui->spinBox_bmark_srparm_end->setValue(year);
+    else
+    {
+        model_data->forecast->set_benchmark_rec_end(year);
+        year = model_data->refyearvalue(year);
+        ui->label_bmark_srparm_end_yr_ref->setText(QString::number(year));
     }
 }
 

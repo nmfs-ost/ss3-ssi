@@ -40,6 +40,8 @@ public slots:
     void set_bmark_relf_end(int yr);
     void set_bmark_recr_begin(int yr);
     void set_bmark_recr_end(int yr);
+    void set_bmark_srparm_begin(int yr);
+    void set_bmark_srparm_end(int yr);
     void set_fcast_sel_begin(int yr);
     void set_fcast_sel_end (int yr);
     void set_fcast_relf_begin(int yr);

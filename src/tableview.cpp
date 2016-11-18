@@ -41,7 +41,7 @@ void tableview::copy()
         return;
 
     QString copy_table;
-    QModelIndex last = list.last();
+//    QModelIndex last = list.last();
     QModelIndex previous = list.first();
 
     list.removeFirst();
@@ -136,5 +136,10 @@ void tableview::setHeight(tablemodel *tm, int rd)
 
 void tableview::setHeight(int rows)
 {
-    setFixedHeight(55 + rows * 30);
+    if (rows == 0)
+        setFixedHeight(0);
+    else if (rows < 15)
+        setFixedHeight(55 + rows * 36);
+    else
+        setFixedHeight(55 + 15 * 36);
 }

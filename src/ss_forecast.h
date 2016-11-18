@@ -37,6 +37,8 @@ public slots:
     void set_benchmark_relf_end (int yr) {i_bmark_yrs[5] = yr;}
     void set_benchmark_rec_beg (int yr) {i_bmark_yrs[6] = yr;}
     void set_benchmark_rec_end (int yr) {i_bmark_yrs[7] = yr;}
+    void set_benchmark_srpar_beg (int yr) {i_bmark_yrs[8] = yr;}
+    void set_benchmark_srpar_end (int yr) {i_bmark_yrs[9] = yr;}
     int get_benchmark_year (int i) {return i_bmark_yrs[i];}
     void set_benchmark_rel_f (int relf) {i_bmark_rel_f = relf;}
     void set_combo_box_relf_basis (int relf);

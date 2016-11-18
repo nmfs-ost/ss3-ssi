@@ -1013,7 +1013,9 @@ int ss_model::checkyearvalue(int value)
 {
     int val = value;
     int totNeg = get_start_year() - get_end_year();
-    if (value <= totNeg)
+    if (value == -999)
+        ;
+    else if (value <= totNeg)
         val = totNeg;
     else if (value > 0 && value < get_start_year())
         val = get_start_year();
@@ -1025,7 +1027,9 @@ int ss_model::checkyearvalue(int value)
 int ss_model::refyearvalue(int value)
 {
     int year = value;
-    if (value <= 0)
+    if (value == -999)
+        year = get_start_year();
+    else if (value <= 0)
         year = get_end_year() + value;
 
     return year;

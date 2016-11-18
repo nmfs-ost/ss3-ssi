@@ -13,7 +13,7 @@
 // standard input file names
 #define STARTER_FILE      "starter.ss"
 #define FORECAST_FILE     "forecast.ss"
-#define PARAMETER_FILE    "ss3.par"
+#define PARAMETER_FILE    "ss.par"
 #define PROFILE_VAL_FILE  "ProfileValues.ss"
 #define RUN_NUMBER_FILE   "runnumber.ss"
 // default input file names
@@ -132,8 +132,8 @@ public slots:
     void set_pro_file (QString fname, bool keep = false);
     void set_parmtr_write(int flag = 0);
     int get_parmtr_write ();
-    void set_cumrpt_write(int flag = 0);
-    int get_cumrpt_write ();
+//    void set_cumrpt_write(int flag = 0);
+//    int get_cumrpt_write ();
 
     void show_input_files ();
     void show_output_files ();
@@ -153,8 +153,8 @@ signals:
 private slots:
 
     void parm_trace_changed(bool flag);
-    void cumrpt_fits_changed(bool flag);
-    void cumrpt_like_changed(bool flag);
+//    void cumrpt_fits_changed(bool flag);
+//    void cumrpt_like_changed(bool flag);
 
     void show_file_info (ss_file *file);
     void show_starter_file_info () {show_file_info (starterFile);}

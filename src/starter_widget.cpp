@@ -232,7 +232,7 @@ int starter_widget::read_data()
             ui->lineEdit_control_file->setText (QString("%1/%2").arg(temp_str, token));
             param++;
         }
-        else if (param == 3) // use ss3.par file for values (0,1)
+        else if (param == 3) // use ss.par file for values (0,1)
         {
             temp_int = token.toInt();
             ui->checkBox_parameter_file->setChecked(temp_int);
@@ -445,7 +445,7 @@ int starter_widget::write_data ()
     chars += out_file->write (line.toAscii());
     line = QString (QString ("%1\n").arg(ui->lineEdit_control_file->text()));
     chars += out_file->write (line.toAscii());
-    line = QString (QString ("%1 # 0=use init values in control file; 1=use ss3.par\n").arg
+    line = QString (QString ("%1 # 0=use init values in control file; 1=use ss.par\n").arg
                     (ui->checkBox_parameter_file->isChecked()?"1":"0"));
     chars += out_file->write (line.toAscii());
     line = QString (QString ("%1 # run display detail (0,1,2)\n").arg

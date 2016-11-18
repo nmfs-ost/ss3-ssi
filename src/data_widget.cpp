@@ -60,6 +60,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ageError->setParent(this);
     ageError->setModel(model_data->get_age_composition()->getErrorModel());
     ageError->setHeight(model_data->get_age_composition()->getErrorModel());
+//    ui->scrollArea_comp_age_err->setWidget(ageError);
     ui->horizontalLayout_age_error->addWidget(ageError);
 
     genBins = new tableview();

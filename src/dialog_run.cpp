@@ -61,7 +61,7 @@ void Dialog_run::showEchoFile()
 
 void Dialog_run::runSS()
 {
-    QString ss3(ui->label_executable->text());
+    QString ss(ui->label_executable->text());
     QString opts(ui->lineEdit_options->text());
     QString line;
     QStringList arguments;
@@ -71,7 +71,7 @@ void Dialog_run::runSS()
     ui->plainTextEdit_output->clear();
     ui->plainTextEdit_error->clear();
 
-    line = QString (QString("%1 %2\n").arg(ss3, opts));
+    line = QString (QString("%1 %2\n").arg(ss, opts));
     ui->plainTextEdit_output->appendPlainText(line);
     // run command in box
 //    arguments = line.split(' ');

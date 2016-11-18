@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -79,7 +79,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-114</y>
+            <y>0</y>
             <width>913</width>
             <height>543</height>
            </rect>
@@ -951,7 +951,14 @@ recruitment distribution method = 1)</string>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox_recr_dev_early_start"/>
+               <widget class="QSpinBox" name="spinBox_recr_dev_early_start">
+                <property name="minimum">
+                 <number>-999</number>
+                </property>
+                <property name="maximum">
+                 <number>0</number>
+                </property>
+               </widget>
               </item>
               <item row="1" column="1">
                <widget class="QSpinBox" name="spinBox_recr_dev_fcast_phase"/>

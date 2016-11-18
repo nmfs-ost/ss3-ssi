@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>890</width>
-    <height>591</height>
+    <width>841</width>
+    <height>621</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,7 +63,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -72,34 +72,31 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout_dimensions">
-         <item row="8" column="2">
-          <widget class="QLabel" name="label_num_surveys">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_year_end">
            <property name="text">
-            <string>Number of Surveys</string>
+            <string>End Year</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="5">
-          <widget class="QSpinBox" name="spinBox_year_total">
-           <property name="readOnly">
-            <bool>true</bool>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_year_start">
+           <property name="text">
+            <string>Start Year</string>
            </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="spinBox_year_start">
+           <property name="minimum">
+            <number>-2</number>
            </property>
            <property name="maximum">
-            <number>200</number>
+            <number>3000</number>
            </property>
           </widget>
          </item>
-         <item row="3" column="4">
-          <widget class="QLabel" name="label_year_total">
-           <property name="text">
-            <string>Total Years</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
+         <item row="1" column="1">
           <widget class="QSpinBox" name="spinBox_year_end">
            <property name="minimum">
             <number>-2</number>
@@ -109,20 +106,20 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
-          <widget class="QLabel" name="label_year_end">
-           <property name="text">
-            <string>End Year</string>
+         <item row="9" column="1">
+          <widget class="QSpinBox" name="spinBox_num_surveys">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QSpinBox" name="spinBox_year_start">
-           <property name="minimum">
-            <number>-2</number>
-           </property>
-           <property name="maximum">
-            <number>3000</number>
+         <item row="9" column="0">
+          <widget class="QLabel" name="label_num_surveys">
+           <property name="text">
+            <string>Number of Surveys</string>
            </property>
           </widget>
          </item>
@@ -145,211 +142,6 @@
             <enum>QAbstractSpinBox::NoButtons</enum>
            </property>
           </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_year_start">
-           <property name="text">
-            <string>Start Year</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="3">
-          <widget class="QSpinBox" name="spinBox_num_surveys">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="4">
-          <widget class="QLabel" name="label_total_fleets">
-           <property name="text">
-            <string>Total Fleets</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="5">
-          <widget class="QSpinBox" name="spinBox_total_fleets">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="7">
-          <widget class="QGroupBox" name="groupBox_seasons">
-           <property name="title">
-            <string>Seasons</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_season">
-              <property name="text">
-               <string>Season</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="spinBox_seas_per_yr">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>12</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="spinBox_season">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>12</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="spinBox_spawn_season">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>12</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_spawn_season">
-              <property name="text">
-               <string>Spawning season</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="4">
-             <widget class="QLabel" name="label_num_mo_season">
-              <property name="text">
-               <string>    Number of months in season</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_num_seasons">
-              <property name="text">
-               <string>Number of Seasons per year</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2">
-             <widget class="QLabel" name="label_season_of">
-              <property name="text">
-               <string>of</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="5">
-             <widget class="QLineEdit" name="lineEdit_num_mo_season">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>12</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="5">
-             <widget class="QSpinBox" name="spinBox_total_months">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="buttonSymbols">
-               <enum>QAbstractSpinBox::NoButtons</enum>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>24</number>
-              </property>
-              <property name="value">
-               <number>12</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="4">
-             <widget class="QLabel" name="label_total_months">
-              <property name="text">
-               <string>Total months</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="3">
-             <widget class="QLineEdit" name="lineEdit_total_seasons">
-              <property name="maximumSize">
-               <size>
-                <width>35</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>1</string>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="5">
-             <widget class="QSpinBox" name="spinBox_subseasons">
-              <property name="minimum">
-               <number>2</number>
-              </property>
-              <property name="maximum">
-               <number>10</number>
-              </property>
-              <property name="singleStep">
-               <number>2</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QLabel" name="label_subseasons">
-              <property name="text">
-               <string>Number of sub-seasons</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="4" column="7">
-          <spacer name="horizontalSpacer_dimen_seas">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item row="5" column="0">
           <widget class="QLabel" name="label_num_genders">
@@ -385,19 +177,6 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="7">
-          <spacer name="horizontalSpacer_dimen">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
          <item row="7" column="0">
           <widget class="QLabel" name="label_num_areas">
            <property name="text">
@@ -416,6 +195,236 @@
            <property name="value">
             <number>1</number>
            </property>
+          </widget>
+         </item>
+         <item row="3" column="7" rowspan="2">
+          <spacer name="horizontalSpacer_dimen_seas">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="label_year_total">
+           <property name="text">
+            <string>Total Years</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QSpinBox" name="spinBox_year_total">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>200</number>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="4" rowspan="2">
+          <widget class="QSpinBox" name="spinBox_total_fleets">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="3" rowspan="2">
+          <widget class="QLabel" name="label_total_fleets">
+           <property name="text">
+            <string>Total Fleets</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="7">
+          <widget class="QGroupBox" name="groupBox_seasons">
+           <property name="title">
+            <string>Seasons</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="4" column="6">
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="4" column="3">
+             <widget class="QLineEdit" name="lineEdit_num_mo_season">
+              <property name="maximumSize">
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>12</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QSpinBox" name="spinBox_subseasons">
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="singleStep">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="3">
+             <widget class="QLabel" name="label_subseasons">
+              <property name="text">
+               <string>Number of sub-seasons</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_season">
+              <property name="text">
+               <string>Season</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="spinBox_seas_per_yr">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>12</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="spinBox_season">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>12</number>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="3">
+             <widget class="QLabel" name="label_num_mo_season">
+              <property name="text">
+               <string>Number of months in season</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_num_seasons">
+              <property name="text">
+               <string>Number of Seasons per year</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_season_of">
+              <property name="text">
+               <string>of</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="5">
+             <widget class="QSpinBox" name="spinBox_total_months">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::NoButtons</enum>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>24</number>
+              </property>
+              <property name="value">
+               <number>12</number>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="4">
+             <widget class="QLabel" name="label_total_months">
+              <property name="text">
+               <string>Total months</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QLineEdit" name="lineEdit_total_seasons">
+              <property name="maximumSize">
+               <size>
+                <width>35</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>1</string>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_spawn_season">
+              <property name="text">
+               <string>Spawning season</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QSpinBox" name="spinBox_spawn_season">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>12</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -442,55 +451,111 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <layout class="QGridLayout" name="gridLayout_settings">
-         <item row="4" column="6" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_convergence"/>
-         </item>
-         <item row="13" column="1">
-          <widget class="QSpinBox" name="spinBox_sdrpt_min_yr">
-           <property name="minimum">
-            <number>-5</number>
-           </property>
-           <property name="maximum">
-            <number>2500</number>
-           </property>
+         <item row="13" column="1" colspan="4">
+          <widget class="QComboBox" name="comboBox_spr_basis">
+           <item>
+            <property name="text">
+             <string>0: Skip</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1: (1-SPR) / (1 - SPR_target)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2: (1-SPR) / (1 - SPR at MSY)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3: (1-SPR) / (1 - SPR at B_target)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4:  (1-SPR) / 1 (actual values)</string>
+            </property>
+           </item>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QCheckBox" name="checkBox_soft_bounds">
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_jitter">
            <property name="text">
-            <string>Use soft boundaries</string>
+            <string>Jitter value</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="5">
-          <widget class="QLabel" name="label_f_max_age">
-           <property name="text">
-            <string>F calculation max age</string>
-           </property>
-          </widget>
+         <item row="15" column="6">
+          <widget class="QSpinBox" name="spinBox_f_max_age"/>
          </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="labe_f_bmass_min_age">
-           <property name="text">
-            <string>Summary biomass min age</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
+         <item row="12" column="0">
           <widget class="QLabel" name="label_f_dep">
            <property name="text">
             <string>Depletion basis</string>
            </property>
           </widget>
          </item>
-         <item row="14" column="1">
-          <widget class="QSpinBox" name="spinBox_num_std_yrs"/>
+         <item row="15" column="5">
+          <widget class="QLabel" name="label_f_max_age">
+           <property name="text">
+            <string>F calculation max age</string>
+           </property>
+          </widget>
          </item>
-         <item row="8" column="1" colspan="4">
+         <item row="10" column="0">
+          <widget class="QLabel" name="labe_f_bmass_min_age">
+           <property name="text">
+            <string>Summary biomass min age</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2" colspan="3">
+          <spacer name="horizontalSpacer_setings">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="16" column="0">
+          <widget class="QLabel" name="label_f_report_basis">
+           <property name="text">
+            <string>F Report basis</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="7">
+          <spacer name="horizontalSpacer_MC">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="12" column="5">
+          <widget class="QLabel" name="label_f_dep_denom">
+           <property name="text">
+            <string>Depletion denomination - Frac(X)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_f_dep">
            <item>
             <property name="text">
-             <string>0: None</string>
+             <string>0: Skip</string>
             </property>
            </item>
            <item>
@@ -510,24 +575,14 @@
            </item>
           </widget>
          </item>
-         <item row="10" column="0">
+         <item row="14" column="0">
           <widget class="QLabel" name="label_f_rpt_units">
            <property name="text">
             <string>F Report values</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="0">
-          <widget class="QLabel" name="label_f_min_age">
-           <property name="text">
-            <string>F calculation min age</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="6" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_dep_denom"/>
-         </item>
-         <item row="12" column="1" colspan="4">
+         <item row="16" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_f_report_basis">
            <item>
             <property name="text">
@@ -551,84 +606,15 @@
            </item>
           </widget>
          </item>
-         <item row="11" column="6">
-          <widget class="QSpinBox" name="spinBox_f_max_age"/>
-         </item>
-         <item row="9" column="1" colspan="4">
-          <widget class="QComboBox" name="comboBox_spr_basis">
-           <item>
-            <property name="text">
-             <string>0: None</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1: (1-SPR) / (1-SPR_tgt)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2: (1-SPR) / (1-SPR_MSY)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3: (1-SPR) / (1-SPR_Btarget)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>4:  1-SPR values</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_jitter">
+         <item row="15" column="0">
+          <widget class="QLabel" name="label_f_min_age">
            <property name="text">
-            <string>Jitter value</string>
+            <string>F calculation min age</string>
            </property>
           </widget>
          </item>
-         <item row="13" column="0">
-          <widget class="QLabel" name="label_sdrpt_min_yr">
-           <property name="text">
-            <string>Min year for sdreport output</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="0">
-          <widget class="QLabel" name="label_f_report_basis">
-           <property name="text">
-            <string>F Report basis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="7">
-          <spacer name="horizontalSpacer_MC">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="1" colspan="4">
-          <spacer name="horizontalSpacer_setings">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
+         <item row="12" column="6" colspan="2">
+          <widget class="QLineEdit" name="lineEdit_dep_denom"/>
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_mc_burn">
@@ -637,41 +623,14 @@
            </property>
           </widget>
          </item>
-         <item row="15" column="0" colspan="2">
-          <widget class="QLabel" name="label_std_yrs">
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="checkBox_soft_bounds">
            <property name="text">
-            <string>Vector of years </string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <string/>
            </property>
           </widget>
          </item>
-         <item row="13" column="6">
-          <widget class="QSpinBox" name="spinBox_sdrpt_max_yr">
-           <property name="minimum">
-            <number>-10</number>
-           </property>
-           <property name="maximum">
-            <number>2500</number>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="5">
-          <widget class="QLabel" name="label_f_dep_denom">
-           <property name="text">
-            <string>Depletion denomination - Frac(X)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="5">
-          <widget class="QLabel" name="label_convergence">
-           <property name="text">
-            <string>Convergence </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="5" colspan="3">
+         <item row="0" column="6" colspan="3">
           <widget class="QCheckBox" name="checkBox_priors">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -680,41 +639,34 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Calculate prior likelihood for all parameters</string>
+            <string/>
            </property>
           </widget>
          </item>
-         <item row="13" column="5">
-          <widget class="QLabel" name="label_sdrpt_max_yr">
-           <property name="text">
-            <string>Max year for sdreport output</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0">
+         <item row="13" column="0">
           <widget class="QLabel" name="label_spr_basis">
            <property name="text">
             <string>SPR Report basis</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="1">
+         <item row="15" column="1">
           <widget class="QSpinBox" name="spinBox_f_min_age"/>
          </item>
-         <item row="6" column="1">
+         <item row="10" column="1">
           <widget class="QSpinBox" name="spinBox_f_bmass_min_age"/>
          </item>
-         <item row="5" column="2">
+         <item row="9" column="2">
           <widget class="QSpinBox" name="spinBox_retrospect_yr">
            <property name="minimum">
-            <number>-10</number>
+            <number>-99</number>
            </property>
            <property name="maximum">
-            <number>3000</number>
+            <number>0</number>
            </property>
           </widget>
          </item>
-         <item row="5" column="0" colspan="2">
+         <item row="9" column="0" colspan="2">
           <widget class="QLabel" name="label_retrospect_yr">
            <property name="text">
             <string>Retrospective year relative to end year</string>
@@ -752,13 +704,6 @@
            </item>
           </layout>
          </item>
-         <item row="14" column="0">
-          <widget class="QLabel" name="label_num_std_yrs">
-           <property name="text">
-            <string>Num of individual sd report years</string>
-           </property>
-          </widget>
-         </item>
          <item row="3" column="5">
           <widget class="QLabel" name="label_mc_thin">
            <property name="text">
@@ -773,11 +718,11 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="1" colspan="4">
+         <item row="14" column="1" colspan="4">
           <widget class="QComboBox" name="comboBox_f_rpt_units">
            <item>
             <property name="text">
-             <string>0: None</string>
+             <string>0: Skip</string>
             </property>
            </item>
            <item>
@@ -837,25 +782,103 @@
          <item row="4" column="1" colspan="2">
           <widget class="QLineEdit" name="lineEdit_jitter"/>
          </item>
-         <item row="5" column="4" colspan="3">
+         <item row="9" column="3" colspan="4">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>A negative value is year relative to end year</string>
+            <string>(A negative value)</string>
            </property>
           </widget>
          </item>
-         <item row="15" column="2" colspan="7">
-          <layout class="QHBoxLayout" name="horizontalLayout_sdYears"/>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_num_std_yrs">
+           <property name="text">
+            <string>Num of individual sd report years</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_sdrpt_min_yr">
+           <property name="text">
+            <string>Min year for sdreport output</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="5">
+          <widget class="QLabel" name="label_sdrpt_max_yr">
+           <property name="text">
+            <string>Max year for sdreport output</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="6">
+          <widget class="QSpinBox" name="spinBox_sdrpt_max_yr">
+           <property name="minimum">
+            <number>-99</number>
+           </property>
+           <property name="maximum">
+            <number>2500</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QSpinBox" name="spinBox_sdrpt_min_yr">
+           <property name="minimum">
+            <number>-99</number>
+           </property>
+           <property name="maximum">
+            <number>2500</number>
+           </property>
+          </widget>
          </item>
          <item row="7" column="0">
+          <widget class="QLabel" name="label_std_yrs">
+           <property name="text">
+            <string>Vector of years </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_soft_bounds">
+           <property name="text">
+            <string>Use soft boundaries (recommended)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QSpinBox" name="spinBox_num_std_yrs"/>
+         </item>
+         <item row="0" column="5">
+          <widget class="QLabel" name="label_priors">
+           <property name="text">
+            <string>Calculate prior likelihood for all params</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_convergence">
+           <property name="text">
+            <string>Convergence </string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1" colspan="2">
+          <widget class="QLineEdit" name="lineEdit_convergence"/>
+         </item>
+         <item row="7" column="1" colspan="7">
+          <layout class="QHBoxLayout" name="horizontalLayout_sdYears"/>
+         </item>
+         <item row="17" column="1" colspan="2">
+          <widget class="QLineEdit" name="lineEdit_alktol"/>
+         </item>
+         <item row="17" column="0">
           <widget class="QLabel" name="label_alktol">
            <property name="text">
             <string>Age Length Key tolerance</string>
            </property>
           </widget>
-         </item>
-         <item row="7" column="1" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_alktol"/>
          </item>
         </layout>
        </item>
@@ -882,7 +905,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_comp">
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab_length">
           <attribute name="title">
@@ -1182,26 +1205,26 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <layout class="QGridLayout" name="gridLayout_comp_age_error">
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_age_error_matrices">
-               <property name="text">
-                <string>Age error matrices </string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
+            <layout class="QGridLayout" name="gridLayout_comp_age_err">
+             <item row="0" column="1">
               <widget class="QLabel" name="label_age_error_num">
                <property name="text">
                 <string>Number of ageing error matrices</string>
                </property>
               </widget>
              </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="label_age_error_matrices">
+               <property name="text">
+                <string>Age error matrices </string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="2">
               <widget class="QSpinBox" name="spinBox_age_error_num"/>
              </item>
-             <item row="0" column="3">
-              <spacer name="horizontalSpacer_age_error">
+             <item row="1" column="3">
+              <spacer name="horizontalSpacer_comp_age_err">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1213,23 +1236,23 @@
                </property>
               </spacer>
              </item>
-             <item row="2" column="0" rowspan="2" colspan="4">
+             <item row="2" column="1" colspan="3">
               <layout class="QHBoxLayout" name="horizontalLayout_age_error"/>
              </item>
+             <item row="2" column="0">
+              <spacer name="verticalSpacer_comp_age_err">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>229</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_age_error">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -1562,8 +1585,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>838</width>
-            <height>443</height>
+            <width>789</width>
+            <height>473</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -1662,8 +1685,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>838</width>
-            <height>443</height>
+            <width>789</width>
+            <height>473</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">

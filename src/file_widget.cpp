@@ -29,8 +29,6 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     ui->label_version->setVisible(check);
     ui->doubleSpinBox_version->setVisible(check);
     }
-    ui->checkBox_cumrpt_fits->setVisible(false);
-    ui->checkBox_cumrpt_like->setVisible(false);
 
     starterFile = new ss_file(STARTER_FILE, this);
     forecastFile = new ss_file(FORECAST_FILE, this);
@@ -68,8 +66,8 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_iter, SLOT(setVisible(bool)));
     connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_param, SLOT(setVisible(bool)));
 
-    connect (ui->checkBox_cumrpt_fits, SIGNAL(toggled(bool)), SLOT(cumrpt_fits_changed(bool)));
-    connect (ui->checkBox_cumrpt_like, SIGNAL(toggled(bool)), SLOT(cumrpt_like_changed(bool)));
+//    connect (ui->checkBox_cumrpt_fits, SIGNAL(toggled(bool)), SLOT(cumrpt_fits_changed(bool)));
+//    connect (ui->checkBox_cumrpt_like, SIGNAL(toggled(bool)), SLOT(cumrpt_like_changed(bool)));
 
     ui->spinBox_datafiles->setMinimum(1);
     ui->spinBox_datafiles->setMaximum(10);
@@ -101,10 +99,10 @@ void file_widget::reset()
 {
     set_par_file(false);
     ui->comboBox_detail_level->setCurrentIndex(1);
-    ui->checkBox_report->setChecked(true);
+    ui->comboBox_report_level->setCurrentIndex(0);
     ui->checkBox_checkup->setChecked(false);
     set_parmtr_write(0);
-    set_cumrpt_write(1);
+    ui->comboBox_cumreport->setCurrentIndex(1);
     set_pro_file(false);
     ui->spinBox_datafiles->setValue(0);
 
@@ -147,19 +145,10 @@ void file_widget::setDatafileVersion(double ver, bool flag)
         msg.append(QString("different directory before saving or running ss."));
         QMessageBox::information(0, QString("Old version files"),msg);*/
         model_info->setReadMonths(false);
-        ui->label_version_33_note->setVisible(false);
-        ui->label_version_32_note->setVisible(false);
     }
     else
     {
         model_info->setReadMonths(true);
-        ui->label_version_33_note->setVisible(false);
-        ui->label_version_32_note->setVisible(false);
-    }
-    if (!flag)
-    {
-        ui->label_version_32_note->setVisible(false);
-        ui->label_version_33_note->setVisible(false);
     }
     setDatafileVersionString(datafile_version);
 }
@@ -384,7 +373,7 @@ void file_widget::parm_trace_changed(bool flag)
     }
 }
 
-void file_widget::cumrpt_fits_changed(bool flag)
+/*void file_widget::cumrpt_fits_changed(bool flag)
 {
     if (flag)
         ui->checkBox_cumrpt_like->setChecked(flag);
@@ -394,7 +383,7 @@ void file_widget::cumrpt_like_changed(bool flag)
 {
     if (!flag)
         ui->checkBox_cumrpt_fits->setChecked(flag);
-}
+}*/
 
 void file_widget::increase_font ()
 {
@@ -455,10 +444,14 @@ void file_widget::new_directory(QString dir, bool keep)
 
 void file_widget::set_parmtr_write(int flag)
 {
+    ui->comboBox_parm_trace_iter->setVisible(true);
+    ui->comboBox_parm_trace_param->setVisible(true);
     switch (flag)
     {
     case 0:
         ui->checkBox_parm_trace->setChecked(false);
+        ui->comboBox_parm_trace_iter->setVisible(false);
+        ui->comboBox_parm_trace_param->setVisible(false);
         break;
     case 1:
         ui->checkBox_parm_trace->setChecked(true);
@@ -505,12 +498,13 @@ int file_widget::get_parmtr_write()
     case 7:
         ret = 3;
         break;
+    case 0:
     default:
         ret = 0;
     }
     return ret;
 }
-
+/*
 void file_widget::set_cumrpt_write(int flag)
 {
     switch (flag)
@@ -539,7 +533,7 @@ int file_widget::get_cumrpt_write()
         ret = 2;
     return ret;
 }
-
+*/
 bool file_widget::read_files(ss_model *model_inf)
 {
     bool okay = true;
@@ -679,7 +673,7 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->get_next_value("control file");
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
-        token = starterFile->get_next_value("ss3.par choice");
+        token = starterFile->get_next_value("ss.par choice");
         temp_int = token.toInt();
         set_par_file(temp_int != 0);
         token = starterFile->get_next_value("run display detail");
@@ -687,7 +681,7 @@ bool file_widget::read_starter_file (QString filename)
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
         token = starterFile->get_next_value("detail choice in Report.sso");
         temp_int = token.toInt();
-        ui->checkBox_report->setChecked(temp_int);
+        ui->comboBox_report_level->setCurrentIndex(temp_int);
         token = starterFile->get_next_value("write EchoInput.sso choice");
         temp_int = token.toInt();
         ui->checkBox_checkup->setChecked(temp_int);
@@ -841,11 +835,11 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->write_val(ui->comboBox_detail_level->currentIndex(), 5,
                     QString("run display detail (0,1,2)"));
 
-        chars += starterFile->write_val(QString(ui->checkBox_report->isChecked()?"1":"0"), 5,
-                    QString("detailed age-structured reports in REPORT.SSO (0,1,2)"));
+        chars += starterFile->write_val(ui->comboBox_report_level->currentIndex(), 5,
+                    QString("detailed age-structured reports in REPORT.SSO (0,1,2) "));
 
         chars += starterFile->write_val(QString(ui->checkBox_checkup->isChecked()?"1":"0"), 5,
-                    QString("write detailed checkup.sso file (0,1)"));
+                    QString("write detailed checkup.sso file (0,1) "));
 
         chars += starterFile->write_val(get_parmtr_write(), 5,
                     QString("write parm values to ParmTrace.sso (0=no,1=good,active; 2=good,all; 3=every_iter,all_parms; 4=every,active)"));
@@ -854,7 +848,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("write to cumreport.sso (0=no,1=like&timeseries; 2=add survey fits)"));
 
         chars += starterFile->write_val(QString(model_info->get_prior_likelihood()?"1":"0"), 5,
-                     QString("Include prior_like for non-estimated parameters (0,1)"));
+                     QString("Include prior_like for non-estimated parameters (0,1) "));
 
         chars += starterFile->write_val(QString(model_info->get_use_softbounds()?"1":"0"), 5,
                      QString("Use Soft Boundaries to aid convergence (0,1) (recommended)"));
@@ -881,14 +875,14 @@ void file_widget::write_starter_file (QString filename)
                     QString("max yr for sdreport outputs (-1 for endyr; -2 for endyr+Nforecastyrs)"));
 
         chars += starterFile->write_val(model_info->get_num_std_years(), 5,
-                    QString("N individual STD years"));
+                    QString("N individual STD years "));
 
-        chars += starterFile->write_val(QString("#vector of year values"));
+        chars += starterFile->write_val(QString("#vector of year values "));
 //        chars += starterFile->write_val(model_info->get_std_years_text());
         chars += starterFile->write_vector(model_info->get_std_years(), 6);
 
         chars += starterFile->write_val(model_info->get_convergence_criteria(), 5,
-                    QString("final convergence criteria (e.g. 1.0e-04)"));
+                    QString("final convergence criteria (e.g. 1.0e-04) "));
 
         chars += starterFile->write_val(model_info->get_retrospect_year(), 5,
                     QString("retrospective year relative to end year (e.g. -4)"));
@@ -929,7 +923,7 @@ void file_widget::write_starter_file (QString filename)
         else
         {
             chars += starterFile->write_val(ui->comboBox_MCMC_output->currentIndex(), 5,
-                    QString("MCMC output format (0=default;1=enhanced;2=full;3=make output subdir for each MCMC vector)"));
+                    QString("MCMC output detail (0=default; 1=enhanced; 2=full; 3=make output subdir for each MCMC vector)"));
             chars += starterFile->write_val(model_info->getALKTol(), 5,
                     QString ("ALK tolerance (example 0.0001)"));
             chars += starterFile->write_val(QString::number(datafile_version, 'f', 2), 5,
