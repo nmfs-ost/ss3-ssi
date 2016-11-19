@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>986</width>
+    <width>951</width>
     <height>577</height>
    </rect>
   </property>
@@ -80,7 +80,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>913</width>
+            <width>887</width>
             <height>543</height>
            </rect>
           </property>
@@ -469,8 +469,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>687</width>
+            <height>355</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -747,7 +747,7 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
+            <width>899</width>
             <height>429</height>
            </rect>
           </property>
@@ -1040,7 +1040,7 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>913</width>
+            <width>903</width>
             <height>521</height>
            </rect>
           </property>
@@ -1429,8 +1429,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>448</width>
+            <height>137</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1570,8 +1570,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>477</width>
+            <height>285</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1817,8 +1817,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>376</width>
+            <height>399</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -2121,8 +2121,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>934</width>
-            <height>429</height>
+            <width>804</width>
+            <height>198</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">

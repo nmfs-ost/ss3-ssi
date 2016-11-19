@@ -1655,10 +1655,10 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
             temp_int = fcast->get_benchmark_year(i);
             value = QString::number(temp_int);
             line.append(QString(QString(" %1").arg(value)));
-            if (temp_int <= 0)
-                temp_string.append(QString(" %1").arg(QString::number(data->get_end_year() + temp_int)));
-            else
-                temp_string.append(QString(" %1").arg(value));
+//            if (temp_int <= 0)
+            temp_string.append(QString(" %1").arg(QString::number(data->refyearvalue(temp_int))));// data->get_end_year() + temp_int)));
+//            else
+//                temp_string.append(QString(" %1").arg(value));
         }
         chars += f_file->writeline(line);
         temp_string.append(" # after processing ");
@@ -1694,11 +1694,12 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         for (int i = 0; i < 6; i++)
         {
             value = QString::number(fcast->get_forecast_year(i));
+            temp_int = value.toInt();
             line.append(QString(QString(" %1").arg(value)));
-            if (fcast->get_forecast_year(i) <= 0)
-                temp_string.append(QString(" %1").arg(QString::number(data->get_end_year() + fcast->get_forecast_year(i))));
-            else
-                temp_string.append(QString(" %1").arg(value));
+//            if (fcast->get_forecast_year(i) <= 0)
+            temp_string.append(QString(" %1").arg(QString::number(data->refyearvalue(temp_int))));//data->get_end_year() + fcast->get_forecast_year(i))));
+//            else
+//                temp_string.append(QString(" %1").arg(value));
         }
         chars += f_file->writeline(line);
         temp_string.append(" # after processing ");

@@ -123,6 +123,121 @@ QString Fleet::getName()
     return nm;
 }
 
+void Fleet::setNumber (int n)
+{
+    int i;
+    QString datum;
+    QStringList datalist;
+    QString fltno(QString::number(n));
+    i_number = n;
+
+    for (i = 0; i < getNumCatchObs(); i++)
+    {
+        datalist = getCatchObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));//QString::number(-i_number);
+        else
+            datalist.insert(2, fltno);//[2] = QString::number(i_number);
+        setCatchObservation(i, datalist);
+    }
+    for (i = 0; i < getNumAbundObs(); i++)
+    {
+        datalist = getAbundanceObs(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));//QString::number(-i_number);
+        else
+            datalist.insert(2, fltno);//[2] = QString::number(i_number);
+        setAbundanceObs(i, datalist);
+    }
+    for (i = 0; i < getDiscardCount(); i++)
+    {
+        datalist = getDiscard(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));//QString::number(-i_number);
+        else
+            datalist.insert(2, fltno);//[2] = QString::number(i_number);
+        setDiscard(i, datalist);
+    }
+
+    for (i = 0; i < getMbwtNumObs(); i++)
+    {
+        datalist = getMbwtObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));
+        else
+            datalist.insert(2, fltno);
+        setMbwtObservation(i, datalist);
+    }
+    for (i = 0; i < getLengthNumObs(); i++)
+    {
+        datalist = getLengthObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));
+        else
+            datalist.insert(2, fltno);
+        setLengthObservation(i, datalist);
+    }
+    for (i = 0; i < getAgeNumObs(); i++)
+    {
+        datalist = getAgeObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));
+        else
+            datalist.insert(2, fltno);
+        setAgeObservation(i, datalist);
+    }
+    for (i = 0; i < getSaaNumObs(); i++)
+    {
+        datalist = getSaaObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));
+        else
+            datalist.insert(2, fltno);
+        setSaaObservation(i, datalist);
+    }
+    for (i = 0; i < getGenModelTotal(); i++)
+    {
+        for (int j = 0; j < getGenNumObs(i); j++)
+        {
+            datalist = getGenObservation(i, j);
+            datum = datalist.takeAt(3);
+            if (datum.contains("-"))
+                datalist.insert(3, fltno.prepend("-"));
+            else
+                datalist.insert(3, fltno);
+            setGenObservation(i, j, datalist);
+        }
+    }
+/*    for (i = 0; i < getRecapNumEvents(); i++)
+    {
+        datalist = getRecapObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(3, fltno.prepend("-"));
+        else
+            datalist.insert(3, fltno);
+        setRecapObservation(i, datalist);
+    }*/
+    for (i = 0; i < getMorphNumObs(); i++)
+    {
+        datalist = getMorphObservation(i);
+        datum = datalist.takeAt(2);
+        if (datum.contains("-"))
+            datalist.insert(2, fltno.prepend("-"));
+        else
+            datalist.insert(2, fltno);
+        setMorphObservation(i, datalist);
+    }
+
+}
+
 void Fleet::reset()
 {
     setName(QString("new_fleet"));
@@ -234,7 +349,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     int i;
     setName (QString("%1_Copy").arg(oldfl->getName()));
     setActive(true);
-    setNumber(oldfl->getNumber());
+    setNumber(0);
     setType (oldfl->getType());
     setArea(oldfl->getArea());
     setSeasTiming(oldfl->getSeasTiming());
@@ -250,7 +365,9 @@ Fleet *Fleet::copy(Fleet *oldfl)
     setCatchMultiplier(oldfl->getCatchMultiplier());
     setNumCatchObs(oldfl->getNumCatchObs());
     for (int i = 0; i < retainCatch->rowCount(); i++)
+    {
         setCatchObservation(i, oldfl->getCatchObservation(i));
+    }
 
     // abundance
     setAbundUnits(oldfl->getAbundUnits());

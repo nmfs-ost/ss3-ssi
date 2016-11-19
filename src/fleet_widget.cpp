@@ -511,8 +511,9 @@ void fleet_widget::delete_current_fleet()
 
 void fleet_widget::new_fleet (QString name)
 {
-    model_data->newFleet(name);
-    totalFleets++;
+    model_data->addFleet(model_data->newFleet(name));
+//    totalFleets++;
+    totalFleets = model_data->get_num_fleets();
     set_current_fleet(totalFleets);
 }
 
@@ -546,6 +547,7 @@ void fleet_widget::delete_fleet(int index)
             totalFleets--;
         }
     }
+    set_current_fleet(index - 1);
 }
 
 void fleet_widget::showLengthObs()

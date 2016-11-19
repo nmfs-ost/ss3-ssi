@@ -619,12 +619,11 @@ void forecast_widget::set_bmark_bio_begin(int yr)
         set_bmark_bio_begin(year);
     else
     {
-        QString yrStr(QString::number(year));
+        QString yrStr(model_data->refyearvalue(year));//QString::number(year));
         model_data->forecast->set_benchmark_bio_beg(year);
         ui->spinBox_bmark_bio_beg->setValue(year);
-//        ui->lineEdit_bmark_bio_beg->setText(yrStr);
-        year = model_data->refyearvalue(year);
-        yrStr =  QString::number(year);
+//        year = model_data->refyearvalue(year);
+//        yrStr =  QString::number(year);
         ui->label_bmark_bio_beg_yr_ref->setText (yrStr);
     }
 }
@@ -646,7 +645,6 @@ void forecast_widget::set_bmark_bio_end(int yr)
         QString yrStr(QString::number(year));
         model_data->forecast->set_benchmark_bio_end(year);
         ui->spinBox_bmark_bio_end->setValue(year);
-//        ui->lineEdit_bmark_bio_end->setText(yrStr);
         year = model_data->refyearvalue(year);
         yrStr =  QString::number(year);
         ui->label_bmark_bio_end_yr_ref->setText (yrStr);
@@ -657,7 +655,10 @@ void forecast_widget::set_bmark_sel_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_sel_beg->setValue(year);
+    {
+        set_bmark_sel_begin(year);
+//        ui->spinBox_bmark_sel_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_sel_beg(year);
@@ -670,7 +671,10 @@ void forecast_widget::set_bmark_sel_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_sel_end->setValue(year);
+    {
+        set_bmark_sel_end(year);
+        //ui->spinBox_bmark_sel_end->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_sel_end(year);
@@ -683,7 +687,10 @@ void forecast_widget::set_bmark_relf_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_relf_beg->setValue(year);
+    {
+        set_bmark_relf_begin(year);
+        //ui->spinBox_bmark_relf_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_relf_beg(year);
@@ -696,7 +703,10 @@ void forecast_widget::set_bmark_relf_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_relf_end->setValue(year);
+    {
+        set_bmark_relf_end(year);
+        //ui->spinBox_bmark_relf_end->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_relf_end(year);
@@ -709,7 +719,10 @@ void forecast_widget::set_bmark_recr_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_recr_beg->setValue(year);
+    {
+        set_bmark_recr_begin(year);
+//        ui->spinBox_bmark_recr_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_rec_beg(year);
@@ -722,7 +735,10 @@ void forecast_widget::set_bmark_recr_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_recr_end->setValue(year);
+    {
+        set_bmark_recr_end(year);
+//        ui->spinBox_bmark_recr_end->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_rec_end(year);
@@ -735,7 +751,10 @@ void forecast_widget::set_bmark_srparm_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_srparm_beg->setValue(year);
+    {
+        set_bmark_srparm_begin(year);
+//       ui->spinBox_bmark_srparm_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_benchmark_srpar_beg(year);
@@ -748,10 +767,13 @@ void forecast_widget::set_bmark_srparm_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_bmark_srparm_end->setValue(year);
+    {
+        set_bmark_srparm_end(year);
+//        ui->spinBox_bmark_srparm_end->setValue(year);
+    }
     else
     {
-        model_data->forecast->set_benchmark_rec_end(year);
+        model_data->forecast->set_benchmark_srpar_end(year);
         year = model_data->refyearvalue(year);
         ui->label_bmark_srparm_end_yr_ref->setText(QString::number(year));
     }
@@ -761,7 +783,10 @@ void forecast_widget::set_fcast_sel_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_fcast_sel_beg->setValue(year);
+    {
+        set_fcast_sel_begin(year);
+//        ui->spinBox_fcast_sel_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_forecast_sel_beg(year);
@@ -774,7 +799,10 @@ void forecast_widget::set_fcast_sel_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_fcast_sel_end->setValue(year);
+    {
+        set_fcast_sel_end(year);
+//        ui->spinBox_fcast_sel_end->setValue(year);
+    }
     else
     {
         model_data->forecast->set_forecast_sel_end(year);
@@ -787,7 +815,10 @@ void forecast_widget::set_fcast_relf_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_fcast_relf_beg->setValue(year);
+    {
+        set_fcast_relf_end(year);
+//        ui->spinBox_fcast_relf_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_forecast_relf_beg(year);
@@ -800,7 +831,10 @@ void forecast_widget::set_fcast_relf_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_fcast_relf_end->setValue(year);
+    {
+        set_fcast_relf_end(year);
+//        ui->spinBox_fcast_relf_end->setValue(year);
+    }
     else
     {
         model_data->forecast->set_forecast_relf_end(yr);
@@ -813,7 +847,10 @@ void forecast_widget::set_fcast_recr_begin(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_fcast_recr_beg->setValue(year);
+    {
+        set_fcast_recr_begin(year);
+//        ui->spinBox_fcast_recr_beg->setValue(year);
+    }
     else
     {
         model_data->forecast->set_forecast_rec_beg(year);
@@ -826,7 +863,10 @@ void forecast_widget::set_fcast_recr_end(int yr)
 {
     int year = model_data->checkyearvalue(yr);
     if (yr != year)
-        ui->spinBox_fcast_recr_end->setValue(year);
+    {
+        set_fcast_recr_end(year);
+//        ui->spinBox_fcast_recr_end->setValue(year);
+    }
     else
     {
         model_data->forecast->set_forecast_rec_end(year);

@@ -166,13 +166,7 @@ void ss_model::reset()
     set_num_std_years(0);
  //   set_f;
 //    QMessageBox::information(this, "Program Flow", "Model seasons set up.");
-    if (fleets.isEmpty())
-        newFleet();
     set_num_fleets(1);
-    set_num_fisheries(1);
-    set_num_surveys(0);
-    i_num_predators = 0;
-    assignFleetNumbers();
     getActiveFleet(1)->reset();
     set_num_areas(1);
 //    QMessageBox::information(this, "Program Flow", "Model fleets set up.");
@@ -506,7 +500,14 @@ int ss_model::getTotalSeasons()
 void ss_model::addFleet(Fleet *flt)
 {
     if (flt != NULL)
+    {
+        flt->setStartYear(get_start_year());
+        flt->setTotalYears(getTotalYears());
+        flt->setNumSeasons(getTotalSeasons());
         fleets.append(flt);
+        assignFleetNumbers();
+    }
+    forecast->set_num_fleets(get_num_fleets());
 }
 
 Fleet * ss_model::getFleet(int index)
@@ -529,11 +530,15 @@ Fleet * ss_model::newFleet(QString name)
     if (name.isEmpty())
             name = QString("New_Fleet");
     newfl->setName(name);
+    newfl->setType(Fleet::Fishing);
+    newfl->setActive(true);
+/*    fleets.append(newfl);
     newfl->setStartYear(get_start_year());
     newfl->setTotalYears(getTotalYears());
     newfl->setNumSeasons(getTotalSeasons());
-    fleets.append(newfl);
-    forecast->set_num_fleets(get_num_fleets());
+    addFleet(newfl);
+    assignFleetNumbers();
+    forecast->set_num_fleets(get_num_fleets());*/
     return newfl;
 }
 
@@ -543,34 +548,26 @@ void ss_model::deleteFleet(int index)
     if (index >= 0 && index < fleets.count())
     {
         flt = fleets.takeAt(index);
-        if (flt->getType() == Fleet::Fishing ||
-                flt->getType() == Fleet::Bycatch)
-            iNumFisheries--;
-        else if (flt->getType() == Fleet::Survey)
-            iNumSurveys--;
         delete flt;
         flt = NULL;
+        assignFleetNumbers();
     }
     forecast->set_num_fleets(get_num_fleets());
 }
 
 Fleet * ss_model::duplicateFleet(Fleet *oldfl)
 {
-    Fleet *dupfl = new Fleet(this);
-    dupfl->copy (oldfl);
-    fleets.append(dupfl);
-    if (oldfl->getType() == Fleet::Fishing ||
-            oldfl->getType() == Fleet::Bycatch)
-        iNumFisheries++;
-    else if (oldfl->getType() == Fleet::Survey)
-        iNumSurveys++;
+    Fleet *newfl = new Fleet(this);
+    newfl->copy (oldfl);
+    addFleet(newfl);
+    assignFleetNumbers();
     forecast->set_num_fleets(get_num_fleets());
-    return dupfl;
+    return newfl;
 }
 
 void ss_model::set_num_fleets(int n_fleets)
 {
-//    int i = n_fleets;
+    int index = n_fleets;
     Fleet *fleet;
 
     if (fleets.isEmpty())
@@ -578,16 +575,18 @@ void ss_model::set_num_fleets(int n_fleets)
 
     while (fleets.count() > n_fleets)
     {
-            fleet = fleets.takeLast();
-            delete fleet;
+        index = n_fleets - 1;
+        deleteFleet(index);
     }
     while (n_fleets > fleets.count())
     {
-            newFleet();
+        addFleet(newFleet());
     }
+    assignFleetNumbers();
 
     forecast->set_num_fleets(n_fleets);
 }
+
 
 int ss_model::get_num_fisheries()
 {
@@ -1018,7 +1017,7 @@ int ss_model::checkyearvalue(int value)
     else if (value <= totNeg)
         val = totNeg;
     else if (value > 0 && value < get_start_year())
-        val = get_start_year();
+        ;//val = get_start_year();
     else if (value > get_end_year())
         val = get_end_year();
     return val;
@@ -1110,16 +1109,38 @@ void ss_model::setCustomEnviroLink(int value)
 void ss_model::assignFleetNumbers()
 {
     int num = 1;
-    for (int t = Fleet::Fishing; t < Fleet::None; t += 1)
+    Fleet *flt;
+    iNumFisheries = 0;
+    iNumSurveys = 0;
+    i_num_predators = 0;
+    for (int i = 0; i < get_num_fleets(); i++)
     {
-        for (int i = 0; i < get_num_fleets(); i++)
+        flt = getFleet(i);
+        if (flt->getType() == Fleet::Fishing)
         {
-            if (t == getFleet(i)->getTypeInt() &&
-                    getFleet(i)->isActive())
-            {
-                getFleet(i)->setNumber (num);
-                num += 1;
-            }
+            iNumFisheries++;
+            if (flt->isActive())
+                flt->setNumber(num++);
+        }
+    }
+    for (int i = 0; i < get_num_fleets(); i++)
+    {
+        flt = getFleet(i);
+        if (flt->getType() == Fleet::Survey)
+        {
+            iNumSurveys++;
+            if (flt->isActive())
+                flt->setNumber(num++);
+        }
+    }
+    for (int i = 0; i < get_num_fleets(); i++)
+    {
+        flt = getFleet(i);
+        if (flt->getType() == Fleet::Predator)
+        {
+            i_num_predators++;
+            if (flt->isActive())
+                flt->setNumber(num++);
         }
     }
 }

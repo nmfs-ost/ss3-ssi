@@ -38,7 +38,7 @@ public slots:
     // General
     void setName(QString fname);
     QString getName();
-    void setNumber (int n) {i_number = n;}
+    void setNumber (int n); //{i_number = n;}
     int getNumber () {return i_number;}
     bool getActive() const;
     bool isActive() const {return getActive();}
@@ -96,6 +96,7 @@ public slots:
     // abundance
     int getYearMonthRow (tablemodel *tm, QString year, QString month);
     void setNumAbundObs (int num);
+    int getNumAbundObs () {return abundModel->rowCount();}
     void set_abundance(int year, int season, float obs);
     void setAbundMonth(int year, float month, float obs, float err);
     void addAbundByMonth(int year, float month, float obs, float err);
