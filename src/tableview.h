@@ -46,6 +46,9 @@ private:
     void appendRow();
     void deleteRows();
 
+    QList<QStandardItem *> blankRow();
+    QList<QStandardItem *> createRow(QStringList strs);
+
 };
 
 #endif // TABLEVIEW_H

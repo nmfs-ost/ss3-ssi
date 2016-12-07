@@ -91,7 +91,7 @@ void tableview::copy()
 
 void tableview::paste()
 {
-    QAbstractItemModel *abmodel = model();
+    tablemodel *abmodel = (tablemodel *)model();
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
@@ -130,11 +130,12 @@ void tableview::paste()
             update(curr_index);
         }
     }
+    setHeight(abmodel);
 }
 
 void tableview::insertRow()
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    tablemodel *abmodel = (tablemodel *)model();
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
@@ -143,6 +144,7 @@ void tableview::insertRow()
         return;
     QStringList rowTextList (text.split('\n', QString::SkipEmptyParts));
     int row, col, curr_row, curr_col;
+    QList<QStandardItem *> data = blankRow();
 
     if(rowTextList.count() < 1)
         return;
@@ -154,8 +156,8 @@ void tableview::insertRow()
 
     row = list.first().row();
     col = list.first().column();
-    QModelIndex curr_index = list.first();
-
+    abmodel->insertRow(row, data);
+    setHeight(abmodel);
 }
 
 void tableview::copyRows()
@@ -172,6 +174,7 @@ void tableview::copyRows()
     QString copy_table;
     QModelIndex last = list.last();
     QModelIndex previous = list.first();
+
 
     list.removeFirst();
 
@@ -204,7 +207,7 @@ void tableview::copyRows()
 
 void tableview::pasteRows()
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    tablemodel *abmodel = (tablemodel *)model();
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
@@ -226,19 +229,22 @@ void tableview::pasteRows()
     col = list.first().column();
     QModelIndex curr_index = list.first();
 
+    setHeight(abmodel);
 }
 
 void tableview::insertCopiedRows()
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    tablemodel *abmodel = (tablemodel *)model();
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
     QString text (clipboard->text());
+    QString rowtext;
     if (text.isEmpty())
         return;
     QStringList rowTextList (text.split('\n', QString::SkipEmptyParts));
     int row, col, curr_row, curr_col;
+    QList<QStandardItem *> data;
 
     if(rowTextList.count() < 1)
         return;
@@ -250,33 +256,62 @@ void tableview::insertCopiedRows()
 
     row = list.first().row();
     col = list.first().column();
-    QModelIndex curr_index = list.first();
-
+    for (int i = 0; i < rowTextList.count(); i++)
+    {
+        rowtext = rowTextList.at(i);
+        data = createRow(rowtext.split(' ', QString::SkipEmptyParts));
+        abmodel->insertRow(row, data);
+    }
+//    QModelIndex curr_index = list.first();
+    setHeight(abmodel);
 }
 
 void tableview::appendRow()
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
-    QList<QStandardItem *> data;
-    for (int i = 0; i < abmodel->columnCount(); i++)
-        data.append(new QStandardItem(QString("")));
+    tablemodel *abmodel = (tablemodel *)model();
+    QList<QStandardItem *> data = blankRow();
+//    for (int i = 0; i < abmodel->columnCount(); i++)
+//        data.append(new QStandardItem(QString("")));
     abmodel->appendRow(data);
+    setHeight(abmodel);
 }
 
 void tableview::deleteRows()
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    tablemodel *abmodel = (tablemodel *)model();
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
 
     qSort(list);
 
-    int first, last;
-    first = list.first().row();
-    last = list.last().row();
+    int firstrow, lastrow;
+    firstrow = list.first().row();
+    lastrow = list.last().row();
 
-    for (int i = first; i <= last; i++)
+    for (int i = firstrow; i <= lastrow; i++)
         abmodel->takeRow(i);
+
+    setHeight(abmodel);
+}
+
+QList<QStandardItem *> tableview::blankRow()
+{
+    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    QList<QStandardItem *> data;
+
+    for (int i = 0; i < abmodel->columnCount(); i++)
+        data.append(new QStandardItem(QString("")));
+    return data;
+}
+
+QList<QStandardItem *> tableview::createRow(QStringList strs)
+{
+    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    QList<QStandardItem *> data;
+
+    for (int i = 0; i < abmodel->columnCount(); i++)
+        data.append(new QStandardItem(strs.at(i)));
+    return data;
 }
 
 void tableview::contextMenu(QMouseEvent *event)
@@ -313,7 +348,7 @@ void tableview::createActions()
 
     actionCopyRows = new QAction(tr("Copy Rows"), this);
     actionCopyRows->setStatusTip(tr("Copy the selected rows to clipboard"));
-    connect (actionCopyRows, &QAction::triggered, this &tableview::copyRows);
+    connect (actionCopyRows, &QAction::triggered, this, &tableview::copyRows);
     actionInsertCopied = new QAction(tr("Insert Copied Rows"), this);
     actionInsertCopied->setStatusTip(tr("Insert rows from clipboard after selection"));
     connect (actionInsertCopied, &QAction::triggered, this, &tableview::insertCopiedRows);
@@ -334,9 +369,9 @@ void tableview::createMenu()
     popup->addAction(actionCopy);
     popup->addAction(actionPaste);
     popup->addSeparator();
-    popup->addAction(actionCopyRows);
-    popup->addAction(actionInsertCopied);
-    popup->addAction(actionInsert);
+//    popup->addAction(actionCopyRows);
+//    popup->addAction(actionInsertCopied);
+//    popup->addAction(actionInsert);
     popup->addAction(actionAppend);
     popup->addAction(actionDelete);
 }
