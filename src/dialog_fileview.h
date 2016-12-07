@@ -18,9 +18,14 @@ public:
 
 public slots:
     void viewFile(QString filename);
+    void increaseFont (bool flag = true);
+    void decreaseFont(bool flag = true);
+    void setFontSize (int ptsize);
 
 private:
     Ui::Dialog_fileView *ui;
+
+    QFont vfont;
 
 private slots:
     void print();

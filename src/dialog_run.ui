@@ -276,7 +276,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_warn">
+    <layout class="QHBoxLayout" name="horizontalLayout_show">
      <item>
       <widget class="QPushButton" name="pushButton_cancel">
        <property name="text">
@@ -297,7 +297,40 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_warn">
+      <spacer name="horizontalSpacer_show">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_increase">
+       <property name="text">
+        <string>Increase Font</string>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl++</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_decrease">
+       <property name="text">
+        <string>Decrease Font</string>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+-</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_show2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

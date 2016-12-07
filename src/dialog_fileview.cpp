@@ -12,6 +12,11 @@ Dialog_fileView::Dialog_fileView(QWidget *parent) :
 
     connect (ui->pushButton_print, SIGNAL(clicked()), SLOT(print()));
     connect (ui->pushButton_close, SIGNAL(clicked()), SLOT(close()));
+
+    connect (ui->spinBox_fontsize, SIGNAL(valueChanged(int)), SLOT(setFontSize(int)));
+
+    vfont = QFont(fontInfo().family(), fontInfo().pointSize());
+    setFontSize(9);
 }
 
 Dialog_fileView::~Dialog_fileView()
@@ -43,4 +48,32 @@ void Dialog_fileView::print()
     action = qpd->exec();
     if (action == QDialog::Accepted)
         ui->plainTextEdit->print(&printer);
+}
+
+void Dialog_fileView::increaseFont (bool flag)
+{
+    int f_size = vfont.pointSize();
+    if (flag)
+    if (f_size < 16)
+    {
+        f_size += 1;
+    }
+    setFontSize(f_size);
+}
+
+void Dialog_fileView::decreaseFont(bool flag)
+{
+    int f_size = vfont.pointSize();
+    if (flag)
+    if (f_size > 8)
+    {
+        f_size -= 1;
+    }
+    setFontSize(f_size);
+}
+
+void Dialog_fileView::setFontSize(int ptsize)
+{
+    vfont.setPointSize(ptsize);
+    setFont(vfont);
 }

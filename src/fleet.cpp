@@ -128,7 +128,8 @@ void Fleet::setNumber (int n)
     int i;
     QString datum;
     QStringList datalist;
-    QString fltno(QString::number(n));
+    QString posFltNo (QString::number(n));
+    QString negFltNo (QString("-%1").arg(posFltNo));
     i_number = n;
 
     for (i = 0; i < getNumCatchObs(); i++)
@@ -136,9 +137,9 @@ void Fleet::setNumber (int n)
         datalist = getCatchObservation(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));//QString::number(-i_number);
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);//[2] = QString::number(i_number);
+            datalist.insert(2, posFltNo);
         setCatchObservation(i, datalist);
     }
     for (i = 0; i < getNumAbundObs(); i++)
@@ -146,9 +147,9 @@ void Fleet::setNumber (int n)
         datalist = getAbundanceObs(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));//QString::number(-i_number);
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);//[2] = QString::number(i_number);
+            datalist.insert(2, posFltNo);
         setAbundanceObs(i, datalist);
     }
     for (i = 0; i < getDiscardCount(); i++)
@@ -156,9 +157,9 @@ void Fleet::setNumber (int n)
         datalist = getDiscard(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));//QString::number(-i_number);
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);//[2] = QString::number(i_number);
+            datalist.insert(2, posFltNo);
         setDiscard(i, datalist);
     }
 
@@ -167,9 +168,9 @@ void Fleet::setNumber (int n)
         datalist = getMbwtObservation(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);
+            datalist.insert(2, posFltNo);
         setMbwtObservation(i, datalist);
     }
     for (i = 0; i < getLengthNumObs(); i++)
@@ -177,9 +178,9 @@ void Fleet::setNumber (int n)
         datalist = getLengthObservation(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);
+            datalist.insert(2, posFltNo);
         setLengthObservation(i, datalist);
     }
     for (i = 0; i < getAgeNumObs(); i++)
@@ -187,9 +188,9 @@ void Fleet::setNumber (int n)
         datalist = getAgeObservation(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);
+            datalist.insert(2, posFltNo);
         setAgeObservation(i, datalist);
     }
     for (i = 0; i < getSaaNumObs(); i++)
@@ -197,9 +198,9 @@ void Fleet::setNumber (int n)
         datalist = getSaaObservation(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);
+            datalist.insert(2, posFltNo);
         setSaaObservation(i, datalist);
     }
     for (i = 0; i < getGenModelTotal(); i++)
@@ -209,9 +210,9 @@ void Fleet::setNumber (int n)
             datalist = getGenObservation(i, j);
             datum = datalist.takeAt(3);
             if (datum.contains("-"))
-                datalist.insert(3, fltno.prepend("-"));
+                datalist.insert(3, negFltNo);
             else
-                datalist.insert(3, fltno);
+                datalist.insert(3, posFltNo);
             setGenObservation(i, j, datalist);
         }
     }
@@ -230,9 +231,9 @@ void Fleet::setNumber (int n)
         datalist = getMorphObservation(i);
         datum = datalist.takeAt(2);
         if (datum.contains("-"))
-            datalist.insert(2, fltno.prepend("-"));
+            datalist.insert(2, negFltNo);
         else
-            datalist.insert(2, fltno);
+            datalist.insert(2, posFltNo);
         setMorphObservation(i, datalist);
     }
 

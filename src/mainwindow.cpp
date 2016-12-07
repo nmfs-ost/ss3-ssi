@@ -127,7 +127,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->stackedWidget, SIGNAL(currentChanged(int)), SLOT(mainTabChanged(int)));
     showFiles();
 
-    main_font = QFont("Arial", 12);
+    main_font = QFont(fontInfo().family(), fontInfo().pointSize());//"Arial", 12);
+    setFontSize(9);
 }
 
 MainWindow::~MainWindow()
@@ -166,6 +167,9 @@ void MainWindow::setupMenus (QMenuBar *main)
 //    dataMenu.addAction (ui->action_Display_selected_data_observations);
     QMenu *viewMenu = new QMenu(QString("&View"), main); // viewMenu (ui->menuView);
     viewMenu->addAction (ui->action_Report_File);
+    viewMenu->addSeparator();
+    viewMenu->addAction (ui->action_IncreaseFont);
+    viewMenu->addAction (ui->action_DecreaseFont);
     QMenu *run_Menu = new QMenu(QString("&Run"), main); // run_Menu (ui->menu_Run);
     run_Menu->addAction (ui->action_Run_Stock_Synthesis);
     QMenu *optsMenu = new QMenu(QString("&Options"), main); // opt_Menu (ui->menu_Options);
@@ -869,24 +873,38 @@ int MainWindow::ask_missing_file(QString fn)
 void MainWindow::increase_font ()
 {
     int f_size = main_font.pointSize();
-    if (f_size < 24)
+    if (f_size < 18)
+    {
+        f_size += 1;
+    }
+/*    else if (f_size < 20)
     {
         f_size += 2;
-        main_font.setPointSize(f_size);
-        setFont(main_font);
-    }
+    }*/
+    setFontSize(f_size);
 }
 
 void MainWindow::decrease_font()
 {
     int f_size = main_font.pointSize();
-    if (f_size > 12)
+/*    if (f_size > 12)
     {
         f_size -= 2;
-        main_font.setPointSize(f_size);
-        setFont(main_font);
     }
+    else*/ if (f_size > 8)
+    {
+        f_size -= 1;
+    }
+    setFontSize(f_size);
 }
+
+void MainWindow::setFontSize(int fsize)
+{
+    main_font.setPointSize(fsize);
+    setFont(main_font);
+}
+
+
 /*
 void MainWindow::read_runnumber()
 {

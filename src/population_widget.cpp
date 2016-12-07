@@ -472,6 +472,7 @@ void population_widget::changeFecundityAdjustment(int opt)
 int population_widget::getFecundityAdjustment()
 {
 //    return (ui->comboBox_fecund_adj_constraint->currentIndex() + 1);
+    return 0;
 }
 
 void population_widget::setMortOption(int opt)

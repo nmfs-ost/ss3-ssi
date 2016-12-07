@@ -12,6 +12,8 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui(new Ui::Dialog_run)
 {
     ui->setupUi(this);
+//    ui->pushButton_increase->setVisible(false);
+//    ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
     ui->plainTextEdit_output->setCenterOnScroll(true);
 
@@ -28,6 +30,9 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (ui->pushButton_showWarn, SIGNAL(clicked()), SLOT(showWarnFile()));
     connect (ui->pushButton_showEcho, SIGNAL(clicked()), SLOT(showEchoFile()));
 
+    connect (ui->pushButton_increase, SIGNAL(clicked()), SLOT(increaseFont()));
+    connect (ui->pushButton_decrease, SIGNAL(clicked()), SLOT(decreaseFont()));
+
     stocksynth = new QProcess(this);
     connect (stocksynth, SIGNAL(started()), SLOT(runStarted()));
     connect (stocksynth, SIGNAL(readyReadStandardOutput()), SLOT(stdOutput()));
@@ -37,6 +42,9 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui->pushButton_run->setEnabled(true);
     ui->pushButton_pause->setEnabled(false);
     ui->pushButton_stop->setEnabled(false);
+
+    dfont = QFont(fontInfo().family(), fontInfo().pointSize());
+    setFontSize(9);
 }
 
 Dialog_run::~Dialog_run()
@@ -266,3 +274,32 @@ void Dialog_run::onProcessTerminate()
 {
     setUiEnabled(true);
 }
+
+void Dialog_run::increaseFont (bool flag)
+{
+    int f_size = dfont.pointSize();
+    if (flag)
+    if (f_size < 16)
+    {
+        f_size += 1;
+    }
+    setFontSize(f_size);
+}
+
+void Dialog_run::decreaseFont(bool flag)
+{
+    int f_size = dfont.pointSize();
+    if (flag)
+    if (f_size > 8)
+    {
+        f_size -= 1;
+    }
+    setFontSize(f_size);
+}
+
+void Dialog_run::setFontSize(int fsize)
+{
+    dfont.setPointSize(fsize);
+    setFont(dfont);
+}
+

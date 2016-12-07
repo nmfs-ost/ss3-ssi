@@ -153,6 +153,7 @@ private slots:
     void set_start_use_values();
     void increase_font();
     void decrease_font();
+    void setFontSize (int fsize);
 
 //    void read_runnumber();
 };

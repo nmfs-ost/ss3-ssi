@@ -1145,6 +1145,7 @@ void ss_model::assignFleetNumbers()
     }
 }
 
+
 int ss_model::getNumActiveFleets()
 {
     int num = 0;

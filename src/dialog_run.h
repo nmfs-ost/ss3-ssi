@@ -57,6 +57,10 @@ public slots:
     void onProcessStdErrWrite(QString szOutput);
     void onProcessTerminate();
 
+    void increaseFont(bool flag = true);
+    void decreaseFont(bool flag = true);
+    void setFontSize (int fsize);
+
 signals:
     void complete();
     void canceled();
@@ -75,6 +79,8 @@ private:
     QProcess *stocksynth;
     QString output;
     bool running;
+
+    QFont dfont;
 
     void setUiEnabled(bool flag);
     void finishOutput();
