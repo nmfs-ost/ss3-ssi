@@ -12,6 +12,14 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.8
+      2016-12-07
+1. Corrected copying fleet observations. The number in the observation
+   itself changes correctly.
+2. Changed the layout of Files and Forecast a little.
+3. Got table popup menu to work for some capabilities - copy, paste, append
+   a row, and delete selected rows.
+============================================================================
       3.3.7
       2016-11-01
 1. Corrected reading/writing of time-varying params for all but tagging.
