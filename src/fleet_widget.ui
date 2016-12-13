@@ -27,24 +27,11 @@
       <widget class="QComboBox" name="comboBox_fleet_name">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>1</horstretch>
+         <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item>
       <spacer name="horizontalSpacer_title">
@@ -98,7 +85,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -108,19 +95,6 @@
           <string>Basic Data</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="4" column="4">
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item row="5" column="2" colspan="2">
            <widget class="QSpinBox" name="spinBox_area">
             <property name="prefix">
@@ -159,141 +133,6 @@
              <double>0.500000000000000</double>
             </property>
            </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLabel" name="label_area">
-            <property name="text">
-             <string>Area assignment</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLabel" name="label_need_catch_mult">
-            <property name="text">
-             <string>Need catch multiplier</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QSpinBox" name="spinBox_units">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>2</number>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLabel" name="label_units">
-            <property name="text">
-             <string>Units of catch</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_type">
-            <property name="text">
-             <string>Type</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLabel" name="label_timing">
-            <property name="text">
-             <string>Timing in Season </string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_type">
-            <item>
-             <property name="text">
-              <string>Fishing with observed catch</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Bycatch with unobserved catch</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Survey</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Ignore</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_fleet_name">
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <spacer name="verticalSpacer_gen1">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_name">
-            <property name="text">
-             <string>FleetName</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="6">
-           <spacer name="horizontalSpacer_gen1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="checkBox_active">
-            <property name="text">
-             <string> Active  (Use this fleet?)</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="7">
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item row="0" column="7">
            <widget class="QSpinBox" name="spinBox_number">
@@ -360,7 +199,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="5">
+          <item row="4" column="4" colspan="2">
            <spacer name="horizontalSpacer_12">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -373,11 +212,143 @@
             </property>
            </spacer>
           </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_type">
+            <property name="text">
+             <string>Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="label_timing">
+            <property name="text">
+             <string>Timing in Season </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_fleet_name">
+            <property name="text">
+             <string>Name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="2">
+           <spacer name="verticalSpacer_gen1">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_name">
+            <property name="text">
+             <string>FleetName</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="6">
+           <spacer name="horizontalSpacer_gen1">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBox_active">
+            <property name="text">
+             <string> Active  (Use this fleet?)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item row="6" column="3" colspan="3">
            <widget class="QLabel" name="label_units_info">
             <property name="text">
              <string>  1 = biomass, 2 = numbers</string>
             </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLabel" name="label_area">
+            <property name="text">
+             <string>Area assignment</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLabel" name="label_need_catch_mult">
+            <property name="text">
+             <string>Apply a catch multiplier</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QSpinBox" name="spinBox_units">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>2</number>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLabel" name="label_units">
+            <property name="text">
+             <string>Units of catch</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="8">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBox_type">
+            <item>
+             <property name="text">
+              <string>1: Fishing with observed catch</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2: Bycatch with unobserved catch</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>3: Survey</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4: Not implemented. For future use</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -402,7 +373,7 @@
                 <item row="0" column="0">
                  <widget class="QLabel" name="label_catch_units">
                   <property name="text">
-                   <string>Catch Units          </string>
+                   <string>Units                  </string>
                   </property>
                  </widget>
                 </item>
@@ -486,7 +457,7 @@
                 <item row="1" column="0" colspan="3">
                  <widget class="QLabel" name="label_abund_err">
                   <property name="text">
-                   <string>Abundance error type </string>
+                   <string>Error distribution </string>
                   </property>
                  </widget>
                 </item>
@@ -520,7 +491,7 @@
                 <item row="0" column="0" colspan="3">
                  <widget class="QLabel" name="label_abund_units">
                   <property name="text">
-                   <string>Abundance units </string>
+                   <string>Units </string>
                   </property>
                  </widget>
                 </item>
@@ -575,7 +546,7 @@
                 <item row="0" column="0" colspan="2">
                  <widget class="QLabel" name="label_discard_units">
                   <property name="text">
-                   <string>Discard units</string>
+                   <string>Units</string>
                   </property>
                  </widget>
                 </item>
@@ -589,7 +560,7 @@
                 <item row="1" column="0" colspan="2">
                  <widget class="QLabel" name="label_discard_err">
                   <property name="text">
-                   <string>Discard error type   </string>
+                   <string>Error distribution </string>
                   </property>
                  </widget>
                 </item>

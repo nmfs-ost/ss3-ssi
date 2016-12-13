@@ -4,6 +4,7 @@
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QTextDocument>
+#include <QFileInfo>
 
 Dialog_view::Dialog_view(QString filename, QWidget *parent) :
     QDialog(parent),
@@ -43,7 +44,9 @@ void Dialog_view::setFileName(QString filename)
 {
     QString txt("");
     file->setFileName(filename);
-    if(file->isReadable())
+    setWindowTitle(QString("Viewer - %1").arg(filename));
+    QFileInfo qfi (*file);
+    if(qfi.exists() && qfi.isReadable())
     {
         file->open(QIODevice::ReadOnly);
         while (!file->atEnd())
@@ -61,6 +64,8 @@ void Dialog_view::setFileName(QString filename)
 
 void Dialog_view::setText(QString txt)
 {
+    QTextCursor qc(doc);
     ui->plainTextEdit->clear();
     ui->plainTextEdit->appendPlainText(txt);
+    ui->plainTextEdit->setTextCursor(qc);
 }

@@ -31,6 +31,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void reset();
+
     void closeEvent(QCloseEvent *event);
     void setupMenus(QMenuBar *menu);
     void readSettings();
@@ -55,6 +57,7 @@ public slots:
     void openNewDirectory();
     void createNewDirectory();
     void openDirectory(QString fname = QString(""));
+    void copyDirectory();
     void openControlFile();
     void saveControlFile();
     void openDataFile();
@@ -64,6 +67,7 @@ public slots:
     void printFiles();
     QString getDataFile();
     QString getControlFile();
+    void setReadWtAtAgeSS (bool flag);
 
     void helpGUI();
     void helpSS();

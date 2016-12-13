@@ -162,6 +162,7 @@ void ss_model::reset()
     seasons.at(0)->setNumMonths(12);
     seasons.at(0)->setSpawning(true);
     seasons.at(0)->setNumSubSeasons(2);
+    set_spawn_month(3.5);
     set_num_genders(2);
     set_num_std_years(0);
  //   set_f;
@@ -174,6 +175,8 @@ void ss_model::reset()
     setNumBlockPatterns(0);
 
     forecast->reset();
+
+    setReadWtAtAge(false);
     pPopulation->reset();
     iNumRuns = 0;
 //    QMessageBox::information(this, "Program Flow", "Model Forecast and Population reset.");
@@ -443,6 +446,17 @@ int ss_model::getTotalMonths()
         total += seasons.at(i)->getNumMonths();
     }
     return total;
+}
+
+void ss_model::set_spawn_month(float month)
+{
+    fSpawnMonth = month;
+    set_spawn_season(find_season(month));
+}
+
+float ss_model::get_spawn_month()
+{
+    return fSpawnMonth;
 }
 
 void ss_model::set_spawn_season(int seasn)

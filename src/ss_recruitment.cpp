@@ -22,6 +22,45 @@ spawn_recruit::spawn_recruit()
     tvParameters = new parametermodel();
     tvParameters->setColumnCount(7);
 
+    reset();
+/*    method = 3;
+    env_link = 0;
+    env_target = 0;
+    rec_dev = 1;
+    rec_dev_start_yr = 1980;
+    rec_dev_end_yr = 2009;
+    rec_dev_phase = -3;
+    advanced_opts = true;
+    rec_dev_early_start = 0;
+    rec_dev_early_phase = -4;
+    fcast_rec_phase = 0;
+    fcast_lambda = 1;
+    nobias_last_early_yr = 971;
+    fullbias_first_yr = 1931;
+    fullbias_last_yr = 2010;
+    nobias_first_recent_yr = 2011;
+    max_bias_adjust = 0;
+    rec_cycles = 0;
+    rec_dev_min = -5;
+    rec_dev_max = 5;
+    num_rec_dev = 0;*/
+    recruitDeviations = new recruitDevs();
+}
+
+spawn_recruit::~spawn_recruit()
+{
+//    delete parameters;
+    delete full_parameters;
+    delete assignments;
+    delete assignmentParams;
+    delete recruitDeviations;
+    delete interactParams;
+}
+
+void spawn_recruit::reset()
+{
+    distrib_method = 1;
+    distrib_area = 1;
     method = 3;
     env_link = 0;
     env_target = 0;
@@ -43,17 +82,7 @@ spawn_recruit::spawn_recruit()
     rec_dev_min = -5;
     rec_dev_max = 5;
     num_rec_dev = 0;
-    recruitDeviations = new recruitDevs();
-}
-
-spawn_recruit::~spawn_recruit()
-{
-//    delete parameters;
-    delete full_parameters;
-    delete assignments;
-    delete assignmentParams;
-    delete recruitDeviations;
-    delete interactParams;
+    use_steepness = 0;
 }
 
 int spawn_recruit::getNumAssignments()

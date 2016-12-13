@@ -74,6 +74,9 @@ public slots:
     void changeFMortNumInput (int num);
     void changeFMortNumIters (int num);
 
+signals:
+    void readWtAtAgeSS (bool flag);
+
 private slots:
     void changeFractionFemale();
     void setHermaphOptions(int herm);

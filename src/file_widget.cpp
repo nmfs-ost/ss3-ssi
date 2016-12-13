@@ -16,6 +16,7 @@ using namespace std;
 #include "fileIO32.h"
 #include "fileIO33.h"
 #include "ui_file_widget.h"
+#include "dialog_view.h"
 
 file_widget::file_widget(ss_model *mod, QWidget *parent) :
     QWidget(parent),
@@ -61,6 +62,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     connect (ui->pushButton_control_file, SIGNAL(clicked()), SLOT(show_control_file_info()));
     connect (ui->pushButton_par_file, SIGNAL(clicked()), SLOT(show_param_file_info()));
     connect (ui->pushButton_pro_file, SIGNAL(clicked()), SLOT(show_prof_file_info()));
+    connect (ui->pushButton_wtatage, SIGNAL(clicked()), SLOT(view_wtatage()));
 
 //    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), SLOT(parm_trace_changed(bool)));
     connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_iter, SLOT(setVisible(bool)));
@@ -93,6 +95,8 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     data_file_name = QString (DATA_FILE);
     control_file_name = QString (CONTROL_FILE);
     set_default_file_names (current_dir.absolutePath(), false);
+    viewer = new Dialog_fileView(this);
+
 }
 
 void file_widget::reset()
@@ -105,7 +109,8 @@ void file_widget::reset()
     ui->comboBox_cumreport->setCurrentIndex(1);
     set_pro_file(false);
     ui->spinBox_datafiles->setValue(0);
-
+    viewer->viewFile(QString(""));
+    setReadWtAtAge(model_info->getReadWtAtAge());
 //    setVersion(3.2);
 //    ui->checkBox_prior_likelihood->setChecked(true);
 }
@@ -113,6 +118,7 @@ void file_widget::reset()
 file_widget::~file_widget()
 {
     error->close();
+    delete viewer;
     delete error;
     delete starterFile;
     delete dataFile;
@@ -342,6 +348,12 @@ void file_widget::set_pro_file(QString fname, bool keep)
     }
 }
 
+void file_widget::setReadWtAtAge(bool flag)
+{
+    ui->label_wtatage->setVisible(flag);
+    ui->pushButton_wtatage->setVisible(flag);
+}
+
 float file_widget::get_version_number(QString token)
 {
     bool okay;
@@ -421,7 +433,19 @@ void file_widget::set_default_file_names(QString dir, bool keep)
     ui->label_cum_report_file->setText(QString("%1/%2").arg(dir, QString(CUM_REPORT_FILE)));
     ui->label_fcast_report_file->setText(QString("%1/%2").arg(dir, QString(FCAST_REPORT_FILE)));
     ui->label_report_file->setText(QString("%1/%2").arg(dir, QString(REPORT_FILE)));
+    ui->label_wtatage->setText(QString("%1/%2").arg(dir, QString(WTATAGE_FILE)));
 
+    QFileInfo qfi(ui->label_wtatage->text());
+    if (qfi.exists() && qfi.size() > 0)
+    {
+        ui->pushButton_wtatage->show();
+        ui->label_wtatage->show();
+    }
+    else
+    {
+        ui->pushButton_wtatage->hide();
+        ui->label_wtatage->hide();
+    }
     // reset defaults
     set_par_file(false);
     set_pro_file(false);
@@ -591,6 +615,7 @@ bool file_widget::read_files(ss_model *model_inf)
                            (current_dir_name, QString(RUN_NUMBER_FILE)));
         }
     }
+    ;
     return okay;
 }
 
@@ -995,6 +1020,12 @@ void file_widget::show_file_info(ss_file *file)
     {
         file_info_dialog(file).exec();
     }
+}
+
+void file_widget::view_wtatage()
+{
+    viewer->viewFile(ui->label_wtatage->text());
+    viewer->show();
 }
 
 bool file_widget::error_no_file(ss_file *file)

@@ -21,6 +21,13 @@ ss_fecundity::~ss_fecundity()
     delete femaleParams;
 }
 
+void ss_fecundity::reset()
+{
+    method = 0;
+    hermSeason = 1;
+    hermIncludeMales = 0;
+}
+
 int ss_fecundity::getMethod() const
 {
     return method;

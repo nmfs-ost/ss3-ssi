@@ -52,6 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->pushButton_about_qt, SIGNAL(clicked()), SLOT(helpQt()));
     connect (ui->actionTitle_Window, SIGNAL(toggled(bool)), ui->dockWidget_help, SLOT(setVisible(bool)));
     connect (ui->dockWidget_help, SIGNAL(visibilityChanged(bool)), ui->actionTitle_Window, SLOT(setChecked(bool)));
+    connect (ui->actionToolbar, SIGNAL(toggled(bool)), ui->mainToolBar, SLOT(setVisible(bool)));
+    connect (ui->mainToolBar, SIGNAL(visibilityChanged(bool)), ui->actionToolbar, SLOT(setChecked(bool)));
+
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Help window set up finished.");
 #endif
@@ -81,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->action_New, SIGNAL(triggered()), SLOT(createNewDirectory()));
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
     connect (ui->action_Save_data, SIGNAL(triggered()), SLOT(saveFiles()));
+    connect (ui->action_Save_As, SIGNAL(triggered()), SLOT(copyDirectory()));
     connect (ui->action_Exit, SIGNAL(triggered()), SLOT(close()));
 
     connect (ui->actionAbout_SS_GUI, SIGNAL(triggered()), SLOT(helpGUI()));
@@ -114,6 +118,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (data, SIGNAL(showMorphObs()), SLOT(showMorphObs()));
     connect (data, SIGNAL(showRecapObs()), SLOT(showRecapObs()));
 
+    connect (population, SIGNAL(readWtAtAgeSS(bool)), SLOT(setReadWtAtAgeSS(bool)));
+
     ui->stackedWidget->setCurrentIndex(FILES);
     ui->stackedWidget->currentWidget()->layout()->addWidget(files);
     ui->stackedWidget->setCurrentIndex(MODEL);
@@ -142,6 +148,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::reset()
+{
+    files->reset();
+    data->reset();
+    forecast->reset();
+    fleets->reset();
+    population->reset();
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeSettings();
@@ -151,7 +166,7 @@ void MainWindow::setupMenus (QMenuBar *main)
 {
     main->clear();
     QMenu *fileMenu = new QMenu(QString("&File"), main); // fileMenu () (ui->menu_File);
-//    fileMenu.addAction (ui->action_New);
+    fileMenu->addAction (ui->action_New);
     fileMenu->addAction (ui->action_Open);
     fileMenu->addAction (ui->action_Save_data);
     fileMenu->addAction (ui->action_Save_As);
@@ -166,10 +181,13 @@ void MainWindow::setupMenus (QMenuBar *main)
 //    dataMenu.addAction (ui->action_Display_data_snapshot);
 //    dataMenu.addAction (ui->action_Display_selected_data_observations);
     QMenu *viewMenu = new QMenu(QString("&View"), main); // viewMenu (ui->menuView);
-    viewMenu->addAction (ui->action_Report_File);
-    viewMenu->addSeparator();
+//    viewMenu->addAction (ui->action_Report_File);
+//    viewMenu->addSeparator();
     viewMenu->addAction (ui->action_IncreaseFont);
     viewMenu->addAction (ui->action_DecreaseFont);
+    viewMenu->addSeparator();
+    viewMenu->addAction (ui->actionTitle_Window);
+    viewMenu->addAction (ui->actionToolbar);
     QMenu *run_Menu = new QMenu(QString("&Run"), main); // run_Menu (ui->menu_Run);
     run_Menu->addAction (ui->action_Run_Stock_Synthesis);
     QMenu *optsMenu = new QMenu(QString("&Options"), main); // opt_Menu (ui->menu_Options);
@@ -264,12 +282,14 @@ void MainWindow::openNewDirectory()
 void MainWindow::createNewDirectory()
 {
     int btn =
-    QMessageBox::question(this, tr("Select New Directory"),
-             tr("This will over-write any duplicate files in the selected directory.\nDo you wish to continue?"),
+    QMessageBox::question(this, tr("Create New Model"),
+             tr("This will reset data to the default values and write the files to the selected directory.\nDo you wish to continue?"),
                           QMessageBox::Yes, QMessageBox::No);
     if (btn == QMessageBox::Yes)
     {
+        model_one->reset();
         openNewDirectory();
+        reset();
     }
     saveFiles();
 }
@@ -311,11 +331,26 @@ void MainWindow::openDirectory(QString fname)
 
     if (!fname.isEmpty())
     {
+        fleets->readingNewModel();
         current_dir = start_file.absolutePath();
         QDir::setCurrent(current_dir);
         files->new_directory(current_dir);
         readFiles();
+        files->setReadWtAtAge(model_one->getReadWtAtAge());
     }
+}
+
+void MainWindow::copyDirectory()
+{
+    int btn =
+    QMessageBox::question(this, tr("Copy Current Model"),
+             tr("This will copy the current model files and over-write any duplicate files in the selected directory.\nDo you wish to continue?"),
+                          QMessageBox::Yes, QMessageBox::No);
+    if (btn == QMessageBox::Yes)
+    {
+        openNewDirectory();
+    }
+    saveFiles();
 }
 
 void MainWindow::openControlFile()
@@ -432,6 +467,12 @@ QString MainWindow::getDataFile()
 QString MainWindow::getControlFile()
 {
     return files->getControlFileName();
+}
+
+void MainWindow::setReadWtAtAgeSS(bool flag)
+{
+    model_one->setReadWtAtAge(flag);
+    files->setReadWtAtAge(flag);
 }
 
 void MainWindow::mainTabChanged(int tab)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>951</width>
+    <width>835</width>
     <height>577</height>
    </rect>
   </property>
@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -469,8 +469,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>687</width>
-            <height>355</height>
+            <width>783</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -747,7 +747,7 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>899</width>
+            <width>783</width>
             <height>429</height>
            </rect>
           </property>
@@ -1041,13 +1041,13 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>903</width>
-            <height>521</height>
+            <height>548</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="11" column="1">
+             <item row="12" column="1">
               <widget class="QComboBox" name="comboBox_fecund_option">
                <item>
                 <property name="text">
@@ -1076,7 +1076,7 @@ recruitment distribution method = 1)</string>
                </item>
               </widget>
              </item>
-             <item row="19" column="0">
+             <item row="20" column="0">
               <spacer name="verticalSpacer_7">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -1089,10 +1089,10 @@ recruitment distribution method = 1)</string>
                </property>
               </spacer>
              </item>
-             <item row="7" column="0" colspan="5">
+             <item row="8" column="0" colspan="5">
               <layout class="QVBoxLayout" name="verticalLayout_cohort_params"/>
              </item>
-             <item row="18" column="0" colspan="5">
+             <item row="19" column="0" colspan="5">
               <widget class="QGroupBox" name="groupBox_hermaphroditism">
                <property name="title">
                 <string>Hermaphroditism</string>
@@ -1209,7 +1209,7 @@ recruitment distribution method = 1)</string>
                </layout>
               </widget>
              </item>
-             <item row="10" column="1">
+             <item row="11" column="1">
               <widget class="QComboBox" name="comboBox_fecund_gend_offset">
                <property name="currentIndex">
                 <number>1</number>
@@ -1231,17 +1231,17 @@ recruitment distribution method = 1)</string>
                </item>
               </widget>
              </item>
-             <item row="13" column="0" colspan="5">
+             <item row="14" column="0" colspan="5">
               <layout class="QVBoxLayout" name="verticalLayout_fecund_params"/>
              </item>
-             <item row="11" column="0">
+             <item row="12" column="0">
               <widget class="QLabel" name="label_fecund_option">
                <property name="text">
                 <string>Fecundity option</string>
                </property>
               </widget>
              </item>
-             <item row="17" column="0" colspan="5">
+             <item row="18" column="0" colspan="5">
               <layout class="QVBoxLayout" name="verticalLayout_fraction_female"/>
              </item>
              <item row="1" column="0">
@@ -1258,7 +1258,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="12" column="0">
+             <item row="13" column="0">
               <widget class="QLabel" name="label_fec_params">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1274,7 +1274,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="16" column="0">
+             <item row="17" column="0">
               <widget class="QLabel" name="label_fraction_fem">
                <property name="text">
                 <string>Fraction female</string>
@@ -1284,7 +1284,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
+             <item row="7" column="0">
               <widget class="QLabel" name="label_maturity_params">
                <property name="text">
                 <string>Cohort Growth Parameter</string>
@@ -1294,7 +1294,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="0">
+             <item row="11" column="0">
               <widget class="QLabel" name="label_fecund_gend_offset">
                <property name="text">
                 <string>Offset method</string>
@@ -1311,7 +1311,7 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="3">
+             <item row="11" column="3">
               <spacer name="horizontalSpacer_fecund3">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -1324,10 +1324,10 @@ recruitment distribution method = 1)</string>
                </property>
               </spacer>
              </item>
-             <item row="3" column="0" colspan="5">
+             <item row="4" column="0" colspan="5">
               <layout class="QVBoxLayout" name="verticalLayout_wtlen_params"/>
              </item>
-             <item row="2" column="0" colspan="2">
+             <item row="3" column="0" colspan="2">
               <widget class="QLabel" name="label_weightlength">
                <property name="text">
                 <string>Weight to Length Parameters</string>
@@ -1363,7 +1363,7 @@ recruitment distribution method = 1)</string>
                </item>
               </widget>
              </item>
-             <item row="10" column="4">
+             <item row="11" column="4">
               <spacer name="horizontalSpacer_12">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -1376,35 +1376,49 @@ recruitment distribution method = 1)</string>
                </property>
               </spacer>
              </item>
-             <item row="15" column="0" colspan="4">
+             <item row="16" column="0" colspan="4">
               <layout class="QVBoxLayout" name="verticalLayout_fecund_time_vary_params"/>
              </item>
-             <item row="4" column="0" colspan="2">
+             <item row="5" column="0" colspan="2">
               <widget class="QLabel" name="label_4">
                <property name="text">
                 <string>Wt to Length Time Varying Parameters</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="0" colspan="2">
+             <item row="9" column="0" colspan="2">
               <widget class="QLabel" name="label_5">
                <property name="text">
                 <string>Cohort Time Varying Parameters</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0" colspan="4">
+             <item row="6" column="0" colspan="4">
               <layout class="QVBoxLayout" name="verticalLayout_wtlen_time_vary_params"/>
              </item>
-             <item row="14" column="0" colspan="2">
+             <item row="15" column="0" colspan="2">
               <widget class="QLabel" name="label_6">
                <property name="text">
                 <string>Fecundity Time Varying Parameters</string>
                </property>
               </widget>
              </item>
-             <item row="9" column="0" colspan="4">
+             <item row="10" column="0" colspan="4">
               <layout class="QVBoxLayout" name="verticalLayout_cohort_time_vary_params"/>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="checkBox_wtatage">
+               <property name="text">
+                <string>(View file on Files tab)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_wtatage">
+               <property name="text">
+                <string>Read wtatage.ss</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -1429,8 +1443,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>448</width>
-            <height>137</height>
+            <width>783</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1570,8 +1584,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>477</width>
-            <height>285</height>
+            <width>783</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1817,8 +1831,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>376</width>
-            <height>399</height>
+            <width>783</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -2122,7 +2136,7 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>804</width>
-            <height>198</height>
+            <height>408</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">

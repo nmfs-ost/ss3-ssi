@@ -75,16 +75,16 @@ public:
     int  iNumAreas;
     ss_forecast *forecast;
 
+public slots:
+    void reset();
+
+    void incrementYear ();
+
     int getSelexAdjustMethod() const;
     void setSelexAdjustMethod(int value);
 
     bool getReadWtAtAge() const;
     void setReadWtAtAge(bool value);
-
-public slots:
-    void reset();
-
-    void incrementYear ();
 
     Fleet *getFleet(int index);
     Fleet *newFleet (QString name = QString(""));
@@ -164,6 +164,8 @@ public slots:
     int getTotalMonths();
     void set_spawn_season (int seasn) ;
     int get_spawn_season () ;
+    void set_spawn_month (float month);
+    float get_spawn_month ();
     int find_season (float month);
     float find_month (int fleet, int season);
     int getTotalSeasons();
@@ -374,6 +376,7 @@ private:
     int iStartYr;
     int iEndYr;
     int iTotalYears;
+    float fSpawnMonth;
     int iNumFisheries;
     int iNumSurveys;
     int i_num_predators;

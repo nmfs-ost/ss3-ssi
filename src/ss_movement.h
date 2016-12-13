@@ -10,8 +10,9 @@ public:
     ss_movement(int n_fleets = 1);
     ~ss_movement ();
 
-    void setYears (int f_yr, int num);
+    void reset();
 
+    void setYears (int f_yr, int num);
 
     int num_fleets;
     int first_year;

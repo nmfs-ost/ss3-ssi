@@ -121,7 +121,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_subseasons, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_subseasons(int)));
     connect (ui->spinBox_season, SIGNAL(valueChanged(int)), SLOT(changeSeason(int)));
     connect (ui->lineEdit_num_mo_season, SIGNAL(textChanged(QString)), SLOT(changeMoPerSeason(QString)));
-    connect (ui->spinBox_spawn_season, SIGNAL(valueChanged(int)), SLOT(changeSpawnSeason(int)));// model_data, SLOT(set_spawn_season(int)));
+    connect (ui->doubleSpinBox_spawn_month, SIGNAL(valueChanged(double)), SLOT(changeSpawnMonth(double)));// model_data, SLOT(set_spawn_season(int)));
     connect (ui->spinBox_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_ages(int)));
     connect (ui->spinBox_num_areas, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_areas(int)));
     connect (ui->spinBox_num_genders, SIGNAL(valueChanged(int)), SLOT(changeNumGenders(int)));
@@ -214,7 +214,7 @@ void data_widget::refresh()
         ui->spinBox_seas_per_yr->setValue(model_data->get_num_seasons());
         ui->spinBox_subseasons->setValue(model_data->get_num_subseasons());
 //
-        ui->spinBox_spawn_season->setValue(model_data->get_spawn_season());
+        ui->doubleSpinBox_spawn_month->setValue(model_data->get_spawn_month());
         ui->spinBox_season->setValue(1);
         setMoPerSeason(1);
         setTotalMonths();
@@ -307,7 +307,6 @@ void data_widget::changeMaxSeason(int num)
     if (num < 1)
         num = 1;
     ui->spinBox_season->setMaximum(num);
-    ui->spinBox_spawn_season->setMaximum(num);
     ui->spinBox_season->setMaximum(num);
 }
 
@@ -320,34 +319,39 @@ void data_widget::changeSeason(int seas)
 void data_widget::setMoPerSeason(int seas)
 {
 //    int seas = ui->spinBox_season->value();
-    double months = model_data->getSeason(seas)->getNumMonths();
+    float months = model_data->getSeason(seas)->getNumMonths();
     ui->lineEdit_num_mo_season->setText(QString::number(months));
 }
 
 void data_widget::changeMoPerSeason(QString txt)
 {
     int seas = ui->spinBox_season->value();
-    int months = txt.toInt();
+    float months = txt.toFloat();
     model_data->getSeason(seas)->setNumMonths(months);
     setTotalMonths();
 }
 
-int data_widget::setTotalMonths()
+float data_widget::setTotalMonths()
 {
     int num_seas = model_data->get_num_seasons();
-    int tot_months = 0;
+    float tot_months = 0;
     for (int i = 1; i <= num_seas; i++)
         tot_months += model_data->getSeason(i)->getNumMonths();
-    ui->spinBox_total_months->setValue(tot_months);
+    ui->label_total_months_value->setText(QString::number(tot_months, 'g', 2));
     return tot_months;
 }
 
-void data_widget::changeSpawnSeason(int seas)
+void data_widget::changeSpawnMonth(double month)
+{
+    model_data->set_spawn_month((float)month);
+}
+
+void data_widget::changeSpawnSeason(float seas)
 {
     if (seas > ui->spinBox_seas_per_yr->value())
     {
-        seas = ui->spinBox_seas_per_yr->value();
-        ui->spinBox_spawn_season->setValue(seas);
+        seas = setTotalMonths();//ui->spinBox_seas_per_yr->value();
+//        ui->doubleSpinBox_spawn_season->setValue(seas);
     }
     model_data->set_spawn_season(seas);
 }

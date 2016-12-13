@@ -145,10 +145,11 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="action_Report_File"/>
-    <addaction name="separator"/>
     <addaction name="action_IncreaseFont"/>
     <addaction name="action_DecreaseFont"/>
+    <addaction name="separator"/>
+    <addaction name="actionTitle_Window"/>
+    <addaction name="actionToolbar"/>
    </widget>
    <widget class="QMenu" name="menu_Options">
     <property name="title">
@@ -191,7 +192,7 @@
    </attribute>
    <addaction name="action_Open"/>
    <addaction name="action_Save_data"/>
-   <addaction name="action_New"/>
+   <addaction name="action_Save_As"/>
    <addaction name="separator"/>
    <addaction name="action_Run_Stock_Synthesis"/>
    <addaction name="separator"/>
@@ -815,6 +816,14 @@
   <action name="actionLocate_documents">
    <property name="text">
     <string>Locate documents</string>
+   </property>
+  </action>
+  <action name="actionToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Toolbar</string>
    </property>
   </action>
  </widget>

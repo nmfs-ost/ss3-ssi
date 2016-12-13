@@ -11,6 +11,8 @@ public:
     ss_fecundity();
     ~ss_fecundity();
 
+    void reset();
+
     int getMethod() const;
     void setMethod(int value);
 

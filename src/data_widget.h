@@ -37,7 +37,8 @@ public slots:
     void changeSeason (int seas);
     void setMoPerSeason (int seas);
     void changeMoPerSeason (QString txt);
-    void changeSpawnSeason (int seas);
+    void changeSpawnMonth (double month);
+    void changeSpawnSeason (float seas);
 //    QString get_mo_per_seas ();
     void setFRptUnits(int val);
     void setNumSdYears(int val);
@@ -139,7 +140,7 @@ private:
     int numAreas;
     QString filename;
     QList<int> monthsPerSeason;
-    int setTotalMonths();
+    float setTotalMonths();
 
 };
 

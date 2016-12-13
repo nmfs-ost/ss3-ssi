@@ -48,6 +48,8 @@ public:
     bool doRecruitInteract;
     QStringList header;
 
+    void reset ();
+
     void setMethod (int value) {method = value;}
     int getMethod () {return method;}
 

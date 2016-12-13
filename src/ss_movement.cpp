@@ -23,6 +23,16 @@ ss_movement::~ss_movement()
     delete movement_parms;
 }
 
+void ss_movement::reset()
+{
+    movement_defs->setRowCount(0);
+    movement_parms->setRowCount(0);
+    first_year = 0;
+    num_years = 0;
+    numAreas = 0;
+    method = 0;
+}
+
 void ss_movement::setYears(int f_yr, int num)
 {
     first_year = f_yr;

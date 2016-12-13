@@ -248,6 +248,12 @@ void fleet_widget::setActive(bool flag)
     }
 }
 
+void fleet_widget::readingNewModel()
+{
+    disconnectFleet();
+    current_fleet = NULL;
+}
+
 void fleet_widget::reset ()
 {
     totalFleets = model_data->get_num_fleets();
@@ -307,8 +313,10 @@ void fleet_widget::set_current_fleet(int index)
         ui->comboBox_fleet_name->setCurrentIndex(totalFleets - 1);
     else if (index < 0)
         ui->comboBox_fleet_name->setCurrentIndex(0);
+    else
+    {
     Fleet *temp_flt = model_data->getFleet(index);
-    if (temp_flt)
+    if (temp_flt != current_fleet)
     {
         disconnectFleet ();
         current_fleet = temp_flt;
@@ -431,6 +439,7 @@ void fleet_widget::set_current_fleet(int index)
         connectFleet ();
     }
     ui->tabWidget_fleet->setCurrentIndex(tabset);
+    }
 }
 
 void fleet_widget::set_fleet_type(int type)

@@ -33,8 +33,14 @@ population::~population()
 
 void population::reset()
 {
-    set_frac_female(0.5);
+    Fec()->reset();
+    Grow()->reset();
+    SR()->reset();
+    Move()->reset();
     M()->setMethod(1);
+    M()->reset();
+
+    set_frac_female(0.5);
 
     i_gender = 1;
     i_mean_bwt_deg_freedom = 1;

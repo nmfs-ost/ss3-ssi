@@ -123,7 +123,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
     connect (ui->comboBox_maturity_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMaturityOpt(int)));
     connect (ui->lineEdit_maturity_first_age, SIGNAL(editingFinished()), SLOT(changeFirstMatureAge()));
-
+    connect (ui->checkBox_wtatage, SIGNAL(toggled(bool)), SIGNAL(readWtAtAgeSS(bool)));
 
     // Mortality
     mortBreakPtsView = new tableview();
@@ -370,6 +370,7 @@ void population_widget::refresh()
     ui->checkBox_growth_time_vary_read->setChecked(pop->Grow()->getTimeVaryReadParams() == 1);
     changeGrowthPattern(1);
     // Maturity
+    ui->checkBox_wtatage->setChecked(model_data->getReadWtAtAge());
 
     // movement
     ui->spinBox_num_move_defs->setValue(pop->Move()->getNumDefs());

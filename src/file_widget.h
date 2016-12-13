@@ -9,12 +9,14 @@
 #include "composition.h"
 #include "tableview.h"
 #include "catchdelegate.h"
+#include "dialog_fileview.h"
 
 // standard input file names
 #define STARTER_FILE      "starter.ss"
 #define FORECAST_FILE     "forecast.ss"
 #define PARAMETER_FILE    "ss.par"
 #define PROFILE_VAL_FILE  "ProfileValues.ss"
+#define WTATAGE_FILE      "wtatage.ss"
 #define RUN_NUMBER_FILE   "runnumber.ss"
 // default input file names
 #define DATA_FILE         "datafile.dat"
@@ -77,6 +79,8 @@ private:
 
     Fleet *getActiveFleet (int index, Fleet::FleetType type);
 
+    Dialog_fileView *viewer;
+
 public slots:
     void set_starter_file (QString fname, bool keep = false);
     QString get_starter_file();
@@ -92,6 +96,7 @@ public slots:
     QString getDataFileName () {return data_file_name;}
     QString getControlFileName () {return control_file_name;}
     ss_model *this_model() {return model_info;}
+    void setReadWtAtAge (bool flag);
 
     float get_version_number(QString token);
     QString getDatafileVersion ();
@@ -137,6 +142,7 @@ public slots:
 
     void show_input_files ();
     void show_output_files ();
+    void view_wtatage();
 
 signals:
     void directory_changed (QString dirname);

@@ -25,6 +25,7 @@ public:
 public slots:
     void edit_name ();
     void setActive (bool flag);
+    void readingNewModel ();
     void reset ();
     void refresh();
     void set_model (ss_model *model);

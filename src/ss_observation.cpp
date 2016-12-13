@@ -93,7 +93,7 @@ meanBwtObservation::meanBwtObservation()
   : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Fleet" << "Part" << "Value" << "CV";
+    obsHeader << "Year" << "Month" << "Fleet" << "Part." << "Obs." << "SE";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);

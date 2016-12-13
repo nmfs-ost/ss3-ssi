@@ -47,9 +47,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         token = d_file->get_next_value("subseasons");
         temp_int = token.toInt();
         data->set_num_subseasons(temp_int);
-        token = d_file->get_next_value("spawning season");
-        temp_int = token.toInt();
-        data->set_spawn_season(temp_int);
+        token = d_file->get_next_value("spawning month");
+        temp_float = token.toFloat();
+        data->set_spawn_month(temp_float);
         token = d_file->get_next_value("number of genders");
         temp_int = token.toInt();
         n_genders = temp_int;
@@ -607,7 +607,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
 
         line = QString (QString ("%1 #_spawn_month").arg
-                            (QString::number(data->get_spawn_season())));
+                            (QString::number(data->get_spawn_month())));
         chars += d_file->writeline (line);
         line = QString (QString ("%1 #_Ngenders").arg
                         (QString::number(data->get_num_genders())));

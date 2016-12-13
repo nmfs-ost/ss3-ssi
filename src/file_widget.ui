@@ -379,6 +379,20 @@
             </property>
            </spacer>
           </item>
+          <item row="10" column="0">
+           <widget class="QPushButton" name="pushButton_wtatage">
+            <property name="text">
+             <string>View Weight-at-Age</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLabel" name="label_wtatage">
+            <property name="text">
+             <string>wtatage.ss</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

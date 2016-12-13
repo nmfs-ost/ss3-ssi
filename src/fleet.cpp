@@ -10,17 +10,17 @@ Fleet::Fleet(QObject *parent) :
     set_max_catch(-1);
     retainCatch = new tablemodel(this);
     retainCatch->setColumnCount(5);
-    catchHeader << "Year" << "Season" << "Fleet" << "Catch" << "Catch_Se";
+    catchHeader << "Year" << "Season" << "Fleet" << "Catch" << "Catch SE";
     retainCatch->setHeader(catchHeader);
 
     abundModel = new tablemodel (this);
     abundModel->setColumnCount(5);
-    abundanceHeader << "Year" << "Season" << "Fleet" << "Value" << "Std. err of log";
+    abundanceHeader << "Year" << "Month" << "Fleet" << "Observation" << "SE";
     abundModel->setHeader(abundanceHeader);
 
     discardModel = new tablemodel (this);
     discardModel->setColumnCount(5);
-    discardHeader << "Year" << "Season" << "Fleet" << "Observation" << "Error";
+    discardHeader << "Year" << "Month" << "Fleet" << "Observation" << "Std.Err.";
     discardModel->setHeader(discardHeader);
 
     mbwtObs = new meanBwtObservation();

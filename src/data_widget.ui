@@ -63,7 +63,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -281,30 +281,7 @@
                </size>
               </property>
               <property name="text">
-               <string>12</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="3">
-             <widget class="QSpinBox" name="spinBox_subseasons">
-              <property name="minimum">
-               <number>2</number>
-              </property>
-              <property name="maximum">
-               <number>10</number>
-              </property>
-              <property name="singleStep">
-               <number>2</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="3">
-             <widget class="QLabel" name="label_subseasons">
-              <property name="text">
-               <string>Number of sub-seasons</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               <string>12.0</string>
               </property>
              </widget>
             </item>
@@ -362,25 +339,6 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="5">
-             <widget class="QSpinBox" name="spinBox_total_months">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="buttonSymbols">
-               <enum>QAbstractSpinBox::NoButtons</enum>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>24</number>
-              </property>
-              <property name="value">
-               <number>12</number>
-              </property>
-             </widget>
-            </item>
             <item row="4" column="4">
              <widget class="QLabel" name="label_total_months">
               <property name="text">
@@ -408,23 +366,66 @@
              </widget>
             </item>
             <item row="5" column="0">
-             <widget class="QLabel" name="label_spawn_season">
+             <widget class="QLabel" name="label_spawn_month">
               <property name="text">
-               <string>Spawning season</string>
+               <string>Spawning month</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4" colspan="2">
+             <widget class="QLabel" name="label_subseasons">
+              <property name="text">
+               <string>Number of sub-seasons</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="6">
+             <widget class="QSpinBox" name="spinBox_subseasons">
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="singleStep">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="5">
+             <widget class="QLabel" name="label_total_months_value">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Sunken</enum>
+              </property>
+              <property name="text">
+               <string>12.0</string>
               </property>
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QSpinBox" name="spinBox_spawn_season">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_spawn_month">
               <property name="minimum">
-               <number>1</number>
+               <double>1.000000000000000</double>
               </property>
               <property name="maximum">
-               <number>12</number>
+               <double>12.970000000000001</double>
               </property>
              </widget>
             </item>
            </layout>
+          </widget>
+         </item>
+         <item row="8" column="5" colspan="3">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>See Fleet section for more info or to make changes.</string>
+           </property>
           </widget>
          </item>
         </layout>
