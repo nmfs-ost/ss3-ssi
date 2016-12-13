@@ -31,16 +31,22 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_7">
+    <property name="spacing">
+     <number>2</number>
+    </property>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="stackedWidget_files">
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QGridLayout" name="files_layout"/>
         </item>
@@ -48,6 +54,9 @@
       </widget>
       <widget class="QWidget" name="stackedWidget_model">
        <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="model_layout"/>
         </item>
@@ -55,6 +64,9 @@
       </widget>
       <widget class="QWidget" name="stackedWidget_forecast">
        <layout class="QVBoxLayout" name="verticalLayout_9">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="forecast_layout"/>
         </item>
@@ -62,6 +74,9 @@
       </widget>
       <widget class="QWidget" name="stackedWidget_parameters">
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="parameters_layout"/>
         </item>
@@ -69,6 +84,9 @@
       </widget>
       <widget class="QWidget" name="stackedWidget_populations">
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="populations_layout"/>
         </item>
@@ -76,6 +94,9 @@
       </widget>
       <widget class="QWidget" name="stackedWidget_surveys">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="surveys_layout"/>
         </item>
@@ -83,6 +104,9 @@
       </widget>
       <widget class="QWidget" name="stackedWidget_fisheries">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="fisheries_layout"/>
         </item>
@@ -202,7 +226,6 @@
    <addaction name="action_Populations"/>
    <addaction name="action_Forecast"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_help">
    <property name="floating">
     <bool>true</bool>
@@ -218,6 +241,9 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <property name="spacing">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_banner">
        <property name="toolTip">

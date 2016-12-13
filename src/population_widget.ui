@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>2</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_title">
      <item>
@@ -60,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>7</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -470,7 +473,7 @@
             <x>0</x>
             <y>0</y>
             <width>783</width>
-            <height>429</height>
+            <height>434</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -748,7 +751,7 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>783</width>
-            <height>429</height>
+            <height>434</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -1444,7 +1447,7 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>783</width>
-            <height>429</height>
+            <height>434</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1585,7 +1588,7 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>783</width>
-            <height>429</height>
+            <height>434</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1832,7 +1835,7 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>783</width>
-            <height>429</height>
+            <height>434</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -2136,7 +2139,7 @@ recruitment distribution method = 1)</string>
             <x>0</x>
             <y>0</y>
             <width>804</width>
-            <height>408</height>
+            <height>413</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">

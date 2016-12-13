@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>2</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_title">
      <item>
@@ -1705,7 +1708,7 @@ e.g. 0, -1, -2, ...</string>
             <x>0</x>
             <y>0</y>
             <width>796</width>
-            <height>642</height>
+            <height>647</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">

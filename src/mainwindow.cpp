@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_gui_ver->setFont(title_font);
     ui->label_gui_ver->setText(tr("For use with Stock Synthesis ") + getAppAppliesTo());
 
+
 //    mainMenu = new QMenuBar(this);
     setupMenus(ui->menuBar);
 
@@ -239,6 +240,10 @@ void MainWindow::writeSettings()
     settings.setValue("pos", ui->dockWidget_help->pos());
     settings.setValue("visible", ui->dockWidget_help->isVisible());
     settings.endGroup();
+    settings.beginGroup("ToolBar");
+    settings.setValue("rect", ui->mainToolBar->geometry());
+    settings.setValue("visible", ui->mainToolBar->isVisible());
+    settings.endGroup();
 }
 
 void MainWindow::readSettings()
@@ -259,6 +264,10 @@ void MainWindow::readSettings()
     ui->dockWidget_help->resize(settings.value("size").toSize());
     ui->dockWidget_help->move(settings.value("pos", QPoint(300,300)).toPoint());
     ui->dockWidget_help->setVisible(settings.value("visible", true).toBool());
+    settings.endGroup();
+    settings.beginGroup("ToolBar");
+    ui->mainToolBar->setGeometry(settings.value("rect", QRect(350,330, 500, 35)).toRect());
+    ui->mainToolBar->setVisible(settings.value("visible", true).toBool());
     settings.endGroup();
 }
 
