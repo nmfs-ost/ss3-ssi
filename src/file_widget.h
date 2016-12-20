@@ -49,7 +49,6 @@ class file_widget : public QWidget
     Q_OBJECT
 
 public:
-//    file_widget(QWidget *parent = 0);
     explicit file_widget (ss_model *mod = 0, QWidget *parent = 0);
     ~file_widget();
 
@@ -107,25 +106,16 @@ public slots:
 
     void set_default_file_names (QString dir, bool keep = false);
     void new_directory (QString dir, bool keep = false);
-    bool read_files(ss_model *model_inf = NULL);
+    bool read_files();
+    bool read_files(ss_model *model_inf);
 
     bool read_starter_file(QString filename = QString(""));
-//    int read_m_data_file (QString filename = QString(""));
-//    int read_forecast_file (QString filename = QString(""));
-//    int read_control_file (QString filename = QString(""));
-//    int read_params_file (QString filename = QString(""));
-//    int read_u_data_file (QString filename = QString(""));
     int read_run_num_file (QString filename = QString(""));
 //    int read_profile_file (QString filename = QString(""));
 
     void write_files ();
 
     void write_starter_file (QString filename = QString(""));
-//    void write_m_data_file (QString filename = QString(""));
-//    void write_forecast_file (QString filename = QString(""));
-//    void write_control_file (QString filename = QString(""));
-//    void write_params_file (QString filename = QString(""));
-//    void write_u_data_file (QString filename = QString(""));
     void write_run_num_file (QString filename = QString(""));
 //    void write_profile_file (QString filename = QString(""));
 
@@ -170,9 +160,6 @@ private slots:
     void show_param_file_info () {show_file_info (parameterFile);}
     void show_prof_file_info () {show_file_info (profileFile);}
 
-//    ssObservation* read_environ_var_observation (ss_file *model_dat);
-
-//    int write_environ_var_observation (ssObservation *obs);
 
     void reset_run_num ();
 

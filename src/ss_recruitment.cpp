@@ -5,7 +5,7 @@ spawn_recruit::spawn_recruit()
 //    parameters = new parametermodel();
 //    parameters->setRowCount(0);
 //    parameters->setColumnCount(7);
-    full_parameters = new parametermodel();
+    full_parameters = new parameterModelTV();
     full_parameters->setRowCount(5);
 
     assignments = new tablemodel();
@@ -14,12 +14,12 @@ spawn_recruit::spawn_recruit()
     header << "GP" << "seas" << "area" << "Settle_age";
     assignments->setHeader(header);
 
-    assignmentParams = new parametermodel();
-    interactParams = new parametermodel();
-    recruitDistParams = new parametermodel();
+    assignmentParams = new parameterModelTV();
+    interactParams = new parameterModelTV();
+    recruitDistParams = new parameterModelTV();
     recruitDistParams->setRowCount(2);
 
-    tvParameters = new parametermodel();
+    tvParameters = new parameterModelTV();
     tvParameters->setColumnCount(7);
 
     reset();

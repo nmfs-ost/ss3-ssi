@@ -72,8 +72,8 @@ public:
 //    void fromXML (xml_file *file);
   //  void fromJSON (json_file *file);
 
-    parametermodel *full_parameters;
-    parametermodel *getFullParameterModel() {return full_parameters;}
+    parameterModelTV *full_parameters;
+    parameterModelTV *getFullParameterModel() {return full_parameters;}
     void setNumFullParameters(int num) {full_parameters->setRowCount(num);}
     int getNumFullParameters() {return full_parameters->rowCount();}
     void setFullParameter(int index, QStringList values) {full_parameters->setRowData(index, values);}
@@ -99,7 +99,7 @@ public:
     tablemodel *getAssignments() const;
     void setAssignment(int row, QStringList data);
     QStringList getAssignment(int row);
-    parametermodel *assignmentParams;
+    parameterModelTV *assignmentParams;
     tablemodel *getAssignmentParams () {return assignmentParams;}
     void setNumAssignmentParams (int num) {assignmentParams->setRowCount(num);}
     int getNumAssignmentParams () {return assignmentParams->rowCount();}
@@ -111,7 +111,7 @@ public:
     recruitDevs *recruitDeviations;
     recruitDevs *getRecruitDevs () {return recruitDeviations;}
 
-    parametermodel *interactParams;
+    parameterModelTV *interactParams;
     tablemodel *getInteractParams () {return interactParams;}
     void setNumInteractParams (int num) {interactParams->setRowCount(num);}
     int getNumInteractParams () {return interactParams->rowCount();}
@@ -120,7 +120,7 @@ public:
     QStringList getInteractParam(int index) {return interactParams->getRowData(index);}
 
 
-    parametermodel *recruitDistParams;
+    parameterModelTV *recruitDistParams;
     tablemodel *getRecruitDistParams() {return recruitDistParams;}
     void setNumRecruitDistParams (int num) {recruitDistParams->setRowCount(num);}
     int getNumRecruitDistParams () {return recruitDistParams->rowCount();}
@@ -128,8 +128,11 @@ public:
     void setRecruitDistParam (int index, QStringList data);
     QStringList getRecruitDistParam(int index) {return recruitDistParams->getRowData(index);}
 
-    parametermodel *tvParameters;
-    parametermodel *getTVParameterModel() {return tvParameters;}
+    int readtvparams;
+    void setTimeVaryReadParams(int flag) {readtvparams = flag;}
+    int getTimeVaryReadParams() {return readtvparams;}
+    parameterModelTV *tvParameters;
+    parameterModelTV *getTVParameterModel() {return tvParameters;}
     void setNumTVParameters(int num) {tvParameters->setRowCount(num);}
     int getNumTVParameters() {return tvParameters->rowCount();}
     void addTVParameter(QStringList values) {setTVParameter(tvParameters->rowCount(), values);}

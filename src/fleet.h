@@ -246,6 +246,8 @@ public slots:
     tablemodel *getMorphModel () {return morphComp->getObsTable();}
 
     //  #q_section
+    void setQTimeVaryReadParams (int flag) {readQTvParams = flag;}
+    int getQTimeVaryReadParams () {return readQTvParams;}
     void setQSetupRead (bool flag = false);
     bool getQSetupRead () {return q_read;}
     void qSetupChanged ();
@@ -265,6 +267,9 @@ public slots:
     parametermodel *getQParams() {return Q()->getParamModel();}
     parametermodel *getQSetup() {return Q()->getSetupModel();}
     q_ratio *Q() {return q_R;}
+
+    void setSelTimeVaryReadParams (int flag) {readSelTvParams = flag;}
+    int getSelTimeVaryReadParams () {return readSelTvParams;}
 
     //   #size selex
     selectivity* getSizeSelectivity() {return size_selex;}
@@ -369,6 +374,7 @@ protected:
     QList<yearIndexMeasure*> d_discard;
     QList<yearIndexMeasure*> d_discard_err;
 
+    int readSelTvParams;
     //   size selex
     selectivity *size_selex;
 
@@ -380,6 +386,7 @@ protected:
     QList<yearIndexMeasure*> f_abundance;
     QList<yearIndexMeasure*> f_abundance_error;
 
+    int readQTvParams;
     bool q_read;
     q_ratio * q_R;
 

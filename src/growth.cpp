@@ -26,25 +26,25 @@ ss_growth::ss_growth()
     matAgeValues = new tablemodel();
     matAgeValues->setRowCount(1);
 
-    wtLenParams = new parametermodel();
+    wtLenParams = new parameterModelTV();
     wtLenParams->setRowCount(0);
-    wtLenTVParams = new parametermodel();
+    wtLenTVParams = new parameterModelTV();
     wtLenTVParams->setRowCount(0);
     wtLenTVParams->setColumnCount(7);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new parametermodel();
+    cohortParam = new parameterModelTV();
     cohortParam->setRowCount(1);
 
-    fracfemaleParams = new parametermodel();
+    fracfemaleParams = new parameterModelTV();
     fracfemaleParams->setRowCount(1);
 
     customBlock = -1;
-    blockParams = new parametermodel();
+    blockParams = new parameterModelTV();
     blockParams->setRowCount(0);
     customEnvLink = -1;
-    environmentParams = new parametermodel();
+    environmentParams = new parameterModelTV();
     environmentParams->setRowCount(0);
 
     reset();

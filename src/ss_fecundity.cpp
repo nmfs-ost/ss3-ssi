@@ -6,12 +6,12 @@ ss_fecundity::ss_fecundity()
     hermSeason = 1;
     hermIncludeMales = 0;
 
-    hermaphParams = new parametermodel();
+    hermaphParams = new parameterModelTV();
     hermaphParams->setRowCount(3);
     hermaphParams->setRowHeader(0, QString("Hermaph_inflect_age"));
     hermaphParams->setRowHeader(1, QString("Hermaph_std_dev"));
     hermaphParams->setRowHeader(2, QString("Hermaph_asymp_rate"));
-    femaleParams = new parametermodel();
+    femaleParams = new parameterModelTV();
     femaleParams->setRowCount(4);
 }
 

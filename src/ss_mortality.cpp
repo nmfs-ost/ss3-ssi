@@ -6,11 +6,11 @@ ss_mortality::ss_mortality(int n_fisheries, int n_surveys)
 {
     QStringList pheader;
     pheader << "fleet" << "year" << "seas" << "F" << "se" << "phase" ;
-    parameterTable = new parametermodel();
+    parameterTable = new parameterModelTV();
     parameterTable->setColumnCount(6);
     parameterTable->setHeader(pheader);
     parameterTable->setRowCount(0);
-    initialParams = new parametermodel();
+    initialParams = new parameterModelTV();
     initialParams->setColumnCount(7);
     initialParams->setRowCount(0);
 //    numFisheries = 0;

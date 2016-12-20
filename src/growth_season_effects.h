@@ -75,7 +75,7 @@ private:
 
     tablemodel *effects;
     QStringList effHeader;
-    parametermodel *paramtable;
+    parameterModelTV *paramtable;
 /*    int numParams;
     QList<shortParameter *> params;*/
 };

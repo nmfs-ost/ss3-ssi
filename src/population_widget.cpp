@@ -352,6 +352,7 @@ void population_widget::refresh()
     ui->lineEdit_recr_dev_max_dev->setText(QString::number(pop->SR()->rec_dev_max));
     ui->spinBox_num_recr_devs->setValue(pop->SR()->getRecruitDevs()->getNumObs());
     changeNumRecrDevs(pop->SR()->getRecruitDevs()->getNumObs());
+    ui->spinBox_spwn_recr_time_vary_read->setValue(pop->SR()->getTimeVaryReadParams());
 
     // growth
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
@@ -367,7 +368,7 @@ void population_widget::refresh()
     ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
     ui->spinBox_growth_num_submorphs->setValue(pop->Grow()->getNum_morphs());
     ui->comboBox_growth_time_vary->setCurrentIndex(pop->Grow()->getTimeVaryMethod()-1);
-    ui->checkBox_growth_time_vary_read->setChecked(pop->Grow()->getTimeVaryReadParams() == 1);
+    ui->spinBox_bio_time_vary_read->setValue(pop->Grow()->getTimeVaryReadParams());
     changeGrowthPattern(1);
     // Maturity
     ui->checkBox_wtatage->setChecked(model_data->getReadWtAtAge());

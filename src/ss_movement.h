@@ -50,7 +50,7 @@ private:
     QStringList defHeader;
 
     tablemodel *movement_defs;
-    parametermodel *movement_parms;
+    parameterModelTV *movement_parms;
 };
 
 #endif // SS_MOVEMENT_H

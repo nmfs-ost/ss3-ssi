@@ -88,7 +88,7 @@ ss_model::ss_model(QWidget *parent) :
     doMorphComp = false;
     lengthData = new compositionLength(this);
 
-    catchMult = new parametermodel(this);
+    catchMult = new parameterModelTV(this);
     catchMult->setColumnCount(7);
     catchMult->setRowCount(1);
 

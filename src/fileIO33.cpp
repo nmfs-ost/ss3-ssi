@@ -1,6 +1,7 @@
 
 #include "fileIO33.h"
 #include "model.h"
+#include "fleet.h"
 #include "fileIOgeneral.h"
 #include "message.h"
 //#include "ss_math.h"
@@ -188,6 +189,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 if (year != -9999)
                     data->getFleet(fleet)->addDiscard(str_lst);
 //                    data->getFleet(fleet)->setDiscardMonth(year, month, obs, err);
+                if (str_lst.at(4).compare("EOF") == 0)
+                    return false;
             } while (year != -9999);
         }
 
@@ -209,6 +212,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 fleet = abs(str_lst.at(2).toInt()) - 1;
                 if (year != -9999)
                     data->getFleet(fleet)->addMbwtObservation(str_lst);
+                if (str_lst.at(4).compare("EOF") == 0)
+                    return false;
             } while (year != -9999);
         }
 
@@ -292,6 +297,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 }
                 if (str_lst.at(0).toInt() == -9999)
                     break;
+                if (str_lst.at(0).compare("EOF") == 0)
+                    return false;
                 temp_int = abs(str_lst.at(2).toInt());
                 data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
             } while (str_lst.at(0).toInt() != -9999);
@@ -368,6 +375,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
             if (str_lst.at(0).toInt() == -9999)
                 break;
+            if (str_lst.at(0).compare("EOF") == 0)
+                return false;
             fleet = abs(str_lst.at(2).toInt());
             data->getFleet(fleet - 1)->addAgeObservation(str_lst);
         } while (str_lst.at(0).toInt() != -9999);
@@ -388,6 +397,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 }
                 if (str_lst.at(0).toInt() == -9999)
                     break;
+                if (str_lst.at(0).compare("EOF") == 0)
+                    return false;
                 fleet = abs(str_lst.at(2).toInt());
                 data->getFleet(fleet - 1)->addSaaObservation(str_lst);
             } while (str_lst.at(0).toInt() != -9999);
@@ -411,6 +422,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 temp_int = str_lst.at(0).toInt();
                 if (temp_int != -9999)
                     data->addEnvironVarObs (str_lst);
+                if (str_lst.at(0).compare("EOF") == 0)
+                    return false;
             } while (temp_int != -9999);
         }
 
@@ -559,13 +572,13 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
 
         d_file->close();
-        return (1);
+        return true;
     }
     else
     {
         d_file->error(QString("File is unreadable."));
     }
-    return (0);
+    return false;
 }
 
 int write33_dataFile(ss_file *d_file, ss_model *data)
@@ -2086,6 +2099,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setTimeVaryMethod(temp_int);
         temp_int = c_file->get_next_value().toInt();
         pop->Grow()->setTimeVaryReadParams(temp_int);
+        temp_int = c_file->get_next_value().toInt();
+        pop->SR()->setTimeVaryReadParams(temp_int);
+        temp_int = c_file->get_next_value().toInt();
+        data->getActiveFleet(1)->setQTimeVaryReadParams(temp_int);
+        temp_int = c_file->get_next_value().toInt();
+//        data->setTagTimeVaryReadParams(temp_int); // for future capability
+        temp_int = c_file->get_next_value().toInt();
+        data->getActiveFleet(1)->setSelTimeVaryReadParams(temp_int);
 
         // natural Mort
         temp_int = c_file->get_next_value().toInt();
@@ -2683,7 +2704,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // SR time vary params
         {
             pop->SR()->setNumTVParameters(0);
-            parametermodel *params = pop->SR()->getFullParameterModel();
+            parameterModelTV *params = pop->SR()->getFullParameterModel();
             num = params->rowCount();
             for (int j = 0; j < 3; j++)
             {
@@ -2799,6 +2820,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(flt - 1)->Q()->setup(datalist);
                 data->getFleet(flt - 1)->setQSetupRead(true);
             }
+            if (datalist.at(0).compare("EOF") == 0)
+                return false;
         } while (flt > 0);
 
         for (i = 0; i < data->get_num_fleets(); i++)
@@ -3197,9 +3220,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         data->setInputValueVariance(0);
         do
         {
-            id = c_file->get_next_value().toInt();
+            temp_string = c_file->get_next_value();
+            id = temp_string.toInt();
             flt = c_file->get_next_value().toInt();
             temp_float = c_file->get_next_value().toFloat();
+            if (temp_string.compare("EOF") == 0)
+                return false;
             if (id == -9999)
                 break;
             data->setInputValueVariance(1);
@@ -3250,6 +3276,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist.append(c_file->get_next_value());
             datalist.append(c_file->get_next_value());
             datalist.append(c_file->get_next_value());
+            if (datalist.at(0).compare("EOF") == 0)
+                return false;
             if (datalist.at(0).toInt() != -9999)
                 data->getFleet(flt-1)->appendLambda(datalist);
         } while (datalist.at(0).toInt() != -9999);
@@ -3481,9 +3509,18 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("%1 #_env/block/dev_adjust_method for all time-vary parms (1=warn relative to base parm bounds; 3=no bound check)").arg (
                            QString::number(temp_int)));
         chars += c_file->writeline(line);
+        line.clear();
         temp_int = pop->Grow()->getTimeVaryReadParams();
-        line = QString(QString("%1 # 0 means to autogenerate time-varying parameters; 1 means to read each time-varying parameter line").arg (
-                           QString::number(temp_int)));
+        line.append(QString("%1 ").arg(QString::number(temp_int)));
+        temp_int = pop->SR()->getTimeVaryReadParams();
+        line.append(QString("%1 ").arg(QString::number(temp_int)));
+        temp_int = data->getActiveFleet(1)->getQTimeVaryReadParams();
+        line.append(QString("%1 ").arg(QString::number(temp_int)));
+//        temp_int = data()->getTimeVaryReadParams();
+        line.append(QString("0 "));//.arg(QString::number(temp_int)));
+        temp_int = data->getActiveFleet(1)->getSelTimeVaryReadParams();
+        line.append(QString("%1 ").arg(QString::number(temp_int)));
+        line.append(QString("# 0=autogenerate time-varying parameters; 1=read each time-varying parameter line"));
         chars += c_file->writeline(line);
         chars += c_file->writeline("#");
         line = QString("# setup for M, growth, maturity, fecundity, recruitment distibution, movement ");
@@ -3978,7 +4015,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
         num = 0;
         {
-        parametermodel *params = pop->SR()->getFullParameterModel();
+        parameterModelTV *params = pop->SR()->getFullParameterModel();
         num = params->rowCount();
         for (j = 0; j < num; j++)
         {
@@ -3990,7 +4027,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString("#_ LO HI INIT PRIOR PR_SD PR_type PHASE  #  parm_name");
         chars += c_file->writeline(line);
         {
-        parametermodel *params = pop->SR()->getTVParameterModel();
+        parameterModelTV *params = pop->SR()->getTVParameterModel();
         num = params->rowCount();
         for (j = 0; j < num; j++)
         {

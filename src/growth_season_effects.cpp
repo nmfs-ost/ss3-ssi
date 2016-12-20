@@ -9,7 +9,7 @@ GrowthSeasonalEffects::GrowthSeasonalEffects()
     effHeader << "MWtLen1" << "MWtLen2" << "L1" << "K";
     effects->setHeader(effHeader);
     effects->setRowHeader(0, "");
-    paramtable = new parametermodel();
+    paramtable = new parameterModelTV();
     clear();
 }
 

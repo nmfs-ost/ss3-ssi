@@ -4,19 +4,19 @@ q_ratio::q_ratio()
 {
     QStringList hdr;
     hdr << "Link" << "Link_Info" << "ExtraSD" << "Bias_Adj" << "Float" ;
-    qsetup = new parametermodel();
+    qsetup = new parameterModelTV();
     qsetup->setColumnCount(5);
     qsetup->setHeader(hdr);
 
     hdr.clear();
     hdr << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
     hdr << "env-var" << "use_dev" << "dv_mnyr" << "dv_mxyr" << "dv_stdv" << "Block" << "Blk_Fxn";
-    params = new parametermodel();
+    params = new parameterModelTV();
     params->setColumnCount(14);
     params->setHeader(hdr);
     params->setRowCount(1);
     params->setRowHeader(0, "LnQ_Base");
-    tvParams = new parametermodel();
+    tvParams = new parameterModelTV();
     tvParams->setColumnCount(7);
     tvParams->setRowCount(0);
     reset();

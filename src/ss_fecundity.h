@@ -40,8 +40,8 @@ private:
     int hermIncludeMales;
 
     QString pHeader;
-    parametermodel *hermaphParams;
-    parametermodel *femaleParams;
+    parameterModelTV *hermaphParams;
+    parameterModelTV *femaleParams;
 };
 
 #endif // SS_FECUNDITY_H

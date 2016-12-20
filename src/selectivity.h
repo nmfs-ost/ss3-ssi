@@ -36,7 +36,7 @@ public:
     QString getParameterLabel (int index);
     int getNumParameters();
     void setNumParameters (int num);
-    parametermodel *getParameterModel() {return parameters;}
+    parameterModelTV *getParameterModel() {return parameters;}
 
     int getNumRetainParameters() {return retainParameters->rowCount();}
     void setRetainParameter(int index, QStringList strList);
@@ -44,7 +44,7 @@ public:
     QString getRetainParameterText (int index);
     QStringList getRetainParameter (int index) {return retainParameters->getRowData(index);}
     QString getRetainParameterLabel (int index) {return retainParameters->getRowHeader(index);}
-    parametermodel *getRetainParameterModel () {return retainParameters;}
+    parameterModelTV *getRetainParameterModel () {return retainParameters;}
 
     int getNumDiscardParameters();
     void setDiscardParameter(int index, QStringList strList);
@@ -52,7 +52,7 @@ public:
     QString getDiscardParameterText (int index);
     QStringList getDiscardParameter (int index) {return discardParameters->getRowData(index);}
     QString getDiscardParameterLabel (int index) {return discardParameters->getRowHeader(index);}
-    parametermodel *getDiscardParameterModel () {return discardParameters;}
+    parameterModelTV *getDiscardParameterModel () {return discardParameters;}
 
     int getNumSpecialParameters();
     void setSpecialParameter(int index, QStringList strList);
@@ -60,7 +60,7 @@ public:
     QString getSpecialParameterText (int index);
     QStringList getSpecialParameter (int index) {return specialParameters->getRowData(index);}
     QString getSpecialParameterLabel (int index) {return specialParameters->getRowHeader(index);}
-    parametermodel *getSpecialParameterModel () {return specialParameters;}
+    parameterModelTV *getSpecialParameterModel () {return specialParameters;}
 
     int getNumMaleParameters();
     void setMaleParameter(int index, QStringList strList);
@@ -68,7 +68,7 @@ public:
     QString getMaleParameterText (int index);
     QStringList getMaleParameter (int index) {return maleParameters->getRowData(index);}
     QString getMaleParameterLabel (int index) {return maleParameters->getRowHeader(index);}
-    parametermodel *getMaleParameterModel () {return maleParameters;}
+    parameterModelTV *getMaleParameterModel () {return maleParameters;}
 
     int getNumTimeVaryParameters ();
     void setTimeVaryParameter (int index, QStringList strList);
@@ -76,7 +76,7 @@ public:
     QString getTimeVaryParameterText (int index);
     QStringList getTimeVaryParameter (int index) {return timeVaryParameters->getRowData(index);}
     QString getTimeVaryParameterLabel (int index) {return timeVaryParameters->getRowHeader(index);}
-    parametermodel *getTimeVaryParameterModel() {return timeVaryParameters;}
+    parameterModelTV *getTimeVaryParameterModel() {return timeVaryParameters;}
 
     double operator()() {return evaluate();}
     double evaluate();
@@ -93,14 +93,14 @@ protected:
 
     int numAges;
 
-    parametermodel *parameters;
+    parameterModelTV *parameters;
 
-    parametermodel *timeVaryParameters;
+    parameterModelTV *timeVaryParameters;
 
-    parametermodel *retainParameters;
-    parametermodel *discardParameters;
-    parametermodel *maleParameters;
-    parametermodel *specialParameters;
+    parameterModelTV *retainParameters;
+    parameterModelTV *discardParameters;
+    parameterModelTV *maleParameters;
+    parameterModelTV *specialParameters;
 
     double evaluate(int f, float m);
 

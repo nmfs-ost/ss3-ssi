@@ -5,30 +5,30 @@ growthPattern::growthPattern()
     morphs.append(new growth_morph());
     num_morphs = 1;
 
-    fractionFemParams = new parametermodel();
+    fractionFemParams = new parameterModelTV();
     fractionFemParams->setRowCount(1);
     fractionFemParams->setRowHeader(0, QString("FracFemale"));
 
-    growthParams = new parametermodel();
-    growthTVParams = new parametermodel();
+    growthParams = new parameterModelTV();
+    growthTVParams = new parameterModelTV();
     growthTVParams->setColumnCount(7);
 
-    cvParams = new parametermodel();
+    cvParams = new parameterModelTV();
     cvParams->setRowCount(2);
-    cvTVParams = new parametermodel();
+    cvTVParams = new parameterModelTV();
     cvTVParams->setColumnCount(7);
 
-    natMParams = new parametermodel();
+    natMParams = new parameterModelTV();
     natMParams->setRowCount(1);
-    natMTVParams = new parametermodel();
+    natMTVParams = new parameterModelTV();
     natMTVParams->setColumnCount(7);
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
 
-    devParams = new parametermodel();
+    devParams = new parameterModelTV();
     devParams->setColumnCount(7);
 
-    timeVaryParams = new parametermodel();
+    timeVaryParams = new parameterModelTV();
     timeVaryParams->setColumnCount(7);
 }
 

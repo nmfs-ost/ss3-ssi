@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>7</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -82,9 +82,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>887</width>
-            <height>543</height>
+            <y>-136</y>
+            <width>885</width>
+            <height>549</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -98,7 +98,7 @@
               </widget>
              </item>
              <item row="16" column="0" colspan="2">
-              <widget class="QLabel" name="label_growth_time_vary_read">
+              <widget class="QLabel" name="label_growth_time_vary_params">
                <property name="text">
                 <string>Time Varying Parameters</string>
                </property>
@@ -346,39 +346,6 @@
                </property>
               </widget>
              </item>
-             <item row="11" column="1" colspan="5">
-              <widget class="QComboBox" name="comboBox_growth_time_vary">
-               <item>
-                <property name="text">
-                 <string>1 = Standard</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2 =Llogistic transform in bounds</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>3 = Standard with no bound check</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="11" column="6" colspan="3">
-              <widget class="QLabel" name="label_growth_time_vary_info">
-               <property name="text">
-                <string>For all Environmental, Block and Deviation adjustment parameters</string>
-               </property>
-              </widget>
-             </item>
-             <item row="12" column="1">
-              <widget class="QCheckBox" name="checkBox_growth_time_vary_read">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
              <item row="18" column="0">
               <widget class="QLabel" name="label_growth_cv_pattern">
                <property name="text">
@@ -416,31 +383,24 @@
               </widget>
              </item>
              <item row="11" column="0">
-              <widget class="QLabel" name="label_growth_time_vay">
+              <widget class="QLabel" name="label_growth_time_vary">
                <property name="text">
-                <string>Time-varying method</string>
+                <string>Adjustment method for time-varying</string>
                </property>
               </widget>
              </item>
              <item row="17" column="0" colspan="8">
               <layout class="QVBoxLayout" name="verticalLayout_growth_time_vary_params"/>
              </item>
-             <item row="12" column="6" colspan="3">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Unchecked means to autogenerate</string>
-               </property>
-              </widget>
-             </item>
              <item row="12" column="0">
-              <widget class="QLabel" name="label_growth_time_vary_read_2">
+              <widget class="QLabel" name="label_bio_time_vary_read">
                <property name="text">
-                <string>Read time varying parameters</string>
+                <string>Reading Biology time-vary parameters</string>
                </property>
               </widget>
              </item>
              <item row="21" column="0">
-              <widget class="QLabel" name="label_growth_time_vary_read_3">
+              <widget class="QLabel" name="label_cv_time_vary_params">
                <property name="text">
                 <string>Time Varying Parameters</string>
                </property>
@@ -448,6 +408,41 @@
              </item>
              <item row="22" column="0" colspan="8">
               <layout class="QVBoxLayout" name="verticalLayout_cv_time_vary_params"/>
+             </item>
+             <item row="12" column="2" colspan="7">
+              <widget class="QLabel" name="label_bio_time_vary_read_info">
+               <property name="text">
+                <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if min = -12345</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="1">
+              <widget class="QSpinBox" name="spinBox_bio_time_vary_read">
+               <property name="maximum">
+                <number>2</number>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="7" colspan="2">
+              <widget class="QLabel" name="label_growth_time_vary_info">
+               <property name="text">
+                <string>For all Environmental, Block, and Deviation parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1" colspan="6">
+              <widget class="QComboBox" name="comboBox_growth_time_vary">
+               <item>
+                <property name="text">
+                 <string>1 = Warning relative to base parameter bounds</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 = No bound check</string>
+                </property>
+               </item>
+              </widget>
              </item>
             </layout>
            </item>
@@ -479,29 +474,50 @@
           <layout class="QVBoxLayout" name="verticalLayout_10">
            <item>
             <layout class="QGridLayout" name="gridLayout_recruitment">
-             <item row="6" column="0">
-              <widget class="QLabel" name="label">
+             <item row="9" column="0" colspan="2">
+              <widget class="QLabel" name="label_sr_do_recr_dev">
                <property name="text">
-                <string>Function parameters</string>
+                <string>Do recruitment deviations</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="4">
-              <widget class="QLabel" name="label_sr_env_tgt">
+             <item row="1" column="0" colspan="2">
+              <widget class="QLabel" name="label_recr_dist_params">
                <property name="text">
-                <string>Environmental target</string>
+                <string>Distribution method for parameters</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_recr_spec">
+             <item row="1" column="3" colspan="6">
+              <widget class="QCheckBox" name="checkBox_recr_interaction">
                <property name="text">
-                <string>Function</string>
+                <string>Year x Area x Settlement Event Interaction Requested (only for
+recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="2">
-              <widget class="QSpinBox" name="spinBox_sr_env_link"/>
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="radioButton_global">
+               <property name="text">
+                <string>Global</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QSpinBox" name="spinBox_recr_dist_params">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>4</number>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="2">
+              <widget class="QSpinBox" name="spinBox_sr_do_recr_dev"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QSpinBox" name="spinBox_recr_num_assigns"/>
              </item>
              <item row="8" column="8">
               <spacer name="horizontalSpacer">
@@ -516,37 +532,6 @@
                </property>
               </spacer>
              </item>
-             <item row="2" column="2">
-              <widget class="QSpinBox" name="spinBox_recr_num_assigns"/>
-             </item>
-             <item row="9" column="2">
-              <widget class="QSpinBox" name="spinBox_sr_do_recr_dev"/>
-             </item>
-             <item row="1" column="2">
-              <widget class="QSpinBox" name="spinBox_recr_dist_params">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>4</number>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton_global">
-               <property name="text">
-                <string>Global</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3" colspan="6">
-              <widget class="QCheckBox" name="checkBox_recr_interaction">
-               <property name="text">
-                <string>Year x Area x Settlement Event Interaction Requested (only for
-recruitment distribution method = 1)</string>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="0" colspan="2">
               <widget class="QLabel" name="label_recr_num_assigns">
                <property name="text">
@@ -554,36 +539,29 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QLabel" name="label_recr_dist_params">
+             <item row="8" column="2">
+              <widget class="QSpinBox" name="spinBox_sr_env_link"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_recr_spec">
                <property name="text">
-                <string>Distribution method for parameters</string>
+                <string>Function</string>
                </property>
               </widget>
              </item>
-             <item row="9" column="0" colspan="2">
-              <widget class="QLabel" name="label_sr_do_recr_dev">
+             <item row="8" column="4">
+              <widget class="QLabel" name="label_sr_env_tgt">
                <property name="text">
-                <string>Do recruitment deviations</string>
+                <string>Environmental target</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1" colspan="2">
-              <widget class="QRadioButton" name="radioButton_area">
+             <item row="6" column="0">
+              <widget class="QLabel" name="label">
                <property name="text">
-                <string>Area</string>
+                <string>Function parameters</string>
                </property>
               </widget>
-             </item>
-             <item row="8" column="0" colspan="2">
-              <widget class="QLabel" name="label_sr_env_link">
-               <property name="text">
-                <string>Environmental link</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="0" colspan="9">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_full_params"/>
              </item>
              <item row="3" column="2" colspan="3">
               <layout class="QHBoxLayout" name="horizontalLayout_recr_assigns"/>
@@ -595,6 +573,23 @@ recruitment distribution method = 1)</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0" colspan="9">
+              <layout class="QVBoxLayout" name="verticalLayout_recr_full_params"/>
+             </item>
+             <item row="8" column="0" colspan="2">
+              <widget class="QLabel" name="label_sr_env_link">
+               <property name="text">
+                <string>Environmental link</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" colspan="2">
+              <widget class="QRadioButton" name="radioButton_area">
+               <property name="text">
+                <string>Area</string>
                </property>
               </widget>
              </item>
@@ -651,6 +646,9 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
+             <item row="11" column="2" colspan="2">
+              <widget class="QSpinBox" name="spinBox_sr_recr_dev_phase"/>
+             </item>
              <item row="2" column="4">
               <spacer name="horizontalSpacer_recr1">
                <property name="orientation">
@@ -663,9 +661,6 @@ recruitment distribution method = 1)</string>
                 </size>
                </property>
               </spacer>
-             </item>
-             <item row="11" column="2" colspan="2">
-              <widget class="QSpinBox" name="spinBox_sr_recr_dev_phase"/>
              </item>
              <item row="10" column="2" colspan="2">
               <widget class="QSpinBox" name="spinBox_sr_recr_dev_begin_yr">
@@ -684,6 +679,23 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
+             <item row="10" column="5" colspan="2">
+              <widget class="QSpinBox" name="spinBox_sr_recr_dev_end_yr">
+               <property name="maximum">
+                <number>3000</number>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="0" colspan="2">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Assignment Parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="0" colspan="9">
+              <layout class="QVBoxLayout" name="verticalLayout_recr_params"/>
+             </item>
              <item row="11" column="7">
               <spacer name="horizontalSpacer_recr2">
                <property name="orientation">
@@ -697,22 +709,22 @@ recruitment distribution method = 1)</string>
                </property>
               </spacer>
              </item>
-             <item row="10" column="5" colspan="2">
-              <widget class="QSpinBox" name="spinBox_sr_recr_dev_end_yr">
-               <property name="maximum">
-                <number>3000</number>
-               </property>
-              </widget>
-             </item>
              <item row="12" column="0" colspan="2">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="label_spwn_recr_time_vary_read">
                <property name="text">
-                <string>Assignment Parameters</string>
+                <string>Reading S/R time-vary parameters </string>
                </property>
               </widget>
              </item>
-             <item row="13" column="0" colspan="9">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_params"/>
+             <item row="12" column="2">
+              <widget class="QSpinBox" name="spinBox_spwn_recr_time_vary_read"/>
+             </item>
+             <item row="12" column="4" colspan="5">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if min = -12345</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

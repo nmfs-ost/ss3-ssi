@@ -93,23 +93,23 @@ private:
     void clear();
     growthPattern& copy (const growthPattern &rhs);
 
-    parametermodel *fractionFemParams;
+    parameterModelTV *fractionFemParams;
 
-    parametermodel *devParams;
+    parameterModelTV *devParams;
 
-    parametermodel *growthParams;
-    parametermodel *growthTVParams;
-    parametermodel *cvParams;
-    parametermodel *cvTVParams;
-    parametermodel *cohortDevParams;
-    parametermodel *cohortTVDevParams;
-    parametermodel *maturityParams;
-    parametermodel *maturityTVParams;
+    parameterModelTV *growthParams;
+    parameterModelTV *growthTVParams;
+    parameterModelTV *cvParams;
+    parameterModelTV *cvTVParams;
+    parameterModelTV *cohortDevParams;
+    parameterModelTV *cohortTVDevParams;
+    parameterModelTV *maturityParams;
+    parameterModelTV *maturityTVParams;
 
-    parametermodel *natMParams;
-    parametermodel *natMTVParams;
+    parameterModelTV *natMParams;
+    parameterModelTV *natMTVParams;
     tablemodel *natMAges;
-    parametermodel *timeVaryParams;
+    parameterModelTV *timeVaryParams;
 };
 
 #endif // GROWTH_PATTERN_H

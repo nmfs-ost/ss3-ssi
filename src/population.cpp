@@ -13,7 +13,7 @@ population::population(QWidget *parent) :
     meanBwtModel->setColumnCount(20);
     header << "Year" << "Seas" << "Type" << "Part" << "Value" << "CV";
     meanBwtModel->setHeader(header);
-    seasparamtable = new parametermodel(this);
+    seasparamtable = new parameterModelTV(this);
     header.clear();
 //    header << "st_age" << "st_age bias" << "max_age bias" << "bias coeff" << "st_age sd" << "max_age sd" << "sd coeff";
     seasparamtable->setColumnCount(7);

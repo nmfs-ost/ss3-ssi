@@ -7,6 +7,7 @@
 #include "method_setup.h"
 #include "short_parameter.h"
 #include "parametermodel.h"
+#include "model.h"
 
 class q_ratio
 {

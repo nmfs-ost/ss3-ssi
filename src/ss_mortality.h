@@ -69,8 +69,8 @@ private:
     int   numInputs;
     int   numTuningIters;
 
-    parametermodel *initialParams;
-    parametermodel *parameterTable;
+    parameterModelTV *initialParams;
+    parameterModelTV *parameterTable;
 
     QString m_text;
 };

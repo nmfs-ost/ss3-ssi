@@ -10,18 +10,18 @@ selectivity::selectivity(int method)
 
     numAges = 0;
     equation = NULL;
-    parameters = new parametermodel();
+    parameters = new parameterModelTV();
 
-    timeVaryParameters = new parametermodel();
+    timeVaryParameters = new parameterModelTV();
     timeVaryParameters->setColumnCount(7);
 
-    discardParameters = new parametermodel();
+    discardParameters = new parameterModelTV();
     discardParameters->setColumnCount(7);
-    specialParameters = new parametermodel();
+    specialParameters = new parameterModelTV();
     specialParameters->setColumnCount(7);
-    retainParameters = new parametermodel();
+    retainParameters = new parameterModelTV();
     retainParameters->setColumnCount(7);
-    maleParameters = new parametermodel();
+    maleParameters = new parameterModelTV();
     maleParameters->setColumnCount(7);
 
     setMethod(method);

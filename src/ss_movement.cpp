@@ -8,7 +8,7 @@ ss_movement::ss_movement(int n_fleets)
     movement_defs->setColumnCount(defHeader.count());
     movement_defs->setHeader(defHeader);
     movement_defs->setRowCount(0);
-    movement_parms = new parametermodel();
+    movement_parms = new parameterModelTV();
     movement_parms->setRowCount(0);
     num_fleets = n_fleets;
     first_year = 0;

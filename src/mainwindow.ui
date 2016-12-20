@@ -32,6 +32,18 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_7">
     <property name="spacing">
+     <number>3</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
      <number>2</number>
     </property>
     <item>
@@ -40,11 +52,23 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="stackedWidget_files">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -55,6 +79,18 @@
       <widget class="QWidget" name="stackedWidget_model">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -65,6 +101,18 @@
       <widget class="QWidget" name="stackedWidget_forecast">
        <layout class="QVBoxLayout" name="verticalLayout_9">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -75,6 +123,18 @@
       <widget class="QWidget" name="stackedWidget_parameters">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -85,6 +145,18 @@
       <widget class="QWidget" name="stackedWidget_populations">
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -95,6 +167,18 @@
       <widget class="QWidget" name="stackedWidget_surveys">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -105,6 +189,18 @@
       <widget class="QWidget" name="stackedWidget_fisheries">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
          <number>2</number>
         </property>
         <item>
@@ -214,6 +310,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="action_New"/>
    <addaction name="action_Open"/>
    <addaction name="action_Save_data"/>
    <addaction name="action_Save_As"/>
@@ -227,6 +324,10 @@
    <addaction name="action_Forecast"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget_help">
+   <property name="windowIcon">
+    <iconset resource="stock_synth.qrc">
+     <normaloff>:/images/icons/help_icon_128.png</normaloff>:/images/icons/help_icon_128.png</iconset>
+   </property>
    <property name="floating">
     <bool>true</bool>
    </property>
@@ -242,6 +343,18 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <property name="spacing">
+      <number>3</number>
+     </property>
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
       <number>2</number>
      </property>
      <item>

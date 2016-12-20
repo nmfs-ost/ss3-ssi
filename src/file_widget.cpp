@@ -7,11 +7,9 @@ using namespace std;
 
 
 #include "file_info_dialog.h"
-//#include "metadata.h"
 #include "fleet.h"
 #include "block_pattern.h"
 #include "growth.h"
-//#include "data_widget.h"
 #include "file_widget.h"
 #include "fileIO32.h"
 #include "fileIO33.h"
@@ -47,9 +45,6 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     ui->label_check_value->setVisible(false);
     ui->label_check_value_info->setVisible(false);
 
-//    connect (ui->lineEdit_starter_file, SIGNAL(textChanged(QString)), SIGNAL(starter_file_changed(QString)));
-//    connect (ui->lineEdit_forecast_file, SIGNAL(textChanged(QString)), SIGNAL(forecast_file_changed(QString)));
-
     connect (ui->toolButton_file_read, SIGNAL(clicked()), SLOT(read_files()));
     connect (ui->toolButton_control_file_new, SIGNAL(clicked()), SIGNAL(choose_control_file()));
     connect (ui->toolButton_control_file_save_as, SIGNAL(clicked()), SIGNAL(save_control_file()));
@@ -65,8 +60,8 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     connect (ui->pushButton_wtatage, SIGNAL(clicked()), SLOT(view_wtatage()));
 
 //    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), SLOT(parm_trace_changed(bool)));
-    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_iter, SLOT(setVisible(bool)));
-    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_param, SLOT(setVisible(bool)));
+    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_iter, SLOT(setEnabled(bool)));
+    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), ui->comboBox_parm_trace_param, SLOT(setEnabled(bool)));
 
 //    connect (ui->checkBox_cumrpt_fits, SIGNAL(toggled(bool)), SLOT(cumrpt_fits_changed(bool)));
 //    connect (ui->checkBox_cumrpt_like, SIGNAL(toggled(bool)), SLOT(cumrpt_like_changed(bool)));
@@ -85,10 +80,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     set_par_file(false);
     set_pro_file(false);
 
-
-    parm_trace_changed(false);
     show_input_files();
-//    ui->tabWidget->setCurrentIndex(0);
     error = new QFile(this);
 
     current_dir = QDir (qApp->applicationDirPath());
@@ -111,8 +103,6 @@ void file_widget::reset()
     ui->spinBox_datafiles->setValue(0);
     viewer->viewFile(QString(""));
     setReadWtAtAge(model_info->getReadWtAtAge());
-//    setVersion(3.2);
-//    ui->checkBox_prior_likelihood->setChecked(true);
 }
 
 file_widget::~file_widget()
@@ -145,11 +135,6 @@ void file_widget::setDatafileVersion(double ver, bool flag)
     datafile_version = ver + .000001;
     if (datafile_version < 3.30)
     {
-/*        msg.append(QString("This program is reading version 3.24 files, but will\n"));
-        msg.append(QString("save them in version 3.30 format. \n"));
-        msg.append(QString("If you wish to preserve the older files, move to a \n"));
-        msg.append(QString("different directory before saving or running ss."));
-        QMessageBox::information(0, QString("Old version files"),msg);*/
         model_info->setReadMonths(false);
     }
     else
@@ -184,8 +169,6 @@ void file_widget::set_starter_file(QString fname, bool keep)
     {
         starterFile->setFileName(fname);
     }
-//    if (starterFile->exists() && starterFile->isReadable())
-//        read_starter_file(fname);
 }
 
 
@@ -205,25 +188,16 @@ void file_widget::set_forecast_file(QString fname, bool keep)
     else if (forecastFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         forecastFile->setFileName(fname);
-/*        QStringList comments = forecast->comments;
-        delete forecast;
-        forecast = new ss_file (fname, this);
-        if (keep)
-        for (int i = 0; i < comments.count(); i++)
-            forecast->comments.append(comments.at(i));*/
     }
 }
 
 QString file_widget::get_forecast_file ()
 {
-//    return ui->lineEdit_forecast_file->text();
     return ui->label_fcast_file->text();
 }
 
 void file_widget::set_control_file(QString fname, bool keep)
 {
-//    ui->lineEdit_control_file->setText(filename);
-//    QStringList commnts;
     if (controlFile == NULL)
     {
         controlFile = new ss_file(fname);
@@ -231,12 +205,6 @@ void file_widget::set_control_file(QString fname, bool keep)
     else if (controlFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         controlFile->setFileName(fname);
-/*        QStringList comments = control->comments;
-        delete control;
-        control = new ss_file (fname, this);
-        if (keep)
-        for (int i = 0; i < comments.count(); i++)
-            control->comments.append(comments.at(i));*/
     }
 
     if (fname.contains('/'))
@@ -248,7 +216,6 @@ void file_widget::set_control_file(QString fname, bool keep)
 
 QString file_widget::get_control_file()
 {
-//    return ui->lineEdit_control_file->text();
     return ui->label_control_file->text();
 }
 
@@ -373,7 +340,9 @@ float file_widget::get_version_number(QString token)
 
 void file_widget::parm_trace_changed(bool flag)
 {
-    if (flag)
+    ui->comboBox_parm_trace_iter->setEnabled(flag);
+    ui->comboBox_parm_trace_param->setEnabled(flag);
+/*    if (flag)
     {
         ui->comboBox_parm_trace_iter->show();
         ui->comboBox_parm_trace_param->show();
@@ -382,7 +351,7 @@ void file_widget::parm_trace_changed(bool flag)
     {
         ui->comboBox_parm_trace_iter->hide();
         ui->comboBox_parm_trace_param->hide();
-    }
+    }*/
 }
 
 /*void file_widget::cumrpt_fits_changed(bool flag)
@@ -468,14 +437,14 @@ void file_widget::new_directory(QString dir, bool keep)
 
 void file_widget::set_parmtr_write(int flag)
 {
-    ui->comboBox_parm_trace_iter->setVisible(true);
-    ui->comboBox_parm_trace_param->setVisible(true);
+    ui->comboBox_parm_trace_iter->setEnabled(true);
+    ui->comboBox_parm_trace_param->setEnabled(true);
     switch (flag)
     {
     case 0:
         ui->checkBox_parm_trace->setChecked(false);
-        ui->comboBox_parm_trace_iter->setVisible(false);
-        ui->comboBox_parm_trace_param->setVisible(false);
+        ui->comboBox_parm_trace_iter->setEnabled(false);
+        ui->comboBox_parm_trace_param->setEnabled(false);
         break;
     case 1:
         ui->checkBox_parm_trace->setChecked(true);
@@ -558,17 +527,19 @@ int file_widget::get_cumrpt_write()
     return ret;
 }
 */
+bool file_widget::read_files()
+{
+    if (model_info == NULL)
+        model_info = new ss_model((QWidget*)this->parent());
+    else
+        model_info->reset();
+    return read_files(model_info);
+}
+
 bool file_widget::read_files(ss_model *model_inf)
 {
     bool okay = true;
-    if (model_inf == NULL)
-    {
-        if (model_info == NULL)
-            model_info = new ss_model((QWidget*)this->parent());
-        else
-            model_inf = model_info;
-    }
-    model_info->reset();
+
 
     okay = read_starter_file();
     if (okay)
@@ -597,16 +568,21 @@ bool file_widget::read_files(ss_model *model_inf)
         }
         else if (datafile_version < 3.40)
         {
-            read33_dataFile(dataFile, model_info);
-            read33_forecastFile(forecastFile, model_info);
-            read33_controlFile(controlFile, model_info);
-            if (ui->checkBox_par_file->isChecked())
+            okay = read33_dataFile(dataFile, model_info);
+            if (okay)
+                okay = read33_forecastFile(forecastFile, model_info);
+            if (okay)
+                okay = read33_controlFile(controlFile, model_info);
+            if (okay)
             {
-                read33_parameterFile(parameterFile, model_info);
-            }
-            if (ui->checkBox_pro_file->isChecked())
-            {
-                read33_profileFile(profileFile, model_info);
+                if (ui->checkBox_par_file->isChecked())
+                {
+                    read33_parameterFile(parameterFile, model_info);
+                }
+                if (ui->checkBox_pro_file->isChecked())
+                {
+                    read33_profileFile(profileFile, model_info);
+                }
             }
         }
         if (okay)

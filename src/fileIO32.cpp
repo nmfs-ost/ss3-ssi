@@ -2550,7 +2550,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parametermodel *pm, *pml;
+            parameterModelTV *pm, *pml;
             temp_int = c_file->get_next_value().toInt();
             data->setCustomEnviroLink(temp_int);
             for (int i = 0; i < data->get_num_fleets(); i++)
@@ -2591,7 +2591,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parametermodel *pm, *pmb;
+            parameterModelTV *pm, *pmb;
             temp_int = c_file->get_next_value().toInt();
             data->setCustomBlockSetup(temp_int);
             for (int i = 0; i < data->get_num_fleets(); i++)
@@ -2634,7 +2634,7 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parametermodel *pm, *pme, *pmr;
+            parameterModelTV *pm, *pme, *pmr;
             for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
@@ -3639,7 +3639,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parametermodel *pm;
+            parameterModelTV *pm;
             temp_int = data->getCustomEnviroLink();
             line.prepend(QString::number(temp_int));
             chars += c_file->writeline(line);
@@ -3693,7 +3693,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parametermodel *pm;
+            parameterModelTV *pm;
             temp_int = data->getCustomBlockSetup();
             line.prepend(QString::number(temp_int));
             chars += c_file->writeline(line);
@@ -3752,7 +3752,7 @@ int write32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parametermodel *pm;
+            parameterModelTV *pm;
             for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();
