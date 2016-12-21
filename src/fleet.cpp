@@ -1,5 +1,6 @@
 #include "fleet.h"
 #include "model.h"
+#include "q_ratio.h"
 
 Fleet::Fleet(QObject *parent) :
     QObject(parent)
@@ -457,10 +458,14 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //  q_section
-    set_q_do_power(oldfl->q_do_power());
+    Q()->setDoPower(oldfl->Q()->getDoPower());
+    Q()->setDoEnvLink(oldfl->Q()->getDoEnvLink());
+    Q()->setDoExtraSD(oldfl->Q()->getDoExtraSD());
+    Q()->setType(oldfl->Q()->getType());
+/*    set_q_do_power(oldfl->q_do_power());
     set_q_do_env_lnk(oldfl->q_do_env_lnk());
     set_q_do_extra_sd(oldfl->q_do_extra_sd());
-    set_q_type(oldfl->q_type());
+    set_q_type(oldfl->q_type());*/
     for (i = 0; i < oldfl->Q()->getNumParams(); i++)
         Q()->setParameter(i, oldfl->Q()->getParameter(i));
 
@@ -696,34 +701,34 @@ void Fleet::setAbundMonth(int year, float month, float obs, float err)
 
 void Fleet::set_abundance(int year, int season, float obs)
 {
-    yearIndexMeasure *yim = getYearIndexMeasure(f_abundance, year, season);
-    yim->setValue(obs);
+//    yearIndexMeasure *yim = getYearIndexMeasure(f_abundance, year, season);
+//    yim->setValue(obs);
 }
 
 float Fleet::abundance(int year, int month)
 {
     double val = 0.0;
-    yearIndexMeasure *yim = NULL;
-    yim = getYearIndexMeasure(f_abundance, year, month);
-    if (yim)
-        val = yim->getValue();
+ //   yearIndexMeasure *yim = NULL;
+ //   yim = getYearIndexMeasure(f_abundance, year, month);
+ //   if (yim)
+ //       val = yim->getValue();
     return val;
 }
 
 void Fleet::set_abundance_error(int i_year, int month, float err)
 {
-    yearIndexMeasure *yim = getYearIndexMeasure(f_abundance_error, i_year, month);
+ //   yearIndexMeasure *yim = getYearIndexMeasure(f_abundance_error, i_year, month);
 
-    yim->setValue(err);
+ //   yim->setValue(err);
 }
 
 float Fleet::abundance_error(int year, int month)
 {
     double val = 0.0;
-    yearIndexMeasure *yim = NULL;
-    yim = getYearIndexMeasure(f_abundance_error, year, month);
-    if (yim)
-        val = yim->getValue();
+//    yearIndexMeasure *yim = NULL;
+//    yim = getYearIndexMeasure(f_abundance_error, year, month);
+ //   if (yim)
+ //       val = yim->getValue();
     return val;
 }
 

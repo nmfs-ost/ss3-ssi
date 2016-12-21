@@ -4,15 +4,17 @@
 #include <QObject>
 #include <QStringList>
 
+#include "q_ratio.h"
 #include "area.h"
-#include "yearindexmeasure.h"
-#include "q.h"
+//#include "yearindexmeasure.h"
 #include "selectivity.h"
-#include "method_setup.h"
+//#include "method_setup.h"
 #include "fleetlambda.h"
-#include "tablemodel.h"
-#include "ss_observation.h"
+//#include "parametermodelTV.h"
+//#include "ss_observation.h"
 #include "fleet_composition.h"
+
+class q_ratio;
 
 class Fleet : public QObject
 {
@@ -31,6 +33,11 @@ public:
         Predator,
         None
     };
+
+private:
+    int readQTvParams;
+    bool q_read;
+    q_ratio *q_R;
 
 signals:
 
@@ -251,7 +258,8 @@ public slots:
     void setQSetupRead (bool flag = false);
     bool getQSetupRead () {return q_read;}
     void qSetupChanged ();
-    void set_q_do_power(int den) {Q()->setDoPower(den); setQSetupRead();}
+    q_ratio *Q() {return q_R;}
+/*    void set_q_do_power(int den) {Q()->setDoPower(den); setQSetupRead();}
     void set_q_do_power(bool yes) {Q()->setDoPower(yes?1:0); setQSetupRead();}
     int q_do_power() {return Q()->getDoPower();}
     void set_q_do_env_lnk(int env_vr) {Q()->setDoEnvLink(env_vr); setQSetupRead();}
@@ -264,9 +272,8 @@ public slots:
     int q_type() {return Q()->getType();}
     void set_q_offset (float val) {Q()->setOffset(val); setQSetupRead();}
     int q_offset () {return Q()->getOffset();}
-    parametermodel *getQParams() {return Q()->getParamModel();}
-    parametermodel *getQSetup() {return Q()->getSetupModel();}
-    q_ratio *Q() {return q_R;}
+    parameterModelTV *getQParams() {return Q()->getParamModel();}
+    parameterModelTV *getQSetup() {return Q()->getSetupModel();}*/
 
     void setSelTimeVaryReadParams (int flag) {readSelTvParams = flag;}
     int getSelTimeVaryReadParams () {return readSelTvParams;}
@@ -281,7 +288,7 @@ public slots:
     bool size_selex_male() {return size_selex->getMale();}
     void set_size_selex_special(int ss_spec) {size_selex->setSpecial(ss_spec);}
     int size_selex_special() {return size_selex->getSpecial();}
-    parametermodel *getSizeSelexModel() {return size_selex->getParameterModel();}
+    parameterModelTV *getSizeSelexModel() {return size_selex->getParameterModel();}
 
     //   #age selex
     selectivity* getAgeSelectivity() {return age_selex;}
@@ -293,7 +300,7 @@ public slots:
     bool age_selex_male() {return age_selex->getMale();}
     void set_age_selex_special(int as_spec) {age_selex->setSpecial(as_spec);}
     int age_selex_special() {return age_selex->getSpecial();}
-    parametermodel *getAgeSelexModel() {return age_selex->getParameterModel();}
+    parameterModelTV *getAgeSelexModel() {return age_selex->getParameterModel();}
 
     void setAddToSurveyCV (float val) {add_to_survey_CV = val;}
     float getAddToSurveyCV () {return add_to_survey_CV;}
@@ -360,7 +367,7 @@ protected:
 
     tablemodel *lambdaModel;
 
-    QList<yearIndexMeasure*> d_catch;
+//    QList<yearIndexMeasure*> d_catch;
     double d_catch_equil;
 
     // surveys
@@ -371,8 +378,8 @@ protected:
     int i_discard_units;   // 1=same_as_catchunits(bio/num), 2=fraction, 3=numbers
     int i_discard_errtype; // >0 for DF of T-dist(read CV below), 0 for normal with CV, -1 for normal with se -2 for lognormal
 
-    QList<yearIndexMeasure*> d_discard;
-    QList<yearIndexMeasure*> d_discard_err;
+//    QList<yearIndexMeasure*> d_discard;
+//    QList<yearIndexMeasure*> d_discard_err;
 
     int readSelTvParams;
     //   size selex
@@ -383,12 +390,8 @@ protected:
 
     int i_survey_units;
     int i_survey_error_type;
-    QList<yearIndexMeasure*> f_abundance;
-    QList<yearIndexMeasure*> f_abundance_error;
-
-    int readQTvParams;
-    bool q_read;
-    q_ratio * q_R;
+//    QList<yearIndexMeasure*> f_abundance;
+//    QList<yearIndexMeasure*> f_abundance_error;
 
     float add_to_survey_CV;
     float add_to_discard_stddev;

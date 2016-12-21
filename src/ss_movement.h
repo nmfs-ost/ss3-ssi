@@ -2,7 +2,7 @@
 #define SS_MOVEMENT_H
 
 #include "tablemodel.h"
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 
 class ss_movement
 {

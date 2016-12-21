@@ -62,7 +62,6 @@ SOURCES += main.cpp\
     variance_adjustment.cpp \
     tag.cpp \
     selex_equation.cpp \
-    q.cpp \
     growth_season_effects.cpp \
     growth_pattern.cpp \
     dialog_about_nft.cpp \
@@ -97,7 +96,9 @@ SOURCES += main.cpp\
     fleet_composition.cpp \
     documentdialog.cpp \
     message.cpp \
-    fileconversiondialog.cpp
+    fileconversiondialog.cpp \
+    parametermodelTV.cpp \
+    q_ratio.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -184,7 +185,9 @@ HEADERS  += mainwindow.h \
     documentdialog.h \
     ss_math.h \
     message.h \
-    fileconversiondialog.h
+    fileconversiondialog.h \
+    parametermodelTV.h \
+    q_ratio.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

@@ -100,7 +100,7 @@ compositionAge::compositionAge(QObject *parent)
     errorModel->setRowHeader(0,"");
 
     useParameters = false;
-    errorParam = new shortparametermodel(this);
+    errorParam = new shortParameterModel(this);
 //    errorParam->setColumnCount(7);
     errorParam->setRowCount(1);
 }

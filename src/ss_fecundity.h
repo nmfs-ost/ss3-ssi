@@ -3,7 +3,7 @@
 
 #include <QStringList>
 
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 
 class ss_fecundity
 {

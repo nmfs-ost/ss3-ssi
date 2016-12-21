@@ -1,12 +1,12 @@
-#ifndef Q_H
-#define Q_H
+#ifndef Q_RATIO_H
+#define Q_RATIO_H
 
 #include <QString>
 #include <QList>
 
 #include "method_setup.h"
-#include "short_parameter.h"
-#include "parametermodel.h"
+//#include "short_parameter.h"
+#include "parametermodelTV.h"
 #include "model.h"
 
 class q_ratio
@@ -22,7 +22,7 @@ public:
     void setup(QString str);
     QString getSetup();
 
-    parametermodel *getSetupModel() {return qsetup;}
+    parameterModelTV *getSetupModel() {return qsetup;}
 
     int getDoPower() const;
     void setDoPower(int value);
@@ -57,14 +57,14 @@ public:
     void setParameter (int index, QStringList values);
     void setParameter (int index, QString text);
     QStringList getParameter(int index);
-    parametermodel *getParamModel() {return params;}
+    parameterModelTV *getParamModel() {return params;}
 
     void setNumTVParams (int num) {tvParams->setRowCount(num);}
     int getNumTVParams () {return tvParams->rowCount();}
     void addTVParam (QStringList data) {setTVParam(getNumTVParams(), data);}
     void setTVParam (int index, QStringList data);
     QStringList getTVParam (int index) {return tvParams->getRowData(index);}
-    parametermodel *getTVParams () {return tvParams;}
+    parameterModelTV *getTVParams () {return tvParams;}
 
     int getTypeIndex() const;
     void setTypeIndex(int value);
@@ -78,9 +78,9 @@ public slots:
     void setupChanged (int error_type);
 
 private:
-    parametermodel *qsetup;
-    parametermodel *params;
-    parametermodel *tvParams;
+    parameterModelTV *qsetup;
+    parameterModelTV *params;
+    parameterModelTV *tvParams;
     int BaseIndex;
     int doBlkTnd;
     int BlkTndIndex;
@@ -98,4 +98,4 @@ private:
     bool doOffset;
 };
 
-#endif // Q_H
+#endif // Q_RATIO_H

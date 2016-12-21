@@ -90,7 +90,7 @@ public slots:
     void addSeasParam (QStringList data) {setSeasParam(seasparamtable->rowCount(), data);}
     void setSeasParam (int index, QStringList data);
     QStringList getSeasParam (int index);
-    parametermodel *getSeasonalParams() {return seasparamtable;}
+    parameterModelTV *getSeasonalParams() {return seasparamtable;}
     void insertSeasParams (int num);
     void removeSeasParams (int num);
 
@@ -118,7 +118,7 @@ private:
     int iStartYear;
     int iNumAges;
 
-    parametermodel *seasparamtable;
+    parameterModelTV *seasparamtable;
 
 };
 

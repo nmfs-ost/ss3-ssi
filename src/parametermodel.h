@@ -5,21 +5,21 @@
 
 #include <QStringList>
 
-class shortparametermodel : public tablemodel
+class shortParameterModel : public tablemodel
 {
 public:
-    shortparametermodel (QObject *parent = 0);
-    ~shortparametermodel ();
+    shortParameterModel (QObject *parent = 0);
+    ~shortParameterModel ();
 
 private:
     QStringList header;
 };
 
-class parametermodel : public tablemodel
+class parameterModel : public tablemodel
 {
 public:
-    parametermodel(QObject *parent = 0);
-    ~parametermodel();
+    parameterModel(QObject *parent = 0);
+    ~parameterModel();
 
     bool envLink (int index);
     bool useBlock (int index);

@@ -1,6 +1,6 @@
 #include "parametermodel.h"
 
-shortparametermodel::shortparametermodel(QObject *parent)
+shortParameterModel::shortParameterModel(QObject *parent)
     : tablemodel(parent)
 {
     setColumnCount(7);
@@ -9,12 +9,12 @@ shortparametermodel::shortparametermodel(QObject *parent)
     setRowCount(0);
 }
 
-shortparametermodel::~shortparametermodel()
+shortParameterModel::~shortParameterModel()
 {
     header.clear();
 }
 
-parametermodel::parametermodel(QObject *parent)
+parameterModel::parameterModel(QObject *parent)
     : tablemodel(parent)
 {
     setColumnCount(14);
@@ -24,12 +24,12 @@ parametermodel::parametermodel(QObject *parent)
     setRowCount(0);
 }
 
-parametermodel::~parametermodel()
+parameterModel::~parameterModel()
 {
     header.clear();
 }
 
-bool parametermodel::envLink(int index)
+bool parameterModel::envLink(int index)
 {
     bool flag = false;
     if (index < rowCount())
@@ -38,7 +38,7 @@ bool parametermodel::envLink(int index)
     return (flag);
 }
 
-bool parametermodel::useBlock(int index)
+bool parameterModel::useBlock(int index)
 {
     bool flag = false;
     if (index < rowCount())
@@ -47,7 +47,7 @@ bool parametermodel::useBlock(int index)
     return (flag);
 }
 
-bool parametermodel::useDev(int index)
+bool parameterModel::useDev(int index)
 {
     bool flag = false;
     if (index < rowCount())

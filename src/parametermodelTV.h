@@ -1,39 +1,39 @@
-#ifndef PARAMETERMODEL_H
-#define PARAMETERMODEL_H
+#ifndef PARAMETERMODELTV_H
+#define PARAMETERMODELTV_H
 
-#include "tablemodel.h"
-#include "model.h"
+#include "parametermodel.h"
+//#include "model.h"
 
 #include <QStringList>
 
-class shortparametermodel : public tablemodel
+class ss_model;
+
+class parameterModelTV : public parameterModel
 {
 public:
-    shortparametermodel (QObject *parent = 0);
-    ~shortparametermodel ();
-
-private:
-    QStringList header;
-};
-
-class parametermodel : public tablemodel
-{
-public:
-    parametermodel(QObject *parent = 0);
-    ~parametermodel();
+    parameterModelTV(QObject *parent = 0);
+    ~parameterModelTV();
 
     bool envLink (int index);
     bool useBlock (int index);
     bool useDev (int index);
 
 public slots:
-    shortparametermodel *getTimeVarModel() {return timeVarianceTable;}
+    shortParameterModel *getTimeVarModel() {return timeVarianceTable;}
     void updateTimeVarTable();
     void modelChanged();
     void changeData();
     void changeData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect = QVector<int>());
     void insertData(QModelIndex index, int first, int last);
     void removeData(QModelIndex index, int first, int last);
+
+    void setTimeVarBlkParam (int param, int num, QStringList data);
+    void setTimeVarDevParam (int param, int num, QStringList data);
+    void setTimeVarEnvParam (int param, QStringList data);
+
+    int getNumTimeVarParams ();
+    QStringList getTimeVarParam (int row);
+    QString getTimeVarParamHdr (int row);
 
 signals:
     void tableChanged();
@@ -47,11 +47,11 @@ private:
     QList<bool> devLinks;
     QList<bool> envLinks;
 
-    QList<shortparametermodel *> timeVarianceList;
-    shortparametermodel *timeVarianceTable;
+    QList<shortParameterModel *> timeVarianceList;
+    shortParameterModel *timeVarianceTable;
     QStringList autoGenBlkParam(int param, int block, QString label);
     QStringList autoGenDevParam(int param, bool value, QString label);
     QStringList autoGenEnvParam(int param, bool value, QString label);
 };
 
-#endif // PARAMETERMODEL_H
+#endif // PARAMETERMODELTV_H

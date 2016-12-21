@@ -3,8 +3,8 @@
 
 #include <QList>
 
-#include "short_parameter.h"
-#include "parametermodel.h"
+//#include "short_parameter.h"
+#include "parametermodelTV.h"
 
 class GrowthSeasonalEffects
 {

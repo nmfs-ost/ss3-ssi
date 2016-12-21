@@ -5,7 +5,7 @@
 
 #include "growth_pattern.h"
 #include "growth_season_effects.h"
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 
 class ss_growth
 {
@@ -181,8 +181,8 @@ private:
     int maturity_option;
     tablemodel *matAgeValues;
     float first_mature_age;
-    parametermodel *wtLenParams;
-    parametermodel *wtLenTVParams;
+    parameterModelTV *wtLenParams;
+    parameterModelTV *wtLenTVParams;
 
     int param_offset_method;
     int adjustment_method;
@@ -194,8 +194,8 @@ private:
 
     tablemodel *morphdisttable;
 
-    parametermodel *cohortParam;
-    parametermodel *fracfemaleParams;
+    parameterModelTV *cohortParam;
+    parameterModelTV *fracfemaleParams;
 
 //    QList<longParameter *> params;
     int num_params;
@@ -203,9 +203,9 @@ private:
     int devPhase;
 
     int customEnvLink;
-    parametermodel *environmentParams;
+    parameterModelTV *environmentParams;
     int customBlock;
-    parametermodel *blockParams;
+    parameterModelTV *blockParams;
 
     int timeVaryMethod;
     int timeVaryReadParams;

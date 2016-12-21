@@ -1,29 +1,10 @@
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 #include "model.h"
 #include <QString>
 
-shortparametermodel::shortparametermodel(QObject *parent)
-    : tablemodel(parent)
+parameterModelTV::parameterModelTV(QObject *parent)
+    : parameterModel(parent)
 {
-    setColumnCount(7);
-    header << " Lo " << " Hi " << "Init" << "Prior" << "Pr_SD" << "Pr_Type" << "Phase";
-    setHeader(header);
-    setRowCount(0);
-}
-
-shortparametermodel::~shortparametermodel()
-{
-    header.clear();
-}
-
-parametermodel::parametermodel(QObject *parent)
-    : tablemodel(parent)
-{
-    setColumnCount(14);
-    header << " Lo " << " Hi " << "Init" << "Prior" << "Pr_SD" << "Pr_Type" << "Phase";
-    header << "Env_Lnk" << "Dev_Lnk" << "Dev_Min" << "Dev_Max" << "Dev_Phs" << "Blk_Lnk" << "Blk_Fxn";
-    setHeader(header);
-    setRowCount(0);
     connect (this, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(insertData(QModelIndex,int,int)));
     connect (this, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(removeData(QModelIndex,int,int)));
     connect (this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), SLOT(changeData(QModelIndex,QModelIndex,QVector<int>)));
@@ -32,9 +13,9 @@ parametermodel::parametermodel(QObject *parent)
 //    timeVarianceModel = new shortparametermodel(this);
 }
 
-parametermodel::~parametermodel()
+parameterModelTV::~parameterModelTV()
 {
-    shortparametermodel *spm;
+    shortParameterModel *spm;
     while (timeVarianceList.count() > 0)
     {
         spm = timeVarianceList.takeLast();
@@ -44,7 +25,7 @@ parametermodel::~parametermodel()
     header.clear();
 }
 
-bool parametermodel::envLink(int index)
+bool parameterModelTV::envLink(int index)
 {
     return envLinks.at(index);
 /*    bool flag = false;
@@ -54,7 +35,7 @@ bool parametermodel::envLink(int index)
     return (flag);*/
 }
 
-bool parametermodel::useBlock(int index)
+bool parameterModelTV::useBlock(int index)
 {
     return blkLinks.at(index) != 0;
 /*    bool flag = false;
@@ -64,7 +45,7 @@ bool parametermodel::useBlock(int index)
     return (flag);*/
 }
 
-bool parametermodel::useDev(int index)
+bool parameterModelTV::useDev(int index)
 {
     return devLinks.at(index);
 /*    bool flag = false;
@@ -74,7 +55,7 @@ bool parametermodel::useDev(int index)
     return (flag);*/
 }
 
-void parametermodel::updateTimeVarTable()
+void parameterModelTV::updateTimeVarTable()
 {
     QString label;
     QStringList ql;
@@ -111,12 +92,12 @@ void parametermodel::updateTimeVarTable()
     }
 }
 
-void parametermodel::modelChanged()
+void parameterModelTV::modelChanged()
 {
     changeData();
 }
 
-void parametermodel::changeData()
+void parameterModelTV::changeData()
 {
     quintptr ptr = 0;
     int rows = rowCount();
@@ -125,7 +106,7 @@ void parametermodel::changeData()
     changeData(tplt, btrt);
 }
 
-void parametermodel::changeData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect)
+void parameterModelTV::changeData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect)
 {
     QString schk;
     int chk;
@@ -182,13 +163,13 @@ void parametermodel::changeData(QModelIndex tplt, QModelIndex btrt, QVector<int>
     }
 }
 
-void parametermodel::insertData(QModelIndex index, int first, int last)
+void parameterModelTV::insertData(QModelIndex index, int first, int last)
 {
-    shortparametermodel *sm;
+    shortParameterModel *sm;
     QStringList ql;
     for (int i = first; i <= last; i++)
     {
-        sm = new shortparametermodel(this);
+        sm = new shortParameterModel(this);
         timeVarianceList.insert(i, sm);
         ql = getRowData(i);
         blkLinks.insert(i, (QString(ql.at(12)).toInt()));
@@ -201,9 +182,9 @@ void parametermodel::insertData(QModelIndex index, int first, int last)
     updateTimeVarTable();
 }
 
-void parametermodel::removeData(QModelIndex index, int first, int last)
+void parameterModelTV::removeData(QModelIndex index, int first, int last)
 {
-    shortparametermodel *sm;
+    shortParameterModel *sm;
     for (int i = last; i >= first; i--)
     {
         envLinks.removeAt(i);
@@ -215,7 +196,7 @@ void parametermodel::removeData(QModelIndex index, int first, int last)
     updateTimeVarTable();
 }
 
-QStringList parametermodel::autoGenEnvParam(int param, bool value, QString label)
+QStringList parameterModelTV::autoGenEnvParam(int param, bool value, QString label)
 {
     QStringList ql;
 
@@ -224,7 +205,7 @@ QStringList parametermodel::autoGenEnvParam(int param, bool value, QString label
     return timeVarianceList.at(param)->getRowData(0);
 }
 
-QStringList parametermodel::autoGenDevParam(int param, bool value, QString label)
+QStringList parameterModelTV::autoGenDevParam(int param, bool value, QString label)
 {
     QStringList ql;
 
@@ -235,7 +216,7 @@ QStringList parametermodel::autoGenDevParam(int param, bool value, QString label
     return timeVarianceList.at(param)->getRowData(1);
 }
 
-QStringList parametermodel::autoGenBlkParam(int param, int block, QString label)
+QStringList parameterModelTV::autoGenBlkParam(int param, int block, QString label)
 {
     QStringList ql;
     BlockPattern *bp = parentModel->getBlockPattern(block);

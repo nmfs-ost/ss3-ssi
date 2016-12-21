@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>5</number>
+         <number>3</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -1283,9 +1283,6 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_q_info">
-            <item row="5" column="1" colspan="5">
-             <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
-            </item>
             <item row="0" column="1">
              <widget class="QLabel" name="label_q_setup">
               <property name="text">
@@ -1293,17 +1290,10 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="label_q_parameters">
-              <property name="text">
-               <string>Parameters</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1" colspan="4">
              <layout class="QVBoxLayout" name="verticalLayout_q_setup"/>
             </item>
-            <item row="4" column="4">
+            <item row="0" column="4">
              <spacer name="horizontalSpacer_14">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1316,7 +1306,7 @@
               </property>
              </spacer>
             </item>
-            <item row="4" column="3">
+            <item row="0" column="3">
              <spacer name="horizontalSpacer_16">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1329,7 +1319,7 @@
               </property>
              </spacer>
             </item>
-            <item row="4" column="5">
+            <item row="0" column="5">
              <spacer name="horizontalSpacer_13">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1342,7 +1332,7 @@
               </property>
              </spacer>
             </item>
-            <item row="4" column="2">
+            <item row="0" column="2">
              <spacer name="horizontalSpacer_20">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1354,6 +1344,26 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_q_parameters">
+              <property name="text">
+               <string>Parameters</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1" colspan="5">
+             <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
+            </item>
+            <item row="5" column="1" colspan="5">
+             <layout class="QHBoxLayout" name="horizontalLayout_q_tv_parameters"/>
+            </item>
+            <item row="4" column="1" colspan="2">
+             <widget class="QLabel" name="label_q_tv_parameters">
+              <property name="text">
+               <string>Time Varying Parameters</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

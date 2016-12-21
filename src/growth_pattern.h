@@ -2,7 +2,7 @@
 #define GROWTH_PATTERN_H
 
 #include "growth_morph.h"
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 
 class growthPattern
 {

@@ -3,7 +3,7 @@
 
 #include "input_file.h"
 #include "short_parameter.h"
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 #include <QString>
 
 class ss_mortality

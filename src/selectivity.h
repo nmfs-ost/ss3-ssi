@@ -5,9 +5,9 @@
 #include <QList>
 
 #include "method_setup.h"
-#include "long_parameter.h"
+//#include "long_parameter.h"
 #include "selex_equation.h"
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 
 class selectivity
 {
@@ -76,7 +76,7 @@ public:
     QString getTimeVaryParameterText (int index);
     QStringList getTimeVaryParameter (int index) {return timeVaryParameters->getRowData(index);}
     QString getTimeVaryParameterLabel (int index) {return timeVaryParameters->getRowHeader(index);}
-    parameterModelTV *getTimeVaryParameterModel() {return timeVaryParameters;}
+    shortParameterModel *getTimeVaryParameterModel() {return timeVaryParameters;}
 
     double operator()() {return evaluate();}
     double evaluate();
@@ -95,7 +95,7 @@ protected:
 
     parameterModelTV *parameters;
 
-    parameterModelTV *timeVaryParameters;
+    shortParameterModel *timeVaryParameters;
 
     parameterModelTV *retainParameters;
     parameterModelTV *discardParameters;

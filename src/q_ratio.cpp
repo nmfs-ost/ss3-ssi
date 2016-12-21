@@ -1,4 +1,4 @@
-#include "q.h"
+#include "q_ratio.h"
 
 q_ratio::q_ratio()
 {

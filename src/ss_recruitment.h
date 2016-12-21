@@ -4,7 +4,7 @@
 #include "short_parameter.h"
 #include "long_parameter.h"
 #include "input_file.h"
-#include "parametermodel.h"
+#include "parametermodelTV.h"
 #include "fileIOgeneral.h"
 
 #include "ss_observation.h"

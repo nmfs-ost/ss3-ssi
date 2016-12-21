@@ -24,6 +24,8 @@
 #include "spinboxdelegate.h"
 #include "composition.h"
 
+class Fleet;
+
 /** a class to keep data about seasons */
 class Season : public QObject
 {
@@ -388,7 +390,7 @@ private:
     bool useMeanBwtData;
     int i_mean_bwt_df;
 
-    parametermodel *catchMult;
+    parameterModel *catchMult;
 
     bool useLenCompData;
     compositionLength *lengthData;
