@@ -61,7 +61,7 @@ void Season::setDuration(float value)
 
 
 ss_model::ss_model(QWidget *parent) :
-    QWidget(parent)
+    QObject(parent)
 {
     ageData = NULL;
     lengthData = NULL;
@@ -88,8 +88,8 @@ ss_model::ss_model(QWidget *parent) :
     doMorphComp = false;
     lengthData = new compositionLength(this);
 
-    catchMult = new parameterModelTV(this);
-    catchMult->setColumnCount(7);
+    catchMult = new shortParameterModel(this);
+//    catchMult->setColumnCount(7);
     catchMult->setRowCount(1);
 
     selexAdjustMethod = 1;
@@ -541,6 +541,7 @@ Fleet * ss_model::getFleet(int index)
 Fleet * ss_model::newFleet(QString name)
 {
     Fleet *newfl = new Fleet(this);
+    newfl->Q()->getParamModel()->setParentModel(this);
     if (name.isEmpty())
             name = QString("New_Fleet");
     newfl->setName(name);

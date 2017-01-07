@@ -61,18 +61,18 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     // set up the default model
-    model_one = new ss_model(this);
-    model_one->setVisible(false);
+    modelData = new ss_model(this);
+//    modelData->setVisible(false);
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Model data set up finished.");
 #endif
 
     // furnish the ui with the default model
-    files = new file_widget (model_one, this);
-    data = new data_widget(model_one, this);
-    forecast = new forecast_widget(model_one, this);
-    fleets = new fleet_widget(model_one, this);
-    population = new population_widget(model_one, this);
+    files = new file_widget (modelData, this);
+    data = new data_widget(modelData, this);
+    forecast = new forecast_widget(modelData, this);
+    fleets = new fleet_widget(modelData, this);
+    population = new population_widget(modelData, this);
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Widget set up finished.");
 #endif
@@ -145,7 +145,7 @@ MainWindow::~MainWindow()
     delete forecast;
     delete fleets;
     delete population;
-    delete model_one;
+    delete modelData;
     delete ui;
 }
 
@@ -296,7 +296,7 @@ void MainWindow::createNewDirectory()
                           QMessageBox::Yes, QMessageBox::No);
     if (btn == QMessageBox::Yes)
     {
-        model_one->reset();
+        modelData->reset();
         openNewDirectory();
         reset();
     }
@@ -345,7 +345,7 @@ void MainWindow::openDirectory(QString fname)
         QDir::setCurrent(current_dir);
         files->new_directory(current_dir);
         readFiles();
-        files->setReadWtAtAge(model_one->getReadWtAtAge());
+        files->setReadWtAtAge(modelData->getReadWtAtAge());
     }
 }
 
@@ -412,8 +412,8 @@ void MainWindow::readFiles()
 {
     bool worked = true;
     int choice = 1;
-    model_one->reset();
-    worked = files->read_files(model_one);
+    modelData->reset();
+    worked = files->read_files(modelData);
     if (worked)
     {
         data->refresh();
@@ -480,7 +480,7 @@ QString MainWindow::getControlFile()
 
 void MainWindow::setReadWtAtAgeSS(bool flag)
 {
-    model_one->setReadWtAtAge(flag);
+    modelData->setReadWtAtAge(flag);
     files->setReadWtAtAge(flag);
 }
 
@@ -766,7 +766,7 @@ void MainWindow::run_trans()
     QMessageBox::information(this, "NOTICE", "If the model has complex features, it may not convert completely.");
     Dialog_run drun(this);
     // edit starter.ss to set max phase 0 and turn off reading parameter file
-    model_one->set_last_estim_phase(0);
+    modelData->set_last_estim_phase(0);
     files->set_par_file(false);
     files->write_starter_file();
     // use run dialog to run ss_trans
@@ -802,7 +802,7 @@ void MainWindow::run_trans()
             copy_file (old_dir + QString("/data.ss_new"), current_dir + QString("/") + files->getDataFileName());
             copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
 
-            if (model_one->getReadWtAtAge())
+            if (modelData->getReadWtAtAge())
             {
                 copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
             }

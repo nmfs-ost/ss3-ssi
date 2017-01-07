@@ -2704,7 +2704,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // SR time vary params
         {
             pop->SR()->setNumTVParameters(0);
-            parameterModelTV *params = pop->SR()->getFullParameterModel();
+            parameterModel *params = pop->SR()->getFullParameterModel();
             num = params->rowCount();
             for (int j = 0; j < 3; j++)
             {
@@ -2871,7 +2871,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Q timevary params
         for (i = 0; i < data->get_num_fleets(); i++)
         {
-            tablemodel *params = data->getFleet(i)->Q()->getParamModel();
+            tablemodel *params = data->getFleet(i)->Q()->getParamModel()->getParameters();
             tablemodel *tvParams = data->getFleet(i)->Q()->getTVParams();
             int num = params->rowCount();
             for (int j = 0; j < num; j++)
@@ -3520,7 +3520,11 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("0 "));//.arg(QString::number(temp_int)));
         temp_int = data->getActiveFleet(1)->getSelTimeVaryReadParams();
         line.append(QString("%1 ").arg(QString::number(temp_int)));
-        line.append(QString("# 0=autogenerate time-varying parameters; 1=read each time-varying parameter line"));
+        line.append(QString("# autogen"));//0=autogenerate time-varying parameters; 1=read each time-varying parameter line"));
+        chars += c_file->writeline(line);
+        line = QString("# where: 0 = autogen all time-varying parms; 1 = read each time-varying parm line; 2 = read then autogen if min=-12345");
+        chars += c_file->writeline(line);
+        line = QString("# 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex");
         chars += c_file->writeline(line);
         chars += c_file->writeline("#");
         line = QString("# setup for M, growth, maturity, fecundity, recruitment distibution, movement ");
@@ -4015,7 +4019,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
         num = 0;
         {
-        parameterModelTV *params = pop->SR()->getFullParameterModel();
+        parameterModel *params = pop->SR()->getFullParameterModel();
         num = params->rowCount();
         for (j = 0; j < num; j++)
         {
@@ -4027,7 +4031,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString("#_ LO HI INIT PRIOR PR_SD PR_type PHASE  #  parm_name");
         chars += c_file->writeline(line);
         {
-        parameterModelTV *params = pop->SR()->getTVParameterModel();
+        shortParameterModel *params = pop->SR()->getTVParameterModel();
         num = params->rowCount();
         for (j = 0; j < num; j++)
         {
@@ -4321,7 +4325,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         for (i = 0; i < data->get_num_fleets(); i++)
         {
-            tablemodel *params = data->getFleet(i)->Q()->getParamModel();
+            tablemodel *params = data->getFleet(i)->Q()->getParamModel()->getParameters();
             tablemodel *tvParams = data->getFleet(i)->Q()->getTVParams();
             int num = tvParams->rowCount();
             for (int j = 0; j < num; j++)

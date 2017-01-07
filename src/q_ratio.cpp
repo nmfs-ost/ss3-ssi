@@ -1,24 +1,22 @@
 #include "q_ratio.h"
+#include "parametermodelTV.h"
 
-q_ratio::q_ratio()
+q_ratio::q_ratio(ss_model *model)
 {
     QStringList hdr;
     hdr << "Link" << "Link_Info" << "ExtraSD" << "Bias_Adj" << "Float" ;
-    qsetup = new parameterModelTV();
+    qsetup = new parameterModel(model);
     qsetup->setColumnCount(5);
     qsetup->setHeader(hdr);
 
     hdr.clear();
     hdr << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
     hdr << "env-var" << "use_dev" << "dv_mnyr" << "dv_mxyr" << "dv_stdv" << "Block" << "Blk_Fxn";
-    params = new parameterModelTV();
+    params = new parameterModelTV(model);
     params->setColumnCount(14);
     params->setHeader(hdr);
     params->setRowCount(1);
     params->setRowHeader(0, "LnQ_Base");
-    tvParams = new parameterModelTV();
-    tvParams->setColumnCount(7);
-    tvParams->setRowCount(0);
     reset();
 }
 
@@ -26,6 +24,7 @@ q_ratio::~q_ratio()
 {
     reset();
     delete params;
+    delete qsetup;
 }
 
 void q_ratio::reset()
@@ -474,11 +473,19 @@ void q_ratio::setupChanged()
     }*/
 }
 
-void q_ratio::setTVParam(int index, QStringList data)
+void q_ratio::setTVBlkParam(int index, int row, QStringList data)
 {
-    if (index < tvParams->rowCount())
-        tvParams->setRowCount(index + 1);
-    tvParams->setRowData(index, data);
+    params->setTimeVarBlkParam (index, row, data);
+}
+
+void q_ratio::setTVDevParam(int index, int row, QStringList data)
+{
+    params->setTimeVarDevParam (index, row, data);
+}
+
+void q_ratio::setTVEnvParam(int index, QStringList data)
+{
+    params->setTimeVarEnvParam (index, data);
 }
 
 

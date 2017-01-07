@@ -1,22 +1,22 @@
 #include "population.h"
 
-population::population(QWidget *parent) :
-    QObject(parent)
+population::population(ss_model *parent) :
+    QObject((QObject *)parent)
 {
     QStringList header;
-    pop_growth = new ss_growth();
-    pop_fecundity = new ss_fecundity();
-    pop_recruitment = new spawn_recruit();
-    pop_mortality = new ss_mortality();
-    pop_movement = new ss_movement();
+    pop_growth = new ss_growth(parent);
+    pop_fecundity = new ss_fecundity(parent);
+    pop_recruitment = new spawn_recruit(parent);
+    pop_mortality = new ss_mortality(parent);
+    pop_movement = new ss_movement(parent);
     meanBwtModel = new tablemodel(this);
     meanBwtModel->setColumnCount(20);
     header << "Year" << "Seas" << "Type" << "Part" << "Value" << "CV";
     meanBwtModel->setHeader(header);
-    seasparamtable = new parameterModelTV(this);
+    seasparamtable = new shortParameterModel(this);
     header.clear();
 //    header << "st_age" << "st_age bias" << "max_age bias" << "bias coeff" << "st_age sd" << "max_age sd" << "sd coeff";
-    seasparamtable->setColumnCount(7);
+//    seasparamtable->setColumnCount(7);
     seasparamtable->setHeader(header);
     reset();
 }

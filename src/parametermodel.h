@@ -7,6 +7,8 @@
 
 class shortParameterModel : public tablemodel
 {
+    Q_OBJECT
+
 public:
     shortParameterModel (QObject *parent = 0);
     ~shortParameterModel ();
@@ -17,6 +19,8 @@ private:
 
 class parameterModel : public tablemodel
 {
+    Q_OBJECT
+
 public:
     parameterModel(QObject *parent = 0);
     ~parameterModel();

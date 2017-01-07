@@ -1,34 +1,35 @@
 #include "growth_pattern.h"
 
-growthPattern::growthPattern()
+growthPattern::growthPattern(ss_model *parent)
 {
+    parnt = parent;
     morphs.append(new growth_morph());
     num_morphs = 1;
 
-    fractionFemParams = new parameterModelTV();
+    fractionFemParams = new parameterModelTV(parnt);
     fractionFemParams->setRowCount(1);
     fractionFemParams->setRowHeader(0, QString("FracFemale"));
 
-    growthParams = new parameterModelTV();
-    growthTVParams = new parameterModelTV();
-    growthTVParams->setColumnCount(7);
+    growthParams = new parameterModelTV(parnt);
+    growthTVParams = growthParams->getTimeVarParameters();
+//    growthTVParams->setColumnCount(7);
 
-    cvParams = new parameterModelTV();
+    cvParams = new parameterModelTV(parnt);
     cvParams->setRowCount(2);
-    cvTVParams = new parameterModelTV();
+    cvTVParams = cvParams->getTimeVarParameters();
     cvTVParams->setColumnCount(7);
 
-    natMParams = new parameterModelTV();
+    natMParams = new parameterModelTV(parnt);
     natMParams->setRowCount(1);
-    natMTVParams = new parameterModelTV();
+    natMTVParams = natMParams->getTimeVarParameters();
     natMTVParams->setColumnCount(7);
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
 
-    devParams = new parameterModelTV();
-    devParams->setColumnCount(7);
+    devParams = new parameterModelTV(parnt);
+//    devParams->setColumnCount(7);
 
-    timeVaryParams = new parameterModelTV();
+    timeVaryParams = new shortParameterModel();
     timeVaryParams->setColumnCount(7);
 }
 
@@ -37,11 +38,11 @@ growthPattern::~growthPattern()
     clear();
     delete fractionFemParams;
     delete growthParams;
-    delete growthTVParams;
+//    delete growthTVParams;
     delete cvParams;
-    delete cvTVParams;
+//    delete cvTVParams;
     delete natMParams;
-    delete natMTVParams;
+//    delete natMTVParams;
     delete natMAges;
     delete devParams;
     delete timeVaryParams;

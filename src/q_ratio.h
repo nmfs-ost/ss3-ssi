@@ -12,7 +12,7 @@
 class q_ratio
 {
 public:
-    q_ratio();
+    q_ratio(ss_model *model);
     ~q_ratio();
 
     void reset();
@@ -22,7 +22,7 @@ public:
     void setup(QString str);
     QString getSetup();
 
-    parameterModelTV *getSetupModel() {return qsetup;}
+    parameterModel *getSetupModel() {return qsetup;}
 
     int getDoPower() const;
     void setDoPower(int value);
@@ -59,12 +59,12 @@ public:
     QStringList getParameter(int index);
     parameterModelTV *getParamModel() {return params;}
 
-    void setNumTVParams (int num) {tvParams->setRowCount(num);}
-    int getNumTVParams () {return tvParams->rowCount();}
-    void addTVParam (QStringList data) {setTVParam(getNumTVParams(), data);}
-    void setTVParam (int index, QStringList data);
-    QStringList getTVParam (int index) {return tvParams->getRowData(index);}
-    parameterModelTV *getTVParams () {return tvParams;}
+    int getNumTVParams () {return params->getTimeVarParameters()->rowCount();}
+    void setTVBlkParam (int index, int row, QStringList data);
+    void setTVDevParam (int index, int row, QStringList data);
+    void setTVEnvParam (int index, QStringList data);
+    QStringList getTVParam (int index) {return params->getTimeVarParam(index);}
+    shortParameterModel *getTVParams () {return params->getTimeVarParameters();}
 
     int getTypeIndex() const;
     void setTypeIndex(int value);
@@ -78,9 +78,9 @@ public slots:
     void setupChanged (int error_type);
 
 private:
-    parameterModelTV *qsetup;
+    parameterModel *qsetup;
     parameterModelTV *params;
-    parameterModelTV *tvParams;
+//    parameterModelTV *tvParams;
     int BaseIndex;
     int doBlkTnd;
     int BlkTndIndex;

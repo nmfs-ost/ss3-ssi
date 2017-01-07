@@ -1,17 +1,18 @@
 #include "ss_fecundity.h"
 
-ss_fecundity::ss_fecundity()
+ss_fecundity::ss_fecundity(ss_model *parent)
 {
+    parnt = parent;
     method = 0;
     hermSeason = 1;
     hermIncludeMales = 0;
 
-    hermaphParams = new parameterModelTV();
+    hermaphParams = new parameterModelTV(parnt);
     hermaphParams->setRowCount(3);
     hermaphParams->setRowHeader(0, QString("Hermaph_inflect_age"));
     hermaphParams->setRowHeader(1, QString("Hermaph_std_dev"));
     hermaphParams->setRowHeader(2, QString("Hermaph_asymp_rate"));
-    femaleParams = new parameterModelTV();
+    femaleParams = new parameterModelTV(parnt);
     femaleParams->setRowCount(4);
 }
 

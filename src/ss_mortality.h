@@ -9,7 +9,7 @@
 class ss_mortality
 {
 public:
-    ss_mortality(int n_fisheries = 1, int n_surveys = 0);
+    ss_mortality(ss_model *parent = 0, int n_fisheries = 1, int n_surveys = 0);
 
     void reset();
     void setYears (int f_year, int num); // num may be number of years or last year
@@ -56,6 +56,7 @@ public:
     tablemodel *getInitialParams () {return initialParams;}
 
 private:
+    ss_model *parnt;
     int firstYear;
     int numYears;
     int numFisheries;
@@ -69,8 +70,8 @@ private:
     int   numInputs;
     int   numTuningIters;
 
-    parameterModelTV *initialParams;
-    parameterModelTV *parameterTable;
+    shortParameterModel *initialParams;
+    shortParameterModel *parameterTable;
 
     QString m_text;
 };

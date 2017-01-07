@@ -2550,7 +2550,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parameterModelTV *pm, *pml;
+            parameterModelTV *pm;
+            shortParameterModel *pml;
             temp_int = c_file->get_next_value().toInt();
             data->setCustomEnviroLink(temp_int);
             for (int i = 0; i < data->get_num_fleets(); i++)
@@ -2591,7 +2592,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parameterModelTV *pm, *pmb;
+            parameterModelTV *pm;
+            shortParameterModel *pmb;
             temp_int = c_file->get_next_value().toInt();
             data->setCustomBlockSetup(temp_int);
             for (int i = 0; i < data->get_num_fleets(); i++)
@@ -2634,7 +2636,8 @@ bool read32_controlFile(ss_file *c_file, ss_model *data)
         }
         if (num_vals > 0)
         {
-            parameterModelTV *pm, *pme, *pmr;
+            parameterModelTV *pm;
+            shortParameterModel *pme, *pmr;
             for (int i = 0; i < data->get_num_fleets(); i++)
             {
                 pm = data->getFleet(i)->getSizeSelectivity()->getParameterModel();

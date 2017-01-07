@@ -8,7 +8,7 @@
 class ss_fecundity
 {
 public:
-    ss_fecundity();
+    ss_fecundity(ss_model *parent = 0);
     ~ss_fecundity();
 
     void reset();
@@ -18,11 +18,11 @@ public:
 
     void setHermParam (int index, QStringList data);
     QStringList getHermParam(int index) {return hermaphParams->getRowData(index);}
-    tablemodel *getHermParams() {return hermaphParams;}
+    tablemodel *getHermParams() {return hermaphParams->getParameters();}
 
     void setFemaleParam (int index, QStringList data);
     QStringList getFemaleParam(int index) {return femaleParams->getRowData(index);}
-    tablemodel *getFemaleParams() {return femaleParams;}
+    tablemodel *getFemaleParams() {return femaleParams->getParameters();}
 
     int getHermIncludeMales() const;
     void setHermIncludeMales(int value);
@@ -34,6 +34,7 @@ public:
     void setHermaphroditism(int value);
 
 private:
+    ss_model *parnt;
     int method;
     int hermaphroditism;
     int hermSeason;

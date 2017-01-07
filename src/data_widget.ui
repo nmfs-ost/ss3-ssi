@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -1681,6 +1681,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_16">
        <item>
         <widget class="QScrollArea" name="scrollArea">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -1696,6 +1699,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
             <widget class="QGroupBox" name="groupBox_tag">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>Enable Tag-Recapture Data</string>
              </property>
@@ -1790,6 +1796,33 @@
                <widget class="QLabel" name="label_tag_max_info">
                 <property name="text">
                  <string>in which to track recoveries. After that, tags enter accumulator</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_tag_time_vary">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Time variance</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="4">
+               <widget class="QLabel" name="label_time_vary_info">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="2">
+               <widget class="QSpinBox" name="spinBox_tag_time_vary">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>

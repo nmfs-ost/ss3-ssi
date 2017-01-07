@@ -142,7 +142,7 @@ void compositionAge::reset()
 
 void compositionAge::setNumberBins(int num)
 {
-    int saaCount;
+//    int saaCount;
     QStringList saaHeader;
     binsModel->setColumnCount(num);
 
@@ -155,7 +155,7 @@ void compositionAge::setNumberBins(int num)
         saaHeader.append(QString("FS%1").arg(i+1));
     for (int i = 0; i < num; i++)
         saaHeader.append(QString("MS%1").arg(i+1));
-    saaCount = 7 + (4 * num);
+//    saaCount = 7 + (4 * num);
     saaModel->setColumnCount(saaHeader.count());
     saaModel->setHeader(saaHeader);
 }

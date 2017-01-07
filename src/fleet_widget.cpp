@@ -393,16 +393,16 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_q_type->setValue(current_fleet->q_type());*/
         qSetupView->setModel(current_fleet->Q()->getSetupModel());//getQSetup());
         qSetupView->setHeight(current_fleet->Q()->getSetupModel());//getQSetup());
-        qParamsView->setModel(current_fleet->Q()->getParamModel());//getQParams());
-        qParamsView->setHeight(current_fleet->Q()->getParamModel());//getQParams());
+        qParamsView->setModel(current_fleet->Q()->getParamModel()->getParameters());//getQParams());
+        qParamsView->setHeight(current_fleet->Q()->getParamModel()->getParameters());//getQParams());
         qParamsView->resizeColumnsToContents();
 
         ui->spinBox_selex_size_pattern->setValue(current_fleet->getSizeSelectivity()->getPattern());
         ui->spinBox_selex_size_discard->setValue(current_fleet->getSizeSelectivity()->getDiscard());
         ui->spinBox_selex_size_male->setValue(current_fleet->getSizeSelectivity()->getMale());
         ui->spinBox_selex_size_special->setValue(current_fleet->getSizeSelectivity()->getSpecial());
-        sizeSelexParamsView->setModel(current_fleet->getSizeSelectivity()->getParameterModel());
-        sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel());
+        sizeSelexParamsView->setModel(current_fleet->getSizeSelectivity()->getParameterModel()->getParameters());
+        sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel()->getParameters());
         sizeSelexParamsView->resizeColumnsToContents();
         sizeSelexRetainView->setModel(current_fleet->getSizeSelectivity()->getRetainParameterModel());
         sizeSelexRetainView->setHeight(current_fleet->getSizeSelectivity()->getRetainParameterModel());
@@ -420,8 +420,8 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
         ui->spinBox_selex_age_male->setValue(current_fleet->getAgeSelectivity()->getMale());
         ui->spinBox_selex_age_special->setValue(current_fleet->getAgeSelectivity()->getSpecial());
-        ageSelexParamsView->setModel(current_fleet->getAgeSelectivity()->getParameterModel());
-        ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel());
+        ageSelexParamsView->setModel(current_fleet->getAgeSelectivity()->getParameterModel()->getParameters());
+        ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel()->getParameters());
         ageSelexParamsView->resizeColumnsToContents();
         ageSelexMaleView->setModel(current_fleet->getAgeSelectivity()->getMaleParameterModel());
         ageSelexMaleView->setHeight(current_fleet->getAgeSelectivity()->getMaleParameterModel());
@@ -657,7 +657,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
             (current_fleet->getSizeSelectivity()->getPattern());
     ui->spinBox_selex_size_num_params->setValue
             (current_fleet->getSizeSelectivity()->getNumParameters());
-    sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel());
+    sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getParameterModel()->getParameters());
 }
 
 void fleet_widget::showSelexSizeInfo()
@@ -730,7 +730,7 @@ void fleet_widget::changeSelexAgePattern(int pat)
             (current_fleet->getAgeSelectivity()->getPattern());
     ui->spinBox_selex_age_num_params->setValue
             (current_fleet->getAgeSelectivity()->getNumParameters());
-    ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel());
+    ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getParameterModel()->getParameters());
 }
 
 void fleet_widget::changeSelexAgeMale(int mal)

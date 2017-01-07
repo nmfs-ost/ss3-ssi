@@ -1,7 +1,7 @@
 #include "selectivity.h"
 #include "selex_equation.h"
 
-selectivity::selectivity(int method)
+selectivity::selectivity(ss_model *model, int method)
 {
     pattern = 0;
     discard = 0;
@@ -10,19 +10,14 @@ selectivity::selectivity(int method)
 
     numAges = 0;
     equation = NULL;
-    parameters = new parameterModelTV();
+    parameters = new parameterModelTV(model);
 
-    timeVaryParameters = new parameterModelTV();
-    timeVaryParameters->setColumnCount(7);
+    timeVaryParameters = parameters->getTimeVarParameters();
 
-    discardParameters = new parameterModelTV();
-    discardParameters->setColumnCount(7);
-    specialParameters = new parameterModelTV();
-    specialParameters->setColumnCount(7);
-    retainParameters = new parameterModelTV();
-    retainParameters->setColumnCount(7);
-    maleParameters = new parameterModelTV();
-    maleParameters->setColumnCount(7);
+    discardParameters = new shortParameterModel();
+    specialParameters = new shortParameterModel();
+    retainParameters = new shortParameterModel();
+    maleParameters = new shortParameterModel();
 
     setMethod(method);
 }

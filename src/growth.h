@@ -10,7 +10,7 @@
 class ss_growth
 {
 public:
-    ss_growth();
+    ss_growth(ss_model *parent = 0);
     ~ss_growth();
 
     void reset();
@@ -72,7 +72,7 @@ public:
     void addWtLenParam (QStringList data) {setWtLenParam(getNumWtLenParams(), data);}
     void setWtLenParam (int index, QStringList data);
     QStringList getWtLenParam (int index) {return wtLenParams->getRowData(index);}
-    tablemodel *getWtLenParams () {return wtLenParams;}
+    tablemodel *getWtLenParams () {return wtLenParams->getParameters();}
     void setNumWtLenTVParams (int num) {wtLenTVParams->setRowCount(num);}
     int getNumWtLenTVParams () {return wtLenTVParams->rowCount();}
     void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
@@ -84,7 +84,7 @@ public:
 
     void setCohortParam (QStringList data) {cohortParam->setRowData (0, data);}
     QStringList getCohortParam () {return cohortParam->getRowData(0);}
-    tablemodel *getCohortParams () {return cohortParam;}
+    tablemodel *getCohortParams () {return cohortParam->getParameters();}
 
     int getNumDevParams();
 
@@ -93,14 +93,14 @@ public:
     void setEnvironParam (int index, QStringList data) {environmentParams->setRowData (index, data);}
     QStringList getEnvironParam(int index) {return environmentParams->getRowData(index);}
     QString getEnvironParamText(int index) {return environmentParams->getRowText(index);}
-    tablemodel *getEnvironParams() {return environmentParams;}
+    tablemodel *getEnvironParams() {return environmentParams->getParameters();}
 
     int getNumBlockParams();
     void addBlockParam (QStringList data) {setBlockParam(getNumBlockParams(), data);}
     void setBlockParam (int index, QStringList data) {blockParams->setRowData (index, data);}
     QStringList getBlockParam(int index) {return blockParams->getRowData(index);}
     QString getBlockParamText(int index) {return blockParams->getRowText(index);}
-    tablemodel *getBlockParams() {return blockParams;}
+    tablemodel *getBlockParams() {return blockParams->getParameters();}
 
 /*    int getHermaphroditism() const;
     void setHermaphroditism(int value);
@@ -153,6 +153,7 @@ public:
     void autogenerateTimeVaryParams ();
 
 private:
+    ss_model *parnt;
     QList<growthPattern *> patterns;
     int num_patterns;
 
@@ -182,7 +183,7 @@ private:
     tablemodel *matAgeValues;
     float first_mature_age;
     parameterModelTV *wtLenParams;
-    parameterModelTV *wtLenTVParams;
+    shortParameterModel *wtLenTVParams;
 
     int param_offset_method;
     int adjustment_method;

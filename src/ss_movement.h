@@ -7,7 +7,7 @@
 class ss_movement
 {
 public:
-    ss_movement(int n_fleets = 1);
+    ss_movement(ss_model *parent = 0, int n_fleets = 1);
     ~ss_movement ();
 
     void reset();
@@ -27,7 +27,7 @@ public:
     QStringList getDefinition (int index);
     void setDefinition (int index, QStringList valuelist);
 
-    tablemodel *getMovementParams() {return movement_parms;}
+    tablemodel *getMovementParams() {return movement_parms->getParameters();}
     void setNumParams (int value) {movement_parms->setRowCount(value);}
     int getNumParams () {return movement_parms->rowCount();}
     void setParameter (int index, QStringList valuelist);
@@ -43,6 +43,7 @@ public:
     void setFirstAge(float value);
 
 private:
+    ss_model *parnt;
     int method;
     int numAreas;
     float firstAge;

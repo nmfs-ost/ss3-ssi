@@ -143,7 +143,7 @@ void tableview::insertRow()
     if (text.isEmpty())
         return;
     QStringList rowTextList (text.split('\n', QString::SkipEmptyParts));
-    int row, col, curr_row, curr_col;
+    int row;//, col, curr_row, curr_col;
     QList<QStandardItem *> data = blankRow();
 
     if(rowTextList.count() < 1)
@@ -155,7 +155,7 @@ void tableview::insertRow()
         return;
 
     row = list.first().row();
-    col = list.first().column();
+//    col = list.first().column();
     abmodel->insertRow(row, data);
     setHeight(abmodel);
 }
@@ -227,7 +227,7 @@ void tableview::pasteRows()
 
     row = list.first().row();
     col = list.first().column();
-    QModelIndex curr_index = list.first();
+//    QModelIndex curr_index = list.first();
 
     setHeight(abmodel);
 }
@@ -243,7 +243,7 @@ void tableview::insertCopiedRows()
     if (text.isEmpty())
         return;
     QStringList rowTextList (text.split('\n', QString::SkipEmptyParts));
-    int row, col, curr_row, curr_col;
+    int row;//, col, curr_row, curr_col;
     QList<QStandardItem *> data;
 
     if(rowTextList.count() < 1)
@@ -255,7 +255,7 @@ void tableview::insertCopiedRows()
         return;
 
     row = list.first().row();
-    col = list.first().column();
+//    col = list.first().column();
     for (int i = 0; i < rowTextList.count(); i++)
     {
         rowtext = rowTextList.at(i);

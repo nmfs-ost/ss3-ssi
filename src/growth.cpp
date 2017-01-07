@@ -1,8 +1,9 @@
 #include "growth.h"
 #include "parametermodel.h"
 
-ss_growth::ss_growth()
+ss_growth::ss_growth(ss_model *parent)
 {
+    parnt = parent;
     num_patterns = 0;
     num_params = 0;
 //    paramtable = new parametermodel();
@@ -11,40 +12,39 @@ ss_growth::ss_growth()
 //    hermaphParams = new parametermodel();
 //    hermaphParams->setRowCount(3);
 
-    morphdisttable = new tablemodel();
+    morphdisttable = new tablemodel((QObject *)parnt);
     morphdisttable->setRowCount(1);
 
     natMortNumBreakPoints = 0;
-    natMortBreakPoints = new tablemodel();
+    natMortBreakPoints = new tablemodel((QObject *)parnt);
     natMortBreakPoints->setRowCount(1);
     natMortBreakPoints->setRowHeader(0, QString("Age(real) at M Breakpoints"));
-    natMortAges = new tablemodel();
+    natMortAges = new tablemodel((QObject *)parnt);
     natMortAges->setRowCount(0);
     natMortAges->setColumnCount(1);
     natMort_lorenzen_ref_age = 0;
 
-    matAgeValues = new tablemodel();
+    matAgeValues = new tablemodel((QObject *)parnt);
     matAgeValues->setRowCount(1);
 
-    wtLenParams = new parameterModelTV();
+    wtLenParams = new parameterModelTV(parnt);
     wtLenParams->setRowCount(0);
-    wtLenTVParams = new parameterModelTV();
+    wtLenTVParams = wtLenParams->getTimeVarParameters();
     wtLenTVParams->setRowCount(0);
-    wtLenTVParams->setColumnCount(7);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new parameterModelTV();
+    cohortParam = new parameterModelTV(parnt);
     cohortParam->setRowCount(1);
 
-    fracfemaleParams = new parameterModelTV();
+    fracfemaleParams = new parameterModelTV(parnt);
     fracfemaleParams->setRowCount(1);
 
     customBlock = -1;
-    blockParams = new parameterModelTV();
+    blockParams = new parameterModelTV(parnt);
     blockParams->setRowCount(0);
     customEnvLink = -1;
-    environmentParams = new parameterModelTV();
+    environmentParams = new parameterModelTV(parnt);
     environmentParams->setRowCount(0);
 
     reset();
@@ -60,7 +60,7 @@ ss_growth::~ss_growth()
     delete natMortAges;
     delete matAgeValues;
     delete wtLenParams;
-    delete wtLenTVParams;
+//    delete wtLenTVParams;
     delete cohortParam;
     delete fracfemaleParams;
     customEnvLink = -1;
@@ -537,12 +537,12 @@ void ss_growth::setNum_patterns(int value)
     int i;
     if (patterns.isEmpty())
     {
-        patterns.append(new growthPattern());
+        patterns.append(new growthPattern(parnt));
     }
     i = patterns.count();
     for (; i < value; i++)
     {
-        growthPattern *new_gp = new growthPattern();
+        growthPattern *new_gp = new growthPattern(parnt);
         patterns.append(new_gp);
     }
     while (value < patterns.count())

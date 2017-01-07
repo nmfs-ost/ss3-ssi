@@ -45,10 +45,10 @@ Fleet::Fleet(QObject *parent) :
     lambdaModel->setHeader(abundanceHeader);
 
     q_read = false;
-    q_R = new q_ratio();
+    q_R = new q_ratio(model);
     s_name = NULL;
-    size_selex = new selectivity();
-    age_selex = new selectivity();
+    size_selex = new selectivity(model);
+    age_selex = new selectivity(model);
     reset();
 }
 

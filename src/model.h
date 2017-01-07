@@ -56,7 +56,7 @@ private:
 
 
 /** This is the main data class and holds pointers to all the other data classes */
-class ss_model : public QWidget
+class ss_model : public QObject
 {
     Q_OBJECT
 public:
@@ -390,7 +390,7 @@ private:
     bool useMeanBwtData;
     int i_mean_bwt_df;
 
-    parameterModel *catchMult;
+    shortParameterModel *catchMult;
 
     bool useLenCompData;
     compositionLength *lengthData;

@@ -50,7 +50,7 @@ public:
     void setParameter (int i, QStringList datalist);
     void setParameter (int i, QString str);
     tablemodel *getEffectsModel() {return effects;}
-    tablemodel *getParamsModel() {return paramtable;}
+    tablemodel *getParamsModel() {return paramtable->getParameters();}
 
     int getNumParams() const;
     void setNumParams(int value);

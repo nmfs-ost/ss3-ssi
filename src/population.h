@@ -17,7 +17,7 @@ class population : public QObject
 {
     Q_OBJECT
 public:
-    population(QWidget *parent = 0);
+    population(ss_model *parent = 0);
     ~population ();
 
     void reset();
@@ -90,7 +90,7 @@ public slots:
     void addSeasParam (QStringList data) {setSeasParam(seasparamtable->rowCount(), data);}
     void setSeasParam (int index, QStringList data);
     QStringList getSeasParam (int index);
-    parameterModelTV *getSeasonalParams() {return seasparamtable;}
+    shortParameterModel *getSeasonalParams() {return seasparamtable;}
     void insertSeasParams (int num);
     void removeSeasParams (int num);
 
@@ -118,7 +118,7 @@ private:
     int iStartYear;
     int iNumAges;
 
-    parameterModelTV *seasparamtable;
+    shortParameterModel *seasparamtable;
 
 };
 

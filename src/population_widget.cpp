@@ -327,12 +327,7 @@ void population_widget::refresh()
     ui->checkBox_recr_interaction->setChecked(pop->SR()->getDoRecruitInteract());
     ui->spinBox_recr_num_assigns->setValue(pop->SR()->getNumAssignments());
     setSpawnRecrSpec(pop->SR()->method);
-//    ui->spinBox_sr_env_link->setValue(pop->SR()->env_link);
-    ui->spinBox_sr_env_link->setVisible(false);
-    ui->label_sr_env_link->setVisible(false);
-//    ui->spinBox_sr_env_tgt->setValue(pop->SR()->env_target);
-    ui->spinBox_sr_env_tgt->setVisible(false);
-    ui->label_sr_env_tgt->setVisible(false);
+
     ui->spinBox_sr_recr_dev_begin_yr->setValue(pop->SR()->rec_dev_start_yr);
     ui->spinBox_sr_recr_dev_phase->setValue(pop->SR()->rec_dev_phase);
     ui->spinBox_sr_recr_dev_end_yr->setValue(pop->SR()->rec_dev_end_yr);
@@ -848,7 +843,7 @@ void population_widget::changeSpawnRecrSpec(int num)
             break;
         }
     }
-    recruitFullParamsView->setHeight(pop->SR()->full_parameters);
+    recruitFullParamsView->setHeight(pop->SR()->full_parameters->getParameters());
 }
 
 void population_widget::changeMoveNumDefs(int value)

@@ -16,7 +16,7 @@
 class spawn_recruit
 {
 public:
-    spawn_recruit();
+    spawn_recruit(ss_model *parent = 0);
     ~spawn_recruit();
 
     int   method; // 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm
@@ -73,12 +73,12 @@ public:
   //  void fromJSON (json_file *file);
 
     parameterModelTV *full_parameters;
-    parameterModelTV *getFullParameterModel() {return full_parameters;}
+    parameterModel *getFullParameterModel() {return full_parameters->getParameters();}
     void setNumFullParameters(int num) {full_parameters->setRowCount(num);}
     int getNumFullParameters() {return full_parameters->rowCount();}
     void setFullParameter(int index, QStringList values) {full_parameters->setRowData(index, values);}
-    void insertFullParameter (int index) {full_parameters->insertRow(index, 0);}
-    void removeFullParameter (int index) {full_parameters->removeRow(index);}
+    void insertFullParameter (int index) {full_parameters->getParameters()->insertRow(index, 0);}
+    void removeFullParameter (int index) {full_parameters->getParameters()->removeRow(index);}
     void setFullParameterHeader(int index, QString hdr) {full_parameters->setRowHeader(index, hdr);}
     QStringList getFullParameter(int index) {return full_parameters->getRowData(index);}
 
@@ -100,7 +100,7 @@ public:
     void setAssignment(int row, QStringList data);
     QStringList getAssignment(int row);
     parameterModelTV *assignmentParams;
-    tablemodel *getAssignmentParams () {return assignmentParams;}
+    tablemodel *getAssignmentParams () {return assignmentParams->getParameters();}
     void setNumAssignmentParams (int num) {assignmentParams->setRowCount(num);}
     int getNumAssignmentParams () {return assignmentParams->rowCount();}
     void addAssignmentParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
@@ -112,7 +112,7 @@ public:
     recruitDevs *getRecruitDevs () {return recruitDeviations;}
 
     parameterModelTV *interactParams;
-    tablemodel *getInteractParams () {return interactParams;}
+    tablemodel *getInteractParams () {return interactParams->getParameters();}
     void setNumInteractParams (int num) {interactParams->setRowCount(num);}
     int getNumInteractParams () {return interactParams->rowCount();}
     void addInteractParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
@@ -121,7 +121,7 @@ public:
 
 
     parameterModelTV *recruitDistParams;
-    tablemodel *getRecruitDistParams() {return recruitDistParams;}
+    tablemodel *getRecruitDistParams() {return recruitDistParams->getParameters();}
     void setNumRecruitDistParams (int num) {recruitDistParams->setRowCount(num);}
     int getNumRecruitDistParams () {return recruitDistParams->rowCount();}
     void addRecruitDistParam (QStringList data) {setRecruitDistParam(getNumRecruitDistParams(), data);}
@@ -131,8 +131,8 @@ public:
     int readtvparams;
     void setTimeVaryReadParams(int flag) {readtvparams = flag;}
     int getTimeVaryReadParams() {return readtvparams;}
-    parameterModelTV *tvParameters;
-    parameterModelTV *getTVParameterModel() {return tvParameters;}
+    shortParameterModel *tvParameters;
+    shortParameterModel *getTVParameterModel() {return tvParameters;}
     void setNumTVParameters(int num) {tvParameters->setRowCount(num);}
     int getNumTVParameters() {return tvParameters->rowCount();}
     void addTVParameter(QStringList values) {setTVParameter(tvParameters->rowCount(), values);}
@@ -140,6 +140,8 @@ public:
     void setTVParameterHeader(int index, QString hdr) {tvParameters->setRowHeader(index, hdr);}
     QStringList getTVParameter(int index) {return tvParameters->getRowData(index);}
 
+private:
+    ss_model *parnt;
 };
 
 #endif // SS_RECRUITMENT_H

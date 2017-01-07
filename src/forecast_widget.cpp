@@ -619,11 +619,11 @@ void forecast_widget::set_bmark_bio_begin(int yr)
         set_bmark_bio_begin(year);
     else
     {
-        QString yrStr(model_data->refyearvalue(year));//QString::number(year));
+        QString yrStr(QString::number(year));
         model_data->forecast->set_benchmark_bio_beg(year);
         ui->spinBox_bmark_bio_beg->setValue(year);
-//        year = model_data->refyearvalue(year);
-//        yrStr =  QString::number(year);
+        year = model_data->refyearvalue(year);
+        yrStr =  QString::number(year);
         ui->label_bmark_bio_beg_yr_ref->setText (yrStr);
     }
 }

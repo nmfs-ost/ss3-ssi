@@ -10,8 +10,9 @@ class ss_model;
 
 class parameterModelTV : public parameterModel
 {
+    Q_OBJECT
 public:
-    parameterModelTV(QObject *parent = 0);
+    parameterModelTV(ss_model *parent = 0);
     ~parameterModelTV();
 
     bool envLink (int index);
@@ -19,7 +20,19 @@ public:
     bool useDev (int index);
 
 public slots:
-    shortParameterModel *getTimeVarModel() {return timeVarianceTable;}
+    void setParentModel (ss_model *pModel);
+
+    parameterModel *getParameters () {return this;}
+//    int rowCount() {return rowCount();}
+//    void setRowCount(int num) {setRowCount(num);}
+//    QStringList getRowData (int row) {return getRowData(row);}
+//    void setRowData (int row, QStringList data) {setRowData(row, data);}
+//    QString getRowText (int row) {return getRowText(row);}
+//    void setRowText (int row, QString txt) {params->setRowText(row, txt);}
+//    QString getRowHeader (int row) {return getRowHeader(row);}
+//    void setRowHeader (int row, QString hdr) {setRowHeader(row, hdr);}
+
+    shortParameterModel *getTimeVarParameters() {return timeVarianceTable;}
     void updateTimeVarTable();
     void modelChanged();
     void changeData();
@@ -36,22 +49,24 @@ public slots:
     QString getTimeVarParamHdr (int row);
 
 signals:
-    void tableChanged();
+   // void tableChanged();
 
 private:
     ss_model *parentModel;
 
     QStringList header;
 
+//    parameterModel *params;
+    int blkst;
     QList<int> blkLinks;
-    QList<bool> devLinks;
-    QList<bool> envLinks;
+    QList<int> devLinks;
+    QList<int> envLinks;
 
     QList<shortParameterModel *> timeVarianceList;
     shortParameterModel *timeVarianceTable;
     QStringList autoGenBlkParam(int param, int block, QString label);
-    QStringList autoGenDevParam(int param, bool value, QString label);
-    QStringList autoGenEnvParam(int param, bool value, QString label);
+    QStringList autoGenDevParam(int param, int value, QString label);
+    QStringList autoGenEnvParam(int param, int value, QString label);
 };
 
 #endif // PARAMETERMODELTV_H

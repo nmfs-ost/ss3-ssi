@@ -102,7 +102,7 @@ private:
     Ui::MainWindow *ui;
     QMenuBar *mainMenu;
 
-    ss_model *model_one;
+    ss_model *modelData;
     file_widget *files;
     data_widget *data;
     forecast_widget *forecast;

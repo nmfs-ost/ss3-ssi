@@ -181,7 +181,7 @@
             </layout>
            </item>
            <item row="2" column="5">
-            <spacer name="horizontalSpacer_19">
+            <spacer name="horizontalSpacer_bmark_yrs">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -614,7 +614,7 @@
             </layout>
            </item>
            <item row="1" column="0" rowspan="5">
-            <widget class="QLabel" name="label_4">
+            <widget class="QLabel" name="label_bmark_yrs_info">
              <property name="text">
               <string>Input actual year or
 relative to end year 
@@ -630,7 +630,7 @@ e.g. 0, -1, -2, -3, ...</string>
             </widget>
            </item>
            <item row="0" column="2">
-            <widget class="QLabel" name="label_5">
+            <widget class="QLabel" name="label_bmark_input_years">
              <property name="text">
               <string>Input years</string>
              </property>

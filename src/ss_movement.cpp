@@ -1,14 +1,15 @@
 #include "ss_movement.h"
 #include "parametermodel.h"
 
-ss_movement::ss_movement(int n_fleets)
+ss_movement::ss_movement(ss_model *parent, int n_fleets)
 {
+    parnt = parent;
     movement_defs = new tablemodel();
     defHeader << "seas" << "GP" << "source_area" << "dest_area" << "minage" << "maxage";
     movement_defs->setColumnCount(defHeader.count());
     movement_defs->setHeader(defHeader);
     movement_defs->setRowCount(0);
-    movement_parms = new parameterModelTV();
+    movement_parms = new parameterModelTV(parnt);
     movement_parms->setRowCount(0);
     num_fleets = n_fleets;
     first_year = 0;

@@ -12,7 +12,7 @@
 class selectivity
 {
 public:
-    selectivity (int method = 0);
+    selectivity (ss_model *model, int method = 0);
     ~selectivity();
 
     void setPattern (int value);
@@ -44,7 +44,7 @@ public:
     QString getRetainParameterText (int index);
     QStringList getRetainParameter (int index) {return retainParameters->getRowData(index);}
     QString getRetainParameterLabel (int index) {return retainParameters->getRowHeader(index);}
-    parameterModelTV *getRetainParameterModel () {return retainParameters;}
+    shortParameterModel *getRetainParameterModel () {return retainParameters;}
 
     int getNumDiscardParameters();
     void setDiscardParameter(int index, QStringList strList);
@@ -52,7 +52,7 @@ public:
     QString getDiscardParameterText (int index);
     QStringList getDiscardParameter (int index) {return discardParameters->getRowData(index);}
     QString getDiscardParameterLabel (int index) {return discardParameters->getRowHeader(index);}
-    parameterModelTV *getDiscardParameterModel () {return discardParameters;}
+    shortParameterModel *getDiscardParameterModel () {return discardParameters;}
 
     int getNumSpecialParameters();
     void setSpecialParameter(int index, QStringList strList);
@@ -60,7 +60,7 @@ public:
     QString getSpecialParameterText (int index);
     QStringList getSpecialParameter (int index) {return specialParameters->getRowData(index);}
     QString getSpecialParameterLabel (int index) {return specialParameters->getRowHeader(index);}
-    parameterModelTV *getSpecialParameterModel () {return specialParameters;}
+    shortParameterModel *getSpecialParameterModel () {return specialParameters;}
 
     int getNumMaleParameters();
     void setMaleParameter(int index, QStringList strList);
@@ -68,7 +68,7 @@ public:
     QString getMaleParameterText (int index);
     QStringList getMaleParameter (int index) {return maleParameters->getRowData(index);}
     QString getMaleParameterLabel (int index) {return maleParameters->getRowHeader(index);}
-    parameterModelTV *getMaleParameterModel () {return maleParameters;}
+    shortParameterModel *getMaleParameterModel () {return maleParameters;}
 
     int getNumTimeVaryParameters ();
     void setTimeVaryParameter (int index, QStringList strList);
@@ -97,10 +97,10 @@ protected:
 
     shortParameterModel *timeVaryParameters;
 
-    parameterModelTV *retainParameters;
-    parameterModelTV *discardParameters;
-    parameterModelTV *maleParameters;
-    parameterModelTV *specialParameters;
+    shortParameterModel *retainParameters;
+    shortParameterModel *discardParameters;
+    shortParameterModel *maleParameters;
+    shortParameterModel *specialParameters;
 
     double evaluate(int f, float m);
 

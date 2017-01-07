@@ -1,11 +1,12 @@
 #include "ss_recruitment.h"
 
-spawn_recruit::spawn_recruit()
+spawn_recruit::spawn_recruit(ss_model *parent)
 {
+    parnt = parent;
 //    parameters = new parametermodel();
 //    parameters->setRowCount(0);
 //    parameters->setColumnCount(7);
-    full_parameters = new parameterModelTV();
+    full_parameters = new parameterModelTV(parnt);
     full_parameters->setRowCount(5);
 
     assignments = new tablemodel();
@@ -14,13 +15,13 @@ spawn_recruit::spawn_recruit()
     header << "GP" << "seas" << "area" << "Settle_age";
     assignments->setHeader(header);
 
-    assignmentParams = new parameterModelTV();
-    interactParams = new parameterModelTV();
-    recruitDistParams = new parameterModelTV();
+    assignmentParams = new parameterModelTV(parnt);
+    interactParams = new parameterModelTV(parnt);
+    recruitDistParams = new parameterModelTV(parnt);
     recruitDistParams->setRowCount(2);
 
-    tvParameters = new parameterModelTV();
-    tvParameters->setColumnCount(7);
+    tvParameters = full_parameters->getTimeVarParameters();//new shortParameterModel((QObject *)parnt);
+//    tvParameters->setColumnCount(7);
 
     reset();
 /*    method = 3;
@@ -55,6 +56,7 @@ spawn_recruit::~spawn_recruit()
     delete assignmentParams;
     delete recruitDeviations;
     delete interactParams;
+    delete recruitDistParams;
 }
 
 void spawn_recruit::reset()

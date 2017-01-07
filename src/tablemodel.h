@@ -8,6 +8,8 @@
 
 class tablemodel : public QStandardItemModel
 {
+    Q_OBJECT
+
 public:
     tablemodel(QObject *parent = 0);
     ~tablemodel();
