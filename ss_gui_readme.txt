@@ -12,6 +12,11 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.10b
+      2017-01-06
+1. Integrating a new time varying parameter model into gui. The parameters
+   are now linked with the full parameters in a single object.
+============================================================================
       3.3.9
       2016-12-13
 1. Months per season is now a floating point number rather than an integer.
