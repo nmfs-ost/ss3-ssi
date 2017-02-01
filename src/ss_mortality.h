@@ -43,17 +43,17 @@ public:
     int getNumTuningIters() const;
     void setNumTuningIters(int value);
 
-    int getNumInputs() const {return parameterTable->rowCount();}
-    void setNumInputs(int value) {parameterTable->setRowCount(value);}
-    void setInputLine (int index, QStringList data) {parameterTable->setRowData(index, data);}
-    QStringList getInputLine (int index) {return parameterTable->getRowData(index);}
-    tablemodel *getInputModel () {return parameterTable;}
+    int getNumInputs() const {return parameterTable->getParamCount();}
+    void setNumInputs(int value) {parameterTable->setParamCount(value);}
+    void setInputLine (int index, QStringList data) {parameterTable->setParameter(index, data);}
+    QStringList getInputLine (int index) {return parameterTable->getParameter(index);}
+    tablemodel *getInputModel () {return parameterTable->getParameters();}
 
-    int getNumInitialParams () {return initialParams->rowCount();}
-    void setNumInitialParams (int num) {initialParams->setRowCount(num);}
-    void setInitialParam (int index, QStringList data) {initialParams->setRowData(index, data);}
-    QStringList getInitialParam (int index) {return initialParams->getRowData(index);}
-    tablemodel *getInitialParams () {return initialParams;}
+    int getNumInitialParams () {return initialParams->getParamCount();}
+    void setNumInitialParams (int num) {initialParams->setParamCount(num);}
+    void setInitialParam (int index, QStringList data) {initialParams->setParameter(index, data);}
+    QStringList getInitialParam (int index) {return initialParams->getParameter(index);}
+    tablemodel *getInitialParams () {return initialParams->getParameters();}
 
 private:
     ss_model *parnt;

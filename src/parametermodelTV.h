@@ -8,7 +8,7 @@
 
 class ss_model;
 
-class parameterModelTV : public parameterModel
+class parameterModelTV : public longParameterModel
 {
     Q_OBJECT
 public:
@@ -17,39 +17,51 @@ public:
 
     bool envLink (int index);
     bool useBlock (int index);
-    bool useDev (int index);
+    bool useDevs (int index);
 
 public slots:
     void setParentModel (ss_model *pModel);
 
-    parameterModel *getParameters () {return this;}
-//    int rowCount() {return rowCount();}
-//    void setRowCount(int num) {setRowCount(num);}
-//    QStringList getRowData (int row) {return getRowData(row);}
-//    void setRowData (int row, QStringList data) {setRowData(row, data);}
-//    QString getRowText (int row) {return getRowText(row);}
-//    void setRowText (int row, QString txt) {params->setRowText(row, txt);}
-//    QString getRowHeader (int row) {return getRowHeader(row);}
-//    void setRowHeader (int row, QString hdr) {setRowHeader(row, hdr);}
+//    tablemodel *getParameters () {return params;}
+    void setNumParams(int rows);
+    void setParameter (int index, QStringList data);
+    QStringList getParameter (int index) {return params.getRowData(index);}
+    QString getParamText (int index) {return params.getRowText(index);}
+    void setParamHeader (int row, QString title);
+    int getNumParams() {return params.rowCount();}
+    QString getParamHeader (int row) {return params.getRowHeader(row);}
 
-    shortParameterModel *getTimeVarParameters() {return timeVarianceTable;}
-    void updateTimeVarTable();
+
     void modelChanged();
     void changeData();
+    void updateParamData();
     void changeData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect = QVector<int>());
+    void changeData(int firstRow, int firstCol, int lastRow, int lastCol);
     void insertData(QModelIndex index, int first, int last);
     void removeData(QModelIndex index, int first, int last);
 
-    void setTimeVarBlkParam (int param, int num, QStringList data);
-    void setTimeVarDevParam (int param, int num, QStringList data);
-    void setTimeVarEnvParam (int param, QStringList data);
+    tablemodel *getTimeVaryParams() {return timeVaryParams.getParameters();}
+    void updateTimeVaryData();
+    void updateTimeVaryModel();
+    void changeTimeVaryData();
+    void changeTimeVaryData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect = QVector<int>());
+    void changeTimeVaryData(int firstRow, int lastRow);
 
-    int getNumTimeVarParams ();
-    QStringList getTimeVarParam (int row);
-    QString getTimeVarParamHdr (int row);
+    void setTimeVaryParam (int index, QStringList data);
+    void setTimeVaryBlkParam (int param, int num, QStringList data);
+    void setTimeVaryDevParam (int param, int num, QStringList data);
+    void setTimeVaryEnvParam (int param, QStringList data);
+    void setTimeVaryHeaders (int param = -1, QString label = QString(""));
+    void setEnvTimeVaryHeader (int param, int link = 0, QString label = QString(""));
+    void setDevTimeVaryHeader (int param, int flag = 0, QString label = QString(""));
+    void setBlkTimeVaryHeader (int param, int block = 0, QString label = QString(""));
+
+    int getNumTimeVaryParams ();
+    QStringList getTimeVaryParam (int row);
+    QString getTimeVaryParamHdr (int row);
 
 signals:
-   // void tableChanged();
+    void paramsChanged();
 
 private:
     ss_model *parentModel;
@@ -57,16 +69,19 @@ private:
     QStringList header;
 
 //    parameterModel *params;
-    int blkst;
-    QList<int> blkLinks;
-    QList<int> devLinks;
-    QList<int> envLinks;
+    QList<QStringList> paramData;
+    QList<int> useEnv;
+    QList<int> useDev;
+    QList<int> useBlk;
 
-    QList<shortParameterModel *> timeVarianceList;
-    shortParameterModel *timeVarianceTable;
-    QStringList autoGenBlkParam(int param, int block, QString label);
-    QStringList autoGenDevParam(int param, int value, QString label);
-    QStringList autoGenEnvParam(int param, int value, QString label);
+    shortParameterModel timeVaryParams;
+    QList<shortParameterModel *> timeVaryParamData;
+    QList<int> tableNum;
+    QList<int> paramNum;
+
+    QStringList autoGenBlkParam(int param, int blkPat, QString label);
+    QStringList autoGenDevParam(int param, int devVal, QString label);
+    QStringList autoGenEnvParam(int param, int envVal, QString label);
 };
 
 #endif // PARAMETERMODELTV_H

@@ -3,7 +3,9 @@
 
 #include <QStringList>
 
-#include "parametermodelTV.h"
+#include "parametermodel.h"
+
+class ss_model;
 
 class ss_fecundity
 {
@@ -17,11 +19,11 @@ public:
     void setMethod(int value);
 
     void setHermParam (int index, QStringList data);
-    QStringList getHermParam(int index) {return hermaphParams->getRowData(index);}
+    QStringList getHermParam(int index) {return hermaphParams->getParameter(index);}
     tablemodel *getHermParams() {return hermaphParams->getParameters();}
 
     void setFemaleParam (int index, QStringList data);
-    QStringList getFemaleParam(int index) {return femaleParams->getRowData(index);}
+    QStringList getFemaleParam(int index) {return femaleParams->getParameter(index);}
     tablemodel *getFemaleParams() {return femaleParams->getParameters();}
 
     int getHermIncludeMales() const;
@@ -41,8 +43,8 @@ private:
     int hermIncludeMales;
 
     QString pHeader;
-    parameterModelTV *hermaphParams;
-    parameterModelTV *femaleParams;
+    longParameterModel *hermaphParams;
+    longParameterModel *femaleParams;
 };
 
 #endif // SS_FECUNDITY_H

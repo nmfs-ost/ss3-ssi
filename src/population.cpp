@@ -13,11 +13,14 @@ population::population(ss_model *parent) :
     meanBwtModel->setColumnCount(20);
     header << "Year" << "Seas" << "Type" << "Part" << "Value" << "CV";
     meanBwtModel->setHeader(header);
-    seasparamtable = new shortParameterModel(this);
+    seasparamtable = new seasonalEffectsModel(parent);// shortParameterModel(this);
     header.clear();
-//    header << "st_age" << "st_age bias" << "max_age bias" << "bias coeff" << "st_age sd" << "max_age sd" << "sd coeff";
+    header << "FWtLn1" << "FWtLn2" << "Mat1" << "Mat2" << "Fec1" << "Fec2" << "MWtLn1" << "MWtLn2" << "L1" << "K";
+    seasparamtable->setSetupHeader(header);
+    header.clear();
+    header << "st_age" << "st_age bias" << "max_age bias" << "bias coeff" << "st_age sd" << "max_age sd" << "sd coeff";
 //    seasparamtable->setColumnCount(7);
-    seasparamtable->setHeader(header);
+    seasparamtable->setParamModelHeader(header);//->setHeader(header);
     reset();
 }
 
@@ -60,14 +63,16 @@ void population::reset()
     L1 = false;
     K = false;
     setNumSeas(1);
-    setNumSeasParams();
+//    setNumSeasParams();
 }
 
 void population::setNumSeas(int seas)
 {
     // default value since insertSeasParams needs it to be > 0
     iNumSeas = 1;
-
+    seasparamtable->setNumSeasons(seas);
+//    seasparamtable->setMultiplier(seas);
+/*
     if (seas >= 1 && seas <= 12)
     {
         if (seas > iNumSeas)
@@ -75,7 +80,7 @@ void population::setNumSeas(int seas)
         else if (seas < iNumSeas)
             removeSeasParams (iNumSeas - seas);
         iNumSeas = seas;
-    }
+    }*/
 }
 
 void population::setStartYear(int yr)
@@ -119,109 +124,150 @@ QStringList population::getFractionFemale()
     return fractionFem;
 }
 
+void population::setSeasParamSetup(QStringList values)
+{
+    seasparamtable->setSetupData(values);
+}
+
+QStringList population::getSeasParamSetup()
+{
+    return seasparamtable->getSetupData();
+}
+
 bool population::getK() const
 {
-    return K;
+    return seasparamtable->getK();
 }
 
 void population::setK(bool value)
 {
-    K = value;
+    if (seasparamtable->getK() != value)
+    {
+        seasparamtable->setK(value);
+    }
+    malewtlen1 = value;
 }
 
 bool population::getL1() const
 {
-    return L1;
+    return seasparamtable->getL1();
 }
 
 void population::setL1(bool value)
 {
-    L1 = value;
-}
-
-bool population::getMalewtlen2() const
-{
-    return malewtlen2;
-}
-
-void population::setMalewtlen2(bool value)
-{
-    malewtlen2 = value;
-}
-
-bool population::getMalewtlen1() const
-{
-    return malewtlen1;
-}
-
-void population::setMalewtlen1(bool value)
-{
+    if (seasparamtable->getL1() != value)
+    {
+        seasparamtable->setL1(value);
+    }
     malewtlen1 = value;
 }
 
-bool population::getFec2() const
+bool population::getMaleWtLen2() const
 {
-    return fec2;
+    return seasparamtable->getMalewtlen2();
 }
 
-void population::setFec2(bool value)
+void population::setMaleWtLen2(bool value)
 {
-    fec2 = value;
-}
-
-bool population::getFec1() const
-{
-    return fec1;
-}
-
-void population::setFec1(bool value)
-{
-    fec1 = value;
-}
-
-bool population::getMat2() const
-{
-    return mat2;
-}
-
-void population::setMat2(bool value)
-{
-    mat2 = value;
-}
-
-bool population::getMat1() const
-{
-    return mat1;
-}
-
-void population::setMat1(bool value)
-{
-    mat1 = value;
-}
-
-bool population::getFemwtlen2() const
-{
-    return femwtlen2;
-}
-
-void population::setFemwtlen2(bool value)
-{
-    femwtlen2 = value;
-}
-
-bool population::getFemwtlen1() const
-{
-    return femwtlen1;
-}
-
-void population::setFemwtlen1(bool value)
-{  
-    if (femwtlen1 != value)
+    if (seasparamtable->getMalewtlen2() != value)
     {
-        femwtlen1 = value;
+        seasparamtable->setMalewtlen2(value);
+    }
+    malewtlen1 = value;
+}
+
+bool population::getMaleWtLen1() const
+{
+    return seasparamtable->getMalewtlen1();
+}
+
+void population::setMaleWtLen1(bool value)
+{
+    if (seasparamtable->getMalewtlen1() != value)
+    {
+        seasparamtable->setMalewtlen1(value);
+    }
+    malewtlen1 = value;
+}
+
+bool population::getFecund2() const
+{
+    return seasparamtable->getFec2();
+}
+
+void population::setFecund2(bool value)
+{
+    if (seasparamtable->getFec2() != value)
+    {
+        seasparamtable->setFec2(value);
     }
 }
 
+bool population::getFecund1() const
+{
+    return seasparamtable->getFec1();
+}
+
+void population::setFecund1(bool value)
+{
+    if (seasparamtable->getFec1() != value)
+    {
+        seasparamtable->setFec1(value);
+    }
+}
+
+bool population::getMaturity2() const
+{
+    return seasparamtable->getMat2();
+}
+
+void population::setMaturity2(bool value)
+{
+    if (seasparamtable->getMat2() != value)
+    {
+        seasparamtable->setMat2(value);
+    }
+}
+
+bool population::getMaturity1() const
+{
+    return seasparamtable->getMat1();
+}
+
+void population::setMaturity1(bool value)
+{
+    if (seasparamtable->getMat1() != value)
+    {
+        seasparamtable->setMat1(value);
+    }
+}
+
+bool population::getFemWtLen2() const
+{
+    return seasparamtable->getFemwtlen2();
+}
+
+void population::setFemWtLen2(bool value)
+{
+    if (seasparamtable->getFemwtlen2() != value)
+    {
+        seasparamtable->setFemwtlen2(value);
+    }
+}
+
+bool population::getFemWtLen1() const
+{
+    return seasparamtable->getFemwtlen1();
+}
+
+void population::setFemWtLen1(bool value)
+{  
+    if (seasparamtable->getFemwtlen1() != value)
+    {
+        seasparamtable->setFemwtlen1(value);
+    }
+}
+/*
 void population::setNumSeasParams()
 {
     int num = 0;
@@ -229,75 +275,75 @@ void population::setNumSeasParams()
     if (femwtlen1)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 FemWtLen1").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 FemWtLen1").arg(QString::number(i)));
     }
     if (femwtlen2)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 FemWtLen2").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 FemWtLen2").arg(QString::number(i)));
     }
     if (mat1)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 Maturity1").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 Maturity1").arg(QString::number(i)));
     }
     if (mat2)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 Maturity2").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 Maturity2").arg(QString::number(i)));
     }
     if (fec1)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 Fecundity1").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 Fecundity1").arg(QString::number(i)));
     }
     if (fec2)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 Fecundity2").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 Fecundity2").arg(QString::number(i)));
     }
     if (malewtlen1)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 MaleWtLen1").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 MaleWtLen1").arg(QString::number(i)));
     }
     if (malewtlen2)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 MaleWtLen2").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 MaleWtLen2").arg(QString::number(i)));
     }
     if (L1)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 L1").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 L1").arg(QString::number(i)));
     }
     if (K)
     {
         num++;
-        seasparamtable->setRowCount(num * iNumSeas);
+        seasparamtable->setParamCount(num * iNumSeas);
         for (i = 1, row = iNumSeas * num - iNumSeas; i <= iNumSeas; i++, row++)
-            seasparamtable->setRowHeader(row, QString("Seas%1 K").arg(QString::number(i)));
+            seasparamtable->setParamHeader(row, QString("Seas%1 K").arg(QString::number(i)));
     }
-}
-
+}*/
+/*
 void population::changeFemWtLn1(bool flag)
 {
     int row = 0;// = 10 * iNumSeas - iNumSeas;
@@ -305,20 +351,21 @@ void population::changeFemWtLn1(bool flag)
     {
         for (int i = 1; i <= iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 FemWtLen1").arg(QString::number(i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 FemWtLen1").arg(QString::number(i)));
         }
-    }
-    else
+        seasparamtable->setParamCount(row);
+    }*/
+/*    else
     {
         for (int i = iNumSeas; i > 0; i--)
         {
             seasparamtable->removeRow(i-1);
         }
-    }
+    }*//*
     femwtlen1 = flag;
 
-}
+}*//*
 void population::changeFemWtLn2(bool flag)
 {
     int row = 0;
@@ -329,8 +376,8 @@ void population::changeFemWtLn2(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 FemWtLen2").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 FemWtLen2").arg(QString::number(i + 1)));
         }
     }
     else
@@ -338,7 +385,7 @@ void population::changeFemWtLn2(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     femwtlen2 = flag;
@@ -354,8 +401,8 @@ void population::changeMaturity1(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Maturity1").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Maturity1").arg(QString::number(i + 1)));
         }
     }
     else
@@ -363,7 +410,7 @@ void population::changeMaturity1(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     mat1 = flag;
@@ -380,8 +427,8 @@ void population::changeMaturity2(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Maturity2").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Maturity2").arg(QString::number(i + 1)));
         }
     }
     else
@@ -389,7 +436,7 @@ void population::changeMaturity2(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     mat2 = flag;
@@ -407,8 +454,8 @@ void population::changeFecundity1(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Fecundity1").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Fecundity1").arg(QString::number(i + 1)));
         }
     }
     else
@@ -416,7 +463,7 @@ void population::changeFecundity1(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     fec1 = flag;
@@ -435,8 +482,8 @@ void population::changeFecundity2(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Fecundity2").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Fecundity2").arg(QString::number(i + 1)));
         }
     }
     else
@@ -444,7 +491,7 @@ void population::changeFecundity2(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     fec2 = flag;
@@ -464,8 +511,8 @@ void population::changeMaleWtLn1(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 MaleWtLen1").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 MaleWtLen1").arg(QString::number(i + 1)));
         }
     }
     else
@@ -473,7 +520,7 @@ void population::changeMaleWtLn1(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     malewtlen1 = flag;
@@ -494,8 +541,8 @@ void population::changeMaleWtLn2(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 MaleWtLen2").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 MaleWtLen2").arg(QString::number(i + 1)));
         }
     }
     else
@@ -503,7 +550,7 @@ void population::changeMaleWtLn2(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     malewtlen2 = flag;
@@ -525,8 +572,8 @@ void population::changeL1(bool flag)
         row *= iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 L1").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 L1").arg(QString::number(i + 1)));
         }
     }
     else
@@ -534,7 +581,7 @@ void population::changeL1(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     L1 = flag;
@@ -557,8 +604,8 @@ void population::changeK(bool flag)
         row = row * iNumSeas;
         for (int i = 0; i < iNumSeas; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 K").arg(QString::number(i + 1)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 K").arg(QString::number(i + 1)));
         }
     }
     else
@@ -566,7 +613,7 @@ void population::changeK(bool flag)
         row = (row + 1) * iNumSeas - 1;
         for (int i = iNumSeas; i > 0; i--, row--)
         {
-            seasparamtable->removeRow(row);
+            seasparamtable->setParamCount(row - 1);
         }
     }
     K = flag;
@@ -575,15 +622,15 @@ void population::changeK(bool flag)
 
 void population::insertSeasParams(int num)
 {
-    int numchcks = seasparamtable->rowCount() / iNumSeas;
+    int numchcks = seasparamtable->getParamCount() / iNumSeas;
     int row = 0;
     if (numchcks > 0 && K)
     {
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 K").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 K").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -592,8 +639,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 L1").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row - 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 L1").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -602,8 +649,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 MaleWtLen2").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 MaleWtLen2").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -612,8 +659,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 MaleWtLen1").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 MaleWtLen1").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -622,8 +669,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Fecundity2").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Fecundity2").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -632,8 +679,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Fecundity1").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Fecundity1").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -642,8 +689,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Maturity2").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Maturity2").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -652,8 +699,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 Maturity1").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 Maturity1").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -662,8 +709,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 FemWtLen2").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 FemWtLen2").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -672,8 +719,8 @@ void population::insertSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++, row++)
         {
-            seasparamtable->insertRow(row);
-            seasparamtable->setRowHeader(row, QString("Seas%1 FemWtLen1").arg(QString::number(iNumSeas + i)));
+            seasparamtable->setParamCount(row + 1);
+            seasparamtable->setParamHeader(row, QString("Seas%1 FemWtLen1").arg(QString::number(iNumSeas + i)));
         }
         numchcks--;
     }
@@ -681,14 +728,14 @@ void population::insertSeasParams(int num)
 
 void population::removeSeasParams(int num)
 {
-    int numchcks = seasparamtable->rowCount() / iNumSeas;
+    int numchcks = seasparamtable->getParamCount() / iNumSeas;
     int row = 0;
     if (numchcks > 0 && K)
     {
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -697,7 +744,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -706,7 +753,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -715,7 +762,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -724,7 +771,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -733,7 +780,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -742,7 +789,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -751,7 +798,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -760,7 +807,7 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
@@ -769,22 +816,22 @@ void population::removeSeasParams(int num)
         row = numchcks * iNumSeas;
         for (int i = 0; i < num; i++)
         {
-            seasparamtable->removeRow(row - i);
+            seasparamtable->setParamCount(row - i);
         }
         numchcks--;
     }
+}*/
+
+void population::setSeasonalParam(int index, QStringList data)
+{
+//    if (index >= seasparamtable->getParamCount())
+//        seasparamtable->setParamCount(index + 1);
+    seasparamtable->setParamData(index, data);
 }
 
-void population::setSeasParam(int index, QStringList data)
+QStringList population::getSeasonalParam(int index)
 {
-    if (index >= seasparamtable->rowCount())
-        seasparamtable->setRowCount(index + 1);
-    seasparamtable->setRowData(index, data);
-}
-
-QStringList population::getSeasParam(int index)
-{
-    return seasparamtable->getRowData(index);
+    return seasparamtable->getParamData(index);
 }
 
 void population::readSeasonalEffects(ss_file *input)

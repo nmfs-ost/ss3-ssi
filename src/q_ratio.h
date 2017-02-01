@@ -6,67 +6,68 @@
 
 #include "method_setup.h"
 //#include "short_parameter.h"
-#include "parametermodelTV.h"
+#include "setupmodel.h"
 #include "model.h"
 
-class q_ratio
+class q_ratio : public setupParamVarModel
 {
 public:
     q_ratio(ss_model *model);
     ~q_ratio();
 
+    void setParentModel (ss_model model);
     void reset();
-    q_ratio *copy (q_ratio *rhs);
+ //   q_ratio *copy (q_ratio *rhs);
 
     void setup(QStringList values);
     void setup(QString str);
     QString getSetup();
 
-    parameterModel *getSetupModel() {return qsetup;}
+ //   longParameterModel *getSetupModel() {return qsetup;}
 
-    int getDoPower() const;
+    int getDoPower();
     void setDoPower(int value);
 
-    int getDoEnvLink() const;
+    int getDoEnvLink();
     void setDoEnvLink(int value);
 
-    int getDoExtraSD() const;
+    int getDoExtraSD();
     void setDoExtraSD(int value);
 
-    int getType() const;
+    int getType();
     void setType(int value);
 
-    float getOffset() const;
+    float getOffset();
     void setOffset(float value);
 
-    QString getPower() const;
+    QString getPower();
     void setPower(QStringList values);
 
-    QString getVariable() const;
+    QString getVariable();
     void setEnvLink(QStringList values);
 
-    QString getExtra() const;
+    QString getExtra();
     void setExtra(QStringList values);
 
-    QString getBase() const;
+    QString getBase();
     void setBase(QStringList values);
 
-    void setParamHdrs (QString name);
-    void setNumParams (int num);
-    int getNumParams();
-    void setParameter (int index, QStringList values);
-    void setParameter (int index, QString text);
-    QStringList getParameter(int index);
-    parameterModelTV *getParamModel() {return params;}
+  //  void setParamHdrs (QString name);
+ //   void setNumParams (int num);
+ //   int getNumParams();
+ //   void setParameter (int index, QStringList values);
+ //   void setParameter (int index, QString text);
+ //   QStringList getParameter(int index);
+ //   parameterModelTV *getParamModel() {return getP;}
 
-    int getNumTVParams () {return params->getTimeVarParameters()->rowCount();}
-    void setTVBlkParam (int index, int row, QStringList data);
-    void setTVDevParam (int index, int row, QStringList data);
-    void setTVEnvParam (int index, QStringList data);
-    QStringList getTVParam (int index) {return params->getTimeVarParam(index);}
-    shortParameterModel *getTVParams () {return params->getTimeVarParameters();}
+  //  int getNumTVParams () {return params->getTimeVaryParams()->rowCount();}
+ //   void setTVBlkParam (int index, int row, QStringList data);
+ //   void setTVDevParam (int index, int row, QStringList data);
+ //   void setTVEnvParam (int index, QStringList data);
+ //   QStringList getTVParam (int index) {return params->getTimeVaryParam(index);}
+ //   tablemodel *getTVParams () {return getParamVarsModel();}
 
-    int getTypeIndex() const;
+    int getTypeIndex();
     void setTypeIndex(int value);
 
     int getLinkType ();
@@ -74,13 +75,13 @@ public:
     int getFloatQ ();
 
 public slots:
-    void setupChanged ();
-    void setupChanged (int error_type);
+    void changeSetup (int errType);
+    void changeSetup ();
+//    void setupChanged ();
+  //  void setupChanged (int error_type);
 
 private:
-    parameterModel *qsetup;
-    parameterModelTV *params;
-//    parameterModelTV *tvParams;
+
     int BaseIndex;
     int doBlkTnd;
     int BlkTndIndex;

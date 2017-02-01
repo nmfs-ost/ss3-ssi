@@ -58,15 +58,20 @@ public slots:
     void showMorphObs();
     void showRecapObs();
 
+    void qSetupParamsChanged();
+
     void changeSelexSizePattern(int pat);
     void showSelexSizeInfo();
     void changeSelexSizeDiscard(int disc);
     void changeSelexSizeMale (int mal);
     void changeSelexSizeSpecial (int spc);
+    void sizeSelexParamsChanged();
+
     void changeSelexAgePattern(int pat);
     void changeSelexAgeMale (int mal);
     void changeSelexAgeSpecial (int spc);
     void showSelexAgeInfo();
+    void ageSelexParamsChanged();
 
 private:
 
@@ -97,6 +102,7 @@ private:
 
     tableview *qSetupView;
     tableview *qParamsView;
+    tableview *qTvParamsView;
 
     tableview *sizeSelexParamsView;
     tableview *sizeSelexRetainView;

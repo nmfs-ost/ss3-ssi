@@ -3,6 +3,7 @@
 
 #include "tablemodel.h"
 #include "parametermodelTV.h"
+#include "setupmodel.h"
 
 class ss_movement
 {
@@ -27,11 +28,11 @@ public:
     QStringList getDefinition (int index);
     void setDefinition (int index, QStringList valuelist);
 
-    tablemodel *getMovementParams() {return movement_parms->getParameters();}
-    void setNumParams (int value) {movement_parms->setRowCount(value);}
-    int getNumParams () {return movement_parms->rowCount();}
+    tablemodel *getMovementParams() {return movement_parms->getParamModel();}
+    void setNumParams (int value) {movement_parms->setNumParams(value);}
+    int getNumParams () {return movement_parms->getNumParams();}
     void setParameter (int index, QStringList valuelist);
-    QStringList getParameter (int index) {return movement_parms->getRowData(index);}
+    QStringList getParameter (int index) {return movement_parms->getParamData(index);}
 
     int getMethod() const;
     void setMethod(int value);
@@ -51,7 +52,8 @@ private:
     QStringList defHeader;
 
     tablemodel *movement_defs;
-    parameterModelTV *movement_parms;
+    setupParamVarModel *movement_parms;
+//    parameterModelTV *movement_parms;
 };
 
 #endif // SS_MOVEMENT_H

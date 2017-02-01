@@ -1,29 +1,35 @@
 #include "parametermodelTV.h"
 #include "model.h"
+
 #include <QString>
 
+#define min(a,b) ((a)<(b))?(a):(b)
+
 parameterModelTV::parameterModelTV(ss_model *parent)
-    : parameterModel(parent)
+    : longParameterModel(parent)
 {
     parentModel = parent;
-    connect (this, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(insertData(QModelIndex,int,int)));
-    connect (this, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(removeData(QModelIndex,int,int)));
-    connect (this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), SLOT(changeData(QModelIndex,QModelIndex,QVector<int>)));
+    connect (&params, SIGNAL(rowsInserted(QModelIndex,int,int)),
+             SLOT(insertData(QModelIndex,int,int)));
+    connect (&params, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+             SLOT(removeData(QModelIndex,int,int)));
+    connect (&params, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT(changeData(QModelIndex,QModelIndex,QVector<int>)));
 //    connect (this, SIGNAL(tableChanged()), SLOT(changeData()));
 
-    timeVarianceTable = new shortParameterModel(this);
-    blkst = 3;
+//    timeVaryParams = new shortParameterModel(this);
+    connect (timeVaryParams.getParameters(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT(changeTimeVaryData(QModelIndex,QModelIndex,QVector<int>)));
+//    blkst = 3;
 }
 
 parameterModelTV::~parameterModelTV()
 {
-    shortParameterModel *spm;
-    while (timeVarianceList.count() > 0)
-    {
-        spm = timeVarianceList.takeLast();
-        delete spm;
-    }
-    delete timeVarianceTable;
+    setNumParams(0);
+    params.clear();
+    paramData.clear();
+    timeVaryParams.getParameters()->clear();
+    timeVaryParamData.clear();
     header.clear();
 }
 
@@ -32,55 +38,138 @@ void parameterModelTV::setParentModel(ss_model *pModel)
     parentModel = pModel;
 }
 
-bool parameterModelTV::useBlock(int index)
+void parameterModelTV::setNumParams(int rows)
 {
-    return blkLinks.at(index) != 0;
+    int numparams = getNumParams();
+    shortParameterModel *tvParamData;
+    QStringList ql;
+    for (int i = 0; i < 14; i++)
+        ql.append(QString("0"));
+//    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    params.setRowCount(rows);
+    for (int i = numparams; i < rows; i++)
+    {
+        setParameter(i, ql);
+        useEnv.append(0);
+        useDev.append(0);
+        useBlk.append(0);
+    }
+    ql.clear();
+    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" ;
+
+    for (int i = numparams; i < rows; i++)
+    {
+        tvParamData = new shortParameterModel(this);
+        tvParamData->setParamCount(4);
+        timeVaryParamData.append(tvParamData);
+    }
+    while (timeVaryParamData.count() > rows)
+    {
+        tvParamData = timeVaryParamData.takeLast();
+        delete tvParamData;
+    }
+    setParamCount(rows);
 }
 
-bool parameterModelTV::useDev(int index)
+void parameterModelTV::setParameter (int index, QStringList data)
 {
-    return devLinks.at(index) != 0;
+    if (index >= getNumParams())
+        setNumParams(index + 1);
+
+    params.setRowData(index, data);
+}
+
+void parameterModelTV::setParamHeader(int row, QString title)
+{
+    params.setRowHeader(row, title);
+    setTimeVaryHeaders (row, title);
+}
+
+bool parameterModelTV::useBlock(int index)
+{
+    return (useBlk.at(index) != 0);
+}
+
+bool parameterModelTV::useDevs(int index)
+{
+    return (useDev.at(index) != 0);
 }
 
 bool parameterModelTV::envLink(int index)
 {
-    return envLinks.at(index) != 0;
+    return (useEnv.at(index) != 0);
 }
 
-void parameterModelTV::updateTimeVarTable()
+void parameterModelTV::updateTimeVaryData()
 {
     QString label;
     QStringList ql;
-    timeVarianceTable->clear();
+    timeVaryParams.setParamCount(0);
     int k = 0;
-    for (int i = 0; i < rowCount(); i++)
+    int i = 0;
+    int tvTotal = getNumParams() * 4;
+    int var;
+
+    while (tableNum.count() <= tvTotal)
     {
-        ql = getRowData(i);
-        label = getRowHeader(i);
-        if (blkLinks.at(i) != 0)
+        tableNum.append(-1);
+        paramNum.append(-1);
+        useBlk.append(0);
+        useDev.append(0);
+        useEnv.append(0);
+    }
+
+    for (i = 0; i < getNumParams(); i++)
+    {
+        ql = getParameter(i);
+        label = getParamHeader(i);
+        var = QString(ql.at(12)).toInt();
+        if (var != 0)
         {
-            for (int j = 3; j < timeVarianceList.at(i)->rowCount(); j++)
+            useBlk[i] = var;
+            for (int j = 3; j < timeVaryParamData.at(i)->getParamCount(); j++)
             {
-                ql = timeVarianceList.at(i)->getRowData(j);
-                timeVarianceTable->setRowData(k, ql);
-                timeVarianceTable->setRowHeader(k++, timeVarianceList.at(i)->getRowHeader(j));
+                tableNum[k] = i;
+                paramNum[k] = j;
+                ql = timeVaryParamData.at(i)->getParameter(j);
+                timeVaryParams.setParameter(k, ql);
+                timeVaryParams.setParamHeader(k++, timeVaryParamData.at(i)->getParamHeader(j));
             }
         }
-        if (devLinks.at(i) != 0)
+        var = QString(ql.at(8)).toInt();
+        if (var != 0)
         {
-            ql = timeVarianceList.at(i)->getRowData(1);
-            timeVarianceTable->setRowData(k, ql);
-            timeVarianceTable->setRowHeader(k++, timeVarianceList.at(i)->getRowHeader(1));
-            ql = timeVarianceList.at(i)->getRowData(2);
-            timeVarianceTable->setRowData(k, ql);
-            timeVarianceTable->setRowHeader(k++, timeVarianceList.at(i)->getRowHeader(2));
+            useDev[i] = var;
+            tableNum[k] = i;
+            paramNum[k] = 1;
+            ql = timeVaryParamData.at(i)->getParameter(1);
+            timeVaryParams.setParameter(k, ql);
+            timeVaryParams.setParamHeader(k++, timeVaryParamData.at(i)->getParamHeader(1));
+            tableNum[k] = i;
+            paramNum[k] = 2;
+            ql = timeVaryParamData.at(i)->getParameter(2);
+            timeVaryParams.setParameter(k, ql);
+            timeVaryParams.setParamHeader(k++, timeVaryParamData.at(i)->getParamHeader(2));
         }
-        if (envLinks.at(i) != 0)
+        var = QString(ql.at(7)).toInt();
+        if (var != 0)
         {
-            ql = timeVarianceList.at(i)->getRowData(0);
-            timeVarianceTable->setRowData(k, ql);
-            timeVarianceTable->setRowHeader(k++, timeVarianceList.at(i)->getRowHeader(0));
+            useEnv[i] = var;
+            tableNum[k] = i;
+            paramNum[k] = 0;
+            ql = timeVaryParamData.at(i)->getParameter(0);
+            timeVaryParams.setParameter(k, ql);
+            timeVaryParams.setParamHeader(k++, timeVaryParamData.at(i)->getParamHeader(0));
         }
+    }
+    while (tableNum.count() > tvTotal)
+//    for (; i < tableNum.count(); i++)
+    {
+        tableNum.takeLast();//[i] = -1;
+        paramNum.takeLast();//[i] = -1;
+        useBlk.takeLast();//[i] = 0;
+        useDev.takeLast();//[i] = 0;
+        useEnv.takeLast();//[i] = 0;
     }
 }
 
@@ -91,67 +180,89 @@ void parameterModelTV::modelChanged()
 
 void parameterModelTV::changeData()
 {
-    quintptr ptr = 0;
-    int rows = rowCount();
-    QModelIndex tplt(index(0, 0));// (0, 0, ptr, this);
-    QModelIndex btrt(index(rows - 1, 13)); // ((rows - 1), 14, ptr, this);
-    changeData(tplt, btrt);
+    int rows = getNumParams();
+    changeData(0, 0, rows - 1, 13);
 }
 
 void parameterModelTV::changeData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect)
 {
+    int startRow = tplt.row();
+    int startCol = tplt.column();
+    int endRow = btrt.row();
+    int endCol = btrt.column();
+    changeData (startRow, startCol, endRow, endCol);
+}
+
+void parameterModelTV::changeData(int firstRow, int firstCol, int lastRow, int lastCol)
+{
     QString schk;
-    int chk;
+    int chk, chk2, numPatterns;
     QStringList ql;
-    bool check, changed = false;
-    int start = tplt.row();
-    int end = btrt.row();
-    if (btrt.column() > 6)
+    bool changed = false;
+    for (int i = firstRow; i <= lastRow; i++)
     {
-        for (int i = start; i <= end; i++)
+        ql = getParameter(i);
+        for (int j = firstCol; j <= lastCol; j++)
+            paramData[i][j] = QString(ql.at(j));
+
+        if (lastCol > 6)
         {
-            ql = getRowData(i);
-            schk = QString(ql.at(7));
-            check = (schk.compare("1") == 0);
-            if (envLinks.at(i) != check)
-            {
-                envLinks[i] = check;
-                changed = true;
-            }
+        chk = QString(ql.at(7)).toInt();
+        if (chk != useEnv.at(i))
+        {
+            useEnv[i] = chk;
+            changed = true;
+            if (chk != 0)
+                autoGenEnvParam(i, chk, getParamHeader(i));
         }
-    }
-    if (btrt.column() > 7)
-    {
-        for (int i = start; i <= end; i++)
+
+        chk = QString(ql.at(8)).toInt();
+        if (useDev.at(i) != chk)
         {
-            ql = getRowData(i);
-            schk = QString(ql.at(8));
-            check = (schk.compare("1") == 0);
-            if (devLinks.at(i) != check)
-            {
-                devLinks[i] = check;
-                changed = true;
-            }
+            useDev[i] = chk;
+            changed = true;
+            if (chk != 0)
+                autoGenDevParam(i, chk, getParamHeader(i));
         }
-    }
-    if (btrt.column() > 11)
-    {
-        for (int i = start; i <= end; i++)
+
+        chk = QString(ql.at(12)).toInt();
+        chk2 = QString(ql.at(13)).toInt();
+        numPatterns = parentModel->getNumBlockPatterns();
+        if (chk > numPatterns)
         {
-            ql = getRowData(i);
-            schk = QString(ql.at(7));
-            chk = schk.toInt();
-            if (blkLinks.at(i) != chk)
-            {
-                blkLinks[i] = chk;
-                changed = true;
-                autoGenBlkParam (i, chk, getRowHeader(i));
-            }
+            chk = numPatterns;
+            ql[12] = QString::number(chk);
+            setParameter(i, ql);
+        }
+        if (useBlk.at(i) != chk)
+        {
+            useBlk[i] = chk;
+            changed = true;
+            if (chk != 0)
+                autoGenBlkParam (i, chk, getParamHeader(i));
+        }
+/*            chk2 = QString(ql.at(13)).toInt();
+        schk = timeVarianceList.at(i)->getRowData(blkst).at(13);
+        if (chk2 != schk.toInt())
+        {
+            autoGenBlkParam(i, chk, getRowHeader(i));
+        }*/
         }
     }
     if (changed)
     {
-        updateTimeVarTable();
+        updateTimeVaryData();
+    }
+}
+
+void parameterModelTV::updateParamData()
+{
+    int numrows = getNumParams();
+    QStringList rowdata;
+    for (int i = 0; i < numrows; i++)
+    {
+        rowdata = getParameter(i);
+        paramData[i] = rowdata;
     }
 }
 
@@ -162,17 +273,19 @@ void parameterModelTV::insertData(QModelIndex index, int first, int last)
     for (int i = first; i <= last; i++)
     {
         sm = new shortParameterModel(this);
-        sm->setRowCount(4);
-        timeVarianceList.insert(i, sm);
-        ql = getRowData(i);
-        blkLinks.insert(i, (QString(ql.at(12)).toInt()));
-        autoGenBlkParam (i, blkLinks.at(i), getRowHeader(i));
-        devLinks.insert(i, (ql.at(8).compare("1") == 0));
-        autoGenDevParam (i, devLinks.at(i), getRowHeader(i));
-        envLinks.insert(i, (ql.at(7).compare("1") == 0));
-        autoGenEnvParam (i, envLinks.at(i), getRowHeader(i));
+        sm->setParamCount(4);
+        timeVaryParamData.insert(i, sm);
+        ql = getParameter(i);
+        useBlk.insert(i, (QString(ql.at(12)).toInt()));
+//        blkFnxs.insert(i, (QString(ql.at(13)).toInt()));
+        autoGenBlkParam (i, useBlk.at(i), getParamHeader(i));
+        useDev.insert(i, (QString(ql.at(8)).toInt()));
+        autoGenDevParam (i, useDev.at(i), getParamHeader(i));
+        useEnv.insert(i, (QString(ql.at(7)).toInt()));
+        autoGenEnvParam (i, useEnv.at(i), getParamHeader(i));
     }
-    updateTimeVarTable();
+//    updateTimeVaryData();
+    emit paramsChanged();
 }
 
 void parameterModelTV::removeData(QModelIndex index, int first, int last)
@@ -180,121 +293,174 @@ void parameterModelTV::removeData(QModelIndex index, int first, int last)
     shortParameterModel *sm;
     for (int i = last; i >= first; i--)
     {
-        envLinks.removeAt(i);
-        devLinks.removeAt(i);
-        blkLinks.removeAt(i);
-        sm = timeVarianceList.takeAt(i);
+        useEnv.removeAt(i);
+        useDev.removeAt(i);
+        useBlk.removeAt(i);
+ //       blkFnxs.removeAt(i);
+        sm = timeVaryParamData.takeAt(i);
         delete sm;
     }
-    updateTimeVarTable();
+    updateTimeVaryData();
+    emit paramsChanged();
 }
 
-void parameterModelTV::setTimeVarBlkParam (int param, int num, QStringList data)
+void parameterModelTV::updateTimeVaryModel()
 {
-    shortParameterModel *sm = timeVarianceList.at(param);
-    sm->setRowData(num + blkst, data);
+    changeTimeVaryData();
 }
 
-void parameterModelTV::setTimeVarDevParam (int param, int num, QStringList data)
+void parameterModelTV::changeTimeVaryData()
 {
-    shortParameterModel *sm = timeVarianceList.at(param);
-    sm->setRowData(num + 1, data);
-
+    int rows = timeVaryParams.getParamCount();
+//    QModelIndex tplt(index(0, 0));
+//    QModelIndex btrt(index(rows - 1, 6));
+    changeTimeVaryData(0, rows - 1);
 }
 
-void parameterModelTV::setTimeVarEnvParam (int param, QStringList data)
+void parameterModelTV::changeTimeVaryData(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect)
 {
-    shortParameterModel *sm = timeVarianceList.at(param);
-    sm->setRowData(0, data);
+    int start = tplt.row();
+    int end = btrt.row();
+    changeTimeVaryData(start, end);
 }
 
-int  parameterModelTV::getNumTimeVarParams ()
+void parameterModelTV::changeTimeVaryData(int firstRow, int lastRow)
 {
-    return timeVarianceTable->rowCount();
-}
-
-QStringList parameterModelTV::getTimeVarParam (int row)
-{
-    return timeVarianceTable->getRowData(row);
-}
-
-QString parameterModelTV::getTimeVarParamHdr (int row)
-{
-    return timeVarianceTable->getRowHeader(row);
-}
-
-QStringList parameterModelTV::autoGenEnvParam(int param, int value, QString label)
-{
+    int param, tvParam;
     QStringList ql;
-    int link = value / 100;
-    int var = value - (link * 100);
+    shortParameterModel *sm;
 
+    for (int i = firstRow; i <= lastRow; i++)
+    {
+        param = tableNum.at(i);
+        tvParam = paramNum.at(i);
+        sm = timeVaryParamData.at(param);
+        ql = timeVaryParams.getParameter(i);
+        sm->setParameter(tvParam, ql);
+    }
+}
+
+void parameterModelTV::setTimeVaryParam(int index, QStringList data)
+{
+    timeVaryParams.setParameter(index, data);
+}
+
+void parameterModelTV::setTimeVaryBlkParam (int param, int num, QStringList data)
+{
+    shortParameterModel *sm = timeVaryParamData.at(param);
+    sm->setParameter(num + 3, data);
+}
+
+void parameterModelTV::setTimeVaryDevParam (int param, int num, QStringList data)
+{
+    shortParameterModel *sm = timeVaryParamData.at(param);
+    sm->setParameter(num + 1, data);
+}
+
+void parameterModelTV::setTimeVaryEnvParam (int param, QStringList data)
+{
+    shortParameterModel *sm = timeVaryParamData.at(param);
+    sm->setParameter(0, data);
+}
+
+int  parameterModelTV::getNumTimeVaryParams ()
+{
+    return timeVaryParams.getParamCount();
+}
+
+QStringList parameterModelTV::getTimeVaryParam (int row)
+{
+    return timeVaryParams.getParameter(row);
+}
+
+QString parameterModelTV::getTimeVaryParamHdr (int row)
+{
+    return timeVaryParams.getParamHeader(row);
+}
+
+void parameterModelTV::setTimeVaryHeaders(int param, QString label)
+{
+    if (param == -1)
+    {
+        for (param = 0; param < getNumParams(); param++)
+        {
+            setEnvTimeVaryHeader (param);
+            setDevTimeVaryHeader (param);
+            setBlkTimeVaryHeader (param);
+        }
+    }
+    else
+    {
+        setEnvTimeVaryHeader(param);
+        setDevTimeVaryHeader(param);
+        setBlkTimeVaryHeader(param);
+    }
+}
+
+void parameterModelTV::setEnvTimeVaryHeader(int param, int link, QString label)
+{
+    QStringList ql;// (getRowData(param));
+//    QString hdr (getRowHeader(param));
+    QString tvHdr;
+    shortParameterModel *sm = timeVaryParamData.at(param);
+    int flag;// = QString(ql.at(7)).toInt();
+
+    if (link == 0)
+    {
+        ql = getParameter(param);
+        flag = QString(ql.at(7)).toInt();
+        link = flag / 100;
+    }
+    if (label.isEmpty())
+        label = getParamHeader(param);
+
+    tvHdr = QString("%1_ENV_").arg(label);//
     switch (link)
     {
     case 1:
-        ql << "-10" << "10" << "1" << "1" << "0.5" << "6" << "4";
-        timeVarianceList.at(param)->setRowData(0, ql);
-        timeVarianceList.at(param)->setRowHeader(0, label + QString("_ENV_add"));
+        tvHdr.append("add");
         break;
     case 2:
-        ql << "-10" << "10" << "1" << "1" << "0.5" << "6" << "4";
-        timeVarianceList.at(param)->setRowData(0, ql);
-        timeVarianceList.at(param)->setRowHeader(0, label + QString("_ENV_mult"));
+        tvHdr.append("mult");
         break;
     case 3:
-        ql << "-0.9" << "0.9" << "0" << "0" << "0.5" << "6" << "4";
-        timeVarianceList.at(param)->setRowData(0, ql);
-        timeVarianceList.at(param)->setRowHeader(0, label + QString("_ENV_offset"));
+        tvHdr.append("offset");
         break;
     case 4:
-        ql << "-0.9" << "0.9" << "0" << "0" << "0.5" << "6" << "4";
-        timeVarianceList.at(param)->setRowData(0, ql);
-        timeVarianceList.at(param)->setRowHeader(0, label + QString("_ENV_lgst_slope"));
+        tvHdr.append("lgst_slope");
         break;
     }
-
-    return timeVarianceList.at(param)->getRowData(0);
+    sm->setParamHeader(0, tvHdr);
 }
 
-QStringList parameterModelTV::autoGenDevParam(int param, int value, QString label)
+void parameterModelTV::setDevTimeVaryHeader(int param, int flag, QString label)
 {
-    QStringList ql;
-    int k = 1;
-    switch (value)
-    {
-    case 1:
-        ql << "0.0001" << "2" << "0.05" << "0.05" << "0.5" << "6" << "-5";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_dev_se"));
-        ql.clear();
-        ql << "-0.99" << "0.99" << "0" << "0" << "0.5" << "6" << "-6";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_dev_autocorr"));
-        break;
-    case 2:
-        ql << "0.0001" << "2" << "0.05" << "0.05" << "0.5" << "6" << "-5";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_dev_se"));
-        ql.clear();
-        ql << "-0.99" << "0.99" << "0" << "0" << "0.5" << "6" << "-6";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_dev_autocorr"));
-        break;
-    }
-    blkst = k;
+    QStringList ql (getParameter(param));
+//    QString hdr (getRowHeader(param));
+    QString tvHdr;
+    shortParameterModel *sm = timeVaryParamData.at(param);
 
-    return timeVarianceList.at(param)->getRowData(1);
+    if (label.isEmpty())
+        label = getParamHeader(param);
+
+    tvHdr = QString("%1_dev_se").arg(label);
+    sm->setParamHeader(1, tvHdr);
+    tvHdr = QString("%1_dev_autocorr").arg(label);
+    sm->setParamHeader(2, tvHdr);
 }
 
-QStringList parameterModelTV::autoGenBlkParam(int param, int block, QString label)
+void parameterModelTV::setBlkTimeVaryHeader(int param, int block, QString label)
 {
-    QStringList ql;
+    QStringList ql (getParameter(param));
+    QString hdr;
+    shortParameterModel *sm = timeVaryParamData.at(param);
+    int func = QString(ql.at(13)).toInt();
     BlockPattern *bp;
-    int numBlocks = 0;
-    int beg = 0;
-    int end = 0;
-    int k = blkst;
-    int func = QString(getRowData(param).at(13)).toInt();
+    int k = 3;//blkst;
+    int numBlocks, beg, end;
+
+    if (label.isEmpty())
+        label = getParamHeader(param);
 
     if (block > 0) // block
     {
@@ -302,95 +468,234 @@ QStringList parameterModelTV::autoGenBlkParam(int param, int block, QString labe
         numBlocks = bp->getNumBlocks();
         for (int i = 0; i < numBlocks; i++)
         {
+            hdr = QString("%1_BLK%2").arg(label, QString::number(i));
             beg = bp->getBlockBegin(i);
             end = bp->getBlockEnd(i);
             if (func == 0)
             {
-                ql << "-1" << "1" << "1" << "1" << "0.05" << "6" << "4";
-                timeVarianceList.at(param)->setRowData(k, ql);
-                timeVarianceList.at(param)->setRowHeader(k++, label + QString("_BLK1add_") + QString::number(beg));
+                hdr.append(QString("mult_%1").arg(QString::number(beg)));
             }
             else if (func == 1)
             {
-                ql << "-0.05" << "0.05" << "0" << "0" << "0.025" << "6" << "4";
-                timeVarianceList.at(param)->setRowData(k, ql);
-                timeVarianceList.at(param)->setRowHeader(k++, label + QString("_BLK1add_") + QString::number(beg));
+                hdr.append(QString("add_%1").arg(QString::number(beg)));
             }
             else if (func == 2)
             {
-                ql << "1" << "45" << "0" << "36" << "10" << "0" << "-3";
-                timeVarianceList.at(param)->setRowData(k, ql);
-                timeVarianceList.at(param)->setRowHeader(k++, label + QString("_BLK1repl_") + QString::number(beg));
+                hdr.append(QString("repl_%1").arg(QString::number(beg)));
             }
             else if (func == 3)
             {
-                ql << "-29.5361" << "20.4639" << "0" << "0" << "10.2319" << "6" << "4";
-                timeVarianceList.at(param)->setRowData(k, ql);
-                timeVarianceList.at(param)->setRowHeader(k++, label + QString("_BLK1delta_") + QString::number(beg));
+                hdr.append(QString("delta_%1").arg(QString::number(beg)));
             }
-            ql.clear();
+            sm->setParamHeader(k++, hdr);
         }
     }
     else if (block == -1) // trends
     {
-        ql << "-4" << "4" << "0" << "0" << "0.5" << "6" << "40";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendFinal_LogstOffset"));
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendInfl_LogstOffset"));
-        ql.clear();
-        ql << "1" << "20" << "3" << "3" << "3" << "6" << "4" ;
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendWidth_yrs"));
-        ql.clear();
+        sm->setParamHeader(k++, label + QString("_TrendFinal_LogstOffset"));
+        sm->setParamHeader(k++, label + QString("_TrendInfl_LogstOffset"));
+        sm->setParamHeader(k++, label + QString("_TrendWidth_yrs"));
     }
     else if (block == -2)
     {
         beg = parentModel->get_start_year();
         end = parentModel->get_end_year();
         int infl = (beg + end) / 2;
-        ql << "0.05" << "0.25" << "0.1" << "0.1" << "0.8" << "0" << "-3";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendFinal_direct"));
-        ql.clear();
-        ql << QString::number(beg) << QString::number(end) << QString::number(infl);
-        ql << QString::number(infl) << "0.5" << "6" << "4";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendInfl_yr"));
-        ql.clear();
-        ql << "1" << "20" << "3" << "3" << "3" << "6" << "4" ;
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendWidth_yr"));
-        ql.clear();
-
+        sm->setParamHeader(k++, label + QString("_TrendFinal_direct"));
+        sm->setParamHeader(k++, label + QString("_TrendInfl_yr"));
+        sm->setParamHeader(k++, label + QString("_TrendWidth_yr"));
     }
     else if (block == -3)
     {
-        ql << "0.0001" << "0.999" << "0.5" << "0.5" << "0.5" << "6" << "4";
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendFinal_frac"));
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendInfl_frac"));
-        ql.clear();
-        ql << "1" << "20" << "3" << "3" << "3" << "6" << "4" ;
-        timeVarianceList.at(param)->setRowData(k, ql);
-        timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendWidth_yr"));
-        ql.clear();
-
+        sm->setParamHeader(k++, label + QString("_TrendFinal_frac"));
+        sm->setParamHeader(k++, label + QString("_TrendInfl_frac"));
+        sm->setParamHeader(k++, label + QString("_TrendWidth_yr"));
     }
     else if (block <= -4)
     {
         int seas = parentModel->get_num_seasons();
         for (int i = 0; i < seas; i++)
         {
-            ql << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            timeVarianceList.at(param)->setRowData(k, ql);
-            timeVarianceList.at(param)->setRowHeader(k++, label + QString("_TrendFinal_seas%1").arg(QString::number(i)));
-            ql.clear();
+            sm->setParamHeader(k++, label + QString("_TrendFinal_seas%1").arg(QString::number(i)));
         }
     }
-    while (k < timeVarianceList.at(param)->rowCount())
-        timeVarianceList.at(param)->takeRow(k);
+}
 
-    return timeVarianceList.at(param)->getRowData(blkst);
+QStringList parameterModelTV::autoGenEnvParam(int param, int envVal, QString label)
+{
+    QStringList ql;
+    int link = envVal / 100;
+    int var = envVal - (link * 100);
+
+    switch (link)
+    {
+    case 1:
+    case 2:
+        ql << "-10" << "10" << "1" << "1" << "0.5" << "6" << "4";
+        timeVaryParamData.at(param)->setParameter(0, ql);
+        break;
+    case 3:
+    case 4:
+        ql << "-0.9" << "0.9" << "0" << "0" << "0.5" << "6" << "4";
+        timeVaryParamData.at(param)->setParameter(0, ql);
+        break;
+    }
+    setEnvTimeVaryHeader(param, link);
+
+    return ql;//timeVaryParamData.at(param)->getRowData(0);
+}
+
+QStringList parameterModelTV::autoGenDevParam(int param, int devVal, QString label)
+{
+    QStringList ql;
+    int k = 1;
+    switch (devVal)
+    {
+    case 1:
+        ql << "0.0001" << "2" << "0.05" << "0.05" << "0.5" << "6" << "-5";
+        timeVaryParamData.at(param)->setParameter(k++, ql);
+        ql.clear();
+        ql << "-0.99" << "0.99" << "0" << "0" << "0.5" << "6" << "-6";
+        timeVaryParamData.at(param)->setParameter(k++, ql);
+        break;
+    case 2:
+        ql << "0.0001" << "2" << "0.05" << "0.05" << "0.5" << "6" << "-5";
+        timeVaryParamData.at(param)->setParameter(k++, ql);
+        ql.clear();
+        ql << "-0.99" << "0.99" << "0" << "0" << "0.5" << "6" << "-6";
+        timeVaryParamData.at(param)->setParameter(k++, ql);
+        break;
+    }
+//    blkst = k;
+
+    setDevTimeVaryHeader(param);
+
+    return ql;//timeVaryParamData.at(param)->getRowData(1);
+}
+
+QStringList parameterModelTV::autoGenBlkParam(int param, int blkPat, QString label)
+{
+    QStringList ql = getParameter(param);
+    BlockPattern *bp;
+    int numBlocks = 0;
+    int beg = 0;
+    int end = 0;
+    int k = 3;
+    int func = QString(getParameter(param).at(13)).toInt();
+
+    if (blkPat == 0)
+    {
+        ql.clear();
+        ql << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_BLK0none"));
+    }
+    else if (blkPat > 0) // block
+    {
+        QString p_lo = QString(ql[0]);
+        QString p_hi = QString(ql[1]);
+        QString p_init = QString(ql[2]);
+        float lo = p_lo.toFloat() - p_init.toFloat(); // max negative change
+        float hi = p_hi.toFloat() - p_init.toFloat(); // max positive change
+        float pr_tp = 0.5 * min(abs(lo), hi); // sd of normal prior
+        QString b_lo = QString::number(lo);
+        QString b_hi = QString::number(hi);
+        QString b_pr_type = QString::number(pr_tp);
+
+        ql.clear();
+        ql << b_lo << b_hi << "0." << "0." << b_pr_type << "6" << "4";
+
+        bp = parentModel->getBlockPattern(blkPat-1);
+        numBlocks = bp->getNumBlocks();
+        for (int i = 0; i < numBlocks; i++)
+        {
+            beg = bp->getBlockBegin(i);
+            end = bp->getBlockEnd(i);
+            if (func == 0)
+            {
+//                ql << b_lo << b_hi << "1" << "1" << "0.05" << "6" << "4";
+                timeVaryParamData.at(param)->setParameter(k, ql);
+                timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_BLK1mult_") + QString::number(beg));
+            }
+            else if (func == 1)
+            {
+//                ql << "-0.05" << "0.05" << "0" << "0" << "0.025" << "6" << "4";
+                timeVaryParamData.at(param)->setParameter(k, ql);
+                timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_BLK1add_") + QString::number(beg));
+            }
+            else if (func == 2)
+            {
+//                ql << "1" << "45" << "0" << "36" << "10" << "0" << "-3";
+                timeVaryParamData.at(param)->setParameter(k, ql);
+                timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_BLK1repl_") + QString::number(beg));
+            }
+            else if (func == 3)
+            {
+//                ql << "-29.5361" << "20.4639" << "0" << "0" << "10.2319" << "6" << "4";
+                timeVaryParamData.at(param)->setParameter(k, ql);
+                timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_BLK1delta_") + QString::number(beg));
+            }
+        }
+    }
+    else if (blkPat == -1) // trends
+    {
+        ql.clear();
+        ql << "-4" << "4" << "0" << "0" << "0.5" << "6" << "40";
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendFinal_LogstOffset"));
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendInfl_LogstOffset"));
+        ql.clear();
+        ql << "1" << "20" << "3" << "3" << "3" << "6" << "4" ;
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendWidth_yrs"));
+    }
+    else if (blkPat == -2)
+    {
+        beg = parentModel->get_start_year();
+        end = parentModel->get_end_year();
+        int infl = (beg + end) / 2;
+        ql.clear();
+        ql << "0.05" << "0.25" << "0.1" << "0.1" << "0.8" << "0" << "-3";
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendFinal_direct"));
+        ql.clear();
+        ql << QString::number(beg) << QString::number(end) << QString::number(infl);
+        ql << QString::number(infl) << "0.5" << "6" << "4";
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendInfl_yr"));
+        ql.clear();
+        ql << "1" << "20" << "3" << "3" << "3" << "6" << "4" ;
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendWidth_yr"));
+    }
+    else if (blkPat == -3)
+    {
+        ql.clear();
+        ql << "0.0001" << "0.999" << "0.5" << "0.5" << "0.5" << "6" << "4";
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendFinal_frac"));
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendInfl_frac"));
+        ql.clear();
+        ql << "1" << "20" << "3" << "3" << "3" << "6" << "4" ;
+        timeVaryParamData.at(param)->setParameter(k, ql);
+        timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendWidth_yr"));
+    }
+    else if (blkPat <= -4)
+    {
+        int seas = parentModel->get_num_seasons();
+        for (int i = 0; i < seas; i++)
+        {
+            ql.clear();
+            ql << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            timeVaryParamData.at(param)->setParameter(k, ql);
+            timeVaryParamData.at(param)->setParamHeader(k++, label + QString("_TrendFinal_seas%1").arg(QString::number(i)));
+        }
+    }
+    timeVaryParamData.at(param)->setParamCount(k);
+//    while (k < timeVaryParamData.at(param)->getParamCount())
+//        timeVaryParamData.at(param)->takeRow(k);
+
+    return ql;//timeVaryParamData.at(param)->getRowData(blkst);
 }

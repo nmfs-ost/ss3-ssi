@@ -1,5 +1,6 @@
 #include "growth.h"
 #include "parametermodel.h"
+#include "setupmodel.h"
 
 ss_growth::ss_growth(ss_model *parent)
 {
@@ -27,25 +28,25 @@ ss_growth::ss_growth(ss_model *parent)
     matAgeValues = new tablemodel((QObject *)parnt);
     matAgeValues->setRowCount(1);
 
-    wtLenParams = new parameterModelTV(parnt);
-    wtLenParams->setRowCount(0);
-    wtLenTVParams = wtLenParams->getTimeVarParameters();
-    wtLenTVParams->setRowCount(0);
+    wtLenParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    wtLenParams->setNumParams(0);
+    wtLenTVParams = wtLenParams->getParamVarsModel();
+//    wtLenParams->getTimeVaryParams()->setRowCount(0);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new parameterModelTV(parnt);
-    cohortParam->setRowCount(1);
+    cohortParam = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    cohortParam->setNumParams(1);
 
-    fracfemaleParams = new parameterModelTV(parnt);
-    fracfemaleParams->setRowCount(1);
+    fracfemaleParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    fracfemaleParams->setNumParams(1);
 
     customBlock = -1;
-    blockParams = new parameterModelTV(parnt);
-    blockParams->setRowCount(0);
+    blockParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    blockParams->setNumParams(0);
     customEnvLink = -1;
-    environmentParams = new parameterModelTV(parnt);
-    environmentParams->setRowCount(0);
+    environmentParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    environmentParams->setNumParams(0);
 
     reset();
 }
@@ -86,13 +87,13 @@ void ss_growth::reset()
 
     num_params = 0;
     matAgeValues->setRowCount(1);
-    wtLenParams->setRowCount(2);
+    wtLenParams->setNumParams(2);
     setTimeVaryMethod(1);
     setTimeVaryReadParams(0);
-    cohortParam->setRowCount(1);
-    fracfemaleParams->setRowCount(1);
-    blockParams->setRowCount(0);
-    environmentParams->setRowCount(0);
+    cohortParam->setNumParams(1);
+    fracfemaleParams->setNumParams(1);
+    blockParams->setNumParams(0);
+    environmentParams->setNumParams(0);
 
     setNum_morphs(1);
     setMorph_within_ratio(1.0);
@@ -474,16 +475,17 @@ void ss_growth::setMaturity_option(int value)
 
 void ss_growth::setWtLenParam(int index, QStringList data)
 {
-    if (index >= wtLenParams->rowCount())
-        wtLenParams->setRowCount(index + 1);
-    wtLenParams->setRowData(index, data);
+    if (index >= wtLenParams->getNumParams())
+        wtLenParams->setNumParams(index + 1);
+    wtLenParams->setParamData(index, data);
 }
 
 void ss_growth::setWtLenTVParam(int index, QStringList data)
 {
-    if (index >= wtLenTVParams->rowCount())
-        wtLenTVParams->setRowCount(index + 1);
-    wtLenTVParams->setRowData(index, data);
+    wtLenParams->setParamVarData(index, data);
+/*    if (index >= wtLenParams->getNumParamVars())// getNumTimeVaryParams())
+        wtLenParams->getTimeVaryParams()->setRowCount(index + 1);
+    wtLenParams->getTimeVaryParams()->setRowData(index, data);*/
 }
 
 /*
@@ -557,21 +559,21 @@ int ss_growth::getNumDevParams()
 {
     int num = 0;
     QStringList data;
-    for (int i = 0; i < wtLenParams->rowCount(); i++)
+    for (int i = 0; i < wtLenParams->getNumParams(); i++)
     {
-        if (wtLenParams->useDev(i))
+        if (wtLenParams->useDevs(i))
             num++;
     }
     return num;
 }
-
+/*
 int ss_growth::getNumEnvLinkParams()
 {
     int num = 0;
     QStringList data;
-    for (int i = 0; i < wtLenParams->rowCount(); i++)
+    for (int i = 0; i < wtLenParams->getNumParams(); i++)
     {
-        if (wtLenParams->envLink(i))
+        if (wtLenParams-> envLink(i))
             num++;
     }
     return num;
@@ -581,11 +583,11 @@ int ss_growth::getNumBlockParams()
 {
     int num = 0;
     QStringList data;
-    for (int i = 0; i < wtLenParams->rowCount(); i++)
+    for (int i = 0; i < wtLenParams->getNumParams(); i++)
     {
         if (wtLenParams->useBlock(i))
             num++;
     }
     return num;
 }
-
+*/

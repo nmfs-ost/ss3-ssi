@@ -24,10 +24,12 @@ void tablemodel::setRowData(int row, QVector<double> rowdata)
     for (int i = 0; i < rowdata.count(); i++)
     {
         QStandardItem *pxi = new QStandardItem(QString::number(rowdata.at(i),'g',6));
+        setItem(row, i, pxi);
         px << pxi;
     }
-    insertRow(row, px);
-    removeRow(row + 1);
+//    insertRow(row, px);
+//    removeRow(row + 1);
+    emit dataChanged();
 }
 
 void tablemodel::setRowData(int row, QStringList &rowstringlist)
@@ -39,10 +41,12 @@ void tablemodel::setRowData(int row, QStringList &rowstringlist)
     for (int i = 0; i < rowstringlist.count(); i++)
     {
         QStandardItem *pxi = new QStandardItem(rowstringlist.at(i));
+        setItem(row, i, pxi);
         px << pxi;
     }
-    insertRow(row, px);
-    removeRow(row + 1);
+//    insertRow(row, px);
+//    removeRow(row + 1);
+    emit dataChanged();
 }
 
 void tablemodel::setRowData(int &row, QString rowstring)

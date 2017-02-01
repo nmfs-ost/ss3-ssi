@@ -3,6 +3,7 @@
 
 #include "growth_morph.h"
 #include "parametermodelTV.h"
+#include "setupmodel.h"
 
 class growthPattern
 {
@@ -19,71 +20,73 @@ public:
 
     growthPattern &operator =(const growthPattern &rhs);
 
-    void setNumNatMParams (int num) {natMParams->setRowCount(num);}
-    int getNumNatMParams () {return natMParams->rowCount();}
-    void addNatMParam (QStringList data) {setNatMParam(natMParams->rowCount(), data);}
+    setupParamVarModel *getGrowthParamsModel() {return growthParams;}
+
+    void setNumNatMParams (int num) {natMParams->setNumParams(num);}
+    int getNumNatMParams () {return natMParams->getNumParams();}
+    void addNatMParam (QStringList data) {setNatMParam(natMParams->getNumParams(), data);}
     void setNatMParam (QStringList data) {setNatMParam(0, data);}
     void setNatMParam (int index, QStringList data);
-    QStringList getNatMParam(int index) {return natMParams->getRowData(index);}
-    tablemodel *getNatMParams() {return natMParams->getParameters();}
-    void setNumNatMTVParams (int num) {natMTVParams->setRowCount(num);}
-    int getNumNatMTVParams () {return natMTVParams->rowCount();}
-    void addNatMTVParam (QStringList data) {setNatMParam(natMTVParams->rowCount(), data);}
+    QStringList getNatMParam(int index) {return natMParams->getParamData(index);}
+    tablemodel *getNatMParams() {return natMParams->getParamModel();}
+    void setNumNatMTVParams (int num) {natMParams->getParamVarsModel()->setRowCount(num);}
+    int getNumNatMTVParams () {return natMParams->getNumParams();}
+//    void addNatMTVParam (QStringList data) {setNatMParam(natMTVParams->getParamCount(), data);}
     void setNatMTVParam (QStringList data) {setNatMParam(0, data);}
     void setNatMTVParam (int index, QStringList data);
-    QStringList getNatMTVParam(int index) {return natMTVParams->getRowData(index);}
-    tablemodel *getNatMTVParams() {return natMTVParams;}
+    QStringList getNatMTVParam(int index) {return natMParams->getParamVarData(index);}
+    tablemodel *getNatMTVParams() {return natMParams->getParamVarsModel();}
     void setNatMMaleAgeList (QStringList data) {natMAges->setRowData(1, data);}
     QStringList getNatMMaleAgeList () {return natMAges->getRowData(1);}
     void setNatMFemAgeList (QStringList data) {natMAges->setRowData (0, data);}
     QStringList getNatMFemAgeList () {return natMAges->getRowData(0);}
     tablemodel *getNatMAges () {return natMAges;}
 
-    void setFractionFemaleParam (QStringList data) {fractionFemParams->setRowData (0, data);}
-    QStringList getFractionFemaleParam () {return fractionFemParams->getRowData(0);}
-    tablemodel *getFractionFemaleParams () {return fractionFemParams->getParameters();}
+    void setFractionFemaleParam (QStringList data) {fractionFemParams->setParameter(0, data);}
+    QStringList getFractionFemaleParam () {return fractionFemParams->getParameter(0);}
+    tablemodel *getFractionFemaleParams () {return fractionFemParams->getParameters();}//->getParameters();}
 
-    void setNumGrowthParams (int num) {growthParams->setRowCount(num);}
-    int getNumGrowthParams () {return growthParams->rowCount();}
-    void addGrowthParam (QStringList data) {setGrowthParam(growthParams->rowCount(), data);}
+    void setNumGrowthParams (int num) {growthParams->setNumParams(num);}
+    int getNumGrowthParams () {return growthParams->getNumParams();}
+    void addGrowthParam (QStringList data) {setGrowthParam(growthParams->getNumParams(), data);}
     void setGrowthParam (int index, QStringList data);
-    QStringList getGrowthParam(int index) {return growthParams->getRowData(index);}
-    tablemodel *getGrowthParams() {return growthParams->getParameters();}
-    void setNumGrowthTVParams (int num) {growthTVParams->setRowCount(num);}
-    int getNumGrowthTVParams () {return growthTVParams->rowCount();}
-    void addGrowthTVParam (QStringList data) {setGrowthParam(growthTVParams->rowCount(), data);}
+    QStringList getGrowthParam(int index) {return growthParams->getParamData(index);}
+    tablemodel *getGrowthParams() {return growthParams->getParamModel();}
+    void setNumGrowthTVParams (int num) {growthParams->getParamVarsModel()->setRowCount(num);}
+    int getNumGrowthTVParams () {return growthParams->getNumParamVars();}
+    void addGrowthTVParam (QStringList data) {setGrowthTVParam(growthParams->getNumParamVars(), data);}
     void setGrowthTVParam (int index, QStringList data);
-    QStringList getGrowthTVParam(int index) {return growthTVParams->getRowData(index);}
-    tablemodel *getGrowthTVParams() {return growthTVParams;}
+    QStringList getGrowthTVParam(int index) {return growthParams->getParamVarData(index);}
+    tablemodel *getGrowthTVParams() {return growthParams->getParamVarsModel();}
 
-    void setNumTimeVaryParams (int num) {timeVaryParams->setRowCount(num);}
-    int getNumTimeVaryParams () {return timeVaryParams->rowCount();}
-    void addTimeVaryParam (QStringList data) {setGrowthParam(timeVaryParams->rowCount(), data);}
+/*    void setNumTimeVaryParams (int num) {timeVaryParams->setParamCount(num);}
+    int getNumTimeVaryParams () {return timeVaryParams->getParamCount();}
+    void addTimeVaryParam (QStringList data) {setGrowthParam(timeVaryParams->getParamCount(), data);}
     void setTimeVaryParam (int index, QStringList data);
     void setTimeVaryParamHeader (int index, QString header);
-    QStringList getTimeVaryParam(int index) {return timeVaryParams->getRowData(index);}
-    QString getTimeVaryParamHeader (int index) {return timeVaryParams->getRowHeader(index);}
-    tablemodel *getTimeVaryParams() {return timeVaryParams;}
+    QStringList getTimeVaryParam(int index) {return timeVaryParams->getParameter(index);}
+    QString getTimeVaryParamHeader (int index) {return timeVaryParams->getParamHeader(index);}
+    tablemodel *getTimeVaryParams() {return timeVaryParams->getParameters();}*/
 
-    void setNumCVParams (int num) {cvParams->setRowCount(num);}
-    int getNumCVParams () {return cvParams->rowCount();}
-    void addCVParam (QStringList data) {setCVParam(cvParams->rowCount(), data);}
+    void setNumCVParams (int num) {cvParams->setNumParams(num);}
+    int getNumCVParams () {return cvParams->getNumParams();}
+    void addCVParam (QStringList data) {setCVParam(cvParams->getNumParams(), data);}
     void setCVParam (int index, QStringList data);
-    QStringList getCVParam(int index) {return cvParams->getRowData(index);}
-    tablemodel *getCVParams() {return cvParams->getParameters();}
-    void setNumCVTVParams (int num) {cvTVParams->setRowCount(num);}
-    int getNumCVTVParams () {return cvTVParams->rowCount();}
-    void addCVTVParam (QStringList data) {setCVParam(cvTVParams->rowCount(), data);}
+    QStringList getCVParam(int index) {return cvParams->getParamData(index);}
+    tablemodel *getCVParams() {return cvParams->getParamModel();}
+    void setNumCVTVParams (int num) {cvParams->getParamVarsModel()->setRowCount(num);}
+    int getNumCVTVParams () {return cvParams->getNumParamVars();}
+    void addCVTVParam (QStringList data) {setCVTVParam(getNumCVTVParams(), data);}
     void setCVTVParam (int index, QStringList data);
-    QStringList getCVTVParam(int index) {return cvTVParams->getRowData(index);}
-    tablemodel *getCVTVParams() {return cvTVParams;}
+    QStringList getCVTVParam(int index) {return cvParams->getParamVarData(index);}
+    tablemodel *getCVTVParams() {return cvParams->getParamVarsModel();}
 
-    void setNumDevParams (int num) {devParams->setRowCount(num);}
-    int getNumDevParams () {return devParams->rowCount();}
-    void addDevParam (QStringList data) {setDevParam(devParams->rowCount(), data);}
+    void setNumDevParams (int num) {devParams->setNumParams(num);}
+    int getNumDevParams () {return devParams->getNumParams();}
+    void addDevParam (QStringList data) {setDevParam(devParams->getNumParams(), data);}
     void setDevParam (int index, QStringList data);
-    QStringList getDevParam(int index) {return devParams->getRowData(index);}
-    tablemodel *getDevParams() {return devParams->getParameters();}
+    QStringList getDevParam(int index) {return devParams->getParamData(index);}
+    tablemodel *getDevParams() {return devParams->getParamModel();}
 
 private:
     ss_model *parnt;
@@ -94,23 +97,29 @@ private:
     void clear();
     growthPattern& copy (const growthPattern &rhs);
 
-    parameterModelTV *fractionFemParams;
+    longParameterModel *fractionFemParams;
 
-    parameterModelTV *devParams;
+    setupParamVarModel *devParams;
+//    parameterModelTV *devParams;
 
-    parameterModelTV *growthParams;
-    shortParameterModel *growthTVParams;
-    parameterModelTV *cvParams;
-    shortParameterModel *cvTVParams;
-    parameterModelTV *cohortDevParams;
-    shortParameterModel *cohortTVDevParams;
-    parameterModelTV *maturityParams;
-    shortParameterModel *maturityTVParams;
+    setupParamVarModel *growthParams;
+//    parameterModelTV *growthParams;
+//    shortParameterModel *growthTVParams;
+    setupParamVarModel *cvParams;
+//    parameterModelTV *cvParams;
+//    shortParameterModel *cvTVParams;
+    setupParamVarModel *cohortDevParams;
+//    parameterModelTV *cohortDevParams;
+//    shortParameterModel *cohortTVDevParams;
+    setupParamVarModel *maturityParams;
+//    parameterModelTV *maturityParams;
+//    shortParameterModel *maturityTVParams;
 
-    parameterModelTV *natMParams;
-    shortParameterModel *natMTVParams;
+    setupParamVarModel *natMParams;
+//    parameterModelTV *natMParams;
+//    shortParameterModel *natMTVParams;
     tablemodel *natMAges;
-    shortParameterModel *timeVaryParams;
+//    shortParameterModel *timeVaryParams;
 };
 
 #endif // GROWTH_PATTERN_H

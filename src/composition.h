@@ -105,8 +105,8 @@ public:
 //    void add_saa_observation (class ssObservation *obs) {o_saa_obs_list.append (obs);}
 //    ssObservation * saa_observation (int index) {return o_saa_obs_list.at(index);}
 
-    void setErrorParam (int index, QStringList data) {errorParam->setRowData(index, data);}
-    QStringList getErrorParam (int index) {return errorParam->getRowData(index);}
+    void setErrorParam (int index, QStringList data) {errorParam->setParameter(index, data);}
+    QStringList getErrorParam (int index) {return errorParam->getParameter(index);}
     shortParameterModel *getErrorParameters() {return errorParam;}
 
 private:

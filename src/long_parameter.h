@@ -27,7 +27,7 @@ public:
     void setDevMinYear(int value);
     int getUseDev() const;
     void setUseDev(int value);
-    float getEnvVaraible() const;
+    float getEnvVariable() const;
     void setEnvVariable(float value);
     int getPhase() const;
     void setPhase(int value);

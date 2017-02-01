@@ -30,6 +30,8 @@ public slots:
     void setRowHeader (int row, QString title);
     QString getRowHeader (int row);
 
+signals:
+    void dataChanged();
 };
 
 

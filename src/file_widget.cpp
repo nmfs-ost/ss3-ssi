@@ -11,7 +11,7 @@ using namespace std;
 #include "block_pattern.h"
 #include "growth.h"
 #include "file_widget.h"
-#include "fileIO32.h"
+//#include "fileIO32.h"
 #include "fileIO33.h"
 #include "ui_file_widget.h"
 #include "dialog_view.h"
@@ -602,7 +602,7 @@ void file_widget::write_files()
     setDatafileVersion(3.30, false);
 
     write_starter_file(ui->label_starter_file->text());
-    if (datafile_version < 3.30)
+/*    if (datafile_version < 3.30)
     {
         write32_dataFile(dataFile, model_info);
         write32_forecastFile(forecastFile, model_info);
@@ -617,7 +617,7 @@ void file_widget::write_files()
             write32_profileFile(profileFile, model_info);
         }
     }
-    else
+    else*/ if (datafile_version < 3.40)
     {
         write33_dataFile(dataFile, model_info);
         write33_forecastFile(forecastFile, model_info);

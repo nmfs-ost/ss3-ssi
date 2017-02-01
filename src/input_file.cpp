@@ -122,9 +122,11 @@ int ss_file::newline()
  * and separate by tabs and spaces into separate tokens. */
 QStringList *ss_file::get_line_tokens()
 {
+    QString line;
     if (current_line->count() > 0)
         current_line->clear();
-    current_line->append(read_line());
+    line = read_line();
+    current_line->append(line);
 
     return get_line_tokens(current_line);
 }
@@ -132,9 +134,10 @@ QStringList *ss_file::get_line_tokens()
 QStringList *ss_file::get_line_tokens(QString *line)
 {
     QString last;
+    QStringList cl;
 
+    cl = line->split('\t', QString::SkipEmptyParts);
     current_tokens->clear();
-    QStringList cl(line->split('\t', QString::SkipEmptyParts));
     for (int i = 0; i < cl.count(); i++)
         current_tokens->append(cl.at(i).split (' ', QString::SkipEmptyParts));
 
@@ -191,12 +194,14 @@ QString ss_file::get_next_value(QString prompt)
 
 QString ss_file::get_next_token()
 {
-    if (current_tokens->count() == 0)
+    QString tk;
+    while (current_tokens->count() == 0)
     {
         get_line_tokens();
     }
+    tk = current_tokens->takeFirst();
 
-    return current_tokens->takeFirst();
+    return tk;
 }
 
 QString ss_file::get_next_token(QString line)
@@ -205,7 +210,7 @@ QString ss_file::get_next_token(QString line)
         get_line_tokens();
     else
         get_line_tokens(&line);
-    if (current_tokens->count() == 0)
+    while (current_tokens->count() == 0)
     {
         get_line_tokens();
     }
@@ -273,7 +278,7 @@ int ss_file::write_val(QString val, int spcng, QString info)
 
 int ss_file::write_vector(QStringList vect, int spcng, QString info)
 {
-    QString line;
+    QString line ("");
     QString item;
     int num = vect.count();
     for (int i = 0; i < num; i++)

@@ -12,6 +12,7 @@
 #include "ss_mortality.h"
 #include "ss_movement.h"
 #include "ss_fecundity.h"
+#include "seasonaleffectsmodel.h"
 
 class population : public QObject
 {
@@ -53,46 +54,39 @@ public slots:
     QStringList getFractionFemale();
     void setFractionFemale (QStringList data);
 
-    bool getFemwtlen1() const;
-    void setFemwtlen1(bool value);
-    void changeFemWtLn1 (bool flag);
-    bool getFemwtlen2() const;
-    void setFemwtlen2(bool value);
-    void changeFemWtLn2 (bool flag);
-    bool getMat1() const;
-    void setMat1(bool value);
-    void changeMaturity1 (bool flag);
-    bool getMat2() const;
-    void setMat2(bool value);
-    void changeMaturity2 (bool flag);
-    bool getFec1() const;
-    void setFec1(bool value);
-    void changeFecundity1(bool flag);
-    bool getFec2() const;
-    void setFec2(bool value);
-    void changeFecundity2(bool flag);
-    bool getMalewtlen1() const;
-    void setMalewtlen1(bool value);
-    void changeMaleWtLn1(bool flag);
-    bool getMalewtlen2() const;
-    void setMalewtlen2(bool value);
-    void changeMaleWtLn2(bool flag);
+    QStringList getSeasParamSetup();
+    void setSeasParamSetup (QStringList values);
+
+    bool getFemWtLen1() const;
+    void setFemWtLen1(bool value);
+    bool getFemWtLen2() const;
+    void setFemWtLen2(bool value);
+    bool getMaturity1() const;
+    void setMaturity1(bool value);
+    bool getMaturity2() const;
+    void setMaturity2(bool value);
+    bool getFecund1() const;
+    void setFecund1(bool value);
+    bool getFecund2() const;
+    void setFecund2(bool value);
+    bool getMaleWtLen1() const;
+    void setMaleWtLen1(bool value);
+    bool getMaleWtLen2() const;
+    void setMaleWtLen2(bool value);
     bool getL1() const;
     void setL1(bool value);
-    void changeL1(bool flag);
     bool getK() const;
     void setK(bool value);
-    void changeK(bool flag);
     void setNumSeas (int seas);
     int getNumSeas () {return iNumSeas;}
-    void setNumSeasParams ();
-    int getNumSeasParams () {return seasparamtable->rowCount();}
-    void addSeasParam (QStringList data) {setSeasParam(seasparamtable->rowCount(), data);}
-    void setSeasParam (int index, QStringList data);
-    QStringList getSeasParam (int index);
-    shortParameterModel *getSeasonalParams() {return seasparamtable;}
-    void insertSeasParams (int num);
-    void removeSeasParams (int num);
+//    void setNumSeasParams ();
+    int getNumSeasParams () {return seasparamtable->getNumParams();}// getParamCount();}
+//    void addSeasonalParam (QStringList data) {setSeasonalParam(seasparamtable->getNumParams(), data);}
+    void setSeasonalParam (int index, QStringList data);
+    QStringList getSeasonalParam (int index);
+    tablemodel *getSeasonalParams() {return seasparamtable->getParamModel();}
+//    void insertSeasParams (int num);
+//    void removeSeasParams (int num);
 
 signals:
 
@@ -118,7 +112,9 @@ private:
     int iStartYear;
     int iNumAges;
 
-    shortParameterModel *seasparamtable;
+    seasonalEffectsModel *seasparamtable;
+//    setupShortParamModel *seasparamtable;
+//    shortParameterModel *seasparamtable;
 
 };
 

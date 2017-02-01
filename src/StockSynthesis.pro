@@ -88,7 +88,6 @@ SOURCES += main.cpp\
     mbweightdelegate.cpp \
     parametermodel.cpp \
     newfleetdialog.cpp \
-    fileIO32.cpp \
     fileIO33.cpp \
     dialog_about_gui.cpp \
     metadata.cpp \
@@ -98,7 +97,11 @@ SOURCES += main.cpp\
     message.cpp \
     fileconversiondialog.cpp \
     parametermodelTV.cpp \
-    q_ratio.cpp
+    q_ratio.cpp \
+    setupmodel.cpp \
+    parammodel.cpp \
+    timevaryparameter.cpp \
+    seasonaleffectsmodel.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -148,7 +151,6 @@ HEADERS  += mainwindow.h \
     variance_adjustment.h \
     tag.h \
     selex_equation.h \
-    q.h \
     growth_season_effects.h \
     growth_pattern.h \
     dialog_about_nft.h \
@@ -175,7 +177,6 @@ HEADERS  += mainwindow.h \
     mbweightdelegate.h \
     parametermodel.h \
     newfleetdialog.h \
-    fileIO32.h \
     fileIO33.h \
     fileIOJSON.h \
     fileIOXML.h \
@@ -187,7 +188,11 @@ HEADERS  += mainwindow.h \
     message.h \
     fileconversiondialog.h \
     parametermodelTV.h \
-    q_ratio.h
+    q_ratio.h \
+    setupmodel.h \
+    parammodel.h \
+    timevaryparameter.h \
+    seasonaleffectsmodel.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

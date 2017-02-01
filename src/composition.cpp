@@ -102,7 +102,7 @@ compositionAge::compositionAge(QObject *parent)
     useParameters = false;
     errorParam = new shortParameterModel(this);
 //    errorParam->setColumnCount(7);
-    errorParam->setRowCount(1);
+    errorParam->setParamCount(1);
 }
 
 compositionAge::~compositionAge()
@@ -136,7 +136,7 @@ void compositionAge::reset()
     i_num_saa_obs = 0;
 
     useParameters = false;
-    errorParam->reset();
+    errorParam->getParameters()->reset();
 
 }
 

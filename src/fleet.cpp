@@ -2,11 +2,11 @@
 #include "model.h"
 #include "q_ratio.h"
 
-Fleet::Fleet(QObject *parent) :
-    QObject(parent)
+Fleet::Fleet(ss_model *parent) :
+    QObject((QObject *)parent)
 {
-    ss_model *model = static_cast<ss_model*>(parent);
-    i_start_year = model->get_start_year();
+//    ss_model *model = static_cast<ss_model*>(parent);
+    i_start_year = parent->get_start_year();
 
     set_max_catch(-1);
     retainCatch = new tablemodel(this);
@@ -45,10 +45,10 @@ Fleet::Fleet(QObject *parent) :
     lambdaModel->setHeader(abundanceHeader);
 
     q_read = false;
-    q_R = new q_ratio(model);
+    q_R = new q_ratio(parent);
     s_name = NULL;
-    size_selex = new selectivity(model);
-    age_selex = new selectivity(model);
+    size_selex = new selectivity(parent);
+    age_selex = new selectivity(parent);
     reset();
 }
 
@@ -347,8 +347,9 @@ void Fleet::reset()
 
 Fleet *Fleet::copy(Fleet *oldfl)
 {
-    ss_model *model = static_cast<ss_model*>(oldfl->parent());
+    ss_model *model = (ss_model *)oldfl->parent();
     int i;
+    QStringList strList;
     setName (QString("%1_Copy").arg(oldfl->getName()));
     setActive(true);
     setNumber(0);
@@ -458,16 +459,25 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //  q_section
-    Q()->setDoPower(oldfl->Q()->getDoPower());
+    Q()->setSetupData(oldfl->Q()->getSetupData());
+/*    Q()->setDoPower(oldfl->Q()->getDoPower());
     Q()->setDoEnvLink(oldfl->Q()->getDoEnvLink());
     Q()->setDoExtraSD(oldfl->Q()->getDoExtraSD());
-    Q()->setType(oldfl->Q()->getType());
+    Q()->setType(oldfl->Q()->getType());*/
 /*    set_q_do_power(oldfl->q_do_power());
     set_q_do_env_lnk(oldfl->q_do_env_lnk());
     set_q_do_extra_sd(oldfl->q_do_extra_sd());
     set_q_type(oldfl->q_type());*/
     for (i = 0; i < oldfl->Q()->getNumParams(); i++)
-        Q()->setParameter(i, oldfl->Q()->getParameter(i));
+    {
+        strList = oldfl->Q()->getParamData(i);
+        Q()->setParamData(i, strList);
+    }
+    for (i = 0; i < oldfl->Q()->getNumParamVars(); i++)
+    {
+        strList = oldfl->Q()->getParamVarData(i);
+        Q()->setParamVarData(i, strList);
+    }
 
     //   size selex
     set_size_selex_pattern(oldfl->size_selex_pattern());
@@ -476,7 +486,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     set_size_selex_special(oldfl->size_selex_special());
     size_selex->setPattern(size_selex_pattern());
     for (i = 0; i < oldfl->getSizeSelectivity()->getNumParameters(); i++)
-        size_selex->setParameter(i, oldfl->getSizeSelectivity()->getParameterModel()->getRowData(i));
+        size_selex->setParameter(i, oldfl->getSizeSelectivity()->getParameter(i));
 
     //   age selex
     set_age_selex_pattern(oldfl->age_selex_pattern());
@@ -485,7 +495,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     set_age_selex_special(oldfl->age_selex_special());
     age_selex->setPattern(age_selex_pattern());
     for (i = 0; i < oldfl->getAgeSelectivity()->getNumParameters(); i++)
-        age_selex->setParameter(i, oldfl->getAgeSelectivity()->getParameterModel()->getRowData(i));
+        age_selex->setParameter(i, oldfl->getAgeSelectivity()->getParameter(i));
 
     // lambdas
     {
@@ -796,8 +806,9 @@ void Fleet::setQSetupRead(bool flag)
 
 void Fleet::qSetupChanged()
 {
-    Q()->setupChanged(getAbundErrType());
+    Q()->changeSetup(getAbundErrType());//setupChanged(getAbundErrType());
 }
+
 
 /*
 void Fleet::resetLambdas()

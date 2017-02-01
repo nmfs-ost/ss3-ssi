@@ -8,12 +8,12 @@ ss_mortality::ss_mortality(ss_model *parent, int n_fisheries, int n_surveys)
     QStringList pheader;
     pheader << "fleet" << "year" << "seas" << "F" << "se" << "phase" ;
     parameterTable = new shortParameterModel((QObject *)parnt);
-    parameterTable->setColumnCount(6);
+//    parameterTable->setColumnCount(6);
     parameterTable->setHeader(pheader);
-    parameterTable->setRowCount(0);
+    parameterTable->setParamCount(0);
     initialParams = new shortParameterModel((QObject *)parnt);
 //    initialParams->setColumnCount(7);
-    initialParams->setRowCount(0);
+    initialParams->setParamCount(0);
 //    numFisheries = 0;
     setNumFisheries(n_fisheries);
     numSurveys = n_surveys;
@@ -85,19 +85,19 @@ void ss_mortality::fromFile(ss_file *file, int num)
         {
             tokenlist.append(file->get_next_value());
         }
-        parameterTable->setRowData(0, tokenlist);
+        parameterTable->setParameter(0, tokenlist);
     }
     else
     {
-        parameterTable->setRowCount(0);
+        parameterTable->setParamCount(0);
     }
 
-    initialParams->setRowCount(num);
+    initialParams->setParamCount(num);
     for (i = 0; i < num; i++)
     {
         tokenlist = readShortParameter(file);
-        initialParams->setRowData(i, tokenlist);
-        initialParams->setRowHeader(i, QString("Fleet%1").arg(QString::number(i+1)));
+        initialParams->setParameter(i, tokenlist);
+        initialParams->setParamHeader(i, QString("Fleet%1").arg(QString::number(i+1)));
     }
 
 }
@@ -138,23 +138,23 @@ QString ss_mortality::toText()
                            QString::number(numTuningIters)));
     }
 
-    tmp = parameterTable->rowCount();
+    tmp = parameterTable->getParamCount();
     for (i = 0; i < tmp; i++)
     {
-        tokenlist = parameterTable->getRowData(i);
+        tokenlist = parameterTable->getParameter(i);
         for (int j = 0; j < tokenlist.count(); j++)
         {
             m_text.append(QString(" %1").arg(tokenlist.at(j)));
         }
         m_text.append(" # " );
     }
-    tmp = initialParams->rowCount();
+    tmp = initialParams->getParamCount();
     m_text.append(QString("#\n#_initial_F_params; count = %1" ).arg (QString::number(tmp)));
     m_text.append("#_LO HI INIT PRIOR PR_TYPE SD PHASE" );
 
     for (i = 0; i < tmp; i++)
     {
-        tokenlist = initialParams->getRowData(i);
+        tokenlist = initialParams->getParameter(i);
         for (j = 0; j < tokenlist.count(); j++)
         {
             m_text.append(QString(" %1").arg(tokenlist.at(j)));

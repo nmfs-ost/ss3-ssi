@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>4</number>
+         <number>3</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -1290,9 +1290,6 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1" colspan="4">
-             <layout class="QVBoxLayout" name="verticalLayout_q_setup"/>
-            </item>
             <item row="0" column="4">
              <spacer name="horizontalSpacer_14">
               <property name="orientation">
@@ -1355,15 +1352,18 @@
             <item row="3" column="1" colspan="5">
              <layout class="QVBoxLayout" name="verticalLayout_q_parameters"/>
             </item>
-            <item row="5" column="1" colspan="5">
-             <layout class="QHBoxLayout" name="horizontalLayout_q_tv_parameters"/>
-            </item>
             <item row="4" column="1" colspan="2">
              <widget class="QLabel" name="label_q_tv_parameters">
               <property name="text">
                <string>Time Varying Parameters</string>
               </property>
              </widget>
+            </item>
+            <item row="5" column="1" colspan="4">
+             <layout class="QVBoxLayout" name="verticalLayout_q_tv_params"/>
+            </item>
+            <item row="1" column="1" colspan="4">
+             <layout class="QVBoxLayout" name="verticalLayout_q_setup"/>
             </item>
            </layout>
           </item>

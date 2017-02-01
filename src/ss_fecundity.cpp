@@ -7,13 +7,13 @@ ss_fecundity::ss_fecundity(ss_model *parent)
     hermSeason = 1;
     hermIncludeMales = 0;
 
-    hermaphParams = new parameterModelTV(parnt);
-    hermaphParams->setRowCount(3);
-    hermaphParams->setRowHeader(0, QString("Hermaph_inflect_age"));
-    hermaphParams->setRowHeader(1, QString("Hermaph_std_dev"));
-    hermaphParams->setRowHeader(2, QString("Hermaph_asymp_rate"));
-    femaleParams = new parameterModelTV(parnt);
-    femaleParams->setRowCount(4);
+    hermaphParams = new longParameterModel((QObject*)parnt);
+    hermaphParams->setParamCount(3);
+    hermaphParams->setParamHeader(0, QString("Hermaph_inflect_age"));
+    hermaphParams->setParamHeader(1, QString("Hermaph_std_dev"));
+    hermaphParams->setParamHeader(2, QString("Hermaph_asymp_rate"));
+    femaleParams = new longParameterModel((QObject*)parnt);
+    femaleParams->setParamCount(4);
 }
 
 ss_fecundity::~ss_fecundity()
@@ -41,9 +41,9 @@ void ss_fecundity::setMethod(int value)
 
 void ss_fecundity::setHermParam(int index, QStringList data)
 {
-    if (index >= hermaphParams->rowCount())
-        hermaphParams->setRowCount(index + 1);
-    hermaphParams->setRowData(index, data);
+    if (index >= hermaphParams->getParamCount())
+        hermaphParams->setParamCount(index + 1);
+    hermaphParams->setParameter(index, data);
 }
 int ss_fecundity::getHermIncludeMales() const
 {
@@ -75,9 +75,9 @@ void ss_fecundity::setHermaphroditism(int value)
 
 void ss_fecundity::setFemaleParam(int index, QStringList data)
 {
-    if (index >= femaleParams->rowCount())
-        femaleParams->setRowCount(index + 1);
-    femaleParams->setRowData(index, data);
+    if (index >= femaleParams->getParamCount())
+        femaleParams->setParamCount(index + 1);
+    femaleParams->setParameter(index, data);
 }
 
 

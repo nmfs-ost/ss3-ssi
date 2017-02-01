@@ -6,6 +6,7 @@
 #include "growth_pattern.h"
 #include "growth_season_effects.h"
 #include "parametermodelTV.h"
+#include "setupmodel.h"
 
 class ss_growth
 {
@@ -67,40 +68,38 @@ public:
     QStringList getMatAgeVals () {return matAgeValues->getRowData(0);}
     void setMatAgeVals (QStringList data) {matAgeValues->setRowData(0, data);}
 
-    void setNumWtLenParams (int num) {wtLenParams->setRowCount(num);}
-    int getNumWtLenParams () {return wtLenParams->rowCount();}
+    void setNumWtLenParams (int num) {wtLenParams->setNumParams(num);}
+    int getNumWtLenParams () {return wtLenParams->getNumParams();}
     void addWtLenParam (QStringList data) {setWtLenParam(getNumWtLenParams(), data);}
     void setWtLenParam (int index, QStringList data);
-    QStringList getWtLenParam (int index) {return wtLenParams->getRowData(index);}
-    tablemodel *getWtLenParams () {return wtLenParams->getParameters();}
-    void setNumWtLenTVParams (int num) {wtLenTVParams->setRowCount(num);}
-    int getNumWtLenTVParams () {return wtLenTVParams->rowCount();}
+    QStringList getWtLenParam (int index) {return wtLenParams->getParamData(index);}
+    tablemodel *getWtLenParams () {return wtLenParams->getParamModel();}
+    void setNumWtLenTVParams (int num) {wtLenParams->getParamVarsModel()->setRowCount(num);}
+    int getNumWtLenTVParams () {return wtLenParams->getNumParamVars();}
     void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
     void setWtLenTVParam (int index, QStringList data);
-    QStringList getWtLenTVParam (int index) {return wtLenTVParams->getRowData(index);}
-    tablemodel *getWtLenTVParams () {return wtLenTVParams;}
+    QStringList getWtLenTVParam (int index) {return wtLenParams->getParamVarData(index);}
+    tablemodel *getWtLenTVParams () {return wtLenParams->getParamVarsModel();}
     float getFirst_mature_age() const;
     void setFirst_mature_age(float value);
 
-    void setCohortParam (QStringList data) {cohortParam->setRowData (0, data);}
-    QStringList getCohortParam () {return cohortParam->getRowData(0);}
-    tablemodel *getCohortParams () {return cohortParam->getParameters();}
+    void setCohortParam (QStringList data) {cohortParam->setParamData (0, data);}
+    QStringList getCohortParam () {return cohortParam->getParamData(0);}
+    tablemodel *getCohortParams () {return cohortParam->getParamModel();}
 
     int getNumDevParams();
 
-    int getNumEnvLinkParams();
+    int getNumEnvLinkParams() {return environmentParams->getNumParams();}
     void addEnvironParam (QStringList data) {setEnvironParam(getNumEnvLinkParams(), data);}
-    void setEnvironParam (int index, QStringList data) {environmentParams->setRowData (index, data);}
-    QStringList getEnvironParam(int index) {return environmentParams->getRowData(index);}
-    QString getEnvironParamText(int index) {return environmentParams->getRowText(index);}
-    tablemodel *getEnvironParams() {return environmentParams->getParameters();}
+    void setEnvironParam (int index, QStringList data) {environmentParams->setParamData(index, data);}
+    QStringList getEnvironParam(int index) {return environmentParams->getParamData(index);}
+    tablemodel *getEnvironParams() {return environmentParams->getParamModel();}
 
-    int getNumBlockParams();
+    int getNumBlockParams() {return blockParams->getNumParams();}
     void addBlockParam (QStringList data) {setBlockParam(getNumBlockParams(), data);}
-    void setBlockParam (int index, QStringList data) {blockParams->setRowData (index, data);}
-    QStringList getBlockParam(int index) {return blockParams->getRowData(index);}
-    QString getBlockParamText(int index) {return blockParams->getRowText(index);}
-    tablemodel *getBlockParams() {return blockParams->getParameters();}
+    void setBlockParam (int index, QStringList data) {blockParams->setParamData(index, data);}
+    QStringList getBlockParam(int index) {return blockParams->getParamData(index);}
+    tablemodel *getBlockParams() {return blockParams->getParamModel();}
 
 /*    int getHermaphroditism() const;
     void setHermaphroditism(int value);
@@ -182,8 +181,9 @@ private:
     int maturity_option;
     tablemodel *matAgeValues;
     float first_mature_age;
-    parameterModelTV *wtLenParams;
-    shortParameterModel *wtLenTVParams;
+    setupParamVarModel *wtLenParams;
+//    parameterModelTV *wtLenParams;
+    tablemodel *wtLenTVParams;
 
     int param_offset_method;
     int adjustment_method;
@@ -195,8 +195,10 @@ private:
 
     tablemodel *morphdisttable;
 
-    parameterModelTV *cohortParam;
-    parameterModelTV *fracfemaleParams;
+   setupParamVarModel *cohortParam;
+//    parameterModelTV *cohortParam;
+   setupParamVarModel *fracfemaleParams;
+//    parameterModelTV *fracfemaleParams;
 
 //    QList<longParameter *> params;
     int num_params;
@@ -204,9 +206,11 @@ private:
     int devPhase;
 
     int customEnvLink;
-    parameterModelTV *environmentParams;
+    setupParamVarModel *environmentParams;
+//    parameterModelTV *environmentParams;
     int customBlock;
-    parameterModelTV *blockParams;
+    setupParamVarModel *blockParams;
+//    parameterModelTV *blockParams;
 
     int timeVaryMethod;
     int timeVaryReadParams;

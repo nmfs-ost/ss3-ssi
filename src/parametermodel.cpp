@@ -1,12 +1,15 @@
 #include "parametermodel.h"
 
 shortParameterModel::shortParameterModel(QObject *parent)
-    : tablemodel(parent)
+    : QObject(parent)
 {
-    setColumnCount(7);
+    params.setColumnCount(7);
     header << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
-    setHeader(header);
-    setRowCount(0);
+    params.setHeader(header);
+    setParamCount(0);
+
+    connect (&params, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
 }
 
 shortParameterModel::~shortParameterModel()
@@ -14,44 +17,71 @@ shortParameterModel::~shortParameterModel()
     header.clear();
 }
 
-parameterModel::parameterModel(QObject *parent)
-    : tablemodel(parent)
+void shortParameterModel::setHeader(QStringList hdr)
 {
-    setColumnCount(14);
-    header << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
-    header << "Env" << "Use_Dev" << "Dev_min" << "Dev_max" << "Dev_sd" << "Use_Blk" << "B_type";
-    setHeader(header);
-    setRowCount(0);
+    params.setColumnCount(hdr.count());
+    params.setHeader(hdr);
 }
 
-parameterModel::~parameterModel()
+void shortParameterModel::setParamCount(int rows)
+{
+    QStringList ql;
+    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    for (int i = params.rowCount(); i <= rows; i++)
+        params.setRowData(i, ql);
+    params.setRowCount(rows);
+}
+
+longParameterModel::longParameterModel(QObject *parent)
+    : shortParameterModel(parent)
+{
+    params.setColumnCount(14);
+    header << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
+    header << "Env" << "Use_Dev" << "Dev_min" << "Dev_max" << "Dev_sd" << "Use_Blk" << "B_type";
+    params.setHeader(header);
+    setParamCount(0);
+
+    connect (&params, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+}
+
+longParameterModel::~longParameterModel()
 {
     header.clear();
 }
 
-bool parameterModel::envLink(int index)
+void longParameterModel::setParamCount(int rows)
+{
+    QStringList ql;
+    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    for (int i = params.rowCount(); i < rows; i++)
+        params.setRowData(i, ql);
+    params.setRowCount(rows);
+}
+
+bool longParameterModel::envLink(int index)
 {
     bool flag = false;
-    if (index < rowCount())
-        if (getRowData(index).at(7).toInt() > 0)
+    if (index < params.rowCount())
+        if (params.getRowData(index).at(7).toInt() > 0)
             flag = true;
     return (flag);
 }
 
-bool parameterModel::useBlock(int index)
+bool longParameterModel::useBlock(int index)
 {
     bool flag = false;
-    if (index < rowCount())
-        if (getRowData(index).at(12).toInt() > 0)
+    if (index < params.rowCount())
+        if (params.getRowData(index).at(12).toInt() > 0)
             flag = true;
     return (flag);
 }
 
-bool parameterModel::useDev(int index)
+bool longParameterModel::useDev(int index)
 {
     bool flag = false;
-    if (index < rowCount())
-        if (getRowData(index).at(8).toInt() > 0)
+    if (index < params.rowCount())
+        if (params.getRowData(index).at(8).toInt() > 0)
             flag = true;
     return (flag);
 }

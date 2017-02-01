@@ -187,9 +187,9 @@ public slots:
     int getNumLinesCatch ();
     void add_fleet_catch_per_season (int fishery, int yr, int season, double num, double se = 0);
 //    double fleet_catch_per_season (int fishery, int yr, int season);
-    void setCatchMult (QStringList data) {catchMult->setRowData(0, data);}
-    QStringList getCatchMult () {return catchMult->getRowData(0);}
-    tablemodel *getCatchMultParam () {return catchMult;}
+    void setCatchMult (QStringList data) {catchMult->setParameter(0, data);}
+    QStringList getCatchMult () {return catchMult->getParameter(0);}
+    tablemodel *getCatchMultParam () {return catchMult->getParameters();}
     void set_fleet_units_err_type (int fleet, int units, int err_type);
     int fleet_units (int fleet);
     int fleet_err_type (int fleet);
@@ -270,6 +270,8 @@ public slots:
     void addBlockPattern (BlockPattern * bp) {blockPatterns.append (bp);}
     BlockPattern * getBlockPattern (int index) {return blockPatterns[index];}
 
+    void setTagTimeVaryReadParams(int flag) {tagTvParamsRead = flag;}
+    int getTagTimeVaryReadParams () {return tagTvParamsRead;}
     void setTagLoss(int flag);
     int getTagLoss() {return tag_loss;}
     void setTagLossParameter(longParameter *lp);
@@ -413,6 +415,7 @@ private:
 
     QList <Season *> seasons;
 
+    int tagTvParamsRead;
     int tag_loss;
     longParameter *tag_loss_param;
 

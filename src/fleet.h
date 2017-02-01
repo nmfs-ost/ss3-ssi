@@ -15,12 +15,13 @@
 #include "fleet_composition.h"
 
 class q_ratio;
+class ss_model;
 
 class Fleet : public QObject
 {
     Q_OBJECT
 public:
-    explicit Fleet(QObject *parent = 0);
+    explicit Fleet(ss_model *parent = 0);
     ~Fleet();
 
     void reset();
@@ -288,7 +289,7 @@ public slots:
     bool size_selex_male() {return size_selex->getMale();}
     void set_size_selex_special(int ss_spec) {size_selex->setSpecial(ss_spec);}
     int size_selex_special() {return size_selex->getSpecial();}
-    parameterModelTV *getSizeSelexModel() {return size_selex->getParameterModel();}
+    tablemodel *getSizeSelexModel() {return size_selex->getParameterModel();}
 
     //   #age selex
     selectivity* getAgeSelectivity() {return age_selex;}
@@ -300,7 +301,7 @@ public slots:
     bool age_selex_male() {return age_selex->getMale();}
     void set_age_selex_special(int as_spec) {age_selex->setSpecial(as_spec);}
     int age_selex_special() {return age_selex->getSpecial();}
-    parameterModelTV *getAgeSelexModel() {return age_selex->getParameterModel();}
+    tablemodel *getAgeSelexModel() {return age_selex->getParameterModel();}
 
     void setAddToSurveyCV (float val) {add_to_survey_CV = val;}
     float getAddToSurveyCV () {return add_to_survey_CV;}

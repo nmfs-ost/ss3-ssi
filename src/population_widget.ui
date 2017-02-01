@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>7</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -82,7 +82,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-70</y>
+            <y>0</y>
             <width>885</width>
             <height>549</height>
            </rect>
@@ -488,7 +488,7 @@
               <widget class="QSpinBox" name="spinBox_recr_num_assigns"/>
              </item>
              <item row="12" column="0" colspan="2">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="label_recr_assigns_params">
                <property name="text">
                 <string>Assignment Parameters</string>
                </property>
@@ -508,7 +508,7 @@
               <widget class="QSpinBox" name="spinBox_spwn_recr_time_vary_read"/>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="label_recr_params">
                <property name="text">
                 <string>Function parameters</string>
                </property>
@@ -548,7 +548,7 @@
               <layout class="QVBoxLayout" name="verticalLayout_recr_time_vary_params"/>
              </item>
              <item row="8" column="0">
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="label_recr_time_vary_params">
                <property name="text">
                 <string>Time-varying parameters</string>
                </property>
@@ -580,7 +580,7 @@ recruitment distribution method = 1)</string>
               </widget>
              </item>
              <item row="8" column="1" colspan="2">
-              <widget class="QPushButton" name="pushButton_recr_param_autogen">
+              <widget class="QPushButton" name="pushButton_recr_time_vary_autogen">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -706,7 +706,7 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-147</y>
+            <y>0</y>
             <width>762</width>
             <height>634</height>
            </rect>
@@ -730,7 +730,7 @@ recruitment distribution method = 1)</string>
              <item row="2" column="0">
               <widget class="QLabel" name="label_spacer">
                <property name="text">
-                <string>    </string>
+                <string/>
                </property>
               </widget>
              </item>
@@ -1402,7 +1402,7 @@ recruitment distribution method = 1)</string>
               <layout class="QVBoxLayout" name="verticalLayout_wtlen_params"/>
              </item>
              <item row="3" column="0" colspan="2">
-              <widget class="QLabel" name="label_weightlength">
+              <widget class="QLabel" name="label_wt_len_params">
                <property name="text">
                 <string>Weight to Length Parameters</string>
                </property>
@@ -1454,14 +1454,14 @@ recruitment distribution method = 1)</string>
               <layout class="QVBoxLayout" name="verticalLayout_fecund_time_vary_params"/>
              </item>
              <item row="5" column="0" colspan="2">
-              <widget class="QLabel" name="label_4">
+              <widget class="QLabel" name="label_wt_len_time_vary_params">
                <property name="text">
                 <string>Wt to Length Time Varying Parameters</string>
                </property>
               </widget>
              </item>
              <item row="9" column="0" colspan="2">
-              <widget class="QLabel" name="label_5">
+              <widget class="QLabel" name="label_maturity_time_vary_params">
                <property name="text">
                 <string>Cohort Time Varying Parameters</string>
                </property>
@@ -1471,7 +1471,7 @@ recruitment distribution method = 1)</string>
               <layout class="QVBoxLayout" name="verticalLayout_wtlen_time_vary_params"/>
              </item>
              <item row="15" column="0" colspan="2">
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="label_fec_time_vary_params">
                <property name="text">
                 <string>Fecundity Time Varying Parameters</string>
                </property>

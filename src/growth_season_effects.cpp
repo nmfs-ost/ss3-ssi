@@ -1,5 +1,6 @@
 #include "growth_season_effects.h"
 #include "parametermodel.h"
+#include "setupmodel.h"
 
 GrowthSeasonalEffects::GrowthSeasonalEffects()
 {
@@ -9,7 +10,7 @@ GrowthSeasonalEffects::GrowthSeasonalEffects()
     effHeader << "MWtLen1" << "MWtLen2" << "L1" << "K";
     effects->setHeader(effHeader);
     effects->setRowHeader(0, "");
-    paramtable = new parameterModelTV();
+    paramtable = new setupParamVarModel();//parameterModelTV();
     clear();
 }
 
@@ -127,39 +128,39 @@ void GrowthSeasonalEffects::setK(float value)
 }
 int GrowthSeasonalEffects::getNumParams() const
 {
-    return paramtable->rowCount();
+    return paramtable->getNumParams();
 }
 
 void GrowthSeasonalEffects::setNumParams(int value)
 {
-    paramtable->setRowCount(value);
+    paramtable->setNumParams(value);
 }
 
 QStringList GrowthSeasonalEffects::getParameter(int index) const
 {
-    return paramtable->getRowData(index);
+    return paramtable->getParamData(index);
 }
 
 void GrowthSeasonalEffects::setParameter(int i, QString str)
 {
     QStringList qlst(str.split(' ', QString::SkipEmptyParts));
-    paramtable->setRowData(i, qlst);
+    paramtable->setParamData(i, qlst);
 }
 
 void GrowthSeasonalEffects::setParameter(int i, QStringList datalist)
 {
-    paramtable->setRowData(i, datalist);
+    paramtable->setParamData(i, datalist);
 }
 
 GrowthSeasonalEffects & GrowthSeasonalEffects::copy (const GrowthSeasonalEffects &other)
 {
     QStringList values(other.getEffects());
     effects->setRowData(0, values);
-    paramtable->setRowCount(other.getNumParams());
-    for (int i = 0; i < paramtable->rowCount(); i++)
+    paramtable->setNumParams(other.getNumParams());
+    for (int i = 0; i < paramtable->getNumParams(); i++)
     {
         values = other.getParameter(i);
-        paramtable->setRowData(i, values);
+        paramtable->setParamData(i, values);
     }
     return *this;
 }
@@ -174,7 +175,7 @@ void GrowthSeasonalEffects::clear()
     QStringList qlst;
     qlst <<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0";
     effects->setRowData(0, qlst);
-    paramtable->setRowCount(0);
+    paramtable->setNumParams(0);
 }
 
 

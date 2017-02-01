@@ -120,7 +120,7 @@ void longParameter::setPhase(int value)
     phase = value;
 }
 
-float longParameter::getEnvVaraible() const
+float longParameter::getEnvVariable() const
 {
     return envVar;
 }

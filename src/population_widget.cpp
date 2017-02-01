@@ -7,8 +7,8 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     QWidget(parent), ui(new Ui::population_widget)
 {
     ui->setupUi(this);
-    model_data = NULL;
-//    pop = model_data->pPopulation;
+    model_data = m_data;
+    pop = model_data->pPopulation;
 
 //    ui->verticalLayout_fishingMort_2_detail->addWidget();
 
@@ -190,30 +190,30 @@ void population_widget::set_model(ss_model *model)
     {
         if (model_data != NULL)
         {
-            disconnect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn1(bool)));
-            disconnect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn2(bool)));
-            disconnect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity1(bool)));
-            disconnect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity2(bool)));
-            disconnect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(changeMaturity1(bool)));
-            disconnect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(changeMaturity2(bool)));
-            disconnect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeMaleWtLn1(bool)));
-            disconnect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeMaleWtLn2(bool)));
-            disconnect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(changeL1(bool)));
-            disconnect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(changeK(bool)));
+/*            disconnect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen1(bool)));
+            disconnect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen2(bool)));
+            disconnect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(setFecund1(bool)));
+            disconnect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(setFecund2(bool)));
+            disconnect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(setMaturity1(bool)));
+            disconnect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(setMaturity2(bool)));
+            disconnect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen1(bool)));
+            disconnect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen2(bool)));
+            disconnect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(setL1(bool)));
+            disconnect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(setK(bool)));*/
         }
         model_data = model;
         pop = model_data->pPopulation;
         connect (pop->Move()->getMovementDefs(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(defsChanged(QModelIndex,QModelIndex)));
-        connect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn1(bool)));
-        connect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeFemWtLn2(bool)));
-        connect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity1(bool)));
-        connect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(changeFecundity2(bool)));
-        connect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(changeMaturity1(bool)));
-        connect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(changeMaturity2(bool)));
-        connect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(changeMaleWtLn1(bool)));
-        connect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(changeMaleWtLn2(bool)));
-        connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(changeL1(bool)));
-        connect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(changeK(bool)));
+/*        connect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen1(bool)));
+        connect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen2(bool)));
+        connect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(setFecund1(bool)));
+        connect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(setFecund2(bool)));
+        connect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(setMaturity1(bool)));
+        connect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(setMaturity2(bool)));
+        connect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen1(bool)));
+        connect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen2(bool)));
+        connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(setL1(bool)));
+        connect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(setK(bool)));*/
         reset();
         refresh();
     }
@@ -222,6 +222,7 @@ void population_widget::set_model(ss_model *model)
 void population_widget::changeGrowthPattern (int num)
 {
     growthPattern *gp = pop->Grow()->getPattern(num - 1);
+    int numparms;
 
     fractionFemView->setModel(gp->getFractionFemaleParams());
     fractionFemView->setHeight(1);
@@ -231,19 +232,25 @@ void population_widget::changeGrowthPattern (int num)
     growthParamsView->setHeight(gp->getGrowthParams());
     growthParamsView->resizeColumnsToContents();
     growthTVParamsView->setModel(gp->getGrowthTVParams());
-    growthTVParamsView->setHeight(gp->getGrowthTVParams());
+    numparms = gp->getGrowthTVParams()->rowCount();
+    ui->label_growth_time_vary_params->setVisible(numparms);
+    growthTVParamsView->setVisible(numparms);
+    growthTVParamsView->setHeight(numparms);
     growthTVParamsView->resizeColumnsToContents();
 
-    timeVaryParamsView->setModel(gp->getTimeVaryParams());
-    timeVaryParamsView->setHeight(gp->getTimeVaryParams());
-    timeVaryParamsView->resizeColumnsToContents();
+//    timeVaryParamsView->setModel(gp->getTimeVaryParams());
+//    timeVaryParamsView->setHeight(gp->getTimeVaryParams());
+//    timeVaryParamsView->resizeColumnsToContents();
 
     cvParamsView->setModel(gp->getCVParams());
     cvParamsView->setHeight(gp->getCVParams());
     cvParamsView->resizeColumnsToContents();
-    cvTVParamsView->setModel(gp->getCVTVParams());
-    cvTVParamsView->setHeight(gp->getCVTVParams());
-    cvTVParamsView->resizeColumnsToContents();
+//    cvTVParamsView->setModel(gp->getCVTVParams());
+//    numparms = gp->getCVTVParams()->rowCount();
+//    ui->label_cv_time_vary_params->setVisible(numparms);
+//    cvTVParamsView->setVisible(numparms);
+//    cvTVParamsView->setHeight(numparms);
+//    cvTVParamsView->resizeColumnsToContents();
 
 //    maturityParamsView->setModel(gp->get);
 
@@ -251,7 +258,10 @@ void population_widget::changeGrowthPattern (int num)
     mortParamsView->setHeight(gp->getNatMParams());
     mortParamsView->resizeColumnsToContents();
     mortTVParamsView->setModel(gp->getNatMTVParams());
-    mortTVParamsView->setHeight(gp->getNatMTVParams());
+    numparms = gp->getNatMTVParams()->rowCount();
+   // ui->label_
+    mortTVParamsView->setVisible(numparms);
+    mortTVParamsView->setHeight(numparms);
     mortTVParamsView->resizeColumnsToContents();
     mortAgesView->setModel(gp->getNatMAges());
     mortAgesView->setHeight(2);
@@ -296,14 +306,14 @@ void population_widget::refresh()
     ui->spinBox_growth_num_submorphs->setValue(temp_int);
     changeNumSubMorph(temp_int);
 
-    ui->checkBox_seas_femWtLen1->setChecked(pop->getFemwtlen1());
-    ui->checkBox_seas_femWtLen2->setChecked(pop->getFemwtlen2());
-    ui->checkBox_seas_fecundity1->setChecked(pop->getFec1());
-    ui->checkBox_seas_fecundity2->setChecked(pop->getFec2());
-    ui->checkBox_seas_maturity1->setChecked(pop->getMat1());
-    ui->checkBox_seas_maturity2->setChecked(pop->getMat2());
-    ui->checkBox_seas_maleWtLen1->setChecked(pop->getMalewtlen1());
-    ui->checkBox_seas_maleWtLen2->setChecked(pop->getMalewtlen2());
+    ui->checkBox_seas_femWtLen1->setChecked(pop->getFemWtLen1());
+    ui->checkBox_seas_femWtLen2->setChecked(pop->getFemWtLen2());
+    ui->checkBox_seas_fecundity1->setChecked(pop->getFecund1());
+    ui->checkBox_seas_fecundity2->setChecked(pop->getFecund2());
+    ui->checkBox_seas_maturity1->setChecked(pop->getMaturity1());
+    ui->checkBox_seas_maturity2->setChecked(pop->getMaturity2());
+    ui->checkBox_seas_maleWtLen1->setChecked(pop->getMaleWtLen1());
+    ui->checkBox_seas_maleWtLen2->setChecked(pop->getMaleWtLen2());
     ui->checkBox_seas_L1->setChecked(pop->getL1());
     ui->checkBox_seas_K->setChecked(pop->getK());
     changeSeasParams();
@@ -394,7 +404,7 @@ void population_widget::refresh()
 
     // Seasonality
     seasonParamsView->setModel(pop->getSeasonalParams());
-    seasonParamsView->setHeight(pop->getSeasonalParams());
+    seasonParamsView->setHeight(pop->getSeasonalParams()->rowCount());
     ui->lineEdit_fishingMort_bpark->setText(QString::number(pop->M()->getBparkF()));
     ui->spinBox_fishingMort_bpark_year->setValue(pop->M()->getBparkYr());
     ui->lineEdit_fishingMort_max->setText(QString::number(pop->M()->getMaxF()));
@@ -737,12 +747,20 @@ void population_widget::changeFirstMatureAge()
 
 void population_widget::changeSeasParams()
 {
-//    bool showtable = false;
-    int num = pop->getNumSeasParams() + 1;
-//    if (num > 0)
-//        showtable = true;
+    int num;
+    pop->setFemWtLen1(ui->checkBox_seas_femWtLen1->isChecked());
+    pop->setFemWtLen2(ui->checkBox_seas_femWtLen2->isChecked());
+    pop->setFecund1(ui->checkBox_seas_fecundity1->isChecked());
+    pop->setFecund2(ui->checkBox_seas_fecundity2->isChecked());
+    pop->setMaturity1(ui->checkBox_seas_maturity1->isChecked());
+    pop->setMaturity2(ui->checkBox_seas_maturity2->isChecked());
+    pop->setMaleWtLen1(ui->checkBox_seas_maleWtLen1->isChecked());
+    pop->setMaleWtLen2(ui->checkBox_seas_maleWtLen2->isChecked());
+    pop->setL1(ui->checkBox_seas_L1->isChecked());
+    pop->setK(ui->checkBox_seas_K->isChecked());
+
+    num = pop->getNumSeasParams() + 1;
     seasonParamsView->setHeight(num);
-//    seasonParamsView->setVisible(showtable);
 }
 
 void population_widget::setRecrArea(int value)
@@ -843,7 +861,7 @@ void population_widget::changeSpawnRecrSpec(int num)
             break;
         }
     }
-    recruitFullParamsView->setHeight(pop->SR()->full_parameters->getParameters());
+    recruitFullParamsView->setHeight(pop->SR()->full_parameters->getNumParams());
 }
 
 void population_widget::changeMoveNumDefs(int value)

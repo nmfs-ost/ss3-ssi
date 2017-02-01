@@ -1,13 +1,14 @@
 #include "q_ratio.h"
-#include "parametermodelTV.h"
+#include "setupmodel.h"
 
 q_ratio::q_ratio(ss_model *model)
+    : setupParamVarModel(model)
 {
     QStringList hdr;
     hdr << "Link" << "Link_Info" << "ExtraSD" << "Bias_Adj" << "Float" ;
-    qsetup = new parameterModel(model);
-    qsetup->setColumnCount(5);
-    qsetup->setHeader(hdr);
+    setSetupHeader(hdr);
+    setNumParams(0);
+/*    setParamHeader(0, "LnQ_Base");
 
     hdr.clear();
     hdr << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
@@ -15,50 +16,52 @@ q_ratio::q_ratio(ss_model *model)
     params = new parameterModelTV(model);
     params->setColumnCount(14);
     params->setHeader(hdr);
-    params->setRowCount(1);
-    params->setRowHeader(0, "LnQ_Base");
-    reset();
+    params->setNumParams(1);
+    params->setParamHeader(0, "LnQ_Base");
+    reset();*/
 }
 
 q_ratio::~q_ratio()
 {
-    reset();
+/*    reset();
     delete params;
-    delete qsetup;
+    delete qsetup;*/
 }
+
 
 void q_ratio::reset()
 {
-    qsetup->setRowCount(0);
-    params->setRowCount(0);
-    doPower = 0;
+//    qsetup->setParamCount(0);
+//    params->setNumParams(0);
+    setNumParams(0);
+    setDoPower(0);
     powerIndex = -1;
-    doEnvVar = 0;
+    setDoEnvLink(0);
     EnvIndex = -1;
-    doExtraSD = 0;
+    setDoExtraSD(0);
     ExtraIndex = -1;
-    type = 0;
+    setType(0);
     typeIndex = -1;
-    offset = 0;
+    setOffset(0);
     doOffset = false;
 }
 
-q_ratio *q_ratio::copy(q_ratio *rhs)
+/*q_ratio *q_ratio::copy(q_ratio *rhs)
 {
     int numprms = rhs->getNumParams();
     QString str;
     QStringList strlst;
-    if (rhs->qsetup->rowCount() == 1)
+    if (rhs->qsetup->getParamCount() == 1)
     {
-        strlst = rhs->getSetupModel()->getRowData(0);
+        strlst = rhs->getSetupModel()->getParameter(0);
         qsetup->setRowData(0, strlst);
     }
     for (int i = 0; i < numprms; i++)
     {
         strlst = rhs->getParameter(i);
         setParameter(i, strlst);
-        str = rhs->getParamModel()->getRowHeader(i);
-        params->setRowHeader(i, str);
+        str = rhs->getParamModel()->getParamHeader(i);
+        params->setParamHeader(i, str);
     }
     setDoPower  (rhs->getDoPower());
     setDoEnvLink(rhs->getDoEnvLink());
@@ -66,11 +69,12 @@ q_ratio *q_ratio::copy(q_ratio *rhs)
     setType     (rhs->getType());
     setOffset   (rhs->getOffset());
     return this;
-}
+}*/
 
 void q_ratio::setup(QStringList values)
 {
-    qsetup->setRowData(0, values);
+    setSetupData(values);
+//    qsetup->setRowData(0, values);
 /*    reset();
     setDoPower(values.at(0).toInt());
     setDoEnvLink(values.at(1).toInt());
@@ -92,7 +96,7 @@ void q_ratio::setup (QString str)
 
 QString q_ratio::getSetup()
 {
-    QStringList sList (qsetup->getRowData(0));
+    QStringList sList (getSetupData());
     QString txt("");
     for (int i = 0; i < sList.count(); i++)
         txt.append(QString("      %1").arg(sList.at(i)));
@@ -104,34 +108,34 @@ QString q_ratio::getSetup()
         txt.append(QString(" %1").arg(QString::number(offset)));*/
     return txt;
 }
-
+/*
 void q_ratio::setParamHdrs(QString name)
 {
-    QStringList sList (qsetup->getRowData(0));
+    QStringList sList (qsetup->getParameter(0));
     int i = 0;
     if (getDoPower() == 1)
-        params->setRowHeader(i++, QString("Q_power_") + name);
+        params->setParamHeader(i++, QString("Q_power_") + name);
     if (getDoExtraSD() == 1)
-        params->setRowHeader(i++, QString("Q_extraSD_") + name);
+        params->setParamHeader(i++, QString("Q_extraSD_") + name);
     if (sList.at(0).compare("0"))//getType() > 0)
-        params->setRowHeader(i++, QString("lnQ_base_") + name);
+        params->setParamHeader(i++, QString("lnQ_base_") + name);
 }
 
 void q_ratio::setNumParams(int num)
 {
-    params->setRowCount(num);
+    params->setNumParams(num);
 }
 
 int q_ratio::getNumParams()
 {
-    return params->rowCount();
+    return params->getNumParams();
 }
 
 void q_ratio::setParameter(int index, QStringList values)
 {
-    if (index < params->rowCount())
-        params->setRowCount(index + 1);
-    params->setRowData(index, values);
+    if (index < params->getNumParams())
+        params->setNumParams(index + 1);
+    params->setParameter(index, values);
 }
 
 void q_ratio::setParameter(int index, QString text)
@@ -142,22 +146,22 @@ void q_ratio::setParameter(int index, QString text)
 
 QStringList q_ratio::getParameter(int index)
 {
-    return params->getRowData(index);
+    return params->getParameter(index);
 }
 
 int q_ratio::getTypeIndex() const
 {
     return typeIndex;
-}
+}*/
 
 void q_ratio::setTypeIndex(int value)
 {
     typeIndex = value;
 }
 
-int q_ratio::getDoPower() const
+int q_ratio::getDoPower()
 {
-    int val = qsetup->getRowData(0).at(0).toInt();
+    int val = getSetupValue(0);//qsetup->getParameter(0).at(0).toInt();
     if (val == 3)
         val = 1;
     else
@@ -167,43 +171,43 @@ int q_ratio::getDoPower() const
 
 void q_ratio::setDoPower(int value)
 {
+    int curVal = getSetupValue(0);
     if (doPower != value)
     {
-        QStringList sList (qsetup->getRowData(0));
-        if (sList.at(0).toInt() != 3)
+//        QStringList sList (qsetup->getParameter(0));
+        if (curVal != 3)//sList.at(0).toInt() != 3)
         {
-            if (value)
-
-            sList.removeAt(0);
+//            if (value)
+            setSetupValue(0, 3);
+            setSetupValue(1, 0);
+/*            sList.removeAt(0);
             sList.insert(0, "3");
             sList.removeAt(1);
-            sList.insert(1, "0");
+            sList.insert(1, "0");*/
             doPower = value;
         }
 //        setupChanged();
     }
 }
 
-int q_ratio::getDoEnvLink() const // obsolete
+int q_ratio::getDoEnvLink() // obsolete
 {
     return 0;// qsetup->getRowData(0).at(1).toInt();// doEnvVar;
 }
 
 void q_ratio::setDoEnvLink(int value)
 {
-    QStringList sList (params->getRowData(0));
-    while (sList.count() < 14)
-    {
-        sList.append("0");
-    }
+    QStringList sList (getParamData(0));
+
     if (sList.at(7).toInt() != value)
     {
         sList.removeAt(7);
         if (value)
-            sList.insert(7, "1");
+            sList.insert(7, QString::number(value));//"1");
         else
-            sList.insert(7, "0");
+            sList.insert(7, QString::number(0));
     }
+    setParamData(0, sList);
 
     /*if (sList.at(1).toInt() != value)
      {
@@ -219,19 +223,22 @@ void q_ratio::setDoEnvLink(int value)
     }*/
 }
 
-int q_ratio::getDoExtraSD() const
+int q_ratio::getDoExtraSD()
 {
-    return qsetup->getRowData(0).at(2).toInt();//doExtraSD;
+    int val = getSetupValue(2);
+    return val;
+//    return qsetup->getParameter(0).at(2).toInt();//doExtraSD;
 }
 
 void q_ratio::setDoExtraSD(int value)
 {
-    QStringList sList (qsetup->getRowData(0));
-    if (sList.at(2).toInt() != value)
+//    QStringList sList (qsetup->getParameter(0));
+    if (getDoExtraSD() != value)
     {
-        sList.removeAt(2);
-        sList.insert(2, QString::number(value));
-        doExtraSD = value;
+        setSetupValue(2, value);
+//        sList.removeAt(2);
+  //      sList.insert(2, QString::number(value));
+    //    doExtraSD = value;
 /*        setupChanged();
         if (value == 1)
         {
@@ -243,7 +250,7 @@ void q_ratio::setDoExtraSD(int value)
     }
 }
 
-int q_ratio::getType() const // obsolete
+int q_ratio::getType() // obsolete
 {
     return type;
 }
@@ -296,29 +303,31 @@ void q_ratio::setType(int value)
     }*/
 }
 
-float q_ratio::getOffset() const
+float q_ratio::getOffset()
 {
-    return qsetup->getRowData(0).at(4).toInt();//offset;
+    return getSetupValue(4);
+//    return qsetup->getParameter(0).at(4).toInt();//offset;
 }
 
 void q_ratio::setOffset(float value)
 {
-    QStringList sList (qsetup->getRowData(0));
-    if (sList.at(4).toInt() != value)
+    QStringList sList (getSetupData());
+    if (getOffset() != value)//sList.at(4).toInt() != value)
     {
-        sList.removeAt(4);
-        sList.insert(4, QString::number(value));
+        setSetupValue(4, value);
+//        sList.removeAt(4);
+ //       sList.insert(4, QString::number(value));
         doOffset = value > 0;
         offset = value;
     }
 }
 
-QString q_ratio::getPower() const
+QString q_ratio::getPower()
 {
     QString txt("");
     if (powerIndex == 0)
     {
-        QStringList values(params->getRowData(powerIndex));
+        QStringList values(params->getParameter(powerIndex));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -329,17 +338,17 @@ void q_ratio::setPower(QStringList values)
 {
     if (powerIndex > 0)
     {
-        params->setRowData(powerIndex, values);
-        params->setRowHeader(powerIndex, QString("Q_Power"));
+        params->setParameter(powerIndex, values);
+        params->setParamHeader(powerIndex, QString("Q_Power"));
     }
 }
 
-QString q_ratio::getVariable() const
+QString q_ratio::getVariable()
 {
     QString txt("");
     if (EnvIndex > -1)
     {
-        QStringList values(params->getRowData(EnvIndex));
+        QStringList values(params->getParameter(EnvIndex));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -350,17 +359,17 @@ void q_ratio::setEnvLink(QStringList values)
 {
     if (EnvIndex > -1)
     {
-        params->setRowData(EnvIndex, values);
-        params->setRowHeader(EnvIndex, QString("Q_env"));
+        params->setParameter(EnvIndex, values);
+        params->setParamHeader(EnvIndex, QString("Q_env"));
     }
 }
 
-QString q_ratio::getExtra() const
+QString q_ratio::getExtra()
 {
     QString txt("");
     if (ExtraIndex > -1)
     {
-        QStringList values(params->getRowData(ExtraIndex));
+        QStringList values(params->getParameter(ExtraIndex));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -373,17 +382,17 @@ void q_ratio::setExtra(QStringList values)
     {
         while (values.count() < 14)
             values.append("0");
-        params->setRowData(ExtraIndex, values);
-        params->setRowHeader(ExtraIndex, QString("Q_extra_SD"));
+        params->setParameter(ExtraIndex, values);
+        params->setParamHeader(ExtraIndex, QString("Q_extra_SD"));
     }
 }
 
-QString q_ratio::getBase() const
+QString q_ratio::getBase()
 {
     QString txt("");
     if (typeIndex > -1)
     {
-        QStringList values(params->getRowData(typeIndex));
+        QStringList values(params->getParameter(typeIndex));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -393,24 +402,35 @@ QString q_ratio::getBase() const
 void q_ratio::setBase(QStringList values)
 {
     typeIndex = 0;
-    params->setRowData(typeIndex, values);
-    params->setRowHeader(typeIndex, QString("LnQ_Base"));
+    setParamData(typeIndex, values);
+    setParamHeader(typeIndex, QString("LnQ_Base"));
 }
 
+void q_ratio::changeSetup(int errType)
+{
+    if (getNumParams() < 1)
+        setNumParams(1);
+    setParamHeader(0, QString("LnQ_Base"));
+    if (errType > 0)
+        setParamHeader(0, QString("Q_Base"));
+//    changeSetup();
+}
+
+void q_ratio::changeSetup()
+{
+
+}
+
+/*
 void q_ratio::setupChanged(int error_type)
 {
-    params->setRowCount(1);
-    params->setRowHeader(0, QString("LnQ_Base"));
-    if (error_type > 0)
-        params->setRowHeader(0, QString("Q_Base"));
-    setupChanged();
 }
 
 void q_ratio::setupChanged()
 {
     int id = 1;
     int option = 0;
-    QStringList sList(getSetupModel()->getRowData(0));
+    QStringList sList(getSetupData());
 
     typeIndex = 0;
     option = sList.at(0).toInt();
@@ -449,12 +469,12 @@ void q_ratio::setupChanged()
             ExtraIndex = -1;
         }
     }
-    params->setRowCount(id);
+    params->setNumParams(id);
     if (powerIndex > 0)
-        params->setRowHeader(powerIndex, QString("Q_Power"));
+        params->setParamHeader(powerIndex, QString("Q_Power"));
     if (ExtraIndex > 0)
-        params->setRowHeader(ExtraIndex, QString("Q_ExtraSD"));
-
+        params->setParamHeader(ExtraIndex, QString("Q_ExtraSD"));
+*/
 /*    option = sList.at(1).toInt();
     if (option != doEnvVar)
     {
@@ -471,23 +491,23 @@ void q_ratio::setupChanged()
             EnvIndex = -1;
         }
     }*/
-}
-
+//}
+/*
 void q_ratio::setTVBlkParam(int index, int row, QStringList data)
 {
-    params->setTimeVarBlkParam (index, row, data);
+    params->setTimeVaryBlkParam (index, row, data);
 }
 
 void q_ratio::setTVDevParam(int index, int row, QStringList data)
 {
-    params->setTimeVarDevParam (index, row, data);
+    params->setTimeVaryDevParam (index, row, data);
 }
 
 void q_ratio::setTVEnvParam(int index, QStringList data)
 {
-    params->setTimeVarEnvParam (index, data);
+    params->setTimeVaryEnvParam (index, data);
 }
-
+*/
 
 
 
