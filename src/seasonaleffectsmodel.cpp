@@ -1,25 +1,37 @@
 #include "seasonaleffectsmodel.h"
 
-seasonalEffectsModel::seasonalEffectsModel(ss_model *parent) : setupShortParamModel(parent)
+seasonalEffectsModel::seasonalEffectsModel(QObject *parent) : QObject(parent)
 {
     QStringList headr;
+    setup = new setupModel(parent);
+    params = new shortParamMultModel(parent);
+
+    connect (setup, SIGNAL(dataChanged(QList<int>)), SLOT(changeParameters(QList<int>)));
+    connect (params, SIGNAL(paramsChanged()), SIGNAL(parametersChanged()));
+
     headr << "FmWtLn1" << "FmWtLn2" ;
     headr << "Matur1" << "Matur2" ;
     headr << "Fecnd1" << "Fecnd2" ;
     headr << "MlWtLn1" << "MlWtLn2" ;
     headr << "L1" << "K";
-    setSetupHeader(headr);
-    headr.clear();
+    setup->setHeader(headr);
+/*    headr.clear();
     for (int i = 0; i < 10; i++)
         headr.append("0");
-    setSetupData(headr);
-    setMultiplier(1);
+    setup->setData(headr);*/
+    setNumSeasons(1);
+//    setParamHeaders();
 }
 
+seasonalEffectsModel::~seasonalEffectsModel()
+{
+    delete params;
+    delete setup;
+}
 
 // set multiplier for number of parameters, typically num of seasons
 //
-void seasonalEffectsModel::setMultiplier(int mlt)
+/*void seasonalEffectsModel::setMultiplier(int mlt)
 {
     int i, j, total;
     int beg, end;
@@ -88,44 +100,58 @@ void seasonalEffectsModel::setMultiplier(int mlt)
         setParamHeaders();
         updateParams();
     }
+}*/
+
+void seasonalEffectsModel::changeParameters(QList<int> setupvals)
+{
+    params->setParamsUsed(setupvals);
+    setParamHeaders();
 }
 
 void seasonalEffectsModel::setParamHeaders()
 {
-    int total, numparams = getNumSetupVals();
+    int total, numparams = setup->getData().count();
+    int mult = params->getMultiplier();
     int i, j;
-    int beg, end, row = 0;
+    int row = 0;
     QString hdrPrm;
     QString hdr;
 
     total = numparams * mult;
     // set headers for each season, each param type
+    params->setTotalNumParams(numparams);
     for (i = 0; i < numparams; i++)
     {
-        hdrPrm = getSetupColHeader(i);
+        hdrPrm = setup->getColHeader(i);
         for (j = 0; j < mult; j++, row++)
         {
             hdr = QString("Seas%1 %2").arg(QString::number(j+1), hdrPrm);
-            paramData->setParamHeader(row, hdr);
+            params->setParamDataHeader(row, hdr);
         }
     }
 }
 
 void seasonalEffectsModel::setNumSeasons(int seas)
 {
-    setMultiplier(seas);
-    changeParamData();
+    int check = params->getMultiplier();
+    if (check != seas)
+    {
+        params->setMultiplier(seas);
+        params->checkParamData();
+        setParamHeaders();
+        params->updateParams();
+    }
 }
 
 // Data has been changed programmatically
 // Make sure background data is correct
 // then update gui
 //
-void seasonalEffectsModel::changeParamData()
+/*void seasonalEffectsModel::changeParamData()
 {
     QStringList param;
-    int rows = paramData->getParamCount();
-    int setupcols = setup->columnCount();
+    int rows = params->getNumParams();
+    int setupcols = setup->getNumSetupVals();
 
     rows = setupcols * mult;
     paramData->setParamCount(rows);
@@ -139,108 +165,108 @@ void seasonalEffectsModel::changeParamData()
                 param.insert(j, QString("0"));
             }
     }
-    setParamHeaders();
-    updateParams();
-}
+//    setParamHeaders();
+//    updateParams();
+}*/
 
 bool seasonalEffectsModel::getFemwtlen1() const
 {
-    int val = setupData.at(0);
+    int val = setup->getValue(0);
     return (val == 1);
 }
 void seasonalEffectsModel::setFemwtlen1(bool value)
 {
-    setSetupValue(0, (value? 1: 0));
+    setup->setValue(0, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getFemwtlen2() const
 {
-    int val = setupData.at(1);
+    int val = setup->getValue(1);
     return (val == 1);
 }
 void seasonalEffectsModel::setFemwtlen2(bool value)
 {
-    setSetupValue(1, (value? 1: 0));
+    setup->setValue(1, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getMat1() const
 {
-    int val = setupData.at(2);
+    int val = setup->getValue(2);
     return (val == 1);
 }
 void seasonalEffectsModel::setMat1(bool value)
 {
-    setSetupValue(2, (value? 1: 0));
+    setup->setValue(2, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getMat2() const
 {
-    int val = setupData.at(3);
+    int val = setup->getValue(3);
     return (val == 1);
 }
 void seasonalEffectsModel::setMat2(bool value)
 {
-    setSetupValue(3, (value? 1: 0));
+    setup->setValue(3, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getFec1() const
 {
-    int val = setupData.at(4);
+    int val = setup->getValue(4);
     return (val == 1);
 }
 void seasonalEffectsModel::setFec1(bool value)
 {
-    setSetupValue(4, (value? 1: 0));
+    setup->setValue(4, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getFec2() const
 {
-    int val = setupData.at(5);
+    int val = setup->getValue(5);
     return (val == 1);
 }
 void seasonalEffectsModel::setFec2(bool value)
 {
-    setSetupValue(5, (value? 1: 0));
+    setup->setValue(5, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getMalewtlen1() const
 {
-    int val = setupData.at(6);
+    int val = setup->getValue(6);
     return (val == 1);
 }
 void seasonalEffectsModel::setMalewtlen1(bool value)
 {
-    setSetupValue(6, (value? 1: 0));
+    setup->setValue(6, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getMalewtlen2() const
 {
-    int val = setupData.at(7);
+    int val = setup->getValue(7);
     return (val == 1);
 }
 void seasonalEffectsModel::setMalewtlen2(bool value)
 {
-    setSetupValue(7, (value? 1: 0));
+    setup->setValue(7, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getL1() const
 {
-    int val = setupData.at(8);
+    int val = setup->getValue(8);
     return (val == 1);
  }
 void seasonalEffectsModel::setL1(bool value)
 {
-    setSetupValue(8, (value? 1: 0));
+    setup->setValue(8, (value? 1: 0));
 }
 
 bool seasonalEffectsModel::getK() const
 {
-    int val = setupData.at(9);
+    int val = setup->getValue(9);
     return (val == 1);
 }
 void seasonalEffectsModel::setK(bool value)
 {
-    setSetupValue(9, (value? 1: 0));
+    setup->setValue(9, (value? 1: 0));
 }
 
 

@@ -82,9 +82,13 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     tagGroups->setHeight(model_data->get_tag_observations());
     tagGroups->resizeColumnsToContents();
     ui->horizontalLayout_tag_reldata->addWidget(tagGroups);
-    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_tag_groups(int)));
+    connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
+    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
     connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
     connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
+    connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
+    connect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
+
 
     envVariables = new tableview();
     envVariables->setParent(this);
@@ -93,6 +97,8 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ui->verticalLayout_env_var_obs->addWidget(envVariables);
     connect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), SLOT(changeNumEnvVarObs(int)));
     connect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(setNumEnvironVars(int)));
+    connect (model_data->getEnvVariables(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT(changeEnvVarData(QModelIndex,QModelIndex,QVector<int>)));
 
     timeBlocks = new tableview();
     timeBlocks->setParent(this);
@@ -167,12 +173,6 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_morph_num_stocks, SIGNAL(valueChanged(int)), SLOT(changeNumMorphs(int)));
     connect (ui->lineEdit_morph_min_comp, SIGNAL(editingFinished()), SLOT(changeMorphMincomp()));
     connect (ui->pushButton_morph_obs, SIGNAL(clicked()), SIGNAL(showMorphObs()));
-
-    connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
-    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
-    connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
-    connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
-    connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
 
     connect (ui->spinBox_block_pattern_num, SIGNAL(valueChanged(int)), SLOT(changeBlockPattern(int)));
 
@@ -282,6 +282,7 @@ void data_widget::refresh()
         setDoMorphs(model_data->getDoMorphComp());
 
         setDoTags(model_data->get_do_tags());
+        ui->spinBox_tag_time_vary->setValue(model_data->getTagTimeVaryReadParams());
 
 
         ui->spinBox_env_var_obs->setValue(model_data->getNumEnvironVarObs());
@@ -547,6 +548,49 @@ void data_widget::changeNumEnvVarObs(int num)
 {
     model_data->setNumEnvironVarObs(num);
     envVariables->setHeight(num);
+}
+
+void data_widget::changeEnvVarData(QModelIndex tl, QModelIndex br, QVector<int> data)
+{
+    tablemodel *tm = model_data->getEnvVariables();
+    int numEnvVar = checkNumEnvVars();//model_data->getNumEnvironVars();
+    int item;
+    int firstrow = tl.row();
+    int lastrow = br.row();
+    QStringList rowdata;
+
+    for (int i = firstrow; i <= lastrow; i++)
+    {
+        rowdata = tm->getRowData(i);
+        item = QString(rowdata.at(1)).toInt();
+        if (item > numEnvVar)
+        {
+            model_data->setNumEnvironVars(item);
+            ui->spinBox_num_evn_var->setValue(item);
+        }
+    }
+}
+
+int data_widget::checkNumEnvVars()
+{
+    tablemodel *tm = model_data->getEnvVariables();
+    int numEnvVar = model_data->getNumEnvironVars();
+    int numVars = 0;
+    int item;
+    QStringList rowdata;
+    for (int i = 0; i <= tm->rowCount(); i++)
+    {
+        rowdata = tm->getRowData(i);
+        item = QString(rowdata.at(1)).toInt();
+        if (item > numVars)
+            numVars = item;
+    }
+    if (numVars != numEnvVar)
+    {
+        model_data->setNumEnvironVars(numVars);
+        ui->spinBox_num_evn_var->setValue(numVars);
+    }
+    return numVars;
 }
 
 void data_widget::setGenCompMethod(int method)

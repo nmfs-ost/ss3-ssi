@@ -54,6 +54,8 @@ public:
     void setAgeMax_for_K (float maxk) {age_max_for_K = maxk;}
     float getExpDecay ();
     void setExpDecay (float value);
+    float getFeature () {return feature;}
+    void setFeature (float value) {feature = value;}
 
     float getSd_add() const;
     void setSd_add(float value);
@@ -72,34 +74,35 @@ public:
     int getNumWtLenParams () {return wtLenParams->getNumParams();}
     void addWtLenParam (QStringList data) {setWtLenParam(getNumWtLenParams(), data);}
     void setWtLenParam (int index, QStringList data);
-    QStringList getWtLenParam (int index) {return wtLenParams->getParamData(index);}
-    tablemodel *getWtLenParams () {return wtLenParams->getParamModel();}
-    void setNumWtLenTVParams (int num) {wtLenParams->getParamVarsModel()->setRowCount(num);}
-    int getNumWtLenTVParams () {return wtLenParams->getNumParamVars();}
+    QStringList getWtLenParam (int index) {return wtLenParams->getParameter(index);}
+    tablemodel *getWtLenParams () {return wtLenParams->getParamTable();}
+    void setNumWtLenTVParams (int num) {wtLenParams->setNumParams(num);}
+    int getNumWtLenTVParams () {return wtLenParams->getNumParams();}
     void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
     void setWtLenTVParam (int index, QStringList data);
-    QStringList getWtLenTVParam (int index) {return wtLenParams->getParamVarData(index);}
-    tablemodel *getWtLenTVParams () {return wtLenParams->getParamVarsModel();}
+    QStringList getWtLenTVParam (int index) {return wtLenParams->getParameter(index);}
+    tablemodel *getWtLenTVParams () {return wtLenParams->getParamTable();}
+    longParameterModel *getWtLenParamModel () {return wtLenParams;}
     float getFirst_mature_age() const;
     void setFirst_mature_age(float value);
 
-    void setCohortParam (QStringList data) {cohortParam->setParamData (0, data);}
-    QStringList getCohortParam () {return cohortParam->getParamData(0);}
-    tablemodel *getCohortParams () {return cohortParam->getParamModel();}
+    void setCohortParam (QStringList data) {cohortParam->setParameter (0, data);}
+    QStringList getCohortParam () {return cohortParam->getParameter(0);}
+    tablemodel *getCohortParams () {return cohortParam->getParamTable();}
 
     int getNumDevParams();
 
     int getNumEnvLinkParams() {return environmentParams->getNumParams();}
     void addEnvironParam (QStringList data) {setEnvironParam(getNumEnvLinkParams(), data);}
-    void setEnvironParam (int index, QStringList data) {environmentParams->setParamData(index, data);}
-    QStringList getEnvironParam(int index) {return environmentParams->getParamData(index);}
-    tablemodel *getEnvironParams() {return environmentParams->getParamModel();}
+    void setEnvironParam (int index, QStringList data) {environmentParams->setParameter(index, data);}
+    QStringList getEnvironParam(int index) {return environmentParams->getParameter(index);}
+    tablemodel *getEnvironParams() {return environmentParams->getParamTable();}
 
     int getNumBlockParams() {return blockParams->getNumParams();}
     void addBlockParam (QStringList data) {setBlockParam(getNumBlockParams(), data);}
-    void setBlockParam (int index, QStringList data) {blockParams->setParamData(index, data);}
-    QStringList getBlockParam(int index) {return blockParams->getParamData(index);}
-    tablemodel *getBlockParams() {return blockParams->getParamModel();}
+    void setBlockParam (int index, QStringList data) {blockParams->setParameter(index, data);}
+    QStringList getBlockParam(int index) {return blockParams->getParameter(index);}
+    tablemodel *getBlockParams() {return blockParams->getParamTable();}
 
 /*    int getHermaphroditism() const;
     void setHermaphroditism(int value);
@@ -177,13 +180,14 @@ private:
     float age_max_for_K;
     float age_exp_decay;
     float sd_add;
+    float feature;
     int cv_growth_pattern;
     int maturity_option;
     tablemodel *matAgeValues;
     float first_mature_age;
-    setupParamVarModel *wtLenParams;
-//    parameterModelTV *wtLenParams;
-    tablemodel *wtLenTVParams;
+    longParameterModel *wtLenParams;
+    timeVaryParameterModel *wtLenVarParams;
+//    tablemodel *wtLenTVParams;
 
     int param_offset_method;
     int adjustment_method;
@@ -195,9 +199,11 @@ private:
 
     tablemodel *morphdisttable;
 
-   setupParamVarModel *cohortParam;
+    longParameterModel *cohortParam;
+    timeVaryParameterModel *cohortVarParam;
 //    parameterModelTV *cohortParam;
-   setupParamVarModel *fracfemaleParams;
+    longParameterModel *fracFemaleParams;
+    timeVaryParameterModel *fracFemaleVarParams;
 //    parameterModelTV *fracfemaleParams;
 
 //    QList<longParameter *> params;
@@ -206,10 +212,12 @@ private:
     int devPhase;
 
     int customEnvLink;
-    setupParamVarModel *environmentParams;
+    longParameterModel *environmentParams;
+    timeVaryParameterModel *environmentVarParams;
 //    parameterModelTV *environmentParams;
     int customBlock;
-    setupParamVarModel *blockParams;
+    longParameterModel *blockParams;
+    timeVaryParameterModel *blockVarParams;
 //    parameterModelTV *blockParams;
 
     int timeVaryMethod;

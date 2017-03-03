@@ -7,44 +7,41 @@
 #include "method_setup.h"
 //#include "short_parameter.h"
 #include "setupmodel.h"
-#include "model.h"
+//#include "model.h"
 
-class q_ratio : public setupParamVarModel
+class ss_model;
+
+class q_ratio : public QObject
 {
+    Q_OBJECT
 public:
     q_ratio(ss_model *model);
     ~q_ratio();
 
     void setParentModel (ss_model model);
     void reset();
- //   q_ratio *copy (q_ratio *rhs);
 
-    void setup(QStringList values);
-    void setup(QString str);
+    void setFleetName(QString name);
+    void setValues(QStringList values);
+    void setValues(QString str);
     QString getSetup();
+    tablemodel *getSetupTable () {return setup->getTable();}
 
- //   longParameterModel *getSetupModel() {return qsetup;}
 
-    int getDoPower();
-    void setDoPower(int value);
+    bool getDoPower();
+    void setDoPower(bool value);
 
-    int getDoEnvLink();
-    void setDoEnvLink(int value);
+    bool getDoExtraSD();
+    void setDoExtraSD(bool value);
 
-    int getDoExtraSD();
-    void setDoExtraSD(int value);
-
-    int getType();
-    void setType(int value);
-
-    float getOffset();
-    void setOffset(float value);
+//    float getOffset();
+//    void setOffset(float value);
 
     QString getPower();
     void setPower(QStringList values);
 
-    QString getVariable();
-    void setEnvLink(QStringList values);
+//    QString getVariable();
+//    void setEnvLink(QStringList values);
 
     QString getExtra();
     void setExtra(QStringList values);
@@ -52,42 +49,52 @@ public:
     QString getBase();
     void setBase(QStringList values);
 
-  //  void setParamHdrs (QString name);
- //   void setNumParams (int num);
- //   int getNumParams();
- //   void setParameter (int index, QStringList values);
- //   void setParameter (int index, QString text);
- //   QStringList getParameter(int index);
- //   parameterModelTV *getParamModel() {return getP;}
+    void setNumParams (int num) {params->setNumParams(num);}
+    int getNumParams() {return params->getNumParams();}
+    void setParameter (int index, QStringList values) {params->setParameter(index, values);}
+    void setParameterData (int index, QStringList values) {params->setParamData(index, values);}
+    QStringList getParameter(int index) {return params->getParameter(index);}
+    tablemodel *getParamTable() {return params->getParamTable();}
+    void setParamHdrs(int errType = 1);
 
-  //  int getNumTVParams () {return params->getTimeVaryParams()->rowCount();}
- //   void setTVBlkParam (int index, int row, QStringList data);
- //   void setTVDevParam (int index, int row, QStringList data);
- //   void setTVEnvParam (int index, QStringList data);
- //   QStringList getTVParam (int index) {return params->getTimeVaryParam(index);}
- //   tablemodel *getTVParams () {return getParamVarsModel();}
+    int getNumTVParams () {return varParams->getNumVarParams();}
+    void setTVParam (int index, QStringList data) {varParams->setVarParameter(index, data);}
+    QStringList getTVParam (int index) {return varParams->getVarParameter(index);}
+    tablemodel *getTVParams () {return varParams->getVarParamTable();}
 
-    int getTypeIndex();
-    void setTypeIndex(int value);
-
+    int getAutoGenerate () {return varParams->getAutoGenerate();}
+    void setAutoGenerate (int flag) {varParams->setAutoGenerate(flag);}
     int getLinkType ();
     int getDoBiasAdj ();
     int getFloatQ ();
 
 public slots:
+    void changeSetupData(QList<int> values);
     void changeSetup (int errType);
     void changeSetup ();
-//    void setupChanged ();
-  //  void setupChanged (int error_type);
+
+    void changeParamData();
+    void checkParamValues(int index, QStringList paramValues);
+
+signals:
+    void setupChanged();
+    void parametersChanged();
+    void varyParamsChanged();
 
 private:
+    setupModel *setup;
+    longParameterModel *params;
+    timeVaryParameterModel *varParams;
 
+    QList<int> paramsUsed;
+
+    QString fltName;
     int BaseIndex;
     int doBlkTnd;
     int BlkTndIndex;
     int doRndWlk;
     int RndWlkIndex;
-    int doPower;
+    bool doPower;
     int powerIndex;
     int doEnvVar;
     int EnvIndex;

@@ -46,7 +46,7 @@ Fleet::Fleet(ss_model *parent) :
 
     q_read = false;
     q_R = new q_ratio(parent);
-    s_name = NULL;
+    s_name = new QString("new_fleet");
     size_selex = new selectivity(parent);
     age_selex = new selectivity(parent);
     reset();
@@ -107,11 +107,10 @@ Fleet::~Fleet()
 
 void Fleet::setName(QString fname)
 {
-    if (s_name == NULL)
-        s_name = new QString("");
-
-    s_name->clear();
+    if (!s_name->isEmpty())
+        s_name->clear();
     s_name->append(fname);
+    q_R->setFleetName(fname);
 }
 
 QString Fleet::getName()
@@ -459,7 +458,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //  q_section
-    Q()->setSetupData(oldfl->Q()->getSetupData());
+    Q()->setValues(oldfl->Q()->getSetup());
 /*    Q()->setDoPower(oldfl->Q()->getDoPower());
     Q()->setDoEnvLink(oldfl->Q()->getDoEnvLink());
     Q()->setDoExtraSD(oldfl->Q()->getDoExtraSD());
@@ -470,13 +469,13 @@ Fleet *Fleet::copy(Fleet *oldfl)
     set_q_type(oldfl->q_type());*/
     for (i = 0; i < oldfl->Q()->getNumParams(); i++)
     {
-        strList = oldfl->Q()->getParamData(i);
-        Q()->setParamData(i, strList);
+        strList = oldfl->Q()->getParameter(i);
+        Q()->setParameter(i, strList);
     }
-    for (i = 0; i < oldfl->Q()->getNumParamVars(); i++)
+    for (i = 0; i < oldfl->Q()->getNumTVParams(); i++)
     {
-        strList = oldfl->Q()->getParamVarData(i);
-        Q()->setParamVarData(i, strList);
+        strList = oldfl->Q()->getTVParam(i);
+        Q()->setTVParam(i, strList);
     }
 
     //   size selex
@@ -791,10 +790,8 @@ void Fleet::setQSetupRead(bool flag)
         if (!flag)
         {
             if (    Q()->getDoPower() ||
-                    Q()->getDoEnvLink() ||
-                    Q()->getDoExtraSD() ||
-                    Q()->getType() > 0 ||
-                    Q()->getOffset() > 0)
+                    Q()->getDoExtraSD())// ||
+ //                   Q()->getOffset() > 0)
                 flag = true;
             else if (abundModel->rowCount() > 0)
                 flag = true;

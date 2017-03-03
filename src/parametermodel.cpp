@@ -1,87 +1,199 @@
 #include "parametermodel.h"
 
-shortParameterModel::shortParameterModel(QObject *parent)
+setupTable::setupTable (QObject *parent) : QObject(parent)
+{
+    dataTable.setRowCount(1);
+    dataTable.setColumnCount(0);
+    setDataHeader("");
+
+    connect (&dataTable, SIGNAL(dataChanged()), SLOT(updateList()));
+}
+
+setupTable::~setupTable ()
+{ }
+
+void setupTable::setHeaders (QStringList hdrs)
+{
+    dataTable.setHeader(hdrs);
+}
+
+QStringList setupTable::getHeaders ()
+{
+    QStringList hdr (getColHeader(0));
+    for (int i = 1; i < dataTable.columnCount(); i++)
+        hdr.append(getColHeader(i));
+    return hdr;
+}
+
+void setupTable::setColHeader (int col, QString hdr)
+{
+    dataTable.setColumnHeader(col, hdr);
+}
+
+QString setupTable::getColHeader (int col)
+{
+    return dataTable.getColumnHeader(col);
+}
+
+void setupTable::setDataHeader (QString hdr)
+{
+    dataTable.setRowHeader(0, hdr);
+}
+
+QString setupTable::getDataHeader ()
+{
+    return dataTable.getRowHeader(0);
+}
+
+void setupTable::setData (QStringList data)
+{
+    dataTable.setRowData(0, data);
+}
+
+QStringList setupTable::getData ()
+{
+    return dataTable.getRowData(0);
+}
+
+void setupTable::setValues (QList<int> values)
+{
+    QStringList dlist;
+    for (int i = 0; i < values.count(); i++)
+        dlist.append(QString::number(values.at(i)));
+    setData(dlist);
+}
+
+QList<int> setupTable::getValues ()
+{
+    QStringList dlist (getData());
+    valuesList.clear();
+    for (int i = 0; i < dlist.count(); i++)
+        valuesList.append(QString(dlist.at(i)).toInt());
+    return valuesList;
+}
+
+void setupTable::setValue (int col, int value)
+{
+    getValues();
+    while (valuesList.count() < col)
+        valuesList.append(0);
+    valuesList[col] = value;
+    setValues(valuesList);
+    emit valuesChanged(valuesList);
+}
+
+int setupTable::getValue (int col)
+{
+    int val;
+    getValues();
+    val = valuesList.at(col);
+    return val;
+}
+
+tablemodel *setupTable::getTable()
+{
+    return &dataTable;
+}
+
+void setupTable::updateList()
+{
+    QStringList data(getData());
+    int item;
+    bool changed = false;
+    for (int i = 0; i < data.count(); i++)
+    {
+        item = QString(data.at(i)).toInt();
+        if (item != valuesList.at(i))
+        {
+            valuesList[i] = item;
+            changed = true;
+        }
+    }
+    if (changed)
+    {
+        emit valuesChanged(valuesList);
+        emit dataChanged();
+    }
+}
+
+
+shortParameterTable::shortParameterTable(QObject *parent)
     : QObject(parent)
 {
-    params.setColumnCount(7);
-    header << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
-    params.setHeader(header);
+    header << "Lo" << "Hi" << "Init" << "Prior" << "P_sd" << "P_type" << "Phase";
+    defaultParam << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    paramTable.setHeader(header);
     setParamCount(0);
 
-    connect (&params, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+    connect (&paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
              SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
 }
 
-shortParameterModel::~shortParameterModel()
+shortParameterTable::~shortParameterTable()
 {
     header.clear();
 }
 
-void shortParameterModel::setHeader(QStringList hdr)
+void shortParameterTable::setHeader(QStringList hdr)
 {
-    params.setColumnCount(hdr.count());
-    params.setHeader(hdr);
+    paramTable.setColumnCount(hdr.count());
+    paramTable.setHeader(hdr);
 }
 
-void shortParameterModel::setParamCount(int rows)
+void shortParameterTable::setParamCount(int rows)
 {
-    QStringList ql;
-    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-    for (int i = params.rowCount(); i <= rows; i++)
-        params.setRowData(i, ql);
-    params.setRowCount(rows);
+    for (int i = paramTable.rowCount(); i <= rows; i++)
+        paramTable.setRowData(i, defaultParam);
+    paramTable.setRowCount(rows);
 }
 
-longParameterModel::longParameterModel(QObject *parent)
-    : shortParameterModel(parent)
+longParameterTable::longParameterTable(QObject *parent)
+    : shortParameterTable(parent)
 {
-    params.setColumnCount(14);
-    header << "Lo" << "Hi" << "Init" << "Prior" << "P_type" << "P_sd" << "Phase";
     header << "Env" << "Use_Dev" << "Dev_min" << "Dev_max" << "Dev_sd" << "Use_Blk" << "B_type";
-    params.setHeader(header);
+    defaultParam << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    paramTable.setHeader(header);
     setParamCount(0);
 
-    connect (&params, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+    connect (&paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
              SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
 }
 
-longParameterModel::~longParameterModel()
+longParameterTable::~longParameterTable()
 {
     header.clear();
 }
 
-void longParameterModel::setParamCount(int rows)
+void longParameterTable::setParamCount(int rows)
 {
-    QStringList ql;
-    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-    for (int i = params.rowCount(); i < rows; i++)
-        params.setRowData(i, ql);
-    params.setRowCount(rows);
+    for (int i = paramTable.rowCount(); i < rows; i++)
+        paramTable.setRowData(i, defaultParam);
+    paramTable.setRowCount(rows);
 }
 
-bool longParameterModel::envLink(int index)
+bool longParameterTable::envLink(int index)
 {
     bool flag = false;
-    if (index < params.rowCount())
-        if (params.getRowData(index).at(7).toInt() > 0)
+    if (index < paramTable.rowCount())
+        if (paramTable.getRowData(index).at(7).toInt() > 0)
             flag = true;
     return (flag);
 }
 
-bool longParameterModel::useBlock(int index)
+bool longParameterTable::useBlock(int index)
 {
     bool flag = false;
-    if (index < params.rowCount())
-        if (params.getRowData(index).at(12).toInt() > 0)
+    if (index < paramTable.rowCount())
+        if (paramTable.getRowData(index).at(12).toInt() > 0)
             flag = true;
     return (flag);
 }
 
-bool longParameterModel::useDev(int index)
+bool longParameterTable::useDev(int index)
 {
     bool flag = false;
-    if (index < params.rowCount())
-        if (params.getRowData(index).at(8).toInt() > 0)
+    if (index < paramTable.rowCount())
+        if (paramTable.getRowData(index).at(8).toInt() > 0)
             flag = true;
     return (flag);
 }

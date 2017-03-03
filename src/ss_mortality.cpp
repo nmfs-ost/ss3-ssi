@@ -7,11 +7,11 @@ ss_mortality::ss_mortality(ss_model *parent, int n_fisheries, int n_surveys)
     parnt = parent;
     QStringList pheader;
     pheader << "fleet" << "year" << "seas" << "F" << "se" << "phase" ;
-    parameterTable = new shortParameterModel((QObject *)parnt);
+    parameterTable = new shortParameterTable((QObject *)parnt);
 //    parameterTable->setColumnCount(6);
     parameterTable->setHeader(pheader);
     parameterTable->setParamCount(0);
-    initialParams = new shortParameterModel((QObject *)parnt);
+    initialParams = new shortParameterTable((QObject *)parnt);
 //    initialParams->setColumnCount(7);
     initialParams->setParamCount(0);
 //    numFisheries = 0;

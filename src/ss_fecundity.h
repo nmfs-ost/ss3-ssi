@@ -4,6 +4,7 @@
 #include <QStringList>
 
 #include "parametermodel.h"
+#include "setupmodel.h"
 
 class ss_model;
 
@@ -20,11 +21,11 @@ public:
 
     void setHermParam (int index, QStringList data);
     QStringList getHermParam(int index) {return hermaphParams->getParameter(index);}
-    tablemodel *getHermParams() {return hermaphParams->getParameters();}
+    tablemodel *getHermParams() {return hermaphParams->getParamTable();}
 
     void setFemaleParam (int index, QStringList data);
     QStringList getFemaleParam(int index) {return femaleParams->getParameter(index);}
-    tablemodel *getFemaleParams() {return femaleParams->getParameters();}
+    tablemodel *getFemaleParams() {return femaleParams->getParamTable();}
 
     int getHermIncludeMales() const;
     void setHermIncludeMales(int value);

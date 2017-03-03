@@ -10,7 +10,7 @@ GrowthSeasonalEffects::GrowthSeasonalEffects()
     effHeader << "MWtLen1" << "MWtLen2" << "L1" << "K";
     effects->setHeader(effHeader);
     effects->setRowHeader(0, "");
-    paramtable = new setupParamVarModel();//parameterModelTV();
+    paramtable = new timeVaryParameterModel();//parameterModelTV();
     clear();
 }
 
@@ -128,39 +128,39 @@ void GrowthSeasonalEffects::setK(float value)
 }
 int GrowthSeasonalEffects::getNumParams() const
 {
-    return paramtable->getNumParams();
+    return paramtable->getNumVarParams();
 }
 
 void GrowthSeasonalEffects::setNumParams(int value)
 {
-    paramtable->setNumParams(value);
+    paramtable->setNumVarParams(value);
 }
 
 QStringList GrowthSeasonalEffects::getParameter(int index) const
 {
-    return paramtable->getParamData(index);
+    return paramtable->getVarParameter(index);
 }
 
 void GrowthSeasonalEffects::setParameter(int i, QString str)
 {
     QStringList qlst(str.split(' ', QString::SkipEmptyParts));
-    paramtable->setParamData(i, qlst);
+    paramtable->setVarParameter(i, qlst);
 }
 
 void GrowthSeasonalEffects::setParameter(int i, QStringList datalist)
 {
-    paramtable->setParamData(i, datalist);
+    paramtable->setVarParameter(i, datalist);
 }
 
 GrowthSeasonalEffects & GrowthSeasonalEffects::copy (const GrowthSeasonalEffects &other)
 {
     QStringList values(other.getEffects());
     effects->setRowData(0, values);
-    paramtable->setNumParams(other.getNumParams());
-    for (int i = 0; i < paramtable->getNumParams(); i++)
+    paramtable->setNumVarParams(other.getNumParams());
+    for (int i = 0; i < paramtable->getNumVarParams(); i++)
     {
         values = other.getParameter(i);
-        paramtable->setParamData(i, values);
+        paramtable->setVarParameter(i, values);
     }
     return *this;
 }
@@ -175,7 +175,7 @@ void GrowthSeasonalEffects::clear()
     QStringList qlst;
     qlst <<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0"<<"0";
     effects->setRowData(0, qlst);
-    paramtable->setNumParams(0);
+    paramtable->setNumVarParams(0);
 }
 
 

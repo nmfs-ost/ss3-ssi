@@ -6,7 +6,7 @@ spawn_recruit::spawn_recruit(ss_model *parent)
 //    parameters = new parametermodel();
 //    parameters->setRowCount(0);
 //    parameters->setColumnCount(7);
-    full_parameters = new setupParamVarModel(parnt);// parameterModelTV(parnt);
+    full_parameters = new longParameterModel();// parameterModelTV(parnt);
     full_parameters->setNumParams(5);
 
     assignments = new tablemodel();
@@ -15,12 +15,12 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     header << "GP" << "seas" << "area" << "Settle_age";
     assignments->setHeader(header);
 
-    assignmentParams = new setupParamVarModel(parnt);// parameterModelTV(parnt);
-    interactParams = new setupParamVarModel(parnt);// parameterModelTV(parnt);
-    recruitDistParams = new setupParamVarModel(parnt);// parameterModelTV(parnt);
+    assignmentParams = new longParameterModel();// parameterModelTV(parnt);
+    interactParams = new longParameterModel();// parameterModelTV(parnt);
+    recruitDistParams = new longParameterModel();// parameterModelTV(parnt);
     recruitDistParams->setNumParams(2);
 
-    tvParameters = full_parameters->getParamVarsModel();//getTimeVaryParams();//new shortParameterModel((QObject *)parnt);
+    tvParameters = new timeVaryParameterModel (parnt);//full_parameters->getParamVarsModel();//getTimeVaryParams();//new shortParameterModel((QObject *)parnt);
 //    tvParameters->setColumnCount(7);
 
     reset();
@@ -136,28 +136,28 @@ void spawn_recruit::setInteractParam(int index, QStringList data)
 {
     if (index >= interactParams->getNumParams())
         interactParams->setNumParams(index + 1);
-    interactParams->setParamData(index, data);
+    interactParams->setParameter(index, data);
 }
 
 void spawn_recruit::setRecruitDistParam(int index, QStringList data)
 {
     if (index >= recruitDistParams->getNumParams())
         recruitDistParams->setNumParams(index + 1);
-    recruitDistParams->setParamData(index, data);
+    recruitDistParams->setParameter(index, data);
 }
 
 void spawn_recruit::setAssignmentParam(int index, QStringList data)
 {
     if (index >= assignmentParams->getNumParams())
         assignmentParams->setNumParams(index + 1);
-    assignmentParams->setParamData(index, data);
+    assignmentParams->setParameter(index, data);
 }
 
 void spawn_recruit::setTVParameter(int index, QStringList values)
 {
-    if (index >= tvParameters->rowCount())
-        tvParameters->setRowCount(index + 1);
-    tvParameters->setRowData(index, values);
+    if (index >= tvParameters->getNumVarParams())
+        tvParameters->setNumVarParams(index + 1);
+    tvParameters->setVarParameter(index, values);
 }
 
 void spawn_recruit::fromFile(ss_file *file)
@@ -172,14 +172,14 @@ void spawn_recruit::fromFile(ss_file *file)
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_LN(R0)");
     }
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_BH_flat_steep");
     }
     if (method == 5 ||
@@ -189,35 +189,35 @@ void spawn_recruit::fromFile(ss_file *file)
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0");
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_3rd_PARM");
     }
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_sigmaR");
     }
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_nullparm");
     }
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_R1_offset");
     }
     {
         datalist = readShortParameter(file);
         for (int j = 0; j < 7; j++)
             datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParamData(i, datalist);
+        full_parameters->setParameter(i, datalist);
         full_parameters->setParamHeader(i++, "SR_autocorr");
     }
 
@@ -249,7 +249,7 @@ void spawn_recruit::fromFile(ss_file *file)
         for (i = 0; i < rec_cycles; i++)
         {
             datalist = readParameter(file);
-            assignmentParams->setParamData(i, datalist);
+            assignmentParams->setParameter(i, datalist);
         }
 
         getRecruitDevs()->setNumRecruitDevs(num_rec_dev);
@@ -346,7 +346,7 @@ QString spawn_recruit::toText()
         for (i = 0; i < rec_cycles; i++)
         {
 //            txt.clear();
-            datalist = full_parameters->getParamData(i);
+            datalist = full_parameters->getParameter(i);
             for (int j = 0; j < 14; j++)
                 sr_text.append(QString(" %1").arg(datalist.at(j)));
             sr_text.append(QString (" # " ));

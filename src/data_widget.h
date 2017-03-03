@@ -61,6 +61,8 @@ public slots:
     void changeAgeError(int numDefs);
     void changeAgeCombine ();
     void changeNumEnvVarObs (int num);
+    void changeEnvVarData (QModelIndex tl, QModelIndex br, QVector<int> data);
+    int checkNumEnvVars();
     void setGenCompMethod(int method);
     void changeGenCompMethod(int method);
     void newGenCompMethod ();

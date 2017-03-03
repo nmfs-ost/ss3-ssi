@@ -12,5 +12,8 @@ int writeVersionComment(ss_file *file);
 QStringList readParameter (ss_file *file);
 QStringList readShortParameter (ss_file *file);
 
+bool useBlks (QStringList param);
+bool useDev (QStringList param);
+bool useEnv (QStringList param);
 
 #endif // FILEIOGENERAL_H

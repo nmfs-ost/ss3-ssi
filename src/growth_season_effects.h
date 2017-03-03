@@ -51,7 +51,7 @@ public:
     void setParameter (int i, QStringList datalist);
     void setParameter (int i, QString str);
     tablemodel *getEffectsModel() {return effects;}
-    tablemodel *getParamsModel() {return paramtable->getParamModel();}
+    tablemodel *getParamsModel() {return paramtable->getVarParamTable();}
 
     int getNumParams() const;
     void setNumParams(int value);
@@ -76,7 +76,7 @@ private:
 
     tablemodel *effects;
     QStringList effHeader;
-    setupParamVarModel *paramtable;
+    timeVaryParameterModel *paramtable;
     //parameterModelTV *paramtable;
 /*    int numParams;
     QList<shortParameter *> params;*/

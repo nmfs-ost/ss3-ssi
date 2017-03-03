@@ -2,6 +2,7 @@
 
 #include <QVector>
 #include <QModelIndex>
+#include <QStandardItem>
 
 tablemodel::tablemodel(QObject *parent)
   : QStandardItemModel(parent)
@@ -24,11 +25,11 @@ void tablemodel::setRowData(int row, QVector<double> rowdata)
     for (int i = 0; i < rowdata.count(); i++)
     {
         QStandardItem *pxi = new QStandardItem(QString::number(rowdata.at(i),'g',6));
-        setItem(row, i, pxi);
+//        setItem(row, i, pxi);
         px << pxi;
     }
-//    insertRow(row, px);
-//    removeRow(row + 1);
+    insertRow(row, px);
+    removeRow(row + 1);
     emit dataChanged();
 }
 
@@ -41,11 +42,12 @@ void tablemodel::setRowData(int row, QStringList &rowstringlist)
     for (int i = 0; i < rowstringlist.count(); i++)
     {
         QStandardItem *pxi = new QStandardItem(rowstringlist.at(i));
-        setItem(row, i, pxi);
+//        setItem(row, i, pxi);
         px << pxi;
     }
-//    insertRow(row, px);
-//    removeRow(row + 1);
+    insertRow(row, px);
+    if (rowCount() > row+1)
+        removeRow(row + 1);
     emit dataChanged();
 }
 
@@ -79,7 +81,9 @@ QString tablemodel::getRowText(int row)
 
 void tablemodel::setHeader(QStringList titles)
 {
-    for (int i = 0; i < titles.count(); i++)
+    int cols = titles.count();
+    setColumnCount(cols);
+    for (int i = 0; i < cols; i++)
         setHeaderData(i, Qt::Horizontal, titles.at(i));
 }
 
@@ -101,5 +105,15 @@ void tablemodel::setRowHeader(int row, QString title)
 QString tablemodel::getRowHeader(int row)
 {
     return headerData(row, Qt::Vertical).toString();
+}
+
+void tablemodel::setTitle(QString strtitle)
+{
+    title = strtitle;
+}
+
+QString tablemodel::getTitle()
+{
+    return title;
 }
 

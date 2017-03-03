@@ -189,7 +189,7 @@ public slots:
 //    double fleet_catch_per_season (int fishery, int yr, int season);
     void setCatchMult (QStringList data) {catchMult->setParameter(0, data);}
     QStringList getCatchMult () {return catchMult->getParameter(0);}
-    tablemodel *getCatchMultParam () {return catchMult->getParameters();}
+    tablemodel *getCatchMultParam () {return catchMult->getParamTable();}
     void set_fleet_units_err_type (int fleet, int units, int err_type);
     int fleet_units (int fleet);
     int fleet_err_type (int fleet);

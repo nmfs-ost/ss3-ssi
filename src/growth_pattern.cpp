@@ -6,42 +6,38 @@ growthPattern::growthPattern(ss_model *parent)
     morphs.append(new growth_morph());
     num_morphs = 1;
 
-    fractionFemParams = new longParameterModel((QObject *)parnt);
-    fractionFemParams->setParamCount(1);
-    fractionFemParams->setParamHeader(0, QString("FracFemale"));
+    fracFmParams = new longParameterModel((QObject *)parnt);
+    fracFmParams->setNumParams(1);
+    fracFmParams->setParamHeader(0, QString("FracFemale"));
 
-    growthParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
-//    growthTVParams = growthParams->getTimeVaryParams();
-//    growthTVParams->setColumnCount(7);
+    growthParams = new longParameterModel();//parameterModelTV(parnt);
+//    growthTVParams = new timeVaryParameterModel(parnt);//growthParams->getTimeVaryParams();
 
-    cvParams = new setupParamVarModel(parnt);// parameterModelTV(parnt);
+    cvParams = new longParameterModel();// parameterModelTV(parnt);
     cvParams->setNumParams(2);
-//    cvTVParams = cvParams->getTimeVaryParams();
-//    cvTVParams->setColumnCount(7);
+//    cvTVParams = new timeVaryParameterModel(parnt);//cvParams->getTimeVaryParams();
 
-    natMParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
-    natMParams->setNumParams(1);
-//    natMTVParams = natMParams->getTimeVaryParams();
-//    natMTVParams->setColumnCount(7);
+    natMrtParams = new longParameterModel();//parameterModelTV(parnt);
+    natMrtParams->setNumParams(1);
+//    natMTVParams = new timeVaryParameterModel(parnt);//natMParams->getTimeVaryParams();
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
 
-    devParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    devParams = new longParameterModel();//parameterModelTV(parnt);
 //    devParams->setColumnCount(7);
 
-//    timeVaryParams = new shortParameterModel();
-//    timeVaryParams->setColumnCount(7);
+//    timeVaryParams = new timeVaryParameterModel(parnt);//new shortParameterModel();
 }
 
 growthPattern::~growthPattern()
 {
     clear();
-    delete fractionFemParams;
+    delete fracFmParams;
     delete growthParams;
 //    delete growthTVParams;
     delete cvParams;
 //    delete cvTVParams;
-    delete natMParams;
+    delete natMrtParams;
 //    delete natMTVParams;
     delete natMAges;
     delete devParams;
@@ -108,26 +104,26 @@ void growthPattern::clear()
 
 void growthPattern::setNatMParam(int index, QStringList data)
 {
-    if (index >= natMParams->getNumParams())
-        natMParams->setNumParams(index + 1);
-    natMParams->setParamData(index, data);
+    if (index >= natMrtParams->getNumParams())
+        natMrtParams->setNumParams(index + 1);
+    natMrtParams->setParameter(index, data);
 }
 
 void growthPattern::setNatMTVParam(int index, QStringList data)
 {
-    natMParams->setParamVarData(index, data);
+    natMrtParams->setParameter(index, data);
 }
 
 void growthPattern::setGrowthParam(int index, QStringList data)
 {
     if (index >= growthParams->getNumParams())
         growthParams->setNumParams(index + 1);
-    growthParams->setParamData(index, data);
+    growthParams->setParameter(index, data);
 }
 
 void growthPattern::setGrowthTVParam(int index, QStringList data)
 {
-    growthParams->setParamVarData(index, data);
+    growthParams->setParameter(index, data);
 }
 /*
 void growthPattern::setTimeVaryParam(int index, QStringList data)
@@ -148,19 +144,19 @@ void growthPattern::setCVParam(int index, QStringList data)
 {
     if (index >= cvParams->getNumParams())
         cvParams->setNumParams(index + 1);
-    cvParams->setParamData(index, data);
+    cvParams->setParameter(index, data);
 }
-
+/*
 void growthPattern::setCVTVParam(int index, QStringList data)
 {
     cvParams->setParamVarData(index, data);
-}
+}*/
 
 void growthPattern::setDevParam(int index, QStringList data)
 {
     if (index >= devParams->getNumParams())
         devParams->setNumParams(index + 1);
-    devParams->setParamData(index, data);
+    devParams->setParameter(index, data);
 }
 
 

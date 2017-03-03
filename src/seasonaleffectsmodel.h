@@ -4,19 +4,31 @@
 #include <QObject>
 #include "setupmodel.h"
 
-class seasonalEffectsModel : public setupShortParamModel
+class seasonalEffectsModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit seasonalEffectsModel(ss_model *parent = 0);
+    explicit seasonalEffectsModel(QObject *parent = 0);
+    ~seasonalEffectsModel();
 
 signals:
+    void parametersChanged();
 
 public slots:
-    void setMultiplier (int mlt);
     void setParamHeaders ();
     void setNumSeasons (int seas);
-    void changeParamData ();
+
+    void setSetupHeader (QStringList hdr) {setup->setHeader(hdr);}
+    QStringList getSetup () {return setup->getData();}
+    void setSetup (QStringList values) {setup->setData(values);}
+
+    void changeParameters(QList<int> setupvals);
+    void setParamModelHeader (QStringList hdr) {params->setParamModelHeader(hdr);}
+    int getNumParameters () {return params->getNumParams();}
+    QStringList getParameter (int num) {return params->getParameter(num);}
+    void setParameter (int num, QStringList data) {params->setParameter(num, data);}
+
+    tablemodel *getParamTable () {return params->getParamTable();}
 
     bool getFemwtlen1() const;
     void setFemwtlen1(bool value);
@@ -38,6 +50,10 @@ public slots:
     void setL1(bool value);
     bool getK() const;
     void setK(bool value);
+
+private:
+    setupModel *setup;
+    shortParamMultModel *params;
 };
 
 #endif // SEASONALEFFECTSMODEL_H

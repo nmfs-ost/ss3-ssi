@@ -55,7 +55,6 @@ public slots:
     void changeSDadd (double val);
     void changeCVmethod (int num);
     void changeTimeVaryMethod (int num);
-    void changeTimeVaryRead (bool flag);
 
     void setSpawnRecrSpec (int spec);
     void setRecrArea (int value);
@@ -88,8 +87,10 @@ private slots:
     void changeFecundityOffsetOption(int opt);
     void changeFecundityAdjustment(int opt);
     void changeFirstMatureAge();
+    void changeGrowthTimeVaryRead(int flag);
 
     void changeNumRecrDevs (int num);
+    void changeSpwnRecReadTimeVary (int flag);
 
     void changeSeasParams();
     void changeRecNumAssigns(int num);
@@ -139,6 +140,12 @@ private:
 
     ss_model *model_data;
     population *pop;
+    spawn_recruit *spwn_rcr;
+    ss_movement *movemnt;
+    ss_fecundity *fecund;
+    ss_growth   *grwth;
+    ss_mortality *mort;
+
 };
 
 #endif // POPULATION_WIDGET_H

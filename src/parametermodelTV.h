@@ -8,7 +8,7 @@
 
 class ss_model;
 
-class parameterModelTV : public longParameterModel
+class parameterModelTV : public longParameterTable
 {
     Q_OBJECT
 public:
@@ -16,7 +16,7 @@ public:
     ~parameterModelTV();
 
     bool envLink (int index);
-    bool useBlock (int index);
+    bool blkNum (int index);
     bool useDevs (int index);
 
 public slots:
@@ -25,11 +25,11 @@ public slots:
 //    tablemodel *getParameters () {return params;}
     void setNumParams(int rows);
     void setParameter (int index, QStringList data);
-    QStringList getParameter (int index) {return params.getRowData(index);}
-    QString getParamText (int index) {return params.getRowText(index);}
+    QStringList getParameter (int index) {return paramTable.getRowData(index);}
+    QString getParamText (int index) {return paramTable.getRowText(index);}
     void setParamHeader (int row, QString title);
-    int getNumParams() {return params.rowCount();}
-    QString getParamHeader (int row) {return params.getRowHeader(row);}
+    int getNumParams() {return paramTable.rowCount();}
+    QString getParamHeader (int row) {return paramTable.getRowHeader(row);}
 
 
     void modelChanged();
@@ -71,11 +71,11 @@ private:
 //    parameterModel *params;
     QList<QStringList> paramData;
     QList<int> useEnv;
-    QList<int> useDev;
+    QList<int> devValue;
     QList<int> useBlk;
 
-    shortParameterModel timeVaryParams;
-    QList<shortParameterModel *> timeVaryParamData;
+    shortParameterTable timeVaryParams;
+    QList<shortParameterTable *> timeVaryParamData;
     QList<int> tableNum;
     QList<int> paramNum;
 

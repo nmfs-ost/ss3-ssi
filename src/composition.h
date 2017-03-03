@@ -107,7 +107,7 @@ public:
 
     void setErrorParam (int index, QStringList data) {errorParam->setParameter(index, data);}
     QStringList getErrorParam (int index) {return errorParam->getParameter(index);}
-    shortParameterModel *getErrorParameters() {return errorParam;}
+    shortParameterTable *getErrorParameters() {return errorParam;}
 
 private:
     tablemodel *errorModel;
@@ -120,7 +120,7 @@ private:
 //    QList<ssObservation *> o_saa_obs_list;
 
     bool useParameters;
-    shortParameterModel *errorParam;
+    shortParameterTable *errorParam;
 
 };
 

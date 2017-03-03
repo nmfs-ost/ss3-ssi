@@ -39,8 +39,8 @@ public slots:
     void setMeanBwt (int index, QStringList values) {meanBwtModel->setRowData(index, values);}
     QStringList getMeanBwt (int index) {return meanBwtModel->getRowData(index);}
 
-    void readSeasonalEffects(ss_file *input);
-    QString writeSeasonalEffects();
+//    void readSeasonalEffects(ss_file *input);
+//    QString writeSeasonalEffects();
 
     float get_frac_female() const;
     void set_frac_female(float value);
@@ -80,11 +80,11 @@ public slots:
     void setNumSeas (int seas);
     int getNumSeas () {return iNumSeas;}
 //    void setNumSeasParams ();
-    int getNumSeasParams () {return seasparamtable->getNumParams();}// getParamCount();}
+    int getNumSeasParams () {return seasparamtable->getNumParameters();}// getParamCount();}
 //    void addSeasonalParam (QStringList data) {setSeasonalParam(seasparamtable->getNumParams(), data);}
     void setSeasonalParam (int index, QStringList data);
     QStringList getSeasonalParam (int index);
-    tablemodel *getSeasonalParams() {return seasparamtable->getParamModel();}
+    tablemodel *getSeasonalParams() {return seasparamtable->getParamTable();}
 //    void insertSeasParams (int num);
 //    void removeSeasParams (int num);
 

@@ -28,25 +28,28 @@ ss_growth::ss_growth(ss_model *parent)
     matAgeValues = new tablemodel((QObject *)parnt);
     matAgeValues->setRowCount(1);
 
-    wtLenParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    wtLenParams = new longParameterModel((QObject *)parnt);
     wtLenParams->setNumParams(0);
-    wtLenTVParams = wtLenParams->getParamVarsModel();
-//    wtLenParams->getTimeVaryParams()->setRowCount(0);
+    wtLenVarParams = new timeVaryParameterModel(parnt);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    cohortParam = new longParameterModel((QObject *)parnt);
     cohortParam->setNumParams(1);
+    cohortVarParam = new timeVaryParameterModel(parnt);
 
-    fracfemaleParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
-    fracfemaleParams->setNumParams(1);
+    fracFemaleParams = new longParameterModel((QObject *)parnt);
+    fracFemaleParams->setNumParams(1);
+    fracFemaleVarParams = new timeVaryParameterModel(parnt);
 
     customBlock = -1;
-    blockParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    blockParams = new longParameterModel((QObject *)parnt);
     blockParams->setNumParams(0);
+    blockVarParams = new timeVaryParameterModel(parnt);
     customEnvLink = -1;
-    environmentParams = new setupParamVarModel(parnt);//parameterModelTV(parnt);
+    environmentParams = new longParameterModel((QObject *)parnt);
     environmentParams->setNumParams(0);
+    environmentVarParams = new timeVaryParameterModel(parnt);
 
     reset();
 }
@@ -61,13 +64,17 @@ ss_growth::~ss_growth()
     delete natMortAges;
     delete matAgeValues;
     delete wtLenParams;
-//    delete wtLenTVParams;
+    delete wtLenVarParams;
     delete cohortParam;
-    delete fracfemaleParams;
+    delete cohortVarParam;
+    delete fracFemaleParams;
+    delete fracFemaleVarParams;
     customEnvLink = -1;
     delete environmentParams;
+    delete environmentVarParams;
     customBlock = -1;
     delete blockParams;
+    delete blockVarParams;
 }
 
 void ss_growth::reset()
@@ -91,7 +98,7 @@ void ss_growth::reset()
     setTimeVaryMethod(1);
     setTimeVaryReadParams(0);
     cohortParam->setNumParams(1);
-    fracfemaleParams->setNumParams(1);
+    fracFemaleParams->setNumParams(1);
     blockParams->setNumParams(0);
     environmentParams->setNumParams(0);
 
@@ -477,12 +484,12 @@ void ss_growth::setWtLenParam(int index, QStringList data)
 {
     if (index >= wtLenParams->getNumParams())
         wtLenParams->setNumParams(index + 1);
-    wtLenParams->setParamData(index, data);
+    wtLenParams->setParameter(index, data);
 }
 
 void ss_growth::setWtLenTVParam(int index, QStringList data)
 {
-    wtLenParams->setParamVarData(index, data);
+    wtLenParams->setParameter(index, data);
 /*    if (index >= wtLenParams->getNumParamVars())// getNumTimeVaryParams())
         wtLenParams->getTimeVaryParams()->setRowCount(index + 1);
     wtLenParams->getTimeVaryParams()->setRowData(index, data);*/
@@ -554,7 +561,7 @@ void ss_growth::setNum_patterns(int value)
     }
     num_patterns = patterns.count();
 }
-
+/*
 int ss_growth::getNumDevParams()
 {
     int num = 0;
@@ -566,7 +573,7 @@ int ss_growth::getNumDevParams()
     }
     return num;
 }
-/*
+
 int ss_growth::getNumEnvLinkParams()
 {
     int num = 0;

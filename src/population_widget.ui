@@ -84,12 +84,45 @@
             <x>0</x>
             <y>0</y>
             <width>885</width>
-            <height>549</height>
+            <height>517</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <layout class="QGridLayout" name="gridLayout_growth">
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_growth_submorph_ratio">
+               <property name="text">
+                <string>Platoon between/within std-dev ratio </string>
+               </property>
+              </widget>
+             </item>
+             <item row="19" column="7">
+              <spacer name="horizontalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="19" column="8">
+              <spacer name="horizontalSpacer_growth">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item row="9" column="0" colspan="3">
               <widget class="QLabel" name="label_growth_age_spec_max">
                <property name="text">
@@ -106,39 +139,6 @@
              </item>
              <item row="20" column="0" colspan="9">
               <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
-             </item>
-             <item row="21" column="7">
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_growth_submorph_ratio">
-               <property name="text">
-                <string>Platoon between/within std-dev ratio </string>
-               </property>
-              </widget>
-             </item>
-             <item row="21" column="8">
-              <spacer name="horizontalSpacer_growth">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="13" column="0">
               <widget class="QLabel" name="label_growth_parameters">
@@ -392,37 +392,6 @@
              <item row="17" column="0" colspan="8">
               <layout class="QVBoxLayout" name="verticalLayout_growth_time_vary_params"/>
              </item>
-             <item row="12" column="0">
-              <widget class="QLabel" name="label_bio_time_vary_read">
-               <property name="text">
-                <string>Reading Biology time-vary parameters</string>
-               </property>
-              </widget>
-             </item>
-             <item row="21" column="0">
-              <widget class="QLabel" name="label_cv_time_vary_params">
-               <property name="text">
-                <string>Time Varying Parameters</string>
-               </property>
-              </widget>
-             </item>
-             <item row="22" column="0" colspan="8">
-              <layout class="QVBoxLayout" name="verticalLayout_cv_time_vary_params"/>
-             </item>
-             <item row="12" column="2" colspan="7">
-              <widget class="QLabel" name="label_bio_time_vary_read_info">
-               <property name="text">
-                <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
-               </property>
-              </widget>
-             </item>
-             <item row="12" column="1">
-              <widget class="QSpinBox" name="spinBox_bio_time_vary_read">
-               <property name="maximum">
-                <number>2</number>
-               </property>
-              </widget>
-             </item>
              <item row="11" column="7" colspan="2">
               <widget class="QLabel" name="label_growth_time_vary_info">
                <property name="text">
@@ -442,6 +411,27 @@
                  <string>3 = No bound check</string>
                 </property>
                </item>
+              </widget>
+             </item>
+             <item row="12" column="2" colspan="7">
+              <widget class="QLabel" name="label_bio_time_vary_read_info">
+               <property name="text">
+                <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLabel" name="label_bio_time_vary_read">
+               <property name="text">
+                <string>Reading Biology time-vary parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="1">
+              <widget class="QSpinBox" name="spinBox_bio_time_vary_read">
+               <property name="maximum">
+                <number>2</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -505,7 +495,11 @@
               </widget>
              </item>
              <item row="7" column="1">
-              <widget class="QSpinBox" name="spinBox_spwn_recr_time_vary_read"/>
+              <widget class="QSpinBox" name="spinBox_spwn_recr_time_vary_read">
+               <property name="maximum">
+                <number>2</number>
+               </property>
+              </widget>
              </item>
              <item row="3" column="0">
               <widget class="QLabel" name="label_recr_params">
@@ -2209,8 +2203,8 @@ recruitment distribution method = 1)</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>804</width>
-            <height>413</height>
+            <width>783</width>
+            <height>434</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2259,7 +2253,8 @@ recruitment distribution method = 1)</string>
              <item row="0" column="4" colspan="2">
               <widget class="QLabel" name="label_seas_info">
                <property name="text">
-                <string>If any factors have seasonality, then read num_of_seasons parameters below.</string>
+                <string>If any factors have seasonality, 
+then read num_of_seasons parameters below.</string>
                </property>
               </widget>
              </item>
@@ -2441,6 +2436,19 @@ recruitment distribution method = 1)</string>
              </item>
              <item row="7" column="1" colspan="5">
               <layout class="QVBoxLayout" name="verticalLayout_seasonal_params"/>
+             </item>
+             <item row="2" column="6">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>

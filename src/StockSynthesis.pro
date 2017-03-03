@@ -86,7 +86,6 @@ SOURCES += main.cpp\
     catchdelegate.cpp \
     abundancedelegate.cpp \
     mbweightdelegate.cpp \
-    parametermodel.cpp \
     newfleetdialog.cpp \
     fileIO33.cpp \
     dialog_about_gui.cpp \
@@ -99,9 +98,8 @@ SOURCES += main.cpp\
     parametermodelTV.cpp \
     q_ratio.cpp \
     setupmodel.cpp \
-    parammodel.cpp \
-    timevaryparameter.cpp \
-    seasonaleffectsmodel.cpp
+    seasonaleffectsmodel.cpp \
+    parametermodel.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -175,7 +173,6 @@ HEADERS  += mainwindow.h \
     catchdelegate.h \
     abundancedelegate.h \
     mbweightdelegate.h \
-    parametermodel.h \
     newfleetdialog.h \
     fileIO33.h \
     fileIOJSON.h \
@@ -190,9 +187,8 @@ HEADERS  += mainwindow.h \
     parametermodelTV.h \
     q_ratio.h \
     setupmodel.h \
-    parammodel.h \
-    timevaryparameter.h \
-    seasonaleffectsmodel.h
+    seasonaleffectsmodel.h \
+    parametermodel.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

@@ -254,12 +254,12 @@ public slots:
     tablemodel *getMorphModel () {return morphComp->getObsTable();}
 
     //  #q_section
-    void setQTimeVaryReadParams (int flag) {readQTvParams = flag;}
-    int getQTimeVaryReadParams () {return readQTvParams;}
+    q_ratio *Q() {return q_R;}
+    void setQTimeVaryReadParams (int flag) {Q()->setAutoGenerate(flag);}
+    int getQTimeVaryReadParams () {return Q()->getAutoGenerate();}
     void setQSetupRead (bool flag = false);
     bool getQSetupRead () {return q_read;}
     void qSetupChanged ();
-    q_ratio *Q() {return q_R;}
 /*    void set_q_do_power(int den) {Q()->setDoPower(den); setQSetupRead();}
     void set_q_do_power(bool yes) {Q()->setDoPower(yes?1:0); setQSetupRead();}
     int q_do_power() {return Q()->getDoPower();}

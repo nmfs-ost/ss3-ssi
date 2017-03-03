@@ -30,8 +30,14 @@ public slots:
     void setRowHeader (int row, QString title);
     QString getRowHeader (int row);
 
+    QString getTitle ();
+    void setTitle (QString strtitle);
+
 signals:
     void dataChanged();
+
+protected:
+    QString title;
 };
 
 

@@ -4,6 +4,7 @@
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <QObject>
 
 #include "tablemodel.h"
 
@@ -15,10 +16,9 @@
 class ssObservation
 {
 public:
-    ssObservation(int size = 0);
+    ssObservation();
     ~ssObservation();
 
-public slots:
     void fromText (QString line);
     QString toText ();
 
@@ -87,7 +87,6 @@ class environmentalVars : public ssObservation
 public:
     environmentalVars();
 
-public slots:
     void setNumVars(int num) {numVars = num;}
     int getNumVars() {return numVars;}
 

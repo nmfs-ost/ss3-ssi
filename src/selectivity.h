@@ -1,6 +1,7 @@
 #ifndef SELECTIVITY_H
 #define SELECTIVITY_H
 
+#include <QObject>
 #include <QString>
 #include <QList>
 
@@ -10,26 +11,30 @@
 #include "parametermodelTV.h"
 #include "setupmodel.h"
 
-class selectivity
+class selectivity : public QObject
 {
+    Q_OBJECT
 public:
-    selectivity (ss_model *model, int method = 0);
+    explicit selectivity (ss_model *model, int method = 0);
     ~selectivity();
 
+public slots:
     void setPattern (int value);
-    int getPattern () {return pattern;}
+    int getPattern () {return setup->getValue(0);}// pattern;}
     void setDiscard (int value);
-    int getDiscard () {return discard;}
+    int getDiscard () {return setup->getValue(1);}//discard;}
     void setMale (int value);
-    int getMale () {return male;}
+    int getMale () {return setup->getValue(2);}// male;}
     void setSpecial (int value);
-    int getSpecial () {return special;}
+    int getSpecial () {return setup->getValue(3);}// special;}
     void setNumAges(int ages) {numAges = ages;}
     void setSetup(QString text);
-    void setSetup(QStringList strList);
     QString getSetupText ();
+    void setSetup(QStringList strList);
+    QStringList getSetup () {return setup->getData();}
+    void setSetup(QList<int> values);
 
-    setupParamVarModel *getSetupModel () {return parameters;}
+    tablemodel *getSetupModel () {return setup->getTable();}
 
     void setParameter (int index, QString text);
     void setParameter (int index, QStringList strList);
@@ -39,17 +44,17 @@ public:
     QString getParameterLabel (int index);
     int getNumParameters();
     void setNumParameters (int num);
-    tablemodel *getParameterModel() {return parameters->getParamModel();}
+    tablemodel *getParameterModel() {return parameters->getParamTable();}
 
     int getNumTimeVaryParameters ();
     void setTimeVaryParameter (int index, QStringList strList);
     void setTimeVaryParameterLabel (int index, QString label);
     QString getTimeVaryParameterText (int index);
-    QStringList getTimeVaryParameter (int index) {return parameters->getParamVarData(index);}//timeVaryParameters->getParameter(index);}
-    QString getTimeVaryParameterLabel (int index) {return parameters->getParamVarHeader(index);}//timeVaryParameters->getParamHeader(index);}
-    tablemodel *getTimeVaryParameterModel() {return parameters->getParamVarsModel();}//timeVaryParameters;}
+    QStringList getTimeVaryParameter (int index) {return varParameters->getVarParameter(index);}//timeVaryParameters->getParameter(index);}
+    QString getTimeVaryParameterLabel (int index) {return varParameters->getVarParamHeader(index);}//timeVaryParameters->getParamHeader(index);}
+    tablemodel *getTimeVaryParameterModel() {return varParameters->getVarParamTable();}//timeVaryParameters;}
 
-    int getNumRetainParameters() {return retainParameters->getParamCount();}
+    int getNumRetainParameters() {return retainParameters->getNumParams();}
     void setRetainParameter(int index, QStringList strList);
     void setRetainParameterLabel (int index, QString label);
     QString getRetainParameterText (int index);
@@ -81,13 +86,13 @@ public:
     QString getMaleParameterLabel (int index) {return maleParameters->getParamHeader(index);}
     shortParameterModel *getMaleParameterModel () {return maleParameters;}
 
-    double operator()() {return evaluate();}
-    double evaluate();
+//    double operator()() {return evaluate();}
+//    double evaluate();
 
     void setMethod (int method);
 
 protected:
-    void setEquation (int method);
+//    void setEquation (int method);
 
     int pattern;
     int discard;
@@ -96,7 +101,9 @@ protected:
 
     int numAges;
 
-    setupParamVarModel *parameters;
+    setupModel *setup;
+    longParameterModel *parameters;
+    timeVaryParameterModel *varParameters;
 
 //    shortParameterModel *timeVaryParameters;
 
@@ -105,9 +112,9 @@ protected:
     shortParameterModel *maleParameters;
     shortParameterModel *specialParameters;
 
-    double evaluate(int f, float m);
+//    double evaluate(int f, float m);
 
-    selex_equation *equation;
+//    selex_equation *equation;
 
 };
 

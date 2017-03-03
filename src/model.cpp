@@ -90,7 +90,7 @@ ss_model::ss_model(QWidget *parent) :
 
     catchMult = new shortParameterModel(this);
 //    catchMult->setColumnCount(7);
-    catchMult->setParamCount(1);
+    catchMult->setNumParams(1);
 
     selexAdjustMethod = 1;
 
@@ -543,7 +543,7 @@ Fleet * ss_model::newFleet(QString name)
     Fleet *newfl = new Fleet(this);
 //    newfl->Q()->setParentModel(this);
     if (name.isEmpty())
-            name = QString("New_Fleet");
+        name = QString("New_Fleet");
     newfl->setName(name);
     newfl->setType(Fleet::Fishing);
     newfl->setActive(true);

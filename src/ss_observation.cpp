@@ -3,7 +3,7 @@
 
 #include <QStringList>
 
-ssObservation::ssObservation(int size)
+ssObservation::ssObservation()
 {
     observations = new tablemodel();
     observations->setRowCount(0);
@@ -90,7 +90,7 @@ QString ssObservation::toText()
 
 
 meanBwtObservation::meanBwtObservation()
-  : ssObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "Year" << "Month" << "Fleet" << "Part." << "Obs." << "SE";
@@ -100,7 +100,7 @@ meanBwtObservation::meanBwtObservation()
 }
 
 lengthObservation::lengthObservation()
-  : ssObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
@@ -122,7 +122,7 @@ ageObservation::ageObservation()
 
 
 saaObservation::saaObservation()
-  : ssObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader  << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "NSamp";
@@ -153,7 +153,7 @@ void saaObservation::setNumBins(int num, int numGenders)
 
 
 environmentalVars::environmentalVars()
-  : ssObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "Year" << "Variable" << "Value" ;
@@ -179,6 +179,7 @@ tagObservation::tagObservation()
 }
 
 recapObservation::recapObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "Tag" << "year" << "season" << "number";
@@ -188,6 +189,7 @@ recapObservation::recapObservation()
 }
 
 morphObservation::morphObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "year" << "month" << "fleet" << "part" << "Nsamp";
@@ -214,6 +216,7 @@ int morphObservation::getNumMorphs()
 
 
 generalObservation::generalObservation()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "Method" << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
@@ -223,6 +226,7 @@ generalObservation::generalObservation()
 }
 
 recruitDevs::recruitDevs()
+    : ssObservation()
 {
     obsHeader.clear();
     obsHeader << "Year" << "Dev";

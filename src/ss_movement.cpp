@@ -9,7 +9,7 @@ ss_movement::ss_movement(ss_model *parent, int n_fleets)
     movement_defs->setColumnCount(defHeader.count());
     movement_defs->setHeader(defHeader);
     movement_defs->setRowCount(0);
-    movement_parms = new setupParamVarModel(parnt);// parameterModelTV(parnt);
+    movement_parms = new longParameterModel((QObject*)parnt);// parameterModelTV(parnt);
     movement_parms->setNumParams(0);
     num_fleets = n_fleets;
     first_year = 0;
@@ -59,7 +59,7 @@ void ss_movement::setParameter(int index, QStringList valuelist)
 {
     if (index >= movement_parms->getNumParams())
         movement_parms->setNumParams(index + 1);
-    movement_parms->setParamData(index, valuelist);
+    movement_parms->setParameter(index, valuelist);
 }
 
 int ss_movement::getMethod() const

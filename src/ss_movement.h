@@ -28,11 +28,13 @@ public:
     QStringList getDefinition (int index);
     void setDefinition (int index, QStringList valuelist);
 
-    tablemodel *getMovementParams() {return movement_parms->getParamModel();}
-    void setNumParams (int value) {movement_parms->setNumParams(value);}
+    tablemodel *getMovementParams() {return movement_parms->getParamTable();}
     int getNumParams () {return movement_parms->getNumParams();}
+    void setNumParams (int value) {movement_parms->setNumParams(value);}
+    QStringList getParameter (int index) {return movement_parms->getParameter(index);}
     void setParameter (int index, QStringList valuelist);
-    QStringList getParameter (int index) {return movement_parms->getParamData(index);}
+    QString getParamHeader (int index) {return movement_parms->getParamHeader(index);}
+    void setParamHeader (int index, QString hdr) {movement_parms->setParamHeader(index, hdr);}
 
     int getMethod() const;
     void setMethod(int value);
@@ -52,7 +54,7 @@ private:
     QStringList defHeader;
 
     tablemodel *movement_defs;
-    setupParamVarModel *movement_parms;
+    longParameterModel *movement_parms;
 //    parameterModelTV *movement_parms;
 };
 

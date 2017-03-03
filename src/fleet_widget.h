@@ -58,7 +58,10 @@ public slots:
     void showMorphObs();
     void showRecapObs();
 
+    void qSetupChanged();
     void qSetupParamsChanged();
+    void qSetupTVParamsChanged();
+    void setQTimeVaryReadParams(int flag);
 
     void changeSelexSizePattern(int pat);
     void showSelexSizeInfo();

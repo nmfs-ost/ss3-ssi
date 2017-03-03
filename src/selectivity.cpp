@@ -2,6 +2,7 @@
 #include "selex_equation.h"
 
 selectivity::selectivity(ss_model *model, int method)
+    : QObject ((QObject*)model)
 {
     pattern = 0;
     discard = 0;
@@ -9,8 +10,20 @@ selectivity::selectivity(ss_model *model, int method)
     special = 0;
 
     numAges = 0;
-    equation = NULL;
-    parameters = new setupParamVarModel(model);// parameterModelTV(model);
+//    equation = NULL;
+    setup = new setupModel();
+    setup->setNumValues(4);
+    setup->setColHeader(0, "Pattern");
+    setup->setColHeader(1, "Discard");
+    setup->setColHeader(2, "Male");
+    setup->setColHeader(3, "Special");
+    parameters = new longParameterModel();// parameterModelTV(model);
+    varParameters = new timeVaryParameterModel(model);
+
+    connect (setup, SIGNAL(dataChanged(QList<int>)),
+             SLOT(setSetup(QList<int>)));
+    connect (parameters, SIGNAL(paramChanged(int,QStringList)),
+             varParameters, SLOT(changeVarParamData(int,QStringList)));
 
 //    timeVaryParameters = parameters->getTimeVaryParams();
 
@@ -24,9 +37,14 @@ selectivity::selectivity(ss_model *model, int method)
 
 selectivity::~selectivity()
 {
-    delete equation;
+//    delete equation;
+    delete maleParameters;
+    delete retainParameters;
+    delete specialParameters;
+    delete discardParameters;
+    delete varParameters;
     delete parameters;
-
+    delete setup;
 }
 
 void selectivity::setSetup(QString text)
@@ -36,29 +54,37 @@ void selectivity::setSetup(QString text)
 }
 void selectivity::setSetup(QStringList strList)
 {
+    setup->setData(strList);
     pattern = strList.at(0).toInt();
     discard = strList.at(1).toInt();
     male = strList.at(2).toInt();
     special = strList.at(3).toInt();
+}
+void selectivity::setSetup(QList<int> values)
+{
+    setMethod (values.at(0));
+    setDiscard(values.at(1));
+    setMale (values.at(2));
+    setSpecial(values.at(3));
 }
 
 QString selectivity::getSetupText()
 {
     QString text("");
     text.append(QString(" %1 %2 %3 %4").arg(
-                    QString::number(pattern),
-                    QString::number(discard),
-                    QString::number(male),
-                    QString::number(special)));
+                QString::number(setup->getValue(0)),//(pattern),
+                QString::number(setup->getValue(1)),//(discard),
+                QString::number(setup->getValue(2)),//(male),
+                QString::number(setup->getValue(3))));//(special)));
     return text;
 }
 
 void selectivity::setMethod(int method)
 {
-    if (equation != NULL)
+/*    if (equation != NULL)
         delete equation;
-    equation = NULL;
-
+    equation = NULL;*/
+    int pattn = setup->getValue(0);
     if (method == pattern)
     {
         switch (method)
@@ -66,12 +92,12 @@ void selectivity::setMethod(int method)
         case 0: // selectivity = 1 for all
         case 10:
             setNumParameters(0);
-            equation = new none();
+//            equation = new none();
             break;
         case 1:  // Simple logistic with 2 parameters
         case 12:
             setNumParameters(2);
-            equation = new simple_logistic();
+//            equation = new simple_logistic();
             break;
         case 2:  // discontinued
             setPattern(8);
@@ -84,11 +110,11 @@ void selectivity::setMethod(int method)
             break;
         case 5:
             setNumParameters(2);
-            equation = new mirror_range();
+//            equation = new mirror_range();
             break;
         case 6:
             setNumParameters(2 + special);
-            equation = new linear_segments();
+//            equation = new linear_segments();
             break;
         case 7:
             setPattern(8);
@@ -96,55 +122,55 @@ void selectivity::setMethod(int method)
         case 8:
         case 18:
             setNumParameters(8);
-            equation = new double_logistic();
+//            equation = new double_logistic();
             break;
         case 9:
         case 19:
             setNumParameters(6);
-            equation = new simple_double_logistic();
+//            equation = new simple_double_logistic();
             break;
         case 11:
             setNumParameters(2);
-            equation = new constant_for_range();
+//            equation = new constant_for_range();
             break;
         case 13:
             setNumParameters(8);
-            equation = new double_logistic();
+//            equation = new double_logistic();
             break;
         case 14:
             setNumParameters(numAges+1);
-            equation = new each_age();
+//            equation = new each_age();
             break;
         case 15:
             setNumParameters(0);
-            equation = new mirror();
+//            equation = new mirror();
             break;
         case 16:
             setNumParameters(2);
-            equation = new coleraine();
+//            equation = new coleraine();
             break;
         case 17:
             setNumParameters(numAges+1);
-            equation = new random_walk();
+//            equation = new random_walk();
             break;
         case 20:
         case 23:
         case 24:
             setNumParameters(6);
-            equation = new double_normal_plateau_ends();
+//            equation = new double_normal_plateau_ends();
             break;
         case 22:
             setNumParameters(4);
-            equation = new double_normal_plateau();
+//            equation = new double_normal_plateau();
             break;
         case 25:
         case 26:
             setNumParameters(3);
-            equation = new exponent_logistic();
+//            equation = new exponent_logistic();
             break;
         case 27:
             setNumParameters(3 + (2 * special));
-            equation = new cubic_spline();
+//            equation = new cubic_spline();
             break;
         case 30:  // equal to spawning biomass
         case 31:  // equal to exp(recruitment dev)
@@ -152,7 +178,7 @@ void selectivity::setMethod(int method)
         case 33:  // expected survey abund = age 0 recruitment
         case 34:  // spawning biomass depletion (B/B0)
             setNumParameters(0);
-            equation = new none();
+//            equation = new none();
             break;
         default:
             setPattern(0);
@@ -168,6 +194,7 @@ void selectivity::setMethod(int method)
 
 void selectivity::setPattern(int value)
 {
+    setup->setValue(0, value);
     pattern = value;
     setMethod(value);
 }
@@ -179,7 +206,17 @@ int selectivity::getNumParameters()
 
 void selectivity::setNumParameters(int num)
 {
-    parameters->setNumParams(num);
+    QStringList ql;
+    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    int curr = getNumParameters();
+    if (curr != num)
+    {
+        parameters->setNumParams(num);
+        for (int i = curr; i < num; i++)
+        {
+            setParameter(i, ql);
+        }
+    }
 }
 
 void selectivity::setParameter(int index, QString text)
@@ -190,15 +227,15 @@ void selectivity::setParameter(int index, QString text)
 
 void selectivity::setParameter(int index, QStringList strList)
 {
-    parameters->setParamData(index, strList);
+    parameters->setParameter(index, strList);
+//    parameters->changeParamData();
 }
 
 
 QString selectivity::getParameterText(int index)
 {
-
     QString text("");
-    QStringList strList(parameters->getParamData(index));
+    QStringList strList(parameters->getParameter(index));
     for (int i = 0; i < strList.count(); i++)
         text.append(QString(" %1").arg(strList.at(i)));
 
@@ -207,7 +244,7 @@ QString selectivity::getParameterText(int index)
 
 QStringList selectivity::getParameter(int index)
 {
-    return parameters->getParamData(index);
+    return parameters->getParameter(index);
 }
 
 void selectivity::setParameterLabel(int index, QString label)
@@ -222,65 +259,74 @@ QString selectivity::getParameterLabel(int index)
 
 void selectivity::setDiscard(int value)
 {
-    discard = value;
-    switch (discard)
+    setup->setValue(1, value);
+    if (discard != value)
     {
-    case 1:
-        retainParameters->setParamCount(4);
-        discardParameters->setParamCount(0);
-        break;
-    case 2:
-        retainParameters->setParamCount(4);
-        discardParameters->setParamCount(4);
-        break;
-    case 3:
-        retainParameters->setParamCount(0);
-        discardParameters->setParamCount(0);
-        break;
-    case 4:
-        retainParameters->setParamCount(7);
-        discardParameters->setParamCount(4);
-        break;
-    default:
-        retainParameters->setParamCount(0);
-        discardParameters->setParamCount(0);
+        discard = value;
+        switch (discard)
+        {
+        case 1:
+            retainParameters->setNumParams(4);
+            discardParameters->setNumParams(0);
+            break;
+        case 2:
+            retainParameters->setNumParams(4);
+            discardParameters->setNumParams(4);
+            break;
+        case 3:
+            retainParameters->setNumParams(0);
+            discardParameters->setNumParams(0);
+            break;
+        case 4:
+            retainParameters->setNumParams(7);
+            discardParameters->setNumParams(4);
+            break;
+        default:
+            retainParameters->setNumParams(0);
+            discardParameters->setNumParams(0);
+        }
     }
 }
 
 void selectivity::setMale(int value)
 {
-    male = value;
-    switch (male)
+    setup->setValue(2, value);
+    if (male != value)
     {
-    case 1:
-        maleParameters->setParamCount(4);
-        break;
-    default:
-        maleParameters->setParamCount(0);
+        male = value;
+        switch (male)
+        {
+        case 1:
+            maleParameters->setNumParams(4);
+            break;
+        default:
+            maleParameters->setNumParams(0);
+        }
     }
 }
 
 void selectivity::setSpecial(int value)
 {
+    setup->setValue(3, value);
     special = value;
 }
 
 void selectivity::setTimeVaryParameter (int index, QStringList strList)
 {
-    parameters->setParamVarData(index, strList);
+    varParameters->setVarParameter(index, strList);
 //    timeVaryParameters->setParameter(index, strList);
 }
 
 void selectivity::setTimeVaryParameterLabel(int index, QString label)
 {
-    parameters->setParamVarHeader(index, label);
+    varParameters->setVarParamHeader(index, label);
 //    timeVaryParameters->setParamHeader(index, label);
 }
 
 QString selectivity::getTimeVaryParameterText (int index)
 {
     QString text("");
-    QStringList ql (parameters->getParamVarData(index));
+    QStringList ql (varParameters->getVarParameter(index));
     for (int i = 0; i < 7; i++)
         text.append(QString (" %1").arg(ql[i]));
     return text;
@@ -288,12 +334,12 @@ QString selectivity::getTimeVaryParameterText (int index)
 
 int selectivity::getNumTimeVaryParameters ()
 {
-    return parameters->getNumParamVars();
+    return varParameters->getNumVarParams();
 }
 
 int selectivity::getNumDiscardParameters()
 {
-    return discardParameters->getParamCount();
+    return discardParameters->getNumParams();
 /*    int num = 0;
     QStringList data;
     for (int i = 0; i < parameters->rowCount(); i++)
@@ -324,7 +370,7 @@ QString selectivity::getDiscardParameterText (int index)
 
 int selectivity::getNumSpecialParameters()
 {
-    return specialParameters->getParamCount();
+    return specialParameters->getNumParams();
 /*    int num = 0;
     QStringList data;
     for (int i = 0; i < parameters->rowCount(); i++)
@@ -374,7 +420,7 @@ QString selectivity::getRetainParameterText (int index)
 
 int selectivity::getNumMaleParameters()
 {
-    return maleParameters->getParamCount();
+    return maleParameters->getNumParams();
 /*    int num = 0;
     QStringList data;
     for (int i = 0; i < parameters->rowCount(); i++)
@@ -402,7 +448,7 @@ QString selectivity::getMaleParameterText (int index)
         text.append(QString(" %1").arg(data.at(i)));
     return text;
 }
-
+/*
 double selectivity::evaluate()
 {
     double val = 0;
@@ -417,5 +463,5 @@ double selectivity::evaluate(int f, float m)
     else
         val = equation->evaluate();
     return val;
-}
+}*/
 

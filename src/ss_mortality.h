@@ -70,8 +70,8 @@ private:
     int   numInputs;
     int   numTuningIters;
 
-    shortParameterModel *initialParams;
-    shortParameterModel *parameterTable;
+    shortParameterTable *initialParams;
+    shortParameterTable *parameterTable;
 
     QString m_text;
 };

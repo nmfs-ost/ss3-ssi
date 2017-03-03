@@ -13,14 +13,14 @@ population::population(ss_model *parent) :
     meanBwtModel->setColumnCount(20);
     header << "Year" << "Seas" << "Type" << "Part" << "Value" << "CV";
     meanBwtModel->setHeader(header);
-    seasparamtable = new seasonalEffectsModel(parent);// shortParameterModel(this);
+    seasparamtable = new seasonalEffectsModel();// shortParameterModel(this);
     header.clear();
-    header << "FWtLn1" << "FWtLn2" << "Mat1" << "Mat2" << "Fec1" << "Fec2" << "MWtLn1" << "MWtLn2" << "L1" << "K";
-    seasparamtable->setSetupHeader(header);
-    header.clear();
-    header << "st_age" << "st_age bias" << "max_age bias" << "bias coeff" << "st_age sd" << "max_age sd" << "sd coeff";
+//    header << "FWtLn1" << "FWtLn2" << "Mat1" << "Mat2" << "Fec1" << "Fec2" << "MWtLn1" << "MWtLn2" << "L1" << "K";
+//    seasparamtable->setSetupHeader(header);
+//    header.clear();
+//    header << "st_age" << "st_age bias" << "max_age bias" << "bias coeff" << "st_age sd" << "max_age sd" << "sd coeff";
 //    seasparamtable->setColumnCount(7);
-    seasparamtable->setParamModelHeader(header);//->setHeader(header);
+//    seasparamtable->setParamModelHeader(header);//->setHeader(header);
     reset();
 }
 
@@ -32,6 +32,7 @@ population::~population()
     delete pop_recruitment;
     delete pop_mortality;
     delete pop_movement;
+    delete seasparamtable;
 }
 
 void population::reset()
@@ -126,12 +127,12 @@ QStringList population::getFractionFemale()
 
 void population::setSeasParamSetup(QStringList values)
 {
-    seasparamtable->setSetupData(values);
+    seasparamtable->setSetup(values);
 }
 
 QStringList population::getSeasParamSetup()
 {
-    return seasparamtable->getSetupData();
+    return seasparamtable->getSetup();
 }
 
 bool population::getK() const
@@ -141,11 +142,12 @@ bool population::getK() const
 
 void population::setK(bool value)
 {
-    if (seasparamtable->getK() != value)
+    seasparamtable->setK(value);
+/*    if (seasparamtable->getK() != value)
     {
         seasparamtable->setK(value);
     }
-    malewtlen1 = value;
+    malewtlen1 = value;*/
 }
 
 bool population::getL1() const
@@ -155,11 +157,12 @@ bool population::getL1() const
 
 void population::setL1(bool value)
 {
-    if (seasparamtable->getL1() != value)
+    seasparamtable->setL1(value);
+/*    if (seasparamtable->getL1() != value)
     {
         seasparamtable->setL1(value);
     }
-    malewtlen1 = value;
+    malewtlen1 = value;*/
 }
 
 bool population::getMaleWtLen2() const
@@ -169,11 +172,12 @@ bool population::getMaleWtLen2() const
 
 void population::setMaleWtLen2(bool value)
 {
-    if (seasparamtable->getMalewtlen2() != value)
+    seasparamtable->setMalewtlen2(value);
+/*    if (seasparamtable->getMalewtlen2() != value)
     {
         seasparamtable->setMalewtlen2(value);
     }
-    malewtlen1 = value;
+    malewtlen1 = value;*/
 }
 
 bool population::getMaleWtLen1() const
@@ -183,11 +187,12 @@ bool population::getMaleWtLen1() const
 
 void population::setMaleWtLen1(bool value)
 {
-    if (seasparamtable->getMalewtlen1() != value)
+    seasparamtable->setMalewtlen1(value);
+/*    if (seasparamtable->getMalewtlen1() != value)
     {
         seasparamtable->setMalewtlen1(value);
     }
-    malewtlen1 = value;
+    malewtlen1 = value;*/
 }
 
 bool population::getFecund2() const
@@ -197,10 +202,11 @@ bool population::getFecund2() const
 
 void population::setFecund2(bool value)
 {
-    if (seasparamtable->getFec2() != value)
+    seasparamtable->setFec2(value);
+/*    if (seasparamtable->getFec2() != value)
     {
         seasparamtable->setFec2(value);
-    }
+    }*/
 }
 
 bool population::getFecund1() const
@@ -210,10 +216,11 @@ bool population::getFecund1() const
 
 void population::setFecund1(bool value)
 {
-    if (seasparamtable->getFec1() != value)
+    seasparamtable->setFec1(value);
+/*    if (seasparamtable->getFec1() != value)
     {
         seasparamtable->setFec1(value);
-    }
+    }*/
 }
 
 bool population::getMaturity2() const
@@ -223,10 +230,11 @@ bool population::getMaturity2() const
 
 void population::setMaturity2(bool value)
 {
-    if (seasparamtable->getMat2() != value)
+    seasparamtable->setMat2(value);
+/*    if (seasparamtable->getMat2() != value)
     {
         seasparamtable->setMat2(value);
-    }
+    }*/
 }
 
 bool population::getMaturity1() const
@@ -236,10 +244,11 @@ bool population::getMaturity1() const
 
 void population::setMaturity1(bool value)
 {
-    if (seasparamtable->getMat1() != value)
+    seasparamtable->setMat1(value);
+/*    if (seasparamtable->getMat1() != value)
     {
         seasparamtable->setMat1(value);
-    }
+    }*/
 }
 
 bool population::getFemWtLen2() const
@@ -249,10 +258,11 @@ bool population::getFemWtLen2() const
 
 void population::setFemWtLen2(bool value)
 {
-    if (seasparamtable->getFemwtlen2() != value)
+    seasparamtable->setFemwtlen2(value);
+/*    if (seasparamtable->getFemwtlen2() != value)
     {
         seasparamtable->setFemwtlen2(value);
-    }
+    }*/
 }
 
 bool population::getFemWtLen1() const
@@ -262,10 +272,11 @@ bool population::getFemWtLen1() const
 
 void population::setFemWtLen1(bool value)
 {  
-    if (seasparamtable->getFemwtlen1() != value)
+    seasparamtable->setFemwtlen1(value);
+/*    if (seasparamtable->getFemwtlen1() != value)
     {
         seasparamtable->setFemwtlen1(value);
-    }
+    }*/
 }
 /*
 void population::setNumSeasParams()
@@ -826,15 +837,15 @@ void population::setSeasonalParam(int index, QStringList data)
 {
 //    if (index >= seasparamtable->getParamCount())
 //        seasparamtable->setParamCount(index + 1);
-    seasparamtable->setParamData(index, data);
+    seasparamtable->setParameter(index, data);
 }
 
 QStringList population::getSeasonalParam(int index)
 {
-    return seasparamtable->getParamData(index);
+    return seasparamtable->getParameter(index);
 }
 
-void population::readSeasonalEffects(ss_file *input)
+/*void population::readSeasonalEffects(ss_file *input)
 {
     femwtlen1 = input->get_next_value().toInt() == 1? true:false;
     femwtlen2 = input->get_next_value().toInt() == 1? true:false;
@@ -846,9 +857,9 @@ void population::readSeasonalEffects(ss_file *input)
     malewtlen2 = input->get_next_value().toInt() == 1? true:false;
     L1 = input->get_next_value().toInt() == 1? true:false;
     K = input->get_next_value().toInt() == 1? true:false;
-}
+}*/
 
-QString population::writeSeasonalEffects()
+/*QString population::writeSeasonalEffects()
 {
     QString line("");
     line.append(QString ("%1 %2 %3 %4 %5 %6 ").arg(
@@ -864,4 +875,4 @@ QString population::writeSeasonalEffects()
                     QString::number(L1? 1: 0),
                     QString::number(K? 1: 0)));
     return line;
-}
+}*/
