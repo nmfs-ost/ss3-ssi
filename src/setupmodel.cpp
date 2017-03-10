@@ -99,7 +99,6 @@ void setupModel::updateData()
             valuesList.append(0);
         while (valuesList.count() > num)
             valuesList.takeLast();
-//        changed = true;
     }
 
     for (int i = 0; i < num; i++)
@@ -159,8 +158,6 @@ void shortParameterModel::setNumParams(int rows)
         paramNum.clear();
         for (i = 0; i < rows; i++)
             paramNum.append(i);
-//        while (paramNum.count() > rows)
-//            paramNum.takeLast();
     }
 }
 
@@ -184,7 +181,6 @@ void shortParameterModel::setParamHeader(int row, QString title)
 {
     if (row >= paramData->rowCount())
         setTotalNumParams(row + 1);
-//    params->setRowHeader(row, title);
     paramData->setRowHeader(row, title);
 //    updateParamHeaders();
 }
@@ -668,37 +664,6 @@ longParameterModel::longParameterModel(QObject *parent) : shortParameterModel(pa
 longParameterModel::~longParameterModel()
 {
 }
-
-// change background data, then update gui table
-//
-/*void longParameterModel::changeParamData()
-{
-    int row = 0;
-    int rows = paramData->getParamCount();
-    int setupcols = setup->columnCount();
-
-    paramData->setParamCount(setupcols);
-    for (int i = rows; i < setupcols; i++)
-    {
-        paramData->setParameter(i, defaultParam);
-        paramData->setParamHeader(i, setup->getColumnHeader(i));
-    }
-
-    updateParams();
-}*/
-
-// Kludge for output routine
-// output whole parameter as one string
-//
-/*QString longParameterModel::getParamText (int row)
-{
-    QString txt;
-    QStringList slist (getParamData(row));
-    for (int i = 0; i < slist.count(); i++)
-        txt.append(QString(" %1").arg(slist.at(i)));
-
-    return txt;
-}*/
 
 
 // the background data has changed

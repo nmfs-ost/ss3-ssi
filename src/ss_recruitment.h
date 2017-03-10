@@ -57,6 +57,9 @@ public:
     void setUseSteepness (int value) {use_steepness = value;}
     int getUseSteepness () {return use_steepness;}
 
+    void setFeature (int value) {futureFeature = value;}
+    int getFeature () {return futureFeature;}
+
 //    shortParameter parameters[6];
 //    parametermodel *parameters;
 //    parametermodel *getSetupModel() {return parameters;}
@@ -148,6 +151,8 @@ public:
 
 private:
     ss_model *parnt;
+
+    int futureFeature;
 };
 
 #endif // SS_RECRUITMENT_H

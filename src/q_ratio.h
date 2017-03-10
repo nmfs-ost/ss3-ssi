@@ -89,21 +89,7 @@ private:
     QList<int> paramsUsed;
 
     QString fltName;
-    int BaseIndex;
-    int doBlkTnd;
-    int BlkTndIndex;
-    int doRndWlk;
-    int RndWlkIndex;
-    bool doPower;
-    int powerIndex;
-    int doEnvVar;
-    int EnvIndex;
-    int doExtraSD;
-    int ExtraIndex;
-    int type;
-    int typeIndex;
-    float offset;
-    bool doOffset;
+
 };
 
 #endif // Q_RATIO_H

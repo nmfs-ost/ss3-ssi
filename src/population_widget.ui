@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>7</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -83,87 +83,24 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>885</width>
-            <height>517</height>
+            <width>894</width>
+            <height>546</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <layout class="QGridLayout" name="gridLayout_growth">
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_growth_submorph_ratio">
-               <property name="text">
-                <string>Platoon between/within std-dev ratio </string>
+             <item row="13" column="1">
+              <widget class="QSpinBox" name="spinBox_bio_time_vary_read">
+               <property name="maximum">
+                <number>2</number>
                </property>
               </widget>
              </item>
-             <item row="19" column="7">
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="19" column="8">
-              <spacer name="horizontalSpacer_growth">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="9" column="0" colspan="3">
-              <widget class="QLabel" name="label_growth_age_spec_max">
-               <property name="text">
-                <string>Maximum age for age-specific K</string>
-               </property>
-              </widget>
-             </item>
-             <item row="16" column="0" colspan="2">
-              <widget class="QLabel" name="label_growth_time_vary_params">
-               <property name="text">
-                <string>Time Varying Parameters</string>
-               </property>
-              </widget>
-             </item>
-             <item row="20" column="0" colspan="9">
-              <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
-             </item>
-             <item row="13" column="0">
-              <widget class="QLabel" name="label_growth_parameters">
-               <property name="text">
-                <string>Growth Parameters</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-               </property>
-              </widget>
-             </item>
-             <item row="19" column="0">
-              <widget class="QLabel" name="label_cv_parameters">
-               <property name="text">
-                <string>CV Parameters</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-               </property>
-              </widget>
-             </item>
-             <item row="14" column="0" colspan="9">
+             <item row="15" column="0" colspan="9">
               <layout class="QVBoxLayout" name="verticalLayout_growth_params"/>
              </item>
-             <item row="7" column="0" colspan="3">
+             <item row="8" column="0" colspan="3">
               <widget class="QLabel" name="label_exp_decay">
                <property name="text">
                 <string>Exponential decay above max age</string>
@@ -186,28 +123,28 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="label_growth_submorph_dist">
                <property name="text">
                 <string>Distribution among sub-morphs </string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_growth_model">
                <property name="text">
                 <string>Growth Model</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="0" colspan="3">
+             <item row="11" column="0" colspan="3">
               <widget class="QLabel" name="label_growth_sd_add">
                <property name="text">
                 <string>Standard Deviation added to length-at-age</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="0" colspan="3">
+             <item row="9" column="0" colspan="3">
               <widget class="QLabel" name="label_growth_age_spec_min">
                <property name="text">
                 <string>Minimum age for age-specific K</string>
@@ -224,7 +161,7 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="1" colspan="6">
+             <item row="5" column="1" colspan="6">
               <widget class="QComboBox" name="comboBox_growth_model">
                <item>
                 <property name="text">
@@ -243,7 +180,7 @@
                </item>
               </widget>
              </item>
-             <item row="10" column="3" colspan="2">
+             <item row="11" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_sd_add">
                <property name="decimals">
                 <number>3</number>
@@ -256,20 +193,20 @@
                </property>
               </widget>
              </item>
-             <item row="9" column="3" colspan="2">
+             <item row="10" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_max"/>
              </item>
-             <item row="8" column="3" colspan="2">
+             <item row="9" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_min"/>
              </item>
-             <item row="7" column="3" colspan="2">
+             <item row="8" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_exp_decay">
                <property name="minimum">
                 <double>-999.000000000000000</double>
                </property>
               </widget>
              </item>
-             <item row="6" column="3" colspan="2">
+             <item row="7" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amax">
                <property name="minimum">
                 <double>0.000000000000000</double>
@@ -319,41 +256,38 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="1" colspan="6">
+             <item row="4" column="1" colspan="6">
               <layout class="QHBoxLayout" name="horizontalLayout_growth_submorph_dist"/>
              </item>
-             <item row="2" column="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_morph_ratio"/>
-             </item>
-             <item row="5" column="3" colspan="2">
+             <item row="6" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amin">
                <property name="maximum">
                 <double>999.000000000000000</double>
                </property>
               </widget>
              </item>
-             <item row="5" column="0" colspan="3">
+             <item row="6" column="0" colspan="3">
               <widget class="QLabel" name="label_growth_first_saa_age">
                <property name="text">
                 <string>Reference age for first size-at-age parameter (Amin)</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0" colspan="3">
+             <item row="7" column="0" colspan="3">
               <widget class="QLabel" name="label_growth_secnd_saa_age">
                <property name="text">
                 <string>Reference age for second size-at-age param (Amax)</string>
                </property>
               </widget>
              </item>
-             <item row="18" column="0">
+             <item row="19" column="0">
               <widget class="QLabel" name="label_growth_cv_pattern">
                <property name="text">
                 <string>CV Pattern</string>
                </property>
               </widget>
              </item>
-             <item row="18" column="1" colspan="5">
+             <item row="19" column="1" colspan="5">
               <widget class="QComboBox" name="comboBox_growth_cv_pattern">
                <item>
                 <property name="text">
@@ -382,24 +316,24 @@
                </item>
               </widget>
              </item>
-             <item row="11" column="0">
+             <item row="12" column="0">
               <widget class="QLabel" name="label_growth_time_vary">
                <property name="text">
                 <string>Adjustment method for time-varying</string>
                </property>
               </widget>
              </item>
-             <item row="17" column="0" colspan="8">
+             <item row="18" column="0" colspan="8">
               <layout class="QVBoxLayout" name="verticalLayout_growth_time_vary_params"/>
              </item>
-             <item row="11" column="7" colspan="2">
+             <item row="12" column="7" colspan="2">
               <widget class="QLabel" name="label_growth_time_vary_info">
                <property name="text">
                 <string>For all Environmental, Block, and Deviation parameters</string>
                </property>
               </widget>
              </item>
-             <item row="11" column="1" colspan="6">
+             <item row="12" column="1" colspan="6">
               <widget class="QComboBox" name="comboBox_growth_time_vary">
                <item>
                 <property name="text">
@@ -413,24 +347,121 @@
                </item>
               </widget>
              </item>
-             <item row="12" column="2" colspan="7">
+             <item row="13" column="2" colspan="7">
               <widget class="QLabel" name="label_bio_time_vary_read_info">
                <property name="text">
                 <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
                </property>
               </widget>
              </item>
-             <item row="12" column="0">
+             <item row="13" column="0">
               <widget class="QLabel" name="label_bio_time_vary_read">
                <property name="text">
                 <string>Reading Biology time-vary parameters</string>
                </property>
               </widget>
              </item>
-             <item row="12" column="1">
-              <widget class="QSpinBox" name="spinBox_bio_time_vary_read">
-               <property name="maximum">
-                <number>2</number>
+             <item row="17" column="0" colspan="2">
+              <widget class="QLabel" name="label_growth_time_vary_params">
+               <property name="text">
+                <string>Time Varying Parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="21" column="0" colspan="9">
+              <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_growth_submorph_ratio">
+               <property name="text">
+                <string>Platoon between/within std-dev ratio </string>
+               </property>
+              </widget>
+             </item>
+             <item row="20" column="8">
+              <spacer name="horizontalSpacer_growth">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="10" column="0" colspan="3">
+              <widget class="QLabel" name="label_growth_age_spec_max">
+               <property name="text">
+                <string>Maximum age for age-specific K</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="0">
+              <widget class="QLabel" name="label_growth_parameters">
+               <property name="text">
+                <string>Growth Parameters</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
+              </widget>
+             </item>
+             <item row="20" column="0">
+              <widget class="QLabel" name="label_cv_parameters">
+               <property name="text">
+                <string>CV Parameters</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_growth_morph_within">
+               <property name="text">
+                <string>Std dev within platoons</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="4" colspan="3">
+              <widget class="QLabel" name="label_growth_morph_between">
+               <property name="text">
+                <string>Std dev between platoons</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="7">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_morph_between">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2" colspan="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_morph_within">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2" colspan="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_morph_ratio">
+               <property name="decimals">
+                <number>3</number>
                </property>
               </widget>
              </item>

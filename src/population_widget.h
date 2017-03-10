@@ -87,6 +87,7 @@ private slots:
     void changeFecundityOffsetOption(int opt);
     void changeFecundityAdjustment(int opt);
     void changeFirstMatureAge();
+    void changeGrowthMorphRatio(double ratio);
     void changeGrowthTimeVaryRead(int flag);
 
     void changeNumRecrDevs (int num);

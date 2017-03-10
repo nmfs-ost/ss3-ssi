@@ -104,6 +104,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 //    timeVaryParamsView->setParent(this);
 //    ui->verticalLayout_growth_time_vary_params->addWidget(timeVaryParamsView);
 
+    connect (ui->doubleSpinBox_growth_morph_ratio, SIGNAL(valueChanged(double)), SLOT(changeGrowthMorphRatio(double)));
     connect (ui->spinBox_bio_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeGrowthTimeVaryRead(int)));
     connect (ui->comboBox_growth_model, SIGNAL(currentIndexChanged(int)), SLOT(changeGrowthModel(int)));
     connect (ui->doubleSpinBox_growth_age_Amin, SIGNAL(valueChanged(double)), SLOT(changeAmin (double)));
@@ -586,17 +587,35 @@ void population_widget::changeNumSubMorph(int num)
 {
     bool vis = false;
     int nmph = pop->Grow()->getNum_morphs();
+    float value, within, between;
     if (nmph != num)
     {
         if (num > 1)
         {
+            value = pop->Grow()->getMorph_within_ratio();
+            if (value = 1.0)
+            {
+                between = .000001;
+                within = 1.0;
+            }
+            else
+            {
+                between = sqrt(1. / (1. + value * value));
+                within = value * between;
+            }
             vis = true;
-            ui->doubleSpinBox_growth_morph_ratio->setValue(pop->Grow()->getMorph_within_ratio());
+            ui->doubleSpinBox_growth_morph_ratio->setValue(value);
+            ui->doubleSpinBox_growth_morph_between->setValue(between);
+            ui->doubleSpinBox_growth_morph_within->setValue(within);
         }
         pop->Grow()->setNum_morphs(num);
     }
     ui->label_growth_submorph_ratio->setVisible(vis);
     ui->doubleSpinBox_growth_morph_ratio->setVisible(vis);
+    ui->label_growth_morph_within->setVisible(vis);
+    ui->doubleSpinBox_growth_morph_within->setVisible(vis);
+    ui->label_growth_morph_between->setVisible(vis);
+    ui->doubleSpinBox_growth_morph_between->setVisible(vis);
     ui->label_growth_submorph_dist->setVisible(vis);
     growthMorphDistView->setVisible(vis);
     growthMorphDistView->resizeColumnsToContents();
@@ -669,6 +688,26 @@ void population_widget::changeCVmethod (int num)
 void population_widget::changeTimeVaryMethod(int num)
 {
     grwth->setTimeVaryMethod(num+1);
+}
+
+void population_widget::changeGrowthMorphRatio(double ratio)
+{
+    double between, within;
+    pop->Grow()->setMorph_within_ratio(ratio);
+
+    if (ui->spinBox_growth_num_submorphs->value() == 1)
+    {
+        pop->Grow()->setMorph_within_ratio(1.0);
+        between = .000001;
+        within = 1.0;
+    }
+    else
+    {
+        between = sqrt(1. / (1. + ratio * ratio));
+        within = ratio * between;
+    }
+    ui->doubleSpinBox_growth_morph_between->setValue(between);
+    ui->doubleSpinBox_growth_morph_within->setValue(within);
 }
 
 void population_widget::changeGrowthTimeVaryRead(int flag)

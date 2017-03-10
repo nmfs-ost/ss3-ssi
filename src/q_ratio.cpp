@@ -16,6 +16,7 @@ q_ratio::q_ratio(ss_model *model)
     setup->setHeader(hdr);
     params->setTotalNumParams(3);
     varParams->setTotalNumVarParams(3);
+    paramsUsed << 0 << 0 << 0;
 
     reset();
 
@@ -36,11 +37,8 @@ q_ratio::~q_ratio()
 void q_ratio::reset()
 {
     QStringList ql;
-    paramsUsed.clear();
-    paramsUsed << 0 << 0 << 0;
     ql << "0" << "0" << "0" << "0" << "0";
     setValues(ql);
-    params->setParamsUsed(paramsUsed);
 }
 
 
@@ -71,7 +69,6 @@ void q_ratio::changeSetupData(QList<int> values)
 {
     int val = 0;
     bool changed;
-    int index = 0;
 
     val = values.at(0);
     if (val > 0)
@@ -81,7 +78,6 @@ void q_ratio::changeSetupData(QList<int> values)
             paramsUsed[0] = 1;
             changed = true;
         }
-        BaseIndex = index++;
     }
     else
     {
@@ -90,7 +86,6 @@ void q_ratio::changeSetupData(QList<int> values)
             paramsUsed[0] = 0;
             changed = true;
         }
-        BaseIndex = -1;
     }
 
     if (val == 3)
@@ -100,7 +95,6 @@ void q_ratio::changeSetupData(QList<int> values)
             paramsUsed[1] = 1;
             changed = true;
         }
-        powerIndex = index++;
     }
     else
     {
@@ -109,18 +103,16 @@ void q_ratio::changeSetupData(QList<int> values)
             paramsUsed[1] = 0;
             changed = true;
         }
-        powerIndex = -1;
     }
 
     val = values.at(2);
-    if (val == 1)
+    if (val > 0)
     {
         if (paramsUsed.at(2) != 1)
         {
             paramsUsed[2] = 1;
             changed = true;
         }
-        ExtraIndex = index;
     }
     else
     {
@@ -129,7 +121,6 @@ void q_ratio::changeSetupData(QList<int> values)
             paramsUsed[2] = 0;
             changed = true;
         }
-        ExtraIndex = -1;
     }
 
     if (changed)
@@ -278,7 +269,6 @@ void q_ratio::setDoPower(bool value)
             setup->setValue(1, 0);
         }
     }
-    doPower = value;
 }
 
 
@@ -304,9 +294,9 @@ void q_ratio::setDoExtraSD(bool value)
 QString q_ratio::getPower()
 {
     QString txt("");
-    if (powerIndex == 0)
+    if (getDoPower())
     {
-        QStringList values(params->getParameter(powerIndex));
+        QStringList values(params->getParameter(1));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -315,11 +305,7 @@ QString q_ratio::getPower()
 
 void q_ratio::setPower(QStringList values)
 {
-    if (powerIndex > 0)
-    {
-        params->setParameter(powerIndex, values);
-        params->setParamHeader(powerIndex, QString("Q_Power"));
-    }
+    params->setParamData(1, values);
 }
 
 
@@ -327,9 +313,14 @@ void q_ratio::setPower(QStringList values)
 QString q_ratio::getExtra()
 {
     QString txt("");
-    if (ExtraIndex > -1)
+    int index = 1;
+    if (getDoExtraSD())
     {
-        QStringList values(params->getParameter(ExtraIndex));
+        if (getDoPower())
+        {
+            index = 2;
+        }
+        QStringList values(params->getParameter(index));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -338,20 +329,15 @@ QString q_ratio::getExtra()
 
 void q_ratio::setExtra(QStringList values)
 {
-    if (ExtraIndex > -1)
-    {
-        while (values.count() < 14)
-            values.append("0");
-        params->setParameter(ExtraIndex, values);
-    }
+    params->setParamData(2, values);
 }
 
 QString q_ratio::getBase()
 {
     QString txt("");
-    if (typeIndex > -1)
+    if (setup->getValue(0) > 0)
     {
-        QStringList values(params->getParameter(typeIndex));
+        QStringList values(params->getParameter(0));
         for (int j = 0; j < values.count(); j++)
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
@@ -360,8 +346,7 @@ QString q_ratio::getBase()
 
 void q_ratio::setBase(QStringList values)
 {
-    typeIndex = 0;
-    params->setParameter(typeIndex, values);
+    params->setParamData(0, values);
 }
 
 void q_ratio::changeSetup(int errType)
