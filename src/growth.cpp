@@ -489,22 +489,10 @@ void ss_growth::setWtLenParam(int index, QStringList data)
 
 void ss_growth::setWtLenTVParam(int index, QStringList data)
 {
-    wtLenParams->setParameter(index, data);
-/*    if (index >= wtLenParams->getNumParamVars())// getNumTimeVaryParams())
-        wtLenParams->getTimeVaryParams()->setRowCount(index + 1);
-    wtLenParams->getTimeVaryParams()->setRowData(index, data);*/
+    wtLenVarParams->setParameter(index, data);
 }
 
-/*
-int ss_growth::getHermaphroditism() const
-{
-    return hermaphroditism;
-}
 
-void ss_growth::setHermaphroditism(int value)
-{
-    hermaphroditism = value;
-}*/
 
 int ss_growth::getParam_offset_method() const
 {

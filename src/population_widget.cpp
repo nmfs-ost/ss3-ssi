@@ -17,6 +17,76 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
 //    ui->verticalLayout_fishingMort_2_detail->addWidget();
 
+    // Growth
+    growthMorphDistView = new tableview();
+    growthMorphDistView->setParent(this);
+//    growthMorphDistView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    ui->horizontalLayout_growth_submorph_dist->addWidget(growthMorphDistView);
+    growthParamsView = new tableview();
+    growthParamsView->setParent(this);
+    ui->verticalLayout_growth_params->addWidget(growthParamsView);
+    growthTVParamsView = new tableview();
+    growthTVParamsView->setParent(this);
+    ui->verticalLayout_growth_time_vary_params->addWidget(growthTVParamsView);
+
+    cvParamsView = new tableview();
+    cvParamsView->setParent(this);
+    ui->verticalLayout_cv_params->addWidget(cvParamsView);
+
+    // Recruitment
+    recruitAssignParamsView = new tableview();
+    recruitAssignParamsView->setParent(this);
+    ui->horizontalLayout_recr_assigns->addWidget(recruitAssignParamsView);
+
+//    recruitParamsView = new tableview();
+//    recruitParamsView->setParent(this);
+    recruitDistView = new tableview();
+    recruitDistView->setParent(this);
+    ui->verticalLayout_recr_params->addWidget(recruitDistView);
+
+    recruitTVParamsView = new tableview();
+    recruitTVParamsView->setParent(this);
+    ui->verticalLayout_recr_devs->addWidget(recruitTVParamsView);
+
+    recruitParamsView = new tableview();
+    recruitParamsView->setParent(this);
+    ui->verticalLayout_recr_params->addWidget(recruitParamsView);
+
+    setRecrArea(2);
+    connect (ui->radioButton_area, SIGNAL(clicked()), SLOT(changeRecrArea()));
+    connect (ui->radioButton_global, SIGNAL(clicked()), SLOT(changeRecrArea()));
+//    setRecrDistParam(1);
+    ui->checkBox_recr_interaction->setChecked(false);
+    connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
+    connect (ui->checkBox_recr_interaction, SIGNAL(toggled(bool)), SLOT(changeRecAssignInteract(bool)));
+    connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
+    connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
+    connect (ui->spinBox_num_recr_devs, SIGNAL(valueChanged(int)), SLOT(changeNumRecrDevs(int)));
+    connect (ui->spinBox_spwn_recr_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeSpwnRecReadTimeVary(int)));
+
+    wtlenParamsView = new tableview();
+    wtlenParamsView->setParent(this);
+    ui->verticalLayout_wtlen_params->addWidget(wtlenParamsView);
+    wtlenTVParamsView = new tableview();
+    wtlenTVParamsView->setParent(this);
+    ui->verticalLayout_wtlen_time_vary_params->addWidget(wtlenTVParamsView);
+    maturityParamsView = new tableview();
+    maturityParamsView->setParent(this);
+    ui->verticalLayout_cohort_params->addWidget(maturityParamsView);
+    maturityTVParamsView = new tableview();
+    maturityTVParamsView->setParent(this);
+    ui->verticalLayout_cohort_time_vary_params->addWidget(maturityTVParamsView);
+
+//    timeVaryParamsView = new tableview();
+//    timeVaryParamsView->setParent(this);
+//    ui->verticalLayout_growth_time_vary_params->addWidget(timeVaryParamsView);
+
+    // Maturity
+
+    connect (ui->comboBox_maturity_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMaturityOpt(int)));
+    connect (ui->lineEdit_maturity_first_age, SIGNAL(editingFinished()), SLOT(changeFirstMatureAge()));
+    connect (ui->checkBox_wtatage, SIGNAL(toggled(bool)), SIGNAL(readWtAtAgeSS(bool)));
+
     // Fecundity
     fractionFemView = new tableview();
     fractionFemView->setParent(this);
@@ -25,6 +95,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     fecundParamsView = new tableview();
     fecundParamsView->setParent(this);
     ui->verticalLayout_fecund_params->addWidget(fecundParamsView);
+    fecundTVParamsView = new tableview();
+    fecundTVParamsView->setParent(this);
+    ui->verticalLayout_fecund_time_vary_params->addWidget(fecundTVParamsView);
 
     ui->spinBox_fecund_hermaph_season->setMinimum(-1);
 
@@ -40,69 +113,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->comboBox_fecund_gend_offset, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityOffsetOption(int)));
 //    connect (ui->comboBox_fecund_adj_constraint, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityAdjustment(int)));
 
-    // Recruitment
-    assignmentView = new tableview();
-    assignmentView->setParent(this);
-    ui->horizontalLayout_recr_assigns->addWidget(assignmentView);
-
-//    recruitParamsView = new tableview();
-//    recruitParamsView->setParent(this);
-    recruitDistView = new tableview();
-    recruitDistView->setParent(this);
-    ui->verticalLayout_recr_params->addWidget(recruitDistView);
-
-    recruitDevsView = new tableview();
-    recruitDevsView->setParent(this);
-    ui->verticalLayout_recr_devs->addWidget(recruitDevsView);
-
-    recruitFullParamsView = new tableview();
-    recruitFullParamsView->setParent(this);
-    ui->verticalLayout_recr_full_params->addWidget(recruitFullParamsView);
-
-    setRecrArea(2);
-    connect (ui->radioButton_area, SIGNAL(clicked()), SLOT(changeRecrArea()));
-    connect (ui->radioButton_global, SIGNAL(clicked()), SLOT(changeRecrArea()));
-//    setRecrDistParam(1);
-    ui->checkBox_recr_interaction->setChecked(false);
-    connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
-    connect (ui->checkBox_recr_interaction, SIGNAL(toggled(bool)), SLOT(changeRecAssignInteract(bool)));
-    connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
-    connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
-    connect (ui->spinBox_num_recr_devs, SIGNAL(valueChanged(int)), SLOT(changeNumRecrDevs(int)));
-    connect (ui->spinBox_spwn_recr_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeSpwnRecReadTimeVary(int)));
-
-    // Growth
-    growthMorphDistView = new tableview();
-    growthMorphDistView->setParent(this);
-//    growthMorphDistView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    ui->horizontalLayout_growth_submorph_dist->addWidget(growthMorphDistView);
-    growthParamsView = new tableview();
-    growthParamsView->setParent(this);
-    ui->verticalLayout_growth_params->addWidget(growthParamsView);
-    growthTVParamsView = new tableview();
-    growthTVParamsView->setParent(this);
-    ui->verticalLayout_growth_time_vary_params->addWidget(growthTVParamsView);
-    cvParamsView = new tableview();
-    cvParamsView->setParent(this);
-    ui->verticalLayout_cv_parameters->addWidget(cvParamsView);
-//    cvTVParamsView = new tableview();
-//    cvTVParamsView->setParent(this);
-//    ui->verticalLayout_cv_time_vary_params->addWidget(cvTVParamsView);
-    wtlenParamsView = new tableview();
-    wtlenParamsView->setParent(this);
-    ui->verticalLayout_wtlen_params->addWidget(wtlenParamsView);
-    wtlenTVParamsView = new tableview();
-    wtlenTVParamsView->setParent(this);
-    ui->verticalLayout_wtlen_time_vary_params->addWidget(wtlenTVParamsView);
-    maturityParamsView = new tableview();
-    maturityParamsView->setParent(this);
-    ui->verticalLayout_cohort_params->addWidget(maturityParamsView);
-    mortTVParamsView = new tableview();
-    mortTVParamsView->setParent(this);
-    ui->verticalLayout_cohort_time_vary_params->addWidget(mortTVParamsView);
-//    timeVaryParamsView = new tableview();
-//    timeVaryParamsView->setParent(this);
-//    ui->verticalLayout_growth_time_vary_params->addWidget(timeVaryParamsView);
 
     connect (ui->doubleSpinBox_growth_morph_ratio, SIGNAL(valueChanged(double)), SLOT(changeGrowthMorphRatio(double)));
     connect (ui->spinBox_bio_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeGrowthTimeVaryRead(int)));
@@ -126,12 +136,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     moveParamsView->setParent(this);
     ui->verticalLayout_move_params->addWidget(moveParamsView);
 
-    // Maturity
-
-    connect (ui->comboBox_maturity_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMaturityOpt(int)));
-    connect (ui->lineEdit_maturity_first_age, SIGNAL(editingFinished()), SLOT(changeFirstMatureAge()));
-    connect (ui->checkBox_wtatage, SIGNAL(toggled(bool)), SIGNAL(readWtAtAgeSS(bool)));
-
     // Mortality
     mortBreakPtsView = new tableview();
     mortBreakPtsView->setParent (this);
@@ -142,6 +146,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     mortParamsView = new tableview();
     mortParamsView->setParent (this);
     ui->verticalLayout_mort_params->addWidget(mortParamsView);
+    mortTVParamsView = new tableview();
+    mortTVParamsView->setParent(this);
+    ui->verticalLayout_cohort_time_vary_params->addWidget(mortTVParamsView);
 
     mortInputsView = new tableview();
     mortInputsView->setParent(this);
@@ -231,10 +238,6 @@ void population_widget::changeGrowthPattern (int num)
     growthPattern *gp = pop->Grow()->getPattern(num - 1);
     int numparms;
 
-    fractionFemView->setModel(gp->getFractionFemaleParams());
-    fractionFemView->setHeight(1);
-    fractionFemView->resizeColumnsToContents();
-
     growthParamsView->setModel(gp->getGrowthParams());
     growthParamsView->setHeight(gp->getGrowthParams());
     growthParamsView->resizeColumnsToContents();
@@ -244,11 +247,6 @@ void population_widget::changeGrowthPattern (int num)
     growthTVParamsView->setVisible(numparms);
     growthTVParamsView->setHeight(numparms);
     growthTVParamsView->resizeColumnsToContents();
-
-//    timeVaryParamsView->setModel(gp->getTimeVaryParams());
-//    timeVaryParamsView->setHeight(gp->getTimeVaryParams());
-//    timeVaryParamsView->resizeColumnsToContents();
-
     cvParamsView->setModel(gp->getCVParams());
     cvParamsView->setHeight(gp->getCVParams());
     cvParamsView->resizeColumnsToContents();
@@ -260,10 +258,13 @@ void population_widget::changeGrowthPattern (int num)
 //    cvTVParamsView->setHeight(numparms);
 //    cvTVParamsView->resizeColumnsToContents();
 
-//    maturityParamsView->setModel(gp->get);
+
+    fractionFemView->setModel(gp->getFractionFemaleParams());
+    fractionFemView->setHeight(1);
+    fractionFemView->resizeColumnsToContents();
 
     mortParamsView->setModel(gp->getNatMParams());
-    mortParamsView->setHeight(gp->getNatMParams());
+    mortParamsView->setHeight(gp->getNatMParams()->rowCount());
     mortParamsView->resizeColumnsToContents();
     mortTVParamsView->setModel(gp->getNatMTVParams());
     numparms = gp->getNatMTVParams()->rowCount();
@@ -275,64 +276,49 @@ void population_widget::changeGrowthPattern (int num)
     mortAgesView->setHeight(2);
     mortAgesView->resizeColumnsToContents();
 
+//    timeVaryParamsView->setModel(gp->getTimeVaryParams());
+//    timeVaryParamsView->setHeight(gp->getTimeVaryParams());
+//    timeVaryParamsView->resizeColumnsToContents();
+
+//    maturityParamsView->setModel(gp->get);
+
 }
 
 void population_widget::refresh()
 {
-//    ui->lineEdit_fraction_female->setText(QString::number(pop->get_frac_female()));
-    // fecundity
-    fecundParamsView->setModel(pop->Fec()->getFemaleParams());
-    fecundParamsView->setHeight(pop->Fec()->getFemaleParams());
-    setFecundityOption(pop->Fec()->getMethod());
-
-    setHermaphOptions(pop->Fec()->getHermaphroditism());
-//    ui->groupBox_hermaphroditism->setChecked(pop->Fec()->getHermaphroditism());
-    hermaphParamsView->setModel(pop->Fec()->getHermParams());
-    hermaphParamsView->setHeight(pop->Fec()->getHermParams());
-    ui->spinBox_fecund_hermaph_season->setMaximum(model_data->get_num_seasons());
-    ui->spinBox_fecund_hermaph_season->setValue(pop->Fec()->getHermSeason());
-    ui->spinBox_fecund_hermaph_male->setValue(pop->Fec()->getHermIncludeMales());
-    setFecundityOffsetOption(pop->Grow()->getParam_offset_method());
-    setFecundityAdjustment(pop->Grow()->getAdjustment_method());
-
-    wtlenParamsView->setModel(pop->Grow()->getWtLenParams());
-    wtlenParamsView->setHeight(pop->Grow()->getWtLenParams());
-    wtlenParamsView->resizeColumnsToContents();
-    maturityParamsView->setModel(pop->Grow()->getCohortParams());
-    maturityParamsView->setHeight(pop->Grow()->getCohortParams());
-    maturityParamsView->resizeColumnsToContents();
-    setMaturityOpt(pop->Grow()->getMaturity_option());
-    ui->lineEdit_maturity_first_age->setText(QString::number(pop->Grow()->getFirst_mature_age()));
+    // growth
+    growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
+    growthMorphDistView->setHeight(pop->Grow()->getMorphDistModel());
+//    growthParamsView->setModel(pop->Grow()->getMaturityParams());
+    growthMorphDistView->resizeColumnsToContents();
+    setGrowthModel(pop->Grow()->getModel());
+    ui->doubleSpinBox_growth_age_Amin->setValue(pop->Grow()->getAge_for_l1());
+    ui->doubleSpinBox_growth_age_Amax->setValue(pop->Grow()->getAge_for_l2());
+    ui->doubleSpinBox_exp_decay->setValue(pop->Grow()->getExpDecay());
+    ui->doubleSpinBox_growth_sd_add->setValue(pop->Grow()->getSd_add());
+    ui->comboBox_growth_cv_pattern->setCurrentIndex(pop->Grow()->getCv_growth_pattern());
+    ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
+    ui->spinBox_growth_num_submorphs->setValue(pop->Grow()->getNum_morphs());
+    ui->comboBox_growth_time_vary->setCurrentIndex(pop->Grow()->getTimeVaryMethod()-1);
+    ui->spinBox_bio_time_vary_read->setValue(pop->Grow()->getTimeVaryReadParams());
 
     int temp_int = pop->Grow()->getNum_patterns();
     ui->spinBox_growth_num_patterns->setValue(temp_int);
     if (temp_int > 0)
     {
-        changeNumGrowthPat(temp_int);
+        changeGrowthPattern(1);
         temp_int = pop->Grow()->getNum_morphs();
+        ui->spinBox_growth_num_submorphs->setValue(temp_int);
+        changeNumSubMorph(temp_int);
     }
-    ui->spinBox_growth_num_submorphs->setValue(temp_int);
-    changeNumSubMorph(temp_int);
-
-    ui->checkBox_seas_femWtLen1->setChecked(pop->getFemWtLen1());
-    ui->checkBox_seas_femWtLen2->setChecked(pop->getFemWtLen2());
-    ui->checkBox_seas_fecundity1->setChecked(pop->getFecund1());
-    ui->checkBox_seas_fecundity2->setChecked(pop->getFecund2());
-    ui->checkBox_seas_maturity1->setChecked(pop->getMaturity1());
-    ui->checkBox_seas_maturity2->setChecked(pop->getMaturity2());
-    ui->checkBox_seas_maleWtLen1->setChecked(pop->getMaleWtLen1());
-    ui->checkBox_seas_maleWtLen2->setChecked(pop->getMaleWtLen2());
-    ui->checkBox_seas_L1->setChecked(pop->getL1());
-    ui->checkBox_seas_K->setChecked(pop->getK());
-    changeSeasParams();
 
     // recruitment
-    assignmentView->setModel(pop->SR()->getAssignments());
-    assignmentView->setHeight(pop->SR()->getAssignments());
-    recruitDevsView->setModel(pop->SR()->getRecruitDevs()->getObservations());
-    recruitDevsView->setHeight(pop->SR()->getRecruitDevs()->getObservations());
-    recruitFullParamsView->setModel(pop->SR()->getFullParameters());
-    recruitFullParamsView->setHeight(pop->SR()->getFullParameters());
+    recruitAssignParamsView->setModel(pop->SR()->getAssignments());
+    recruitAssignParamsView->setHeight(pop->SR()->getAssignments());
+    recruitTVParamsView->setModel(pop->SR()->getRecruitDevs()->getObservations());
+    recruitTVParamsView->setHeight(pop->SR()->getRecruitDevs()->getObservations());
+    recruitParamsView->setModel(pop->SR()->getFullParameters());
+    recruitParamsView->setHeight(pop->SR()->getFullParameters());
     recruitDistView->setModel(pop->SR()->getAssignmentParams());
     recruitDistView->setHeight(pop->SR()->getAssignmentParams());
     recruitDistView->resizeColumnsToContents();
@@ -367,24 +353,43 @@ void population_widget::refresh()
     changeNumRecrDevs(pop->SR()->getRecruitDevs()->getNumObs());
     ui->spinBox_spwn_recr_time_vary_read->setValue(pop->SR()->getTimeVaryReadParams());
 
-    // growth
-    growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
-    growthMorphDistView->setHeight(pop->Grow()->getMorphDistModel());
-//    growthParamsView->setModel(pop->Grow()->getMaturityParams());
-    growthMorphDistView->resizeColumnsToContents();
-    setGrowthModel(pop->Grow()->getModel());
-    ui->doubleSpinBox_growth_age_Amin->setValue(pop->Grow()->getAge_for_l1());
-    ui->doubleSpinBox_growth_age_Amax->setValue(pop->Grow()->getAge_for_l2());
-    ui->doubleSpinBox_exp_decay->setValue(pop->Grow()->getExpDecay());
-    ui->doubleSpinBox_growth_sd_add->setValue(pop->Grow()->getSd_add());
-    ui->comboBox_growth_cv_pattern->setCurrentIndex(pop->Grow()->getCv_growth_pattern());
-    ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
-    ui->spinBox_growth_num_submorphs->setValue(pop->Grow()->getNum_morphs());
-    ui->comboBox_growth_time_vary->setCurrentIndex(pop->Grow()->getTimeVaryMethod()-1);
-    ui->spinBox_bio_time_vary_read->setValue(pop->Grow()->getTimeVaryReadParams());
-    changeGrowthPattern(1);
     // Maturity
     ui->checkBox_wtatage->setChecked(model_data->getReadWtAtAge());
+
+    wtlenParamsView->setModel(pop->Grow()->getWtLenParams());
+    wtlenParamsView->setHeight(pop->Grow()->getWtLenParams());
+    wtlenParamsView->resizeColumnsToContents();
+    wtlenTVParamsView->setModel(pop->Grow()->getWtLenTVParams());
+    wtlenTVParamsView->setHeight(pop->Grow()->getWtLenTVParams());
+    wtlenTVParamsView->resizeColumnsToContents();
+    ui->label_wt_len_time_vary_params->setVisible(pop->Grow()->getWtLenTVParams()->rowCount());
+
+    maturityParamsView->setModel(pop->Grow()->getCohortParams());
+    maturityParamsView->setHeight(pop->Grow()->getCohortParams());
+    maturityParamsView->resizeColumnsToContents();
+    setMaturityOpt(pop->Grow()->getMaturity_option());
+    ui->lineEdit_maturity_first_age->setText(QString::number(pop->Grow()->getFirst_mature_age()));
+    maturityTVParamsView->setModel(pop->Grow()->getCohortParams());
+    maturityTVParamsView->setHeight(pop->Grow()->getCohortParams());
+    maturityTVParamsView->resizeColumnsToContents();
+
+    // fecundity
+    setFecundityOption(pop->Fec()->getMethod());
+    setFecundityOffsetOption(pop->Grow()->getParam_offset_method());
+    setFecundityAdjustment(pop->Grow()->getAdjustment_method());
+    fecundParamsView->setModel(pop->Fec()->getFemaleParams());
+    fecundParamsView->setHeight(pop->Fec()->getFemaleParams());
+    fecundParamsView->resizeColumnsToContents();
+    fecundTVParamsView->setModel(pop->Fec()->getFemaleParams());
+    fecundTVParamsView->setHeight(pop->Fec()->getFemaleParams());
+    fecundTVParamsView->resizeColumnsToContents();
+
+    setHermaphOptions(pop->Fec()->getHermaphroditism());
+    hermaphParamsView->setModel(pop->Fec()->getHermParams());
+    hermaphParamsView->setHeight(pop->Fec()->getHermParams());
+    ui->spinBox_fecund_hermaph_season->setMaximum(model_data->get_num_seasons());
+    ui->spinBox_fecund_hermaph_season->setValue(pop->Fec()->getHermSeason());
+    ui->spinBox_fecund_hermaph_male->setValue(pop->Fec()->getHermIncludeMales());
 
     // movement
     ui->spinBox_num_move_defs->setValue(pop->Move()->getNumDefs());
@@ -411,6 +416,18 @@ void population_widget::refresh()
     setMortOption (pop->Grow()->getNatural_mortality_type());
 
     // Seasonality
+    ui->checkBox_seas_femWtLen1->setChecked(pop->getFemWtLen1());
+    ui->checkBox_seas_femWtLen2->setChecked(pop->getFemWtLen2());
+    ui->checkBox_seas_fecundity1->setChecked(pop->getFecund1());
+    ui->checkBox_seas_fecundity2->setChecked(pop->getFecund2());
+    ui->checkBox_seas_maturity1->setChecked(pop->getMaturity1());
+    ui->checkBox_seas_maturity2->setChecked(pop->getMaturity2());
+    ui->checkBox_seas_maleWtLen1->setChecked(pop->getMaleWtLen1());
+    ui->checkBox_seas_maleWtLen2->setChecked(pop->getMaleWtLen2());
+    ui->checkBox_seas_L1->setChecked(pop->getL1());
+    ui->checkBox_seas_K->setChecked(pop->getK());
+    changeSeasParams();
+
     seasonParamsView->setModel(pop->getSeasonalParams());
     seasonParamsView->setHeight(pop->getNumSeasParams());// SeasonalParams()->rowCount());
     ui->lineEdit_fishingMort_bpark->setText(QString::number(pop->M()->getBparkF()));
@@ -425,10 +442,10 @@ void population_widget::refresh()
 
     hermaphParamsView->resizeColumnsToContents();
     seasonParamsView->resizeColumnsToContents();
-    assignmentView->resizeColumnsToContents();
+    recruitAssignParamsView->resizeColumnsToContents();
 //    recruitParamsView->resizeColumnsToContents();
-    recruitDevsView->resizeColumnsToContents();
-    recruitFullParamsView->resizeColumnsToContents();
+    recruitTVParamsView->resizeColumnsToContents();
+    recruitParamsView->resizeColumnsToContents();
     mortBreakPtsView->resizeColumnsToContents();
     changeMortOption(pop->Grow()->getNatural_mortality_type());
 }
@@ -770,7 +787,7 @@ void population_widget::changeHermaphMales(int opt)
 void population_widget::changeNumRecrDevs(int num)
 {
     pop->SR()->recruitDeviations->setNumRecruitDevs(num);
-    recruitDevsView->setHeight(num);
+    recruitTVParamsView->setHeight(num);
 }
 
 void population_widget::changeSpwnRecReadTimeVary(int flag)
@@ -878,7 +895,7 @@ void population_widget::changeRecNumAssigns(int num)
 //    bool vis = (num != 0);
     pop->SR()->setNumAssignments(num);
 //    ui->label_recr_num_assigns->setVisible(vis);
-    assignmentView->setHeight(num);
+    recruitAssignParamsView->setHeight(num);
 //    assignmentView->setVisible(vis);
 }
 
@@ -921,7 +938,7 @@ void population_widget::changeSpawnRecrSpec(int num)
             break;
         }
     }
-    recruitFullParamsView->setHeight(pop->SR()->full_parameters->getNumParams());
+    recruitParamsView->setHeight(pop->SR()->full_parameters->getNumParams());
 }
 
 void population_widget::changeMoveNumDefs(int value)

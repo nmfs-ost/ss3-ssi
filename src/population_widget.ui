@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -369,7 +369,7 @@
               </widget>
              </item>
              <item row="21" column="0" colspan="9">
-              <layout class="QVBoxLayout" name="verticalLayout_cv_parameters"/>
+              <layout class="QVBoxLayout" name="verticalLayout_cv_params"/>
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="label_growth_submorph_ratio">
@@ -516,7 +516,7 @@
               </widget>
              </item>
              <item row="13" column="0" colspan="5">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_params"/>
+              <layout class="QVBoxLayout" name="verticalLayout_recr_assign_params"/>
              </item>
              <item row="7" column="0">
               <widget class="QLabel" name="label_spwn_recr_time_vary_read">
@@ -540,7 +540,7 @@
               </widget>
              </item>
              <item row="4" column="0" rowspan="3" colspan="5">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_full_params"/>
+              <layout class="QVBoxLayout" name="verticalLayout_recr_params"/>
              </item>
              <item row="11" column="1" colspan="3">
               <layout class="QHBoxLayout" name="horizontalLayout_recr_assigns"/>
@@ -1138,7 +1138,7 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-94</y>
             <width>903</width>
             <height>548</height>
            </rect>
@@ -1696,105 +1696,15 @@ recruitment distribution method = 1)</string>
              <layout class="QVBoxLayout" name="verticalLayout_12">
               <item>
                <layout class="QGridLayout" name="gridLayout_mortality">
-                <item row="5" column="0">
-                 <widget class="QLabel" name="label_mort_params">
+                <item row="7" column="0">
+                 <widget class="QLabel" name="label">
                   <property name="text">
-                   <string>Parameters </string>
+                   <string>Time varying parameters</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0" rowspan="2" colspan="2">
-                 <widget class="QLabel" name="label_mort_option">
-                  <property name="text">
-                   <string>Natural Mortality option </string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2" rowspan="2">
-                 <widget class="QComboBox" name="comboBox_mort_option">
-                  <item>
-                   <property name="text">
-                    <string>0: Read one parameter</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>1: Age mortality breakpoints</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>2: Lorenzen function</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>3: Age specific mort only</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>4: Age specific mort with seasonal interp</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="0" column="3" rowspan="2">
-                 <spacer name="horizontalSpacer_14">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="0" column="5" rowspan="2">
-                 <spacer name="horizontalSpacer_13">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="4" column="1" colspan="5">
-                 <layout class="QHBoxLayout" name="horizontalLayout_mort_age_specific"/>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_mort_age_specific">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>160</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Natural Mortality at age</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                  </property>
-                 </widget>
+                <item row="8" column="0" colspan="4">
+                 <layout class="QVBoxLayout" name="verticalLayout_22"/>
                 </item>
                 <item row="2" column="0" colspan="4">
                  <widget class="QWidget" name="widget_mort_breakpoints" native="true">
@@ -1842,22 +1752,6 @@ recruitment distribution method = 1)</string>
                   </layout>
                  </widget>
                 </item>
-                <item row="0" column="4">
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="6" column="0" colspan="6">
-                 <layout class="QVBoxLayout" name="verticalLayout_mort_params"/>
-                </item>
                 <item row="3" column="0" colspan="4">
                  <widget class="QWidget" name="widget_mort_lorenz" native="true">
                   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -1889,6 +1783,122 @@ recruitment distribution method = 1)</string>
                     </spacer>
                    </item>
                   </layout>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_mort_params">
+                  <property name="text">
+                   <string>Parameters </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1" colspan="5">
+                 <layout class="QHBoxLayout" name="horizontalLayout_mort_age_specific"/>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_mort_age_specific">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>50</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>160</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Natural Mortality at age</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="0" colspan="6">
+                 <layout class="QVBoxLayout" name="verticalLayout_mort_params"/>
+                </item>
+                <item row="1" column="4">
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="5">
+                 <spacer name="horizontalSpacer_13">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="3">
+                 <spacer name="horizontalSpacer_14">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="comboBox_mort_option">
+                  <item>
+                   <property name="text">
+                    <string>0: Read one parameter</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>1: Age mortality breakpoints</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>2: Lorenzen function</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>3: Age specific mort only</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>4: Age specific mort with seasonal interp</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QLabel" name="label_mort_option">
+                  <property name="text">
+                   <string>Natural Mortality option </string>
+                  </property>
                  </widget>
                 </item>
                </layout>

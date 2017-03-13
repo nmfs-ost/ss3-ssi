@@ -76,13 +76,13 @@ public:
     void setWtLenParam (int index, QStringList data);
     QStringList getWtLenParam (int index) {return wtLenParams->getParameter(index);}
     tablemodel *getWtLenParams () {return wtLenParams->getParamTable();}
-    void setNumWtLenTVParams (int num) {wtLenParams->setNumParams(num);}
-    int getNumWtLenTVParams () {return wtLenParams->getNumParams();}
+    longParameterModel *getWtLenParamModel () {return wtLenParams;}
+    void setNumWtLenTVParams (int num) {wtLenVarParams->setNumParams(num);}
+    int getNumWtLenTVParams () {return wtLenVarParams->getNumVarParams();}
     void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
     void setWtLenTVParam (int index, QStringList data);
-    QStringList getWtLenTVParam (int index) {return wtLenParams->getParameter(index);}
-    tablemodel *getWtLenTVParams () {return wtLenParams->getParamTable();}
-    longParameterModel *getWtLenParamModel () {return wtLenParams;}
+    QStringList getWtLenTVParam (int index) {return wtLenVarParams->getVarParameter(index);}
+    tablemodel *getWtLenTVParams () {return wtLenVarParams->getVarParamTable();}
     float getFirst_mature_age() const;
     void setFirst_mature_age(float value);
 

@@ -107,37 +107,41 @@ private slots:
 private:
     Ui::population_widget *ui;
 
-    tableview *fecundParamsView;
-    tableview *fractionFemView;
-    tableview *hermaphParamsView;
-
     tableview *growthMorphDistView;
     tableview *growthParamsView;
     tableview *growthTVParamsView;
     tableview *cvParamsView;
-    tableview *cvTVParamsView;
-    tableview *seasonParamsView;
-    tableview *seasonTVParamsView;
+//    tableview *cvTVParamsView;
+
+    tableview *recruitDistView;
+    tableview *recruitParamsView;
+    tableview *recruitTVParamsView;
+    tableview *recruitAssignParamsView;
+
     tableview *wtlenParamsView;
     tableview *wtlenTVParamsView;
+
     tableview *maturityParamsView;
-    tableview *mortTVParamsView;
+    tableview *maturityTVParamsView;
 
-    tableview *timeVaryParamsView;
+    tableview *fecundParamsView;
+    tableview *fecundTVParamsView;
+    tableview *fractionFemView;
+    tableview *hermaphParamsView;
 
-    tableview *assignmentView;
-    tableview *recruitDistView;
-    tableview *recruitDevsView;
-    tableview *recruitFullParamsView;
+    tableview *moveDefsView;
+    tableview *moveParamsView;
 
     tableview *mortBreakPtsView;
     tableview *mortAgesView;
     tableview *mortParamsView;
+    tableview *mortTVParamsView;
+
     tableview *mortInputsView;
     tableview *mortInitialParamsView;
 
-    tableview *moveDefsView;
-    tableview *moveParamsView;
+    tableview *seasonParamsView;
+    tableview *seasonTVParamsView;
 
     ss_model *model_data;
     population *pop;
@@ -147,6 +151,7 @@ private:
     ss_growth   *grwth;
     ss_mortality *mort;
 
+//    tableview *timeVaryParamsView;
 };
 
 #endif // POPULATION_WIDGET_H
