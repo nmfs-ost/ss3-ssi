@@ -7,11 +7,7 @@ ss_growth::ss_growth(ss_model *parent)
     parnt = parent;
     num_patterns = 0;
     num_params = 0;
-//    paramtable = new parametermodel();
-//    paramtable->setRowCount(0);
 
-//    hermaphParams = new parametermodel();
-//    hermaphParams->setRowCount(3);
 
     morphdisttable = new tablemodel((QObject *)parnt);
     morphdisttable->setRowCount(1);
@@ -37,19 +33,8 @@ ss_growth::ss_growth(ss_model *parent)
     cohortParam = new longParameterModel((QObject *)parnt);
     cohortParam->setNumParams(1);
     cohortVarParam = new timeVaryParameterModel(parnt);
+    cohortVarParam->setNumParams(1);
 
-    fracFemaleParams = new longParameterModel((QObject *)parnt);
-    fracFemaleParams->setNumParams(1);
-    fracFemaleVarParams = new timeVaryParameterModel(parnt);
-
-    customBlock = -1;
-    blockParams = new longParameterModel((QObject *)parnt);
-    blockParams->setNumParams(0);
-    blockVarParams = new timeVaryParameterModel(parnt);
-    customEnvLink = -1;
-    environmentParams = new longParameterModel((QObject *)parnt);
-    environmentParams->setNumParams(0);
-    environmentVarParams = new timeVaryParameterModel(parnt);
 
     reset();
 }
@@ -67,14 +52,12 @@ ss_growth::~ss_growth()
     delete wtLenVarParams;
     delete cohortParam;
     delete cohortVarParam;
-    delete fracFemaleParams;
-    delete fracFemaleVarParams;
     customEnvLink = -1;
-    delete environmentParams;
-    delete environmentVarParams;
+//    delete environmentParams;
+//    delete environmentVarParams;
     customBlock = -1;
-    delete blockParams;
-    delete blockVarParams;
+//    delete blockParams;
+//    delete blockVarParams;
 }
 
 void ss_growth::reset()
@@ -98,9 +81,8 @@ void ss_growth::reset()
     setTimeVaryMethod(1);
     setTimeVaryReadParams(0);
     cohortParam->setNumParams(1);
-    fracFemaleParams->setNumParams(1);
-    blockParams->setNumParams(0);
-    environmentParams->setNumParams(0);
+//    blockParams->setNumParams(0);
+//    environmentParams->setNumParams(0);
 
     setNum_morphs(1);
     setMorph_within_ratio(1.0);

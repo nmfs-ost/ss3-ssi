@@ -12,8 +12,13 @@ ss_fecundity::ss_fecundity(ss_model *parent)
     hermaphParams->setParamHeader(0, QString("Hermaph_inflect_age"));
     hermaphParams->setParamHeader(1, QString("Hermaph_std_dev"));
     hermaphParams->setParamHeader(2, QString("Hermaph_asymp_rate"));
+    hermaphVarParams = new timeVaryParameterModel(parnt);
+    hermaphVarParams->setNumParams(3);
+
     femaleParams = new longParameterModel((QObject*)parnt);
     femaleParams->setNumParams(4);
+    femaleVarParams = new timeVaryParameterModel(parnt);
+    femaleVarParams->setNumParams(4);
 }
 
 ss_fecundity::~ss_fecundity()
@@ -45,6 +50,12 @@ void ss_fecundity::setHermParam(int index, QStringList data)
         hermaphParams->setNumParams(index + 1);
     hermaphParams->setParameter(index, data);
 }
+
+void ss_fecundity::setHermTVParam(int index, QStringList data)
+{
+    hermaphVarParams->setVarParameter(index, data);
+}
+
 int ss_fecundity::getHermIncludeMales() const
 {
     return hermIncludeMales;
@@ -78,6 +89,11 @@ void ss_fecundity::setFemaleParam(int index, QStringList data)
     if (index >= femaleParams->getNumParams())
         femaleParams->setNumParams(index + 1);
     femaleParams->setParameter(index, data);
+}
+
+void ss_fecundity::setFemaleTVParam(int index, QStringList data)
+{
+    femaleVarParams->setVarParameter(index, data);
 }
 
 

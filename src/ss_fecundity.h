@@ -22,10 +22,16 @@ public:
     void setHermParam (int index, QStringList data);
     QStringList getHermParam(int index) {return hermaphParams->getParameter(index);}
     tablemodel *getHermParams() {return hermaphParams->getParamTable();}
+    void setHermTVParam (int index, QStringList data);
+    QStringList getHermTVParam (int index) {return hermaphVarParams->getVarParameter(index);}
+    tablemodel *getHermTVParams () {return hermaphVarParams->getVarParamTable();}
 
     void setFemaleParam (int index, QStringList data);
     QStringList getFemaleParam(int index) {return femaleParams->getParameter(index);}
     tablemodel *getFemaleParams() {return femaleParams->getParamTable();}
+    void setFemaleTVParam (int index, QStringList data);
+    QStringList getFemaleTVParam(int index) {return femaleVarParams->getVarParameter(index);}
+    tablemodel *getFemaleTVParams() {return femaleVarParams->getVarParamTable();}
 
     int getHermIncludeMales() const;
     void setHermIncludeMales(int value);
@@ -45,7 +51,9 @@ private:
 
     QString pHeader;
     longParameterModel *hermaphParams;
+    timeVaryParameterModel *hermaphVarParams;
     longParameterModel *femaleParams;
+    timeVaryParameterModel *femaleVarParams;
 };
 
 #endif // SS_FECUNDITY_H

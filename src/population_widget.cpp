@@ -369,8 +369,8 @@ void population_widget::refresh()
     maturityParamsView->resizeColumnsToContents();
     setMaturityOpt(pop->Grow()->getMaturity_option());
     ui->lineEdit_maturity_first_age->setText(QString::number(pop->Grow()->getFirst_mature_age()));
-    maturityTVParamsView->setModel(pop->Grow()->getCohortParams());
-    maturityTVParamsView->setHeight(pop->Grow()->getCohortParams());
+    maturityTVParamsView->setModel(pop->Grow()->getCohortTVParams());
+    maturityTVParamsView->setHeight(pop->Grow()->getCohortTVParams());
     maturityTVParamsView->resizeColumnsToContents();
 
     // fecundity
@@ -380,8 +380,8 @@ void population_widget::refresh()
     fecundParamsView->setModel(pop->Fec()->getFemaleParams());
     fecundParamsView->setHeight(pop->Fec()->getFemaleParams());
     fecundParamsView->resizeColumnsToContents();
-    fecundTVParamsView->setModel(pop->Fec()->getFemaleParams());
-    fecundTVParamsView->setHeight(pop->Fec()->getFemaleParams());
+    fecundTVParamsView->setModel(pop->Fec()->getFemaleTVParams());
+    fecundTVParamsView->setHeight(pop->Fec()->getFemaleTVParams());
     fecundTVParamsView->resizeColumnsToContents();
 
     setHermaphOptions(pop->Fec()->getHermaphroditism());

@@ -89,20 +89,12 @@ public:
     void setCohortParam (QStringList data) {cohortParam->setParameter (0, data);}
     QStringList getCohortParam () {return cohortParam->getParameter(0);}
     tablemodel *getCohortParams () {return cohortParam->getParamTable();}
+    void setCohortTVParam (int row, QStringList data) {cohortVarParam->setVarParameter(row, data);}
+    QStringList getCohortTVParam (int row) {return cohortVarParam->getVarParameter(row);}
+    tablemodel *getCohortTVParams () {return cohortVarParam->getVarParamTable();}
 
-    int getNumDevParams();
 
-    int getNumEnvLinkParams() {return environmentParams->getNumParams();}
-    void addEnvironParam (QStringList data) {setEnvironParam(getNumEnvLinkParams(), data);}
-    void setEnvironParam (int index, QStringList data) {environmentParams->setParameter(index, data);}
-    QStringList getEnvironParam(int index) {return environmentParams->getParameter(index);}
-    tablemodel *getEnvironParams() {return environmentParams->getParamTable();}
 
-    int getNumBlockParams() {return blockParams->getNumParams();}
-    void addBlockParam (QStringList data) {setBlockParam(getNumBlockParams(), data);}
-    void setBlockParam (int index, QStringList data) {blockParams->setParameter(index, data);}
-    QStringList getBlockParam(int index) {return blockParams->getParameter(index);}
-    tablemodel *getBlockParams() {return blockParams->getParamTable();}
 
 /*    int getHermaphroditism() const;
     void setHermaphroditism(int value);
@@ -187,7 +179,6 @@ private:
     float first_mature_age;
     longParameterModel *wtLenParams;
     timeVaryParameterModel *wtLenVarParams;
-//    tablemodel *wtLenTVParams;
 
     int param_offset_method;
     int adjustment_method;
@@ -201,24 +192,18 @@ private:
 
     longParameterModel *cohortParam;
     timeVaryParameterModel *cohortVarParam;
-//    parameterModelTV *cohortParam;
-    longParameterModel *fracFemaleParams;
-    timeVaryParameterModel *fracFemaleVarParams;
-//    parameterModelTV *fracfemaleParams;
 
-//    QList<longParameter *> params;
+
     int num_params;
 
     int devPhase;
 
     int customEnvLink;
-    longParameterModel *environmentParams;
-    timeVaryParameterModel *environmentVarParams;
-//    parameterModelTV *environmentParams;
+//    longParameterModel *environmentParams;
+//    timeVaryParameterModel *environmentVarParams;
     int customBlock;
-    longParameterModel *blockParams;
-    timeVaryParameterModel *blockVarParams;
-//    parameterModelTV *blockParams;
+//    longParameterModel *blockParams;
+//    timeVaryParameterModel *blockVarParams;
 
     int timeVaryMethod;
     int timeVaryReadParams;

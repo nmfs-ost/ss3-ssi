@@ -10,23 +10,18 @@ growthPattern::growthPattern(ss_model *parent)
     fracFmParams->setNumParams(1);
     fracFmParams->setParamHeader(0, QString("FracFemale"));
 
-    growthParams = new longParameterModel();//parameterModelTV(parnt);
-//    growthTVParams = new timeVaryParameterModel(parnt);//growthParams->getTimeVaryParams();
+    growthParams = new longParameterModel();
+    growthVarParams = new timeVaryParameterModel(parnt);
 
-    cvParams = new longParameterModel();// parameterModelTV(parnt);
+    cvParams = new longParameterModel();
     cvParams->setNumParams(2);
-//    cvTVParams = new timeVaryParameterModel(parnt);//cvParams->getTimeVaryParams();
 
-    natMrtParams = new longParameterModel();//parameterModelTV(parnt);
-    natMrtParams->setNumParams(1);
-//    natMTVParams = new timeVaryParameterModel(parnt);//natMParams->getTimeVaryParams();
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
+    natMrtParams = new longParameterModel();
+    natMrtParams->setNumParams(1);
+    natMrtVarParams = new timeVaryParameterModel(parnt);
 
-    devParams = new longParameterModel();//parameterModelTV(parnt);
-//    devParams->setColumnCount(7);
-
-//    timeVaryParams = new timeVaryParameterModel(parnt);//new shortParameterModel();
 }
 
 growthPattern::~growthPattern()
@@ -34,14 +29,11 @@ growthPattern::~growthPattern()
     clear();
     delete fracFmParams;
     delete growthParams;
-//    delete growthTVParams;
+    delete growthVarParams;
     delete cvParams;
-//    delete cvTVParams;
     delete natMrtParams;
-//    delete natMTVParams;
+    delete natMrtVarParams;
     delete natMAges;
-    delete devParams;
-//    delete timeVaryParams;
 }
 
 growthPattern::growthPattern (const growthPattern &rhs)
@@ -125,38 +117,13 @@ void growthPattern::setGrowthTVParam(int index, QStringList data)
 {
     growthParams->setParameter(index, data);
 }
-/*
-void growthPattern::setTimeVaryParam(int index, QStringList data)
-{
-    if (index >= timeVaryParams->getParamCount())
-        timeVaryParams->setParamCount(index + 1);
-    timeVaryParams->setParamData(index, data);
-}
 
-void growthPattern::setTimeVaryParamHeader(int index, QString header)
-{
-    if (index >= timeVaryParams->getParamCount())
-        timeVaryParams->setParamCount(index + 1);
-    timeVaryParams->setParamHeader(index, header);
-}
-*/
 void growthPattern::setCVParam(int index, QStringList data)
 {
     if (index >= cvParams->getNumParams())
         cvParams->setNumParams(index + 1);
     cvParams->setParameter(index, data);
 }
-/*
-void growthPattern::setCVTVParam(int index, QStringList data)
-{
-    cvParams->setParamVarData(index, data);
-}*/
 
-void growthPattern::setDevParam(int index, QStringList data)
-{
-    if (index >= devParams->getNumParams())
-        devParams->setNumParams(index + 1);
-    devParams->setParameter(index, data);
-}
 
 
