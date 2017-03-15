@@ -8,7 +8,7 @@
 #define app_version_minor  3
 #define app_version_sub    01
 #define app_version_bugfix 13
-#define app_release_level  "a"  // a - alpha, b - beta, blank - release candidate
+#define app_release_level  "b"  // a - alpha, b - beta, blank - release candidate
 #define app_version_apply ("3.30")
 #define app_copyright_date  __DATE__
 #define app_copyright_org ("NOAA")

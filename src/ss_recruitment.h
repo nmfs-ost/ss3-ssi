@@ -105,21 +105,19 @@ public:
     tablemodel *getAssignments() const;
     void setAssignment(int row, QStringList data);
     QStringList getAssignment(int row);
-    longParameterModel *assignmentParams;
-//    parameterModelTV *assignmentParams;
-    tablemodel *getAssignmentParams () {return assignmentParams->getParamTable();}
-    void setNumAssignmentParams (int num) {assignmentParams->setNumParams(num);}
-    int getNumAssignmentParams () {return assignmentParams->getNumParams();}
-    void addAssignmentParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
-    void setAssignmentParam (int index, QStringList data);
-    QStringList getAssignmentParam(int index) {return assignmentParams->getParameter(index);}
+    longParameterModel *cycleParams;
+    tablemodel *getCycleParams () {return cycleParams->getParamTable();}
+    void setNumCycleParams (int num) {cycleParams->setNumParams(num);}
+    int getNumCycleParams () {return cycleParams->getNumParams();}
+    void addCycleParam (QStringList data) {setInteractParam(getNumInteractParams(), data);}
+    void setCycleParam (int index, QStringList data);
+    QStringList getCycleParam(int index) {return cycleParams->getParameter(index);}
 
 
     recruitDevs *recruitDeviations;
     recruitDevs *getRecruitDevs () {return recruitDeviations;}
 
     longParameterModel *interactParams;
-//    parameterModelTV *interactParams;
     tablemodel *getInteractParams () {return interactParams->getParamTable();}
     void setNumInteractParams (int num) {interactParams->setNumParams(num);}
     int getNumInteractParams () {return interactParams->getNumParams();}
@@ -128,14 +126,13 @@ public:
     QStringList getInteractParam(int index) {return interactParams->getParameter(index);}
 
 
-    longParameterModel *recruitDistParams;
-//    parameterModelTV *recruitDistParams;
-    tablemodel *getRecruitDistParams() {return recruitDistParams->getParamTable();}
-    void setNumRecruitDistParams (int num) {recruitDistParams->setNumParams(num);}
-    int getNumRecruitDistParams () {return recruitDistParams->getNumParams();}
-    void addRecruitDistParam (QStringList data) {setRecruitDistParam(getNumRecruitDistParams(), data);}
-    void setRecruitDistParam (int index, QStringList data);
-    QStringList getRecruitDistParam(int index) {return recruitDistParams->getParameter(index);}
+    longParameterModel *distParams;
+    tablemodel *getDistParams() {return distParams->getParamTable();}
+    void setNumDistParams (int num) {distParams->setNumParams(num);}
+    int getNumDistParams () {return distParams->getNumParams();}
+    void addDistParam (QStringList data) {setDistParam(getNumDistParams(), data);}
+    void setDistParam (int index, QStringList data);
+    QStringList getDistParam(int index) {return distParams->getParameter(index);}
 
     int readtvparams;
     void setTimeVaryReadParams(int flag) {readtvparams = flag;}

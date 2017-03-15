@@ -38,11 +38,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     recruitAssignParamsView->setParent(this);
     ui->horizontalLayout_recr_assigns->addWidget(recruitAssignParamsView);
 
-//    recruitParamsView = new tableview();
-//    recruitParamsView->setParent(this);
     recruitDistView = new tableview();
     recruitDistView->setParent(this);
-    ui->verticalLayout_recr_params->addWidget(recruitDistView);
+    ui->verticalLayout_recr_dist_params->addWidget(recruitDistView);
 
     recruitTVParamsView = new tableview();
     recruitTVParamsView->setParent(this);
@@ -319,8 +317,8 @@ void population_widget::refresh()
     recruitTVParamsView->setHeight(pop->SR()->getRecruitDevs()->getObservations());
     recruitParamsView->setModel(pop->SR()->getFullParameters());
     recruitParamsView->setHeight(pop->SR()->getFullParameters());
-    recruitDistView->setModel(pop->SR()->getAssignmentParams());
-    recruitDistView->setHeight(pop->SR()->getAssignmentParams());
+    recruitDistView->setModel(pop->SR()->getDistParams());
+    recruitDistView->setHeight(pop->SR()->getDistParams());
     recruitDistView->resizeColumnsToContents();
 //    recruitParamsView->setModel(pop->SR()->getSetupModel());
 //    recruitParamsView->setHeight(pop->SR()->getSetupModel());

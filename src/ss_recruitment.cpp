@@ -15,10 +15,10 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     header << "GP" << "seas" << "area" << "Settle_age";
     assignments->setHeader(header);
 
-    assignmentParams = new longParameterModel();// parameterModelTV(parnt);
+    cycleParams = new longParameterModel();// parameterModelTV(parnt);
     interactParams = new longParameterModel();// parameterModelTV(parnt);
-    recruitDistParams = new longParameterModel();// parameterModelTV(parnt);
-    recruitDistParams->setNumParams(2);
+    distParams = new longParameterModel();// parameterModelTV(parnt);
+    distParams->setNumParams(2);
 
     tvParameters = new timeVaryParameterModel (parnt);//full_parameters->getParamVarsModel();//getTimeVaryParams();//new shortParameterModel((QObject *)parnt);
 //    tvParameters->setColumnCount(7);
@@ -53,10 +53,10 @@ spawn_recruit::~spawn_recruit()
 //    delete parameters;
     delete full_parameters;
     delete assignments;
-    delete assignmentParams;
+    delete cycleParams;
     delete recruitDeviations;
     delete interactParams;
-    delete recruitDistParams;
+    delete distParams;
 }
 
 void spawn_recruit::reset()
@@ -139,18 +139,18 @@ void spawn_recruit::setInteractParam(int index, QStringList data)
     interactParams->setParameter(index, data);
 }
 
-void spawn_recruit::setRecruitDistParam(int index, QStringList data)
+void spawn_recruit::setDistParam(int index, QStringList data)
 {
-    if (index >= recruitDistParams->getNumParams())
-        recruitDistParams->setNumParams(index + 1);
-    recruitDistParams->setParameter(index, data);
+    if (index >= distParams->getNumParams())
+        distParams->setNumParams(index + 1);
+    distParams->setParameter(index, data);
 }
 
-void spawn_recruit::setAssignmentParam(int index, QStringList data)
+void spawn_recruit::setCycleParam(int index, QStringList data)
 {
-    if (index >= assignmentParams->getNumParams())
-        assignmentParams->setNumParams(index + 1);
-    assignmentParams->setParameter(index, data);
+    if (index >= cycleParams->getNumParams())
+        cycleParams->setNumParams(index + 1);
+    cycleParams->setParameter(index, data);
 }
 
 void spawn_recruit::setTVParameter(int index, QStringList values)
@@ -245,11 +245,11 @@ void spawn_recruit::fromFile(ss_file *file)
         rec_dev_max = file->get_next_value().toInt();
         num_rec_dev = file->get_next_value().toInt();
 
-        assignmentParams->setNumParams(rec_cycles);
+        cycleParams->setNumParams(rec_cycles);
         for (i = 0; i < rec_cycles; i++)
         {
             datalist = readParameter(file);
-            assignmentParams->setParameter(i, datalist);
+            cycleParams->setParameter(i, datalist);
         }
 
         getRecruitDevs()->setNumRecruitDevs(num_rec_dev);

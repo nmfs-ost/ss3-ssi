@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -509,14 +509,14 @@
               <widget class="QSpinBox" name="spinBox_recr_num_assigns"/>
              </item>
              <item row="12" column="0" colspan="2">
-              <widget class="QLabel" name="label_recr_assigns_params">
+              <widget class="QLabel" name="label_recr_dist_params">
                <property name="text">
-                <string>Assignment Parameters</string>
+                <string>Distribution Parameters</string>
                </property>
               </widget>
              </item>
              <item row="13" column="0" colspan="5">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_assign_params"/>
+              <layout class="QVBoxLayout" name="verticalLayout_recr_dist_params"/>
              </item>
              <item row="7" column="0">
               <widget class="QLabel" name="label_spwn_recr_time_vary_read">
@@ -580,7 +580,7 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="label_recr_dist_params">
+              <widget class="QLabel" name="label_recr_dist_method">
                <property name="text">
                 <string>Distribution method for parameters</string>
                </property>
@@ -610,7 +610,7 @@ recruitment distribution method = 1)</string>
                 <bool>false</bool>
                </property>
                <property name="text">
-                <string>Auto Generate Now</string>
+                <string>Auto Generate</string>
                </property>
               </widget>
              </item>
@@ -1079,7 +1079,7 @@ recruitment distribution method = 1)</string>
                     </widget>
                    </item>
                    <item row="11" column="0" colspan="5">
-                    <layout class="QHBoxLayout" name="horizontalLayout_recr_dev_period_params"/>
+                    <layout class="QHBoxLayout" name="horizontalLayout_recr_period_params"/>
                    </item>
                    <item row="14" column="4">
                     <spacer name="horizontalSpacer_20">
@@ -1138,7 +1138,7 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-94</y>
+            <y>0</y>
             <width>903</width>
             <height>548</height>
            </rect>
