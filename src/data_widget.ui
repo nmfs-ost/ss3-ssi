@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>6</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -1855,10 +1855,34 @@
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <layout class="QGridLayout" name="gridLayout_blocks">
-         <item row="0" column="2" colspan="2">
-          <widget class="QLabel" name="label_blocks_num_patterns">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_block_pattern_num">
            <property name="text">
-            <string>of</string>
+            <string>Block Pattern </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="spinBox_block_pattern_num"/>
+         </item>
+         <item row="1" column="0" colspan="3">
+          <widget class="QLabel" name="label_blocks_per_pattern">
+           <property name="text">
+            <string>Blocks in this pattern</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="3">
+          <widget class="QLabel" name="label_blocks_beg_end_years">
+           <property name="text">
+            <string>Beginning and Ending years
+ for each block</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
            </property>
           </widget>
          </item>
@@ -1875,15 +1899,35 @@
            </property>
           </spacer>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_block_pattern_num">
-           <property name="text">
-            <string>Block Pattern </string>
+         <item row="2" column="3" colspan="4">
+          <layout class="QVBoxLayout" name="verticalLayout_block_years"/>
+         </item>
+         <item row="0" column="4">
+          <widget class="QSpinBox" name="spinBox_block_patterns_total">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::PlusMinus</enum>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QSpinBox" name="spinBox_block_pattern_num"/>
+         <item row="0" column="2" colspan="2">
+          <widget class="QLabel" name="label_blocks_num_patterns">
+           <property name="text">
+            <string>of total patterns</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QSpinBox" name="spinBox_blocks_count">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+          </widget>
          </item>
          <item row="0" column="6">
           <spacer name="horizontalSpacer_blocks1">
@@ -1897,47 +1941,6 @@
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="0" column="4">
-          <widget class="QSpinBox" name="spinBox_block_patterns_total">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::PlusMinus</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="5">
-          <widget class="QSpinBox" name="spinBox_blocks_count">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="5">
-          <widget class="QLabel" name="label_blocks_beg_end_years">
-           <property name="text">
-            <string>Beginning and Ending years
- for each block</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="5">
-          <widget class="QLabel" name="label_blocks_per_pattern">
-           <property name="text">
-            <string>Blocks in this pattern</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="5" colspan="2">
-          <layout class="QVBoxLayout" name="verticalLayout_block_years"/>
          </item>
         </layout>
        </item>

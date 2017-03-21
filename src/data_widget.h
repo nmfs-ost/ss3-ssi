@@ -80,8 +80,10 @@ public slots:
     void setDoTags(bool flag);
     void changeDoTags(bool flag);
     void changeNumTagGrps (int num);
-    void changeBlockPattern(int num);
     void setBlockPattern (int num);
+    void changeNumBlockPatterns (int num);
+    void changeBlockPattern(int num);
+    void changeNumBlocks (int num);
 
     void changeJitter();
     void changeAlkTol();

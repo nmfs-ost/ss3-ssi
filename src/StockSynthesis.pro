@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     fileselector.cpp \
     dialog_yearlyvalues.cpp \
     form_yearvalue.cpp \
-    choose_year_widget.cpp \
     data_widget.cpp \
     control_widget.cpp \
     input_file.cpp \
@@ -43,7 +42,6 @@ SOURCES += main.cpp\
     ss_forecast.cpp \
     fleet_widget.cpp \
     observation_widget.cpp \
-    data_input_dialog.cpp \
     growth.cpp \
     growth_morph.cpp \
     ss_observation.cpp \
@@ -106,7 +104,6 @@ HEADERS  += mainwindow.h \
     fileselector.h \
     dialog_yearlyvalues.h \
     form_yearvalue.h \
-    choose_year_widget.h \
     data_widget.h \
     control_widget.h \
     metadata.h \
@@ -130,7 +127,6 @@ HEADERS  += mainwindow.h \
     ss_forecast.h \
     fleet_widget.h \
     observation_widget.h \
-    data_input_dialog.h \
     growth.h \
     growth_morph.h \
     ss_observation.h \
@@ -195,7 +191,6 @@ FORMS    += mainwindow.ui \
     fileselector.ui \
     dialog_yearlyvalues.ui \
     form_yearvalue.ui \
-    choose_year_widget.ui \
     data_widget.ui \
     control_widget.ui \
     length_bin_data.ui \
@@ -208,7 +203,6 @@ FORMS    += mainwindow.ui \
     dialog_about_admb.ui \
     fleet_widget.ui \
     observation_widget.ui \
-    data_input_dialog.ui \
     dialog_about_nft.ui \
     population_widget.ui \
     composition_widget.ui \

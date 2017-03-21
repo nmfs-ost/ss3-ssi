@@ -40,7 +40,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
 
     model_info = mod;
 
-    setDatafileVersion(3.30, false);  // default version 3.3.0.
+    setDatafileVersion(3.30, false);  // only version 3.3.0.
     ui->label_note_check_value->setVisible(false);
     ui->label_check_value->setVisible(false);
     ui->label_check_value_info->setVisible(false);
@@ -646,7 +646,7 @@ void file_widget::print_files()
 bool file_widget::read_starter_file (QString filename)
 {
     bool okay = true;
-    QString token;// = in_file->get_next_token();
+    QString token;
     float temp_float;
     int temp_int = 0;
 
@@ -879,7 +879,6 @@ void file_widget::write_starter_file (QString filename)
                     QString("N individual STD years "));
 
         chars += starterFile->write_val(QString("#vector of year values "));
-//        chars += starterFile->write_val(model_info->get_std_years_text());
         chars += starterFile->write_vector(model_info->get_std_years(), 6);
 
         chars += starterFile->write_val(model_info->get_convergence_criteria(), 5,
@@ -924,7 +923,7 @@ void file_widget::write_starter_file (QString filename)
         else
         {
             chars += starterFile->write_val(ui->comboBox_MCMC_output->currentIndex(), 5,
-                    QString("MCMC output detail (0=default; 1=enhanced; 2=full; 3=make output subdir for each MCMC vector)"));
+                    QString("MCMC output detail (0=default; 1=obj func components; 2=expanded; 3=make output subdir for each MCMC vector)"));
             chars += starterFile->write_val(model_info->getALKTol(), 5,
                     QString ("ALK tolerance (example 0.0001)"));
             chars += starterFile->write_val(QString::number(datafile_version, 'f', 2), 5,

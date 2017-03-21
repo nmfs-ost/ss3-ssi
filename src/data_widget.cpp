@@ -104,7 +104,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     timeBlocks->setParent(this);
     timeBlocks->setModel(0);
     ui->verticalLayout_block_years->addWidget(timeBlocks);
- //   ui->spinbox_bl
+
     addSdSpecification = new tableview();
     addSdSpecification->setParent(this);
     addSdSpecification->setModel(model_data->getAddSdReporting()->getSpecModel());
@@ -174,7 +174,9 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->lineEdit_morph_min_comp, SIGNAL(editingFinished()), SLOT(changeMorphMincomp()));
     connect (ui->pushButton_morph_obs, SIGNAL(clicked()), SIGNAL(showMorphObs()));
 
+    connect (ui->spinBox_block_patterns_total, SIGNAL(valueChanged(int)), SLOT(changeNumBlockPatterns(int)));
     connect (ui->spinBox_block_pattern_num, SIGNAL(valueChanged(int)), SLOT(changeBlockPattern(int)));
+    connect (ui->spinBox_blocks_count, SIGNAL(valueChanged(int)), SLOT(changeNumBlocks(int)));
 
     ui->spinBox_num_std_yrs->setMaximum(20);
     setNumSdYears(0);
@@ -809,6 +811,12 @@ void data_widget::setBlockPattern(int num)
     }
 }
 
+void data_widget::changeNumBlockPatterns(int num)
+{
+    model_data->setNumBlockPatterns(num);
+    setBlockPattern(num);
+}
+
 void data_widget::changeBlockPattern(int num)
 {
     int numpat = model_data->getNumBlockPatterns();
@@ -829,6 +837,17 @@ void data_widget::changeBlockPattern(int num)
     {
         ui->spinBox_block_patterns_total->setValue(0);
         ui->spinBox_block_pattern_num->setValue(0);
+    }
+}
+
+void data_widget::changeNumBlocks(int num)
+{
+    int bpnum = ui->spinBox_block_pattern_num->value();
+    if (bpnum > 0)
+    {
+        BlockPattern *bp = model_data->getBlockPattern(bpnum - 1);
+        bp->setNumBlocks(num);
+        timeBlocks->setHeight(model_data->getBlockPattern(bpnum-1)->getBlocks());
     }
 }
 

@@ -12,6 +12,10 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.14b
+      2017-03-21
+1. Blocks in data widget are now functional.
+============================================================================
       3.3.13b
       2017-03-15
 1. Revamped the reading of time varying parameters.
