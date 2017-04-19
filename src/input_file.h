@@ -31,6 +31,8 @@ public:
     QString get_next_token();
     QString get_next_token(QString line);
     void return_token (QString tokn);
+    int getNumTokens ();
+    void setNumTokens ();
 
     QString get_line();
     int getLineNum() {return line_num;}
@@ -75,6 +77,7 @@ private:
     int line_num;
     QString *current_line;
     QStringList *current_tokens;
+    int current_line_num_tokens;
 
 protected:
     QStringList *get_line_tokens();

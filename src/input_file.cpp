@@ -157,7 +157,24 @@ QStringList *ss_file::get_line_tokens(QString *line)
     if (current_tokens->count() == 0)
         get_line_tokens();
 
+    setNumTokens();
     return current_tokens;
+}
+
+int ss_file::getNumTokens()
+{
+    return current_line_num_tokens;
+}
+
+void ss_file::setNumTokens()
+{
+    current_line_num_tokens = 0;
+    for (int i = 0; i < current_tokens->count(); i++)
+    {
+        if (QString(current_tokens->at(i)).startsWith('#'))
+            break;
+        current_line_num_tokens++;
+    }
 }
 
 /*QString ss_file::get_next_value()
