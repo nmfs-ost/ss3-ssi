@@ -17,12 +17,12 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui->pushButton_pause->setVisible(false);
     ui->plainTextEdit_output->setCenterOnScroll(true);
 
-    warnview = new Dialog_fileView(this);//("Warning.sso", this);
-    warnview->hide();
-    echoview = new Dialog_fileView(this);
-    echoview->hide();
+    ui->pushButton_run->setEnabled(true);
+    ui->pushButton_pause->setEnabled(false);
+    ui->pushButton_stop->setEnabled(false);
 
     connect (ui->pushButton_changeExe, SIGNAL(clicked()), SLOT(changeExe()));
+    connect (ui->pushButton_options, SIGNAL(clicked()), SLOT(showOptions()));
     connect (ui->pushButton_run, SIGNAL(clicked()), SLOT(startRun()));
     connect (ui->pushButton_pause, SIGNAL(clicked()), SLOT(pauseRun()));
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
@@ -33,15 +33,33 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (ui->pushButton_increase, SIGNAL(clicked()), SLOT(increaseFont()));
     connect (ui->pushButton_decrease, SIGNAL(clicked()), SLOT(decreaseFont()));
 
+    warnview = new Dialog_fileView(this);//("Warning.sso", this);
+    warnview->hide();
+    echoview = new Dialog_fileView(this);
+    echoview->hide();
+
+    nohess = false;
+    shess = false;
+    est = false;
+    noest = false;
+    lprof = false;
+    mcdiag = false;
+    runoptions = new Dialog_runoptions(this);
+    runoptions->hide();
+    connect (runoptions, SIGNAL(doNoHess(bool)), SLOT(setNohess(bool)));
+    connect (runoptions, SIGNAL(doSparseHess(bool)), SLOT(setShess(bool)));
+    connect (runoptions, SIGNAL(doNoEst(bool)), SLOT(setNoest(bool)));
+    connect (runoptions, SIGNAL(doEstOnly(bool)), SLOT(setEst(bool)));
+    connect (runoptions, SIGNAL(doLikeProf(bool)), SLOT(setLprof(bool)));
+    connect (runoptions, SIGNAL(doMCDiag(bool)), SLOT(setMcdiag(bool)));
+    connect (runoptions, SIGNAL(accepted()), SLOT(applyOptions()));
+    connect (runoptions, SIGNAL(rejected()), SLOT(resetOptions()));
+
     stocksynth = new QProcess(this);
     connect (stocksynth, SIGNAL(started()), SLOT(runStarted()));
     connect (stocksynth, SIGNAL(readyReadStandardOutput()), SLOT(stdOutput()));
     connect (stocksynth, SIGNAL(readyReadStandardError()), SLOT(stdError()));
     connect (stocksynth, SIGNAL(finished(int)), SLOT(runCompleted(int)));
-
-    ui->pushButton_run->setEnabled(true);
-    ui->pushButton_pause->setEnabled(false);
-    ui->pushButton_stop->setEnabled(false);
 
     dfont = QFont(fontInfo().family(), fontInfo().pointSize());
     setFontSize(9);
@@ -194,6 +212,45 @@ void Dialog_run::changeExe()
     setExe(filename);
 }
 
+void Dialog_run::showOptions()
+{
+    runoptions->show();
+
+}
+
+void Dialog_run::applyOptions()
+{
+    QString opts("");
+    if (nohess)
+        opts.append(QString("-nohess "));
+
+    if (shess)
+        opts.append(QString("-shess "));
+
+    if (est)
+        opts.append(QString("-est "));
+
+    if (noest)
+        opts.append(QString("-noest "));
+
+    if (lprof)
+        opts.append(QString("-lprof "));
+
+    if (mcdiag)
+        opts.append(QString("-mcdiag "));
+
+    if (opts.isEmpty())
+        resetOptions();
+    else
+        setOptions(opts);
+}
+
+void Dialog_run::resetOptions()
+{
+    QString opts("");
+    ui->lineEdit_options->setText(opts);
+}
+
 void Dialog_run::setExe(QString exe)
 {
     ui->label_executable->setText(exe);
@@ -301,5 +358,35 @@ void Dialog_run::setFontSize(int fsize)
 {
     dfont.setPointSize(fsize);
     setFont(dfont);
+}
+
+void Dialog_run::setMcdiag(bool value)
+{
+    mcdiag = value;
+}
+
+void Dialog_run::setLprof(bool value)
+{
+    lprof = value;
+}
+
+void Dialog_run::setNoest(bool value)
+{
+    noest = value;
+}
+
+void Dialog_run::setEst(bool value)
+{
+    est = value;
+}
+
+void Dialog_run::setShess(bool value)
+{
+    shess = value;
+}
+
+void Dialog_run::setNohess(bool value)
+{
+    nohess = value;
 }
 

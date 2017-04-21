@@ -97,7 +97,8 @@ SOURCES += main.cpp\
     q_ratio.cpp \
     setupmodel.cpp \
     seasonaleffectsmodel.cpp \
-    parametermodel.cpp
+    parametermodel.cpp \
+    dialog_runoptions.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -184,7 +185,8 @@ HEADERS  += mainwindow.h \
     q_ratio.h \
     setupmodel.h \
     seasonaleffectsmodel.h \
-    parametermodel.h
+    parametermodel.h \
+    dialog_runoptions.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -215,7 +217,8 @@ FORMS    += mainwindow.ui \
     newfleetdialog.ui \
     dialog_about_gui.ui \
     documentdialog.ui \
-    fileconversiondialog.ui
+    fileconversiondialog.ui \
+    dialog_runoptions.ui
 
 OTHER_FILES +=
 
