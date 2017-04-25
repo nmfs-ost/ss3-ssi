@@ -814,7 +814,7 @@ void data_widget::setBlockPattern(int num)
 void data_widget::changeNumBlockPatterns(int num)
 {
     model_data->setNumBlockPatterns(num);
-    setBlockPattern(num);
+//    setBlockPattern(num);
 }
 
 void data_widget::changeBlockPattern(int num)

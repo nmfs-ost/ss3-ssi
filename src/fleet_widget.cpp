@@ -295,6 +295,7 @@ void fleet_widget::refresh()
     refreshFleetNames();
 
     ui->spinBox_q_time_vary_read->setValue(model_data->getFleet(0)->getQTimeVaryReadParams());
+    setQTimeVaryReadParams(model_data->getFleet(0)->getQTimeVaryReadParams());
     ui->spinBox_sel_time_vary_read->setValue(model_data->getFleet(0)->getSelTimeVaryReadParams());
 
     ui->comboBox_fleet_name->setCurrentIndex(curr);
@@ -397,6 +398,7 @@ void fleet_widget::set_current_fleet(int index)
         ui->checkBox_q_doEnv->setChecked(current_fleet->q_do_env_lnk());
         ui->checkBox_q_doExtra->setChecked(current_fleet->q_do_extra_sd());
         ui->spinBox_q_type->setValue(current_fleet->q_type());*/
+        ui->spinBox_q_time_vary_read;
         qSetupView->setModel(current_fleet->Q()->getSetupTable());//getQSetup());
         qSetupView->setHeight(current_fleet->Q()->getSetupTable());//getQSetup());
         current_fleet->Q()->setParamHdrs();
@@ -657,6 +659,14 @@ void fleet_widget::setQTimeVaryReadParams(int flag)
 {
     for (int i = 0; i < model_data->get_num_fleets(); i++)
         model_data->getFleet(i)->setQTimeVaryReadParams(flag);
+    if (flag == 0)
+    {
+        qTvParamsView->setEnabled(false);
+    }
+    else
+    {
+        qTvParamsView->setEnabled(true);
+    }
 }
 
 void fleet_widget::changeSelexSizePattern(int pat)
