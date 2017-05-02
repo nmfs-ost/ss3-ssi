@@ -228,6 +228,7 @@ void selectivity::setParameter(int index, QString text)
 void selectivity::setParameter(int index, QStringList strList)
 {
     parameters->setParameter(index, strList);
+    varParameters->setParameter(index, strList);
 //    parameters->changeParamData();
 }
 
@@ -250,6 +251,7 @@ QStringList selectivity::getParameter(int index)
 void selectivity::setParameterLabel(int index, QString label)
 {
     parameters->setParamHeader(index, label);
+    varParameters->setTableTitle(index, label);
 }
 
 QString selectivity::getParameterLabel(int index)

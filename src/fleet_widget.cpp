@@ -394,17 +394,13 @@ void fleet_widget::set_current_fleet(int index)
         recapObsView->resizeColumnsToContents();
         ui->spinBox_obs_rec_numObs->setValue(current_fleet->getRecapNumEvents());
 
-/*        ui->checkBox_q_doPower->setChecked(current_fleet->q_do_power());
-        ui->checkBox_q_doEnv->setChecked(current_fleet->q_do_env_lnk());
-        ui->checkBox_q_doExtra->setChecked(current_fleet->q_do_extra_sd());
-        ui->spinBox_q_type->setValue(current_fleet->q_type());*/
-        ui->spinBox_q_time_vary_read;
-        qSetupView->setModel(current_fleet->Q()->getSetupTable());//getQSetup());
-        qSetupView->setHeight(current_fleet->Q()->getSetupTable());//getQSetup());
+        ui->groupBox_q_setup->setChecked(current_fleet->getQSetupRead());
+        qSetupView->setModel(current_fleet->Q()->getSetupTable());
+        qSetupView->setHeight(current_fleet->Q()->getSetupTable());
         current_fleet->Q()->setParamHdrs();
         qSetupView->resizeColumnsToContents();
-        qParamsView->setModel(current_fleet->Q()->getParamTable());//getQParams());
-        qParamsView->setHeight(current_fleet->Q()->getNumParams());//getQParams());
+        qParamsView->setModel(current_fleet->Q()->getParamTable());
+        qParamsView->setHeight(current_fleet->Q()->getNumParams());
         qParamsView->resizeColumnsToContents();
         qTvParamsView->setModel(current_fleet->Q()->getTVParams());
         qTvParamsView->setHeight(current_fleet->Q()->getNumTVParams());
@@ -633,7 +629,6 @@ void fleet_widget::qSetupChanged()
 {
     current_fleet->qSetupChanged();
     qSetupParamsChanged();
-    qSetupTVParamsChanged();
 }
 
 void fleet_widget::qSetupParamsChanged()
@@ -666,6 +661,22 @@ void fleet_widget::setQTimeVaryReadParams(int flag)
     else
     {
         qTvParamsView->setEnabled(true);
+    }
+}
+
+void fleet_widget::setSelTimeVaryReadParams(int flag)
+{
+    for (int i = 0; i < model_data->get_num_fleets(); i++)
+        model_data->getFleet(i)->setSelTimeVaryReadParams(flag);
+    if (flag == 0)
+    {
+        sizeSelexTimeVaryParamsView->setEnabled(false);
+        ageSelexTimeVaryParamsView->setEnabled(false);
+    }
+    else
+    {
+        sizeSelexTimeVaryParamsView->setEnabled(true);
+        ageSelexTimeVaryParamsView->setEnabled(true);
     }
 }
 
@@ -762,7 +773,20 @@ void fleet_widget::changeSelexSizeSpecial(int spc)
 
 void fleet_widget::sizeSelexParamsChanged()
 {
+    int ht;
+    ht = current_fleet->getSizeSelectivity()->getNumParameters();
+    sizeSelexParamsView->setHeight(ht);
+    sizeSelexParamsView->resizeColumnsToContents();
+}
 
+void fleet_widget::sizeSelexTVParamsChanged()
+{
+    int ht;
+    ht = current_fleet->getSizeSelectivity()->getNumTimeVaryParameters();
+    sizeSelexTimeVaryParamsView->setHeight(ht);
+    sizeSelexTimeVaryParamsView->resizeColumnsToContents();
+    sizeSelexTimeVaryParamsView->setVisible(ht);
+    ui->label_selex_size_timevary_parms->setVisible(ht);
 }
 
 void fleet_widget::ageSelexParamsChanged()
@@ -798,8 +822,11 @@ void fleet_widget::changeSelexAgePattern(int pat)
 
 void fleet_widget::changeSelexAgeMale(int mal)
 {
+    int ht;
     current_fleet->getAgeSelectivity()->setMale(mal);
-    ageSelexMaleView->setHeight(current_fleet->getAgeSelectivity()->getMaleParameterModel()->getNumParams());
+    ht = current_fleet->getAgeSelectivity()->getMaleParameterModel()->getNumParams();
+    ageSelexMaleView->setHeight(ht);
+    ageSelexMaleView->resizeColumnsToContents();
 }
 
 void fleet_widget::changeSelexAgeSpecial(int spc)

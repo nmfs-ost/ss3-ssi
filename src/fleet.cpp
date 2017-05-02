@@ -46,7 +46,8 @@ Fleet::Fleet(ss_model *parent) :
 
     q_read = false;
     q_R = new q_ratio(parent);
-    s_name = new QString("new_fleet");
+    s_name = new QString("");
+    setName(QString("new_fleet"));
     size_selex = new selectivity(parent);
     age_selex = new selectivity(parent);
     reset();

@@ -2679,7 +2679,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
         for (i = 0; i < data->get_num_fleets(); i++)
         {
-            readTimeVaryParams(c_file, data, data->getFleet(i)->Q()->getParamTable(), timevaryread, data->getFleet(i)->Q()->getTVParams());
+            if (data->getFleet(i)->getQSetupRead())
+                readTimeVaryParams(c_file, data, data->getFleet(i)->Q()->getParamTable(), timevaryread, data->getFleet(i)->Q()->getTVParams());
+            data->getFleet(i)->setName(data->getFleet(i)->getName());
 /*            int row = 0;
             num = data->getFleet(i)->Q()->getNumTVParams();
             for (int j = 0; j < num; j++)

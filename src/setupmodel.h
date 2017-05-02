@@ -181,14 +181,16 @@ public slots:
     int getAutoGenerate() const;
     void setAutoGenerate(int value);
 
-    void setNumParams (int tables) {setTotalNumVarParams(tables);}
+    void setNumParams (int tables) {setTotalNumVarTables(tables);}
+    int getNumParams () {return getTotalNumVarTables();}
     void setParameter (int table, QStringList data)
         {changeVarParamData(table, data);}
 
     void setNumVarParams(int rows);
     int getNumVarParams () {return varyParamTable->rowCount();}
 
-    void setTotalNumVarParams (int rows);
+    void setTotalNumVarTables (int rows);
+    int getTotalNumVarTables () {return varyParamDataTables.count();}
     void setVarParamHeaders (QStringList hdr);
 
     void setVarParamsUsed (QList<int> data);
@@ -201,6 +203,7 @@ public slots:
     timeVaryParameterModel *getVarParamModel() {return this;}
 
     void updateVarParams ();
+    void updateVarParamHdrs ();
     void changeVarParamData(int parm, QStringList data);
     void changeVarParamHeader(int parm, QString title);
     void updateVarParamData(QModelIndex tl, QModelIndex br, QVector<int> data);
@@ -218,6 +221,7 @@ public slots:
 
     tablemodel * newVaryParamTable ();
     void setTableTitle (int tbl, QString name);
+    void updateTableParamHdrs (int tbl);
 
 protected:
     ss_model *model_data;

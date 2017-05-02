@@ -69,6 +69,8 @@ public slots:
     void changeSelexSizeMale (int mal);
     void changeSelexSizeSpecial (int spc);
     void sizeSelexParamsChanged();
+    void sizeSelexTVParamsChanged();
+    void setSelTimeVaryReadParams(int flag);
 
     void changeSelexAgePattern(int pat);
     void changeSelexAgeMale (int mal);
