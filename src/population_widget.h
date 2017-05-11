@@ -99,7 +99,7 @@ private slots:
     void changeSpawnRecrSpec(int num);
 
     void changeMoveNumDefs(int value);
-    void defsChanged(QModelIndex tl, QModelIndex br);
+    void moveDefsChanged(QModelIndex tl, QModelIndex br);
     void setMoveParamTitles();
     void setMoveParamTitle(int def);
     void changeMoveFirstAge();
@@ -117,6 +117,8 @@ private:
     tableview *recruitParamsView;
     tableview *recruitTVParamsView;
     tableview *recruitAssignParamsView;
+    tableview *recruitCyclesParamsView;
+    tableview *recruitDevsView;
 
     tableview *wtlenParamsView;
     tableview *wtlenTVParamsView;

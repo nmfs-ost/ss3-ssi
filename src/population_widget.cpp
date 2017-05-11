@@ -44,11 +44,19 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
     recruitTVParamsView = new tableview();
     recruitTVParamsView->setParent(this);
-    ui->verticalLayout_recr_devs->addWidget(recruitTVParamsView);
+    ui->verticalLayout_recr_time_vary_params->addWidget(recruitTVParamsView);
 
     recruitParamsView = new tableview();
     recruitParamsView->setParent(this);
     ui->verticalLayout_recr_params->addWidget(recruitParamsView);
+
+    recruitCyclesParamsView = new tableview();
+    recruitCyclesParamsView->setParent(this);
+    ui->horizontalLayout_recr_period_params->addWidget(recruitCyclesParamsView);
+
+    recruitDevsView = new tableview();
+    recruitDevsView->setParent(this);
+    ui->verticalLayout_recr_devs->addWidget(recruitDevsView);
 
     setRecrArea(2);
     connect (ui->radioButton_area, SIGNAL(clicked()), SLOT(changeRecrArea()));
@@ -202,30 +210,17 @@ void population_widget::set_model(ss_model *model)
     {
         if (model_data != NULL)
         {
-/*            disconnect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen1(bool)));
-            disconnect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen2(bool)));
-            disconnect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(setFecund1(bool)));
-            disconnect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(setFecund2(bool)));
-            disconnect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(setMaturity1(bool)));
-            disconnect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(setMaturity2(bool)));
-            disconnect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen1(bool)));
-            disconnect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen2(bool)));
-            disconnect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(setL1(bool)));
-            disconnect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(setK(bool)));*/
+/*            disconnect (pop->Move()->getMovementDefs(),
+                        SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                        SLOT(moveDefsChanged(QModelIndex,QModelIndex)));
+*/
         }
         model_data = model;
         pop = model_data->pPopulation;
-        connect (pop->Move()->getMovementDefs(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(defsChanged(QModelIndex,QModelIndex)));
-/*        connect (ui->checkBox_seas_femWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen1(bool)));
-        connect (ui->checkBox_seas_femWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setFemWtLen2(bool)));
-        connect (ui->checkBox_seas_fecundity1, SIGNAL(toggled(bool)), pop, SLOT(setFecund1(bool)));
-        connect (ui->checkBox_seas_fecundity2, SIGNAL(toggled(bool)), pop, SLOT(setFecund2(bool)));
-        connect (ui->checkBox_seas_maturity1, SIGNAL(toggled(bool)), pop, SLOT(setMaturity1(bool)));
-        connect (ui->checkBox_seas_maturity2, SIGNAL(toggled(bool)), pop, SLOT(setMaturity2(bool)));
-        connect (ui->checkBox_seas_maleWtLen1, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen1(bool)));
-        connect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), pop, SLOT(setMaleWtLen2(bool)));
-        connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), pop, SLOT(setL1(bool)));
-        connect (ui->checkBox_seas_K, SIGNAL(toggled(bool)), pop, SLOT(setK(bool)));*/
+        connect (pop->Move()->getMovementDefs(),
+                 SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                 SLOT(moveDefsChanged(QModelIndex,QModelIndex)));
+
         reset();
         refresh();
     }
@@ -241,8 +236,8 @@ void population_widget::changeGrowthPattern (int num)
     growthParamsView->resizeColumnsToContents();
     growthTVParamsView->setModel(gp->getGrowthTVParams());
     numparms = gp->getGrowthTVParams()->rowCount();
-    ui->label_growth_time_vary_params->setVisible(numparms);
-    growthTVParamsView->setVisible(numparms);
+//    ui->label_growth_time_vary_params->setVisible(numparms);
+//    growthTVParamsView->setEnabled(numparms);
     growthTVParamsView->setHeight(numparms);
     growthTVParamsView->resizeColumnsToContents();
     cvParamsView->setModel(gp->getCVParams());
@@ -313,13 +308,19 @@ void population_widget::refresh()
     // recruitment
     recruitAssignParamsView->setModel(pop->SR()->getAssignments());
     recruitAssignParamsView->setHeight(pop->SR()->getAssignments());
-    recruitTVParamsView->setModel(pop->SR()->getRecruitDevs()->getObservations());
-    recruitTVParamsView->setHeight(pop->SR()->getRecruitDevs()->getObservations());
+    recruitTVParamsView->setModel(pop->SR()->getTimeVaryParams());
+    recruitTVParamsView->setHeight(pop->SR()->getTimeVaryParams());
     recruitParamsView->setModel(pop->SR()->getFullParameters());
     recruitParamsView->setHeight(pop->SR()->getFullParameters());
     recruitDistView->setModel(pop->SR()->getDistParams());
     recruitDistView->setHeight(pop->SR()->getDistParams());
     recruitDistView->resizeColumnsToContents();
+    recruitCyclesParamsView->setModel(pop->SR()->getCycleParams());
+    recruitCyclesParamsView->setHeight(pop->SR()->getCycleParams());
+    recruitCyclesParamsView->resizeColumnsToContents();
+    recruitDevsView->setModel(pop->SR()->getRecruitDevTable());
+    recruitDevsView->setHeight(pop->SR()->getRecruitDevTable());
+    recruitDevsView->resizeColumnsToContents();
 //    recruitParamsView->setModel(pop->SR()->getSetupModel());
 //    recruitParamsView->setHeight(pop->SR()->getSetupModel());
 //    recruitParamsView->resizeColumnsToContents();
@@ -328,27 +329,27 @@ void population_widget::refresh()
     setRecrDistParam(pop->SR()->getDistribMethod());
     ui->checkBox_recr_interaction->setChecked(pop->SR()->getDoRecruitInteract());
     ui->spinBox_recr_num_assigns->setValue(pop->SR()->getNumAssignments());
-    setSpawnRecrSpec(pop->SR()->method);
+    setSpawnRecrSpec(pop->SR()->getMethod());
 
-    ui->spinBox_sr_recr_dev_begin_yr->setValue(pop->SR()->rec_dev_start_yr);
-    ui->spinBox_sr_recr_dev_phase->setValue(pop->SR()->rec_dev_phase);
-    ui->spinBox_sr_recr_dev_end_yr->setValue(pop->SR()->rec_dev_end_yr);
+    ui->spinBox_sr_recr_dev_begin_yr->setValue(pop->SR()->getRecDevStartYr());
+    ui->spinBox_sr_recr_dev_phase->setValue(pop->SR()->getRecDevPhase());
+    ui->spinBox_sr_recr_dev_end_yr->setValue(pop->SR()->getRecDevEndYr());
 //    ui->checkBox_recr_dev_adv_opt->setChecked(pop->SR()->advanced_opts);
-    ui->groupBox_recr_dev_adv_opt->setChecked(pop->SR()->advanced_opts);
-    ui->spinBox_recr_dev_early_start->setValue(pop->SR()->rec_dev_early_start);
-    ui->spinBox_recr_dev_early_phase->setValue(pop->SR()->rec_dev_early_phase);
-    ui->spinBox_recr_dev_fcast_phase->setValue(pop->SR()->fcast_rec_phase);
-    ui->lineEdit_recr_dev_fcast_lambda->setText(QString::number(pop->SR()->fcast_lambda));
-    ui->spinBox_recr_dev_last_nobias->setValue(pop->SR()->nobias_last_early_yr);
-    ui->spinBox_recr_dev_first_bias->setValue(pop->SR()->fullbias_first_yr);
-    ui->spinBox_recr_dev_last_bias->setValue(pop->SR()->fullbias_last_yr);
-    ui->spinBox_recr_dev_first_nobias->setValue(pop->SR()->nobias_first_recent_yr);
-    ui->lineEdit_recr_dev_max_bias->setText(QString::number(pop->SR()->max_bias_adjust));
-    ui->spinBox_recr_dev_cycles->setValue(pop->SR()->rec_cycles);
-    ui->lineEdit_recr_dev_min_dev->setText(QString::number(pop->SR()->rec_dev_min));
-    ui->lineEdit_recr_dev_max_dev->setText(QString::number(pop->SR()->rec_dev_max));
-    ui->spinBox_num_recr_devs->setValue(pop->SR()->getRecruitDevs()->getNumObs());
-    changeNumRecrDevs(pop->SR()->getRecruitDevs()->getNumObs());
+    ui->groupBox_recr_dev_adv_opt->setChecked(pop->SR()->getAdvancedOpts());
+    ui->spinBox_recr_dev_early_start->setValue(pop->SR()->getRecDevEarlyStart());
+    ui->spinBox_recr_dev_early_phase->setValue(pop->SR()->getRecDevEarlyPhase());
+    ui->spinBox_recr_dev_fcast_phase->setValue(pop->SR()->getFcastRecPhase());
+    ui->lineEdit_recr_dev_fcast_lambda->setText(QString::number(pop->SR()->getFcastLambda()));
+    ui->spinBox_recr_dev_last_nobias->setValue(pop->SR()->getNobiasLastEarlyYr());
+    ui->spinBox_recr_dev_first_bias->setValue(pop->SR()->getFullbiasFirstYr());
+    ui->spinBox_recr_dev_last_bias->setValue(pop->SR()->getFullbiasLastYr());
+    ui->spinBox_recr_dev_first_nobias->setValue(pop->SR()->getNobiasFirstRecentYr());
+    ui->lineEdit_recr_dev_max_bias->setText(QString::number(pop->SR()->getMaxBiasAdjust()));
+    ui->spinBox_recr_dev_cycles->setValue(pop->SR()->getRecCycles());
+    ui->lineEdit_recr_dev_min_dev->setText(QString::number(pop->SR()->getRecDevMin()));
+    ui->lineEdit_recr_dev_max_dev->setText(QString::number(pop->SR()->getRecDevMax()));
+    ui->spinBox_num_recr_devs->setValue(pop->SR()->getNumRecDev());
+    changeNumRecrDevs(pop->SR()->getNumRecDev());
     ui->spinBox_spwn_recr_time_vary_read->setValue(pop->SR()->getTimeVaryReadParams());
 
     // Maturity
@@ -608,7 +609,7 @@ void population_widget::changeNumSubMorph(int num)
         if (num > 1)
         {
             value = pop->Grow()->getMorph_within_ratio();
-            if (value = 1.0)
+            if (value == 1.0)
             {
                 between = .000001;
                 within = 1.0;
@@ -729,11 +730,11 @@ void population_widget::changeGrowthTimeVaryRead(int flag)
 {
     bool vis = (flag != 0);
     grwth->setTimeVaryReadParams(flag);
-    ui->label_growth_time_vary_params->setVisible(vis);
-    growthTVParamsView->setVisible(vis);
-    ui->label_wt_len_time_vary_params->setVisible(vis);
-    wtlenTVParamsView->setVisible(vis);
-    ui->label_maturity_time_vary_params->setVisible(vis);
+//    ui->label_growth_time_vary_params->setVisible(vis);
+    growthTVParamsView->setEnabled(vis);
+//    ui->label_wt_len_time_vary_params->setVisible(vis);
+    wtlenTVParamsView->setEnabled(vis);
+//    ui->label_maturity_time_vary_params->setVisible(vis);
 
     ui->label_fec_time_vary_params->setVisible(vis);
 }
@@ -784,15 +785,16 @@ void population_widget::changeHermaphMales(int opt)
 
 void population_widget::changeNumRecrDevs(int num)
 {
-    pop->SR()->recruitDeviations->setNumRecruitDevs(num);
-    recruitTVParamsView->setHeight(num);
+    pop->SR()->setNumRecDev(num);
+    recruitDevsView->setHeight(num);
 }
 
 void population_widget::changeSpwnRecReadTimeVary(int flag)
 {
     bool vis = (flag != 0);
     spwn_rcr->setTimeVaryReadParams(flag);
-    ui->label_recr_time_vary_params->setVisible(vis);
+//    ui->label_recr_time_vary_params->setVisible(vis);
+    recruitTVParamsView->setEnabled(vis);
 }
 
 void population_widget::setMaturityOpt(int opt)
@@ -907,10 +909,10 @@ void population_widget::setSpawnRecrSpec(int spec)
 void population_widget::changeSpawnRecrSpec(int num)
 {
     int mthd = num + 1;
-    int old_mthd = pop->SR()->method;
+    int old_mthd = pop->SR()->getMethod();
     if (mthd != old_mthd)
     {
-        pop->SR()->method = mthd;
+        pop->SR()->setMethod(mthd);
         switch (mthd)
         {
         case 1:
@@ -936,7 +938,7 @@ void population_widget::changeSpawnRecrSpec(int num)
             break;
         }
     }
-    recruitParamsView->setHeight(pop->SR()->full_parameters->getNumParams());
+    recruitParamsView->setHeight(pop->SR()->getFullParameters());
 }
 
 void population_widget::changeMoveNumDefs(int value)
@@ -948,7 +950,7 @@ void population_widget::changeMoveNumDefs(int value)
     setMoveParamTitles();
 }
 
-void population_widget::defsChanged(QModelIndex tl, QModelIndex br)
+void population_widget::moveDefsChanged(QModelIndex tl, QModelIndex br)
 {
     int r1 = tl.row();
     int r2 = br.row();

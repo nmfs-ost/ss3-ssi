@@ -2521,43 +2521,42 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         readTimeVaryParams(c_file, data, pop->SR()->getFullParameters(), timevaryread, pop->SR()->getTVParameterModel()->getVarParamTable());
 
         // Recruitment deviations
-        pop->SR()->rec_dev = c_file->get_next_value().toInt();
-        pop->SR()->rec_dev_start_yr = c_file->get_next_value().toInt();
-        pop->SR()->rec_dev_end_yr = c_file->get_next_value().toInt();
-        pop->SR()->rec_dev_phase = c_file->get_next_value().toInt();
+        pop->SR()->setRecDevCode(c_file->get_next_value().toInt());
+        pop->SR()->setRecDevStartYr(c_file->get_next_value().toInt());
+        pop->SR()->setRecDevEndYr(c_file->get_next_value().toInt());
+        pop->SR()->setRecDevPhase(c_file->get_next_value().toInt());
 
         // SR advanced opts
-        pop->SR()->advanced_opts = (c_file->get_next_value().compare("0") != 0);
-        if (pop->SR()->advanced_opts)
+        pop->SR()->setAdvancedOpts(c_file->get_next_value().compare("0") != 0);
+        if (pop->SR()->getAdvancedOpts())
         {
-            pop->SR()->rec_dev_early_start = c_file->get_next_value().toInt();
-            pop->SR()->rec_dev_early_phase = c_file->get_next_value().toInt();
-            pop->SR()->fcast_rec_phase = c_file->get_next_value().toInt();
-            pop->SR()->fcast_lambda = c_file->get_next_value().toFloat();
-            pop->SR()->nobias_last_early_yr = c_file->get_next_value().toInt();
-            pop->SR()->fullbias_first_yr = c_file->get_next_value().toInt();
-            pop->SR()->fullbias_last_yr = c_file->get_next_value().toInt();
-            pop->SR()->nobias_first_recent_yr = c_file->get_next_value().toInt();
-            pop->SR()->max_bias_adjust = c_file->get_next_value().toFloat();
-            pop->SR()->rec_cycles = c_file->get_next_value().toInt();
-            pop->SR()->rec_dev_min = c_file->get_next_value().toInt();
-            pop->SR()->rec_dev_max = c_file->get_next_value().toInt();
-            pop->SR()->num_rec_dev = c_file->get_next_value().toInt();
+            pop->SR()->setRecDevEarlyStart(c_file->get_next_value().toInt());
+            pop->SR()->setRecDevEarlyPhase(c_file->get_next_value().toInt());
+            pop->SR()->setFcastRecPhase(c_file->get_next_value().toInt());
+            pop->SR()->setFcastLambda(c_file->get_next_value().toFloat());
+            pop->SR()->setNobiasLastEarlyYr(c_file->get_next_value().toInt());
+            pop->SR()->setFullbiasFirstYr(c_file->get_next_value().toInt());
+            pop->SR()->setFullbiasLastYr(c_file->get_next_value().toInt());
+            pop->SR()->setNobiasFirstRecentYr(c_file->get_next_value().toInt());
+            pop->SR()->setMaxBiasAdjust(c_file->get_next_value().toFloat());
+            pop->SR()->setRecCycles(c_file->get_next_value().toInt());
+            pop->SR()->setRecDevMin(c_file->get_next_value().toInt());
+            pop->SR()->setRecDevMax(c_file->get_next_value().toInt());
+            pop->SR()->setNumRecDev(c_file->get_next_value().toInt());
 
-            pop->SR()->setNumCycleParams(pop->SR()->rec_cycles);
-            for (i = 0; i < pop->SR()->rec_cycles; i++)
+            pop->SR()->setNumCycleParams(pop->SR()->getRecCycles());
+            for (i = 0; i < pop->SR()->getRecCycles(); i++)
             {
                 datalist = readParameter(c_file);
                 pop->SR()->setCycleParam(i, datalist);
             }
 
-            pop->SR()->getRecruitDevs()->setNumRecruitDevs(pop->SR()->num_rec_dev);
-            for (i = 0; i < pop->SR()->num_rec_dev; i++)
+            for (i = 0; i < pop->SR()->getNumRecDev(); i++)
             {
                 datalist.clear();
                 datalist.append(c_file->get_next_value());
                 datalist.append(c_file->get_next_value());
-                pop->SR()->getRecruitDevs()->setRecruitDev(i, datalist);
+                pop->SR()->setRecruitDev(i, datalist);
             }
         }
 
@@ -2680,32 +2679,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->getQSetupRead())
-                readTimeVaryParams(c_file, data, data->getFleet(i)->Q()->getParamTable(), timevaryread, data->getFleet(i)->Q()->getTVParams());
+                readTimeVaryParams(c_file, data,
+                           data->getFleet(i)->Q()->getParamTable(),
+                           timevaryread, data->getFleet(i)->Q()->getTVParams());
             data->getFleet(i)->setName(data->getFleet(i)->getName());
-/*            int row = 0;
-            num = data->getFleet(i)->Q()->getNumTVParams();
-            for (int j = 0; j < num; j++)
-            {
-                datalist = readShortParameter(c_file);
-                data->getFleet(i)->Q()->setTVParam(j, datalist);*/
-/*                if (data->getFleet(i)->Q()->useBlks(j))
-                {
-                    datalist = readShortParameter(c_file);
-                    data->getFleet(i)->Q()->setParamVarData(row++, datalist);
-                }
-                if (data->getFleet(i)->Q()->useDevs(j))
-                {
-                    datalist = readShortParameter(c_file);
-                    data->getFleet(i)->Q()->setParamVarData(row++, datalist);
-                    datalist = readShortParameter(c_file);
-                    data->getFleet(i)->Q()->setParamVarData(row++, datalist);
-                }
-                if (data->getFleet(i)->Q()->useEnvVar(j))
-                {
-                    datalist = readShortParameter(c_file);
-                    data->getFleet(i)->Q()->setParamVarData(row++, datalist);
-                }*/
-//            }
         }
         }
 
@@ -3700,7 +3677,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString("#_Spawner-Recruitment");
         chars += c_file->writeline(line);
         line = QString(QString("%1 #_SR_function").arg(
-                           QString::number(pop->SR()->method)));
+                           QString::number(pop->SR()->getMethod())));
         line.append(": 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm");
         chars += c_file->writeline(line);
         line = QString(QString("%1 # 0/1 to use steepness in initial equ recruitment calculation").arg(
@@ -3773,61 +3750,61 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);*/
 
         line = QString(QString ("%1 #_do_recdev:  0=none; 1=devvector; 2=simple deviations").arg(
-                           QString::number(pop->SR()->rec_dev)));
+                           QString::number(pop->SR()->getRecDevCode())));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # first year of main recr_devs; early devs can preceed this era").arg(
-                           QString::number(pop->SR()->rec_dev_start_yr)));
+                           QString::number(pop->SR()->getRecDevStartYr())));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # last year of main recr_devs; forecast devs start in following year").arg(
-                           QString::number(pop->SR()->rec_dev_end_yr)));
+                           QString::number(pop->SR()->getRecDevEndYr())));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 #_recdev phase ").arg(
-                           QString::number(pop->SR()->rec_dev_phase)));
+                           QString::number(pop->SR()->getRecDevPhase())));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # (0/1) to read 13 advanced options").arg(
-                           pop->SR()->advanced_opts? "1":"0"));
+                           pop->SR()->getAdvancedOpts()? "1":"0"));
         chars += c_file->writeline(line);
 
-        if (pop->SR()->advanced_opts)
+        if (pop->SR()->getAdvancedOpts())
         {
             line = QString(QString (" %1 #_recdev_early_start (0=none; neg value makes relative to recdev_start)").arg(
-                               QString::number(pop->SR()->rec_dev_early_start)));
+                               QString::number(pop->SR()->getRecDevEarlyStart())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_recdev_early_phase").arg(
-                               QString::number(pop->SR()->rec_dev_early_phase)));
+                               QString::number(pop->SR()->getRecDevEarlyPhase())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_forecast_recruitment phase (incl. late recr) (0 value resets to maxphase+1)").arg(
-                               QString::number(pop->SR()->fcast_rec_phase)));
+                               QString::number(pop->SR()->getFcastRecPhase())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_lambda for Fcast_recr_like occurring before endyr+1").arg(
-                               QString::number(pop->SR()->fcast_lambda)));
+                               QString::number(pop->SR()->getFcastLambda())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_last_early_yr_nobias_adj_in_MPD").arg(
-                               QString::number(pop->SR()->nobias_last_early_yr)));
+                               QString::number(pop->SR()->getNobiasLastEarlyYr())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_first_yr_fullbias_adj_in_MPD").arg(
-                               QString::number(pop->SR()->fullbias_first_yr)));
+                               QString::number(pop->SR()->getFullbiasFirstYr())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_last_yr_fullbias_adj_in_MPD").arg(
-                               QString::number(pop->SR()->fullbias_last_yr)));
+                               QString::number(pop->SR()->getFullbiasLastYr())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_first_recent_yr_nobias_adj_in_MPD").arg(
-                               QString::number(pop->SR()->nobias_first_recent_yr)));
+                               QString::number(pop->SR()->getNobiasFirstRecentYr())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_max_bias_adj_in_MPD (-1 to override ramp and set biasadj=1.0 for all estimated recdevs)").arg(
-                               QString::number(pop->SR()->max_bias_adjust)));
+                               QString::number(pop->SR()->getMaxBiasAdjust())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_period of cycles in recruitment (N parms read below)").arg(
-                               QString::number(pop->SR()->rec_cycles)));
+                               QString::number(pop->SR()->getRecCycles())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_min rec_dev").arg(
-                               QString::number(pop->SR()->rec_dev_min)));
+                               QString::number(pop->SR()->getRecDevMin())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_max rec_dev").arg(
-                               QString::number(pop->SR()->rec_dev_max)));
+                               QString::number(pop->SR()->getRecDevMax())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_read recdevs").arg(
-                               QString::number(pop->SR()->num_rec_dev)));
+                               QString::number(pop->SR()->getNumRecDev())));
             chars += c_file->writeline(line);
             line = QString(QString ("#_end of advanced SR options"));
             chars += c_file->writeline(line);
@@ -3835,14 +3812,14 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString("#");
         chars += c_file->writeline(line);
 
-        if (pop->SR()->rec_cycles == 0)
+        if (pop->SR()->getRecCycles() == 0)
         {
             line = QString("#_placeholder for full parameter lines for recruitment cycles");
             chars += c_file->writeline(line);
         }
         else
         {
-            for (i = 0; i < pop->SR()->rec_cycles; i++)
+            for (i = 0; i < pop->SR()->getRecCycles(); i++)
             {
                 line.clear();
                 str_list = pop->SR()->getCycleParam(i);
@@ -3857,7 +3834,12 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#_Yr Input_value");
         chars += c_file->writeline(line);
-        for (std::map<int,float>::iterator itr = pop->SR()->yearly_devs.begin(); itr != pop->SR()->yearly_devs.end(); itr++)
+        for (i = 0; i < pop->SR()->getNumRecDev(); i++)
+        {
+            str_list = pop->SR()->getRecruitDev(i);
+            chars += c_file->write_vector(str_list, 4);
+        }
+/*        for (std::map<int,float>::iterator itr = pop->SR()->yearly_devs.begin(); itr != pop->SR()->yearly_devs.end(); itr++)
         {
             line.clear();
             temp_int = itr->first;
@@ -3866,7 +3848,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                                QString::number(temp_int),
                                QString::number(temp_float)));
             chars += c_file->writeline(line);
-        }
+        }*/
         line = QString("#");
         chars += c_file->writeline(line);
         c_file->newline();
@@ -4022,7 +4004,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#_      LO        HI      INIT     PRIOR   PR_SD  PR_type      PHASE");
         chars += c_file->writeline(line);
-        if (data->getFleet(0)->getQTimeVaryReadParams())
+        if (data->getFleet(0)->getQTimeVaryReadParams() > 0)
         {
         for (i = 0; i < data->get_num_fleets(); i++)
         {
@@ -4030,7 +4012,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             int num = tvParams->rowCount();
             for (int j = 0; j < num; j++)
             {
-                c_file->write_vector(tvParams->getRowData(j), 4, tvParams->getRowHeader(j));
+                chars += c_file->write_vector(tvParams->getRowData(j), 4, tvParams->getRowHeader(j));
             }
         }
         }
@@ -4462,8 +4444,7 @@ void readTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *paramTable
             header = paramTable->getRowHeader(i);
             value = param.at(0).toInt();
 
-            if (varRead == 1 ||
-                (value == -12345 && varRead == 2))
+            if (varRead > 0)
             {
                 // read time varying parameters
                 // blocks

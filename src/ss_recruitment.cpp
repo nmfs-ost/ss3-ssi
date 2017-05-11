@@ -9,6 +9,8 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     full_parameters = new longParameterModel();// parameterModelTV(parnt);
     full_parameters->setNumParams(5);
 
+    tvParameters = new timeVaryParameterModel (parnt);//full_parameters->getParamVarsModel();//getTimeVaryParams();//new shortParameterModel((QObject *)parnt);
+
     assignments = new tablemodel();
     assignments->setColumnCount(4);
     assignments->setRowCount(0);
@@ -20,7 +22,10 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     distParams = new longParameterModel();// parameterModelTV(parnt);
     distParams->setNumParams(2);
 
-    tvParameters = new timeVaryParameterModel (parnt);//full_parameters->getParamVarsModel();//getTimeVaryParams();//new shortParameterModel((QObject *)parnt);
+    header.clear();
+    header << "Year" << "Input_value";
+    recruitDevs = new tablemodel();
+    recruitDevs->setHeader(header);
 //    tvParameters->setColumnCount(7);
 
     reset();
@@ -45,7 +50,6 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     rec_dev_min = -5;
     rec_dev_max = 5;
     num_rec_dev = 0;*/
-    recruitDeviations = new recruitDevs();
 }
 
 spawn_recruit::~spawn_recruit()
@@ -54,7 +58,7 @@ spawn_recruit::~spawn_recruit()
     delete full_parameters;
     delete assignments;
     delete cycleParams;
-    delete recruitDeviations;
+    delete recruitDevs;
     delete interactParams;
     delete distParams;
 }
@@ -66,7 +70,7 @@ void spawn_recruit::reset()
     method = 3;
     env_link = 0;
     env_target = 0;
-    rec_dev = 1;
+    rec_dev_code = 1;
     rec_dev_start_yr = 1980;
     rec_dev_end_yr = 2009;
     rec_dev_phase = -3;
@@ -80,10 +84,12 @@ void spawn_recruit::reset()
     fullbias_last_yr = 2010;
     nobias_first_recent_yr = 2011;
     max_bias_adjust = 0;
-    rec_cycles = 0;
+    setNumCycleParams(0);
+//    rec_cycles = 0;
     rec_dev_min = -5;
     rec_dev_max = 5;
-    num_rec_dev = 0;
+    setNumRecDev(0);
+//    num_rec_dev = 0;
     use_steepness = 0;
 }
 
@@ -160,210 +166,186 @@ void spawn_recruit::setTVParameter(int index, QStringList values)
     tvParameters->setVarParameter(index, values);
 }
 
-void spawn_recruit::fromFile(ss_file *file)
+int spawn_recruit::getRecDevStartYr() const
 {
-    QString token('#'), temp_str;
-    QStringList datalist;
-    int i;
-    
-    method = file->get_next_value().toInt();
-    i = 0;
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_LN(R0)");
-    }
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_BH_flat_steep");
-    }
-    if (method == 5 ||
-            method == 7 ||
-            method == 8)
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0");
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_3rd_PARM");
-    }
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_sigmaR");
-    }
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_nullparm");
-    }
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_R1_offset");
-    }
-    {
-        datalist = readShortParameter(file);
-        for (int j = 0; j < 7; j++)
-            datalist.append("0"); // to fill out long parameter line
-        full_parameters->setParameter(i, datalist);
-        full_parameters->setParamHeader(i++, "SR_autocorr");
-    }
-
-    env_link = file->get_next_value().toFloat();
-    env_target = file->get_next_value().toInt();
-    rec_dev = file->get_next_value().toInt();
-    rec_dev_start_yr = file->get_next_value().toInt();
-    rec_dev_end_yr = file->get_next_value().toInt();
-    rec_dev_phase = file->get_next_value().toInt();
-    advanced_opts = (file->get_next_value().compare("0") != 0);
-
-    if (advanced_opts)
-    {
-        rec_dev_early_start = file->get_next_value().toInt();
-        rec_dev_early_phase = file->get_next_value().toInt();
-        fcast_rec_phase = file->get_next_value().toInt();
-        fcast_lambda = file->get_next_value().toFloat();
-        nobias_last_early_yr = file->get_next_value().toInt();
-        fullbias_first_yr = file->get_next_value().toInt();
-        fullbias_last_yr = file->get_next_value().toInt();
-        nobias_first_recent_yr = file->get_next_value().toInt();
-        max_bias_adjust = file->get_next_value().toFloat();
-        rec_cycles = file->get_next_value().toInt();
-        rec_dev_min = file->get_next_value().toInt();
-        rec_dev_max = file->get_next_value().toInt();
-        num_rec_dev = file->get_next_value().toInt();
-
-        cycleParams->setNumParams(rec_cycles);
-        for (i = 0; i < rec_cycles; i++)
-        {
-            datalist = readParameter(file);
-            cycleParams->setParameter(i, datalist);
-        }
-
-        getRecruitDevs()->setNumRecruitDevs(num_rec_dev);
-        for (i = 0; i < num_rec_dev; i++)
-        {
-            datalist.clear();
-            datalist.append(file->get_next_value());
-            datalist.append(file->get_next_value());
-            getRecruitDevs()->setRecruitDev(i, datalist);
-/*            temp_int = file->next_value().toInt();
-            temp_float = file->next_value().toFloat();
-            yearly_devs[temp_int] = temp_float;*/
-        }
-    }
+    return rec_dev_start_yr;
 }
 
-QString spawn_recruit::toText()
+void spawn_recruit::setRecDevStartYr(int value)
 {
-    int i, temp_ind;
-    float temp_val;
-    QString txt;
-    QStringList datalist;
-
-    sr_text.clear();
-    sr_text.append(QString("#_Spawner-Recruitment" ));
-    sr_text.append(QString("%1 #_SR_function").arg(
-                       QString::number(method)));
-    sr_text.append(QString(": 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm" ));
-    sr_text.append(QString("#_LO HI INIT PRIOR PR_TYPE SD PHASE" ));
-/*    for (i = 0; i < 6; i++)
-    {
-        datalist = parameters->getRowData(i);
-        for (int j = 0; j < 7; j++)
-            sr_text.append(QString(" %1").arg(datalist.at(j)));
-
-        sr_text.append(QString (" # " ));
-    }*/
-    sr_text.append(QString ("%1 # SR_LN(R0)" ).arg(full_parameters->getParamText(0)));
-    sr_text.append(QString ("%1 # SR_BH_steep" ).arg(full_parameters->getParamText(1)));
-    sr_text.append(QString ("%1 # SR_sigmaR" ).arg(full_parameters->getParamText(2)));
-    sr_text.append(QString ("%1 # SR_envlink" ).arg(full_parameters->getParamText(3)));
-    sr_text.append(QString ("%1 # SR_R1_offset" ).arg(full_parameters->getParamText(4)));
-    sr_text.append(QString ("%1 # SR_autocorr" ).arg(full_parameters->getParamText(5)));
-
-    sr_text.append(QString ("%1 #_do_rec_dev:  0=none; 1=devvector; 2=simple deviations" ).arg(
-                       QString::number(rec_dev)));
-    sr_text.append(QString ("%1 #_first_year_of_main_rec_devs; early devs can preceed this era" ).arg(
-                       QString::number(rec_dev_start_yr)));
-    sr_text.append(QString ("%1 #_last_year_of_main_rec_devs; forecast devs start in following year" ).arg(
-                       QString::number(rec_dev_end_yr)));
-    sr_text.append(QString ("%1 #_rec-dev phase" ).arg(
-                       QString::number(rec_dev_phase)));
-    sr_text.append(QString ("%1 # (0/1) to read 13 advanced options" ).arg(
-                       advanced_opts? "1":"0"));
-
-    if (advanced_opts)
-    {
-        sr_text.append(QString (" %1 #_rec-dev early start (0=none; neg value makes relative to recdev_start)" ).arg(
-                           QString::number(rec_dev_early_start)));
-        sr_text.append(QString (" %1 #_rec-dev early phase" ).arg(
-                           QString::number(rec_dev_early_phase)));
-        sr_text.append(QString (" %1 #_forecast recruitment phase (incl. late recr) (0 value resets to maxphase+1)" ).arg(
-                           QString::number(fcast_rec_phase)));
-        sr_text.append(QString (" %1 #_lambda for forecast_recr_like occurring before endyr+1" ).arg(
-                           QString::number(fcast_lambda)));
-        sr_text.append(QString (" %1 #_last_early_yr_nobias_adj_in_MPD" ).arg(
-                           QString::number(nobias_last_early_yr)));
-        sr_text.append(QString (" %1 #_first_yr_fullbias_adj_in_MPD" ).arg(
-                           QString::number(fullbias_first_yr)));
-        sr_text.append(QString (" %1 #_last_yr_fullbias_adj_in_MPD" ).arg(
-                           QString::number(fullbias_last_yr)));
-        sr_text.append(QString (" %1 #_first_recent_yr_nobias_adj_in_MPD" ).arg(
-                           QString::number(nobias_first_recent_yr)));
-        sr_text.append(QString (" %1 #_max_bias_adj_in_MPD (-1 to override ramp and set biasadj=1.0 for all estimated recdevs)" ).arg(
-                           QString::number(max_bias_adjust)));
-        sr_text.append(QString (" %1 #_period of cycles in recruitment (N parms read below)" ).arg(
-                           QString::number(rec_cycles)));
-        sr_text.append(QString (" %1 #_min rec_dev" ).arg(
-                           QString::number(rec_dev_min)));
-        sr_text.append(QString (" %1 #_max rec_dev" ).arg(
-                           QString::number(rec_dev_max)));
-        sr_text.append(QString (" %1 #_read rec_devs" ).arg(
-                           QString::number(num_rec_dev)));
-        sr_text.append(QString ("#_end of advanced SR options" ));
-    }
-    sr_text.append("#" );
-
-    if (rec_cycles == 0)
-    {
-        sr_text.append("#_placeholder for full parameter lines for recruitment cycles" );
-    }
-    else
-    {
-        for (i = 0; i < rec_cycles; i++)
-        {
-//            txt.clear();
-            datalist = full_parameters->getParameter(i);
-            for (int j = 0; j < 14; j++)
-                sr_text.append(QString(" %1").arg(datalist.at(j)));
-            sr_text.append(QString (" # " ));
-        }
-    }
-
-    sr_text.append(QString("# read %1 specified recr devs\n#_Yr Input_value" ).arg(
-                       QString::number(num_rec_dev)));
-    for (std::map<int,float>::iterator itr = yearly_devs.begin(); itr != yearly_devs.end(); itr++)
-    {
-        temp_ind = itr->first;
-        temp_val = itr->second;
-        sr_text.append(QString("%1 %2" ).arg(
-                           QString::number(temp_ind),
-                           QString::number(temp_val)));
-    }
-    sr_text.append("#" );
-
-    return sr_text;
+    rec_dev_start_yr = value;
 }
+
+int spawn_recruit::getRecDevEndYr() const
+{
+    return rec_dev_end_yr;
+}
+
+void spawn_recruit::setRecDevEndYr(int value)
+{
+    rec_dev_end_yr = value;
+}
+
+bool spawn_recruit::getAdvancedOpts() const
+{
+    return advanced_opts;
+}
+
+void spawn_recruit::setAdvancedOpts(bool value)
+{
+    advanced_opts = value;
+}
+
+int spawn_recruit::getRecDevEarlyStart() const
+{
+    return rec_dev_early_start;
+}
+
+void spawn_recruit::setRecDevEarlyStart(int value)
+{
+    rec_dev_early_start = value;
+}
+
+int spawn_recruit::getRecDevEarlyPhase() const
+{
+    return rec_dev_early_phase;
+}
+
+void spawn_recruit::setRecDevEarlyPhase(int value)
+{
+    rec_dev_early_phase = value;
+}
+
+int spawn_recruit::getFcastRecPhase() const
+{
+    return fcast_rec_phase;
+}
+
+void spawn_recruit::setFcastRecPhase(int value)
+{
+    fcast_rec_phase = value;
+}
+
+float spawn_recruit::getFcastLambda() const
+{
+    return fcast_lambda;
+}
+
+void spawn_recruit::setFcastLambda(float value)
+{
+    fcast_lambda = value;
+}
+
+int spawn_recruit::getNobiasLastEarlyYr() const
+{
+    return nobias_last_early_yr;
+}
+
+void spawn_recruit::setNobiasLastEarlyYr(int value)
+{
+    nobias_last_early_yr = value;
+}
+
+int spawn_recruit::getFullbiasFirstYr() const
+{
+    return fullbias_first_yr;
+}
+
+void spawn_recruit::setFullbiasFirstYr(int value)
+{
+    fullbias_first_yr = value;
+}
+
+int spawn_recruit::getFullbiasLastYr() const
+{
+    return fullbias_last_yr;
+}
+
+void spawn_recruit::setFullbiasLastYr(int value)
+{
+    fullbias_last_yr = value;
+}
+
+int spawn_recruit::getNobiasFirstRecentYr() const
+{
+    return nobias_first_recent_yr;
+}
+
+void spawn_recruit::setNobiasFirstRecentYr(int value)
+{
+    nobias_first_recent_yr = value;
+}
+
+float spawn_recruit::getMaxBiasAdjust() const
+{
+    return max_bias_adjust;
+}
+
+void spawn_recruit::setMaxBiasAdjust(float value)
+{
+    max_bias_adjust = value;
+}
+
+int spawn_recruit::getRecCycles() const
+{
+    return cycleParams->getNumParams();
+//    return rec_cycles;
+}
+
+void spawn_recruit::setRecCycles(int value)
+{
+    cycleParams->setNumParams(value);
+//    rec_cycles = value;
+}
+
+int spawn_recruit::getRecDevMin() const
+{
+    return rec_dev_min;
+}
+
+void spawn_recruit::setRecDevMin(int value)
+{
+    rec_dev_min = value;
+}
+
+int spawn_recruit::getRecDevMax() const
+{
+    return rec_dev_max;
+}
+
+void spawn_recruit::setRecDevMax(int value)
+{
+    rec_dev_max = value;
+}
+
+int spawn_recruit::getRecDevCode() const
+{
+    return rec_dev_code;
+}
+
+void spawn_recruit::setRecDevCode(int value)
+{
+    rec_dev_code = value;
+}
+
+/*int spawn_recruit::getNumRecDev() const
+{
+    return num_rec_dev;
+}
+
+void spawn_recruit::setNumRecDev(int value)
+{
+    num_rec_dev = value;
+}*/
+
+int spawn_recruit::getRecDevPhase() const
+{
+    return rec_dev_phase;
+}
+
+void spawn_recruit::setRecDevPhase(int value)
+{
+    rec_dev_phase = value;
+}
+
+

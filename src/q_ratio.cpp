@@ -71,6 +71,7 @@ void q_ratio::changeSetupData(QList<int> values)
         if (paramsUsed.at(0) != 1)
         {
             paramsUsed[0] = 1;
+            varParams->changeVarParamData(0, params->getParameter(0));
             changed = true;
         }
     }
@@ -88,6 +89,7 @@ void q_ratio::changeSetupData(QList<int> values)
         if (paramsUsed.at(1) != 1)
         {
             paramsUsed[1] = 1;
+            varParams->changeVarParamData(1, params->getParameter(1));
             changed = true;
         }
     }
@@ -106,6 +108,7 @@ void q_ratio::changeSetupData(QList<int> values)
         if (paramsUsed.at(2) != 1)
         {
             paramsUsed[2] = 1;
+            varParams->changeVarParamData(2, params->getParameter(2));
             changed = true;
         }
     }

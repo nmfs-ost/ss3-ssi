@@ -173,6 +173,16 @@ void fleet_widget::disconnectFleet()
     disconnect (current_fleet->Q()->getSetupTable(), SIGNAL(dataChanged()), this, SLOT(qSetupChanged()));
     disconnect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(qSetupParamsChanged()));
     disconnect (current_fleet->Q()->getTVParams(), SIGNAL(dataChanged()), this, SLOT(qSetupTVParamsChanged()));
+
+    disconnect (current_fleet->getSizeSelectivity()->getParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(sizeSelexParamsChanged()));
+    disconnect (current_fleet->getSizeSelectivity()->getTimeVaryParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(sizeSelexTVParamsChanged()));
+
+    disconnect (current_fleet->getAgeSelectivity()->getParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(ageSelexParamsChanged()));
+    disconnect (current_fleet->getAgeSelectivity()->getTimeVaryParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(ageSelexTVParamsChanged()));
     }
 }
 
@@ -210,9 +220,22 @@ void fleet_widget::connectFleet()
     connect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
     connect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
 
-    connect (current_fleet->Q()->getSetupTable(), SIGNAL(dataChanged()), this, SLOT(qSetupChanged()));
-    connect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(qSetupParamsChanged()));
-    connect (current_fleet->Q()->getTVParams(), SIGNAL(dataChanged()), this, SLOT(qSetupTVParamsChanged()));
+    connect (current_fleet->Q()->getSetupTable(), SIGNAL(dataChanged()),
+             this, SLOT(qSetupChanged()));
+    connect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()),
+             this, SLOT(qSetupParamsChanged()));
+    connect (current_fleet->Q()->getTVParams(), SIGNAL(dataChanged()),
+             this, SLOT(qSetupTVParamsChanged()));
+
+    connect (current_fleet->getSizeSelectivity()->getParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(sizeSelexParamsChanged()));
+    connect (current_fleet->getSizeSelectivity()->getTimeVaryParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(sizeSelexTVParamsChanged()));
+
+    connect (current_fleet->getAgeSelectivity()->getParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(ageSelexParamsChanged()));
+    connect (current_fleet->getAgeSelectivity()->getTimeVaryParameterModel(),
+             SIGNAL(dataChanged()), this, SLOT(ageSelexTVParamsChanged()));
 }
 
 fleet_widget::~fleet_widget()
@@ -791,7 +814,15 @@ void fleet_widget::sizeSelexTVParamsChanged()
 
 void fleet_widget::ageSelexParamsChanged()
 {
+    ageSelexParamsView->setHeight (current_fleet->getAgeSelexModel());
+    ageSelexParamsView->resizeColumnsToContents();
+}
 
+void fleet_widget::ageSelexTVParamsChanged()
+{
+    ageSelexTimeVaryParamsView->setHeight (
+            current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
+    ageSelexTimeVaryParamsView->resizeColumnsToContents();
 }
 
 void fleet_widget::changeSelexAgePattern(int pat)

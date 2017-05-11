@@ -50,9 +50,9 @@ public slots:
     void setTimeVaryParameter (int index, QStringList strList);
     void setTimeVaryParameterLabel (int index, QString label);
     QString getTimeVaryParameterText (int index);
-    QStringList getTimeVaryParameter (int index) {return varParameters->getVarParameter(index);}//timeVaryParameters->getParameter(index);}
-    QString getTimeVaryParameterLabel (int index) {return varParameters->getVarParamHeader(index);}//timeVaryParameters->getParamHeader(index);}
-    tablemodel *getTimeVaryParameterModel() {return varParameters->getVarParamTable();}//timeVaryParameters;}
+    QStringList getTimeVaryParameter (int index) {return varParameters->getVarParameter(index);}
+    QString getTimeVaryParameterLabel (int index) {return varParameters->getVarParamHeader(index);}
+    tablemodel *getTimeVaryParameterModel() {return varParameters->getVarParamTable();}
 
     int getNumRetainParameters() {return retainParameters->getNumParams();}
     void setRetainParameter(int index, QStringList strList);

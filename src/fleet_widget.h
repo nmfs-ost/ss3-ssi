@@ -77,6 +77,7 @@ public slots:
     void changeSelexAgeSpecial (int spc);
     void showSelexAgeInfo();
     void ageSelexParamsChanged();
+    void ageSelexTVParamsChanged();
 
 private:
 

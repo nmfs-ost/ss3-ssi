@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>3</number>
+         <number>4</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -1686,8 +1686,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>578</width>
-                   <height>184</height>
+                   <width>733</width>
+                   <height>396</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">

@@ -218,6 +218,11 @@ public slots:
     void autoGenEnvVarParam (int parmnum, int value);
     void autoGenDevVarParam (int parmnum, int value);
     void autoGenBlkVarParam (int parmnum, int value, int fxn, QStringList parmdata);
+//    QStringList *autoGenBlkVarParamAdd(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndOffsVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndDrctVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndFracVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndSeasVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
 
     tablemodel * newVaryParamTable ();
     void setTableTitle (int tbl, QString name);
