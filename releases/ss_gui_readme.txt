@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.7
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.14b
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
