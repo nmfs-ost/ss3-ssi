@@ -1,15 +1,17 @@
 #include "ss_recruitment.h"
 
 spawn_recruit::spawn_recruit(ss_model *parent)
+    : QObject ((QObject*)parent)
 {
     parnt = parent;
-//    parameters = new parametermodel();
-//    parameters->setRowCount(0);
-//    parameters->setColumnCount(7);
-    full_parameters = new longParameterModel();// parameterModelTV(parnt);
+
+    full_parameters = new longParameterModel();
     full_parameters->setNumParams(5);
 
-    tvParameters = new timeVaryParameterModel (parnt);//full_parameters->getParamVarsModel();//getTimeVaryParams();//new shortParameterModel((QObject *)parnt);
+    tvParameters = new timeVaryParameterModel (parnt);
+
+    connect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
+             tvParameters, SLOT(changeVarParamData(int,QStringList)));
 
     assignments = new tablemodel();
     assignments->setColumnCount(4);
@@ -17,50 +19,31 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     header << "GP" << "seas" << "area" << "Settle_age";
     assignments->setHeader(header);
 
-    cycleParams = new longParameterModel();// parameterModelTV(parnt);
-    interactParams = new longParameterModel();// parameterModelTV(parnt);
-    distParams = new longParameterModel();// parameterModelTV(parnt);
+    interactParams = new longParameterModel();
+    distParams = new longParameterModel();
     distParams->setNumParams(2);
+
+    cycleParams = new longParameterModel();
 
     header.clear();
     header << "Year" << "Input_value";
     recruitDevs = new tablemodel();
     recruitDevs->setHeader(header);
-//    tvParameters->setColumnCount(7);
 
     reset();
-/*    method = 3;
-    env_link = 0;
-    env_target = 0;
-    rec_dev = 1;
-    rec_dev_start_yr = 1980;
-    rec_dev_end_yr = 2009;
-    rec_dev_phase = -3;
-    advanced_opts = true;
-    rec_dev_early_start = 0;
-    rec_dev_early_phase = -4;
-    fcast_rec_phase = 0;
-    fcast_lambda = 1;
-    nobias_last_early_yr = 971;
-    fullbias_first_yr = 1931;
-    fullbias_last_yr = 2010;
-    nobias_first_recent_yr = 2011;
-    max_bias_adjust = 0;
-    rec_cycles = 0;
-    rec_dev_min = -5;
-    rec_dev_max = 5;
-    num_rec_dev = 0;*/
+
 }
 
 spawn_recruit::~spawn_recruit()
 {
 //    delete parameters;
     delete full_parameters;
+    delete tvParameters;
     delete assignments;
-    delete cycleParams;
-    delete recruitDevs;
     delete interactParams;
     delete distParams;
+    delete cycleParams;
+    delete recruitDevs;
 }
 
 void spawn_recruit::reset()
@@ -91,6 +74,49 @@ void spawn_recruit::reset()
     setNumRecDev(0);
 //    num_rec_dev = 0;
     use_steepness = 0;
+}
+
+void spawn_recruit::setMethod(int value)
+{
+    method = value;
+    int num = 2;
+    switch (value)
+    {
+    case 1:
+        num = 0;
+        break;
+    case 2:
+    case 3:
+    case 4:
+    case 6:
+        num = 5;
+        break;
+    case 5:
+    case 7:
+    case 8:
+        num = 6;
+        break;
+    }
+
+    setNumFullParameters(num);
+}
+
+void spawn_recruit::setNumFullParameters(int num)
+{
+    full_parameters->setNumParams(num);
+    tvParameters->setTotalNumVarTables(num);
+}
+
+void spawn_recruit::setFullParameter(int index, QStringList values)
+{
+    full_parameters->setParamData(index, values);
+    tvParameters->setParameter(index, values);
+}
+
+void spawn_recruit::setFullParameterHeader(int index, QString hdr)
+{
+    full_parameters->setParamHeader(index, hdr);
+    tvParameters->setTableTitle(index, hdr);
 }
 
 int spawn_recruit::getNumAssignments()

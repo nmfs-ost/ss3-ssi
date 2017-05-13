@@ -10,26 +10,18 @@
 
 #include "ss_observation.h"
 
+#include <QObject>
 #include <QList>
 #include <QString>
-#include <map>
+//#include <map>
 
-class spawn_recruit
+class spawn_recruit : public QObject
 {
+    Q_OBJECT
+
 public:
-    spawn_recruit(ss_model *parent = 0);
+    explicit spawn_recruit(ss_model *parent = 0);
     ~spawn_recruit();
-
-    void reset ();
-
-    void setMethod (int value) {method = value;}
-    int getMethod () {return method;}
-
-    void setUseSteepness (int value) {use_steepness = value;}
-    int getUseSteepness () {return use_steepness;}
-
-    void setFeature (int value) {futureFeature = value;}
-    int getFeature () {return futureFeature;}
 
     QString toText();
 //    QString toXML();
@@ -38,14 +30,26 @@ public:
 //    void fromXML (xml_file *file);
   //  void fromJSON (json_file *file);
 
+    void reset ();
+
+public slots:
+    void setMethod (int value);
+    int getMethod () {return method;}
+
+    void setUseSteepness (int value) {use_steepness = value;}
+    int getUseSteepness () {return use_steepness;}
+
+    void setFeature (int value) {futureFeature = value;}
+    int getFeature () {return futureFeature;}
+
     longParameterModel *getFullParameterModel () {return full_parameters;}
     tablemodel *getFullParameters() {return full_parameters->getParamTable();}
-    void setNumFullParameters(int num) {full_parameters->setNumParams(num);}
+    void setNumFullParameters(int num);
     int getNumFullParameters() {return full_parameters->getNumParams();}
-    void setFullParameter(int index, QStringList values) {full_parameters->setParameter(index, values);}
+    void setFullParameter(int index, QStringList values);
     void insertFullParameter (int index) {full_parameters->getParamTable()->insertRow(index, 0);}
     void removeFullParameter (int index) {full_parameters->getParamTable()->removeRow(index);}
-    void setFullParameterHeader(int index, QString hdr) {full_parameters->setParamHeader(index, hdr);}
+    void setFullParameterHeader(int index, QString hdr);
     QStringList getFullParameter(int index) {return full_parameters->getParameter(index);}
 
     int getDistribMethod() const {return distrib_method;}

@@ -151,13 +151,16 @@ void shortParameterModel::setNumParams(int rows)
         for (i = currows; i < rows; i++)
         {
             paramTable->setRowData(i, defaultParam);
+            paramUsed.append(1);
         }
         // set rows in paramData
         setTotalNumParams(rows);
         // set to use all params - can be changed later
         paramNum.clear();
         for (i = 0; i < rows; i++)
+        {
             paramNum.append(i);
+        }
     }
 }
 
@@ -841,7 +844,7 @@ void timeVaryParameterModel::setVarParameter(int row, QStringList &rowstringlist
 // for one parameter and compare with the underlying data.
 // if any have changed, return true, else return false
 //
-bool timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
+void timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
 {
     // get param and paramVar table
     // generate a time-varying parameter and replace existing.

@@ -152,7 +152,7 @@ private slots:
     void showSurveys();
 
     void copy_file(QString old_file, QString new_file);
-    int ask_missing_file(QString fn);
+    int ask_missing_file();
     void set_start_age_rept();
     void set_start_use_values();
     void increase_font();

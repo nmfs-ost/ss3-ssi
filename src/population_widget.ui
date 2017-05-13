@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -82,7 +82,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-133</y>
+            <y>0</y>
             <width>894</width>
             <height>546</height>
            </rect>
@@ -604,16 +604,6 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="1" colspan="2">
-              <widget class="QPushButton" name="pushButton_recr_time_vary_autogen">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>Auto Generate</string>
-               </property>
-              </widget>
-             </item>
              <item row="10" column="4">
               <spacer name="horizontalSpacer_18">
                <property name="orientation">
@@ -731,7 +721,7 @@ recruitment distribution method = 1)</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-200</y>
+            <y>0</y>
             <width>762</width>
             <height>634</height>
            </rect>

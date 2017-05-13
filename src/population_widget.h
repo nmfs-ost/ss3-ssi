@@ -90,19 +90,43 @@ private slots:
     void changeGrowthMorphRatio(double ratio);
     void changeGrowthTimeVaryRead(int flag);
 
-    void changeNumRecrDevs (int num);
     void changeSpwnRecReadTimeVary (int flag);
 
-    void changeSeasParams();
+    void changeRecrFullParams ();
+    void changeRecrTVParams ();
+    void changeRecrAssignParams ();
+    void changeRecrDistParams ();
+    void changeRecrCycleParams ();
+    void changeRecrDevParams ();
     void changeRecNumAssigns(int num);
-    void changeRecAssignInteract (bool flag);
     void changeSpawnRecrSpec(int num);
+    void changeRecAssignInteract (bool flag);
+    void changeRecDoDev (int num);
+    void changeRecrDevStartYr (int yr);
+    void changeRecrDevEndYr (int yr);
+    void changeRecrDevPhase (int phase);
+    void changeRecrDoAdvancedOpts (bool flag);
+    void changeRecrDevEarlyStart (int yr);
+    void changeRecrDevEarlyPhase (int phase);
+    void changeRecrFcastPhase (int phase);
+    void changeRecrFcastLambda (QString s_lam);
+    void changeRecrNoBiasLastYr (int yr);
+    void changeRecrFullBiasFirstYr (int yr);
+    void changeRecrFullBiasLastYr (int yr);
+    void changeRecrNoBiasFirstYr (int yr);
+    void changeRecrBiasMax (QString s_max);
+    void changeRecrCycles (int cycles);
+    void changeRecrDevMin (QString s_min);
+    void changeRecrDevMax (QString s_max);
+    void changeRecrNumDevs (int num);
 
     void changeMoveNumDefs(int value);
     void moveDefsChanged(QModelIndex tl, QModelIndex br);
     void setMoveParamTitles();
     void setMoveParamTitle(int def);
     void changeMoveFirstAge();
+
+    void changeSeasParams();
 
 private:
     Ui::population_widget *ui;

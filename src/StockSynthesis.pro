@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts printsupport
 
 
 TARGET = ss_gui
@@ -98,7 +98,8 @@ SOURCES += main.cpp\
     setupmodel.cpp \
     seasonaleffectsmodel.cpp \
     parametermodel.cpp \
-    dialog_runoptions.cpp
+    dialog_runoptions.cpp \
+    conversions.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -186,7 +187,8 @@ HEADERS  += mainwindow.h \
     setupmodel.h \
     seasonaleffectsmodel.h \
     parametermodel.h \
-    dialog_runoptions.h
+    dialog_runoptions.h \
+    conversions.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

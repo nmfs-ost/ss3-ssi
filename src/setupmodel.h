@@ -213,7 +213,7 @@ public slots:
     int checkBlockNum (int value);
     int checkBlockFxn (int value);
 
-    bool generateVarParamData (int parmNum, QStringList data);
+    void generateVarParamData(int parmNum, QStringList data);
 
     void autoGenEnvVarParam (int parmnum, int value);
     void autoGenDevVarParam (int parmnum, int value);
