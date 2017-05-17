@@ -1,6 +1,7 @@
 #include "growth_pattern.h"
 
 growthPattern::growthPattern(ss_model *parent)
+    : QObject((QObject *)parent)
 {
     parnt = parent;
     morphs.append(new growth_morph());
@@ -89,6 +90,12 @@ void growthPattern::setMorph(int index, growth_morph * &value)
     delete gm;
 }
 
+void growthPattern::setNumNatMParams(int num)
+{
+    natMrtParams->setNumParams(num);
+    natMrtVarParams->setTotalNumVarTables(num);
+}
+
 void growthPattern::clear()
 {
     setNum_morphs(1);
@@ -97,25 +104,45 @@ void growthPattern::clear()
 void growthPattern::setNatMParam(int index, QStringList data)
 {
     if (index >= natMrtParams->getNumParams())
-        natMrtParams->setNumParams(index + 1);
+        setNumNatMParams(index + 1);
     natMrtParams->setParameter(index, data);
+    natMrtVarParams->setParameter(index, data);
+}
+
+void growthPattern::setNatMParamHeader(int index, QString hdr)
+{
+    natMrtParams->setParamHeader(index, hdr);
+    natMrtVarParams->setTableTitle(index, hdr);
 }
 
 void growthPattern::setNatMTVParam(int index, QStringList data)
 {
-    natMrtParams->setParameter(index, data);
+    natMrtVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setNumGrowthParams(int num)
+{
+    growthParams->setNumParams(num);
+    growthVarParams->setTotalNumVarTables(num);
 }
 
 void growthPattern::setGrowthParam(int index, QStringList data)
 {
     if (index >= growthParams->getNumParams())
-        growthParams->setNumParams(index + 1);
+        setNumGrowthParams(index + 1);
     growthParams->setParameter(index, data);
+    growthVarParams->setParameter(index, data);
+}
+
+void growthPattern::setGrowthParamHeader(int index, QString hdr)
+{
+    growthParams->setParamHeader(index, hdr);
+    growthVarParams->setTableTitle(index, hdr);
 }
 
 void growthPattern::setGrowthTVParam(int index, QStringList data)
 {
-    growthParams->setParameter(index, data);
+    growthVarParams->setVarParameter(index, data);
 }
 
 void growthPattern::setCVParam(int index, QStringList data)

@@ -1,16 +1,23 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.14b
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.15b
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
 allow for changes to the data, run the executable, and display results.
 
-Currently, the only results displayed are the warnings.sso and echoinput.sso.
+Currently, the only results displayed are the files warnings.sso and
+echoinput.sso.
 
 Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
+============================================================================
+      3.3.15b
+      2017-05-17
+1. Now reads/writes SS 3.30.03 data files.
+2. Reworked Recruitment so that all parameters show and changes in the Gui
+   are reflected attendant tables and in the data files.
 ============================================================================
       3.3.14b
       2017-03-21

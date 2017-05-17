@@ -8,8 +8,10 @@
 
 class ss_model;
 
-class ss_fecundity
+class ss_fecundity : public QObject
 {
+    Q_OBJECT
+
 public:
     ss_fecundity(ss_model *parent = 0);
     ~ss_fecundity();

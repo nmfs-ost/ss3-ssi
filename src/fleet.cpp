@@ -46,7 +46,8 @@ Fleet::Fleet(ss_model *parent) :
 
     q_read = false;
     q_R = new q_ratio(parent);
-    s_name = new QString("new_fleet");
+    s_name = new QString("");
+    setName(QString("new_fleet"));
     size_selex = new selectivity(parent);
     age_selex = new selectivity(parent);
     reset();
@@ -920,6 +921,16 @@ void Fleet::appendLambda(QStringList values)
     int rows = lambdaModel->rowCount();
     lambdaModel->setRowCount(rows + 1);
     lambdaModel->setRowData(rows, values);
+}
+
+int Fleet::getAr1SelSmoother()
+{
+    return ar1SelSmoother;
+}
+
+void Fleet::setAr1SelSmoother(int value)
+{
+    ar1SelSmoother = value;
 }
 
 float Fleet::get_max_catch() const

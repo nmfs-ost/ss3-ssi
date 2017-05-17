@@ -151,13 +151,16 @@ void shortParameterModel::setNumParams(int rows)
         for (i = currows; i < rows; i++)
         {
             paramTable->setRowData(i, defaultParam);
+            paramUsed.append(1);
         }
         // set rows in paramData
         setTotalNumParams(rows);
         // set to use all params - can be changed later
         paramNum.clear();
         for (i = 0; i < rows; i++)
+        {
             paramNum.append(i);
+        }
     }
 }
 
@@ -179,10 +182,13 @@ void shortParameterModel::setTotalNumParams(int num)
 
 void shortParameterModel::setParamHeader(int row, QString title)
 {
+    int tblrow = paramNum.indexOf(row);
     if (row >= paramData->rowCount())
         setTotalNumParams(row + 1);
     paramData->setRowHeader(row, title);
 //    updateParamHeaders();
+    if (tblrow >= 0)
+        paramTable->setRowHeader(tblrow, title);
 }
 
 void shortParameterModel::setParameter(int row, QStringList &rowstringlist)
@@ -211,8 +217,8 @@ void shortParameterModel::setParamsUsed(QList<int> data)
     paramNum.clear();
     if (paramUsed.count() != data.count())
     {
-        paramUsed = data;
         setTotalNumParams(params);
+        paramUsed = data;
         changed = true;
     }
     for (int i = 0; i < params; i++)
@@ -253,19 +259,22 @@ void shortParameterModel::checkParamData()
 {
     QStringList param;
     int rows = paramData->rowCount();
+    int i, j;
 
-    for (int i = 0; i < rows; i++)
+    for (i = 0; i < rows; i++)
     {
         param = paramData->getRowData(i);
-        for (int j = 0; j < param.count(); j++)
+        for (j = 0; j < param.count(); j++)
         {
             if (QString(param.at(j)).isEmpty())
             {
                 param.removeAt(j);
                 param.insert(j, QString("0"));
             }
-            paramData->setRowData(i, param);
         }
+        while (j++ < defaultParam.count())
+            param.append(QString("0"));
+        paramData->setRowData(i, param);
     }
     updateParams();
 }
@@ -725,6 +734,7 @@ timeVaryParameterModel::timeVaryParameterModel(ss_model *parent) : QObject((QObj
     varyParamTable->setRowCount(0);
     autoGenerate = 0;
 
+    setTotalNumVarTables(0);
     setNumVarParams(0);
 
     connect (varyParamTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
@@ -759,12 +769,13 @@ void timeVaryParameterModel::setVarParamHeaders(QStringList hdr)
     {
         tableHeaders[i] = hdr[i];
     }
+    updateVarParamHdrs();
 }
 
 // set the number of background tables to the number of parameters
 // also sets arrays of current values to correct length
 //
-void timeVaryParameterModel::setTotalNumVarParams(int num)
+void timeVaryParameterModel::setTotalNumVarTables(int num)
 {
     tablemodel *paramVarModel;
     int numtables = varyParamDataTables.count();
@@ -773,7 +784,7 @@ void timeVaryParameterModel::setTotalNumVarParams(int num)
     {
         paramVarModel = newVaryParamTable();
         varyParamDataTables.append(paramVarModel);
-        tableUsed.append(0);
+        tableUsed.append(false);
         blkVal.append(0);
         blkFxn.append(0);
         devVal.append(0);
@@ -799,17 +810,17 @@ void timeVaryParameterModel::setVarParamsUsed(QList<int> data)
     bool changed = false;
     if (num != tableUsed.count())
     {
-        setTotalNumVarParams(num);
-        tableUsed = data;
+        setTotalNumVarTables(num);
         changed = true;
     }
     else
     {
         for (int i = 0; i < num; i++)
         {
-            if (data.at(i) != tableUsed.at(i))
+            if ((tableUsed.at(i) && data.at(i) == 0) ||
+                (!tableUsed.at(i) && data.at(i) != 0))
             {
-                tableUsed[i] = data[i];
+                tableUsed[i] = (data[i] != 0);
                 changed = true;
             }
         }
@@ -834,7 +845,7 @@ void timeVaryParameterModel::setVarParameter(int row, QStringList &rowstringlist
 // for one parameter and compare with the underlying data.
 // if any have changed, return true, else return false
 //
-bool timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
+void timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
 {
     // get param and paramVar table
     // generate a time-varying parameter and replace existing.
@@ -864,40 +875,50 @@ bool timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
 void timeVaryParameterModel::changeVarParamData(int parm, QStringList data)
 {
     bool varsChanged = false;
-    int item = QString(data.at(7)).toInt();
+    int item = QString(data.at(0)).toInt();
+    bool autogen = (autoGenerate == 0) || (autoGenerate == 2 && item == -12345);
+
+    if (getNumParams() <= parm)
+        setNumParams(parm + 1);
+
+    item = QString(data.at(7)).toInt();
     if (envVal[parm] != item)
     {
         envVal[parm] = item;
-        tableUsed[parm] = item;
+        autoGenEnvVarParam(parm, item);
         varsChanged = true;
     }
     item = QString(data.at(8)).toInt();
     if (devVal[parm] != item)
     {
         devVal[parm] = item;
-        tableUsed[parm] = item;
+        autoGenDevVarParam(parm, item);
         varsChanged = true;
     }
     item = QString(data.at(12)).toInt();
     if (blkVal[parm] != item)
     {
         blkVal[parm] = item;
-        tableUsed[parm] = item;
+        autoGenBlkVarParam(parm, item, QString(data.at(13)).toInt(), data);
         varsChanged = true;
     }
     item = QString(data.at(13)).toInt();
     if (blkFxn[parm] != item)
     {
         blkFxn[parm] = item;
+        autoGenBlkVarParam(parm, QString(data.at(12)).toInt(), item, data);
         varsChanged = true;
     }
+    tableUsed[parm] = (envVal[parm] != 0) ||
+            (devVal[parm] != 0) ||
+            (blkVal[parm] != 0);
 
     if (varsChanged)
     {
-        item = QString(data.at(0)).toInt();
-        if (autoGenerate == 0 ||
-           (autoGenerate == 2 && item == -12345))
-            generateVarParamData(parm, data);
+//        item = QString(data.at(0)).toInt();
+//        if (autoGenerate == 0 ||
+  //         (autoGenerate == 2 && item == -12345))
+    //        generateVarParamData(parm, data);
         updateVarParams ();
         emit varParamsChanged();
     }
@@ -1044,6 +1065,15 @@ void timeVaryParameterModel::updateVarParams()
         tableParNum.takeLast();
     }
     varyParamTable->setRowCount(row);
+}
+
+void timeVaryParameterModel::updateVarParamHdrs()
+{
+    int numparams = varyParamDataTables.count();
+    for (int i = 0; i < numparams; i++)
+    {
+        updateTableParamHdrs(i);
+    }
 }
 
 // Check the Environment Link value
@@ -1290,6 +1320,7 @@ void timeVaryParameterModel::autoGenBlkVarParam(int parmnum, int value, int fxn,
         numBlocks = bp->getNumBlocks();
         for (int i = 0; i < numBlocks; i++)
         {
+            beg = bp->getBlockBegin(i);
             if (fxn == 0) // mult
             {
                 varparms->setRowData(k, varparam);
@@ -1371,6 +1402,14 @@ void timeVaryParameterModel::autoGenBlkVarParam(int parmnum, int value, int fxn,
     if (k < varparms->rowCount())
         varparms->setRowCount(k);
 }
+/*
+QStringList *timeVaryParameterModel::autoGenTndSeasVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum)
+{
+    int seas = model_data->get_num_seasons();
+    QStringList *varparm = new QStringList;
+    varparm << "0";
+
+}*/
 
 tablemodel *timeVaryParameterModel::newVaryParamTable()
 {
@@ -1386,6 +1425,50 @@ void timeVaryParameterModel::setTableTitle(int tbl, QString name)
 {
     tablemodel *table = varyParamDataTables.at(tbl);
     table->setTitle(name);
+    updateTableParamHdrs(tbl);
+}
+
+void timeVaryParameterModel::updateTableParamHdrs(int tbl)
+{
+    tablemodel *parmVars = varyParamDataTables.at(tbl);
+    int numrows = parmVars->rowCount();
+    QString title (parmVars->getTitle());
+    QString env, dev, blk;
+
+    env = QString (parmVars->getRowHeader(0));
+    if (env.contains("ENV"))
+        env = QString (parmVars->getRowHeader(0).split("ENV").at(1));
+    parmVars->setRowHeader(0, QString("%1_ENV%2").arg(title, env));
+
+    dev = QString (parmVars->getRowHeader(1));
+    if (dev.contains("dev"))
+        dev = QString (parmVars->getRowHeader(1).split("dev").at(1));
+    parmVars->setRowHeader(1, QString("%1_dev%2").arg(title, dev));
+    dev = QString (parmVars->getRowHeader(2));
+    if (dev.contains("dev"))
+        dev = QString (parmVars->getRowHeader(2).split("dev").at(1));
+    parmVars->setRowHeader(2, QString("%1_dev%2").arg(title, dev));
+
+
+    for (int j = 3; j < numrows; j++)
+    {
+        blk = QString (parmVars->getRowHeader(j));
+        if (blk.contains("BLK"))
+        {
+            blk = QString (parmVars->getRowHeader(j).split("BLK").at(1));
+            parmVars->setRowHeader(j, QString("%1_BLK%2").arg(title, blk));
+        }
+        else if (blk.contains("Trend"))
+        {
+            blk = QString (parmVars->getRowHeader(j).split("Trend").at(1));
+            parmVars->setRowHeader(j, QString("%1_Trend%2").arg(title, blk));
+        }
+        else
+        {
+            parmVars->setRowHeader(j, QString("%1_BLK").arg(title));
+        }
+    }
+    updateVarParams();
 }
 
 int timeVaryParameterModel::getAutoGenerate() const

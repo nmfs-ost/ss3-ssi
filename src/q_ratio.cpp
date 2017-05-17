@@ -15,7 +15,7 @@ q_ratio::q_ratio(ss_model *model)
     hdr << "Link" << "Link_Info" << "ExtraSD" << "Bias_Adj" << "Float" ;
     setup->setHeader(hdr);
     params->setTotalNumParams(3);
-    varParams->setTotalNumVarParams(3);
+    varParams->setTotalNumVarTables(3);
     paramsUsed << 0 << 0 << 0;
 
     reset();
@@ -47,11 +47,6 @@ void q_ratio::setFleetName(QString name)
     fltName = name;
     setParamHdrs();
     setup->setRowHeader(name);
-/*    params->setNumParams(3);
-    params->setParamHeader(0, QString("%1_LnQ_Base").arg(fltName));
-    params->setParamHeader(1, QString ("%1_Power").arg(fltName));
-    params->setParamHeader(2, QString ("%1_Extra_SD").arg(fltName));*/
-
 }
 
 void q_ratio::setValues(QStringList values)
@@ -76,6 +71,7 @@ void q_ratio::changeSetupData(QList<int> values)
         if (paramsUsed.at(0) != 1)
         {
             paramsUsed[0] = 1;
+            varParams->changeVarParamData(0, params->getParameter(0));
             changed = true;
         }
     }
@@ -93,6 +89,7 @@ void q_ratio::changeSetupData(QList<int> values)
         if (paramsUsed.at(1) != 1)
         {
             paramsUsed[1] = 1;
+            varParams->changeVarParamData(1, params->getParameter(1));
             changed = true;
         }
     }
@@ -111,6 +108,7 @@ void q_ratio::changeSetupData(QList<int> values)
         if (paramsUsed.at(2) != 1)
         {
             paramsUsed[2] = 1;
+            varParams->changeVarParamData(2, params->getParameter(2));
             changed = true;
         }
     }
@@ -192,6 +190,7 @@ void q_ratio::changeParamData()
 void q_ratio::setParamHdrs(int errType)
 {
 //    params->setTotalNumParams(3);
+    QStringList varHdrs;
     QString hdr;
     if (errType > 0)
     {
@@ -205,16 +204,20 @@ void q_ratio::setParamHdrs(int errType)
         params->setParamHeader(0, hdr);
         varParams->setTableTitle(0, hdr);
     }
+    varHdrs.append(hdr);
 
     hdr = QString ("%1_Power").arg(fltName);
     params->setParamHeader(1, hdr);
     varParams->setTableTitle(1, hdr);
+    varHdrs.append(hdr);
 
     hdr = QString ("%1_Extra_SD").arg(fltName);
     params->setParamHeader(2, hdr);
     varParams->setTableTitle(2, hdr);
+    varHdrs.append(hdr);
 
     params->updateParamHeaders();
+    varParams->updateVarParamHdrs();
 }
 
 /*

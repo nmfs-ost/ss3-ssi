@@ -100,6 +100,8 @@ public slots:
     int getAbundUnits() {return i_abund_units;}           // 0=numbers, 1=biomass, 2=F
     void setAbundErrType(int err) {i_abund_errtype = err;}      // -1=normal, 0=lognormal, >0=T
     int getAbundErrType() {return i_abund_errtype;}      // -1=normal, 0=lognormal, >0=T
+    void setSDReport(int rpt) { i_sd_report = rpt;}    // 0=no sdreport; 1=enable sdreport
+    int getSDReport() {return i_sd_report;}
 
     // abundance
     int getYearMonthRow (tablemodel *tm, QString year, QString month);
@@ -278,6 +280,8 @@ public slots:
 
     void setSelTimeVaryReadParams (int flag) {readSelTvParams = flag;}
     int getSelTimeVaryReadParams () {return readSelTvParams;}
+    int getAr1SelSmoother();
+    void setAr1SelSmoother(int value);
 
     //   #size selex
     selectivity* getSizeSelectivity() {return size_selex;}
@@ -374,6 +378,7 @@ protected:
     // surveys
     int i_abund_units;           // 0=numbers, 1=biomass, 2=F
     int i_abund_errtype;      // -1=normal, 0=lognormal, >0=T
+    int i_sd_report;
 
     // discard
     int i_discard_units;   // 1=same_as_catchunits(bio/num), 2=fraction, 3=numbers
@@ -383,6 +388,7 @@ protected:
 //    QList<yearIndexMeasure*> d_discard_err;
 
     int readSelTvParams;
+    int ar1SelSmoother;
     //   size selex
     selectivity *size_selex;
 

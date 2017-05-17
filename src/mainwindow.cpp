@@ -905,7 +905,7 @@ void MainWindow::set_start_use_values()
 {
 }
 
-int MainWindow::ask_missing_file(QString fn)
+int MainWindow::ask_missing_file()
 {
     QMessageBox mbox (this);
     int btn;

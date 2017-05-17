@@ -181,14 +181,16 @@ public slots:
     int getAutoGenerate() const;
     void setAutoGenerate(int value);
 
-    void setNumParams (int tables) {setTotalNumVarParams(tables);}
+    void setNumParams (int tables) {setTotalNumVarTables(tables);}
+    int getNumParams () {return getTotalNumVarTables();}
     void setParameter (int table, QStringList data)
         {changeVarParamData(table, data);}
 
     void setNumVarParams(int rows);
     int getNumVarParams () {return varyParamTable->rowCount();}
 
-    void setTotalNumVarParams (int rows);
+    void setTotalNumVarTables (int rows);
+    int getTotalNumVarTables () {return varyParamDataTables.count();}
     void setVarParamHeaders (QStringList hdr);
 
     void setVarParamsUsed (QList<int> data);
@@ -201,6 +203,7 @@ public slots:
     timeVaryParameterModel *getVarParamModel() {return this;}
 
     void updateVarParams ();
+    void updateVarParamHdrs ();
     void changeVarParamData(int parm, QStringList data);
     void changeVarParamHeader(int parm, QString title);
     void updateVarParamData(QModelIndex tl, QModelIndex br, QVector<int> data);
@@ -210,14 +213,20 @@ public slots:
     int checkBlockNum (int value);
     int checkBlockFxn (int value);
 
-    bool generateVarParamData (int parmNum, QStringList data);
+    void generateVarParamData(int parmNum, QStringList data);
 
     void autoGenEnvVarParam (int parmnum, int value);
     void autoGenDevVarParam (int parmnum, int value);
     void autoGenBlkVarParam (int parmnum, int value, int fxn, QStringList parmdata);
+//    QStringList *autoGenBlkVarParamAdd(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndOffsVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndDrctVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndFracVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
+//    QStringList *autoGenTndSeasVarParam(int parmnum, int blk, QStringList parmdate, int varparmnum = 0);
 
     tablemodel * newVaryParamTable ();
     void setTableTitle (int tbl, QString name);
+    void updateTableParamHdrs (int tbl);
 
 protected:
     ss_model *model_data;
@@ -231,7 +240,7 @@ protected:
 
     QList<tablemodel *> varyParamDataTables;
     QStringList tableHeaders;
-    QList<int> tableUsed;
+    QList<bool> tableUsed;
     QList<int> blkVal;
     QList<int> blkFxn;
     QList<int> devVal;

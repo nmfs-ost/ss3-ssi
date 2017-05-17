@@ -3,6 +3,7 @@
 #include "setupmodel.h"
 
 ss_growth::ss_growth(ss_model *parent)
+    : QObject((QObject *)parent)
 {
     parnt = parent;
     num_patterns = 0;
@@ -29,11 +30,17 @@ ss_growth::ss_growth(ss_model *parent)
     wtLenVarParams = new timeVaryParameterModel(parnt);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
+    connect (wtLenParams, SIGNAL(paramChanged(int,QStringList)),
+             wtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
 
     cohortParam = new longParameterModel((QObject *)parnt);
     cohortParam->setNumParams(1);
+    cohortParam->setParamHeader(0, QString("CohortGrowDev"));
     cohortVarParam = new timeVaryParameterModel(parnt);
-    cohortVarParam->setNumParams(1);
+    cohortVarParam->setTotalNumVarTables(1);
+    cohortVarParam->setTableTitle(0, QString("CohortGrowDev"));
+    connect (cohortParam, SIGNAL(paramChanged(int,QStringList)),
+             cohortVarParam, SLOT(changeVarParamData(int,QStringList)));
 
 
     reset();
@@ -432,6 +439,12 @@ void ss_growth::setFirst_mature_age(float value)
     first_mature_age = value;
 }
 
+void ss_growth::setCohortParam (QStringList data)
+{
+    cohortParam->setParamData(0, data);
+    cohortVarParam->setParameter(0, data);
+}
+
 float ss_growth::getSd_add() const
 {
     return sd_add;
@@ -462,11 +475,24 @@ void ss_growth::setMaturity_option(int value)
     maturity_option = value;
 }
 
+void ss_growth::setNumWtLenParams(int num)
+{
+    wtLenParams->setNumParams(num);
+    wtLenVarParams->setTotalNumVarTables(num);
+}
+
 void ss_growth::setWtLenParam(int index, QStringList data)
 {
     if (index >= wtLenParams->getNumParams())
         wtLenParams->setNumParams(index + 1);
     wtLenParams->setParameter(index, data);
+    wtLenVarParams->setParameter(index, data);
+}
+
+void ss_growth::setWtLenParamHeader(int index, QString hdr)
+{
+    wtLenParams->setParamHeader(index, hdr);
+    wtLenVarParams->setTableTitle(index, hdr);
 }
 
 void ss_growth::setWtLenTVParam(int index, QStringList data)

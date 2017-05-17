@@ -15,6 +15,7 @@
 #include "dialog_view.h"
 #include "dialog_fileview.h"
 #include "console_redir.h"
+#include "dialog_runoptions.h"
 
 #define BUFFER_SIZE 256
 
@@ -45,12 +46,23 @@ public slots:
     void setOptions (QString opt = QString(""));
     void changeExe ();
 
+    void setNohess(bool value);
+    void setShess(bool value);
+    void setEst(bool value);
+    void setNoest(bool value);
+    void setLprof(bool value);
+    void setMcdiag(bool value);
+
     void stdOutput();
     void stdError();
     void outputLine();
 
     void showWarnFile();
     void showEchoFile();
+
+    void showOptions();
+    void applyOptions();
+    void resetOptions();
 
     void onProcessStarted();
     void onProcessStdOutWrite(QString szOutput);
@@ -81,6 +93,14 @@ private:
     bool running;
 
     QFont dfont;
+
+    Dialog_runoptions *runoptions;
+    bool nohess;
+    bool shess;
+    bool est;
+    bool noest;
+    bool lprof;
+    bool mcdiag;
 
     void setUiEnabled(bool flag);
     void finishOutput();

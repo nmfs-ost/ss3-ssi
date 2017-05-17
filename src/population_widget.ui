@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -604,16 +604,6 @@ recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="1" colspan="2">
-              <widget class="QPushButton" name="pushButton_recr_time_vary_autogen">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>Auto Generate</string>
-               </property>
-              </widget>
-             </item>
              <item row="10" column="4">
               <spacer name="horizontalSpacer_18">
                <property name="orientation">
@@ -1018,7 +1008,7 @@ recruitment distribution method = 1)</string>
                    <item row="9" column="0">
                     <widget class="QLabel" name="label_recr_dev_cycles">
                      <property name="text">
-                      <string>Period of cycles in recruitment</string>
+                      <string>Period for recruitment cycles</string>
                      </property>
                     </widget>
                    </item>
@@ -1074,7 +1064,7 @@ recruitment distribution method = 1)</string>
                    <item row="10" column="0">
                     <widget class="QLabel" name="label_recr_dev_period_params">
                      <property name="text">
-                      <string>Period parameters</string>
+                      <string>Period cycle parameters</string>
                      </property>
                     </widget>
                    </item>

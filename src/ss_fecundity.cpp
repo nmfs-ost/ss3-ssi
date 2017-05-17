@@ -1,6 +1,7 @@
 #include "ss_fecundity.h"
 
 ss_fecundity::ss_fecundity(ss_model *parent)
+    : QObject((QObject *)parent)
 {
     parnt = parent;
     method = 0;
@@ -13,12 +14,19 @@ ss_fecundity::ss_fecundity(ss_model *parent)
     hermaphParams->setParamHeader(1, QString("Hermaph_std_dev"));
     hermaphParams->setParamHeader(2, QString("Hermaph_asymp_rate"));
     hermaphVarParams = new timeVaryParameterModel(parnt);
-    hermaphVarParams->setNumParams(3);
+    hermaphVarParams->setTotalNumVarTables(3);
+    hermaphVarParams->setTableTitle(0, QString("Hermaph_inflect_age"));
+    hermaphVarParams->setTableTitle(1, QString("Hermaph_std_dev"));
+    hermaphVarParams->setTableTitle(2, QString("Hermaph_asymp_rate"));
+    connect (hermaphParams, SIGNAL(paramChanged(int,QStringList)),
+             hermaphVarParams, SLOT(changeVarParamData(int,QStringList)));
 
     femaleParams = new longParameterModel((QObject*)parnt);
     femaleParams->setNumParams(4);
     femaleVarParams = new timeVaryParameterModel(parnt);
-    femaleVarParams->setNumParams(4);
+    femaleVarParams->setTotalNumVarTables(4);
+    connect (femaleParams, SIGNAL(paramChanged(int,QStringList)),
+             femaleVarParams, SLOT(changeVarParamData(int,QStringList)));
 }
 
 ss_fecundity::~ss_fecundity()
@@ -49,6 +57,7 @@ void ss_fecundity::setHermParam(int index, QStringList data)
     if (index >= hermaphParams->getNumParams())
         hermaphParams->setNumParams(index + 1);
     hermaphParams->setParameter(index, data);
+    hermaphVarParams->setParameter(index, data);
 }
 
 void ss_fecundity::setHermTVParam(int index, QStringList data)

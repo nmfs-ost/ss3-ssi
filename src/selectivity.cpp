@@ -17,15 +17,13 @@ selectivity::selectivity(ss_model *model, int method)
     setup->setColHeader(1, "Discard");
     setup->setColHeader(2, "Male");
     setup->setColHeader(3, "Special");
-    parameters = new longParameterModel();// parameterModelTV(model);
+    parameters = new longParameterModel();
     varParameters = new timeVaryParameterModel(model);
 
     connect (setup, SIGNAL(dataChanged(QList<int>)),
              SLOT(setSetup(QList<int>)));
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
-
-//    timeVaryParameters = parameters->getTimeVaryParams();
 
     discardParameters = new shortParameterModel();
     specialParameters = new shortParameterModel();
@@ -72,10 +70,10 @@ QString selectivity::getSetupText()
 {
     QString text("");
     text.append(QString(" %1 %2 %3 %4").arg(
-                QString::number(setup->getValue(0)),//(pattern),
-                QString::number(setup->getValue(1)),//(discard),
-                QString::number(setup->getValue(2)),//(male),
-                QString::number(setup->getValue(3))));//(special)));
+                QString::number(setup->getValue(0)),
+                QString::number(setup->getValue(1)),
+                QString::number(setup->getValue(2)),
+                QString::number(setup->getValue(3))));
     return text;
 }
 
@@ -217,6 +215,7 @@ void selectivity::setNumParameters(int num)
             setParameter(i, ql);
         }
     }
+    varParameters->setTotalNumVarTables(num);
 }
 
 void selectivity::setParameter(int index, QString text)
@@ -228,6 +227,7 @@ void selectivity::setParameter(int index, QString text)
 void selectivity::setParameter(int index, QStringList strList)
 {
     parameters->setParameter(index, strList);
+    varParameters->setParameter(index, strList);
 //    parameters->changeParamData();
 }
 
@@ -250,6 +250,7 @@ QStringList selectivity::getParameter(int index)
 void selectivity::setParameterLabel(int index, QString label)
 {
     parameters->setParamHeader(index, label);
+    varParameters->setTableTitle(index, label);
 }
 
 QString selectivity::getParameterLabel(int index)

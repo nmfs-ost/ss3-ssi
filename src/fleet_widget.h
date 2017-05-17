@@ -63,18 +63,23 @@ public slots:
     void qSetupTVParamsChanged();
     void setQTimeVaryReadParams(int flag);
 
+    void setAr1SelexSmoother(int val);
+
     void changeSelexSizePattern(int pat);
     void showSelexSizeInfo();
     void changeSelexSizeDiscard(int disc);
     void changeSelexSizeMale (int mal);
     void changeSelexSizeSpecial (int spc);
     void sizeSelexParamsChanged();
+    void sizeSelexTVParamsChanged();
+    void setSelTimeVaryReadParams(int flag);
 
     void changeSelexAgePattern(int pat);
     void changeSelexAgeMale (int mal);
     void changeSelexAgeSpecial (int spc);
     void showSelexAgeInfo();
     void ageSelexParamsChanged();
+    void ageSelexTVParamsChanged();
 
 private:
 
