@@ -92,6 +92,17 @@ private slots:
 
     void changeSpwnRecReadTimeVary (int flag);
 
+    void changeGrowthParams();
+    void changeGrowthTVParams();
+    void changeNatMParams();
+    void changeNatMTVParams();
+    void changeWtLenParams();
+    void changeWtLenTVParams();
+    void changeCohortParams();
+    void changeCohortTVParams();
+    void changeFecundityParams();
+    void changeFecundityTVParams();
+
     void changeRecrFullParams ();
     void changeRecrTVParams ();
     void changeRecrAssignParams ();
@@ -130,6 +141,8 @@ private slots:
 
 private:
     Ui::population_widget *ui;
+
+    growthPattern *currPattern;
 
     tableview *growthMorphDistView;
     tableview *growthParamsView;

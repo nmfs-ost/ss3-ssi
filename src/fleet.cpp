@@ -923,6 +923,16 @@ void Fleet::appendLambda(QStringList values)
     lambdaModel->setRowData(rows, values);
 }
 
+int Fleet::getAr1SelSmoother()
+{
+    return ar1SelSmoother;
+}
+
+void Fleet::setAr1SelSmoother(int value)
+{
+    ar1SelSmoother = value;
+}
+
 float Fleet::get_max_catch() const
 {
     return f_max_catch;

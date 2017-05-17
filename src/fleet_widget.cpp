@@ -115,6 +115,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_q_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setQTimeVaryReadParams(int)));
 
     connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
+    connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
     connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), SLOT(showSelexSizeInfo()));
     connect (ui->spinBox_selex_size_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexSizePattern(int)));
     connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
@@ -428,6 +429,7 @@ void fleet_widget::set_current_fleet(int index)
         qTvParamsView->setModel(current_fleet->Q()->getTVParams());
         qTvParamsView->setHeight(current_fleet->Q()->getNumTVParams());
         qTvParamsView->resizeColumnsToContents();
+        current_fleet->Q()->getTVParamModel()->updateVarParams();
 
         ui->spinBox_selex_size_pattern->setValue(current_fleet->getSizeSelectivity()->getPattern());
         ui->spinBox_selex_size_discard->setValue(current_fleet->getSizeSelectivity()->getDiscard());
@@ -461,6 +463,7 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->setModel(current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
         ageSelexTimeVaryParamsView->setHeight(current_fleet->getAgeSelectivity()->getNumTimeVaryParameters());
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
+        ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
 
         ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());
@@ -745,6 +748,12 @@ void fleet_widget::changeSelexSizePattern(int pat)
     ui->spinBox_selex_size_num_params->setValue
             (current_fleet->getSizeSelectivity()->getNumParameters());
     sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getSetupModel()->rowCount());
+}
+
+void fleet_widget::setAr1SelexSmoother(int val)
+{
+    for (int i = 0; i < model_data->get_num_fleets(); i++)
+        model_data->getFleet(i)->setAr1SelSmoother(val);
 }
 
 void fleet_widget::showSelexSizeInfo()

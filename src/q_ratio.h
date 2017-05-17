@@ -61,6 +61,7 @@ public:
     void setTVParam (int index, QStringList data) {varParams->setVarParameter(index, data);}
     QStringList getTVParam (int index) {return varParams->getVarParameter(index);}
     tablemodel *getTVParams () {return varParams->getVarParamTable();}
+    timeVaryParameterModel *getTVParamModel () {return varParams;}
 
     int getAutoGenerate () {return varParams->getAutoGenerate();}
     void setAutoGenerate (int flag) {varParams->setAutoGenerate(flag);}

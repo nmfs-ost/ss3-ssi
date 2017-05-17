@@ -272,7 +272,7 @@ void shortParameterModel::checkParamData()
                 param.insert(j, QString("0"));
             }
         }
-        while (j < defaultParam.count())
+        while (j++ < defaultParam.count())
             param.append(QString("0"));
         paramData->setRowData(i, param);
     }
@@ -734,6 +734,7 @@ timeVaryParameterModel::timeVaryParameterModel(ss_model *parent) : QObject((QObj
     varyParamTable->setRowCount(0);
     autoGenerate = 0;
 
+    setTotalNumVarTables(0);
     setNumVarParams(0);
 
     connect (varyParamTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
@@ -783,7 +784,7 @@ void timeVaryParameterModel::setTotalNumVarTables(int num)
     {
         paramVarModel = newVaryParamTable();
         varyParamDataTables.append(paramVarModel);
-        tableUsed.append(0);
+        tableUsed.append(false);
         blkVal.append(0);
         blkFxn.append(0);
         devVal.append(0);
@@ -810,16 +811,16 @@ void timeVaryParameterModel::setVarParamsUsed(QList<int> data)
     if (num != tableUsed.count())
     {
         setTotalNumVarTables(num);
-        tableUsed = data;
         changed = true;
     }
     else
     {
         for (int i = 0; i < num; i++)
         {
-            if (data.at(i) != tableUsed.at(i))
+            if ((tableUsed.at(i) && data.at(i) == 0) ||
+                (!tableUsed.at(i) && data.at(i) != 0))
             {
-                tableUsed[i] = data[i];
+                tableUsed[i] = (data[i] != 0);
                 changed = true;
             }
         }
@@ -874,44 +875,50 @@ void timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
 void timeVaryParameterModel::changeVarParamData(int parm, QStringList data)
 {
     bool varsChanged = false;
-    int item = QString(data.at(7)).toInt();
+    int item = QString(data.at(0)).toInt();
+    bool autogen = (autoGenerate == 0) || (autoGenerate == 2 && item == -12345);
 
     if (getNumParams() <= parm)
         setNumParams(parm + 1);
 
+    item = QString(data.at(7)).toInt();
     if (envVal[parm] != item)
     {
         envVal[parm] = item;
-        tableUsed[parm] = item;
+        autoGenEnvVarParam(parm, item);
         varsChanged = true;
     }
     item = QString(data.at(8)).toInt();
     if (devVal[parm] != item)
     {
         devVal[parm] = item;
-        tableUsed[parm] = item;
+        autoGenDevVarParam(parm, item);
         varsChanged = true;
     }
     item = QString(data.at(12)).toInt();
     if (blkVal[parm] != item)
     {
         blkVal[parm] = item;
-        tableUsed[parm] = item;
+        autoGenBlkVarParam(parm, item, QString(data.at(13)).toInt(), data);
         varsChanged = true;
     }
     item = QString(data.at(13)).toInt();
     if (blkFxn[parm] != item)
     {
         blkFxn[parm] = item;
+        autoGenBlkVarParam(parm, QString(data.at(12)).toInt(), item, data);
         varsChanged = true;
     }
+    tableUsed[parm] = (envVal[parm] != 0) ||
+            (devVal[parm] != 0) ||
+            (blkVal[parm] != 0);
 
     if (varsChanged)
     {
-        item = QString(data.at(0)).toInt();
-        if (autoGenerate == 0 ||
-           (autoGenerate == 2 && item == -12345))
-            generateVarParamData(parm, data);
+//        item = QString(data.at(0)).toInt();
+//        if (autoGenerate == 0 ||
+  //         (autoGenerate == 2 && item == -12345))
+    //        generateVarParamData(parm, data);
         updateVarParams ();
         emit varParamsChanged();
     }

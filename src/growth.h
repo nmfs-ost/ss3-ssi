@@ -1,21 +1,26 @@
 #ifndef GROWTH_H
 #define GROWTH_H
 
+#include <QObject>
 #include <QList>
+#include <QStringList>
 
 #include "growth_pattern.h"
 #include "growth_season_effects.h"
 #include "parametermodelTV.h"
 #include "setupmodel.h"
 
-class ss_growth
+class ss_growth : public QObject
 {
+    Q_OBJECT
+
 public:
     ss_growth(ss_model *parent = 0);
     ~ss_growth();
 
     void reset();
 
+public slots:
     int getNum_patterns() const;
     void setNum_patterns(int value);
     growthPattern *getPattern(int index) {return patterns[index];}
@@ -70,26 +75,30 @@ public:
     QStringList getMatAgeVals () {return matAgeValues->getRowData(0);}
     void setMatAgeVals (QStringList data) {matAgeValues->setRowData(0, data);}
 
-    void setNumWtLenParams (int num) {wtLenParams->setNumParams(num);}
+    void setNumWtLenParams (int num);// {wtLenParams->setNumParams(num);}
     int getNumWtLenParams () {return wtLenParams->getNumParams();}
     void addWtLenParam (QStringList data) {setWtLenParam(getNumWtLenParams(), data);}
     void setWtLenParam (int index, QStringList data);
     QStringList getWtLenParam (int index) {return wtLenParams->getParameter(index);}
+    void setWtLenParamHeader (int index, QString hdr);
+    QString getWtLenParamHeader (int index) {return wtLenParams->getParamHeader(index);}
     tablemodel *getWtLenParams () {return wtLenParams->getParamTable();}
     longParameterModel *getWtLenParamModel () {return wtLenParams;}
-    void setNumWtLenTVParams (int num) {wtLenVarParams->setNumParams(num);}
+//    void setNumWtLenTVParams (int num) {wtLenVarParams->setNumParams(num);}
     int getNumWtLenTVParams () {return wtLenVarParams->getNumVarParams();}
-    void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
+//    void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
     void setWtLenTVParam (int index, QStringList data);
     QStringList getWtLenTVParam (int index) {return wtLenVarParams->getVarParameter(index);}
+    QString getWtLenTVParamHeader (int index) {return wtLenVarParams->getVarParamHeader(index);}
     tablemodel *getWtLenTVParams () {return wtLenVarParams->getVarParamTable();}
     float getFirst_mature_age() const;
     void setFirst_mature_age(float value);
 
-    void setCohortParam (QStringList data) {cohortParam->setParameter (0, data);}
+    void setCohortParam (QStringList data);// {cohortParam->setParameter (0, data);}
     QStringList getCohortParam () {return cohortParam->getParameter(0);}
     tablemodel *getCohortParams () {return cohortParam->getParamTable();}
     void setCohortTVParam (int row, QStringList data) {cohortVarParam->setVarParameter(row, data);}
+    int getNumCohortTVParams () {return cohortVarParam->getNumVarParams();}
     QStringList getCohortTVParam (int row) {return cohortVarParam->getVarParameter(row);}
     tablemodel *getCohortTVParams () {return cohortVarParam->getVarParamTable();}
 
@@ -116,8 +125,8 @@ public:
 //    QStringList getParameter(int index);
 //    tablemodel *getParamsModel() {return paramtable;}
 
-    longParameter * getParam(int i) const;
-    void setParam(int i, longParameter *&value);
+//    longParameter * getParam(int i) const;
+//    void setParam(int i, longParameter *&value);
 
     int getNum_morphs() const;
     void setNum_morphs(int value);

@@ -240,7 +240,7 @@ protected:
 
     QList<tablemodel *> varyParamDataTables;
     QStringList tableHeaders;
-    QList<int> tableUsed;
+    QList<bool> tableUsed;
     QList<int> blkVal;
     QList<int> blkFxn;
     QList<int> devVal;
