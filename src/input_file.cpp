@@ -204,7 +204,7 @@ QString ss_file::get_next_value(QString prompt)
         else
             msg.append(QString("looking for %1 in ").arg(prompt));
         msg.append(QString("file %2.").arg(this->fileName()));
-        QMessageBox::critical(0, tr("Input File unexpected EOF"), msg);
+        QMessageBox::warning(0, tr("Input File unexpected EOF"), msg);
     }
     return tk;
 }
@@ -257,7 +257,7 @@ void ss_file::append_file_line_info (QString &txt)
 int ss_file::error (QString err)
 {
     append_file_line_info (err);
-    int btn = QMessageBox::critical((QWidget*)parent(), tr("Error"), err, QMessageBox::Cancel | QMessageBox::Ok);
+    int btn = QMessageBox::warning((QWidget*)parent(), tr("Error"), err, QMessageBox::Cancel | QMessageBox::Ok);
     return btn;
 }
 

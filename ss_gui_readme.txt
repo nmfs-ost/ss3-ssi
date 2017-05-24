@@ -13,6 +13,13 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.16b
+      2017-05-17
+1. Critical file messages are now Warnings so that the program does not
+   crash. It will still crash if bad data is read.
+2. Ignores recruitment distribution interaction (only used for method 1).
+   The GUI will change the distribution method from 1 to 3.
+============================================================================
       3.3.15b
       2017-05-17
 1. Now reads/writes SS 3.30.03 data files.

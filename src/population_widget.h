@@ -94,6 +94,7 @@ private slots:
 
     void changeGrowthParams();
     void changeGrowthTVParams();
+    void changeCVParams();
     void changeNatMParams();
     void changeNatMTVParams();
     void changeWtLenParams();

@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -555,7 +555,7 @@
              <item row="1" column="1">
               <widget class="QSpinBox" name="spinBox_recr_dist_params">
                <property name="minimum">
-                <number>1</number>
+                <number>2</number>
                </property>
                <property name="maximum">
                 <number>4</number>
@@ -583,14 +583,6 @@
               <widget class="QLabel" name="label_recr_dist_method">
                <property name="text">
                 <string>Distribution method for parameters</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2" colspan="3">
-              <widget class="QCheckBox" name="checkBox_recr_interaction">
-               <property name="text">
-                <string>Year x Area x Settlement Event Interaction Requested (only for
-recruitment distribution method = 1)</string>
                </property>
               </widget>
              </item>

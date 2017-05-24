@@ -128,25 +128,25 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
-            fleet = abs(d_file->get_next_value().toInt()); // fleet number
+            fleet = abs(d_file->get_next_value("Abund fleet num").toInt()); // fleet number
             if (fleet != (i + 1))
                 d_file->error(QString("Fleet number does not match."));
-            units = d_file->get_next_value().toInt(); // units
+            units = d_file->get_next_value("Abund units").toInt(); // units
             flt->setAbundUnits(units);
-            err_type = d_file->get_next_value().toInt(); // err_flt->setAbundErrType(err_type);
+            err_type = d_file->get_next_value("Abund err-type").toInt(); // err_flt->setAbundErrType(err_type);
             flt->setAbundErrType(err_type);
-            temp_int = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value("Abund sd ").toInt();
             flt->setSDReport(temp_int);
         }
         // here are the abundance numbers
         do
         {    // year, month, fleet_number, observation, error
             str_lst.clear();
-            str_lst.append(d_file->get_next_value("year"));
-            str_lst.append(d_file->get_next_value("month"));
-            str_lst.append(d_file->get_next_value("fleet"));
-            str_lst.append(d_file->get_next_value("obs"));
-            str_lst.append(d_file->get_next_value("err"));
+            str_lst.append(d_file->get_next_value("Abund year"));
+            str_lst.append(d_file->get_next_value("Abund month"));
+            str_lst.append(d_file->get_next_value("Abund fleet"));
+            str_lst.append(d_file->get_next_value("Abund obs"));
+            str_lst.append(d_file->get_next_value("Abund err"));
             year = str_lst.at(0).toInt();
             fleet = abs(str_lst.at(2).toInt()) - 1;
 /*            year = d_file->get_next_value().toInt();
@@ -166,9 +166,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         {
             for (i = 0; i < num_vals; i++)
             {
-                fleet = abs(d_file->get_next_value().toInt()) - 1;
-                units = d_file->get_next_value().toInt();
-                err_type = d_file->get_next_value().toInt();
+                fleet = abs(d_file->get_next_value("discard fleet").toInt()) - 1;
+                units = d_file->get_next_value("discard units").toInt();
+                err_type = d_file->get_next_value("discard err-type").toInt();
                 data->getFleet(fleet)->setDiscardUnits(units);
                 data->getFleet(fleet)->setDiscardErrType(err_type);
             }
@@ -176,11 +176,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             do
             {    // year, month, fleet_number, observation, error
                 str_lst.clear();
-                str_lst.append(d_file->get_next_value("year"));
-                str_lst.append(d_file->get_next_value("month"));
-                str_lst.append(d_file->get_next_value("fleet"));
-                str_lst.append(d_file->get_next_value("obs"));
-                str_lst.append(d_file->get_next_value("err"));
+                str_lst.append(d_file->get_next_value("Discard year"));
+                str_lst.append(d_file->get_next_value("Discard month"));
+                str_lst.append(d_file->get_next_value("Discard fleet"));
+                str_lst.append(d_file->get_next_value("Discard obs"));
+                str_lst.append(d_file->get_next_value("Discard err"));
                 year = str_lst.at(0).toInt();
                 fleet = abs(str_lst.at(2).toInt()) - 1;
 /*                year = d_file->get_next_value().toInt();
@@ -198,18 +198,18 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  SS_Label_Info_2.5 #Read Mean Body Weight data
         //  note that syntax for storing this info internal is done differently than for surveys and discard
-        temp_int = d_file->get_next_value().toInt();
+        temp_int = d_file->get_next_value("use mean bwt").toInt();
         data->setUseMeanBwt(temp_int);
         if (temp_int > 0)
         {
-            temp_int = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value("mean bwt df").toInt();
             for (i = 0; i < data->get_num_fleets(); i++)
                 data->getFleet(i)->setMbwtDF(temp_int);
             do
             {    // year, month, fleet_number, partition, obs, stderr
                 str_lst.clear();
                 for (int j = 0; j < 6; j++)
-                    str_lst.append(d_file->get_next_value());
+                    str_lst.append(d_file->get_next_value(QString("mean bwt")));
                 year = str_lst.at(0).toInt();
                 fleet = abs(str_lst.at(2).toInt()) - 1;
                 if (year != -9999)
@@ -225,7 +225,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         if (l_data == NULL)
             l_data = new compositionLength();
         data->set_length_composition(l_data);
-        temp_int = d_file->get_next_value().toInt();
+        temp_int = d_file->get_next_value("Length comp alt bin method").toInt();
         l_data->setAltBinMethod(temp_int);
         switch (temp_int)
         {
@@ -233,52 +233,52 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             break;
         case 2:  // generate from min, max, width
             float min, max, width;
-            token = d_file->get_next_value();
+            token = d_file->get_next_value("Length comp bin width");
             width = token.toFloat();
             l_data->setAltBinWidth(width);
-            token = d_file->get_next_value();
+            token = d_file->get_next_value("Length comp alt bin min");
             min = token.toFloat();
             l_data->setAltBinMin(min);
-            token = d_file->get_next_value();
+            token = d_file->get_next_value("Length comp alt bin max");
             max = token.toFloat();
             l_data->setAltBinMax(max);
             l_data->generateAltBins();
             break;
         case 3:  // read vector
             str_lst.clear();
-            temp_int = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value("Length comp num alt bins").toInt();
             l_data->setNumberAltBins(temp_int);
             for (int j = 0; j < temp_int; j++)
-                str_lst.append(d_file->get_next_value());
+                str_lst.append(d_file->get_next_value("Length comp alt bin"));
             l_data->setAltBins(str_lst);
             break;
         }
         //  SS_Label_Info_2.7 #Start length data section
-        temp_int = d_file->get_next_value().toInt();
+        temp_int = d_file->get_next_value("use length comp?").toInt();
         data->setUseLengthComp(temp_int);
         if (temp_int == 1)
         {
             for (i = 0; i < total_fleets; i++)
             {
-                data->getFleet(i)->setLengthMinTailComp(d_file->get_next_value());
-                data->getFleet(i)->setLengthAddToData(d_file->get_next_value());
-                temp_int = d_file->get_next_value().toInt();
+                data->getFleet(i)->setLengthMinTailComp(d_file->get_next_value("min tail comp"));
+                data->getFleet(i)->setLengthAddToData(d_file->get_next_value("add to data"));
+                temp_int = d_file->get_next_value("combine genders").toInt();
                 data->getFleet(i)->setLengthCombineGen(temp_int);
-                temp_int = d_file->get_next_value().toInt();
+                temp_int = d_file->get_next_value("compress bins").toInt();
                 data->getFleet(i)->setLengthCompressBins(temp_int);
-                temp_int = d_file->get_next_value().toInt();
+                temp_int = d_file->get_next_value("error").toInt();
                 data->getFleet(i)->setLengthCompError(temp_int);
-                temp_int = d_file->get_next_value().toInt();
+                temp_int = d_file->get_next_value("error parameter").toInt();
                 data->getFleet(i)->setLengthCompErrorParm(temp_int);
             }
-            temp_int = d_file->get_next_value().toInt();//token.toInt();
+            temp_int = d_file->get_next_value("Length comp number bins").toInt();//token.toInt();
             l_data->setNumberBins(temp_int);
             for (int j = 0; j < data->get_num_fleets(); j++)
                 data->getFleet(j)->setLengthNumBins(temp_int);
             str_lst.clear();
             for (i = 0; i < temp_int; i++)
             {
-                str_lst.append(d_file->get_next_value());
+                str_lst.append(d_file->get_next_value("Length comp bin"));
             }
             l_data->setBins(str_lst);
             if (l_data->getAltBinMethod() == 1) // set alt bins if method = 1
@@ -294,7 +294,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.clear();
                 for (int j = 0; j < obslength; j++)
                 {
-                    token = d_file->get_next_value();
+                    token = d_file->get_next_value(QString("Length comp data"));
                     str_lst.append(token);
                 }
                 if (str_lst.at(0).toInt() == -9999)
@@ -313,7 +313,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         compositionAge *a_data = data->get_age_composition();
         if (a_data == NULL)
             a_data = new compositionAge ();
-        token = d_file->get_next_value();
+        token = d_file->get_next_value("age comp num bins");
         temp_int = token.toInt();
         a_data->setNumberBins(temp_int);
         for (i = 0; i < data->get_num_fleets(); i++)
@@ -324,11 +324,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         str_lst.clear();
         for (i = 0; i < temp_int; i++)
         {
-            token = d_file->get_next_value();
+            token = d_file->get_next_value("age comp bin");
             str_lst.append(token);
         }
         a_data->setBins(str_lst);
-        token = d_file->get_next_value();
+        token = d_file->get_next_value("age comp num error defs");
         temp_int = token.toInt();
         a_data->set_num_error_defs(temp_int);
         for (i = 0; i < temp_int; i++)
@@ -345,19 +345,19 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         for (i = 0; i < total_fleets; i++)
         {
-            data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value());
-            data->getFleet(i)->setAgeAddToData(d_file->get_next_value());
-            temp_int = d_file->get_next_value().toInt();
+            data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value("min tail comp"));
+            data->getFleet(i)->setAgeAddToData(d_file->get_next_value("add to data"));
+            temp_int = d_file->get_next_value("combine genders").toInt();
             data->getFleet(i)->setAgeCombineGen(temp_int);
-            temp_int = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value("compress bins").toInt();
             data->getFleet(i)->setAgeCompressBins(temp_int);
-            temp_int = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value("error").toInt();
             data->getFleet(i)->setAgeCompError(temp_int);
-            temp_int = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value("error parm").toInt();
             data->getFleet(i)->setAgeCompErrorParm(temp_int);
         }
 
-        token = d_file->get_next_value();
+        token = d_file->get_next_value("Age comp alt bin method");
         a_data->setAltBinMethod(token.toInt());
 
         //  SS_Label_Info_2.8.2 #Read Age data
@@ -367,7 +367,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             str_lst.clear();
             for (int j = 0; j < obslength; j++)
             {
-                token = d_file->get_next_value();
+                token = d_file->get_next_value(QString("Age data"));
                 str_lst.append(token);
                 if (token.contains("-9999"))
                 {
@@ -394,7 +394,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.clear();
                 for (int j = 0; j < obslength; j++)
                 {
-                    token = d_file->get_next_value();
+                    token = d_file->get_next_value(QString("mean Size_at_Age"));
                     str_lst.append(token);
                 }
                 if (str_lst.at(0).toInt() == -9999)
@@ -408,7 +408,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
 
         //  SS_Label_Info_2.10 #Read environmental data that will be used to modify processes and expected values
-        temp_int = d_file->get_next_value().toInt();
+        temp_int = d_file->get_next_value("num env vars").toInt();
         data->setNumEnvironVars (temp_int);
         data->setNumEnvironVarObs(0);
         if (temp_int > 0)
@@ -419,7 +419,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.clear();
                 for(int j = 0; j < obslength; j++)
                 {
-                    str_lst.append(d_file->get_next_value());
+                    str_lst.append(d_file->get_next_value(QString("env var data")));
                 }
                 temp_int = str_lst.at(0).toInt();
                 if (temp_int != -9999)
@@ -578,7 +578,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     }
     else
     {
-        d_file->error(QString("File is unreadable."));
+        d_file->error(QString("Data file does not exist or is unreadable."));
     }
     return false;
 }
@@ -1520,7 +1520,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                     total += fcast->get_num_areas();
                 for (i = 0; i < total; i++)
                 {
-                    temp_float = f_file->get_next_value().toFloat();
+                    temp_float = f_file->get_next_value("seas flt rel f").toFloat();
                     fcast->set_seas_fleet_rel_f(s, i, temp_float);
                 }
             }
@@ -1529,7 +1529,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         // max catch fleet
         do {
             fleet = f_file->get_next_value().toInt();
-            temp_float = f_file->get_next_value().toFloat();
+            temp_float = f_file->get_next_value("max catch fleet").toFloat();
             if (fleet != -9999)
                 fcast->set_max_catch_fleet((fleet - 1), temp_float);
         } while (fleet != -9999);
@@ -1539,7 +1539,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             fcast->set_max_catch_area(i, 0);
         do {
             area = f_file->get_next_value().toInt();
-            temp_float = f_file->get_next_value().toFloat();
+            temp_float = f_file->get_next_value("max catch area").toFloat();
             if (area != -9999)
                 fcast->set_max_catch_area((area - 1), temp_float);
         } while (area != -9999);
@@ -1549,8 +1549,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         for (i = 0; i < data->get_num_fleets(); i++)
             data->getFleet(i)->setAllocGroup(0);
         do {
-            fleet = f_file->get_next_value().toInt();
-            temp_int = f_file->get_next_value().toInt();
+            fleet = f_file->get_next_value("fleet alloc grp").toInt();
+            temp_int = f_file->get_next_value("alloc grp").toInt();
             if (fleet != -9999)
             {
                 data->getFleet(fleet - 1)->setAllocGroup(temp_int);
@@ -1585,20 +1585,20 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         do
         {
             str_lst.clear();
-            token = f_file->get_next_value();
+            token = f_file->get_next_value("Year");
             temp_int = token.toInt();
             str_lst.append(token);                // Year
-            str_lst.append(f_file->get_next_value()); // Season
-            str_lst.append(f_file->get_next_value()); // Fleet
-            str_lst.append(f_file->get_next_value()); // Catch
+            str_lst.append(f_file->get_next_value("Season")); // Season
+            str_lst.append(f_file->get_next_value("Fleet")); // Fleet
+            str_lst.append(f_file->get_next_value("Catch")); // Catch
             if (num == -1)
-                str_lst.append(f_file->get_next_value()); // Basis
+                str_lst.append(f_file->get_next_value("Basis")); // Basis
             if (temp_int != -9999)
                 fcast->addFixedFcastCatch(str_lst);
         } while (temp_int != -9999);
 
         //  SS_Label_Info_3.5 #End of datafile indicator
-        token = f_file->get_next_value();
+        token = f_file->get_next_value("End of data indicator");
         temp_int = token.toInt();
         if (temp_int != END_OF_DATA)
         {
@@ -1617,7 +1617,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
     }
     else
     {
-        f_file->error(QString("File is not readable."));
+        f_file->error(QString("Forecast file does not exist or is not readable."));
     }
     return 1;
 }
@@ -1908,30 +1908,30 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         c_file->read_comments();
 
         // read wtatage.ss
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Read wtatage.ss?").toInt();
         data->setReadWtAtAge(temp_int);
 
         // growth patterns
-        num = c_file->get_next_value().toInt();
+        num = c_file->get_next_value("Num growth patterns").toInt();
         pop->Grow()->setNum_patterns(num);
         // morphs or platoons
-        num = c_file->get_next_value().toInt();
+        num = c_file->get_next_value("Num growth morphs").toInt();
         pop->Grow()->setNum_morphs(num); // 1, 3, and 5 are best, normal dist set
         num = pop->Grow()->getNum_morphs();
         pop->Grow()->setMorph_within_ratio(1.0);
         pop->Grow()->setMorph_dist(0, 1.0);
         if (num > 1)
         {
-            temp_float = c_file->get_next_value().toFloat();
+            temp_float = c_file->get_next_value("Morph between ratio").toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
-            temp_float = c_file->get_next_value().toFloat();
+            temp_float = c_file->get_next_value("Morph dist").toFloat();
             if ((int)temp_float != -1) // normal dist is the default
             {
                 float total = temp_float;
                 pop->Grow()->setMorph_dist(0, temp_float);
                 for (i = 1; i < num; i++)
                 {
-                    temp_float = c_file->get_next_value().toFloat();
+                    temp_float = c_file->get_next_value("Morph dist").toFloat();
                     total += temp_float;
                     pop->Grow()->setMorph_dist(i, temp_float);
                 }
@@ -1948,25 +1948,26 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 for (i = 1; i < num; i++)
                 {
-                    temp_float = c_file->get_next_value().toFloat();
+                    temp_float = c_file->get_next_value("Morph dist - ignored").toFloat();
                 }
                 pop->Grow()->setMorphDist();
             }
         }
 
         // recruitment designs
-        index = c_file->get_next_value().toInt(); // recruitment distribution
+        index = c_file->get_next_value("Recr dist").toInt(); // recruitment distribution
         pop->SR()->setDistribMethod(index);
-        temp_int = c_file->get_next_value().toInt(); // recruitment dist area
+        temp_int = c_file->get_next_value("Recr dist area").toInt(); // recruitment dist area
         pop->SR()->setDistribArea(temp_int);
         switch (index)
         {
         case 1:
+            pop->SR()->setDistribMethod(3);
         case 2:
         case 3:
-            num = c_file->get_next_value().toInt(); // num recr assignments
+            num = c_file->get_next_value("Num recr assigns").toInt(); // num recr assignments
             pop->SR()->setNumAssignments(num);
-            temp_int = c_file->get_next_value().toInt(); // read interact params?
+            temp_int = c_file->get_next_value("Recr intx?").toInt(); // read interact params?
             pop->SR()->setDoRecruitInteract(temp_int);
             break;
         case 4:
@@ -1979,7 +1980,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist.clear();
             for (int j = 0; j < 4; j++)
-                datalist.append(c_file->get_next_value());
+                datalist.append(c_file->get_next_value("Recr assign data"));
             pop->SR()->setAssignment(i, datalist);
         }
 
@@ -1988,30 +1989,30 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Move()->setFirstAge(0);
         if (data->get_num_areas() > 1)
         {
-            num = c_file->get_next_value().toInt();
+            num = c_file->get_next_value("Num move defs").toInt();
             pop->Move()->setNumDefs(num);
             if (num > 0)
             {
-                temp_float = c_file->get_next_value().toFloat();
+                temp_float = c_file->get_next_value("Move first age").toFloat();
                 pop->Move()->setFirstAge(temp_float);
                 for (i = 0; i < num; i++)
                 {
                     datalist.clear();
                     for (int j = 0; j < 6; j++)
-                        datalist.append(c_file->get_next_value());
+                        datalist.append(c_file->get_next_value("Move definition"));
                     pop->Move()->setDefinition(i, datalist);
                 }
             }
         }
 
         // time block definitions
-        num = c_file->get_next_value().toInt();
+        num = c_file->get_next_value("Num block patterns").toInt();
         data->setNumBlockPatterns(num);
         if (num > 0)
         {
             for (i = 0; i < num; i++)
             {
-                temp_int = c_file->get_next_value().toInt();
+                temp_int = c_file->get_next_value("Num blocks").toInt();
                 data->getBlockPattern(i)->setNumBlocks(temp_int);
             }
             for (i = 0; i < num; i++)
@@ -2019,8 +2020,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 for (int j = 0; j < data->getBlockPattern(i)->getNumBlocks(); j++)
                 {
                     datalist.clear();
-                    datalist.append(c_file->get_next_value());
-                    datalist.append(c_file->get_next_value());
+                    datalist.append(c_file->get_next_value("block start"));
+                    datalist.append(c_file->get_next_value("block end"));
                     data->getBlockPattern(i)->setBlock(j, datalist);
                 }
             }
@@ -2041,7 +2042,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         data->getFleet(0)->setSelTimeVaryReadParams(temp_int);
 
         // natural Mort
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Nat Mort type").toInt();
         pop->Grow()->setNatural_mortality_type(temp_int);
         switch (temp_int)
         {
@@ -2050,16 +2051,16 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             num_vals = 1;  // 1 parameter for each gender only
             break;
         case 1:
-            num_vals = c_file->get_next_value().toInt(); // num breakpoints
+            num_vals = c_file->get_next_value("Num breakpts").toInt(); // num breakpoints
             pop->Grow()->setNatMortNumBreakPts(num_vals);
             datalist.clear();
             for (int i = 0; i < num_vals; i++) // vector of breakpoints
-                datalist.append(c_file->get_next_value());
+                datalist.append(c_file->get_next_value("Breakpts"));
             pop->Grow()->setNatMortBreakPts(datalist);
             num_vals = num_vals; // read N params for each gender for each GP
             break;
         case 2:
-            temp_int = c_file->get_next_value().toInt(); // ref age for Lorenzen
+            temp_int = c_file->get_next_value("Lorenz ref age").toInt(); // ref age for Lorenzen
             pop->Grow()->setNaturnalMortLorenzenRef(temp_int);
             num_vals = 1; // read 1 param for each gender for each GP
             break;
@@ -2073,7 +2074,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.clear();
                 for (int j = 0; j < num_vals; j++)
                 {
-                    datalist.append(c_file->get_next_value());
+                    datalist.append(c_file->get_next_value("age-spec M vals female"));
                 }
                 pop->Grow()->getPattern(i)->setNatMFemAgeList(datalist);
             }
@@ -2084,7 +2085,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     datalist.clear();
                     for (int j = 0; j < num_vals; j++)
                     {
-                        datalist.append(c_file->get_next_value());
+                        datalist.append(c_file->get_next_value("age-spec M vals male"));
                     }
                     pop->Grow()->getPattern(i)->setNatMMaleAgeList(datalist);
                 }
@@ -2096,20 +2097,22 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             pop->Grow()->getPattern(i)->setNumNatMParams(num_vals);
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
         // growth model
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Growth model").toInt();
         pop->Grow()->setModel(temp_int);
 
-        temp_float = c_file->get_next_value().toFloat();
+        temp_float = c_file->get_next_value("age for L1").toFloat();
         pop->Grow()->setAge_for_l1(temp_float);
-        temp_float = c_file->get_next_value().toFloat();
+        temp_float = c_file->get_next_value("age for L2").toFloat();
         pop->Grow()->setAge_for_l2(temp_float);
         if (pop->Grow()->getModel() == 3)
         {
-            temp_float = c_file->get_next_value().toFloat();
+            temp_float = c_file->get_next_value("age min for K").toFloat();
             pop->Grow()->setAgeMin_for_K(temp_float);
-            temp_float = c_file->get_next_value().toFloat();
+            temp_float = c_file->get_next_value("age max for K").toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
         // Exponential decay for growth above max age
@@ -2265,6 +2268,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->getFemaleParams()->setRowHeader(num, QString("Eggs/kg_slope_wt_Fem"));
         num++;
 
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
+
         if (data->get_num_genders() > 1)          // Male parameters
         {
             for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
@@ -2342,6 +2348,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Grow()->setWtLenParam(num, datalist);
             pop->Grow()->setWtLenParamHeader(num, QString("Wtlen_2_Mal"));
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
+
 
         if (pop->Fec()->getHermaphroditism())
         {
@@ -2358,6 +2367,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Fec()->setHermParam(i, datalist);
             pop->Fec()->getHermParams()->setRowHeader(i, QString("Hermaph_asymp_rate"));
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
+
 
         num_vals = (pop->Grow()->getNum_patterns() + data->get_num_areas() + data->get_num_seasons());
         pop->SR()->setNumDistParams(num_vals);
@@ -2405,6 +2417,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         datalist = readParameter(c_file); // cohort growth deviation
         pop->Grow()->setCohortParam(datalist);
         pop->Grow()->getCohortParams()->setRowHeader(0, QString("CohortGrowDev"));
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
+
 
         // movement parameters (2 per definition)
         num = pop->Move()->getNumDefs();
@@ -2421,6 +2436,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Move()->setParameter (par + 1, datalist);
             pop->Move()->setParamHeader(par+1, QString("MoveParm_B_%1").arg(temp_string));
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
         // ageing error if requested
         if (data->get_age_composition()->getUseParameters())
@@ -2439,6 +2456,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Grow()->getPattern(i)->setFractionFemaleParam(datalist);
             pop->Grow()->getPattern(i)->getFractionFemaleParams()->setRowHeader(0, QString("FracFemale_GP_%1").arg(QString::number(i+1)));
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
         // timevary MG Parameters
         timevaryread = pop->Grow()->getTimeVaryReadParams();
@@ -2463,7 +2482,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         datalist.clear();
         for (i = 0; i < 10; i++)
         {
-            temp_string = c_file->get_next_value();
+            temp_string = c_file->get_next_value("seasonal effects setup");
             datalist.append(temp_string);
         }
         pop->setSeasParamSetup(datalist);
@@ -2523,18 +2542,21 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setFullParameter(i, datalist);
             pop->SR()->setFullParameterHeader(i++, "SR_autocorr");
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
+
         // SR time vary params
         timevaryread = pop->SR()->getTimeVaryReadParams();
         readTimeVaryParams(c_file, data, pop->SR()->getFullParameters(), timevaryread, pop->SR()->getTVParameterModel()->getVarParamTable());
 
         // Recruitment deviations
-        pop->SR()->setRecDevCode(c_file->get_next_value().toInt());
-        pop->SR()->setRecDevStartYr(c_file->get_next_value().toInt());
-        pop->SR()->setRecDevEndYr(c_file->get_next_value().toInt());
-        pop->SR()->setRecDevPhase(c_file->get_next_value().toInt());
+        pop->SR()->setRecDevCode(c_file->get_next_value("Recr dev code").toInt());
+        pop->SR()->setRecDevStartYr(c_file->get_next_value("Recr dev start yr").toInt());
+        pop->SR()->setRecDevEndYr(c_file->get_next_value("Recr dev end yr").toInt());
+        pop->SR()->setRecDevPhase(c_file->get_next_value("Recr dev phase").toInt());
 
         // SR advanced opts
-        pop->SR()->setAdvancedOpts(c_file->get_next_value().compare("0") != 0);
+        pop->SR()->setAdvancedOpts(c_file->get_next_value("Read advanced options?").compare("0") != 0);
         if (pop->SR()->getAdvancedOpts())
         {
             pop->SR()->setRecDevEarlyStart(c_file->get_next_value().toInt());
@@ -2576,13 +2598,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 num++;
         }
         pop->M()->setNumInitialParams(num);
-        temp_float = c_file->get_next_value().toFloat();
+        temp_float = c_file->get_next_value("Mort ballpark F").toFloat();
         pop->M()->setBparkF(temp_float); // bparkF ;
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Mort ballpark year").toInt();
         pop->M()->setBparkYr(temp_int); // bparkYr
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Mort method").toInt();
         pop->M()->setMethod(temp_int); // method
-        temp_float = c_file->get_next_value().toFloat();
+        temp_float = c_file->get_next_value("Mort maxF").toFloat();
         pop->M()->setMaxF(temp_float); // maxF
         pop->M()->setStartF(0.0); //startF = 0;
         pop->M()->setPhase(0); // phase = 0;
@@ -2591,15 +2613,15 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         switch (pop->M()->getMethod())
         {
         case 2:
-            temp_float = c_file->get_next_value().toFloat();
+            temp_float = c_file->get_next_value("Mort start F").toFloat();
             pop->M()->setStartF(temp_float); // startF
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("Mort phase").toInt();
             pop->M()->setPhase(temp_int); // phase
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("Mort num inputs").toInt();
             pop->M()->setNumInputs(temp_int); // numInputs
             break;
         case 3:
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("Mort num tuning iters").toInt();
             pop->M()->setNumTuningIters(temp_int); // numTuningIters
             break;
         }
@@ -2609,7 +2631,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist.clear();
             for (int j = 0; j < 6; j++)
             {
-                datalist.append(c_file->get_next_value());
+                datalist.append(c_file->get_next_value("Mort inputs"));
             }
             pop->M()->setInputLine (i, datalist);
         }
@@ -2620,6 +2642,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->M()->setInitialParam(i, datalist);
             pop->M()->getInitialParams()->setRowHeader(i, QString("Fleet%1").arg(QString::number(i+1)));
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
 
         // Q setup
@@ -2629,7 +2653,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             flt = c_file->get_next_value().toInt();
 
             for (int j = 0; j < 5; j++)
-                datalist.append(c_file->get_next_value());
+                datalist.append(c_file->get_next_value(QString("Q setup")));
             if (flt > 0)
             {
                 data->getFleet(flt - 1)->Q()->setValues(datalist);
@@ -2678,6 +2702,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 fleet->Q()->setExtra(datalist);
             }
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
         // Q timevary params
         timevaryread = data->getFleet(0)->getQTimeVaryReadParams();
@@ -2702,22 +2728,25 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             sizesel = data->getFleet(i)->getSizeSelectivity();
             datalist.clear();
             for (int j = 0; j < 4; j++)
-                datalist.append(c_file->get_next_value("size selex val"));
+                datalist.append(c_file->get_next_value("size selex setup"));
             sizesel->setSetup(datalist);
         }
         // Age selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
             agesel = data->getFleet(i)->getAgeSelectivity();
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("age selex pattern").toInt();
             agesel->setPattern(temp_int);
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("age selex discard").toInt();
             agesel->setDiscard(temp_int);
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("age selex male").toInt();
             agesel->setMale(temp_int);
-            temp_int = c_file->get_next_value().toInt();
+            temp_int = c_file->get_next_value("age selex special").toInt();
             agesel->setSpecial(temp_int);
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
+
         // read size selectivity parameters
         for (int i = 0; i < num_fleets; i++)
         {
@@ -2810,6 +2839,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (temp_int == 7)
                 agesel->setSpecial(1);
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
         timevaryread = data->getFleet(0)->getSelTimeVaryReadParams();
         if (timevaryread > 0)
@@ -2859,12 +2890,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         data->setInputValueVariance(0);
         do
         {
-            temp_string = c_file->get_next_value();
+            temp_string = c_file->get_next_value(QString("input var id"));
             id = temp_string.toInt();
-            flt = c_file->get_next_value().toInt();
-            temp_float = c_file->get_next_value().toFloat();
+            flt = c_file->get_next_value(QString("input var fleet")).toInt();
+            temp_float = c_file->get_next_value(QString("input var value")).toFloat();
             if (temp_string.compare("EOF") == 0)
-                break;
+                return false;
             if (id == -9999)
                 break;
             data->setInputValueVariance(1);
@@ -2895,11 +2926,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         } while (id != -9999);
 
         // Max lambda phase
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Lambda max phase").toInt();
         data->setLambdaMaxPhase(temp_int);
 
         // sd offset
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("Lambda sd offset").toInt();
         data->setLambdaSdOffset(temp_int);
 
         // lambda changes
@@ -2908,20 +2939,20 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             int flt = 1;
             datalist.clear();
-            datalist.append(c_file->get_next_value());
+            datalist.append(c_file->get_next_value(QString("lambda component")));
             if (datalist.contains("EOF"))
-                break;
-            flt = abs(c_file->get_next_value().toInt());
-            datalist.append(c_file->get_next_value());
-            datalist.append(c_file->get_next_value());
-            datalist.append(c_file->get_next_value());
+                return false;
+            flt = abs(c_file->get_next_value(QString("lambda fleet")).toInt());
+            datalist.append(c_file->get_next_value(QString("lambda phase")));
+            datalist.append(c_file->get_next_value(QString("lambda value")));
+            datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
             if (datalist.contains("EOF"))
                 return false;
             if (datalist.at(0).toInt() != -9999)
                 data->getFleet(flt-1)->appendLambda(datalist);
         } while (datalist.at(0).toInt() != -9999);
 
-        temp_int = c_file->get_next_value().toInt();
+        temp_int = c_file->get_next_value("additional sd reporting").toInt();
         data->getAddSdReporting()->setActive(temp_int);
         if (temp_int == 1)
         {
@@ -2949,11 +2980,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setNatAgeBins(datalist);
         }
+        if (QString(datalist.last()).compare("EOF") == 0)
+            return false;
 
         temp_int = c_file->get_next_value().toInt();
         if (temp_int != 999)
         {
-            temp_string = QString("Problem reading control file. The end of data token '%1' does not match '999'").arg(
+            temp_string = QString("Problem reading control file. The end-of-data token '%1' does not match '999'").arg(
                         QString::number(temp_int));
             c_file->error(temp_string);
         }
@@ -2962,7 +2995,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     }
     else
     {
-        c_file->error(QString("Control file is unreadable."));
+        c_file->error(QString("Control file does not exist or is unreadable."));
     }
     return 1;
 }
@@ -3040,7 +3073,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.clear();
         temp_int = pop->SR()->getDistribMethod();
         line = QString (QString("%1 # recr_dist_method for parameters:").arg(QString::number(temp_int)));
-        line.append(QString("  1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1"));
+        line.append(QString(" 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1"));
         chars += c_file->writeline(line);
         temp_int = pop->SR()->getDistribArea();
         line = QString (QString("%1 # Recruitment: 1=global; 2=by area (future option)").arg(QString::number(temp_int)));
@@ -3048,7 +3081,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         num = pop->SR()->getNumAssignments();
         line = QString (QString("%1 # number of recruitment settlement assignments ").arg(QString::number(num)));
         chars += c_file->writeline(line);
-        if (pop->SR()->getDistribMethod() == 1)
+/*        if (pop->SR()->getDistribMethod() == 1)
         {
             temp_int = pop->SR()->getDoRecruitInteract()? 1: 0;
             line = QString (QString("%1 ").arg(QString::number(temp_int)));
@@ -3058,7 +3091,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             line = QString ("#_COND 1 ");
         }
         line.append(QString("# year_x_area_x_settlement_event interaction requested (only for recr_dist_method=1)"));
-        chars += c_file->writeline(line);
+        chars += c_file->writeline(line);*/
         line = QString ("#GPat month area age (for each settlement assignment)");
         chars += c_file->writeline(line);
         for (i = 0; i < num; i++)
@@ -4345,7 +4378,7 @@ bool read33_parameterFile(ss_file *pr_file, ss_model *data)
         pr_file->close();
     }
     else
-        pr_file->error("File is not readable.");
+        pr_file->error("Parameter file does not exist or is not readable.");
 
     return flag;
 }
@@ -4363,7 +4396,7 @@ int write33_parameterFile(ss_file *pr_file, ss_model *data)
         pr_file->close();
     }
     else
-        pr_file->error("File is not writeable.");
+        pr_file->error("Parameter file is not writeable.");
     return chars;
 }
 
@@ -4381,7 +4414,7 @@ bool read33_userDataFile (ss_file *ud_file, ss_model *data)
         ud_file->close();
     }
     else
-        ud_file->error("File is not readable.");
+        ud_file->error("User data file does not exist or is not readable.");
 
     return flag;
 }
@@ -4399,7 +4432,7 @@ int write33_userDataFile (ss_file *ud_file, ss_model *data)
         ud_file->close();
     }
     else
-        ud_file->error("File is not writeable.");
+        ud_file->error("User data file is not writeable.");
     return chars;
 }
 
@@ -4420,7 +4453,7 @@ bool read33_profileFile (ss_file *pf_file, ss_model *data)
     }
     else
     {
-        pf_file->error(QString("File is not readable."));
+        pf_file->error(QString("Profile file does not exist or is not readable."));
         okay = false;
     }
 
@@ -4441,7 +4474,7 @@ int write33_profileFile (ss_file *pf_file, ss_model *data)
     }
     else
     {
-        pf_file->error(QString("File is not writeable."));
+        pf_file->error(QString("Profile file is not writeable."));
         code = 1;
     }
 
