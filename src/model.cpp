@@ -6,6 +6,8 @@
 
 #include <QMessageBox>
 
+#include <cmath>
+
 Season::Season()
 {
     reset();
@@ -1237,8 +1239,8 @@ double checkdoublevalue(QString value)
 bool floatEquals(float a, float b)
 {
     bool equals = false;
-    float aa = abs(a);
-    float bb = abs(b);
+    float aa = std::abs(a);
+    float bb = std::abs(b);
     if ((a < 0 && b < 0) ||
             (a >= 0 && b >= 0))
         if ((aa > bb - .0000001) && (aa < bb + .0000001))

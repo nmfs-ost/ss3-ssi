@@ -2,6 +2,7 @@
 #include "model.h"
 
 #include <QString>
+#include <cmath>
 
 #define min(a,b) ((a)<(b))?(a):(b)
 
@@ -597,7 +598,7 @@ QStringList parameterModelTV::autoGenBlkParam(int param, int blkPat, QString lab
         QString p_init = QString(ql[2]);
         float lo = p_lo.toFloat() - p_init.toFloat(); // max negative change
         float hi = p_hi.toFloat() - p_init.toFloat(); // max positive change
-        float pr_tp = 0.5 * min(abs(lo), hi); // sd of normal prior
+        float pr_tp = 0.5 * min(std::abs(lo), hi); // sd of normal prior
         QString b_lo = QString::number(lo);
         QString b_hi = QString::number(hi);
         QString b_pr_type = QString::number(pr_tp);
