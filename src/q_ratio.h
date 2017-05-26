@@ -22,8 +22,8 @@ public:
     void reset();
 
     void setFleetName(QString name);
-    void setValues(QStringList values);
-    void setValues(QString str);
+    void setSetup(QStringList values);
+    void setSetup(QString str);
     QString getSetup();
     tablemodel *getSetupTable () {return setup->getTable();}
 

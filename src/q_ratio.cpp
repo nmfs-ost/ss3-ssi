@@ -38,7 +38,7 @@ void q_ratio::reset()
 {
     QStringList ql;
     ql << "0" << "0" << "0" << "0" << "0";
-    setValues(ql);
+    setSetup(ql);
 }
 
 
@@ -49,15 +49,15 @@ void q_ratio::setFleetName(QString name)
     setup->setRowHeader(name);
 }
 
-void q_ratio::setValues(QStringList values)
+void q_ratio::setSetup(QStringList values)
 {
     setup->setData(values);
 }
 
-void q_ratio::setValues (QString str)
+void q_ratio::setSetup (QString str)
 {
     QStringList sList (str.split(' ', QString::SkipEmptyParts));
-    setValues (sList);
+    setSetup (sList);
 }
 
 void q_ratio::changeSetupData(QList<int> values)
@@ -309,6 +309,7 @@ QString q_ratio::getPower()
 void q_ratio::setPower(QStringList values)
 {
     params->setParamData(1, values);
+    varParams->setParameter(1, values);
 }
 
 
@@ -333,6 +334,7 @@ QString q_ratio::getExtra()
 void q_ratio::setExtra(QStringList values)
 {
     params->setParamData(2, values);
+    varParams->setParameter(2, values);
 }
 
 QString q_ratio::getBase()
@@ -350,6 +352,7 @@ QString q_ratio::getBase()
 void q_ratio::setBase(QStringList values)
 {
     params->setParamData(0, values);
+    varParams->setParameter(0, values);
 }
 
 void q_ratio::changeSetup(int errType)

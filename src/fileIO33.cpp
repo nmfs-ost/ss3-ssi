@@ -2655,7 +2655,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->get_next_value(QString("Q setup")));
             if (flt > 0)
             {
-                data->getFleet(flt - 1)->Q()->setValues(datalist);
+                data->getFleet(flt - 1)->Q()->setSetup(datalist);
                 data->getFleet(flt - 1)->setQSetupRead(true);
             }
             if (datalist.at(0).compare("EOF") == 0)
@@ -2682,23 +2682,26 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < num_fleets; i++)
         {
             Fleet *fleet = data->getFleet(i);
-            // Q Base
             if (fleet->getQSetupRead())
             {
-                datalist = readParameter(c_file);
-                fleet->Q()->setBase(datalist);
-            }
-            // Q Power
-            if (fleet->Q()->getDoPower())
-            {
-                datalist = readParameter(c_file);
-                fleet->Q()->setPower(datalist);
-            }
-            // Q Extra SD
-            if (fleet->Q()->getDoExtraSD())
-            {
-                datalist = readParameter(c_file);
-                fleet->Q()->setExtra(datalist);
+                // Q Base
+                if (fleet->Q()->getSetupTable()->getRowData(0).at(0).toInt() > 0)
+                {
+                    datalist = readParameter(c_file);
+                    fleet->Q()->setBase(datalist);
+                }
+                // Q Power
+                if (fleet->Q()->getDoPower())
+                {
+                    datalist = readParameter(c_file);
+                    fleet->Q()->setPower(datalist);
+                }
+                // Q Extra SD
+                if (fleet->Q()->getDoExtraSD())
+                {
+                    datalist = readParameter(c_file);
+                    fleet->Q()->setExtra(datalist);
+                }
             }
         }
         if (QString(datalist.last()).compare("EOF") == 0)

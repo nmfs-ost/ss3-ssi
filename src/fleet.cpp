@@ -459,7 +459,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //  q_section
-    Q()->setValues(oldfl->Q()->getSetup());
+    Q()->setSetup(oldfl->Q()->getSetup());
 /*    Q()->setDoPower(oldfl->Q()->getDoPower());
     Q()->setDoEnvLink(oldfl->Q()->getDoEnvLink());
     Q()->setDoExtraSD(oldfl->Q()->getDoExtraSD());

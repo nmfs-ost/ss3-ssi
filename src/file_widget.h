@@ -74,7 +74,9 @@ private:
     QString data_file_name;
 
     float datafile_version;
+#ifdef DEBUG
     QFile *error;
+#endif
 
     Fleet *getActiveFleet (int index, Fleet::FleetType type);
 

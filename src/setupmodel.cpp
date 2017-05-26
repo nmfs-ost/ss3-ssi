@@ -997,6 +997,32 @@ void timeVaryParameterModel::updateVarParamData(QModelIndex tl, QModelIndex br, 
     if (changed) {emit varParamsChanged();}
 }
 
+void timeVaryParameterModel::updateVarParamData (int first, int last)
+{
+    QStringList param;
+    QStringList paramvar;
+    tablemodel *parmvartable;
+    int parm, parmvar;
+    bool changed = false;
+
+    for (int i = first; i <= last; i++)
+    {
+        param = varyParamTable->getRowData(i);
+        parm = tableNum.at(i);
+        parmvar = tableParNum.at(i);
+
+        parmvartable = varyParamDataTables.at(parm);
+        paramvar = parmvartable->getRowData(parmvar);
+
+        if (paramvar != param)
+        {
+            parmvartable->setRowData(parmvar, param);
+            changed = true;
+        }
+    }
+    if (changed) {emit varParamsChanged();}
+}
+
 // background data is changed
 // update gui table to match
 //

@@ -206,6 +206,7 @@ public slots:
     void updateVarParamHdrs ();
     void changeVarParamData(int parm, QStringList data);
     void changeVarParamHeader(int parm, QString title);
+    void updateVarParamData(int firstrow, int lastrow);
     void updateVarParamData(QModelIndex tl, QModelIndex br, QVector<int> data);
 
     int checkEnvVarValue (int value);

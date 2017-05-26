@@ -228,7 +228,6 @@ void selectivity::setParameter(int index, QStringList strList)
 {
     parameters->setParameter(index, strList);
     varParameters->setParameter(index, strList);
-//    parameters->changeParamData();
 }
 
 
@@ -372,13 +371,6 @@ QString selectivity::getDiscardParameterText (int index)
 int selectivity::getNumSpecialParameters()
 {
     return specialParameters->getNumParams();
-/*    int num = 0;
-    QStringList data;
-    for (int i = 0; i < parameters->rowCount(); i++)
-    {
-        num += parameters->useDev(i)? 1: 0;
-    }
-    return num;*/
 }
 
 void selectivity::setSpecialParameter(int index, QStringList strList)
@@ -422,13 +414,6 @@ QString selectivity::getRetainParameterText (int index)
 int selectivity::getNumMaleParameters()
 {
     return maleParameters->getNumParams();
-/*    int num = 0;
-    QStringList data;
-    for (int i = 0; i < parameters->rowCount(); i++)
-    {
-        num += parameters->useBlock(i)? 1: 0;
-    }
-    return num;*/
 }
 
 void selectivity::setMaleParameter(int index, QStringList strList)

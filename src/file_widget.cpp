@@ -81,8 +81,9 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     set_pro_file(false);
 
     show_input_files();
+#ifdef DEBUG
     error = new QFile(this);
-
+#endif
     current_dir = QDir (qApp->applicationDirPath());
     data_file_name = QString (DATA_FILE);
     control_file_name = QString (CONTROL_FILE);
@@ -107,9 +108,11 @@ void file_widget::reset()
 
 file_widget::~file_widget()
 {
+#ifdef DEBUG
     error->close();
-    delete viewer;
     delete error;
+#endif
+    delete viewer;
     delete starterFile;
     delete dataFile;
     delete forecastFile;
@@ -422,9 +425,11 @@ void file_widget::set_default_file_names(QString dir, bool keep)
     parm_trace_changed(false);
     show_input_files();
     // our plucky error file
+#ifdef DEBUG
     error->close();
     error->setFileName(QString("%1/%2").arg(dir, QString(ERROR_FILE)));
     error->open(QIODevice::WriteOnly);
+#endif
 }
 
 void file_widget::new_directory(QString dir, bool keep)
@@ -1009,9 +1014,11 @@ bool file_widget::error_no_file(ss_file *file)
     QString fname;
     QString msg(QString("File %1 does not exist.\n").arg(file->fileName()));
     msg = tr(msg.toUtf8());
+#ifdef DEBUG
     error->write(msg.toUtf8()) ;
+#endif
     msg.append(tr(" Do you want to select a new file?"));
-    int btn = QMessageBox::critical((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
+    int btn = QMessageBox::warning((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
     if (btn == QMessageBox::Ok)
     {
         fname = QFileDialog::getOpenFileName (this, tr("Select File"),
@@ -1033,16 +1040,20 @@ void file_widget::error_unreadable(QString fname)
 {
     QString msg (QString("File %1 is unreadable.\n").arg(fname));
     msg = tr(msg.toUtf8());
+#ifdef DEBUG
     error->write (msg.toUtf8()) ;
-    QMessageBox::critical((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
+#endif
+    QMessageBox::warning((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
 }
 
 void file_widget::error_problem(ss_file *file)
 {
     QString msg (QString("Problem in reading file %1, line %2.\n").arg(file->fileName(), QString::number(file->getLineNum())));
     msg = tr(msg.toUtf8());
+#ifdef DEBUG
     error->write (msg.toUtf8()) ;
-    QMessageBox::critical((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
+#endif
+    QMessageBox::warning((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
 }
 
 
