@@ -1,4 +1,5 @@
 #include <QWidget>
+#include <cmath>
 
 #include "population_widget.h"
 #include "ui_population_widget.h"
@@ -687,7 +688,7 @@ void population_widget::changeNumSubMorph(int num)
             }
             else
             {
-                between = sqrt(1. / (1. + value * value));
+                between = std::sqrt(1. / (1. + value * value));
                 within = value * between;
             }
             vis = true;
@@ -790,7 +791,7 @@ void population_widget::changeGrowthMorphRatio(double ratio)
     }
     else
     {
-        between = sqrt(1. / (1. + ratio * ratio));
+        between = std::sqrt(1. / (1. + ratio * ratio));
         within = ratio * between;
     }
     ui->doubleSpinBox_growth_morph_between->setValue(between);
