@@ -12,8 +12,8 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui(new Ui::Dialog_run)
 {
     ui->setupUi(this);
-//    ui->pushButton_increase->setVisible(false);
-//    ui->pushButton_decrease->setVisible(false);
+    ui->pushButton_increase->setVisible(false);
+    ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
     ui->plainTextEdit_output->setCenterOnScroll(true);
 
@@ -99,12 +99,8 @@ void Dialog_run::runSS()
 
     line = QString (QString("%1 %2\n").arg(ss, opts));
     ui->plainTextEdit_output->appendPlainText(line);
-    // run command in box
-//    arguments = line.split(' ');
-//    stocksynth->start(cmd);//, arguments);
-//    stocksynth->write(line);
-//    stocksynth->closeWriteChannel();
     arguments = opts.split(' ', QString::SkipEmptyParts);
+    // run command in box
     stocksynth->start(line, QIODevice::ReadOnly);
 }
 
