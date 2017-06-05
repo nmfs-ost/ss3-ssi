@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.17b
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.18
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -13,7 +13,11 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
-      3.3.17b
+      3.3.18
+      2017-06-05
+1. Reading/writing recruitment dist interaction fixed.
+============================================================================
+      3.3.17
       2017-05-30
 1. Fleet Q setup/parameters/timevarying parameters fixed.
 2. Disabled ss_error.txt in release version.

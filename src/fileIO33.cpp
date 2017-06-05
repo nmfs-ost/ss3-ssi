@@ -1959,21 +1959,21 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setDistribMethod(index);
         temp_int = c_file->get_next_value("Recr dist area").toInt(); // recruitment dist area
         pop->SR()->setDistribArea(temp_int);
-        switch (index)
+        num = c_file->get_next_value("Num recr assigns").toInt(); // num recr assignments
+        pop->SR()->setNumAssignments(num);
+        temp_int = c_file->get_next_value("Recr intx?").toInt(); // read interact params?
+        pop->SR()->setDoRecruitInteract(temp_int);
+/*        switch (index)
         {
         case 1:
         case 2:
         case 3:
-            num = c_file->get_next_value("Num recr assigns").toInt(); // num recr assignments
-            pop->SR()->setNumAssignments(num);
-            temp_int = c_file->get_next_value("Recr intx?").toInt(); // read interact params?
-            pop->SR()->setDoRecruitInteract(temp_int);
             break;
         case 4:
             pop->SR()->setNumAssignments(1);
             pop->SR()->setDoRecruitInteract(0);
             break;
-        }
+        }*/
 
         for (i = 0; i < num; i++) // gr pat, month, area, age for each assignment
         {
@@ -3075,7 +3075,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.clear();
         temp_int = pop->SR()->getDistribMethod();
         line = QString (QString("%1 # recr_dist_method for parameters:").arg(QString::number(temp_int)));
-        line.append(QString(" 1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1"));
+        line.append(QString(" 1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity;"));
         chars += c_file->writeline(line);
         temp_int = pop->SR()->getDistribArea();
         line = QString (QString("%1 # Recruitment: 1=global; 2=by area (future option)").arg(QString::number(temp_int)));
@@ -3083,16 +3083,8 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         num = pop->SR()->getNumAssignments();
         line = QString (QString("%1 # number of recruitment settlement assignments ").arg(QString::number(num)));
         chars += c_file->writeline(line);
-        if (pop->SR()->getDistribMethod() == 1)
-        {
-            temp_int = pop->SR()->getDoRecruitInteract()? 1: 0;
-            line = QString (QString("%1 ").arg(QString::number(temp_int)));
-        }
-        else
-        {
-            line = QString ("#_COND 1 ");
-        }
-        line.append(QString("# year_x_area_x_settlement_event interaction requested (only for recr_dist_method=1)"));
+        temp_int = pop->SR()->getDoRecruitInteract()? 1: 0;
+        line = QString (QString("%1 # unused quantity (formerly recr_dist_inx)").arg(QString::number(temp_int)));
         chars += c_file->writeline(line);
         line = QString ("#GPat month area age (for each settlement assignment)");
         chars += c_file->writeline(line);
