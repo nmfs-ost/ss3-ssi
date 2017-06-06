@@ -34,7 +34,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     dataFile = new ss_file(DATA_FILE, this);
     controlFile = new ss_file(CONTROL_FILE, this);
     runNumberFile = new ss_file(RUN_NUMBER_FILE, this);
-    parameterFile = new ss_file(PARAMETER_FILE, this);
+//    parameterFile = new ss_file(PARAMETER_FILE, this);
     profileFile = new ss_file(PROFILE_VAL_FILE, this);
     userDataFile = NULL;
 
@@ -55,7 +55,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     connect (ui->pushButton_fcast_file, SIGNAL(clicked()), SLOT(show_forecast_file_info()));
     connect (ui->pushButton_data_file, SIGNAL(clicked()), SLOT(show_data_file_info()));
     connect (ui->pushButton_control_file, SIGNAL(clicked()), SLOT(show_control_file_info()));
-    connect (ui->pushButton_par_file, SIGNAL(clicked()), SLOT(show_param_file_info()));
+    connect (ui->pushButton_viewParFile, SIGNAL(clicked()), SLOT(view_param_file()));
     connect (ui->pushButton_pro_file, SIGNAL(clicked()), SLOT(show_prof_file_info()));
     connect (ui->pushButton_wtatage, SIGNAL(clicked()), SLOT(view_wtatage()));
 
@@ -118,7 +118,7 @@ file_widget::~file_widget()
     delete forecastFile;
     delete controlFile;
     delete runNumberFile;
-    delete parameterFile;
+//    delete parameterFile;
     delete profileFile;
     delete userDataFile;
 
@@ -253,18 +253,20 @@ QString file_widget::get_run_num_file()
 void file_widget::set_par_file(bool flag)
 {
     ui->checkBox_par_file->setChecked(flag);
-    ui->label_parameter_file->setVisible(flag);
-    ui->pushButton_par_file->setVisible(flag);
+}
+
+bool file_widget::getReadParFile()
+{
+    return ui->checkBox_par_file->isChecked();
 }
 
 QString file_widget::get_param_file()
 {
-    return ui->label_parameter_file->text();
+    return QString(PARAMETER_FILE);
 }
 
-void file_widget::set_par_file(QString fname, bool keep)
+/*void file_widget::set_par_file(QString fname, bool keep)
 {
-    QStringList commnts;
     if (fname.isEmpty())
     {
         set_par_file(false);
@@ -279,10 +281,9 @@ void file_widget::set_par_file(QString fname, bool keep)
         {
             parameterFile->setFileName(fname);
         }
-        ui->label_parameter_file->setText(fname);
         set_par_file(true);
     }
-}
+}*/
 
 QString file_widget::get_profile_file()
 {
@@ -294,6 +295,11 @@ void file_widget::set_pro_file(bool flag)
     ui->checkBox_pro_file->setChecked(flag);
     ui->label_profile_file->setVisible(flag);
     ui->pushButton_pro_file->setVisible(flag);
+}
+
+bool file_widget::getReadProFile()
+{
+    return ui->checkBox_pro_file->isChecked();
 }
 
 void file_widget::set_pro_file(QString fname, bool keep)
@@ -398,7 +404,7 @@ void file_widget::set_default_file_names(QString dir, bool keep)
     set_forecast_file(QString("%1/%2").arg(dir, QString(FORECAST_FILE)), keep);
     set_data_file(QString("%1/%2").arg(dir, QString(data_file_name)), keep);
     set_control_file(QString("%1/%2").arg(dir, QString(control_file_name)), keep);
-    set_par_file(QString("%1/%2").arg(dir, QString(PARAMETER_FILE)));
+//    set_par_file(QString("%1/%2").arg(dir, QString(PARAMETER_FILE)));
     set_pro_file(QString("%1/%2").arg(dir, QString(PROFILE_VAL_FILE)));
 
     ui->label_comp_report_file->setText(QString("%1/%2").arg(dir, QString(COMP_REPORT_FILE)));
@@ -580,10 +586,10 @@ bool file_widget::read_files(ss_model *model_inf)
                 okay = read33_controlFile(controlFile, model_info);
             if (okay)
             {
-                if (ui->checkBox_par_file->isChecked())
+             /*   if (ui->checkBox_par_file->isChecked())
                 {
                     read33_parameterFile(parameterFile, model_info);
-                }
+                }*/
                 if (ui->checkBox_pro_file->isChecked())
                 {
                     read33_profileFile(profileFile, model_info);
@@ -596,7 +602,7 @@ bool file_widget::read_files(ss_model *model_inf)
                            (current_dir_name, QString(RUN_NUMBER_FILE)));
         }
     }
-    ;
+
     return okay;
 }
 
@@ -627,10 +633,10 @@ void file_widget::write_files()
         write33_dataFile(dataFile, model_info);
         write33_forecastFile(forecastFile, model_info);
         write33_controlFile(controlFile, model_info);
-        if (ui->checkBox_par_file->isChecked())
+    /*    if (ui->checkBox_par_file->isChecked())
         {
             write33_parameterFile(parameterFile, model_info);
-        }
+        }*/
         if (ui->checkBox_pro_file->isChecked())
         {
             reset_run_num();
@@ -1000,6 +1006,12 @@ void file_widget::show_file_info(ss_file *file)
     {
         file_info_dialog(file).exec();
     }
+}
+
+void file_widget::view_param_file()
+{
+    viewer->viewFile(PARAMETER_FILE);
+    viewer->show();
 }
 
 void file_widget::view_wtatage()

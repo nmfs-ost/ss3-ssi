@@ -124,8 +124,10 @@ public slots:
     void print_files ();
 
     void set_par_file (bool flag);
-    void set_par_file (QString fname, bool keep = false);
+    bool getReadParFile ();
+//    void set_par_file (QString fname, bool keep = false);
     void set_pro_file (bool flag);
+    bool getReadProFile ();
     void set_pro_file (QString fname, bool keep = false);
     void set_parmtr_write(int flag = 0);
     int get_parmtr_write ();
@@ -159,7 +161,8 @@ private slots:
     void show_forecast_file_info () {show_file_info (forecastFile);}
     void show_data_file_info () {show_file_info (dataFile);}
     void show_control_file_info () {show_file_info (controlFile);}
-    void show_param_file_info () {show_file_info (parameterFile);}
+//    void show_param_file_info () {show_file_info (parameterFile);}
+    void view_param_file ();
     void show_prof_file_info () {show_file_info (profileFile);}
 
 

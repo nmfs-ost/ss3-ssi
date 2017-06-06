@@ -32,6 +32,7 @@ public:
     ~MainWindow();
 
     void reset();
+    void refreshAll();
 
     void closeEvent(QCloseEvent *event);
     void setupMenus(QMenuBar *menu);
@@ -64,6 +65,8 @@ public slots:
     void saveDataFile();
     void readFiles ();
     void saveFiles ();
+    void copyFiles (QString oldDir, QString newDir);
+    void copyFile (QString fname, QString newDir);
     void printFiles();
     QString getDataFile();
     QString getControlFile();

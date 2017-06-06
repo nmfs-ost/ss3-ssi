@@ -158,6 +158,15 @@ void MainWindow::reset()
     population->reset();
 }
 
+void MainWindow::refreshAll()
+{
+    files->reset();
+    data->refresh();
+    forecast->refresh();
+    fleets->refresh();
+    population->refresh();
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeSettings();
@@ -278,10 +287,13 @@ void MainWindow::openNewDirectory()
                                 old_dir, QFileDialog::ShowDirsOnly));
     if (!new_dir.isEmpty() && new_dir != old_dir)
     {
+/*        copyFile(old_dir + QString("/wtatage.ss"), new_dir);
+        copyFile(old_dir + QString("/ss.par"), new_dir);
+        copyFile(old_dir + QString("/ss.bar"), new_dir);
         QString waa_str ("/wtatage.ss");
         QFile waa (old_dir + waa_str);
         if (waa.exists())
-            waa.copy (new_dir + waa_str);
+            waa.copy (new_dir + waa_str);*/
 
         current_dir = new_dir;
         files->new_directory(current_dir, true);
@@ -290,6 +302,7 @@ void MainWindow::openNewDirectory()
 
 void MainWindow::createNewDirectory()
 {
+    QString oldDir (current_dir);
     int btn =
     QMessageBox::question(this, tr("Create New Model"),
              tr("This will reset data to the default values and write the files to the selected directory.\nDo you wish to continue?"),
@@ -298,7 +311,8 @@ void MainWindow::createNewDirectory()
     {
         modelData->reset();
         openNewDirectory();
-        reset();
+//        copyFiles(oldDir, current_dir);
+        refreshAll();
     }
     saveFiles();
 }
@@ -351,6 +365,9 @@ void MainWindow::openDirectory(QString fname)
 
 void MainWindow::copyDirectory()
 {
+    QString old_dir (current_dir);
+    QString new_dir;
+
     int btn =
     QMessageBox::question(this, tr("Copy Current Model"),
              tr("This will copy the current model files and over-write any duplicate files in the selected directory.\nDo you wish to continue?"),
@@ -359,7 +376,11 @@ void MainWindow::copyDirectory()
     {
         openNewDirectory();
     }
-    saveFiles();
+    new_dir = QString (current_dir);
+    if (new_dir.compare(old_dir) != 0)
+    {
+        copyFiles(old_dir, new_dir);
+    }
 }
 
 void MainWindow::openControlFile()
@@ -462,6 +483,32 @@ void MainWindow::readFiles()
 void MainWindow::saveFiles()
 {
     files->write_files ();
+}
+
+void MainWindow::copyFiles(QString oldDir, QString newDir)
+{
+    saveFiles();
+    copyFile (oldDir + QString("/wtatage.ss"), newDir);
+    copyFile (oldDir + QString("/ss.par"), newDir);
+    copyFile (oldDir + QString("/ss.bar"), newDir);
+/*    if (modelData->getReadWtAtAge())
+    {
+        // copy wtatage.ss
+//        copy_file (oldDir + QString("/wtatage.ss_new"), newDir + QString("/wtatage.ss"));
+    }
+    if (files->getReadParFile())
+    {
+        // copy ss.par file
+//        copy_file (oldDir + QString("/ss.par"), newDir + QString("/ss.par"));
+    }*/
+}
+
+void MainWindow::copyFile(QString fname, QString newDir)
+{
+    QString sname (fname.section('/', -1));
+    QFile qfile (fname);
+    if (qfile.exists())
+        qfile.copy (QString("%1/%2").arg(newDir, sname));
 }
 
 void MainWindow::printFiles()
@@ -797,7 +844,8 @@ void MainWindow::run_trans()
         if (old_dir != current_dir)
         {
             // copy files
-            copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
+            copyFiles (old_dir, current_dir);
+/*            copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
             copy_file (old_dir + QString("/forecast.ss_new"), current_dir + QString("/forecast.ss"));
             copy_file (old_dir + QString("/data.ss_new"), current_dir + QString("/") + files->getDataFileName());
             copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
@@ -805,7 +853,7 @@ void MainWindow::run_trans()
             if (modelData->getReadWtAtAge())
             {
                 copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
-            }
+            }*/
             // read data into GUI
             readFiles();
         }
