@@ -844,16 +844,17 @@ void MainWindow::run_trans()
         if (old_dir != current_dir)
         {
             // copy files
-            copyFiles (old_dir, current_dir);
-/*            copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
+            copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
+            files->read_starter_file("starter.ss");
             copy_file (old_dir + QString("/forecast.ss_new"), current_dir + QString("/forecast.ss"));
             copy_file (old_dir + QString("/data.ss_new"), current_dir + QString("/") + files->getDataFileName());
             copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
-
+            copy_file (old_dir + QString("/ss.par"), current_dir + QString("/ss.par"));
+            copy_file (old_dir + QString("/ss.bar"), current_dir + QString("/ss.bar"));
             if (modelData->getReadWtAtAge())
             {
                 copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
-            }*/
+            }
             // read data into GUI
             readFiles();
         }

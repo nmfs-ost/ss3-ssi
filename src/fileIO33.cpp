@@ -595,7 +595,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 
     if(d_file->open(QIODevice::WriteOnly))
     {
-        chars += d_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
+//        chars += d_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
         chars += writeVersionComment(d_file);
         chars += d_file->write_comments();// (writeDatafileComment().toUtf8());
 
@@ -1633,7 +1633,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
     if(f_file->open(QIODevice::WriteOnly))
     {
-        chars += f_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
+//        chars += f_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
         chars += writeVersionComment(f_file);
         chars += f_file->write_comments();
 
@@ -3013,7 +3013,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
     if(c_file->open(QIODevice::WriteOnly))
     {
-        chars += c_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
+//        chars += c_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
         chars += writeVersionComment(c_file);
         chars += c_file->write_comments();
 

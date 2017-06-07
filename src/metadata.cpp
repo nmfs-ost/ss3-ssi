@@ -58,5 +58,5 @@ QString getDatafileVersionString()
 void setDatafileVersionString(float ver)
 {
     int major = (int)(ver * 100.0);
-    datafile_version_str = QString(QString("%1.0.0").arg(QString::number(major)));
+    datafile_version_str = QString(QString("%1.03.0").arg(QString::number(major)));
 }

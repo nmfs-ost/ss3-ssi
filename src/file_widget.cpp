@@ -830,7 +830,7 @@ void file_widget::write_starter_file (QString filename)
 
     if(starterFile->open(QIODevice::WriteOnly))
     {
-        chars += starterFile->writeline(QString("#V%1").arg(getDatafileVersionString()));
+//        chars += starterFile->writeline(QString("#V%1").arg(getDatafileVersionString()));
         chars += writeVersionComment(starterFile);
 
         starterFile->write_comments();//write_comments(starter);
