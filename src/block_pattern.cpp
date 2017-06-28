@@ -2,6 +2,7 @@
 
 BlockPattern::BlockPattern()
 {
+    QStringList blockHeader;
     blocks = new tablemodel();
     blockHeader << "Begin" << "End";
     blocks->setHeader(blockHeader);
@@ -16,7 +17,7 @@ BlockPattern::~BlockPattern()
 
 int BlockPattern::getNumBlocks() const
 {
-    return numBlocks;
+    return blocks->rowCount();
 }
 
 tablemodel *BlockPattern::getBlocks()
@@ -27,7 +28,6 @@ tablemodel *BlockPattern::getBlocks()
 void BlockPattern::setNumBlocks(int value)
 {
     blocks->setRowCount(value);
-    numBlocks = blocks->rowCount();
 }
 QStringList BlockPattern::getBlock(int index) const
 {

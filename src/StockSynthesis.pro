@@ -51,7 +51,6 @@ SOURCES += main.cpp\
     ss_mortality.cpp \
     long_parameter.cpp \
     short_parameter.cpp \
-    ss_q.cpp \
     method_setup.cpp \
     block_pattern.cpp \
     sd_reporting.cpp \
@@ -138,7 +137,6 @@ HEADERS  += mainwindow.h \
     ss_mortality.h \
     long_parameter.h \
     short_parameter.h \
-    ss_q.h \
     method_setup.h \
     block_pattern.h \
     sd_reporting.h \

@@ -40,9 +40,6 @@ public:
     shortParameter getUseCustomPattern (int blk);
 
 private:
-    int numBlocks;
-//    QList <TimeBlock *> Blocks;
-    QStringList blockHeader;
     tablemodel *blocks;
 
     longParameter useBlockPattern;
