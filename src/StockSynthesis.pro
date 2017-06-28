@@ -54,8 +54,6 @@ SOURCES += main.cpp\
     method_setup.cpp \
     block_pattern.cpp \
     sd_reporting.cpp \
-    lambda_change.cpp \
-    lambda.cpp \
     variance_adjustment.cpp \
     tag.cpp \
     selex_equation.cpp \
@@ -140,8 +138,6 @@ HEADERS  += mainwindow.h \
     method_setup.h \
     block_pattern.h \
     sd_reporting.h \
-    lambda_change.h \
-    lambda.h \
     variance_adjustment.h \
     tag.h \
     selex_equation.h \
