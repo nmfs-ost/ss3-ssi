@@ -13,6 +13,12 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.05.1
+      2017-07-10
+1. Added the minimum sampmle size to both the length and age comp header tables;
+   the default value is 1 to match SS 3.24.
+2. Added selectivity to use for forecasts (not yet implemented).
+============================================================================
       3.3.20
       2017-06-07
 1. Fixed major problem with converting old files. Copying of converted files
