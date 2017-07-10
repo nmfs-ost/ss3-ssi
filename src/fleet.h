@@ -162,6 +162,8 @@ public slots:
     void setLengthCompErrorParm (int val) {lengthComp->setErrorParam(val);}
     int getLengthCompErrorParm () {return lengthComp->getErrorParam();}
     void setLengthNumBins(int num) {lengthComp->setNumberBins(num, i_num_genders);}
+    int getLengthMinSampleSize () {return lengthComp->getMinSample();}
+    void setLengthMinSampleSize (int num) {lengthComp->setMinSample(num);}
     int getLengthObsLength () {return lengthComp->getObsLength();}
     void setLengthNumObs(int num) {lengthComp->setNumberObs(num);}
     int getLengthNumObs() {return lengthComp->getNumberObs();}
@@ -183,6 +185,8 @@ public slots:
     int getAgeCompError () {return ageComp->getErrorType();}
     void setAgeCompErrorParm (int val) {ageComp->setErrorParam(val);}
     int getAgeCompErrorParm () {return ageComp->getErrorParam();}
+    void setAgeCompMinSampleSize (int val) {ageComp->setMinSample(val);}
+    int getAgeCompMinSampleSize () {return ageComp->getMinSample();}
     void setAgeNumBins(int num) {ageComp->setNumberBins(num, i_num_genders);}
     int getAgeObsLength () {return ageComp->getObsLength();}
     void setAgeNumObs(int num) {ageComp->setNumberObs(num);}

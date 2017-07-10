@@ -208,12 +208,14 @@ void fleet_widget::connectFleet()
     connect (ui->spinBox_length_comp_bins, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCompressBins(int)));
     connect (ui->spinBox_length_comp_error, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCompError(int)));
     connect (ui->spinBox_length_comp_error_parm, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCompErrorParm(int)));
+    connect (ui->spinBox_length_min_sample, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthMinSampleSize(int)));
 
     connect (ui->spinBox_obs_age_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeNumObs(int)));
     connect (ui->spinBox_age_combine, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCombineGen(int)));
     connect (ui->spinBox_age_comp_bins, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompressBins(int)));
     connect (ui->spinBox_age_comp_error, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompError(int)));
     connect (ui->spinBox_age_comp_error_parm, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompErrorParm(int)));
+    connect (ui->spinBox_age_min_sample, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompMinSampleSize(int)));
 
     connect (ui->spinBox_obs_saa_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setSaaNumObs(int)));
     connect (ui->spinBox_obs_gen_num, SIGNAL(valueChanged(int)), SLOT(changeGenMethodNum(int)));
@@ -392,6 +394,7 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_length_comp_bins->setValue(current_fleet->getLengthCompressBins());
         ui->spinBox_length_comp_error->setValue(current_fleet->getLengthCompError());
         ui->spinBox_length_comp_error_parm->setValue(current_fleet->getLengthCompErrorParm());
+        ui->spinBox_length_min_sample->setValue(current_fleet->getLengthMinSampleSize());
 
         ageCompView->setModel(current_fleet->getAgeModel());
         ageCompView->resizeColumnsToContents();
@@ -402,6 +405,7 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_age_comp_bins->setValue(current_fleet->getAgeCompressBins());
         ui->spinBox_age_comp_error->setValue(current_fleet->getAgeCompError());
         ui->spinBox_age_comp_error_parm->setValue(current_fleet->getAgeCompErrorParm());
+        ui->spinBox_age_min_sample->setValue(current_fleet->getAgeCompMinSampleSize());
 
         saaObsView->setModel(current_fleet->getSaaModel());
         saaObsView->resizeColumnsToContents();

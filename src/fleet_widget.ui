@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -946,6 +946,19 @@
                 <item row="5" column="0" colspan="7">
                  <layout class="QVBoxLayout" name="verticalLayout_len_obs"/>
                 </item>
+                <item row="4" column="3">
+                 <widget class="QLabel" name="label_length_min_sample">
+                  <property name="toolTip">
+                   <string>1 will mimic 3.24 behavior</string>
+                  </property>
+                  <property name="text">
+                   <string>Minimum sample size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="4">
+                 <widget class="QSpinBox" name="spinBox_length_min_sample"/>
+                </item>
                </layout>
               </item>
              </layout>
@@ -1083,6 +1096,19 @@
                 </item>
                 <item row="5" column="0" colspan="7">
                  <layout class="QVBoxLayout" name="verticalLayout_age_obs"/>
+                </item>
+                <item row="4" column="3">
+                 <widget class="QLabel" name="label_age_min_sample">
+                  <property name="toolTip">
+                   <string>1 will mimic 3.24 behavior</string>
+                  </property>
+                  <property name="text">
+                   <string>Minimum sample size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="4">
+                 <widget class="QSpinBox" name="spinBox_age_min_sample"/>
                 </item>
                </layout>
               </item>
@@ -1448,7 +1474,7 @@
             <item>
              <widget class="QLabel" name="label_ar1_info">
               <property name="text">
-               <string>    </string>
+               <string/>
               </property>
              </widget>
             </item>

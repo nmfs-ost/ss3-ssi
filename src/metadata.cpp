@@ -6,9 +6,10 @@ QString datafile_version_str;
 
 QString getAppVersion ()
 {
-    QString str(QString("%1.%2.%3%4").arg(
+    QString str(QString("%1.%2.%3.%4%5").arg(
                     QString::number(app_version_major),
                     QString::number(app_version_minor),
+                    QString::number(app_version_sub),
                     QString::number(app_version_bugfix),
                     QString(app_release_level)));
     return str;

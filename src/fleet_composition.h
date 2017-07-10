@@ -32,6 +32,8 @@ public:
     int getErrorType () {return i_error;}
     void setErrorParam (int val) {i_err_param = val;}
     int getErrorParam () {return i_err_param;}
+    void setMinSample (int val) {i_min_sample = val;}
+    int getMinSample () {return i_min_sample;}
 
     void setNumberBins (int num, int gen);
     int getObsLength() {return obsModel->columnCount();}
@@ -52,6 +54,7 @@ protected:
     int i_compress_bins; // accumulate upper tail by this number of bins
     int i_error;       //  0=multinomial, 1=dirichlet
     int i_err_param;   // parm number if error = 1
+    int i_min_sample;   // minimum sample size, 1 will mimic 3.24
 
     tablemodel *obsModel;
     QStringList obsHeader;

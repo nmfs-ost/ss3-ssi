@@ -56,6 +56,8 @@ public slots:
     void set_forecast_rec_beg (int yr) {i_fcast_yrs[4] = yr;}
     void set_forecast_rec_end (int yr) {i_fcast_yrs[5] = yr;}
     int get_forecast_year (int i) {return i_fcast_yrs[i];}
+    void setSelectivity (int val) {i_selex = val;}
+    int getSelectivity () {return i_selex;}
     void set_cr_method (int ctl) {i_ctl_rule_method = ctl;}
     void set_combo_box_cr_method (int ctl);
     int get_cr_method () {return i_ctl_rule_method;}
@@ -182,6 +184,8 @@ public slots:
     float f_f_scalar;
     // Fcast_years:  beg_selex, end_selex, beg_relF, end_relF  (enter actual year, or values of 0 or -integer to be rel. endyr)
     int   i_fcast_yrs[6];
+    // Forecast selectivity (not yet implemented)
+    int   i_selex;
     // Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB) )
     int   i_ctl_rule_method;
     // Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below)

@@ -270,6 +270,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(i)->setLengthCompError(temp_int);
                 temp_int = d_file->get_next_value("error parameter").toInt();
                 data->getFleet(i)->setLengthCompErrorParm(temp_int);
+                temp_int = d_file->get_next_value("min sample size").toInt();
+                data->getFleet(i)->setLengthMinSampleSize(temp_int);
             }
             temp_int = d_file->get_next_value("Length comp number bins").toInt();//token.toInt();
             l_data->setNumberBins(temp_int);
@@ -355,6 +357,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             data->getFleet(i)->setAgeCompError(temp_int);
             temp_int = d_file->get_next_value("error parm").toInt();
             data->getFleet(i)->setAgeCompErrorParm(temp_int);
+            temp_int = d_file->get_next_value("min sample size").toInt();
+            data->getFleet(i)->setAgeCompMinSampleSize(temp_int);
         }
 
         token = d_file->get_next_value("Age comp alt bin method");
@@ -914,7 +918,9 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString("#_Comp_Error2:  parm number  for dirichlet");
         chars += d_file->writeline (line);
-        line = QString("#_mintailcomp_addtocomp_combM+F_CompressBins_CompError_ParmSelect");
+        line = QString("#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001");
+        chars += d_file->writeline (line);
+        line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
         chars += d_file->writeline (line);
 //        int fleetNum = 1;
         for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
@@ -927,6 +933,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.append(QString("%1 ").arg(QString::number(flt->getLengthCompressBins())));
             line.append(QString("%1 ").arg(QString::number(flt->getLengthCompError())));
             line.append(QString("%1 ").arg(QString::number(flt->getLengthCompErrorParm())));
+            line.append(QString("%1 ").arg(QString::number(flt->getLengthMinSampleSize())));
             line.append(QString("#_fleet:%1_%2").arg(QString::number(i), flt->getName()));
             chars += d_file->writeline (line);
         }
@@ -1025,18 +1032,21 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString("#_Comp_Error2:  parm number  for dirichlet");
         chars += d_file->writeline (line);
-        line = QString("#_mintailcomp_addtocomp_combM+F_CompressBins_CompError_ParmSelect");
+        line = QString("#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001");
+        chars += d_file->writeline (line);
+        line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
         chars += d_file->writeline (line);
         for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
         {
             flt = data->getActiveFleet(i);
-            line = QString(QString("%1 %2 %3 %4 %5 %6 #_fleet:%7_%8").arg (
+            line = QString(QString("%1 %2 %3 %4 %5 %6 %7 #_fleet:%8_%9").arg (
                                flt->getAgeMinTailComp(),
                                flt->getAgeAddToData(),
                                QString::number(flt->getAgeCombineGen()),
                                QString::number(flt->getAgeCompressBins()),
                                QString::number(flt->getAgeCompError()),
                                QString::number(flt->getAgeCompErrorParm()),
+                               QString::number(flt->getAgeCompMinSampleSize()),
                                QString::number(i),
                                flt->getName()));
             chars += d_file->writeline (line);
@@ -1457,6 +1467,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             fcast->set_forecast_year(i, temp_int);
         }
 
+        token = f_file->get_next_value("Forecast selectivity (not yet implemented)");
+        temp_int = token.toInt();
+        fcast->setSelectivity (temp_int);
         token = f_file->get_next_value("control rule method");
         temp_int = token.toInt();
         fcast->set_cr_method(temp_int);
@@ -1699,6 +1712,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         temp_string.append(" # after processing ");
         chars += f_file->writeline(temp_string);
 
+        chars += f_file->write_val(fcast->getSelectivity(), 5, QString("Forecast selectivity (not yet implemented)"));
         chars += f_file->write_val(fcast->get_cr_method(), 5, QString("Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB))"));
         chars += f_file->write_val(fcast->get_cr_biomass_const_f(), 5, QString("Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below)"));
         chars += f_file->write_val(fcast->get_cr_biomass_no_f(), 5, QString("Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10)"));
