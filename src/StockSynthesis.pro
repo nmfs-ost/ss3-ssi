@@ -96,7 +96,8 @@ SOURCES += main.cpp\
     seasonaleffectsmodel.cpp \
     parametermodel.cpp \
     dialog_runoptions.cpp \
-    conversions.cpp
+    conversions.cpp \
+    chartdialog.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -182,7 +183,8 @@ HEADERS  += mainwindow.h \
     seasonaleffectsmodel.h \
     parametermodel.h \
     dialog_runoptions.h \
-    conversions.h
+    conversions.h \
+    chartdialog.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -214,7 +216,8 @@ FORMS    += mainwindow.ui \
     dialog_about_gui.ui \
     documentdialog.ui \
     fileconversiondialog.ui \
-    dialog_runoptions.ui
+    dialog_runoptions.ui \
+    chartdialog.ui
 
 OTHER_FILES +=
 

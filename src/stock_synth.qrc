@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/images">
+    <qresource prefix="/i">
         <file>images/noaa_fisheries_logo.png</file>
         <file>images/noaa_fisheries_logo_small.png</file>
         <file>images/circle_only.jpg</file>
@@ -79,6 +79,8 @@
         <file>icons/help_icon_128.png</file>
         <file>icons/noaa_icon_128.png</file>
         <file>icons/admb_icon_128.png</file>
+        <file>icons/chart.png</file>
+        <file>icons/charts.png</file>
     </qresource>
     <qresource prefix="/">
         <file>icons/ss_pop_icon.png</file>

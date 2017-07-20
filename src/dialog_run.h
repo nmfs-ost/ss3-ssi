@@ -16,6 +16,7 @@
 #include "dialog_fileview.h"
 #include "console_redir.h"
 #include "dialog_runoptions.h"
+#include "chartdialog.h"
 
 #define BUFFER_SIZE 256
 
@@ -57,6 +58,7 @@ public slots:
     void stdError();
     void outputLine();
 
+    void showRptCharts();
     void showWarnFile();
     void showEchoFile();
 
@@ -81,6 +83,7 @@ private:
     Ui::Dialog_run *ui;
     Dialog_fileView *warnview;
     Dialog_fileView *echoview;
+    chartDialog *charts;
 
     QVBoxLayout *layout;
     QPlainTextEdit *out;

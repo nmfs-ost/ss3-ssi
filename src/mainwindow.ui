@@ -324,7 +324,7 @@
   </widget>
   <widget class="QDockWidget" name="dockWidget_help">
    <property name="windowIcon">
-    <iconset resource="stock_synth.qrc">
+    <iconset>
      <normaloff>:/images/icons/help_icon_128.png</normaloff>:/images/icons/help_icon_128.png</iconset>
    </property>
    <property name="floating">
@@ -368,7 +368,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="stock_synth.qrc">:/images/images/NOAA_fisheries_banner_fish_trans.png</pixmap>
+        <pixmap>:/images/images/NOAA_fisheries_banner_fish_trans.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -401,7 +401,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="stock_synth.qrc">:/images/images/image7_no_background.png</pixmap>
+        <pixmap>:/images/images/image7_no_background.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -417,7 +417,7 @@
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
-           <normaloff>:/images/icons/help_icon_128.png</normaloff>:/images/icons/help_icon_128.png</iconset>
+           <normaloff>:/i/icons/help_icon_128.png</normaloff>:/i/icons/help_icon_128.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -463,7 +463,7 @@
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
-           <normaloff>:/images/images/NOAA_circle_trans.png</normaloff>:/images/images/NOAA_circle_trans.png</iconset>
+           <normaloff>:/i/icons/noaa_icon_128.png</normaloff>:/i/icons/noaa_icon_128.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -486,7 +486,7 @@
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
-           <normaloff>:/images/icons/admb_icon_128.png</normaloff>:/images/icons/admb_icon_128.png</iconset>
+           <normaloff>:/i/icons/admb_icon_128.png</normaloff>:/i/icons/admb_icon_128.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -509,7 +509,7 @@
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
-           <normaloff>:/images/images/qt-logo.png</normaloff>:/images/images/qt-logo.png</iconset>
+           <normaloff>:/i/images/qt-logo.png</normaloff>:/i/images/qt-logo.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -530,7 +530,7 @@
   <action name="action_New">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/dir-new.png</normaloff>:/images/icons/dir-new.png</iconset>
+     <normaloff>:/i/icons/dir-new.png</normaloff>:/i/icons/dir-new.png</iconset>
    </property>
    <property name="text">
     <string>Create a &amp;new model</string>
@@ -542,7 +542,7 @@
   <action name="action_Open">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/file-open.png</normaloff>:/images/icons/file-open.png</iconset>
+     <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open existing model</string>
@@ -554,7 +554,7 @@
   <action name="action_Save_As">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/file-save-as.png</normaloff>:/images/icons/file-save-as.png</iconset>
+     <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;as a new model</string>
@@ -578,7 +578,7 @@
   <action name="action_About_Qt">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/images/qt-logo.png</normaloff>:/images/images/qt-logo.png</iconset>
+     <normaloff>:/i/images/qt-logo.png</normaloff>:/i/images/qt-logo.png</iconset>
    </property>
    <property name="text">
     <string>About &amp;Qt</string>
@@ -608,7 +608,7 @@
    </property>
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/file-print.png</normaloff>:/images/icons/file-print.png</iconset>
+     <normaloff>:/i/icons/file-print.png</normaloff>:/i/icons/file-print.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Print</string>
@@ -701,7 +701,7 @@
   </action>
   <action name="action_Upddate_control_parameters">
    <property name="icon">
-    <iconset resource="stock_synth.qrc">
+    <iconset>
      <normaloff>:/images/icons/document-properties.png</normaloff>:/images/icons/document-properties.png</iconset>
    </property>
    <property name="text">
@@ -750,7 +750,7 @@
    </property>
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/document-files.png</normaloff>:/images/icons/document-files.png</iconset>
+     <normaloff>:/i/icons/document-files.png</normaloff>:/i/icons/document-files.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Files</string>
@@ -782,6 +782,10 @@
    </property>
   </action>
   <action name="action_Forecast_specification">
+   <property name="icon">
+    <iconset resource="stock_synth.qrc">
+     <normaloff>:/i/icons/binoculars_64.png</normaloff>:/i/icons/binoculars_64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Forecast specification</string>
    </property>
@@ -789,7 +793,7 @@
   <action name="action_Save_data">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/file-save.png</normaloff>:/images/icons/file-save.png</iconset>
+     <normaloff>:/i/icons/file-save.png</normaloff>:/i/icons/file-save.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Save current model</string>
@@ -850,7 +854,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="stock_synth.qrc">
+    <iconset>
      <normaloff>:/images/icons/trawler_NOAA_lg.png</normaloff>:/images/icons/trawler_NOAA_lg.png</iconset>
    </property>
    <property name="text">
@@ -863,7 +867,7 @@
    </property>
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/trawler_NOAA_lg.png</normaloff>:/images/icons/trawler_NOAA_lg.png</iconset>
+     <normaloff>:/i/icons/trawler_NOAA_lg.png</normaloff>:/i/icons/trawler_NOAA_lg.png</iconset>
    </property>
    <property name="text">
     <string>F&amp;leets</string>
@@ -875,7 +879,7 @@
    </property>
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/images/admb_icon_trans.png</normaloff>:/images/images/admb_icon_trans.png</iconset>
+     <normaloff>:/i/images/admb_icon_trans.png</normaloff>:/i/images/admb_icon_trans.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Configuration</string>
@@ -890,7 +894,7 @@
    </property>
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/binoculars_64.png</normaloff>:/images/icons/binoculars_64.png</iconset>
+     <normaloff>:/i/icons/binoculars_64.png</normaloff>:/i/icons/binoculars_64.png</iconset>
    </property>
    <property name="text">
     <string>F&amp;orecast</string>
@@ -899,7 +903,7 @@
   <action name="action_About_ADMB">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/admb_icon_128.png</normaloff>:/images/icons/admb_icon_128.png</iconset>
+     <normaloff>:/i/images/admb_icon_trans.png</normaloff>:/i/images/admb_icon_trans.png</iconset>
    </property>
    <property name="text">
     <string>About A&amp;DMB</string>
@@ -911,7 +915,7 @@
   <action name="action_About_NFT">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/images/NOAA_circle_trans.png</normaloff>:/images/images/NOAA_circle_trans.png</iconset>
+     <normaloff>:/i/images/nft_thumbnail.jpg</normaloff>:/i/images/nft_thumbnail.jpg</iconset>
    </property>
    <property name="text">
     <string>About NOAA Fisheries Toolbox</string>
@@ -945,7 +949,7 @@
   <action name="actionAbout_SS_GUI">
    <property name="icon">
     <iconset resource="stock_synth.qrc">
-     <normaloff>:/images/icons/help-browser.png</normaloff>:/images/icons/help-browser.png</iconset>
+     <normaloff>:/i/images/image7_no_background.png</normaloff>:/i/images/image7_no_background.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About Stock Synthesis GUI</string>

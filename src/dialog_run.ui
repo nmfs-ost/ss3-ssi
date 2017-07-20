@@ -101,46 +101,14 @@
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_output" stretch="0,1">
+    <layout class="QVBoxLayout" name="verticalLayout_output" stretch="0">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_buttons">
        <item>
-        <widget class="QLabel" name="label_output">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Output</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_buttons">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QPushButton" name="pushButton_run">
+         <property name="toolTip">
+          <string>Run program in current directory</string>
+         </property>
          <property name="text">
           <string>Run</string>
          </property>
@@ -164,6 +132,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_pause">
+         <property name="toolTip">
+          <string>Pause the process</string>
+         </property>
          <property name="text">
           <string>Pause</string>
          </property>
@@ -190,6 +161,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_stop">
+         <property name="toolTip">
+          <string>Stop processing</string>
+         </property>
          <property name="text">
           <string>Stop</string>
          </property>
@@ -214,7 +188,95 @@
          </property>
         </widget>
        </item>
+       <item>
+        <spacer name="horizontalSpacer_buttons">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_rptCharts">
+         <property name="minimumSize">
+          <size>
+           <width>35</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Show Report Charts</string>
+         </property>
+         <property name="whatsThis">
+          <string>Show time-series charts from Report.sso</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="stock_synth.qrc">
+           <normaloff>:/i/icons/chart.png</normaloff>:/i/icons/chart.png</iconset>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_cRptCharts">
+         <property name="minimumSize">
+          <size>
+           <width>35</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Show CumReport Charts</string>
+         </property>
+         <property name="whatsThis">
+          <string>Show charts from CumReport.sso</string>
+         </property>
+         <property name="icon">
+          <iconset resource="stock_synth.qrc">
+           <normaloff>:/i/icons/charts.png</normaloff>:/i/icons/charts.png</iconset>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_output">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Output</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPlainTextEdit" name="plainTextEdit_output">
@@ -251,7 +313,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Errors</string>
+        <string>Error output</string>
        </property>
       </widget>
      </item>
@@ -376,7 +438,6 @@
   <tabstop>pushButton_showEcho</tabstop>
   <tabstop>pushButton_showWarn</tabstop>
   <tabstop>pushButton_changeExe</tabstop>
-  <tabstop>plainTextEdit_output</tabstop>
   <tabstop>plainTextEdit_error</tabstop>
  </tabstops>
  <resources>

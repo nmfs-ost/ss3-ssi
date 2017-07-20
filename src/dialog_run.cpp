@@ -15,6 +15,8 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui->pushButton_increase->setVisible(false);
     ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
+    ui->pushButton_cRptCharts->setVisible(false);
+
     ui->plainTextEdit_output->setCenterOnScroll(true);
 
     ui->pushButton_run->setEnabled(true);
@@ -27,6 +29,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (ui->pushButton_pause, SIGNAL(clicked()), SLOT(pauseRun()));
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
     connect (ui->pushButton_cancel, SIGNAL(clicked()), SLOT(rejected()));
+    connect (ui->pushButton_rptCharts, SIGNAL(clicked()), SLOT(showRptCharts()));
     connect (ui->pushButton_showWarn, SIGNAL(clicked()), SLOT(showWarnFile()));
     connect (ui->pushButton_showEcho, SIGNAL(clicked()), SLOT(showEchoFile()));
 
@@ -37,6 +40,9 @@ Dialog_run::Dialog_run(QWidget *parent) :
     warnview->hide();
     echoview = new Dialog_fileView(this);
     echoview->hide();
+
+    charts = new chartDialog(this);
+    charts->hide();
 
     nohess = false;
     shess = false;
@@ -69,6 +75,12 @@ Dialog_run::~Dialog_run()
 {
     delete ui;
     delete stocksynth;
+}
+
+void Dialog_run::showRptCharts()
+{
+    charts->show();
+    charts->refreshData();
 }
 
 void Dialog_run::showWarnFile()
@@ -278,6 +290,8 @@ void Dialog_run::stdError()
 void Dialog_run::setUiEnabled(bool flag)
 {
     ui->pushButton_cancel->setEnabled(flag);
+    ui->pushButton_rptCharts->setEnabled(flag);
+    ui->pushButton_cRptCharts->setEnabled(flag);
     ui->pushButton_showWarn->setEnabled(flag);
     ui->pushButton_showEcho->setEnabled(flag);
     ui->lineEdit_options->setEnabled(flag);
