@@ -25,9 +25,10 @@ public:
 public slots:
     void refreshData();
     void readData();
+    void resetCharts();
     void createCharts(int areaNum, QStringList serNames);
-    void removeSeries();
-    void removeSeries(QChart *cht, QList<QLineSeries *>seriesList);
+    void removeCharts();
+    void removeCharts(QChart *cht, QList<QLineSeries *>seriesList);
 
     void connectMarkers(QChart *cht);
     void disconnectMarkers(QChart *cht);

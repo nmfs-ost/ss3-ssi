@@ -9,6 +9,7 @@
 #include <QtCharts/QLegendMarker>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QXYLegendMarker>
+#include <QtCharts/QValueAxis>
 #include <QtCore/QtMath>
 
 QT_CHARTS_USE_NAMESPACE
@@ -32,6 +33,10 @@ chartDialog::chartDialog(QWidget *parent) :
 
 void chartDialog::reset()
 {
+    removeCharts();
+    seriesNames.clear();
+    seasons.clear();
+
     numBmassSeries = 0;
     numOtherSeries = 0;
 
@@ -50,8 +55,13 @@ chartDialog::~chartDialog()
 
 void chartDialog::refreshData()
 {
+    QRect qr (geometry());
+    QRect tempqr (pos(), QSize(225, 140));
     reset();
+    setGeometry(QRect(pos(), QSize(100, 50)));
     readData();
+    resetCharts();
+    setGeometry(qr);
 }
 
 void chartDialog::readData()
@@ -71,9 +81,6 @@ void chartDialog::readData()
     }
 
     QTextStream stream(&report);
-    removeSeries();
-    seasons.clear();
-    seriesNames.clear();
 
     while (!stream.atEnd())
     {
@@ -118,6 +125,10 @@ void chartDialog::readData()
                         xvalue += seasons.at(s - 2);
 //                    if (seas > 1)
 //                        xvalue += seasons.at(seas - 2);
+                    if (year < firstYear)
+                        firstYear = year;
+                    if (year > lastYear)
+                        lastYear = year;
 
                     if (values.at(2).contains("FORE"))
                     {
@@ -130,14 +141,22 @@ void chartDialog::readData()
                     {
                         yvalue = values.at(i + 4).toFloat(&okay);
                         if (okay)
+                        {
+                            if (yvalue > maxBmass)
+                                maxBmass = yvalue;
                             bmassSeries.at(index + i)->append(QPointF(xvalue, yvalue));
+                        }
                     }
                     index = numOtherSeries * (areaNum - 1);
                     for (int i = 0; i < numOtherSeries; i++)
                     {
                         yvalue = values.at(i + 8).toFloat(&okay);
                         if (okay)
+                        {
+                            if (yvalue > maxOther)
+                                maxOther = yvalue;
                             otherSeries.at(index + i)->append(QPointF(xvalue, yvalue));
+                        }
                     }
                 }
                 line = stream.readLine();
@@ -151,6 +170,24 @@ void chartDialog::readData()
     report.close();
 }
 
+void chartDialog::resetCharts()
+{
+    for (int i = 0; i < bmassCharts.count(); i++)
+    {
+        bmassCharts[i]->axisX()->setRange(firstYear, lastYear);
+        bmassCharts[i]->axisY()->setRange(0, maxBmass);
+        static_cast<QValueAxis *>(bmassCharts[i]->axisX())->applyNiceNumbers();
+        static_cast<QValueAxis *>(bmassCharts[i]->axisY())->applyNiceNumbers();
+    }
+    for (int i = 0; i < otherCharts.count(); i++)
+    {
+        otherCharts[i]->axisX()->setRange(firstYear, lastYear);
+        otherCharts[i]->axisY()->setRange(0, maxOther);
+        static_cast<QValueAxis *>(otherCharts[i]->axisX())->applyNiceNumbers();
+        static_cast<QValueAxis *>(otherCharts[i]->axisY())->applyNiceNumbers();
+    }
+}
+
 void chartDialog::createCharts(int areaNum, QStringList serNames)
 {
     QChart *newcht = 0;
@@ -159,17 +196,14 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
     if (areaNum > bmassCharts.count())
     {
         // create layout
-//        QHBoxLayout *layout = new QHBoxLayout(this);
-//        cDialog->addLayout(layout);
         newcht = new QChart();
         newcht->setTitle(QString("Area %1").arg(QString::number(areaNum)));
         newcht->legend()->setAlignment(Qt::AlignRight);
-        newcht->setGeometry(0, 0, 600, 600);
-        newcht->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        newcht->setGeometry(0, 0, 100, 100);
         newview = new QChartView (newcht);
-        newview->setGeometry(0, 0, 600, 600);
-        newview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//        newview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         bmassCharts.append(newcht);
+        bmassChartViews.append(newview);
         for (int i = 0; i < 4; i++)
         {
             newseries = new QLineSeries(newcht);
@@ -179,19 +213,18 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
         }
         connectMarkers(newcht);
         newcht->createDefaultAxes();
-//        layout->addWidget(newview);//(newview, areaNum, 1, 1, 1);
-        ui->gridLayout->addWidget(newview, areaNum, 1);
-//        addChart(newview, areaNum, 1);
+
+        ui->verticalLayout_left->addWidget(newview, 1);
+
 
         newcht = new QChart ();
         newcht->setTitle(QString("Area %1").arg(QString::number(areaNum)));
         newcht->legend()->setAlignment(Qt::AlignRight);
-        newcht->setGeometry(0, 0, 600, 600);
-        newcht->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        newcht->setGeometry(0, 0, 100, 100);
         newview = new QChartView (newcht);
-        newview->setGeometry(0, 0, 600, 600);
-        newview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//        newview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         otherCharts.append(newcht);
+        otherChartViews.append(newview);
         for (int i = 4; i < serNames.count(); i++)
         {
             newseries = new QLineSeries(newcht);
@@ -201,11 +234,9 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
         }
         connectMarkers(newcht);
         newcht->createDefaultAxes();
-//        layout->addWidget(newview);
-//        m_mainLayout->addWidget(newview, areaNum, 2, 1, 1);
-        ui->gridLayout->addWidget(newview, areaNum, 2);
-//        cDialog->addChart(newview, areaNum, 2);
-  //      cDialog->setSize(800, 600*areaNum);
+
+        ui->verticalLayout_right->addWidget(newview, 1);
+
 
         if (areaNum == 1)
         {
@@ -215,76 +246,56 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
     }
 }
 
-void chartDialog::removeSeries()
+void chartDialog::removeCharts()
 {
     QLineSeries *series;
     QChart *cht;
 
     while (bmassCharts.count() > 0)
     {
+        for (int i = 0; i < numBmassSeries; i++)
+        {
+            series = bmassSeries.last();
+            bmassCharts.last()->removeSeries(series);
+            bmassSeries.takeLast();
+            delete series;
+        }
         cht = bmassCharts.takeLast();
-        cht->removeAllSeries();
         delete cht;
-    }
-    while (bmassSeries.count() > 0)
-    {
-        series = bmassSeries.takeLast();
-        delete series;
     }
 
     while (otherCharts.count() > 0)
     {
+        for (int i = 0; i < numOtherSeries; i++)
+        {
+            series = otherSeries.last();
+            otherCharts.last()->removeSeries(series);
+            otherSeries.takeLast();
+            delete series;
+        }
         cht = otherCharts.takeLast();
-        cht->removeAllSeries();
         delete cht;
     }
-    while (otherSeries.count() > 0)
-    {
-        series = otherSeries.takeLast();
-        delete series;
-    }
 
-/*     // Remove all series from charts
-     while (spwn_series.count() > 0) {
-         series = spwn_series.last();
-         spwn_chart->removeSeries(series);
-         spwn_series.removeLast();
-         delete series;
-     }
-     while (recr_series.count() > 0) {
-         series = recr_series.last();
-         recr_chart->removeSeries(series);
-         recr_series.removeLast();
-         delete series;
-     }
-     while (biom_series.count() > 0) {
-         series = biom_series.last();
-         biom_chart->removeSeries(series);
-         biom_series.removeLast();
-         delete series;
-     }
-     while (smry_series.count() > 0) {
-         series = smry_series.last();
-         smry_chart->removeSeries(series);
-         smry_series.removeLast();
-         delete series;
-     }
-     while (totc_series.count() > 0) {
-         series = totc_series.last();
-         totc_chart->removeSeries(series);
-         totc_series.removeLast();
-         delete series;
-     }
-     while (retc_series.count() > 0) {
-         series = retc_series.last();
-         retc_chart->removeSeries(series);
-         retc_series.removeLast();
-         delete series;
-     }*/
+    if (!ui->verticalLayout_left->isEmpty())
+    {
+        for (int i = 0; i < bmassChartViews.count(); i++)
+        {
+            ui->verticalLayout_left->removeWidget((QWidget*)bmassChartViews.at(i));
+            delete bmassChartViews.at(i);
+        }
+        bmassChartViews.clear();
+        for (int i = 0; i < otherChartViews.count(); i++)
+        {
+            ui->verticalLayout_right->removeWidget((QWidget*)otherChartViews.at(i));
+            delete otherChartViews.at(i);
+        }
+        otherChartViews.clear();
+    }
 
 }
 
-void chartDialog::removeSeries(QChart *cht, QList<QLineSeries *>seriesList)
+void chartDialog::removeCharts(QChart *cht, QList<QLineSeries *>seriesList)
 {
     // Remove last series from chart
     if (seriesList.count() > 0) {
