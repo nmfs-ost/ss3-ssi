@@ -7,7 +7,7 @@
 #define app_version_major  3
 #define app_version_minor  3
 #define app_version_sub    05
-#define app_version_bugfix 1
+#define app_version_bugfix 03
 #define app_release_level  " "  // a - alpha, b - beta, blank - release candidate
 #define app_version_apply ("3.30.05")
 #define app_copyright_date  __DATE__

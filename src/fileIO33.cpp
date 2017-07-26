@@ -2398,11 +2398,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setDistParam(i, datalist);
             pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
         }
-        for (num = 0; num < data->get_num_seasons(); num++, i++)
+        for (num = 0; num < pop->SR()->getNumAssignments(); num++, i++)
         {
-            datalist = readParameter(c_file); // recr apportion to seasons
+            datalist = readParameter(c_file); // recr apportion to settlement events
             pop->SR()->setDistParam(i, datalist);
-            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Bseas_%1").arg(QString::number(num+1)));
+            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Settlement_%1").arg(QString::number(num+1)));
         }
         if (pop->SR()->getDoRecruitInteract())
         {

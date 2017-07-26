@@ -201,7 +201,6 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
         newcht->legend()->setAlignment(Qt::AlignRight);
         newcht->setGeometry(0, 0, 100, 100);
         newview = new QChartView (newcht);
-//        newview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         bmassCharts.append(newcht);
         bmassChartViews.append(newview);
         for (int i = 0; i < 4; i++)
@@ -222,7 +221,6 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
         newcht->legend()->setAlignment(Qt::AlignRight);
         newcht->setGeometry(0, 0, 100, 100);
         newview = new QChartView (newcht);
-//        newview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         otherCharts.append(newcht);
         otherChartViews.append(newview);
         for (int i = 4; i < serNames.count(); i++)
@@ -261,6 +259,7 @@ void chartDialog::removeCharts()
             delete series;
         }
         cht = bmassCharts.takeLast();
+        disconnectMarkers(cht);
         delete cht;
     }
 
@@ -274,6 +273,7 @@ void chartDialog::removeCharts()
             delete series;
         }
         cht = otherCharts.takeLast();
+        disconnectMarkers(cht);
         delete cht;
     }
 

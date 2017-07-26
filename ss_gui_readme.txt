@@ -13,6 +13,16 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.05.03
+      2017-07-27
+1. Changed over to reading settlement timing parameters instead of seasonal
+   Recruitment Distribution parameters.
+============================================================================
+      3.3.05.2
+      2017-07-24
+1. Added charts view button to the run dialog. It reads the Report.sso file
+   and creates charts dynamically.
+============================================================================
       3.3.05.1
       2017-07-10
 1. Added the minimum sampmle size to both the length and age comp header tables;

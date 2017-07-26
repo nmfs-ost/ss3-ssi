@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -787,7 +787,11 @@
               </widget>
              </item>
              <item row="3" column="3" colspan="2">
-              <widget class="QSpinBox" name="spinBox_sr_recr_dev_phase"/>
+              <widget class="QSpinBox" name="spinBox_sr_recr_dev_phase">
+               <property name="minimum">
+                <number>-5</number>
+               </property>
+              </widget>
              </item>
              <item row="0" column="4" colspan="3">
               <widget class="QLabel" name="label_7">
@@ -877,7 +881,7 @@
                       <number>-999</number>
                      </property>
                      <property name="maximum">
-                      <number>0</number>
+                      <number>2</number>
                      </property>
                     </widget>
                    </item>
@@ -954,7 +958,11 @@
                     </layout>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QSpinBox" name="spinBox_recr_dev_early_phase"/>
+                    <widget class="QSpinBox" name="spinBox_recr_dev_early_phase">
+                     <property name="minimum">
+                      <number>-5</number>
+                     </property>
+                    </widget>
                    </item>
                    <item row="4" column="1">
                     <widget class="QSpinBox" name="spinBox_recr_dev_last_nobias">
