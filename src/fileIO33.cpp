@@ -3803,7 +3803,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString("#Then short parm lines, if requested, for block/trend effects on R0, steepness, and annual dev");
         chars += c_file->writeline(line);*/
 
-        line = QString(QString ("%1 #_do_recdev:  0=none; 1=devvector; 2=simple deviations").arg(
+        line = QString(QString ("%1 #do_recdev:  0=none; 1=devvector; 2=simple deviations").arg(
                            QString::number(pop->SR()->getRecDevCode())));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # first year of main recr_devs; early devs can preceed this era").arg(
@@ -4079,7 +4079,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#_size_selex_types");
         chars += c_file->writeline(line);
-        line = QString("#discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead");
+        line = QString("#discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
         chars += c_file->writeline(line);
         line = QString("#_Pattern Discard Male Special");
         chars += c_file->writeline(line);

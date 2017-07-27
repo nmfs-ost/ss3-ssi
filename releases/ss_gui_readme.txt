@@ -13,8 +13,12 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
-      3.3.05.03
+      3.3.05.04
       2017-07-27
+1. Fixed problem with negative phase numbers in advanced recruitment.
+============================================================================
+      3.3.05.03
+      2017-07-26
 1. Changed over to reading settlement timing parameters instead of seasonal
    Recruitment Distribution parameters.
 ============================================================================
