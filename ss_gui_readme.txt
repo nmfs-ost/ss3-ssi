@@ -13,7 +13,12 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
-      3.3.05.04
+      3.3.05.06
+      2017-08-04
+1. Fixed problem with converting wtatage.ss - copying correct file.
+2. Fixed setting read wtatage.ss checkbox with maturity option 5.
+============================================================================
+      3.3.05.05
       2017-07-27
 1. Fixed problem with negative phase numbers in advanced recruitment.
 ============================================================================

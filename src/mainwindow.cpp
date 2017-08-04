@@ -851,7 +851,7 @@ void MainWindow::run_trans()
             copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
             copy_file (old_dir + QString("/ss.par"), current_dir + QString("/ss.par"));
             copy_file (old_dir + QString("/ss.bar"), current_dir + QString("/ss.bar"));
-            if (modelData->getReadWtAtAge())
+            if (QFile(old_dir + QString("/wtatage.ss")).exists())// (modelData->getReadWtAtAge())
             {
                 copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
             }

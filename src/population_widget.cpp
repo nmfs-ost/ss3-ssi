@@ -947,8 +947,11 @@ void population_widget::setMaturityOpt(int opt)
 
 void population_widget::changeMaturityOpt(int opt)
 {
+    int option = opt + 1;
 //    bool vis = true;
-    pop->Grow()->setMaturity_option(opt + 1);
+    pop->Grow()->setMaturity_option(option);
+    if (option == 5)
+        ui->checkBox_wtatage->setChecked(true);
 /*    if (opt == 2 || opt == 3)
         vis = true;
     ui->frame_growth_age_spec->setVisible(vis);*/
