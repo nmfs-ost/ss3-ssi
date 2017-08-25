@@ -2,6 +2,9 @@
 #include "ui_equationdialog.h"
 
 #include <QAbstractButton>
+#include <QtCharts/QChart>
+#include <QtCharts/QLineSeries>
+
 #include <cmath>
 
 equationDialog::equationDialog(QWidget *parent) :
@@ -12,6 +15,16 @@ equationDialog::equationDialog(QWidget *parent) :
 
     fleet = NULL;
     dataModel = NULL;
+
+    equationNum = 0;
+    parameters = NULL;
+
+    chartview = new QChartView(this);
+    cht = new QChart();
+    chartview->setChart(cht);
+    series = new QLineSeries(cht);
+
+    ui->verticalLayout_graph->addWidget(chartview);
 
     min1 = -5; max1 = 5;
     min2 = -5; max2 = 5;
@@ -99,7 +112,7 @@ void equationDialog::setFleet (Fleet *flt)
     fleet = flt;
 
     if (dataModel != NULL)
-        reset();
+        resetValues();
 }
 
 void equationDialog::setDataModel (ss_model *data)
@@ -119,6 +132,89 @@ void equationDialog::setDataModel (ss_model *data)
         lengths = lenComp->getBins();
 }
 
+void equationDialog::setEquationNumber(int num)
+{
+    equationNum = num;
+    parameters = NULL;
+}
+
+void equationDialog::setParameters(tablemodel *params)
+{
+    parameters = params;
+    refresh();
+}
+
+void equationDialog::getParameterValues()
+{
+    double val;
+    QStringList values;
+    if (parameters->rowCount() > 0)
+    {
+        values = parameters->getRowData(0);
+        val = (values.at(0)).toDouble();
+        ui->doubleSpinBox_1_min->setValue(val);
+        val = (values.at(1)).toDouble();
+        ui->doubleSpinBox_1_max->setValue(val);
+        val = (values.at(2)).toDouble();
+        ui->doubleSpinBox_1_value->setValue(val);
+    }
+    if (parameters->rowCount() > 1)
+    {
+        values = parameters->getRowData(1);
+        val = (values.at(0)).toDouble();
+        ui->doubleSpinBox_2_min->setValue(val);
+        val = (values.at(1)).toDouble();
+        ui->doubleSpinBox_2_max->setValue(val);
+        val = (values.at(2)).toDouble();
+        ui->doubleSpinBox_2_value->setValue(val);
+    }
+}
+
+void equationDialog::setParameterValues()
+{
+    QStringList values;
+    if (parameters->rowCount() > 0)
+    {
+        values = parameters->getRowData(0);
+        values[0] = QString::number(ui->doubleSpinBox_1_min->value());
+        values[1] = QString::number(ui->doubleSpinBox_1_max->value());
+        values[2] = QString::number(ui->doubleSpinBox_1_input->value());
+        parameters->setRowData(0, values);
+    }
+    if (parameters->rowCount() > 1)
+    {
+        values = parameters->getRowData(1);
+        values[0] = QString::number(ui->doubleSpinBox_2_min->value());
+        values[1] = QString::number(ui->doubleSpinBox_2_max->value());
+        values[2] = QString::number(ui->doubleSpinBox_2_input->value());
+        parameters->setRowData(1, values);
+    }
+}
+
+void equationDialog::refresh()
+{
+    getParameterValues();
+    resetValues ();
+    update ();
+}
+
+void equationDialog::update()
+{
+    switch (equationNum) {
+    case 0:
+        constant(1.0);
+        break;
+    case 1:
+        logistic();
+        break;
+    case 6:
+        linear();
+    default:
+        blank();
+        break;
+    }
+
+}
 
 void equationDialog::slider1Changed(int value)
 {
@@ -140,6 +236,20 @@ void equationDialog::value1Changed (double value)
 
     int val = (int)((value - min1)/(max1 - min1) * 1000);
     ui->horizontalSlider_1->setValue(val);
+}
+
+void equationDialog::min1Changed (double value)
+{
+    min1 = value;
+    ui->doubleSpinBox_1_value->setMinimum(value);
+    value1Changed(ui->doubleSpinBox_1_value->value());
+}
+
+void equationDialog::max1Changed (double value)
+{
+    max1 = value;
+    ui->doubleSpinBox_1_value->setMaximum(value);
+    value1Changed(ui->doubleSpinBox_1_value->value());
 }
 
 void equationDialog::slider2Changed(int value)
@@ -438,7 +548,7 @@ void equationDialog::join3Changed (int value)
 
 void equationDialog::apply()
 {
-    // write values to parameters
+    // set input spinboxes
     ui->doubleSpinBox_1_input->setValue(ui->doubleSpinBox_1_value->value());
     ui->doubleSpinBox_2_input->setValue(ui->doubleSpinBox_2_value->value());
     ui->doubleSpinBox_3_input->setValue(ui->doubleSpinBox_3_value->value());
@@ -447,12 +557,13 @@ void equationDialog::apply()
     ui->doubleSpinBox_6_input->setValue(ui->doubleSpinBox_6_value->value());
     ui->doubleSpinBox_7_input->setValue(ui->doubleSpinBox_7_value->value());
     ui->doubleSpinBox_8_input->setValue(ui->doubleSpinBox_8_value->value());
-    // writeParameters();
+    // write values to parameters
+    setParameterValues();
 }
 
-void equationDialog::reset()
+void equationDialog::resetValues()
 {
-    // get values from parameters
+    // get values from input spinboxes
     value1Changed(ui->doubleSpinBox_1_input->value());
     value2Changed(ui->doubleSpinBox_2_input->value());
     value3Changed(ui->doubleSpinBox_3_input->value());
@@ -461,11 +572,14 @@ void equationDialog::reset()
     value6Changed(ui->doubleSpinBox_6_input->value());
     value7Changed(ui->doubleSpinBox_7_input->value());
     value8Changed(ui->doubleSpinBox_8_input->value());
+    update();
 }
 
-void equationDialog::restore()
+void equationDialog::restoreAll()
 {
-
+    // get values from parameters
+    getParameterValues();
+    resetValues ();
 }
 
 void equationDialog::close()
@@ -479,9 +593,9 @@ void equationDialog::buttonClicked(QAbstractButton *btn)
     if (btn->text().contains("Apply"))
         apply();
     else if (btn->text().contains("Reset"))
-        reset();
+        resetValues();
     else if (btn->text().contains("Restore"))
-        restore();
+        restoreAll();
     else if (btn->text().contains("Close"))
         close();
 }
@@ -493,10 +607,258 @@ void equationDialog::closeEvent(QCloseEvent *event)
 
 void equationDialog::parametersChanged()
 {
-
+    refresh();
 }
 
 void equationDialog::setupChanged()
 {
 
+    refresh();
 }
+
+int equationDialog::getSpecial() const
+{
+    return special;
+}
+
+void equationDialog::setSpecial(int value)
+{
+    special = value;
+    update();
+}
+
+void equationDialog::showSliders(int num)
+{
+    ui->label_name->setVisible(false);
+    ui->label_value->setVisible(false);
+    ui->label_type->setVisible(false);
+    ui->label_min->setVisible(false);
+    ui->label_max->setVisible(false);
+    ui->label_input->setVisible(false);
+    ui->label_sliders->setVisible(false);
+
+    ui->label_1_name->setVisible(false);
+    ui->doubleSpinBox_1_value->setVisible(false);
+    ui->label_1_type->setVisible(false);
+    ui->doubleSpinBox_1_trans->setVisible(false);
+    ui->doubleSpinBox_1_min->setVisible(false);
+    ui->doubleSpinBox_1_max->setVisible(false);
+    ui->doubleSpinBox_1_input->setVisible(false);
+    ui->horizontalSlider_1->setVisible(false);
+
+    ui->label_2_name->setVisible(false);
+    ui->doubleSpinBox_2_value->setVisible(false);
+    ui->label_2_type->setVisible(false);
+    ui->doubleSpinBox_2_trans->setVisible(false);
+    ui->doubleSpinBox_2_min->setVisible(false);
+    ui->doubleSpinBox_2_max->setVisible(false);
+    ui->doubleSpinBox_2_input->setVisible(false);
+    ui->horizontalSlider_2->setVisible(false);
+
+    ui->label_3_name->setVisible(false);
+    ui->doubleSpinBox_3_value->setVisible(false);
+    ui->label_3_type->setVisible(false);
+    ui->doubleSpinBox_3_trans->setVisible(false);
+    ui->doubleSpinBox_3_min->setVisible(false);
+    ui->doubleSpinBox_3_max->setVisible(false);
+    ui->doubleSpinBox_3_input->setVisible(false);
+    ui->horizontalSlider_3->setVisible(false);
+
+    ui->label_4_name->setVisible(false);
+    ui->doubleSpinBox_4_value->setVisible(false);
+    ui->label_4_type->setVisible(false);
+    ui->doubleSpinBox_4_trans->setVisible(false);
+    ui->doubleSpinBox_4_min->setVisible(false);
+    ui->doubleSpinBox_4_max->setVisible(false);
+    ui->doubleSpinBox_4_input->setVisible(false);
+    ui->horizontalSlider_4->setVisible(false);
+
+    ui->label_5_name->setVisible(false);
+    ui->doubleSpinBox_5_value->setVisible(false);
+    ui->label_5_type->setVisible(false);
+    ui->doubleSpinBox_5_trans->setVisible(false);
+    ui->doubleSpinBox_5_min->setVisible(false);
+    ui->doubleSpinBox_5_max->setVisible(false);
+    ui->doubleSpinBox_5_input->setVisible(false);
+    ui->horizontalSlider_5->setVisible(false);
+
+    ui->label_6_name->setVisible(false);
+    ui->doubleSpinBox_6_value->setVisible(false);
+    ui->label_6_type->setVisible(false);
+    ui->doubleSpinBox_6_trans->setVisible(false);
+    ui->doubleSpinBox_6_min->setVisible(false);
+    ui->doubleSpinBox_6_max->setVisible(false);
+    ui->doubleSpinBox_6_input->setVisible(false);
+    ui->horizontalSlider_6->setVisible(false);
+
+    ui->label_7_name->setVisible(false);
+    ui->doubleSpinBox_7_value->setVisible(false);
+    ui->label_7_type->setVisible(false);
+    ui->doubleSpinBox_7_trans->setVisible(false);
+    ui->doubleSpinBox_7_min->setVisible(false);
+    ui->doubleSpinBox_7_max->setVisible(false);
+    ui->doubleSpinBox_7_input->setVisible(false);
+    ui->horizontalSlider_7->setVisible(false);
+
+    ui->label_8_name->setVisible(false);
+    ui->doubleSpinBox_8_value->setVisible(false);
+    ui->label_8_type->setVisible(false);
+    ui->doubleSpinBox_8_trans->setVisible(false);
+    ui->doubleSpinBox_8_min->setVisible(false);
+    ui->doubleSpinBox_8_max->setVisible(false);
+    ui->doubleSpinBox_8_input->setVisible(false);
+    ui->horizontalSlider_8->setVisible(false);
+
+    if (num > 0)
+    {
+        ui->label_name->setVisible(true);
+        ui->label_value->setVisible(true);
+        ui->label_type->setVisible(true);
+        ui->label_min->setVisible(true);
+        ui->label_max->setVisible(true);
+        ui->label_input->setVisible(true);
+        ui->label_sliders->setVisible(true);
+
+        ui->label_1_name->setVisible(true);
+        ui->doubleSpinBox_1_value->setVisible(true);
+        ui->label_1_type->setVisible(true);
+        ui->doubleSpinBox_1_trans->setVisible(true);
+        ui->doubleSpinBox_1_min->setVisible(true);
+        ui->doubleSpinBox_1_max->setVisible(true);
+        ui->doubleSpinBox_1_input->setVisible(true);
+        ui->horizontalSlider_1->setVisible(true);
+    }
+    if (num > 1)
+    {
+        ui->label_2_name->setVisible(true);
+        ui->doubleSpinBox_2_value->setVisible(true);
+        ui->label_2_type->setVisible(true);
+        ui->doubleSpinBox_2_trans->setVisible(true);
+        ui->doubleSpinBox_2_min->setVisible(true);
+        ui->doubleSpinBox_2_max->setVisible(true);
+        ui->doubleSpinBox_2_input->setVisible(true);
+        ui->horizontalSlider_2->setVisible(true);
+    }
+    if (num > 2)
+    {
+        ui->label_3_name->setVisible(true);
+        ui->doubleSpinBox_3_value->setVisible(true);
+        ui->label_3_type->setVisible(true);
+        ui->doubleSpinBox_3_trans->setVisible(true);
+        ui->doubleSpinBox_3_min->setVisible(true);
+        ui->doubleSpinBox_3_max->setVisible(true);
+        ui->doubleSpinBox_3_input->setVisible(true);
+        ui->horizontalSlider_3->setVisible(true);
+    }
+    if (num > 3)
+    {
+        ui->label_4_name->setVisible(true);
+        ui->doubleSpinBox_4_value->setVisible(true);
+        ui->label_4_type->setVisible(true);
+        ui->doubleSpinBox_4_trans->setVisible(true);
+        ui->doubleSpinBox_4_min->setVisible(true);
+        ui->doubleSpinBox_4_max->setVisible(true);
+        ui->doubleSpinBox_4_input->setVisible(true);
+        ui->horizontalSlider_4->setVisible(true);
+    }
+    if (num > 4)
+    {
+        ui->label_5_name->setVisible(true);
+        ui->doubleSpinBox_5_value->setVisible(true);
+        ui->label_5_type->setVisible(true);
+        ui->doubleSpinBox_5_trans->setVisible(true);
+        ui->doubleSpinBox_5_min->setVisible(true);
+        ui->doubleSpinBox_5_max->setVisible(true);
+        ui->doubleSpinBox_5_input->setVisible(true);
+        ui->horizontalSlider_5->setVisible(true);
+    }
+    if (num > 5)
+    {
+        ui->label_6_name->setVisible(true);
+        ui->doubleSpinBox_6_value->setVisible(true);
+        ui->label_6_type->setVisible(true);
+        ui->doubleSpinBox_6_trans->setVisible(true);
+        ui->doubleSpinBox_6_min->setVisible(true);
+        ui->doubleSpinBox_6_max->setVisible(true);
+        ui->doubleSpinBox_6_input->setVisible(true);
+        ui->horizontalSlider_6->setVisible(true);
+    }
+    if (num > 6)
+    {
+        ui->label_7_name->setVisible(true);
+        ui->doubleSpinBox_7_value->setVisible(true);
+        ui->label_7_type->setVisible(true);
+        ui->doubleSpinBox_7_trans->setVisible(true);
+        ui->doubleSpinBox_7_min->setVisible(true);
+        ui->doubleSpinBox_7_max->setVisible(true);
+        ui->doubleSpinBox_7_input->setVisible(true);
+        ui->horizontalSlider_7->setVisible(true);
+    }
+    if (num > 7)
+    {
+        ui->label_8_name->setVisible(true);
+        ui->doubleSpinBox_8_value->setVisible(true);
+        ui->label_8_type->setVisible(true);
+        ui->doubleSpinBox_8_trans->setVisible(true);
+        ui->doubleSpinBox_8_min->setVisible(true);
+        ui->doubleSpinBox_8_max->setVisible(true);
+        ui->doubleSpinBox_8_input->setVisible(true);
+        ui->horizontalSlider_8->setVisible(true);
+    }
+
+}
+
+void equationDialog::showBins(bool flag)
+{
+    ui->label_bins->setVisible(flag);
+    ui->label_bins_min->setVisible(flag);
+    ui->label_bins_max->setVisible(flag);
+    ui->label_bins_width->setVisible(flag);
+    ui->label_bins_midbin->setVisible(flag);
+    ui->spinBox_bins_min->setVisible(flag);
+    ui->spinBox_bins_max->setVisible(flag);
+    ui->spinBox_bins_width->setVisible(flag);
+    ui->doubleSpinBox_bins_midbin->setVisible(flag);
+    ui->label_steepness->setVisible(flag);
+    ui->label_steep_join1->setVisible(flag);
+    ui->label_steep_join2->setVisible(flag);
+    ui->label_steep_join3->setVisible(flag);
+    ui->spinBox_steep_join1->setVisible(flag);
+    ui->spinBox_steep_join2->setVisible(flag);
+    ui->spinBox_steep_join3->setVisible(flag);
+}
+
+void equationDialog::blank ()
+{
+    // This equation not yet implemented.
+    // INTENTIONALLY LEFT BLANK
+    QString msg ("This equation is not yet implemented.\n\n THIS PAGE INTENTIONALLY LEFT BANK");
+    ui->label_title->setText(msg);
+    showSliders(0);
+    showBins (false);
+}
+
+void equationDialog::constant (float val)
+{
+    QPointF pt;
+    ui->label_title->setText(QString("Constant Value %1").arg(QString::number(val,'g',2)));
+    showSliders(0);
+    showBins(true);
+
+    series->append(ui->spinBox_bins_min->value(), val);
+    series->append(ui->spinBox_bins_max->value(), val);
+    cht->addSeries(series);
+}
+
+void equationDialog::logistic ()
+{
+    ui->label_title->setText(QString("Logistic"));
+    showSliders(2);
+}
+
+void equationDialog::linear ()
+{
+    ui->label_title->setText(QString("Line Segments"));
+    showSliders(parameters->rowCount());
+}
+

@@ -95,7 +95,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
     selexSizeEqDialog = new equationDialog(this);
     selexSizeEqDialog->hide();
-    ui->pushButton_selex_size_curve->hide(); // remove this to show button
+//    ui->pushButton_selex_size_curve->hide(); // remove this to show button
 
     lambdaView = new tableview();
     lambdaView->setParent(this);
@@ -363,15 +363,10 @@ void fleet_widget::set_current_fleet(int index)
         ui->label_name->setText(current_fleet->getName());
         ui->checkBox_active->setChecked(current_fleet->isActive());
         ui->spinBox_number->setValue(current_fleet->getNumber());
-//        ui->spinBox_num->setValue(index + 1);
-//        ui->label_title->setText(QString("Fleet Info - %1").arg(*current_fleet->name()));
-//        ui->label_title->setFont(titleFont);
         set_type_fleet(current_fleet->getType());
         ui->doubleSpinBox_timing->setValue(current_fleet->getSeasTiming());
 
         ui->spinBox_area->setValue(current_fleet->getArea());
-//        ui->doubleSpinBox_equ_catch_se->setValue(current_fleet->equ_catch_se());
-//        ui->doubleSpinBox_catch_se->setValue(current_fleet->catch_se());
         ui->spinBox_units->setValue(current_fleet->getCatchUnits());
     //    ui->spinBox_need_catch_mult->setValue(current_fleet->catch_mult());
         ui->spinBox_catch_units->setValue(current_fleet->getCatchUnits());
@@ -762,6 +757,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
     ui->spinBox_selex_size_num_params->setValue
             (current_fleet->getSizeSelectivity()->getNumParameters());
     sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getSetupModel()->rowCount());
+    selexSizeEqDialog->setEquationNumber(pat);
 }
 
 void fleet_widget::setAr1SelexSmoother(int val)
@@ -815,6 +811,7 @@ void fleet_widget::changeSelexSizeMale(int mal)
 void fleet_widget::changeSelexSizeSpecial(int spc)
 {
     current_fleet->getSizeSelectivity()->setSpecial(spc);
+    selexSizeEqDialog->setSpecial(spc);
 }
 
 void fleet_widget::sizeSelexParamsChanged()
@@ -823,6 +820,7 @@ void fleet_widget::sizeSelexParamsChanged()
     ht = current_fleet->getSizeSelectivity()->getNumParameters();
     sizeSelexParamsView->setHeight(ht);
     sizeSelexParamsView->resizeColumnsToContents();
+    selexSizeEqDialog->setParameters(current_fleet->getSizeSelexModel());
 }
 
 void fleet_widget::sizeSelexTVParamsChanged()
@@ -838,6 +836,8 @@ void fleet_widget::sizeSelexTVParamsChanged()
 void fleet_widget::showSelexSizeCurve(bool flag)
 {
     selexSizeEqDialog->setVisible(flag);
+    selexSizeEqDialog->setEquationNumber (current_fleet->getSizeSelectivity()->getPattern());
+    selexSizeEqDialog->setParameters (current_fleet->getSizeSelectivity()->getParameterModel());
 }
 
 void fleet_widget::selexSizeCurveClosed()

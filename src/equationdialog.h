@@ -2,7 +2,14 @@
 #define EQUATIONDIALOG_H
 
 #include <QDialog>
+#include <QLabel>
 #include <QAbstractButton>
+
+#include <qchart.h>
+#include <qlineseries.h>
+#include <QChartView>
+
+QT_CHARTS_USE_NAMESPACE
 
 #include "selectivity.h"
 #include "fleet.h"
@@ -20,12 +27,26 @@ public:
     explicit equationDialog(QWidget *parent = 0);
     ~equationDialog();
 
+    int getSpecial() const;
+    void setSpecial(int value);
+
 public slots:
     void setFleet (Fleet *flt);
     void setDataModel (ss_model *data);
 
+    void setEquationNumber (int num);
+    void setParameters (tablemodel *params);
+
+    void getParameterValues();
+    void setParameterValues();
+
+    void refresh ();  // update from fleet values
+    void update ();   // update from dialog values
+
     void slider1Changed(int value);
     void value1Changed (double value);
+    void min1Changed (double value);
+    void max1Changed (double value);
 
     void slider2Changed(int value);
     void value2Changed (double value);
@@ -72,8 +93,8 @@ public slots:
     void join3Changed (int value);
 
     void apply();
-    void reset();
-    void restore();
+    void resetValues();
+    void restoreAll();
     void close();
 
     void buttonClicked (QAbstractButton *btn);
@@ -88,8 +109,18 @@ signals:
 private:
     Ui::equationDialog *ui;
 
+    QLabel *title;
+
     Fleet * fleet;
     ss_model * dataModel;
+
+    int equationNum;
+    tablemodel *parameters;
+    int special;
+
+    QChart *cht;
+    QChartView *chartview;
+    QLineSeries *series;
 
     QList<float> ageList;
     QList<float> lenList;
@@ -107,6 +138,13 @@ private:
     double binMidWidth;
 
     int join1, join2, join3;
+
+    void showSliders (int num);
+    void showBins (bool flag);
+    void blank ();
+    void constant (float val);
+    void linear ();
+    void logistic ();
 
 };
 
