@@ -810,7 +810,10 @@ void MainWindow::run()
 
 void MainWindow::run_trans()
 {
-    QMessageBox::information(this, "NOTICE", "If the model has complex features, it may not convert completely.");
+    int lastEstPhase = modelData->get_last_estim_phase();
+    QString notice ("If the model has complex features, it may not convert completely.\n");
+//    notice.append("Parameter file use is disabled for conversion.");
+    QMessageBox::information(this, "NOTICE", notice);
     Dialog_run drun(this);
     // edit starter.ss to set max phase 0 and turn off reading parameter file
     modelData->set_last_estim_phase(0);
@@ -828,6 +831,9 @@ void MainWindow::run_trans()
     drun.setExe(ss_trans_exe);
     drun.setOptions("-nohess");
     drun.exec();
+    // reset last estimation phase
+    modelData->set_last_estim_phase(lastEstPhase);
+    files->write_starter_file();
     // ask user for new directory and copy files there
     {
         // save old directory
@@ -857,6 +863,8 @@ void MainWindow::run_trans()
             }
             // read data into GUI
             readFiles();
+            modelData->set_last_estim_phase(lastEstPhase);
+            files->write_starter_file();
         }
     }
 }

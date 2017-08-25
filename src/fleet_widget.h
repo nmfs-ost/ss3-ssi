@@ -9,6 +9,7 @@
 #include "tableview.h"
 #include "catchdelegate.h"
 #include "abundancedelegate.h"
+#include "equationdialog.h"
 
 namespace Ui {
 class fleet_widget;
@@ -73,6 +74,8 @@ public slots:
     void sizeSelexParamsChanged();
     void sizeSelexTVParamsChanged();
     void setSelTimeVaryReadParams(int flag);
+    void showSelexSizeCurve(bool flag);
+    void selexSizeCurveClosed ();
 
     void changeSelexAgePattern(int pat);
     void changeSelexAgeMale (int mal);
@@ -120,8 +123,10 @@ private:
     tableview *ageSelexParamsView;
     tableview *ageSelexMaleView;
     tableview *ageSelexTimeVaryParamsView;
+    equationDialog *selexSizeEqDialog;
 
     tableview *lambdaView;
+
 
     void refreshFleetNames();
     void connectFleet ();

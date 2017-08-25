@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>0</number>
+         <number>4</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -1528,20 +1528,11 @@
                      </widget>
                     </item>
                     <item row="4" column="0" colspan="4">
-                     <widget class="QLabel" name="label_3">
+                     <widget class="QLabel" name="label_sel_size_retain_params">
                       <property name="text">
                        <string>Retain parameters</string>
                       </property>
                      </widget>
-                    </item>
-                    <item row="10" column="0" colspan="10">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_male"/>
-                    </item>
-                    <item row="5" column="0" colspan="10">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_retain"/>
-                    </item>
-                    <item row="3" column="0" colspan="10">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_params"/>
                     </item>
                     <item row="0" column="6">
                      <widget class="QSpinBox" name="spinBox_selex_size_num_params">
@@ -1555,19 +1546,6 @@
                        <string/>
                       </property>
                      </widget>
-                    </item>
-                    <item row="13" column="9">
-                     <spacer name="verticalSpacer_5">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
                     </item>
                     <item row="0" column="2">
                      <widget class="QLabel" name="label_selex_size_pattern_info">
@@ -1623,19 +1601,6 @@
                     <item row="13" column="0" colspan="8">
                      <layout class="QVBoxLayout" name="verticalLayout_selex_size_timevary_parms"/>
                     </item>
-                    <item row="0" column="9">
-                     <spacer name="horizontalSpacer_23">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                     <item row="0" column="3">
                      <widget class="QPushButton" name="pushButton_selex_size_pattern_info">
                       <property name="text">
@@ -1656,20 +1621,10 @@
                       </property>
                      </spacer>
                     </item>
-                    <item row="7" column="0" colspan="10">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_discard"/>
-                    </item>
                     <item row="12" column="0" colspan="4">
                      <widget class="QLabel" name="label_selex_size_timevary_parms">
                       <property name="text">
                        <string>Time varying parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0" colspan="4">
-                     <widget class="QLabel" name="label_sel_size_pattern_params">
-                      <property name="text">
-                       <string>Pattern parameters </string>
                       </property>
                      </widget>
                     </item>
@@ -1710,6 +1665,61 @@
                       </property>
                      </widget>
                     </item>
+                    <item row="2" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_pattern_params">
+                      <property name="text">
+                       <string>Pattern parameters </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="3">
+                     <widget class="QPushButton" name="pushButton_selex_size_curve">
+                      <property name="text">
+                       <string>Show Curve</string>
+                      </property>
+                      <property name="checkable">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="9">
+                     <spacer name="horizontalSpacer_23">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="13" column="9">
+                     <spacer name="verticalSpacer_5">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="10" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_male"/>
+                    </item>
+                    <item row="7" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_discard"/>
+                    </item>
+                    <item row="5" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_retain"/>
+                    </item>
+                    <item row="3" column="0" colspan="10">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_params"/>
+                    </item>
                    </layout>
                   </item>
                   <item>
@@ -1746,8 +1756,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>578</width>
-                   <height>184</height>
+                   <width>733</width>
+                   <height>365</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1813,38 +1823,12 @@
                     <item row="3" column="0" colspan="10">
                      <layout class="QVBoxLayout" name="verticalLayout_selex_age_params"/>
                     </item>
-                    <item row="0" column="7">
-                     <spacer name="horizontalSpacer_22">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                     <item row="0" column="3">
                      <widget class="QPushButton" name="pushButton_selex_age_pattern_info">
                       <property name="text">
                        <string>Info</string>
                       </property>
                      </widget>
-                    </item>
-                    <item row="0" column="9">
-                     <spacer name="horizontalSpacer_7">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
                     </item>
                     <item row="0" column="6">
                      <widget class="QSpinBox" name="spinBox_selex_age_num_params">
@@ -1902,13 +1886,6 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="2" column="0" colspan="4">
-                     <widget class="QLabel" name="label_selex_age_params">
-                      <property name="text">
-                       <string>Pattern Parameters</string>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="1" column="1" colspan="3">
                      <widget class="QLabel" name="label_selex_age_discard">
                       <property name="text">
@@ -1916,6 +1893,39 @@
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="9">
+                     <spacer name="horizontalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="2" column="7">
+                     <spacer name="horizontalSpacer_22">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="2" column="0" colspan="3">
+                     <widget class="QLabel" name="label_selex_age_params">
+                      <property name="text">
+                       <string>Pattern Parameters</string>
                       </property>
                      </widget>
                     </item>

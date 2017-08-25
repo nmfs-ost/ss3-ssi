@@ -94,18 +94,11 @@ public slots:
 protected:
 //    void setEquation (int method);
 
-    int pattern;
-    int discard;
-    int male;
-    int special;
-
     int numAges;
 
     setupModel *setup;
     longParameterModel *parameters;
     timeVaryParameterModel *varParameters;
-
-//    shortParameterModel *timeVaryParameters;
 
     shortParameterModel *retainParameters;
     shortParameterModel *discardParameters;

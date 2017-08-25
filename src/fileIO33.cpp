@@ -2398,11 +2398,24 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setDistParam(i, datalist);
             pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
         }
-        for (num = 0; num < pop->SR()->getNumAssignments(); num++, i++)
+        index = pop->SR()->getDistribMethod();
+        num_vals = pop->SR()->getNumAssignments();
+        if (index == 2)
         {
             datalist = readParameter(c_file); // recr apportion to settlement events
             pop->SR()->setDistParam(i, datalist);
-            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Settlement_%1").arg(QString::number(num+1)));
+            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_timing_1"));
+            pop->SR()->setNumDistParams(i+1);
+        }
+        else if (index == 3 || (index == 4 && (num_vals * pop->Grow()->getNum_patterns() > 1)))
+        {
+            for (num = 0; num < num_vals; num++, i++)
+            {
+                datalist = readParameter(c_file); // recr apportion to settlement events
+                pop->SR()->setDistParam(i, datalist);
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Settlement_%1").arg(QString::number(num+1)));
+            }
+            pop->SR()->setNumDistParams(i);
         }
         if (pop->SR()->getDoRecruitInteract())
         {
@@ -3019,7 +3032,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 int write33_controlFile(ss_file *c_file, ss_model *data)
 {
     int temp_int, num, num_vals, chars = 0;
-    int i, j;
+    int i, j, index;
     float temp_float;
     QString line, temp_string;
     QStringList str_list;
@@ -3512,16 +3525,37 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        for (i = 0; i < pop->SR()->getNumDistParams(); i++)
+        num_vals = pop->SR()->getNumDistParams();
+        for (i = 0; i < num_vals; i++)
         {
-            line.clear();
-            str_list = pop->SR()->getDistParam(i);
-            for (int l = 0; l < str_list.count(); l++)
-                line.append(QString(" %1").arg(str_list.at(l)));
-            line.append(" # ");
-            line.append(pop->SR()->getDistParams()->getRowHeader(i));
-            chars += c_file->writeline (line);
+            chars += c_file->write_vector(pop->SR()->getDistParam(i), 2,
+                              pop->SR()->getDistParams()->getRowHeader(i));
         }
+/*        num_vals = pop->Grow()->getNum_patterns();
+        for (i = 0; i < num_vals; i++, index++)
+        {
+        }
+        num_vals = data->get_num_areas();
+        for (i = 0; i < num_vals; i++, index++)
+        {
+            chars += c_file->write_vector(pop->SR()->getDistParam(index), 2,
+                              pop->SR()->getDistParams()->getRowHeader(index));
+        }
+        num = pop->SR()->getDistribMethod();
+        num_vals = pop->SR()->getNumAssignments();
+        if (num == 2)
+        {
+            chars += c_file->write_vector(pop->SR()->getDistParam(index), 2,
+                               pop->SR()->getDistParams()->getRowHeader(index++));
+        }
+        else if (num == 3 || (num == 4 && (num_vals * pop->Grow()->getNum_patterns() > 1)))
+        {
+            for (i = 0; i < pop->SR()->getNumAssignments(); i++, index++)
+            {
+                chars += c_file->write_vector(pop->SR()->getDistParam(index), 1,
+                                 pop->SR()->getDistParams()->getRowHeader(index));
+            }
+        }*/
 
         if (pop->SR()->getDoRecruitInteract())
         {

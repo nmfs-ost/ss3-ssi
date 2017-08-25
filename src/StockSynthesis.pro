@@ -97,7 +97,8 @@ SOURCES += main.cpp\
     parametermodel.cpp \
     dialog_runoptions.cpp \
     conversions.cpp \
-    chartdialog.cpp
+    chartdialog.cpp \
+    equationdialog.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -184,7 +185,8 @@ HEADERS  += mainwindow.h \
     parametermodel.h \
     dialog_runoptions.h \
     conversions.h \
-    chartdialog.h
+    chartdialog.h \
+    equationdialog.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -217,7 +219,8 @@ FORMS    += mainwindow.ui \
     documentdialog.ui \
     fileconversiondialog.ui \
     dialog_runoptions.ui \
-    chartdialog.ui
+    chartdialog.ui \
+    equationdialog.ui
 
 OTHER_FILES +=
 

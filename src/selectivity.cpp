@@ -4,10 +4,10 @@
 selectivity::selectivity(ss_model *model, int method)
     : QObject ((QObject*)model)
 {
-    pattern = 0;
-    discard = 0;
-    male = 0;
-    special = 0;
+//    pattern = 0;
+//    discard = 0;
+//    male = 0;
+//    special = 0;
 
     numAges = 0;
 //    equation = NULL;
@@ -53,10 +53,10 @@ void selectivity::setSetup(QString text)
 void selectivity::setSetup(QStringList strList)
 {
     setup->setData(strList);
-    pattern = strList.at(0).toInt();
+/*    pattern = strList.at(0).toInt();
     discard = strList.at(1).toInt();
     male = strList.at(2).toInt();
-    special = strList.at(3).toInt();
+    special = strList.at(3).toInt();*/
 }
 void selectivity::setSetup(QList<int> values)
 {
@@ -83,7 +83,7 @@ void selectivity::setMethod(int method)
         delete equation;
     equation = NULL;*/
     int pattn = setup->getValue(0);
-    if (method == pattern)
+    if (method == pattn)
     {
         switch (method)
         {
@@ -111,7 +111,7 @@ void selectivity::setMethod(int method)
 //            equation = new mirror_range();
             break;
         case 6:
-            setNumParameters(2 + special);
+            setNumParameters(2 + setup->getValue(3));
 //            equation = new linear_segments();
             break;
         case 7:
@@ -167,7 +167,7 @@ void selectivity::setMethod(int method)
 //            equation = new exponent_logistic();
             break;
         case 27:
-            setNumParameters(3 + (2 * special));
+            setNumParameters(3 + (2 * setup->getValue(3)));
 //            equation = new cubic_spline();
             break;
         case 30:  // equal to spawning biomass
@@ -193,7 +193,7 @@ void selectivity::setMethod(int method)
 void selectivity::setPattern(int value)
 {
     setup->setValue(0, value);
-    pattern = value;
+//    pattern = value;
     setMethod(value);
 }
 
@@ -259,10 +259,10 @@ QString selectivity::getParameterLabel(int index)
 
 void selectivity::setDiscard(int value)
 {
-    setup->setValue(1, value);
+    int discard = setup->getValue(1);
     if (discard != value)
     {
-        discard = value;
+        setup->setValue(1, value);
         switch (discard)
         {
         case 1:
@@ -290,10 +290,10 @@ void selectivity::setDiscard(int value)
 
 void selectivity::setMale(int value)
 {
-    setup->setValue(2, value);
+    int male = setup->getValue(2);
     if (male != value)
     {
-        male = value;
+        setup->setValue(2, value);
         switch (male)
         {
         case 1:
@@ -308,7 +308,7 @@ void selectivity::setMale(int value)
 void selectivity::setSpecial(int value)
 {
     setup->setValue(3, value);
-    special = value;
+//    special = value;
 }
 
 void selectivity::setTimeVaryParameter (int index, QStringList strList)

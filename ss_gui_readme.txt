@@ -7,11 +7,15 @@ This GUI is created to display input to the Stock Synthesis application,
 allow for changes to the data, run the executable, and display results.
 
 Currently, the only results displayed are the files warnings.sso and
-echoinput.sso.
+echoinput.sso and the TIME-SERIES charts from Report.sso.
 
 Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
+============================================================================
+      3.3.07.01
+      2017-09-25
+1. Made compliant with SS version 3.30.07.
 ============================================================================
       3.3.05.06
       2017-08-04
@@ -34,7 +38,7 @@ History:
 ============================================================================
       3.3.05.1
       2017-07-10
-1. Added the minimum sampmle size to both the length and age comp header tables;
+1. Added the minimum sample size to both the length and age comp header tables;
    the default value is 1 to match SS 3.24.
 2. Added selectivity to use for forecasts (not yet implemented).
 ============================================================================
