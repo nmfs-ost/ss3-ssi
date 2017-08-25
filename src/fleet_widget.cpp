@@ -95,7 +95,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
     selexSizeEqDialog = new equationDialog(this);
     selexSizeEqDialog->hide();
-    ui->pushButton_selex_size_curve->hide();
+    ui->pushButton_selex_size_curve->hide(); // remove this to show button
 
     lambdaView = new tableview();
     lambdaView->setParent(this);
