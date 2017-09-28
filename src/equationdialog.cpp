@@ -27,15 +27,15 @@ equationDialog::equationDialog(QWidget *parent) :
 
     chartview = new QChartView(this);
     cht = new QChart();
-    firstSeries = NULL;
-    lastSeries = NULL;
-    eqSeries = new QLineSeries(cht);
-    eqSeries->append(0, 0);
-    cht->addSeries(eqSeries);
+    firstSeries = new QLineSeries(cht);
+    lastSeries = new QLineSeries(cht);
+    selSeries = new QLineSeries(cht);
+    selSeries->append(0, 0);
+    cht->addSeries(selSeries);
     chartview->setChart(cht);
     ui->verticalLayout_graph->addWidget(chartview, 1);
     axisXsel = new QValueAxis();
-    axisXalt = new QValueAxis();
+    axisYalt = new QValueAxis();
     axisY = new QValueAxis();
 
     min1 = -5; max1 = 5;
@@ -76,7 +76,7 @@ equationDialog::equationDialog(QWidget *parent) :
     connect (ui->spinBox_bins_min, SIGNAL(valueChanged(int)), SLOT(binMinChanged(int)));
     connect (ui->spinBox_bins_max, SIGNAL(valueChanged(int)), SLOT(binMaxChanged(int)));
     connect (ui->spinBox_bins_width, SIGNAL(valueChanged(int)), SLOT(binWidthChanged(int)));
-    connect (ui->doubleSpinBox_bins_midbin, SIGNAL(valueChanged(int)), SLOT(binMidChanged(int)));
+    connect (ui->doubleSpinBox_bins_midbin, SIGNAL(valueChanged(double)), SLOT(binMidChanged(double)));
 
     connect (ui->horizontalSlider_1, SIGNAL(valueChanged(int)), SLOT(slider1Changed(int)));
     connect (ui->doubleSpinBox_1_value, SIGNAL(valueChanged(double)), SLOT(value1Changed(double)));
@@ -1008,8 +1008,9 @@ void equationDialog::blank ()
     showSliders(0);
     showBins (false);
     showJoins(0);
-    cht->series().clear();
-    eqSeries->clear();
+    selSeries->clear();
+    firstSeries->clear();
+    lastSeries->clear();
     chartview->hide();
 //    cht->removeAllSeries();
 }
@@ -1031,11 +1032,11 @@ void equationDialog::constant (float val)
     cht = chartview->chart();
     cht->legend()->setVisible(false);
 
-    eqSeries = new QLineSeries(cht);
-    eqSeries->append(QPointF(binMin + binMid, val));
-    eqSeries->append(QPointF(binMax + binMid, val));
-    eqSeries->setPen(QPen(QBrush(Qt::blue), 3));
-    cht->addSeries(eqSeries);
+    selSeries = new QLineSeries(cht);
+    selSeries->append(QPointF(binMin + binMid, val));
+    selSeries->append(QPointF(binMax + binMid, val));
+    selSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(selSeries);
 
     axisXsel->setRange((binMin), (binMax + binWidth));
     axisXsel->setTickCount(xRange % 2? xTicks: xTicks + 1);
@@ -1043,8 +1044,8 @@ void equationDialog::constant (float val)
     axisY->setTickCount(7);
 //    axisX->applyNiceNumbers();
 //    axisY->applyNiceNumbers();
-    cht->setAxisX(axisXsel, eqSeries);
-    cht->setAxisY(axisY, eqSeries);
+    cht->setAxisX(axisXsel, selSeries);
+    cht->setAxisY(axisY, selSeries);
 }
 
 /* Size selex equation 1, age selex equation 11 */
@@ -1052,6 +1053,7 @@ void equationDialog::logistic ()
 {
     int xRange = binMax - binMin;
     int xTicks = 9;
+    int yTicks = 7;
     float yVal = 0;
     float temp = 0;
     float len = 0;
@@ -1060,6 +1062,10 @@ void equationDialog::logistic ()
 
     ui->label_title->setText(QString("Exponential"));
     showSliders(2);
+    ui->label_1_name->setText("Value at 50%");
+    ui->label_1_type->setText("Value");
+    ui->label_2_name->setText("Diff 95% & 50%");
+    ui->label_2_type->setText("Value");
     showBins(true);
     showJoins(0);
 
@@ -1067,27 +1073,28 @@ void equationDialog::logistic ()
     delete cht;
     cht = chartview->chart();
     cht->legend()->setVisible(false);
-    xTicks = cht->rect().width() / 20;
+    xTicks = cht->rect().width() / 100;
+    yTicks = cht->rect().height() / 50;
 
-    eqSeries = new QLineSeries(cht);
+    selSeries = new QLineSeries(cht);
     for (int i = 0; i < xValList.count(); i++)
     {
         len = xValList.at(i);
         temp = -log(19) * (len - par1) / par2;
         yVal = 1 / (1 + exp(temp));
-        eqSeries->append(QPointF(len, yVal));
+        selSeries->append(QPointF(len, yVal));
     }
-    eqSeries->setPen(QPen(QBrush(Qt::blue), 3));
-    cht->addSeries(eqSeries);
+    selSeries->setPen(QPen(QBrush(Qt::red), 3));
+    cht->addSeries(selSeries);
 
     axisXsel->setRange((binMin), (binMax + binWidth));
-    axisXsel->setTickCount(xRange % 2? xTicks: xTicks + 1);
+    axisXsel->setTickCount(xTicks % 2? xTicks: xTicks + 1);
     axisY->setRange(0, (1 + .2));
-    axisY->setTickCount(7);
-    axisXsel->applyNiceNumbers();
-    axisY->applyNiceNumbers();
-    cht->setAxisX(axisXsel, eqSeries);
-    cht->setAxisY(axisY, eqSeries);
+    axisY->setTickCount(yTicks);
+//    axisXsel->applyNiceNumbers();
+//    axisY->applyNiceNumbers();
+    cht->setAxisX(axisXsel, selSeries);
+    cht->setAxisY(axisY, selSeries);
 }
 
 /* Size selex equation 6, age selex equation 16 */
@@ -1099,6 +1106,6 @@ void equationDialog::linear ()
     showBins(true);
     showJoins(0);
     cht->removeAllSeries();
-    eqSeries->clear();
+    selSeries->clear();
 }
 
