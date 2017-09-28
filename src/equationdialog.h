@@ -138,11 +138,11 @@ private:
     QChartView *chartview;
     QLineSeries *firstSeries;
     QLineSeries *lastSeries;
-    QLineSeries *eqSeries;
+    QLineSeries *selSeries;
 
     QValueAxis *axisXsel;
-    QValueAxis *axisXalt;
     QValueAxis *axisY;
+    QValueAxis *axisYalt;
 
     QList<float> xValList;
 
