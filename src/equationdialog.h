@@ -8,6 +8,7 @@
 #include <qchart.h>
 #include <qlineseries.h>
 #include <QChartView>
+#include <QValueAxis>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -30,9 +31,15 @@ public:
     int getSpecial() const;
     void setSpecial(int value);
 
+    Fleet *getFleet() const;
+    void setFleet(Fleet *value);
+
 public slots:
-    void setFleet (Fleet *flt);
+    void setSelex (selectivity *slx);
     void setDataModel (ss_model *data);
+    void setXvals(QStringList vals);
+    void setMidBin (float val);
+//    void setAges ();
 
     void setEquationNumber (int num);
     void setParameters (tablemodel *params);
@@ -43,41 +50,49 @@ public slots:
     void refresh ();  // update from fleet values
     void update ();   // update from dialog values
 
+    void setSlider1 (float min, float max, float init);
     void slider1Changed(int value);
     void value1Changed (double value);
     void min1Changed (double value);
     void max1Changed (double value);
 
+    void setSlider2 (float min, float max, float init);
     void slider2Changed(int value);
     void value2Changed (double value);
     void min2Changed (double value);
     void max2Changed (double value);
 
+    void setSlider3 (float min, float max, float init);
     void slider3Changed(int value);
     void value3Changed (double value);
     void min3Changed (double value);
     void max3Changed (double value);
 
+    void setSlider4 (float min, float max, float init);
     void slider4Changed(int value);
     void value4Changed (double value);
     void min4Changed (double value);
     void max4Changed (double value);
 
+    void setSlider5 (float min, float max, float init);
     void slider5Changed(int value);
     void value5Changed (double value);
     void min5Changed (double value);
     void max5Changed (double value);
 
+    void setSlider6 (float min, float max, float init);
     void slider6Changed(int value);
     void value6Changed (double value);
     void min6Changed (double value);
     void max6Changed (double value);
 
+    void setSlider7 (float min, float max, float init);
     void slider7Changed(int value);
     void value7Changed (double value);
     void min7Changed (double value);
     void max7Changed (double value);
 
+    void setSlider8 (float min, float max, float init);
     void slider8Changed(int value);
     void value8Changed (double value);
     void min8Changed (double value);
@@ -111,7 +126,8 @@ private:
 
     QLabel *title;
 
-    Fleet * fleet;
+    Fleet *fleet;
+    selectivity * selex;
     ss_model * dataModel;
 
     int equationNum;
@@ -120,10 +136,15 @@ private:
 
     QChart *cht;
     QChartView *chartview;
-    QLineSeries *series;
+    QLineSeries *firstSeries;
+    QLineSeries *lastSeries;
+    QLineSeries *eqSeries;
 
-    QList<float> ageList;
-    QList<float> lenList;
+    QValueAxis *axisXsel;
+    QValueAxis *axisXalt;
+    QValueAxis *axisY;
+
+    QList<float> xValList;
 
     double min1, max1;
     double min2, max2;
@@ -141,6 +162,7 @@ private:
 
     void showSliders (int num);
     void showBins (bool flag);
+    void showJoins (int num);
     void blank ();
     void constant (float val);
     void linear ();

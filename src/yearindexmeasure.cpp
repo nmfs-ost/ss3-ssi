@@ -87,7 +87,7 @@ bool yearIndexMeasure::gt(const yearIndexMeasure &rhs)
 
 yearIndexMeasure *getYearIndexMeasure(QList<yearIndexMeasure*> &yimList, int year, int index)
 {
-    yearIndexMeasure *yim, *newyim = NULL;
+    yearIndexMeasure *yim = NULL, *newyim = NULL;
     for (int i = 0; i < yimList.count(); i++)
     {
         yim = yimList.at(i);

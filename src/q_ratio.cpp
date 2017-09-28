@@ -63,7 +63,7 @@ void q_ratio::setSetup (QString str)
 void q_ratio::changeSetupData(QList<int> values)
 {
     int val = 0;
-    bool changed;
+    bool changed = false;
 
     val = values.at(0);
     if (val > 0)

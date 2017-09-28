@@ -251,6 +251,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             for (int j = 0; j < temp_int; j++)
                 str_lst.append(d_file->get_next_value("Length comp alt bin"));
             l_data->setAltBins(str_lst);
+            l_data->setAltBinMin(str_lst.first().toInt());
+            l_data->setAltBinMax(str_lst.last().toInt());
+            l_data->setAltBinWidth(str_lst.at(1).toInt() - str_lst.at(0).toInt());
             break;
         }
         //  SS_Label_Info_2.7 #Start length data section
@@ -287,6 +290,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             {
                 l_data->setNumberAltBins(l_data->getNumberBins());
                 l_data->setAltBins(l_data->getBins());
+                l_data->setAltBinMin(l_data->getBin(0));
+                l_data->setAltBinMax(l_data->getBin(l_data->getNumberBins()));
+                l_data->setAltBinWidth(l_data->getBin(1) - l_data->getBin(0));
             }
 
             //  SS_Label_Info_2.7.4 #Read Length composition data

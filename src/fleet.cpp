@@ -7,6 +7,7 @@ Fleet::Fleet(ss_model *parent) :
 {
 //    ss_model *model = static_cast<ss_model*>(parent);
     i_start_year = parent->get_start_year();
+    f_timing = .5;
 
     set_max_catch(-1);
     retainCatch = new tablemodel(this);

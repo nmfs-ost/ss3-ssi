@@ -341,7 +341,8 @@ void fleet_widget::refresh()
 void fleet_widget::set_model (ss_model *model)
 {
     model_data = model;
-    selexSizeEqDialog->setDataModel(model_data);
+    selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
+//    selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
     refresh();
 }
 
@@ -455,7 +456,8 @@ void fleet_widget::set_current_fleet(int index)
         sizeSelexTimeVaryParamsView->setModel(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
         sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getNumTimeVaryParameters());
         sizeSelexTimeVaryParamsView->resizeColumnsToContents();
-        selexSizeEqDialog->setFleet(current_fleet);
+//        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+//        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
 
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
@@ -480,7 +482,6 @@ void fleet_widget::set_current_fleet(int index)
 
         connectFleet ();
 
-        selexSizeEqDialog->setFleet(current_fleet);
     }
     ui->tabWidget_fleet->setCurrentIndex(tabset);
     }
@@ -836,8 +837,11 @@ void fleet_widget::sizeSelexTVParamsChanged()
 void fleet_widget::showSelexSizeCurve(bool flag)
 {
     selexSizeEqDialog->setVisible(flag);
-    selexSizeEqDialog->setEquationNumber (current_fleet->getSizeSelectivity()->getPattern());
-    selexSizeEqDialog->setParameters (current_fleet->getSizeSelectivity()->getParameterModel());
+    selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
+    selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
+    selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+//    selexSizeEqDialog->setEquationNumber (current_fleet->getSizeSelectivity()->getPattern());
+//    selexSizeEqDialog->setParameters (current_fleet->getSizeSelectivity()->getParameterModel());
 }
 
 void fleet_widget::selexSizeCurveClosed()
