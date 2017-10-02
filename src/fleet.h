@@ -6,12 +6,8 @@
 
 #include "q_ratio.h"
 #include "area.h"
-//#include "yearindexmeasure.h"
 #include "selectivity.h"
-//#include "method_setup.h"
 #include "fleetlambda.h"
-//#include "parametermodelTV.h"
-//#include "ss_observation.h"
 #include "fleet_composition.h"
 
 class q_ratio;

@@ -37,7 +37,7 @@ public:
 public slots:
     void setSelex (selectivity *slx);
     void setDataModel (ss_model *data);
-    void setXvals(QStringList vals);
+    void setXvals(const QStringList &vals);
     void setMidBin (float val);
 //    void setAges ();
 
@@ -115,6 +115,8 @@ public slots:
     void buttonClicked (QAbstractButton *btn);
     void closeEvent (QCloseEvent *event);
 
+    void resizeEvent(QResizeEvent *event);
+
     void parametersChanged();
     void setupChanged();
 
@@ -124,7 +126,7 @@ signals:
 private:
     Ui::equationDialog *ui;
 
-    QLabel *title;
+    QString title;
 
     Fleet *fleet;
     selectivity * selex;
@@ -159,6 +161,15 @@ private:
     double binMidWidth;
 
     int join1, join2, join3;
+
+    void setTrans1(double value);
+    void setTrans2(double value);
+    void setTrans3(double value);
+    void setTrans4(double value);
+    void setTrans5(double value);
+    void setTrans6(double value);
+    void setTrans7(double value);
+    void setTrans8(double value);
 
     void showSliders (int num);
     void showBins (bool flag);

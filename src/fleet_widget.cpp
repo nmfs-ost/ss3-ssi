@@ -101,7 +101,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     lambdaView->setParent(this);
     ui->verticalLayout_lambda_changes->addWidget(lambdaView);
 
-    model_data = m_data;
+    set_model(m_data);
     totalFleets = m_data->get_num_fleets();
 
     connect (ui->comboBox_fleet_name, SIGNAL(currentIndexChanged(int)), SLOT(set_current_fleet(int)));
@@ -329,8 +329,11 @@ void fleet_widget::refresh()
     setQTimeVaryReadParams(model_data->getFleet(0)->getQTimeVaryReadParams());
     ui->spinBox_sel_time_vary_read->setValue(model_data->getFleet(0)->getSelTimeVaryReadParams());
 
-    ui->comboBox_fleet_name->setCurrentIndex(curr);
-    set_current_fleet(curr);
+    if (curr >= 0)
+    {
+        ui->comboBox_fleet_name->setCurrentIndex(curr);
+        set_current_fleet(curr);
+    }
 
     ui->tabWidget_fleet->setCurrentIndex(0);
     ui->tabWidget_obs->setCurrentIndex(0);
@@ -456,8 +459,9 @@ void fleet_widget::set_current_fleet(int index)
         sizeSelexTimeVaryParamsView->setModel(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
         sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getNumTimeVaryParameters());
         sizeSelexTimeVaryParamsView->resizeColumnsToContents();
-//        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
-//        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
+        selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
+        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
+        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
 
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
@@ -837,11 +841,7 @@ void fleet_widget::sizeSelexTVParamsChanged()
 void fleet_widget::showSelexSizeCurve(bool flag)
 {
     selexSizeEqDialog->setVisible(flag);
-    selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
-    selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
-    selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
-//    selexSizeEqDialog->setEquationNumber (current_fleet->getSizeSelectivity()->getPattern());
-//    selexSizeEqDialog->setParameters (current_fleet->getSizeSelectivity()->getParameterModel());
+    selexSizeEqDialog->update();
 }
 
 void fleet_widget::selexSizeCurveClosed()
