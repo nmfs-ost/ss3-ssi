@@ -460,8 +460,8 @@ void fleet_widget::set_current_fleet(int index)
         sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getNumTimeVaryParameters());
         sizeSelexTimeVaryParamsView->resizeColumnsToContents();
         selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
-        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
         selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
 
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());

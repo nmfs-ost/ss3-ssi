@@ -49,50 +49,52 @@ public slots:
 
     void refresh ();  // update from fleet values
     void update ();   // update from dialog values
+    void updateSel ();
+    void resizeEvent(QResizeEvent *event);
 
-    void setSlider1 (float min, float max, float init);
+    void setSlider1 (double min, double max, double value);
     void slider1Changed(int value);
     void value1Changed (double value);
     void min1Changed (double value);
     void max1Changed (double value);
 
-    void setSlider2 (float min, float max, float init);
+    void setSlider2 (float min, float max, float value);
     void slider2Changed(int value);
     void value2Changed (double value);
     void min2Changed (double value);
     void max2Changed (double value);
 
-    void setSlider3 (float min, float max, float init);
+    void setSlider3 (float min, float max, float value);
     void slider3Changed(int value);
     void value3Changed (double value);
     void min3Changed (double value);
     void max3Changed (double value);
 
-    void setSlider4 (float min, float max, float init);
+    void setSlider4 (float min, float max, float value);
     void slider4Changed(int value);
     void value4Changed (double value);
     void min4Changed (double value);
     void max4Changed (double value);
 
-    void setSlider5 (float min, float max, float init);
+    void setSlider5 (float min, float max, float value);
     void slider5Changed(int value);
     void value5Changed (double value);
     void min5Changed (double value);
     void max5Changed (double value);
 
-    void setSlider6 (float min, float max, float init);
+    void setSlider6 (float min, float max, float value);
     void slider6Changed(int value);
     void value6Changed (double value);
     void min6Changed (double value);
     void max6Changed (double value);
 
-    void setSlider7 (float min, float max, float init);
+    void setSlider7 (float min, float max, float value);
     void slider7Changed(int value);
     void value7Changed (double value);
     void min7Changed (double value);
     void max7Changed (double value);
 
-    void setSlider8 (float min, float max, float init);
+    void setSlider8 (float min, float max, float value);
     void slider8Changed(int value);
     void value8Changed (double value);
     void min8Changed (double value);
@@ -115,12 +117,11 @@ public slots:
     void buttonClicked (QAbstractButton *btn);
     void closeEvent (QCloseEvent *event);
 
-    void resizeEvent(QResizeEvent *event);
-
     void parametersChanged();
     void setupChanged();
 
 signals:
+    void numbersUpdated();
     void closed ();
 
 private:
@@ -135,6 +136,7 @@ private:
     int equationNum;
     tablemodel *parameters;
     int special;
+    bool building;
 
     QChart *cht;
     QChartView *chartview;
@@ -174,9 +176,11 @@ private:
     void showSliders (int num);
     void showBins (bool flag);
     void showJoins (int num);
+    void updateTicks(QRectF rect);
     void blank ();
     void constant (float val);
     void linear ();
+    void updateLogistic ();
     void logistic ();
 
 };

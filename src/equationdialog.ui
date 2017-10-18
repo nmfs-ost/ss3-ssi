@@ -113,7 +113,7 @@
      <item row="1" column="5">
       <widget class="QDoubleSpinBox" name="doubleSpinBox_1_max">
        <property name="readOnly">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::UpDownArrows</enum>
@@ -145,7 +145,7 @@
      <item row="1" column="4">
       <widget class="QDoubleSpinBox" name="doubleSpinBox_1_min">
        <property name="readOnly">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::UpDownArrows</enum>
@@ -872,7 +872,7 @@
      <item row="1" column="8">
       <widget class="QSlider" name="horizontalSlider_1">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
