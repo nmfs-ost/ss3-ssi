@@ -100,6 +100,12 @@ public slots:
     void min8Changed (double value);
     void max8Changed (double value);
 
+    void setSlider9 (float min, float max, float value);
+    void slider9Changed(int value);
+    void value9Changed (double value);
+    void min9Changed (double value);
+    void max9Changed (double value);
+
     void binMinChanged (int value);
     void binMaxChanged (int value);
     void binWidthChanged (int value);
@@ -122,6 +128,7 @@ public slots:
 
 signals:
     void numbersUpdated();
+    void linearUpdated();
     void closed ();
 
 private:
@@ -143,6 +150,9 @@ private:
     QLineSeries *firstSeries;
     QLineSeries *lastSeries;
     QLineSeries *selSeries;
+    QList<QPointF> firstPoints;
+
+    float yMax;
 
     QValueAxis *axisXsel;
     QValueAxis *axisY;
@@ -158,12 +168,14 @@ private:
     double min6, max6;
     double min7, max7;
     double min8, max8;
+    double min9, max9;
 
     int binMin, binMax, binWidth;
     double binMidWidth;
 
     int join1, join2, join3;
 
+private slots:
     void setTrans1(double value);
     void setTrans2(double value);
     void setTrans3(double value);
@@ -172,17 +184,21 @@ private:
     void setTrans6(double value);
     void setTrans7(double value);
     void setTrans8(double value);
+    void setTrans9(double value);
 
     void showSliders (int num);
     void showBins (bool flag);
     void showJoins (int num);
     void updateTicks(QRectF rect);
-    void blank ();
+    void blank (int num, int rep = 0, QString msg = QString(""));
     void constant (float val);
-    void linear ();
-    void updateLogistic ();
     void logistic ();
+    void updateLogistic ();
+    void linear ();
+    void updateLinear ();
+    void updateLinearExp ();
 
+    float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
 };
 
 #endif // EQUATIONDIALOG_H
