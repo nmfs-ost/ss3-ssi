@@ -311,7 +311,7 @@ void equationDialog::getParameterValues()
     }
 
     connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
-    update();
+    emit numbersUpdated();
 }
 
 void equationDialog::setParameterValues()
@@ -1033,6 +1033,7 @@ void equationDialog::apply()
     ui->doubleSpinBox_6_input->setValue(ui->doubleSpinBox_6_value->value());
     ui->doubleSpinBox_7_input->setValue(ui->doubleSpinBox_7_value->value());
     ui->doubleSpinBox_8_input->setValue(ui->doubleSpinBox_8_value->value());
+    ui->doubleSpinBox_9_input->setValue(ui->doubleSpinBox_9_value->value());
     // write values to parameters
     setParameterValues();
 
@@ -1047,14 +1048,38 @@ void equationDialog::resetValues()
     val = ui->doubleSpinBox_1_input->value();
     setSlider1(min, max, val);
 
-    ui->doubleSpinBox_2_value->setValue(ui->doubleSpinBox_2_input->value());
-    ui->doubleSpinBox_3_value->setValue(ui->doubleSpinBox_3_input->value());
-    ui->doubleSpinBox_4_value->setValue(ui->doubleSpinBox_4_input->value());
-    ui->doubleSpinBox_5_value->setValue(ui->doubleSpinBox_5_input->value());
-    ui->doubleSpinBox_6_value->setValue(ui->doubleSpinBox_6_input->value());
-    ui->doubleSpinBox_7_value->setValue(ui->doubleSpinBox_7_input->value());
-    ui->doubleSpinBox_8_value->setValue(ui->doubleSpinBox_8_input->value());
-    ui->doubleSpinBox_9_value->setValue(ui->doubleSpinBox_8_input->value());
+    min = ui->doubleSpinBox_2_input->minimum();
+    max = ui->doubleSpinBox_2_input->maximum();
+    val = ui->doubleSpinBox_2_input->value();
+    setSlider2(min, max, val);
+    min = ui->doubleSpinBox_3_input->minimum();
+    max = ui->doubleSpinBox_3_input->maximum();
+    val = ui->doubleSpinBox_3_input->value();
+    setSlider3(min, max, val);
+    min = ui->doubleSpinBox_4_input->minimum();
+    max = ui->doubleSpinBox_4_input->maximum();
+    val = ui->doubleSpinBox_4_input->value();
+    setSlider4(min, max, val);
+    min = ui->doubleSpinBox_5_input->minimum();
+    max = ui->doubleSpinBox_5_input->maximum();
+    val = ui->doubleSpinBox_5_input->value();
+    setSlider5(min, max, val);
+    min = ui->doubleSpinBox_6_input->minimum();
+    max = ui->doubleSpinBox_6_input->maximum();
+    val = ui->doubleSpinBox_6_input->value();
+    setSlider6(min, max, val);
+    min = ui->doubleSpinBox_7_input->minimum();
+    max = ui->doubleSpinBox_7_input->maximum();
+    val = ui->doubleSpinBox_7_input->value();
+    setSlider7(min, max, val);
+    min = ui->doubleSpinBox_8_input->minimum();
+    max = ui->doubleSpinBox_8_input->maximum();
+    val = ui->doubleSpinBox_8_input->value();
+    setSlider8(min, max, val);
+    min = ui->doubleSpinBox_9_input->minimum();
+    max = ui->doubleSpinBox_9_input->maximum();
+    val = ui->doubleSpinBox_9_input->value();
+    setSlider9(min, max, val);
     emit numbersUpdated();
 }
 
