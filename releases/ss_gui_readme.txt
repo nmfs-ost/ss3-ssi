@@ -13,9 +13,13 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
-      3.3.08.01
+      3.3.08.03
+      2017-11-01
+1. Fixed problem with recruitment distribution timings. GUI updated.
+============================================================================
+      3.3.08.02
       2017-10-27
-1. Added graph view for Length Selectivity for constant (0), logistic (1), 
+1. Added graph view for Length Selectivity for constant (0), logistic (1),
    and linear segment (6).
 2. Made compliant with SS version 3.30.08.
 ============================================================================
