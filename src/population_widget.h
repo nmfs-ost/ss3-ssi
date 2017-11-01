@@ -62,6 +62,7 @@ public slots:
     int getRecrArea ();
     void setRecrDistParam (int method);
     void changeRecrDistParam (int method);
+    void changeRecrDistAssignments (int method);
     int getRecrDistParam ();
 
     void changeFMortMethod (int opt);

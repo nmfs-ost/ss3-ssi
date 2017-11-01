@@ -1974,7 +1974,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
-        // recruitment designs
+        // recruitment distribution designs
         index = c_file->get_next_value("Recr dist").toInt(); // recruitment distribution
         pop->SR()->setDistribMethod(index);
         temp_int = c_file->get_next_value("Recr dist area").toInt(); // recruitment dist area
@@ -1983,17 +1983,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setNumAssignments(num);
         temp_int = c_file->get_next_value("Recr unused").toInt(); // read interact params?
         pop->SR()->setDoRecruitInteract(temp_int);
-/*        switch (index)
-        {
-        case 1:
-        case 2:
-        case 3:
-            break;
-        case 4:
-            pop->SR()->setNumAssignments(1);
-            pop->SR()->setDoRecruitInteract(0);
-            break;
-        }*/
 
         for (i = 0; i < num; i++) // gr pat, month, area, age for each assignment
         {
@@ -2002,6 +1991,33 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->get_next_value("Recr assign data"));
             pop->SR()->setAssignment(i, datalist);
         }
+        datalist.clear();
+//        pop->SR()->setAssignTimings();
+        /*
+        num = pop->SR()->getNumAssignments();
+        if (num == 1)
+        {
+            datalist.append(QString::number(1.0,'g',1));
+        }
+        else
+        {
+            num_vals = 0;
+            for (j = 1; j <= num; j++)
+            {
+                if(settle_timings_tempvec(j)==real_month)  // found matching settle_time
+                {
+                    settle_assignments_timing(settle)=j;
+                    num_vals = 1;
+                }
+            }
+            if (num_vals == 0)
+            {
+                N_settle_timings++;
+                settle_timings_tempvec(N_settle_timings)=real_month;
+                settle_assignments_timing(settle)=N_settle_timings;
+            }
+        }
+        pop->SR()->setAssignTimings (datalist);*/
 
         // movement definitions
         pop->Move()->setNumDefs(0);
@@ -2389,40 +2405,43 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         if (QString(datalist.last()).compare("EOF") == 0)
             return false;
 
-
-        num_vals = (pop->Grow()->getNum_patterns() + data->get_num_areas() + data->get_num_seasons());
-        pop->SR()->setNumDistParams(num_vals);
-        for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
-        {
-            datalist = readParameter(c_file); // recr apportion main
-            pop->SR()->setDistParam(i, datalist);
-            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
-        }
-        for (num = 0; num < data->get_num_areas(); num++, i++)
-        {
-            datalist = readParameter(c_file); // recr apportion to areas
-            pop->SR()->setDistParam(i, datalist);
-            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
-        }
         index = pop->SR()->getDistribMethod();
-        num_vals = pop->SR()->getNumAssignments();
         if (index == 2)
         {
-            datalist = readParameter(c_file); // recr apportion to settlement events
-            pop->SR()->setDistParam(i, datalist);
-            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_timing_1"));
-            pop->SR()->setNumDistParams(i+1);
-        }
-        else if (index == 3 || (index == 4 && (num_vals * pop->Grow()->getNum_patterns() > 1)))
-        {
-            for (num = 0; num < num_vals; num++, i++)
+            num_vals = pop->Grow()->getNum_patterns() + data->get_num_areas() + pop->SR()->getNumAssignTimings();//data->get_num_seasons();
+            pop->SR()->setNumDistParams(num_vals);
+            for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
+            {
+                datalist = readParameter(c_file); // recr apportion main
+                pop->SR()->setDistParam(i, datalist);
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
+            }
+            for (num = 0; num < data->get_num_areas(); num++, i++)
+            {
+                datalist = readParameter(c_file); // recr apportion to areas
+                pop->SR()->setDistParam(i, datalist);
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Area_%1").arg(QString::number(num+1)));
+            }
+            for (num = 0; num < pop->SR()->getNumAssignTimings(); num++, i++)
             {
                 datalist = readParameter(c_file); // recr apportion to settlement events
                 pop->SR()->setDistParam(i, datalist);
-                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Settlement_%1").arg(QString::number(num+1)));
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_timing_%1").arg(QString::number(num+1)));
             }
             pop->SR()->setNumDistParams(i);
         }
+        else if (index == 3 || (index == 4 && (num_vals * pop->Grow()->getNum_patterns() > 1)))
+        {
+            num_vals = pop->SR()->getNumAssignments();
+            for (i = 0; i < num_vals; i++)
+            {
+                datalist = readParameter(c_file); // recr apportion settlement evenets
+                pop->SR()->setDistParam(i, datalist);
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Assignment_%1").arg(QString::number(i+1)));
+            }
+            pop->SR()->setNumDistParams(i);
+        }
+
         if (pop->SR()->getDoRecruitInteract())
         {
             index = 0;

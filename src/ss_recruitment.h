@@ -53,7 +53,7 @@ public slots:
     QStringList getFullParameter(int index) {return full_parameters->getParameter(index);}
 
     int getDistribMethod() const {return distrib_method;}
-    void setDistribMethod (int value) {distrib_method = value;}
+    void setDistribMethod (int value);
     int getDistribArea () const {return distrib_area;}
     void setDistribArea (int value) {distrib_area = value;}
     bool getDoRecruitInteract() const;
@@ -63,6 +63,9 @@ public slots:
     void setNumAssignments(int rows);
     tablemodel *getAssignments() const;
     void setAssignment(int row, QStringList data);
+    int getNumAssignTimings () const;
+    QStringList getAssignTimings () const;
+    void setAssignTimings ();
     QStringList getAssignment(int row);
     tablemodel *getCycleParams () {return cycleParams->getParamTable();}
     void setNumCycleParams (int num) {cycleParams->setNumParams(num);}
@@ -187,6 +190,7 @@ private:
     int distrib_method;
     int distrib_area;
     tablemodel *assignments;
+    tablemodel *assignTimings;
     bool doRecruitInteract;
     QStringList header;
 

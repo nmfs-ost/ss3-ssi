@@ -7,6 +7,8 @@
 tablemodel::tablemodel(QObject *parent)
   : QStandardItemModel(parent)
 {
+    connect (this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                    SIGNAL(dataChanged()));
     reset();
 }
 

@@ -1024,6 +1024,8 @@ void population_widget::changeRecrAssignParams()
 {
     recruitAssignParamsView->setHeight(pop->SR()->getAssignments());
     recruitAssignParamsView->resizeColumnsToContents();
+    pop->SR()->setAssignTimings();
+    changeRecrDistAssignments(pop->SR()->getDistribMethod());
 }
 void population_widget::changeRecrDistParams()
 {
@@ -1044,16 +1046,46 @@ void population_widget::changeRecrDevParams()
 void population_widget::setRecrDistParam(int method)
 {
     ui->spinBox_recr_dist_params->setValue(method);
-    changeRecrDistParam(method);
+    changeRecrDistAssignments(method);
 }
 
 void population_widget::changeRecrDistParam(int method)
 {
-    pop->SR()->setDistribMethod(method);
+    if (method != pop->SR()->getDistribMethod())
+    {
+        pop->SR()->setDistribMethod(method);
+        changeRecrDistAssignments(method);
+        refresh();
+    }
 //    if (method == 1)
 //        ui->checkBox_recr_interaction->setVisible(true);
 //    else
 //        ui->checkBox_recr_interaction->setVisible(false);
+}
+
+void population_widget::changeRecrDistAssignments(int method)
+{
+    int i, num = 0;
+    if (method == 2)
+    {
+        num = pop->Grow()->getNum_patterns() +
+                model_data->get_num_areas() +
+                pop->SR()->getNumAssignTimings();
+        pop->SR()->setNumDistParams(num);
+        num = 0;
+        for (i = 0; i < pop->Grow()->getNum_patterns(); i++, num++)
+            pop->SR()->getDistParams()->setRowHeader(num, QString("RecrDist_GP_%1").arg(QString::number(i+1)));
+        for (i = 0; i < model_data->get_num_areas(); i++, num++)
+            pop->SR()->getDistParams()->setRowHeader(num, QString("RecrDist_Area_%1").arg(QString::number(i+1)));
+        for (i = 0; i < pop->SR()->getNumAssignTimings(); i++, num++)
+            pop->SR()->getDistParams()->setRowHeader(num, QString("RecrDist_Timing_%1").arg(QString::number(i+1)));
+    }
+    else if (method == 3)
+    {
+        pop->SR()->setNumDistParams(pop->SR()->getNumAssignments());
+        for (i = 0; i < pop->SR()->getNumAssignments(); i++)
+            pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Assignmnt_%1").arg(QString::number(i+1)));
+    }
 }
 
 int population_widget::getRecrDistParam()
@@ -1070,6 +1102,8 @@ void population_widget::changeRecNumAssigns(int num)
 {
 //    bool vis = (num != 0);
     pop->SR()->setNumAssignments(num);
+    pop->SR()->setAssignTimings();
+    changeRecrDistAssignments(pop->SR()->getDistribMethod());
 //    ui->label_recr_num_assigns->setVisible(vis);
     recruitAssignParamsView->setHeight(num);
 //    assignmentView->setVisible(vis);

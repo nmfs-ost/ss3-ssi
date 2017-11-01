@@ -16,8 +16,12 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     assignments = new tablemodel();
     assignments->setColumnCount(4);
     assignments->setRowCount(0);
-    header << "GP" << "seas" << "area" << "Settle_age";
+    header << "GP" << "Month" << "Area" << "Settle Age";
     assignments->setHeader(header);
+    assignTimings = new tablemodel();
+    assignTimings->setRowCount(1);
+    assignTimings->setColumnCount(1);
+    assignTimings->setRowHeader(0, QString("Settle Timings"));
 
     interactParams = new longParameterModel();
     distParams = new longParameterModel();
@@ -31,7 +35,6 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     recruitDevs->setHeader(header);
 
     reset();
-
 }
 
 spawn_recruit::~spawn_recruit()
@@ -119,6 +122,11 @@ void spawn_recruit::setFullParameterHeader(int index, QString hdr)
     tvParameters->setTableTitle(index, hdr);
 }
 
+void spawn_recruit::setDistribMethod(int value)
+{
+    distrib_method = value;
+}
+
 int spawn_recruit::getNumAssignments()
 {
     return assignments->rowCount();
@@ -126,7 +134,15 @@ int spawn_recruit::getNumAssignments()
 
 void spawn_recruit::setNumAssignments(int rows)
 {
-    assignments->setRowCount(rows);
+    if (rows < assignments->rowCount())
+    {
+        assignments->setRowCount(rows);
+        setAssignTimings();
+    }
+    else
+    {
+        assignments->setRowCount(rows);
+    }
 }
 
 tablemodel *spawn_recruit::getAssignments() const
@@ -144,6 +160,51 @@ void spawn_recruit::setAssignment(int row, QStringList data)
     if (row >= assignments->rowCount())
         assignments->setRowCount(row + 1);
     assignments->setRowData(row, data);
+    setAssignTimings();
+}
+
+int spawn_recruit::getNumAssignTimings() const
+{
+    return assignTimings->columnCount();
+}
+
+QStringList spawn_recruit::getAssignTimings() const
+{
+    return assignTimings->getRowData(0);
+}
+
+void spawn_recruit::setAssignTimings()
+{
+    int num = getNumAssignments();
+    int settle, i, j, timings = 0;
+    QString month;
+    QStringList datalist;
+    QStringList assignment;
+
+    if (num == 0)
+    {
+        datalist.append(QString::number(1.0,'g',1));
+    }
+    else
+    {
+        timings = 1;
+        datalist.append (getAssignment(0).at(1));
+
+        for (settle = 1; settle < num; settle++)
+        {
+            assignment = getAssignment (settle);
+            month = assignment.at(1);
+            if (!datalist.contains(month) && !month.isEmpty())
+            {
+                datalist.append(month);
+                timings++;
+            }
+        }
+    }
+    assignTimings->setColumnCount(datalist.count());
+    assignTimings->setRowData(0, datalist);
+    if (distrib_method == 3)
+        distParams->setTotalNumParams(datalist.count());
 }
 
 bool spawn_recruit::getDoRecruitInteract() const

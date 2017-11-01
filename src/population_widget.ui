@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -82,7 +82,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-133</y>
             <width>894</width>
             <height>546</height>
            </rect>
@@ -495,33 +495,33 @@
           <layout class="QVBoxLayout" name="verticalLayout_10">
            <item>
             <layout class="QGridLayout" name="gridLayout_recruitment">
-             <item row="11" column="0">
-              <widget class="QLabel" name="label_recr_assigns">
-               <property name="text">
-                <string>Settlement assignments</string>
+             <item row="12" column="1">
+              <widget class="QSpinBox" name="spinBox_recr_dist_params">
+               <property name="minimum">
+                <number>2</number>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="1">
-              <widget class="QSpinBox" name="spinBox_recr_num_assigns"/>
-             </item>
-             <item row="12" column="0" colspan="2">
-              <widget class="QLabel" name="label_recr_dist_params">
-               <property name="text">
-                <string>Distribution Parameters</string>
+               <property name="maximum">
+                <number>3</number>
                </property>
               </widget>
              </item>
-             <item row="13" column="0" colspan="5">
-              <layout class="QVBoxLayout" name="verticalLayout_recr_dist_params"/>
-             </item>
-             <item row="7" column="0">
-              <widget class="QLabel" name="label_spwn_recr_time_vary_read">
+             <item row="1" column="1" colspan="2">
+              <widget class="QRadioButton" name="radioButton_area">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
-                <string>Reading S/R time-vary parameters </string>
+                <string>Area</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QRadioButton" name="radioButton_global">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Global</string>
                </property>
               </widget>
              </item>
@@ -552,16 +552,6 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QSpinBox" name="spinBox_recr_dist_params">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>4</number>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="0">
               <widget class="QLabel" name="label_recr_spec">
                <property name="text">
@@ -579,20 +569,10 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
+             <item row="12" column="0">
               <widget class="QLabel" name="label_recr_dist_method">
                <property name="text">
                 <string>Distribution method for parameters</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton_global">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>Global</string>
                </property>
               </widget>
              </item>
@@ -668,13 +648,44 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1" colspan="2">
-              <widget class="QRadioButton" name="radioButton_area">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
+             <item row="11" column="0">
+              <widget class="QLabel" name="label_recr_assigns">
                <property name="text">
-                <string>Area</string>
+                <string>Settlement assignments</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="1">
+              <widget class="QSpinBox" name="spinBox_recr_num_assigns">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="0" colspan="2">
+              <widget class="QLabel" name="label_recr_dist_params">
+               <property name="text">
+                <string>Distribution Parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="0" colspan="5">
+              <layout class="QVBoxLayout" name="verticalLayout_recr_dist_params"/>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_spwn_recr_time_vary_read">
+               <property name="text">
+                <string>Reading S/R time-vary parameters </string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="2" colspan="3">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>2 = Effects for GP, area, and settle timing, 3 = one param for each settle entity</string>
                </property>
               </widget>
              </item>
