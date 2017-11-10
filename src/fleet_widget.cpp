@@ -95,7 +95,8 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
     selexSizeEqDialog = new equationDialog(this);
     selexSizeEqDialog->hide();
-//    ui->pushButton_selex_size_curve->hide(); // remove this to show button
+    selexAgeEqDialog = new equationDialog(this);
+    selexAgeEqDialog->hide();
 
     lambdaView = new tableview();
     lambdaView->setParent(this);
@@ -131,6 +132,8 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
+//    connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
+//    connect (selexAgeEqDialog, SIGNAL(closed()), SLOT(selexAgeCurveClosed()));
 
     connect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), SLOT(changeLengthMinTailComp()));
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
@@ -462,6 +465,7 @@ void fleet_widget::set_current_fleet(int index)
         selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
         selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
+        selexSizeEqDialog->update();
 
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
@@ -722,20 +726,23 @@ void fleet_widget::setSelTimeVaryReadParams(int flag)
 
 void fleet_widget::changeSelexSizePattern(int pat)
 {
+    int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
+    int newNumParams = 0;
     switch (pat)
     {
     case 2:
     case 7:
         ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #8."));
-        break;
+        return;
     case 3:
         ui->label_selex_size_pattern_info->setText(tr("Discontinued, select another pattern."));
-        break;
+        return;
     case 4:
         ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #30."));
-        break;
+        return;
     case 13:
         ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #18."));
+        return;
     case 10:
     case 11:
     case 12:
@@ -747,22 +754,32 @@ void fleet_widget::changeSelexSizePattern(int pat)
     case 20:
     case 26:
         ui->label_selex_size_pattern_info->setText(tr("Used for age selectivity only."));
-        break;
+        return;
     case 21:
     case 28:
     case 29:
         ui->label_selex_size_pattern_info->setText(tr("Not used, select another pattern."));
-        break;
+        return;
     default:
         ui->label_selex_size_pattern_info->setText(" ");
     }
     current_fleet->getSizeSelectivity()->setPattern(pat);
+    newNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
+    for (int i = oldNumParams; i < newNumParams; i++)
+    {
+        QStringList prm;
+        prm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        current_fleet->getSizeSelectivity()->setParameter(i, prm);
+    }
+
     ui->spinBox_selex_size_pattern->setValue
             (current_fleet->getSizeSelectivity()->getPattern());
     ui->spinBox_selex_size_num_params->setValue
             (current_fleet->getSizeSelectivity()->getNumParameters());
     sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getSetupModel()->rowCount());
     selexSizeEqDialog->setEquationNumber(pat);
+    selexSizeEqDialog->update();
+    selexSizeEqDialog->resetValues();
 }
 
 void fleet_widget::setAr1SelexSmoother(int val)
@@ -826,6 +843,7 @@ void fleet_widget::sizeSelexParamsChanged()
     sizeSelexParamsView->setHeight(ht);
     sizeSelexParamsView->resizeColumnsToContents();
     selexSizeEqDialog->setParameters(current_fleet->getSizeSelexModel());
+    selexSizeEqDialog->update();
 }
 
 void fleet_widget::sizeSelexTVParamsChanged()
@@ -870,13 +888,14 @@ void fleet_widget::changeSelexAgePattern(int pat)
     case 28:
     case 29:
         ui->label_selex_age_pattern_info->setText(tr("Not used, select another pattern."));
+        return;
     case 22:
     case 23:
     case 24:
     case 25:
     case 27:
         ui->label_selex_age_pattern_info->setText(tr("Used for size selectivity only."));
-        break;
+        return;
     default:
         ui->label_selex_age_pattern_info->setText(tr(" "));
     }

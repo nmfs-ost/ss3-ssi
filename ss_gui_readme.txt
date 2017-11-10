@@ -13,6 +13,11 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.08.04
+      2017-11-09
+1. Fixed Bug #40146, crash when changing selectivity model.
+2.
+============================================================================
       3.3.08.03
       2017-11-01
 1. Fixed problem with recruitment distribution timings. GUI updated.

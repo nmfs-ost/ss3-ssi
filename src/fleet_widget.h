@@ -124,6 +124,7 @@ private:
     tableview *ageSelexMaleView;
     tableview *ageSelexTimeVaryParamsView;
     equationDialog *selexSizeEqDialog;
+    equationDialog *selexAgeEqDialog;
 
     tableview *lambdaView;
 

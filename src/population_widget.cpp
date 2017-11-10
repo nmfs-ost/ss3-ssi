@@ -1057,7 +1057,7 @@ void population_widget::changeRecrDistParam(int method)
         changeRecrDistAssignments(method);
         refresh();
     }
-//    if (method == 1)
+//    if (method == 1)  // no longer used
 //        ui->checkBox_recr_interaction->setVisible(true);
 //    else
 //        ui->checkBox_recr_interaction->setVisible(false);

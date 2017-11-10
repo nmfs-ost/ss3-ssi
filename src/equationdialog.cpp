@@ -34,18 +34,11 @@ equationDialog::equationDialog(QWidget *parent) :
     binMidWidth = .5;
     binWidth = 2;
 
-    chartview = new QChartView(this);
-    cht = new QChart();
-    firstSeries = NULL;
-    lastSeries = NULL;
-    selSeries = new QLineSeries(cht);
+    resetChart(true);
     selSeries->append(0, 0);
     cht->addSeries(selSeries);
     chartview->setChart(cht);
     ui->verticalLayout_graph->addWidget(chartview, 1);
-    axisXsel = new QValueAxis();
-    axisYalt = new QValueAxis();
-    axisY = new QValueAxis();
 
     ui->horizontalSlider_1->setMaximum(SLIDER_SPAN);
     ui->horizontalSlider_2->setMaximum(SLIDER_SPAN);
@@ -224,6 +217,7 @@ void equationDialog::getParameterValues()
     int numParams = parameters->rowCount();
 
     disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    showSliders(numParams);
 
     switch (numParams)
     {
@@ -311,7 +305,7 @@ void equationDialog::getParameterValues()
     }
 
     connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
-    emit numbersUpdated();
+//    emit numbersUpdated();
 }
 
 void equationDialog::setParameterValues()
@@ -406,6 +400,7 @@ void equationDialog::update()
     int sliders = 0;
 
     building = true;
+    getParameterValues();
 
     switch (equationNum)
     {
@@ -435,10 +430,7 @@ void equationDialog::update()
     case 5:
         sliders = 2;
     case 15:
-        ui->label_1_type->setText("Value");
-        ui->label_2_type->setText("Value");
-        msg = QString(QString("Mirror of Fleet(%1)").arg(QString::number(getSpecial())));
-        blank(sliders, 0, msg);
+        mirror(sliders);
         break;
 
     case 6:
@@ -446,8 +438,15 @@ void equationDialog::update()
         break;
 
     case 8:
-        blank(0);
+        dblLogPeak();
         break;
+
+    case 9:
+        dblLogistic();
+        break;
+
+    case 22:
+        blank(6,0, QString("Double normal"));
 
     default:
         blank(0);
@@ -459,9 +458,6 @@ void equationDialog::update()
 
 void equationDialog::updateSel()
 {
-    QStringList templist;
-    float min, max, init;
-
     switch (equationNum) {
     case 0:
     case 10:
@@ -473,11 +469,23 @@ void equationDialog::updateSel()
         updateLogistic();
         break;
 
+    case 5:
+        updateMirror();
+        break;
+
     case 6:
         updateLinear();
         break;
+
+    case 8:
+        updateDblLogPeak();
+        break;
+
+    case 9:
+        updateDblLogistic();
+        break;
+
     default:
-        blank(0);
         break;
     }
 }
@@ -1080,7 +1088,6 @@ void equationDialog::resetValues()
     max = ui->doubleSpinBox_9_input->maximum();
     val = ui->doubleSpinBox_9_input->value();
     setSlider9(min, max, val);
-    emit numbersUpdated();
 }
 
 void equationDialog::restoreAll()
@@ -1112,6 +1119,7 @@ void equationDialog::restoreAll()
                 max = QString(templist.at(1)).toFloat();
                 init = QString(templist.at(2)).toFloat();
                 setSlider2(min, max, init);*/
+    update();
 }
 
 void equationDialog::close()
@@ -1122,14 +1130,20 @@ void equationDialog::close()
 
 void equationDialog::buttonClicked(QAbstractButton *btn)
 {
-    if (btn->text().contains("Apply"))
+    if (btn->text().contains("Apply")) {
         apply();
-    else if (btn->text().contains("Reset"))
+    }
+    else if (btn->text().contains("Reset")){
         resetValues();
-    else if (btn->text().contains("Restore"))
+        emit numbersUpdated();
+    }
+    else if (btn->text().contains("Restore")){
         restoreAll();
-    else if (btn->text().contains("Close"))
+        emit numbersUpdated();
+    }
+    else if (btn->text().contains("Close")){
         close();
+    }
 }
 
 void equationDialog::closeEvent(QCloseEvent *event)
@@ -1552,8 +1566,39 @@ void equationDialog::updateTicks(QRectF rect)
     axisY->setTickCount(yTicks % 2? yTicks: yTicks + 1);
 }
 
+void equationDialog::resetChart(bool create)
+{
+    ui->verticalLayout_graph->removeWidget(chartview);
+    if (!create)
+    {
+        delete axisXsel;
+        delete axisY;
+        delete axisYalt;
+//        cht->removeAllSeries();
+        delete firstSeries;
+        delete lastSeries;
+        delete selSeries;
+        delete cht;
+        delete chartview;
+    }
+    chartview = new QChartView(this);
+    chartview->setChart(new QChart());
+    cht = chartview->chart();
+    firstSeries = new QLineSeries(cht);
+    lastSeries = new QLineSeries(cht);
+    selSeries = new QLineSeries(cht);
+    axisXsel = new QValueAxis();
+    axisY = new QValueAxis();
+    axisYalt = new QValueAxis();
+
+    firstPoints.clear();
+
+    yMax = 0;
+}
+
 void equationDialog::blank (int num, int rep, QString msg)
 {
+    resetChart();
     // If replaced by another pattern
     if (rep > 0)
     {
@@ -1563,13 +1608,12 @@ void equationDialog::blank (int num, int rep, QString msg)
     // This is for equations not yet implemented.
     // INTENTIONALLY LEFT BLANK
     if (msg.isEmpty())
-        msg.append ("This equation is not yet implemented.\n\n THIS PAGE INTENTIONALLY LEFT BANK");
+        msg.append ("This equation is not yet implemented.\n\n\n THIS PAGE INTENTIONALLY LEFT BANK");
 
     ui->label_title->setText(msg);
     showSliders(num);
     showBins (num > 0);
     showJoins(0);
-    chartview->hide();
 }
 
 /* Size selex equation 0, age selex equation 10 */
@@ -1588,27 +1632,17 @@ void equationDialog::constant (float val)
     showBins(true);
     showJoins(0);
 
-    delete axisXsel;
-    delete axisY;
-    delete selSeries;
-    delete cht;
-    delete chartview;
-    chartview = new QChartView(this);
+    resetChart();
     ui->verticalLayout_graph->addWidget(chartview);
-    chartview->setChart(new QChart());
-    cht = chartview->chart();
     cht->legend()->setVisible(false);
 
-    selSeries = new QLineSeries(cht);
     selSeries->append(QPointF(binMin + binMid, val));
     selSeries->append(QPointF(binMax + binMid, val));
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    axisXsel = new QValueAxis();
     axisXsel->setRange((binMin), (binMax + binWidth));
     axisXsel->setTickCount(xTicks % 2? xTicks: xTicks + 1);
-    axisY = new QValueAxis();
     axisY->setRange(0, (val + .2));
     axisY->setTickCount(yTicks % 2? yTicks: yTicks + 1);
 //    axisX->applyNiceNumbers();
@@ -1642,21 +1676,13 @@ void equationDialog::logistic ()
     showBins(true);
     showJoins(0);
 
-    delete axisXsel;
-    delete axisY;
-    delete selSeries;
-    delete cht;
-    delete chartview;
-    chartview = new QChartView(this);
+    resetChart();
     ui->verticalLayout_graph->addWidget(chartview);
-    cht = new QChart();
-    chartview->setChart(cht);
 
     cht->legend()->setVisible(false);
     xTicks = cht->rect().width() / 100;
     yTicks = cht->rect().height() / 60;
 
-    selSeries = new QLineSeries(cht);
     for (int i = 0; i < xValList.count(); i++)
     {
         len = xValList.at(i);
@@ -1667,10 +1693,8 @@ void equationDialog::logistic ()
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    axisXsel = new QValueAxis();
     axisXsel->setRange((binMin), (binMax + binWidth));
     axisXsel->setTickCount(xTicks % 2? xTicks: xTicks + 1);
-    axisY = new QValueAxis();
     axisY->setRange(0, (1 + .2));
     axisY->setTickCount(yTicks % 2? yTicks: yTicks + 1);
 //    axisXsel->applyNiceNumbers();
@@ -1690,8 +1714,8 @@ void equationDialog::updateLogistic()
     ui->doubleSpinBox_2_trans->setValue(par2);
 
     delete selSeries;
-
     selSeries = new QLineSeries(cht);
+
     for (int i = 0; i < xValList.count(); i++)
     {
         len = xValList.at(i);
@@ -1704,6 +1728,31 @@ void equationDialog::updateLogistic()
 
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
+}
+
+/* Size selex equation 5, size and age selex equation 15 */
+void equationDialog::mirror (int sliders)
+{
+    QString msg(QString("Mirror of Fleet (%1)").arg
+                (QString::number(getSpecial())));
+    resetChart();
+    if (sliders > 0)
+    {
+        ui->label_1_name->setText("Bin select");
+        ui->label_1_type->setText("Value");
+        ui->label_2_name->setText("Bin select");
+        ui->label_2_type->setText("Value");
+    }
+    ui->label_title->setText(msg);
+    showSliders(sliders);
+    showBins (sliders > 0);
+    showJoins(0);
+    updateMirror();
+}
+void equationDialog::updateMirror()
+{
+    ui->doubleSpinBox_1_trans->setValue(ui->doubleSpinBox_1_value->value());
+    ui->doubleSpinBox_2_trans->setValue(ui->doubleSpinBox_2_value->value());
 }
 
 /* Size selex equation 6, age selex equation 16 */
@@ -1775,17 +1824,14 @@ void equationDialog::linear ()
     showBins(true);
     showJoins(0);
 
-    chartview->setChart(new QChart());
-    delete cht;
-    cht = chartview->chart();
+    resetChart();
+    ui->verticalLayout_graph->addWidget(chartview);
     cht->legend()->setVisible(false);
     xTicks = cht->rect().width() / 100;
     yTicks = cht->rect().height() / 50;
 
-    axisXsel = new QValueAxis();
     axisXsel->setRange((binMin), (binMax + binWidth));
     axisXsel->setTickCount(xTicks % 2? xTicks: xTicks + 1);
-    axisY = new QValueAxis();
     axisY->setRange(0, (1 + .2));
     axisY->setTickCount(yTicks % 2? yTicks: yTicks + 1);
     axisY->setTitleText("Selex (red)");
@@ -1804,12 +1850,8 @@ void equationDialog::updateLinear()
     float xVal[10];
     float yVal[10];
 
-    if (axisYalt != NULL)
-        delete axisYalt;
-    if (firstSeries != NULL)
-        delete firstSeries;
-    if (lastSeries != NULL)
-        delete lastSeries;
+    delete firstSeries;
+    firstSeries = new QLineSeries(cht);
 
     if (num > 7)
     {
@@ -1852,8 +1894,6 @@ void equationDialog::updateLinear()
         xVal[i] = xVal[1] + (i - 1) * temp;
     }
 
-    firstSeries = new QLineSeries(cht);
-//    selSeries = new QLineSeries(cht);
     for (int i = 0; i <= num; i++)
         firstSeries->append(QPointF(xVal[i], yVal[i]));
     if (xVal[num] > binMax)
@@ -1890,7 +1930,6 @@ void equationDialog::updateLinear()
     firstSeries->setPen(QPen(QBrush(Qt::blue), 2));
     cht->addSeries(firstSeries);
 
-    axisYalt = new QValueAxis();
     axisYalt->setRange(axisYMin, axisYMax);
     axisYalt->setTitleText("Ln of Selex (blue)");
 
@@ -1910,7 +1949,6 @@ void equationDialog::updateLinearExp()
     delete selSeries;
     selSeries = new QLineSeries(cht);
 
-
     for (int i = 0; i < firstPoints.count(); i++)
     {
         yVal = exp(firstPoints.at(i).y() - yMax);
@@ -1927,10 +1965,30 @@ void equationDialog::updateLinearExp()
 //    cht->setAxisY(axisY, selSeries);
 }
 
-
 float equationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
 {
     float slope = (pt2.y() - pt1.y()) / (pt2.x() - pt1.x());
     float y = -1 * (slope * (pt2.x() - x) - pt2.y());
     return y;
+}
+
+
+void equationDialog::dblLogistic()
+{
+    blank(6);
+}
+
+void equationDialog::updateDblLogistic()
+{
+
+}
+
+void equationDialog::dblLogPeak()
+{
+    blank(8);
+}
+
+void equationDialog::updateDblLogPeak()
+{
+
 }

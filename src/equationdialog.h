@@ -170,10 +170,14 @@ private:
     double min8, max8;
     double min9, max9;
 
-    int binMin, binMax, binWidth;
+    int binMin;
+    int binMax;
+    int binWidth;
     double binMidWidth;
 
-    int join1, join2, join3;
+    int join1;
+    int join2;
+    int join3;
 
 private slots:
     void setTrans1(double value);
@@ -190,13 +194,21 @@ private slots:
     void showBins (bool flag);
     void showJoins (int num);
     void updateTicks(QRectF rect);
+    void resetChart(bool create = false);
+
     void blank (int num, int rep = 0, QString msg = QString(""));
     void constant (float val);
     void logistic ();
     void updateLogistic ();
+    void mirror (int sliders);
+    void updateMirror ();
     void linear ();
     void updateLinear ();
     void updateLinearExp ();
+    void dblLogistic ();
+    void updateDblLogistic ();
+    void dblLogPeak ();
+    void updateDblLogPeak ();
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
 };

@@ -192,9 +192,12 @@ void selectivity::setMethod(int method)
 
 void selectivity::setPattern(int value)
 {
-    setup->setValue(0, value);
-//    pattern = value;
-    setMethod(value);
+    if (setup->getValue(0) != value)
+    {
+        setup->setValue(0, value);
+    //    pattern = value;
+        setMethod(value);
+    }
 }
 
 int selectivity::getNumParameters()
