@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.08
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.09
         ------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -13,10 +13,15 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.09.00
+      2017-11-21
+1. Enabled forecast recruitment adjustment control and value.
+============================================================================
       3.3.08.04
       2017-11-09
 1. Fixed Bug #40146, crash when changing selectivity model.
-2.
+   Selectivity graph will change smoothly, but may need to hit
+   Reset button occasionally.
 ============================================================================
       3.3.08.03
       2017-11-01

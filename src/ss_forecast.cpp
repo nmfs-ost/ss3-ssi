@@ -460,8 +460,8 @@ void ss_forecast::reset()
     f_ctl_rule_tgt = 0.75;// Control rule target as fraction of Flimit (e.g. 0.75)
     i_num_fcast_loops = 3;// N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)
     i_fcast_loop_stch_recruit = 3;// First forecast loop with stochastic recruitment
-    i_fcast_loop_3 = 0;// Forecast loop control #3 (reserved for future bells&whistles)
-    i_fcast_loop_4 = 0;// Forecast loop control #4 (reserved for future bells&whistles)
+    i_fcast_recr_adj = 0;// Forecast loop control #3 (reserved for future bells&whistles)
+    f_fcast_recr_adj_val = 0;// Forecast loop control #4 (reserved for future bells&whistles)
     i_fcast_loop_5 = 0;// Forecast loop control #5 (reserved for future bells&whistles)
     i_caps_st_year = 2015;// FirstYear for caps and allocations (should be after years with fixed inputs)
     f_log_ctch_stdv = 0.0;// stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)
@@ -504,8 +504,8 @@ void ss_forecast::clear()
     f_ctl_rule_tgt = 0.0;
     i_num_fcast_loops = 1;
     i_fcast_loop_stch_recruit = 1;
-    i_fcast_loop_3 = 0;
-    i_fcast_loop_4 = 0;
+    i_fcast_recr_adj = 0;
+    f_fcast_recr_adj_val = 0;
     i_fcast_loop_5 = 0;
     i_caps_st_year = 0;
     f_log_ctch_stdv = 0.0;

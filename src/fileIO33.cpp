@@ -1497,10 +1497,10 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_forecast_loop_recruitment(temp_int);
         token = f_file->get_next_value("loop control 3");
         temp_int = token.toInt();
-        fcast->set_forecast_loop_ctl3(temp_int);
+        fcast->set_forecast_recr_adjust(temp_int);
         token = f_file->get_next_value("loop control 4");
-        temp_int = token.toInt();
-        fcast->set_forecast_loop_ctl4(temp_int);
+        temp_float = token.toFloat();
+        fcast->set_forecast_recr_adj_value(temp_float);
         token = f_file->get_next_value("loop control 5");
         temp_int = token.toInt();
         fcast->set_forecast_loop_ctl5(temp_int);
@@ -1726,8 +1726,8 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         chars += f_file->write_val(fcast->get_num_forecast_loops(), 5, QString("N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)"));
         chars += f_file->write_val(fcast->get_forecast_loop_recruitment(), 5, QString("First forecast loop with stochastic recruitment"));
-        chars += f_file->write_val(fcast->get_forecast_loop_ctl3(), 5, QString("Forecast loop control #3 (reserved for future bells&whistles)"));
-        chars += f_file->write_val(fcast->get_forecast_loop_ctl4(), 5, QString("Forecast loop control #4 (reserved for future bells&whistles)"));
+        chars += f_file->write_val(fcast->get_forecast_recr_adjust(), 5, QString("Forecast recruitment: 0=spawn_recr; 1=value*spawn_recr; 2=value*VirginRecr; 3=recent mean"));
+        chars += f_file->write_val(fcast->get_forecast_recr_adj_value(), 5, QString("Forecast recruitment value "));
         chars += f_file->write_val(fcast->get_forecast_loop_ctl5(), 5, QString("Forecast loop control #5 (reserved for future bells&whistles)"));
 
         chars += f_file->write_val(fcast->get_caps_alloc_st_year(), 5, QString("First Year for caps and allocations (should be after years with fixed inputs)"));

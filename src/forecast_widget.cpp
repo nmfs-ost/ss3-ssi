@@ -12,10 +12,6 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui(new Ui::forecast_widget)
 {
     ui->setupUi(this);
-    ui->label_fcast_loops_3->setVisible(false);
-    ui->spinBox_fcast_loops_3->setVisible(false);
-    ui->label_fcast_loops_4->setVisible(false);
-    ui->spinBox_fcast_loops_4->setVisible(false);
     ui->label_fcast_loops_5->setVisible(false);
     ui->spinBox_fcast_loops_5->setVisible(false);
 
@@ -154,8 +150,8 @@ void forecast_widget::reset()
     ui->lineEdit_ctl_rule_no_F->setText("0.1");
     ui->spinBox_num_forecast_loops->setValue(3);
     ui->spinBox_first_loop->setValue(3);
-    ui->spinBox_fcast_loops_3->setValue(0);
-    ui->spinBox_fcast_loops_4->setValue(0);
+    ui->spinBox_fcast_recr_adjust->setValue(0);
+    ui->lineEdit_fcast_recr_adj_value->setText("0.0");
     ui->spinBox_fcast_loops_5->setValue(0);
     ui->spinBox_first_caps_yr->setValue(-1);
     ui->lineEdit_log_sd->setText("0.0");
@@ -230,8 +226,8 @@ void forecast_widget::refresh()
 
     ui->spinBox_num_forecast_loops->setValue(fcast->get_num_forecast_loops());
     ui->spinBox_first_loop->setValue(fcast->get_forecast_loop_recruitment());
-    ui->spinBox_fcast_loops_3->setValue(fcast->get_forecast_loop_ctl3());
-    ui->spinBox_fcast_loops_4->setValue(fcast->get_forecast_loop_ctl4());
+    ui->spinBox_fcast_recr_adjust->setValue(fcast->get_forecast_recr_adjust());
+    ui->lineEdit_fcast_recr_adj_value->setText(QString::number(fcast->get_forecast_recr_adj_value()));
     ui->spinBox_fcast_loops_5->setValue(fcast->get_forecast_loop_ctl5());
 
     ui->spinBox_first_caps_yr->setValue(fcast->get_caps_alloc_st_year());

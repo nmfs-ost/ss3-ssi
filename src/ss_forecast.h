@@ -73,10 +73,10 @@ public slots:
     int get_num_forecast_loops () {return i_num_fcast_loops;}
     void set_forecast_loop_recruitment (int loop) {i_fcast_loop_stch_recruit = loop;}
     int get_forecast_loop_recruitment () {return i_fcast_loop_stch_recruit;}
-    void set_forecast_loop_ctl3 (int floop) {i_fcast_loop_3 = floop;}
-    int get_forecast_loop_ctl3 () {return i_fcast_loop_3;}
-    void set_forecast_loop_ctl4 (int floop) {i_fcast_loop_4 = floop;}
-    int get_forecast_loop_ctl4 () {return i_fcast_loop_4;}
+    void set_forecast_recr_adjust (int fra) {i_fcast_recr_adj = fra;}
+    int get_forecast_recr_adjust () {return i_fcast_recr_adj;}
+    void set_forecast_recr_adj_value (float frav) {f_fcast_recr_adj_val = frav;}
+    float get_forecast_recr_adj_value () {return f_fcast_recr_adj_val;}
     void set_forecast_loop_ctl5 (int floop) {i_fcast_loop_5 = floop;}
     int get_forecast_loop_ctl5 () {return i_fcast_loop_5;}
     void set_caps_alloc_st_year (int yr) {i_caps_st_year = yr;}
@@ -198,10 +198,10 @@ public slots:
     int   i_num_fcast_loops;
     // First forecast loop with stochastic recruitment
     int   i_fcast_loop_stch_recruit;
-    // Forecast loop control #3 (reserved for future bells&whistles)
-    int   i_fcast_loop_3;
-    // Forecast loop control #4 (reserved for future bells&whistles)
-    int   i_fcast_loop_4;
+    // Forecast recruitment adjustment: 0=spawn_recr; 1=value*spawn_recr; 2=value*VirginRecr; 3=recent mean
+    int   i_fcast_recr_adj;
+    // Forecast recruitment adjustment value
+    float f_fcast_recr_adj_val;
     // Forecast loop control #5 (reserved for future bells&whistles)
     int   i_fcast_loop_5;
     // FirstYear for caps and allocations (should be after years with fixed inputs)
