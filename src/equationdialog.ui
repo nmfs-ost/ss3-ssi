@@ -537,7 +537,7 @@
      <item row="8" column="8">
       <widget class="QSlider" name="horizontalSlider_8">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -567,7 +567,7 @@
      <item row="4" column="8">
       <widget class="QSlider" name="horizontalSlider_4">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -681,7 +681,7 @@
      <item row="7" column="8">
       <widget class="QSlider" name="horizontalSlider_7">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -691,7 +691,7 @@
      <item row="2" column="8">
       <widget class="QSlider" name="horizontalSlider_2">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -775,7 +775,7 @@
      <item row="3" column="8">
       <widget class="QSlider" name="horizontalSlider_3">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -878,7 +878,7 @@
      <item row="6" column="8">
       <widget class="QSlider" name="horizontalSlider_6">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -902,7 +902,7 @@
      <item row="5" column="8">
       <widget class="QSlider" name="horizontalSlider_5">
        <property name="maximum">
-        <number>1000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -931,10 +931,10 @@
      <item row="9" column="8">
       <widget class="QSlider" name="horizontalSlider_9">
        <property name="minimum">
-        <number>-2000</number>
+        <number>0</number>
        </property>
        <property name="maximum">
-        <number>2000</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

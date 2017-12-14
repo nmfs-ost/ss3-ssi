@@ -1652,7 +1652,6 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
     if(f_file->open(QIODevice::WriteOnly))
     {
-//        chars += f_file->writeline(QString("#V%1").arg(getDatafileVersionString()));
         chars += writeVersionComment(f_file);
         chars += f_file->write_comments();
 
@@ -1660,17 +1659,16 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
 
         chars += f_file->write_val(fcast->get_benchmarks(), 5,
-                                   QString("Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy"));
+                                   QString("Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F_0.1,F_msy"));
 
         chars += f_file->write_val(fcast->get_MSY(), 5,
-                                   QString("MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt); 4=set to F(endyr)"));
+                                   QString("MSY: 1=F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F(0.1); 4=F(endyr)"));
 
         chars += f_file->write_val(fcast->get_spr_target(), 5, QString("SPR target (e.g. 0.40)"));
 
         chars += f_file->write_val(fcast->get_biomass_target(), 5, QString("Biomass target (e.g. 0.40)"));
 
         line = QString("#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recr_dist, end_recr_dist, beg_SRparm, end_SRparm");
-//        temp_string = QString ("# ");
         line.append(QString(" (enter actual year, or values of 0 or -integer to be rel. endyr)"));
         chars += f_file->writeline(line);
         line.clear();
@@ -1680,10 +1678,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
             temp_int = fcast->get_benchmark_year(i);
             value = QString::number(temp_int);
             line.append(QString(QString(" %1").arg(value)));
-//            if (temp_int <= 0)
             temp_string.append(QString(" %1").arg(QString::number(data->refyearvalue(temp_int))));// data->get_end_year() + temp_int)));
-//            else
-//                temp_string.append(QString(" %1").arg(value));
         }
         chars += f_file->writeline(line);
         temp_string.append(" # after processing ");
@@ -1709,10 +1704,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
             value = QString::number(fcast->get_forecast_year(i));
             temp_int = value.toInt();
             line.append(QString(QString(" %1").arg(value)));
-//            if (fcast->get_forecast_year(i) <= 0)
             temp_string.append(QString(" %1").arg(QString::number(data->refyearvalue(temp_int))));//data->get_end_year() + fcast->get_forecast_year(i))));
-//            else
-//                temp_string.append(QString(" %1").arg(value));
         }
         chars += f_file->writeline(line);
         temp_string.append(" # after processing ");
@@ -1992,32 +1984,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setAssignment(i, datalist);
         }
         datalist.clear();
-//        pop->SR()->setAssignTimings();
-        /*
-        num = pop->SR()->getNumAssignments();
-        if (num == 1)
-        {
-            datalist.append(QString::number(1.0,'g',1));
-        }
-        else
-        {
-            num_vals = 0;
-            for (j = 1; j <= num; j++)
-            {
-                if(settle_timings_tempvec(j)==real_month)  // found matching settle_time
-                {
-                    settle_assignments_timing(settle)=j;
-                    num_vals = 1;
-                }
-            }
-            if (num_vals == 0)
-            {
-                N_settle_timings++;
-                settle_timings_tempvec(N_settle_timings)=real_month;
-                settle_assignments_timing(settle)=N_settle_timings;
-            }
-        }
-        pop->SR()->setAssignTimings (datalist);*/
 
         // movement definitions
         pop->Move()->setNumDefs(0);

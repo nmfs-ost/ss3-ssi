@@ -3,7 +3,7 @@
 spawn_recruit::spawn_recruit(ss_model *parent)
     : QObject ((QObject*)parent)
 {
-    parnt = parent;
+     parnt = parent;
 
     full_parameters = new longParameterModel();
     full_parameters->setNumParams(5);

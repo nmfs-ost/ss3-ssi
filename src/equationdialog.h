@@ -160,15 +160,15 @@ private:
 
     QList<float> xValList;
 
-    double min1, max1;
-    double min2, max2;
-    double min3, max3;
-    double min4, max4;
-    double min5, max5;
-    double min6, max6;
-    double min7, max7;
-    double min8, max8;
-    double min9, max9;
+    double min1, max1, val1;
+    double min2, max2, val2;
+    double min3, max3, val3;
+    double min4, max4, val4;
+    double min5, max5, val5;
+    double min6, max6, val6;
+    double min7, max7, val7;
+    double min8, max8, val8;
+    double min9, max9, val9;
 
     int binMin;
     int binMax;
@@ -209,6 +209,12 @@ private slots:
     void updateDblLogistic ();
     void dblLogPeak ();
     void updateDblLogPeak ();
+    void dblNormal ();
+    void updateDblNormal ();
+    void dblNormEndpts ();
+    void updateDblNormEndpts ();
+    void expLogistic ();
+    void updateExpLogistic ();
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
 };
