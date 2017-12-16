@@ -20,7 +20,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Reset</set>
      </property>
      <property name="centerButtons">
       <bool>false</bool>
@@ -523,7 +523,7 @@
      <item row="0" column="5">
       <widget class="QLabel" name="label_max">
        <property name="text">
-        <string>Max</string>
+        <string>Maximum</string>
        </property>
       </widget>
      </item>
@@ -597,7 +597,7 @@
      <item row="0" column="7">
       <widget class="QLabel" name="label_input">
        <property name="text">
-        <string>Original Vals</string>
+        <string>Original Value</string>
        </property>
       </widget>
      </item>
@@ -628,7 +628,7 @@
      <item row="0" column="4">
       <widget class="QLabel" name="label_min">
        <property name="text">
-        <string>Min</string>
+        <string>Minimum</string>
        </property>
       </widget>
      </item>
@@ -674,7 +674,7 @@
      <item row="0" column="3">
       <widget class="QLabel" name="label_trans">
        <property name="text">
-        <string>Trans</string>
+        <string>Transformed</string>
        </property>
       </widget>
      </item>

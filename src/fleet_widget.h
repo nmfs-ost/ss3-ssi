@@ -83,6 +83,8 @@ public slots:
     void showSelexAgeInfo();
     void ageSelexParamsChanged();
     void ageSelexTVParamsChanged();
+    void showSelexAgeCurve(bool flag);
+    void selexAgeCurveClosed ();
 
 private:
 

@@ -132,8 +132,8 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
-//    connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
-//    connect (selexAgeEqDialog, SIGNAL(closed()), SLOT(selexAgeCurveClosed()));
+    connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
+    connect (selexAgeEqDialog, SIGNAL(closed()), SLOT(selexAgeCurveClosed()));
 
     connect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), SLOT(changeLengthMinTailComp()));
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
@@ -348,7 +348,7 @@ void fleet_widget::set_model (ss_model *model)
 {
     model_data = model;
     selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
-//    selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
+    selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
     refresh();
 }
 
@@ -481,6 +481,10 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->setHeight(current_fleet->getAgeSelectivity()->getNumTimeVaryParameters());
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
+        selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
+        selexAgeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
+        selexAgeEqDialog->update();
 
         ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());
@@ -842,7 +846,7 @@ void fleet_widget::sizeSelexParamsChanged()
     ht = current_fleet->getSizeSelectivity()->getNumParameters();
     sizeSelexParamsView->setHeight(ht);
     sizeSelexParamsView->resizeColumnsToContents();
-    selexSizeEqDialog->setParameters(current_fleet->getSizeSelexModel());
+//    selexSizeEqDialog->setParameters(current_fleet->getSizeSelexModel());
     selexSizeEqDialog->update();
 }
 
@@ -871,6 +875,8 @@ void fleet_widget::ageSelexParamsChanged()
 {
     ageSelexParamsView->setHeight (current_fleet->getAgeSelexModel());
     ageSelexParamsView->resizeColumnsToContents();
+//    selexAgeEqDialog->setParameters(current_fleet->getAgeSelexModel());
+    selexAgeEqDialog->update();
 }
 
 void fleet_widget::ageSelexTVParamsChanged()
@@ -905,6 +911,20 @@ void fleet_widget::changeSelexAgePattern(int pat)
     ui->spinBox_selex_age_num_params->setValue
             (current_fleet->getAgeSelectivity()->getNumParameters());
     ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getSetupModel()->rowCount());
+    selexAgeEqDialog->setEquationNumber(pat);
+    selexAgeEqDialog->update();
+    selexAgeEqDialog->resetValues();
+}
+
+void fleet_widget::showSelexAgeCurve(bool flag)
+{
+    selexAgeEqDialog->setVisible(flag);
+    selexAgeEqDialog->update();
+}
+
+void fleet_widget::selexAgeCurveClosed()
+{
+    ui->pushButton_selex_age_curve->setChecked(false);
 }
 
 void fleet_widget::changeSelexAgeMale(int mal)
@@ -919,6 +939,7 @@ void fleet_widget::changeSelexAgeMale(int mal)
 void fleet_widget::changeSelexAgeSpecial(int spc)
 {
     current_fleet->getAgeSelectivity()->setSpecial(spc);
+    selexAgeEqDialog->setSpecial(spc);
 }
 
 void fleet_widget::showSelexAgeInfo()

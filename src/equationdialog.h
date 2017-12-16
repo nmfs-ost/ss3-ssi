@@ -130,6 +130,8 @@ signals:
     void numbersUpdated();
     void linearUpdated();
     void closed ();
+    void applyingValues();
+    void applyingComplete();
 
 private:
     Ui::equationDialog *ui;
@@ -217,6 +219,7 @@ private slots:
     void updateExpLogistic ();
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
+    float logistic (double value);
 };
 
 #endif // EQUATIONDIALOG_H
