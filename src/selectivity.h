@@ -28,6 +28,7 @@ public slots:
     void setSpecial (int value);
     int getSpecial () {return setup->getValue(3);}// special;}
     void setNumAges(int ages) {numAges = ages;}
+    int getNumAges() {return numAges;}
     void setSetup(QString text);
     QString getSetupText ();
     void setSetup(QStringList strList);

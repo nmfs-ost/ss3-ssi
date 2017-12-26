@@ -347,9 +347,29 @@ void fleet_widget::refresh()
 void fleet_widget::set_model (ss_model *model)
 {
     model_data = model;
-    selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
-    selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
     refresh();
+}
+
+void fleet_widget::setAgeLengthBins()
+{
+    int ages = model_data->get_num_ages();
+    if (ages > 0)
+    {
+        QStringList agebinlist (model_data->get_age_composition()->getBins());
+        int firstage = QString(agebinlist.at(0)).toInt();
+        int age = firstage;
+        int interval = QString(agebinlist.at(2)).toInt() - QString(agebinlist.at(1)).toInt();
+        QStringList agelist;
+        agelist.append(QString::number(age));
+        for (int i = 1; i < ages; i++)
+        {
+            age += interval;
+            agelist.append(QString::number(age));
+        }
+        selexAgeEqDialog->setXvals(agelist);
+    }
+    selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
+
 }
 
 void fleet_widget::set_current_fleet(int index)
@@ -462,7 +482,8 @@ void fleet_widget::set_current_fleet(int index)
         sizeSelexTimeVaryParamsView->setModel(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
         sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getNumTimeVaryParameters());
         sizeSelexTimeVaryParamsView->resizeColumnsToContents();
-        selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
+        setAgeLengthBins();
+//        selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
         selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
         selexSizeEqDialog->update();
@@ -481,7 +502,7 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->setHeight(current_fleet->getAgeSelectivity()->getNumTimeVaryParameters());
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
-        selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
+//        selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
         selexAgeEqDialog->setMidBin(current_fleet->getSeasTiming());
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
         selexAgeEqDialog->update();
@@ -734,6 +755,57 @@ void fleet_widget::changeSelexSizePattern(int pat)
     int newNumParams = 0;
     switch (pat)
     {
+    case 0:
+        ui->label_selex_size_pattern_info->setText(tr("Selex = 1.0"));
+        break;
+    case 1:
+        ui->label_selex_size_pattern_info->setText(tr("Logistic"));
+        break;
+    case 5:
+        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special) with limits"));
+        break;
+    case 6:
+        ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y)"));
+        break;
+    case 8:
+        ui->label_selex_size_pattern_info->setText(tr("Double logistic with smooth joins"));
+        break;
+    case 9:
+        ui->label_selex_size_pattern_info->setText(tr("Simple double logistic"));
+        break;
+    case 15:
+        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special)"));
+        break;
+    case 22:
+        ui->label_selex_size_pattern_info->setText(tr("Double normal, similar to CASAL"));
+        break;
+    case 23:
+        ui->label_selex_size_pattern_info->setText(tr("Similar to #24"));
+        break;
+    case 24:
+        ui->label_selex_size_pattern_info->setText(tr("Double normal with start and end values"));
+        break;
+    case 25:
+        ui->label_selex_size_pattern_info->setText(tr("Exponential - Logistic"));
+        break;
+    case 27:
+        ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
+        break;
+    case 30:
+        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is spawning biomass"));
+        break;
+    case 31:
+        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is exp(recr dev)"));
+        break;
+    case 32:
+        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is exp(recr dev) * spawn Biomass"));
+        break;
+    case 33:
+        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is age 0 recr"));
+        break;
+    case 34:
+        ui->label_selex_size_pattern_info->setText(tr("Spawning biomass depletion"));
+        break;
     case 2:
     case 7:
         ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #8."));
@@ -744,12 +816,10 @@ void fleet_widget::changeSelexSizePattern(int pat)
     case 4:
         ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #30."));
         return;
-    case 13:
-        ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #18."));
-        return;
     case 10:
     case 11:
     case 12:
+    case 13:
     case 14:
     case 16:
     case 17:
@@ -782,7 +852,6 @@ void fleet_widget::changeSelexSizePattern(int pat)
             (current_fleet->getSizeSelectivity()->getNumParameters());
     sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getSetupModel()->rowCount());
     selexSizeEqDialog->setEquationNumber(pat);
-    selexSizeEqDialog->update();
     selexSizeEqDialog->resetValues();
 }
 
@@ -890,6 +959,45 @@ void fleet_widget::changeSelexAgePattern(int pat)
 {
     switch (pat)
     {
+    case 0:
+        ui->label_selex_age_pattern_info->setText(tr("Selex = 1, ages 1-n"));
+        break;
+    case 10:
+        ui->label_selex_age_pattern_info->setText(tr("Selex = 1, ages 2-n"));
+        break;
+    case 11:
+        ui->label_selex_age_pattern_info->setText(tr("Selex = 1 between ages"));
+        break;
+    case 12:
+        ui->label_selex_age_pattern_info->setText(tr("Logistic"));
+        break;
+    case 13:
+        ui->label_selex_age_pattern_info->setText(tr("Double Logistic with IF joins"));
+        break;
+    case 14:
+        ui->label_selex_age_pattern_info->setText(tr("Selex = 1/(1+exp(-param))"));
+        break;
+    case 15:
+        ui->label_selex_age_pattern_info->setText(tr("Mirror another selex (Special)"));
+        break;
+    case 16:
+        ui->label_selex_age_pattern_info->setText(tr("Coleraine single Gaussian"));
+        break;
+    case 17:
+        ui->label_selex_age_pattern_info->setText(tr("Random Walk"));
+        break;
+    case 18:
+        ui->label_selex_age_pattern_info->setText(tr("Double Logistic with smooth joins"));
+        break;
+    case 19:
+        ui->label_selex_age_pattern_info->setText(tr("Simple Double Logistic"));
+        break;
+    case 20:
+        ui->label_selex_age_pattern_info->setText(tr("Double Normal with start and end values"));
+        break;
+    case 26:
+        ui->label_selex_age_pattern_info->setText(tr("Exponential - Logistic"));
+        break;
     case 21:
     case 28:
     case 29:
@@ -912,7 +1020,6 @@ void fleet_widget::changeSelexAgePattern(int pat)
             (current_fleet->getAgeSelectivity()->getNumParameters());
     ageSelexParamsView->setHeight(current_fleet->getAgeSelectivity()->getSetupModel()->rowCount());
     selexAgeEqDialog->setEquationNumber(pat);
-    selexAgeEqDialog->update();
     selexAgeEqDialog->resetValues();
 }
 
@@ -952,7 +1059,7 @@ void fleet_widget::showSelexAgeInfo()
     msg.append("13\t8\tDouble logistic, IF joiners, Discouraged, use pattern #18.\n");
     msg.append("14\tNages+1\tEach age, value at age is 1/(1+exp(-x)).\n");
     msg.append("15\t0\tMirror another selectivity, special is source fleet.\n");
-    msg.append("16\t2\tColeraine, single Gaussian.\n");
+    msg.append("16\t2\tColeraine single Gaussian.\n");
     msg.append("17\tNages+1\tEach age as random walk.\n");
     msg.append("18\t8\tDouble logistic with defined peak, smooth joiners.\n");
     msg.append("19\t6\tSimple double logistic, no defined peak.\n");

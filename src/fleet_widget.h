@@ -30,6 +30,7 @@ public slots:
     void reset ();
     void refresh();
     void set_model (ss_model *model);
+    void setAgeLengthBins ();
     void set_current_fleet (int index);
     void set_fleet_type (int type);
     void set_type_fleet (Fleet::FleetType ft);

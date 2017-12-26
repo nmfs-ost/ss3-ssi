@@ -1,7 +1,7 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.09
-        ------------------------------------------------
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.10
+        -------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
 allow for changes to the data, run the executable, and display results.
@@ -13,9 +13,15 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.10.00
+      2017-12-26
+1. Added graph view for equations 5, 10, 11, 12, 14, 15, 16, 17, 22, 25, 26,
+   41, and 43.
+============================================================================
       3.3.09.00
       2017-11-21
-1. Enabled forecast recruitment adjustment control and value.
+1. Enabled forecast recruitment adjustment control and value. Compatible
+   with SS ver 3.30.09 and 3.30.10.
 ============================================================================
       3.3.08.04
       2017-11-09

@@ -1530,19 +1530,20 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         temp_int = token.toInt();
         fcast->set_catch_tuning_basis(temp_int);
 
+        // season, fleet, relF
         if (fcast->get_fleet_rel_f() == 2)
         {
-            for (int s = 0; s < fcast->get_num_seasons(); s++)
-            {
-                int total = fcast->get_num_fleets();
-                if (fcast->get_num_areas() > 1)
-                    total += fcast->get_num_areas();
-                for (i = 0; i < total; i++)
-                {
-                    temp_float = f_file->get_next_value("seas flt rel f").toFloat();
-                    fcast->set_seas_fleet_rel_f(s, i, temp_float);
-                }
-            }
+            for (i = 0; i < data->get_num_seasons(); i++)
+                for (int j = 0; j < data->get_num_fleets(); j++)
+                    fcast->setSeasFleetRelF(i, j, 1.0);
+            do {
+                temp_int = f_file->get_next_value("season").toInt();
+                fleet = f_file->get_next_value("fleet").toInt();
+                temp_float = f_file->get_next_value("relF").toFloat();
+                if (temp_int != -9999)
+                    fcast->setSeasFleetRelF(temp_int, fleet, temp_float);
+
+            } while (temp_int != -9999);
         }
 
         // max catch fleet
@@ -1645,6 +1646,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 {
     int temp_int, num, i, chars = 0;
     int yr;
+    float temp_float;
     QString value, line, temp_string;
     QStringList str_lst, tmp_lst;
     ss_forecast *fcast = data->forecast;
@@ -1689,7 +1691,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         chars += f_file->writeline("#");
 
-        chars += f_file->write_val(fcast->get_forecast(), 5, QString("Forecast: 0=none; 1=F(SPR); 2=F(MSY) 3=F(Btgt); 4=Ave F (uses first-last relF yrs); 5=input annual F scalar"));
+        chars += f_file->write_val(fcast->get_forecast(), 5, QString("Forecast: 0=none; 1=F(SPR); 2=F(MSY) 3=F(Btgt) or F0.1; 4=Ave F (uses first-last relF yrs); 5=input annual F scalar"));
 
         chars += f_file->write_val(fcast->get_num_forecast_years(), 5, QString("N forecast years"));
 
@@ -1719,7 +1721,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->write_val(fcast->get_num_forecast_loops(), 5, QString("N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)"));
         chars += f_file->write_val(fcast->get_forecast_loop_recruitment(), 5, QString("First forecast loop with stochastic recruitment"));
         chars += f_file->write_val(fcast->get_forecast_recr_adjust(), 5, QString("Forecast recruitment: 0=spawn_recr; 1=value*spawn_recr; 2=value*VirginRecr; 3=recent mean"));
-        chars += f_file->write_val(fcast->get_forecast_recr_adj_value(), 5, QString("Forecast recruitment value "));
+        chars += f_file->write_val(fcast->get_forecast_recr_adj_value(), 5, QString("Value ignored "));
         chars += f_file->write_val(fcast->get_forecast_loop_ctl5(), 5, QString("Forecast loop control #5 (reserved for future bells&whistles)"));
 
         chars += f_file->write_val(fcast->get_caps_alloc_st_year(), 5, QString("First Year for caps and allocations (should be after years with fixed inputs)"));
@@ -1730,7 +1732,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->write_val(fcast->get_rebuilder_first_year(), 5, QString ("Rebuilder: first year catch could have been set to zero (Ydecl)(-1 to set to 1999)"));
         chars += f_file->write_val(fcast->get_rebuilder_curr_year(), 5, QString ("Rebuilder: year for current age structure (Yinit) (-1 to set to endyear+1)"));
 
-        chars += f_file->write_val(fcast->get_fleet_rel_f(), 5, QString ("fleet relative F: 1=use first-last alloc year; 2=read seas(row) x fleet(col) below"));
+        chars += f_file->write_val(fcast->get_fleet_rel_f(), 5, QString ("fleet relative F: 1=use first-last alloc year; 2=read seas, fleet, alloc list below"));
         line = QString("# Note that fleet allocation is used directly as average F if Do_Forecast=4");
         chars += f_file->writeline(line);
 
@@ -1738,36 +1740,34 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         line = QString("# Conditional input if relative F choice = 2");
         chars += f_file->writeline(line);
-        line = QString("# Fleet relative F:  rows are seasons, columns are fleets");
+        line = QString("# enter list of:  season,  fleet, relF; if used, terminate with season=-9999");
         chars += f_file->writeline(line);
-        line = QString ("#_Fleet: ");
-        for (i = 1; i <= data->getNumActiveFleets(); i++)
-        {
-            line.append(QString(" %1").arg (data->getActiveFleet(i)->getName()));
-        }
-        chars += f_file->writeline(line);
+
         if (fcast->get_fleet_rel_f() == 2)
         {
             temp_string = QString("");
             for (int seas = 0; seas < data->get_num_seasons(); seas++)
             {
                 str_lst = fcast->getSeasFleetRelF(seas);
-                chars += f_file->write_vector(str_lst, 5, QString("Season %1").arg(QString::number(seas+1)));
+                for (i = 0; i < data->get_num_fleets(); i++)
+                {
+                    temp_float = QString(str_lst.at(i)).toFloat();
+                    if (temp_float != 0.0)
+                    {
+                        tmp_lst.clear();
+                        tmp_lst.append(QString::number(seas + 1));
+                        tmp_lst.append(QString::number(i + 1));
+                        tmp_lst.append(QString::number(temp_float));
+                        chars += f_file->write_vector(tmp_lst, 5);
+                    }
+                }
+                tmp_lst.clear();
+                chars += f_file->writeline(" -9999 1 0.0");
             }
         }
         else
         {
-            temp_string = QString("# ");
-            for (i = 0; i < data->get_num_fisheries(); i++)
-            {
-                if (data->getFleet(i)->isActive())
-                temp_string.append(" 1");
-            }
-            for (; i < data->get_num_fleets(); i++)
-            {
-                if (data->getFleet(i)->isActive())
-                temp_string.append(" 0");
-            }
+            temp_string = QString("#  -9999 1 0.0");
             chars += f_file->writeline(temp_string);
         }
         temp_string.clear();
@@ -3274,7 +3274,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                            temp_int));
         chars += c_file->writeline (line);
         temp_float = pop->Grow()->getAge_for_l1();
-        line = QString(QString("%1 #_Growth_Age_for_L1").arg(
+        line = QString(QString("%1 #_Age(post-settlement)_for_L1;linear growth below this").arg(
                            QString::number(temp_float)));
         chars += c_file->writeline (line);
         temp_float = pop->Grow()->getAge_for_l2();
@@ -4302,7 +4302,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("%1 #_maxlambdaphase").arg(
                            QString::number(data->getLambdaMaxPhase())));
         chars += c_file->writeline(line);
-        line = QString(QString("%2 #_sd_offset").arg(
+        line = QString(QString("%2 #__sd_offset; must be 1 if any growthCV, sigmaR, or survey extraSD is an estimated parameter").arg(
                            QString::number(data->getLambdaSdOffset())));
         chars += c_file->writeline(line);
         line = QString(QString("# read %1 changes to default Lambdas (default value is 1.0)").arg(QString::number(data->getLambdaNumChanges())));

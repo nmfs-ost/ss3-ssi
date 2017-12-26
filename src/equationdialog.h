@@ -128,7 +128,7 @@ public slots:
 
 signals:
     void numbersUpdated();
-    void linearUpdated();
+    void linearUpdated(float);
     void closed ();
     void applyingValues();
     void applyingComplete();
@@ -196,30 +196,45 @@ private slots:
     void showBins (bool flag);
     void showJoins (int num);
     void updateTicks(QRectF rect);
+    void updateTicks(int xT = 7, int yT = 7);
     void resetChart(bool create = false);
 
     void blank (int num, int rep = 0, QString msg = QString(""));
-    void constant (float val);
+    void constant (float val = 1.0);
+    void updateConstant();
+    void updateConstant (float val, float first, float last);
+    void constantRange ();
+    void updateConstantRange ();
     void logistic ();
     void updateLogistic ();
     void mirror (int sliders);
     void updateMirror ();
-    void linear ();
-    void updateLinear ();
-    void updateLinearExp ();
+    void linear (float scale);
+    void updateLinear (float scale);
+    void updateLinearExp (float scale);
     void dblLogistic ();
     void updateDblLogistic ();
     void dblLogPeak ();
     void updateDblLogPeak ();
+    void dblNormCasal ();
+    void updateDblNormCasal ();
     void dblNormal ();
     void updateDblNormal ();
     void dblNormEndpts ();
     void updateDblNormEndpts ();
     void expLogistic ();
     void updateExpLogistic ();
+    void eachAge ();
+    void updateEachAge ();
+    void randomWalk (float scale);
+    void updateRandomWalk (float scale);
+    void coleGauss ();
+    void updateColeGauss();
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
-    float logistic (double value);
+    float logist (double value);
+    float maxXvalue (QList<QPointF> &pointlist);
+    float maxYvalue (QList<QPointF> &pointlist);
 };
 
 #endif // EQUATIONDIALOG_H

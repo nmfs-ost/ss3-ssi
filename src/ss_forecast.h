@@ -95,9 +95,11 @@ public slots:
     void add_seas_fleet_rel_f (int seas, int flt, float f);
     void set_seas_fleet_rel_f (int seas, int flt, float f);
 //    float seas_fleet_rel_f (int seas, int flt) {return f_seas_fleet_rel_f_list.at(seas).at(flt);}
+    float getSeasFleetRelF(int seas, int fleet);
     QStringList getSeasFleetRelF (int seas) {return seasFleetRelF_table->getRowData(seas);}
+    void setSeasFleetRelF(int seas, int fleet, float relf);
     void setSeasFleetRelF (int seas, QStringList data) {seasFleetRelF_table->setRowData(seas, data);}
-    float get_seas_fleet_rel_f (int seas, int flt) {return seasFleetRelF_table->getRowData(seas).at(flt).toFloat();}
+//    float get_seas_fleet_rel_f (int seas, int flt) {return seasFleetRelF_table->getRowData(seas).at(flt).toFloat();}
     tablemodel *getSeasFleetRelFTable () {return seasFleetRelF_table;}
     void set_catch_tuning_basis (int basis); // {i_ctch_basis = basis;}
     void set_combo_box_catch_tuning (int basis);

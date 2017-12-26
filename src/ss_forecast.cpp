@@ -372,6 +372,20 @@ void ss_forecast::set_seas_fleet_rel_f(int seas, int flt, float f)
     }*/
 }
 
+float ss_forecast::getSeasFleetRelF(int seas, int fleet)
+{
+    QStringList relflist (getSeasFleetRelF(seas));
+    float value = QString(relflist.at(fleet-1)).toFloat();
+    return value;
+}
+
+void ss_forecast::setSeasFleetRelF(int seas, int fleet, float relf)
+{
+    QStringList relflist (getSeasFleetRelF(seas));
+    relflist[fleet - 1] = relf;
+    setSeasFleetRelF(seas, relflist);
+}
+
 void ss_forecast::set_catch_tuning_basis(int basis)
 {
     if (basis < 2)
