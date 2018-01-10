@@ -1,6 +1,6 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.10
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11
         -------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -12,6 +12,11 @@ echoinput.sso and the TIME-SERIES charts from Report.sso.
 Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
+============================================================================
+      3.3.10.01
+      2018-01-09
+1. Added graph view for equations 9 and 19.
+2. Incorporated changes for bycatch data.
 ============================================================================
       3.3.10.00
       2017-12-26

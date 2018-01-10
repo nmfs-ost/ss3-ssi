@@ -1133,7 +1133,8 @@ void ss_model::assignFleetNumbers()
     for (int i = 0; i < get_num_fleets(); i++)
     {
         flt = getFleet(i);
-        if (flt->getType() == Fleet::Fishing)
+        if (flt->getType() == Fleet::Fishing ||
+            flt->getType() == Fleet::Bycatch)
         {
             iNumFisheries++;
             if (flt->isActive())

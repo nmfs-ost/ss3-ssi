@@ -73,7 +73,7 @@ equationDialog::equationDialog(QWidget *parent) :
     ui->spinBox_steep_join1->setValue(join1);
     ui->spinBox_steep_join2->setValue(join2);
     ui->spinBox_steep_join3->setValue(join3);
-    binMin = 0; binMax = 20; binWidth = 2; binMidWidth = 0.5;
+    binMin = 0; binMax = 20; binWidth = 2; binMidWidth = 0.;
     ui->spinBox_bins_min->setValue(binMin);
     ui->spinBox_bins_max->setValue(binMax);
     ui->spinBox_bins_width->setValue(binWidth);
@@ -82,7 +82,7 @@ equationDialog::equationDialog(QWidget *parent) :
     connect (ui->spinBox_bins_min, SIGNAL(valueChanged(int)), SLOT(binMinChanged(int)));
     connect (ui->spinBox_bins_max, SIGNAL(valueChanged(int)), SLOT(binMaxChanged(int)));
     connect (ui->spinBox_bins_width, SIGNAL(valueChanged(int)), SLOT(binWidthChanged(int)));
-    connect (ui->doubleSpinBox_bins_midbin, SIGNAL(valueChanged(double)), SLOT(binMidChanged(double)));
+//    connect (ui->doubleSpinBox_bins_midbin, SIGNAL(valueChanged(double)), SLOT(binMidChanged(double)));
 
     connect (ui->horizontalSlider_1, SIGNAL(valueChanged(int)), SLOT(slider1Changed(int)));
 //    connect (ui->horizontalSlider_1, SIGNAL(sliderReleased()), SLOT(update()));
@@ -180,6 +180,7 @@ void equationDialog::setXvals(const QStringList &vals)
 void equationDialog::setMidBin(float val)
 {
     binMidWidth = val;
+    ui->doubleSpinBox_bins_midbin->setValue(val);
 }
 
 /*void equationDialog::setAges()
@@ -521,7 +522,12 @@ void equationDialog::updateSel()
             updateDblLogPeak();
             break;
 
+        case 18:
+            updateDblLogSmooth();
+            break;
+
         case 9:
+        case 19:
             updateDblLogistic();
             break;
 
@@ -2131,20 +2137,20 @@ void equationDialog::dblLogistic()
 {
     if (!title.isEmpty())
         title.clear();
-    title.append(QString("Simple Double Logistic - not fully implemented"));
+    title.append(QString("Simple Double Logistic"));
     ui->label_title->setText(title);
     showSliders(6);
-    ui->label_1_name->setText("Lwr Limit");
+    ui->label_1_name->setText("Infl 1");
     ui->label_1_type->setText("Value");
-    ui->label_2_name->setText("Value");
+    ui->label_2_name->setText("Slope 1");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Value");
+    ui->label_3_name->setText("Infl 2");
     ui->label_3_type->setText("Value");
-    ui->label_4_name->setText("Value");
+    ui->label_4_name->setText("Slope 2");
     ui->label_4_type->setText("Value");
-    ui->label_5_name->setText("Lwr Limit");
+    ui->label_5_name->setText("First Bin");
     ui->label_5_type->setText("Value");
-    ui->label_6_name->setText("Value");
+    ui->label_6_name->setText("Offset");
     ui->label_6_type->setText("Value");
     showBins(true);
 
@@ -2189,14 +2195,14 @@ void equationDialog::updateDblLogistic()
     for (i = limit; i < xValList.count(); i++)
     {
         term1 = par2 * (xValList.at(i) - par1);
-        term2 = par4 * (xValList.at(i) - (par1 * par6 - par3));
+        term2 = par4 * (xValList.at(i) - (par1 * par6 + par3));
         sel = logist(term1) * logist(term2);
         firstPoints.append(QPointF(xValList.at(i), sel));
     }
-    maxSel = maxXvalue(firstPoints);
+    maxSel = maxYvalue(firstPoints);
     for (i = 0; i < firstPoints.count(); i++)
     {
-        sel = (firstPoints.at(i).x() + .000001) / maxSel;
+        sel = (firstPoints.at(i).y() + .000001) / maxSel;
         selSeries->append(QPointF(xValList.at(i), sel));
     }
 }
@@ -2236,13 +2242,180 @@ void equationDialog::dblLogPeak()
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
 
-    updateDblLogPeak();
+    if (equationNum == 8)
+        updateDblLogPeak();
+    else
+        updateDblLogSmooth();
 }
 
 void equationDialog::updateDblLogPeak()
 {
+    float maxSelX = 0;
+    float minX = xValList.first();
+    float maxX = xValList.last();
+    float sel = 0;
+    float t1 = 0, t1min, t1max, t1power;
+    float t2 = 0, t2min, t2max, t2power;
+    float jn1, jn2, jn3;
+    float final, upsel, dnsel;
+    int binM, i;
+    float par1 = ui->doubleSpinBox_1_value->value();
+    float par2 = ui->doubleSpinBox_2_value->value();
+    float par3 = ui->doubleSpinBox_3_value->value();
+    float par4 = ui->doubleSpinBox_4_value->value();
+    float par5 = ui->doubleSpinBox_5_value->value();
+    float par6 = ui->doubleSpinBox_6_value->value();
+    float par7 = ui->doubleSpinBox_7_value->value();
+    float par8 = ui->doubleSpinBox_8_value->value();
+    ui->doubleSpinBox_1_trans->setValue(par1);
+    ui->doubleSpinBox_2_trans->setValue(par2);
+    ui->doubleSpinBox_3_trans->setValue(par3);
+    ui->doubleSpinBox_4_trans->setValue(par4);
+    ui->doubleSpinBox_5_trans->setValue(par5);
+    ui->doubleSpinBox_6_trans->setValue(par6);
+    ui->doubleSpinBox_7_trans->setValue(par7);
+    ui->doubleSpinBox_8_trans->setValue(par8);
+
+    selSeries->clear();
+    firstPoints.clear();
+//    t1=minL+(1./(1.+mfexp(-sp(3))))*(sp(1)-minL);    // INFL
+//    t1min=1./(1.+mfexp(-mfexp(sp(4))*(minL-t1)))*0.9999;  // asc value at minsize
+//    t1max=1./(1.+mfexp(-mfexp(sp(4))*(sp(1)-t1)))*1.0001;  // asc value at peak
+//    t1power=log(0.5)/log((0.5-t1min)/(t1max-t1min));  // so the parameter will actual correspond to 50% point
+    t1 = minX + (logist(par3) * (par1 - minX));
+    t1min = 1./(1. + exp(-exp(par4) * (minX - t1))) * 0.9999;
+    t1max = 1./(1. + exp(-exp(par4) * (par1 - t1))) * 1.0001;
+    t1power = log(0.5)/log((0.5 - t1min)/(t1max - t1min));
+
+//    if(seltype(f,4)==0) {sel_maxL=maxL;} else {sel_maxL=Ave_Size(styr,3,1,nages);}
+    if (special == 0)
+    {
+        maxSelX = maxX;
+    }
+    else
+    {
+        maxSelX = aveXvalue(xValList);
+    }
+//    t2=(sp(1)+sp(8))+(1./(1.+mfexp(-sp(6))))*(sel_maxL-(sp(1)+sp(8)));    // INFL
+//    t2min=1./(1.+mfexp(-mfexp(sp(7))*(sp(1)+sp(8)-t2)))*0.9999;  // asc value at peak+
+//    t2max=1./(1.+mfexp(-mfexp(sp(7))*(sel_maxL-t2)))*1.0001;  // asc value at maxL
+//    t2power=log(0.5)/log((0.5-t2min)/(t2max-t2min));
+    t2 = (par1 + par8) + logist(par6) * (maxSelX - (par1 + par8));
+    t2min = 1./(1. + exp(-exp(par7) * (par1 + par8 - t2))) * 0.9999;
+    t2max = 1./(1. + exp(-exp(par7) * (maxSelX - t2))) * 1.0001;
+    t2power = log(0.5) / log((0.5 - t2min)/(t2max - t2min));
+//    final=1./(1.+mfexp(-sp(5)));
+    final = logist (par5);
+
+/*    for (j=1; j<=nlength; j++)  //calculate the value over length bins
+    {   join1=1./(1.+mfexp(10.*(len_bins_m(j)-sp(1))));
+        join2=1./(1.+mfexp(10.*(len_bins_m(j)-(sp(1)+sp(8)))));
+        join3=1./(1.+mfexp(10.*(len_bins_m(j)-sel_maxL)));
+        upselex=sp(2) + (1. - sp(2)) * pow((( 1./(1.+mfexp(-mfexp(sp(4))*(len_bins_m(j)-t1)))-t1min ) / (t1max-t1min)),t1power);
+        downselex=(1. + (final - 1.) * pow(fabs(((( 1./(1.+mfexp(-mfexp(sp(7))*(len_bins_m(j)-t2))) -t2min ) / (t2max-t2min) ))),t2power));
+        sel(j) = ((((upselex*join1)+1.0*(1.0-join1))*join2) + downselex*(1-join2))*join3 + final*(1-join3);
+    }*/
+    for (i = 0; i < xValList.count(); i++)
+    {
+        binM = xValList.at(i);
+        jn1 = 1.0 / (1.0 + exp(10.0 * (binM - par1)));
+        jn2 = 1.0 / (1.0 + exp(10.0 * (binM - (par1 + par8))));
+        jn3 = 1.0 / (1.0 + exp(10.0 * (binM - maxSelX)));
+        upsel = par2 + (1.0 - par2) * pow((( 1.0 / (1.0 + exp(-exp(par4) * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
+        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-exp(par7) * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
+        sel = ((((upsel * jn1) + 1.0 * (1.0 - jn1)) * jn2) + dnsel * (1.0 - jn2)) * jn3 + final * (1.0 - jn3);
+        selSeries->append(QPointF(xValList.at(i), sel));
+    }
+    ui->spinBox_steep_join1->setValue(10);
+    ui->spinBox_steep_join2->setValue(10);
+    ui->spinBox_steep_join3->setValue(10);
+}
+
+void equationDialog::dblLogSmooth()
+{
+
+}
+
+void equationDialog::updateDblLogSmooth()
+{
+    float maxSelX = 0;
+    float minX = xValList.first();
+    float maxX = xValList.last();
+    float sel = 0;
+    float t1 = 0, t1min, t1max, t1power;
+    float t2 = 0, t2min, t2max, t2power;
+    float jn1, jn2, jn3;
+    float final, upsel, dnsel;
+    int binM, i;
+    float par1 = ui->doubleSpinBox_1_value->value();
+    float par2 = ui->doubleSpinBox_2_value->value();
+    float par3 = ui->doubleSpinBox_3_value->value();
+    float par4 = ui->doubleSpinBox_4_value->value();
+    float par5 = ui->doubleSpinBox_5_value->value();
+    float par6 = ui->doubleSpinBox_6_value->value();
+    float par7 = ui->doubleSpinBox_7_value->value();
+    float par8 = ui->doubleSpinBox_8_value->value();
+    ui->doubleSpinBox_1_trans->setValue(par1);
+    ui->doubleSpinBox_2_trans->setValue(par2);
+    ui->doubleSpinBox_3_trans->setValue(par3);
+    ui->doubleSpinBox_4_trans->setValue(par4);
+    ui->doubleSpinBox_5_trans->setValue(par5);
+    ui->doubleSpinBox_6_trans->setValue(par6);
+    ui->doubleSpinBox_7_trans->setValue(par7);
+    ui->doubleSpinBox_8_trans->setValue(par8);
+
+    selSeries->clear();
+    firstPoints.clear();
+
+//    t1=0.+(1./(1.+mfexp(-sp(3))))*(sp(1)-0.);    // INFL
+//    t1min=1./(1.+mfexp(-sp(4)*(0.-t1)))*0.9999;  // asc value at minsize
+//    t1max=1./(1.+mfexp(-sp(4)*(sp(1)-t1)))*1.00001;  // asc value at peak
+//    t1power=log(0.5)/log((0.5-t1min)/(t1max-t1min));
+    t1 = 0.0 + (logist(par3) * (par1 - 0.0));
+    t1min = 1.0/(1.0 + exp(-exp(par4) * (0.0 - t1))) * 0.9999;
+    t1max = 1.0/(1.0 + exp(-exp(par4) * (par1 - t1))) * 1.0001;
+    t1power = log(0.5)/log((0.5 - t1min)/(t1max - t1min));
 
 
+//    t2=(sp(1)+sp(8))+(1./(1.+mfexp(-sp(6))))*(r_ages(nages)-(sp(1)+sp(8)));    // INFL
+//    t2min=1./(1.+mfexp(-sp(7)*(sp(1)+sp(8)-t2)))*0.9999;  // asc value at peak+
+//    t2max=1./(1.+mfexp(-sp(7)*(r_ages(nages)-t2)))*1.00001;  // asc value at maxage
+//    t2power=log(0.5)/log((0.5-t2min)/(t2max-t2min));
+    t2 = (par1 + par8) + logist(par6) * (binMax - (par1 + par8));
+    t2min = 1./(1. + exp(-exp(par7) * (par1 + par8 - t2))) * 0.9999;
+    t2max = 1./(1. + exp(-exp(par7) * (binMax - t2))) * 1.0001;
+    t2power = log(0.5) / log((0.5 - t2min)/(t2max - t2min));
+//    final=1./(1.+mfexp(-sp(5)));
+    final = logist(par5);
+
+/*    for (a=0; a<=nages; a++)  //calculate the value over ages
+    {
+        sel_a(y,fs,1,a) =
+        (
+        (
+        (sp(2) + (1.-sp(2)) *
+        pow((( 1./(1.+mfexp(-sp(4)*(r_ages(a)-t1)))-t1min)/ (t1max-t1min)),t1power))
+        /(1.0+mfexp(30.*(r_ages(a)-sp(1))))  // scale ascending side
+        +
+        1./(1.+mfexp(-30.*(r_ages(a)-sp(1))))   // flattop, with scaling
+        )
+        /(1.+mfexp( 30.*(r_ages(a)-(sp(1)+sp(8)))))    // scale combo of ascending and flattop
+        +
+        (1. + (final - 1.) *
+        pow(fabs((( 1./(1.+mfexp(-sp(7)*(r_ages(a)-t2))) -t2min ) / (t2max-t2min) )),t2power))
+        /(1.+mfexp( -30.*(r_ages(a)-(sp(1)+sp(8)))))    // scale descending
+        );
+    }   // end age loop */
+    for (i = 0; i < xValList.count(); i++)
+    {
+        binM = xValList.at(i);
+        jn1 = 1.0 / (1.0 + exp(30.0 * (binM - par1)));
+        jn2 = 1.0 / (1.0 + exp(30.0 * (binM - (par1 + par8))));
+        upsel = par2 + (1.0 - par2) * pow((( 1.0 / (1.0 + exp(-par4 * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
+        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-par7 * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
+        sel = ((((upsel * jn1) + jn1) * jn2) + dnsel * jn2);
+        selSeries->append(QPointF(binM, sel));
+    }
 }
 
 /** Case 22: size selectivity using double normal plateau
@@ -2272,7 +2445,7 @@ void equationDialog::dblNormCasal()
 {
     if (!title.isEmpty())
         title.clear();
-    title.append(QString("Double Normal (like CASAL) - not fully implemented"));
+    title.append(QString("Double Normal (like CASAL)"));
     ui->label_title->setText(title);
     showSliders(4);
     ui->label_1_name->setText("Peak");
@@ -2400,10 +2573,6 @@ void equationDialog::dblNormEndpts()
 
 void equationDialog::updateDblNormEndpts()
 {
-    int xRange = binMax - binMin;
-    float yVal = 0;
-    float temp = 0;
-    float xVal = 0;
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
     float par3 = ui->doubleSpinBox_3_value->value();
@@ -2486,10 +2655,12 @@ void equationDialog::updateExpLogistic()
     }
 }
 
+/** Returns the logistic of the requested value
+ * 1/(1 + exp(-value)) */
 float equationDialog::logist(double value)
 {
     float temp = exp(-value);
-    return (1/(1 + temp));
+    return (1./(1. + temp));
 }
 
 void equationDialog::eachAge ()
@@ -2728,6 +2899,7 @@ void equationDialog::updateColeGauss()
     }
 }
 
+/** Returns the maximum x-value of a point list */
 float equationDialog::maxXvalue(QList<QPointF> &pointlist)
 {
     float value = -1000;
@@ -2739,6 +2911,7 @@ float equationDialog::maxXvalue(QList<QPointF> &pointlist)
     return value;
 }
 
+/** Returns the maximum y-value of a point list */
 float equationDialog::maxYvalue(QList<QPointF> &pointlist)
 {
     float value = -1000;
@@ -2748,4 +2921,28 @@ float equationDialog::maxYvalue(QList<QPointF> &pointlist)
             value = pointlist.at(i).y();
     }
     return value;
+}
+
+/** Returns the average of the values of a float list */
+float equationDialog::aveXvalue(QList<float> &xvals)
+{
+    float value = 0.;
+    int i = 0;
+    for (i = 0; i < xvals.count(); i++)
+        value += (float)xvals.at(i);
+    value /= i;
+    return value;
+}
+
+/** Returns the average of the y-values of a point list */
+float equationDialog::aveYvalue(QList<QPointF> &pointlist)
+{
+    float value = 0.;
+    int i = 0;
+    for (i = 0; i < pointlist.count(); i++)
+    {
+        if (pointlist.at(i).y() > value)
+            value += pointlist.at(i).y();
+    }
+    return (value / i);
 }

@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>4</number>
+         <number>0</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -97,8 +97,83 @@
          <attribute name="title">
           <string>Basic Data</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="5" column="2" colspan="2">
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_fleet_name">
+            <property name="text">
+             <string>Name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_name">
+            <property name="text">
+             <string>FleetName</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" colspan="2">
+           <widget class="QPushButton" name="pushButton_edit_name">
+            <property name="text">
+             <string>Edit Name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QSpinBox" name="spinBox_number">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLabel" name="label_need_catch_mult">
+            <property name="text">
+             <string>Apply a catch multiplier</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3" colspan="2">
+           <widget class="QLabel" name="label_units_info">
+            <property name="text">
+             <string>  1 = biomass, 2 = numbers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QCheckBox" name="checkBox_need_catch_mult">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QSpinBox" name="spinBox_units">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>2</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4">
+           <spacer name="horizontalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="4" column="2" colspan="2">
            <widget class="QSpinBox" name="spinBox_area">
             <property name="prefix">
              <string>Area </string>
@@ -111,14 +186,21 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2" colspan="3">
-           <widget class="QPushButton" name="pushButton_edit_name">
+          <item row="5" column="1">
+           <widget class="QLabel" name="label_units">
             <property name="text">
-             <string>Edit Name</string>
+             <string>Units of catch</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="2" colspan="2">
+          <item row="4" column="1">
+           <widget class="QLabel" name="label_area">
+            <property name="text">
+             <string>Area where the fleet operates</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2" colspan="2">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_timing">
             <property name="decimals">
              <number>3</number>
@@ -137,17 +219,41 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="7">
-           <widget class="QSpinBox" name="spinBox_number">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
+          <item row="3" column="1">
+           <widget class="QLabel" name="label_timing">
+            <property name="text">
+             <string>Timing in Season </string>
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_type">
+            <property name="text">
+             <string>Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="4" colspan="2">
+           <widget class="QLabel" name="label_timing_info">
+            <property name="text">
+             <string>Superceded by real month in observations</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="7">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="5">
            <widget class="QLabel" name="label_number">
             <property name="text">
              <string>Fleet Number</string>
@@ -157,7 +263,191 @@
             </property>
            </widget>
           </item>
-          <item row="9" column="0" colspan="8">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBox_active">
+            <property name="text">
+             <string> Active  (Use this fleet?)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="5">
+           <spacer name="horizontalSpacer_gen1">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBox_type">
+            <item>
+             <property name="text">
+              <string>1: Fishing with retained catch</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2: Bycatch (catch discarded)</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>3: Survey</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <spacer name="verticalSpacer_gen1">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="7" column="0" rowspan="2" colspan="7">
+           <widget class="QGroupBox" name="groupBox_bycatch">
+            <property name="title">
+             <string>Bycatch Fleet data</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_byc_dead">
+               <property name="text">
+                <string>Include deadfish</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLabel" name="label_byc_lastYear">
+               <property name="text">
+                <string>Last year of range</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" colspan="2">
+              <widget class="QComboBox" name="comboBox_byc_dead">
+               <item>
+                <property name="text">
+                 <string>1=deadfish in MSY, ABC and other benchmark and forecast output</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2=omit from MSY and ABC (but still include the mortality</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <spacer name="horizontalSpacer_bycatch">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_byc_firstYear">
+               <property name="text">
+                <string>F or first year of range</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="label_byc_f">
+               <property name="text">
+                <string>Bycatch F</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLineEdit" name="lineEdit_byc_firstYear">
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maxLength">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="lineEdit_byc_lastYear">
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maxLength">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2" colspan="2">
+              <widget class="QComboBox" name="comboBox_byc_f">
+               <item>
+                <property name="text">
+                 <string>1=Fmult scales with other fleets</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2=bycatch F constant at input value</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3=bycatch F form range of years</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_spacer">
+               <property name="text">
+                <string>      </string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <spacer name="horizontalSpacer_bycatch_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="10" column="0" colspan="7">
            <layout class="QHBoxLayout" name="horizontalLayout_ops">
             <item>
              <widget class="QPushButton" name="pushButton_new">
@@ -194,172 +484,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="7" column="2">
-           <widget class="QCheckBox" name="checkBox_need_catch_mult">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_type">
-            <property name="text">
-             <string>Type</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLabel" name="label_timing">
-            <property name="text">
-             <string>Timing in Season </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_fleet_name">
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <spacer name="verticalSpacer_gen1">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_name">
-            <property name="text">
-             <string>FleetName</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="6">
-           <spacer name="horizontalSpacer_gen1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="checkBox_active">
-            <property name="text">
-             <string> Active  (Use this fleet?)</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="3" colspan="3">
-           <widget class="QLabel" name="label_units_info">
-            <property name="text">
-             <string>  1 = biomass, 2 = numbers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLabel" name="label_area">
-            <property name="text">
-             <string>Area where the fleet operates</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLabel" name="label_need_catch_mult">
-            <property name="text">
-             <string>Apply a catch multiplier</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QSpinBox" name="spinBox_units">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>2</number>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLabel" name="label_units">
-            <property name="text">
-             <string>Units of catch</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="8">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="3" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_type">
-            <item>
-             <property name="text">
-              <string>1: Fishing with retained catch</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>2: Bycatch (catch discarded)</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>3: Survey</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>4: Not yet implemented.</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="5" column="4" colspan="2">
-           <spacer name="horizontalSpacer_12">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="4" column="4" colspan="4">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Superceded by real month in observations</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -1513,8 +1637,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>733</width>
-                   <height>365</height>
+                   <width>593</width>
+                   <height>279</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">

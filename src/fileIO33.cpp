@@ -69,6 +69,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         temp_int = token.toInt();
         total_fleets = temp_int;
         data->set_num_fleets(total_fleets);
+        num_vals = 0;
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
@@ -78,6 +79,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->getAgeSelectivity()->setNumAges (data->get_num_ages());
             temp_int = d_file->get_next_value("fleet type").toInt();
             flt->setTypeInt(temp_int);
+            if (temp_int == 2)
+                num_vals++;
             temp_float = d_file->get_next_value("timing").toFloat();
             flt->setSeasTiming(temp_float);
             temp_int = d_file->get_next_value("area").toInt();
@@ -98,6 +101,27 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->setTotalYears(data->getTotalYears());
         }
         data->assignFleetNumbers();
+
+        // Read bycatch data, if any
+        for (i = 0; i < num_vals; i++)
+        {
+            temp_int = d_file->get_next_value("fleet index").toInt();
+            Fleet *flt = data->getFleet(temp_int - 1);
+            if (flt->getTypeInt() != 2)
+            {
+                d_file->error(QString("Provided bycatch data for non-bycatch fleet: %1").arg(QString::number(temp_int)));
+            }
+            temp_int = d_file->get_next_value("include dead").toInt();
+            flt->setBycatchDead(temp_int);
+            temp_int = d_file->get_next_value("f method").toInt();
+            flt->setBycatchF(temp_int);
+            temp_str = d_file->get_next_value("first year");
+            flt->setBycFirstYr(temp_str);
+            temp_str = d_file->get_next_value("last year");
+            flt->setBycLastYr(temp_str);
+            temp_str = d_file->get_next_value("unused");
+            flt->setBycUnused(temp_str);
+        }
 
         //  ProgLabel_2.2  Read CATCH amount by fleet
         // Catch
@@ -687,7 +711,37 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             line.append(QString("  # %1").arg(QString::number(i)));
             chars += d_file->writeline (line);*/
         }
-
+        line = QString ("#Bycatch_fleet_input_goes_next");
+        chars += d_file->writeline (line);
+        line = QString ("#a: fleet index");
+        chars += d_file->writeline (line);
+        line = QString ("#b: 1=deadfish in MSY, ABC and other benchmark and forecast output; 2=omit from MSY and ABC (but still include the mortality)");
+        chars += d_file->writeline (line);
+        line = QString ("#c: 1=Fmult scales with other fleets; 2=bycatch F constant at input value; 3=bycatch F form range of years");
+        chars += d_file->writeline (line);
+        line = QString ("#d: F or first year of range");
+        chars += d_file->writeline (line);
+        line = QString ("#e: last year of range");
+        chars += d_file->writeline (line);
+        line = QString ("#f: not used");
+        chars += d_file->writeline (line);
+        line = QString ("# a  b  c  d  e  f");
+        chars += d_file->writeline (line);
+        for (i = 0; i < total_fleets; i++)
+        {
+            flt = data->getActiveFleet(i);
+            if (flt->getTypeInt() == 2)
+            {
+                str_lst.clear();
+                str_lst.append(QString::number(i + 1));
+                str_lst.append(QString::number(flt->getBycatchDead()));
+                str_lst.append(QString::number(flt->getBycatchF()));
+                str_lst.append(flt->getBycFirstYr());
+                str_lst.append(flt->getBycLastYr());
+                str_lst.append(flt->getBycUnused());
+                chars += d_file->write_vector(str_lst, 5, flt->getName());
+            }
+        }
 
         line = QString("#_Catch data: yr, seas, fleet, catch, catch_se");
         chars += d_file->writeline (line);

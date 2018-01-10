@@ -55,6 +55,18 @@ public slots:
     int getArea() {return i_area;}
     void setSeasTiming(double ftiming) {f_timing = (float)ftiming;}
     float getSeasTiming() {return f_timing;}
+    // Bycatch
+    int getBycatchDead() const;
+    void setBycatchDead(int value);
+    int getBycatchF() const;
+    void setBycatchF(int value);
+    QString getBycFirstYr() const;
+    void setBycFirstYr(const QString &value);
+    QString getBycLastYr() const;
+    void setBycLastYr(const QString &value);
+    QString getBycUnused() const;
+    void setBycUnused(const QString &value);
+    //
     void setStartYear (int year) {i_start_year = year;}
     int getStartYear () {return i_start_year;}
     void setTotalYears (int n_years);
@@ -335,6 +347,11 @@ protected:
     FleetType f_type;
     int i_area;
     float f_timing;
+    int i_bycatch_dead;
+    int i_bycatch_f;
+    QString s_byc_firstYr;
+    QString s_byc_lastYr;
+    QString s_byc_unused;
     int i_num_years;
     int i_start_year;
     int i_num_seasons;

@@ -249,6 +249,11 @@ void Fleet::reset()
     setType(Fleet::Fishing);
     setArea(1);
     setSeasTiming(0.5);
+    setBycatchDead(1);
+    setBycatchF(1);
+    setBycFirstYr(QString("1993"));
+    setBycLastYr(QString("1996"));
+    setBycUnused(QString("1"));
     setTotalYears(1);
     setNumSeasons(1);
     setNumGenders(2);
@@ -922,6 +927,56 @@ void Fleet::appendLambda(QStringList values)
     int rows = lambdaModel->rowCount();
     lambdaModel->setRowCount(rows + 1);
     lambdaModel->setRowData(rows, values);
+}
+
+QString Fleet::getBycUnused() const
+{
+    return s_byc_unused;
+}
+
+void Fleet::setBycUnused(const QString &value)
+{
+    s_byc_unused = value;
+}
+
+QString Fleet::getBycLastYr() const
+{
+    return s_byc_lastYr;
+}
+
+void Fleet::setBycLastYr(const QString &value)
+{
+    s_byc_lastYr = value;
+}
+
+QString Fleet::getBycFirstYr() const
+{
+    return s_byc_firstYr;
+}
+
+void Fleet::setBycFirstYr(const QString &value)
+{
+    s_byc_firstYr = value;
+}
+
+int Fleet::getBycatchF() const
+{
+    return i_bycatch_f;
+}
+
+void Fleet::setBycatchF(int value)
+{
+    i_bycatch_f = value;
+}
+
+int Fleet::getBycatchDead() const
+{
+    return i_bycatch_dead;
+}
+
+void Fleet::setBycatchDead(int value)
+{
+    i_bycatch_dead = value;
 }
 
 int Fleet::getAr1SelSmoother()

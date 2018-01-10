@@ -42,6 +42,10 @@ public slots:
     void new_fleet (QString name = QString(""));
     void duplicate_fleet (int index);
     void delete_fleet (int index);
+    void changeBycatchDead (int value);
+    void changeBycatchF (int value);
+    void changeBycatchFirstYr ();
+    void changeBycatchLastYr ();
 
     void showLengthObs();
     void changeLengthMinTailComp();

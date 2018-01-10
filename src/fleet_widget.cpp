@@ -115,7 +115,10 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->pushButton_new, SIGNAL(clicked()), SLOT(create_new_fleet()));
     connect (ui->pushButton_duplicate, SIGNAL(clicked()), SLOT(duplicate_current_fleet()));
     connect (ui->spinBox_units, SIGNAL(valueChanged(int)), ui->spinBox_catch_units, SLOT(setValue(int)));
-
+    connect (ui->comboBox_byc_dead, SIGNAL(currentIndexChanged(int)), SLOT(changeBycatchDead(int)));
+    connect (ui->comboBox_byc_f, SIGNAL(currentIndexChanged(int)), SLOT(changeBycatchF(int)));
+    connect (ui->lineEdit_byc_firstYear, SIGNAL(editingFinished()), SLOT(changeBycatchFirstYr()));
+    connect (ui->lineEdit_byc_lastYear, SIGNAL(editingFinished()), SLOT(changeBycatchLastYr()));
     connect (ui->spinBox_q_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setQTimeVaryReadParams(int)));
 
     connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
@@ -400,6 +403,13 @@ void fleet_widget::set_current_fleet(int index)
         ui->checkBox_need_catch_mult->setChecked (current_fleet->getCatchMultiplier() > 0);
         catchview->setModel(current_fleet->getCatchModel());
 
+        if (ui->groupBox_bycatch->isVisible())
+        {
+            ui->comboBox_byc_dead->setCurrentIndex(current_fleet->getBycatchDead() - 1);
+            ui->comboBox_byc_f->setCurrentIndex(current_fleet->getBycatchF() - 1);
+            ui->lineEdit_byc_firstYear->setText(current_fleet->getBycFirstYr());
+            ui->lineEdit_byc_lastYear->setText(current_fleet->getBycLastYr());
+        }
         ui->spinBox_abund_units->setValue(current_fleet->getAbundUnits());
         ui->spinBox_abund_err->setValue(current_fleet->getAbundErrType());
         abundview->setModel(current_fleet->getAbundanceModel());
@@ -503,7 +513,7 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
 //        selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
-        selexAgeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexAgeEqDialog->setMidBin(0);
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
         selexAgeEqDialog->update();
 
@@ -522,6 +532,7 @@ void fleet_widget::set_current_fleet(int index)
 
 void fleet_widget::set_fleet_type(int type)
 {
+    ui->groupBox_bycatch->setVisible(false);
     switch(type)
     {
     case 0:
@@ -529,6 +540,11 @@ void fleet_widget::set_fleet_type(int type)
         break;
     case 1:
         current_fleet->setType(Fleet::Bycatch);
+        ui->groupBox_bycatch->setVisible(true);
+        ui->comboBox_byc_dead->setCurrentIndex(current_fleet->getBycatchDead() - 1);
+        ui->comboBox_byc_f->setCurrentIndex(current_fleet->getBycatchF() - 1);
+        ui->lineEdit_byc_firstYear->setText(current_fleet->getBycFirstYr());
+        ui->lineEdit_byc_lastYear->setText(current_fleet->getBycLastYr());
         break;
     case 2:
         current_fleet->setType(Fleet::Survey);
@@ -544,6 +560,7 @@ void fleet_widget::set_fleet_type(int type)
 
 void fleet_widget::set_type_fleet(Fleet::FleetType ft)
 {
+    ui->groupBox_bycatch->setVisible(false);
     switch (ft)
     {
     case Fleet::Fishing:
@@ -551,6 +568,7 @@ void fleet_widget::set_type_fleet(Fleet::FleetType ft)
         break;
     case Fleet::Bycatch:
         ui->comboBox_type->setCurrentIndex(1);
+        ui->groupBox_bycatch->setVisible(true);
         break;
     case Fleet::Survey:
         ui->comboBox_type->setCurrentIndex(2);
@@ -636,6 +654,29 @@ void fleet_widget::delete_fleet(int index)
     }
     set_current_fleet(index - 1);
 }
+
+void fleet_widget::changeBycatchDead (int value)
+{
+    current_fleet->setBycatchDead(value + 1);
+}
+
+void fleet_widget::changeBycatchF (int value)
+{
+    current_fleet->setBycatchF(value + 1);
+}
+
+void fleet_widget::changeBycatchFirstYr ()
+{
+    QString year(ui->lineEdit_byc_firstYear->text());
+    current_fleet->setBycFirstYr(year);
+}
+
+void fleet_widget::changeBycatchLastYr ()
+{
+    QString year(ui->lineEdit_byc_lastYear->text());
+    current_fleet->setBycLastYr(year);
+}
+
 
 void fleet_widget::showLengthObs()
 {

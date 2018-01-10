@@ -216,6 +216,8 @@ private slots:
     void updateDblLogistic ();
     void dblLogPeak ();
     void updateDblLogPeak ();
+    void dblLogSmooth ();
+    void updateDblLogSmooth();
     void dblNormCasal ();
     void updateDblNormCasal ();
     void dblNormal ();
@@ -235,6 +237,8 @@ private slots:
     float logist (double value);
     float maxXvalue (QList<QPointF> &pointlist);
     float maxYvalue (QList<QPointF> &pointlist);
+    float aveXvalue (QList<float> &xvals);
+    float aveYvalue (QList<QPointF> &pointlist);
 };
 
 #endif // EQUATIONDIALOG_H
