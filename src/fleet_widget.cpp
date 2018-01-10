@@ -372,7 +372,6 @@ void fleet_widget::setAgeLengthBins()
         selexAgeEqDialog->setXvals(agelist);
     }
     selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
-
 }
 
 void fleet_widget::set_current_fleet(int index)
@@ -492,11 +491,6 @@ void fleet_widget::set_current_fleet(int index)
         sizeSelexTimeVaryParamsView->setModel(current_fleet->getSizeSelectivity()->getTimeVaryParameterModel());
         sizeSelexTimeVaryParamsView->setHeight(current_fleet->getSizeSelectivity()->getNumTimeVaryParameters());
         sizeSelexTimeVaryParamsView->resizeColumnsToContents();
-        setAgeLengthBins();
-//        selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
-        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
-        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
-        selexSizeEqDialog->update();
 
         ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
@@ -512,10 +506,14 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->setHeight(current_fleet->getAgeSelectivity()->getNumTimeVaryParameters());
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
-//        selexAgeEqDialog->setXvals(model_data->get_age_composition()->getBins());
+
+        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
         selexAgeEqDialog->setMidBin(0);
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
-        selexAgeEqDialog->update();
+        setAgeLengthBins();
+        selexSizeEqDialog->restoreAll();
+        selexAgeEqDialog->restoreAll();
 
         ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());

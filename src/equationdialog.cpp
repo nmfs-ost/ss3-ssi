@@ -152,6 +152,13 @@ void equationDialog::setSelex (selectivity *slx)
     special = selex->getSpecial();
     equationNum = selex->getPattern();
     parameters = selex->getParameterModel();
+//    restoreAll();
+}
+
+void equationDialog::changeSelex()
+{
+    special = selex->getSpecial();
+    equationNum = selex->getPattern();
     restoreAll();
 }
 
@@ -387,7 +394,7 @@ void equationDialog::update()
     if (!building)
     {
         building = true;
-        getParameterValues();
+//        getParameterValues();
 
         switch (equationNum)
         {
@@ -1171,12 +1178,6 @@ void equationDialog::apply()
 
 void equationDialog::resetValues()
 {
-    if (    equationNum == 14 ||
-            equationNum == 17 ||
-            equationNum == 27 ||
-            parameters->rowCount() > 9)
-        return;
-
     // get values from input spinboxes
     double min, max, val;
     min = ui->doubleSpinBox_1_input->minimum();

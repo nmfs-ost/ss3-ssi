@@ -733,7 +733,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             if (flt->getTypeInt() == 2)
             {
                 str_lst.clear();
-                str_lst.append(QString::number(i + 1));
+                str_lst.append(QString::number(i));
                 str_lst.append(QString::number(flt->getBycatchDead()));
                 str_lst.append(QString::number(flt->getBycatchF()));
                 str_lst.append(flt->getBycFirstYr());

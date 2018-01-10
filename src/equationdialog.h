@@ -36,6 +36,7 @@ public:
 
 public slots:
     void setSelex (selectivity *slx);
+    void changeSelex ();
     void setDataModel (ss_model *data);
     void setXvals(const QStringList &vals);
     void setMidBin (float val);
