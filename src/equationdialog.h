@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QLabel>
 #include <QAbstractButton>
+#include "ttk_spline.h"
 
 #include <qchart.h>
 #include <qlineseries.h>
@@ -144,14 +145,18 @@ private:
     ss_model * dataModel;
 
     int equationNum;
+    int numSliders;
     tablemodel *parameters;
     int special;
     bool building;
 
     QChart *cht;
     QChartView *chartview;
-    QLineSeries *firstSeries;
-    QLineSeries *lastSeries;
+    QLineSeries *ascendSeries;
+    QLineSeries *dscendSeries;
+    QLineSeries *join1Series;
+    QLineSeries *join2Series;
+    QLineSeries *join3Series;
     QLineSeries *selSeries;
     QList<QPointF> firstPoints;
 
@@ -183,16 +188,6 @@ private:
     int join3;
 
 private slots:
-    void setTrans1(double value);
-    void setTrans2(double value);
-    void setTrans3(double value);
-    void setTrans4(double value);
-    void setTrans5(double value);
-    void setTrans6(double value);
-    void setTrans7(double value);
-    void setTrans8(double value);
-    void setTrans9(double value);
-
     void showSliders (int num);
     void showBins (bool flag);
     void showJoins (int num);
@@ -233,13 +228,16 @@ private slots:
     void updateRandomWalk (float scale);
     void coleGauss ();
     void updateColeGauss();
+    void cubicSpline (float scale);
+    void updateCubicSpline (float scale);
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
     float logist (double value);
-    float maxXvalue (QList<QPointF> &pointlist);
-    float maxYvalue (QList<QPointF> &pointlist);
-    float aveXvalue (QList<float> &xvals);
-    float aveYvalue (QList<QPointF> &pointlist);
+    float maxXvalue (const QList<QPointF> &pointlist);
+    float minYvalue (const QList<QPointF> &pointlist);
+    float maxYvalue (const QList<QPointF> &pointlist);
+    float aveXvalue (const QList<float> &xvals);
+    float aveYvalue (const QList<QPointF> &pointlist);
 };
 
 #endif // EQUATIONDIALOG_H

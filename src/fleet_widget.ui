@@ -88,7 +88,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>0</number>
+         <number>4</number>
         </property>
         <property name="movable">
          <bool>true</bool>
@@ -427,7 +427,7 @@
              <item row="3" column="0">
               <widget class="QLabel" name="label_spacer">
                <property name="text">
-                <string>      </string>
+                <string/>
                </property>
               </widget>
              </item>
@@ -1620,7 +1620,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_selex">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab_selex_size">
              <attribute name="title">
@@ -1637,8 +1637,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>593</width>
-                   <height>279</height>
+                   <width>733</width>
+                   <height>365</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -1674,10 +1674,10 @@
                     <item row="2" column="3">
                      <widget class="QSpinBox" name="spinBox_selex_size_num_params">
                       <property name="readOnly">
-                       <bool>true</bool>
+                       <bool>false</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::NoButtons</enum>
+                       <enum>QAbstractSpinBox::PlusMinus</enum>
                       </property>
                       <property name="prefix">
                        <string/>
@@ -1945,10 +1945,10 @@
                     <item row="2" column="3">
                      <widget class="QSpinBox" name="spinBox_selex_age_num_params">
                       <property name="readOnly">
-                       <bool>true</bool>
+                       <bool>false</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::NoButtons</enum>
+                       <enum>QAbstractSpinBox::PlusMinus</enum>
                       </property>
                       <property name="prefix">
                        <string/>

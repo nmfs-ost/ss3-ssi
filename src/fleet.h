@@ -37,6 +37,7 @@ private:
     q_ratio *q_R;
 
 signals:
+    void newDataRead();
 
 public slots:
     // General

@@ -2916,6 +2916,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         if (QString(datalist.last()).compare("EOF") == 0)
             return false;
 
+
         timevaryread = data->getFleet(0)->getSelTimeVaryReadParams();
         if (timevaryread > 0)
         {
@@ -2945,6 +2946,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (i = 0; i < data->get_num_fleets(); i++)
         {
             data->getFleet(i)->setAr1SelSmoother(temp_int);
+            emit data->getFleet(i)->newDataRead();
         }
 
         // Tag loss and Tag reporting parameters go next
@@ -4104,7 +4106,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 //                    line.append(QString("  ").arg(str_list.at(k)));
                 line.append(QString("%1 #  LnQ_base_%2(%3)").arg(
                                 temp_string,
-                                data->getFleet(i)->getName(),
+                                fleet->getName(),
                                 QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
@@ -4115,7 +4117,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 temp_string = fleet->Q()->getPower();
                 line.append(QString("%1  #  Q_power_%2(%3)").arg(
                                 temp_string,
-                                data->getFleet(i)->getName(),
+                                fleet->getName(),
                                 QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
@@ -4126,7 +4128,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 temp_string = fleet->Q()->getExtra();
                 line.append(QString("%1  #  Q_extraSD_%2(%3)").arg(
                                 temp_string,
-                                data->getFleet(i)->getName(),
+                                fleet->getName(),
                                 QString::number(i+1)));
                 chars += c_file->writeline(line);
             }
