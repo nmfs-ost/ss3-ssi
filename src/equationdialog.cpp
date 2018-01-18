@@ -6,6 +6,7 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QValueAxis>
+#include <QMessageBox>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -1189,6 +1190,8 @@ void equationDialog::apply()
 
 void equationDialog::resetValues()
 {
+    if (parameters->rowCount() < 9)
+    {
     // get values from input spinboxes
     double min, max, val;
     min = ui->doubleSpinBox_1_input->minimum();
@@ -1227,6 +1230,7 @@ void equationDialog::resetValues()
     max = ui->doubleSpinBox_9_input->maximum();
     val = ui->doubleSpinBox_9_input->value();
     setSlider9(min, max, val);
+    }
 }
 
 void equationDialog::restoreAll()
@@ -1821,43 +1825,88 @@ void equationDialog::mirror (int sliders)
     resetChart();
     if (sliders > 0)
     {
-        ui->label_1_name->setText("Bin select");
+        msg.append(QString(" between Lo and Hi bins."));
+        ui->label_1_name->setText("Lo Bin");
         ui->label_1_type->setText("Value");
-        ui->doubleSpinBox_1_min->setValue(1);
-        ui->doubleSpinBox_1_max->setValue(xValList.count());
-        ui->label_2_name->setText("Bin select");
+        ui->label_2_name->setText("Hi Bin");
         ui->label_2_type->setText("Value");
-        ui->doubleSpinBox_2_min->setValue(1);
-        ui->doubleSpinBox_2_max->setValue(xValList.count());
     }
     ui->label_title->setText(msg);
     showSliders(sliders);
     showBins (sliders > 0);
     showJoins(0);
-    updateMirror();
-}
-void equationDialog::updateMirror()
-{
-    ui->doubleSpinBox_1_trans->setValue(ui->doubleSpinBox_1_value->value());
-    ui->doubleSpinBox_2_trans->setValue(ui->doubleSpinBox_2_value->value());
+    updateMirror(sliders);
 }
 
-/* Size selex equation 6, age selex equation 16 */
+void equationDialog::updateMirror(int sliders)
+{
+    QString msg;
+    if (getSpecial() >= fleet->getNumber())
+    {
+        msg = QString("Mirror must be of previous fleet.\n Change Special value.");
+        QMessageBox::information(this, tr("Error in Fleet Number"), tr(msg.toUtf8()));
+    }
+    if (sliders > 0)
+    {
+        float par1 = ui->doubleSpinBox_1_value->value();
+        float par2 = ui->doubleSpinBox_2_value->value();
+        if (par1 < 1)
+        {
+            par1 = 1;
+            ui->doubleSpinBox_1_min->setValue(1);
+            ui->doubleSpinBox_2_min->setValue(1);
+            msg = QString("Minimum for param 1 is first bin. adjusting ...");
+            QMessageBox::information(this, tr("Error in Value"), tr(msg.toUtf8()));
+            ui->doubleSpinBox_1_value->setValue(par1);
+            apply();
+            return;
+        }
+        if (par2 > xValList.count())
+        {
+            par2 = xValList.count();
+            ui->doubleSpinBox_1_max->setValue(xValList.count());
+            ui->doubleSpinBox_2_max->setValue(xValList.count());
+            msg = QString("Maximum for param 2 is last bin. adjusting ...");
+            QMessageBox::information(this, tr("Error in Value"), tr(msg.toUtf8()));
+            ui->doubleSpinBox_2_value->setValue(par2);
+            apply();
+            return;
+        }
+        if (par2 < par1)
+        {
+            par2 = par1;
+            msg = QString("Minimum is greater than Maximum. adjusting ...");
+            QMessageBox::information(this, tr("Error in Value"), tr(msg.toUtf8()));
+            ui->doubleSpinBox_2_value->setValue(par2);
+            apply();
+            return;
+        }
+        ui->doubleSpinBox_1_trans->setValue(par1);
+        ui->doubleSpinBox_2_trans->setValue(par2);
+    }
+}
+
+/* Size selex equation 6 */
 void equationDialog::linear (float scale)
 {
     QString msg;
     int num = getSpecial();
-
     if (!title.isEmpty())
         title.clear();
     msg.append(QString("%1 Linear segments").arg(QString::number(num)));
     title.append(msg);
     ui->label_title->setText(title);
 
-    if (num > 7)
+    if (scale > 0)
+    {
+        linearScaled();
+        return;
+    }
+    else if (num > 7)
     {
         msg.append(" - Too many segments for this display!");
         blank(9, 0, msg);
+        return;
     }
     else
     {
@@ -1910,19 +1959,19 @@ void equationDialog::linear (float scale)
 
         resetChart();
 
-        selSeries->setPen(QPen(QBrush(Qt::red), 3));
-        cht->addSeries(selSeries);
-
+        axisY->setTitleText("Selex");
         cht->addAxis(axisY, Qt::AlignLeft);
         cht->addAxis(axisXsel, Qt::AlignBottom);
-        selSeries->attachAxis(axisXsel);
-        selSeries->attachAxis(axisY);
-        axisY->setTitleText("Selex");
 
         ascendSeries = new QLineSeries(cht);
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         ascendSeries->setName(QString("Ln of Selex"));
         cht->addSeries(ascendSeries);
+
+        selSeries->setPen(QPen(QBrush(Qt::red), 3));
+        cht->addSeries(selSeries);
+        selSeries->attachAxis(axisXsel);
+        selSeries->attachAxis(axisY);
 
         axisYalt->setTitleText("Ln of Selex");
 
@@ -1932,6 +1981,89 @@ void equationDialog::linear (float scale)
         cht->legend()->show();
         cht->legend()->setAlignment(Qt::AlignLeft);
         updateLinear(scale);
+    }
+}
+
+void equationDialog::linearScaled ()
+{
+    QString msg;
+    int num = getSpecial();
+
+    if (!title.isEmpty())
+        title.clear();
+    msg.append(QString("%1 Linear segments").arg(QString::number(num)));
+    title.append(msg);
+    ui->label_title->setText(title);
+
+    if (num > 5)
+    {
+        msg.append(" - Too many segments for this display!");
+        blank(9, 0, msg);
+    }
+    else
+    {
+        showSliders(num + 4);
+        ui->label_1_name->setText("Scale bin Lo");
+        ui->label_1_type->setText("Value");
+        ui->label_2_name->setText("Scale bin Hi");
+        ui->label_2_type->setText("Value");
+        ui->label_3_name->setText("length for P1");
+        ui->label_3_type->setText("Value");
+        ui->label_4_name->setText("length for P2");
+        ui->label_4_type->setText("Value");
+        ui->label_5_name->setText("ln of sel at P1");
+        ui->label_5_type->setText("Value");
+        ui->label_6_name->setText("ln of sel midpt");
+        ui->label_6_type->setText("Value");
+        ui->label_7_name->setText("ln of sel midpt");
+        ui->label_7_type->setText("Value");
+        ui->label_8_name->setText("ln of sel midpt");
+        ui->label_8_type->setText("Value");
+        ui->label_9_type->setText("Value");
+
+        if (num < 3)
+        {
+            ui->label_6_name->setText("ln of sel at P2");
+        }
+        else if (num < 4)
+        {
+            ui->label_7_name->setText("ln of sel at P2");
+        }
+        else if (num < 5)
+        {
+            ui->label_8_name->setText("ln of sel at P2");
+        }
+        else if (num < 6)
+        {
+            ui->label_9_name->setText("ln of sel at P2");
+        }
+        showBins(true);
+        showJoins(0);
+
+        resetChart();
+
+        axisY->setTitleText("Selex");
+        cht->addAxis(axisY, Qt::AlignLeft);
+        cht->addAxis(axisXsel, Qt::AlignBottom);
+
+        ascendSeries = new QLineSeries(cht);
+        ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
+        ascendSeries->setName(QString("Ln of Selex"));
+        cht->addSeries(ascendSeries);
+
+        selSeries->setPen(QPen(QBrush(Qt::red), 3));
+        cht->addSeries(selSeries);
+        selSeries->attachAxis(axisXsel);
+        selSeries->attachAxis(axisY);
+
+        axisYalt->setTitleText("Ln of Selex");
+
+        cht->addAxis(axisYalt, Qt::AlignRight);
+        ascendSeries->attachAxis(axisXsel);
+        ascendSeries->attachAxis(axisYalt);
+        cht->legend()->show();
+        cht->legend()->setAlignment(Qt::AlignLeft);
+        updateLinearScaled();
     }
 }
 
@@ -1948,6 +2080,11 @@ void equationDialog::updateLinear(float scale)
 
     ascendSeries->clear();
 
+    if (scale > 0)
+    {
+        updateLinearScaled();
+        return;
+    }
     if (num > 7)
     {
         QString msg(QString("%1 Linear segments - too many segments for this display!").arg(QString::number(num)));
@@ -2024,19 +2161,161 @@ void equationDialog::updateLinear(float scale)
         }
     }
     axisYalt->setRange(axisYMin, axisYMax);
-    emit linearUpdated(scale);
+    updateLinearExp(scale);
+}
+
+void equationDialog::updateLinearScaled()
+{
+    float y = 0;
+    int axisYMax = 0;
+    int axisYMin = 0;
+    QString msg;
+    float temp = 0;
+    float len = 0;
+    int num = getSpecial();
+    float xVal[10];
+    float yVal[10];
+    float xMin = ui->doubleSpinBox_1_value->value();
+    float xMax = ui->doubleSpinBox_2_value->value();
+    if (xMin < 1)
+    {
+        xMin = 1;
+        msg = QString("Minimum for param 1 is first bin. adjusting ...");
+        QMessageBox::information(this, tr("Error in Value"), tr(msg.toUtf8()));
+        value1Changed(xMin);
+        return;
+    }
+    if (xMax > xValList.count())
+    {
+        xMax = xValList.count();
+        msg = QString("Maximum for param 2 is last bin. adjusting ...");
+        QMessageBox::information(this, tr("Error in Value"), tr(msg.toUtf8()));
+        value2Changed(xMax);
+        return;
+    }
+    if (xMax < xMin)
+    {
+        xMax = xMin;
+        msg = QString("Minimum is greater than Maximum. adjusting ...");
+        QMessageBox::information(this, tr("Error in Value"), tr(msg.toUtf8()));
+        value2Changed(xMax);
+        return;
+    }
+    ui->doubleSpinBox_1_trans->setValue(xMin);
+    ui->doubleSpinBox_2_trans->setValue(xMax);
+
+    ascendSeries->clear();
+
+    if (num > 5)
+    {
+        QString msg(QString("%1 Linear segments - too many segments for this display!").arg(QString::number(num)));
+        blank(num, 0, msg);
+        return;
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        xVal[i] = 0.0;
+        yVal[i] = 0.0;
+    }
+    xVal[0] = xValList.first();
+    yVal[0] = -10.0;
+    xVal[1] = ui->doubleSpinBox_3_value->value();
+    ui->doubleSpinBox_1_trans->setValue(xVal[1]);
+    yVal[1] = ui->doubleSpinBox_5_value->value();
+    ui->doubleSpinBox_3_trans->setValue(yVal[1]);
+    yVal[2] = ui->doubleSpinBox_6_value->value();
+    ui->doubleSpinBox_4_trans->setValue(yVal[2]);
+    yVal[3] = ui->doubleSpinBox_7_value->value();
+    ui->doubleSpinBox_5_trans->setValue(yVal[3]);
+    yVal[4] = ui->doubleSpinBox_8_value->value();
+    ui->doubleSpinBox_6_trans->setValue(yVal[4]);
+    yVal[5] = ui->doubleSpinBox_9_value->value();
+    ui->doubleSpinBox_7_trans->setValue(yVal[5]);
+
+    xVal[num] = ui->doubleSpinBox_4_value->value();
+    ui->doubleSpinBox_4_trans->setValue(xVal[num]);
+    xVal[num + 1] = xValList.last();
+    yVal[num + 1] = yVal[num];
+
+    temp = (xVal[num] - xVal[1]) / (num - 1);
+    for (int i = 2; i < num; i++)
+    {
+        xVal[i] = xVal[1] + (i - 1) * temp;
+    }
+
+    for (int i = 0; i <= num; i++)
+        ascendSeries->append(QPointF(xVal[i], yVal[i]));
+    if (xVal[num] > binMax)
+        temp = xVal[num] + 2;
+    else
+        temp = binMax;
+    ascendSeries->append(QPointF(temp, yVal[num]));
+
+    firstPoints.clear();
+    yMax = yVal[0];
+    for (int i = 0; i < xValList.count(); i++)
+    {
+        len = xValList.at(i);
+        for (int j = 1; j <= num; j++)
+        {
+            if (len >= xVal[j -1] && len < xVal[j])
+            {
+                y = evaluateLine(QPointF(xVal[j-1], yVal[j-1]), QPointF(xVal[j], yVal[j]), len);
+                firstPoints.append(QPointF(len, y));
+                if (y > yMax)
+                    yMax = y;
+                if (y < axisYMin)
+                    axisYMin = (int)y - 2;
+                break;
+            }
+        }
+        if (len >= xVal[num])
+        {
+            y = yVal[num];
+            firstPoints.append(QPointF(len, y));
+        }
+    }
+    axisYMax = (int)yMax + 1;
+    axisYalt->setRange(axisYMin, axisYMax);
+    updateLinearExp(2);
 }
 
 void equationDialog::updateLinearExp(float scale)
 {
     float yVal;
+    int first = ui->doubleSpinBox_1_trans->value();
+    int last = ui->doubleSpinBox_2_trans->value();
+    float yTotal = 1;
+    float yAve = 1;
 
     selSeries->clear();
 
-    for (int i = 0; i < firstPoints.count(); i++)
+    if (scale == 0)
     {
-        yVal = exp(firstPoints.at(i).y() - yMax);
-        selSeries->append(firstPoints.at(i).x(), yVal);
+        for (int i = 0; i < firstPoints.count(); i++)
+        {
+            yVal = exp(firstPoints.at(i).y() - yMax);
+            selSeries->append(firstPoints.at(i).x(), yVal);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < firstPoints.count(); i++)
+        {
+            yVal = exp(firstPoints.at(i).y() - yMax);
+            firstPoints[i].setY(yVal);
+        }
+        for (int i = first-1; i < last; i++)
+        {
+            yTotal += firstPoints.at(i).y();
+        }
+        yAve = yTotal / (last - first + 1);
+        for (int i = 0; i < firstPoints.count(); i++)
+        {
+            yVal = firstPoints.at(i).y() / yAve;
+            selSeries->append(firstPoints.at(i).x(), yVal);
+        }
     }
 }
 
@@ -2183,15 +2462,15 @@ void equationDialog::dblLogPeak()
     ui->label_1_type->setText("Value");
     ui->label_2_name->setText("Init");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Infl");
+    ui->label_3_name->setText("Infl-Up");
     ui->label_3_type->setText("Logit");
-    ui->label_4_name->setText("Slope");
+    ui->label_4_name->setText("Slope-Up");
     ui->label_4_type->setText("Value");
     ui->label_5_name->setText("Final");
     ui->label_5_type->setText("Logit");
-    ui->label_6_name->setText("Infl");
+    ui->label_6_name->setText("Infl-Dn");
     ui->label_6_type->setText("Logit");
-    ui->label_7_name->setText("Slope");
+    ui->label_7_name->setText("Slope-Dn");
     ui->label_7_type->setText("Value");
     ui->label_8_name->setText("BinWidth");
     ui->label_8_type->setText("Value");
@@ -2201,13 +2480,28 @@ void equationDialog::dblLogPeak()
 
     resetChart();
 
+    join1Series = new QLineSeries(cht);
+    join1Series->setPen(QPen(QBrush(Qt::darkGreen), 1));
+    join1Series->setName(QString("Join1"));
+    cht->addSeries(join1Series);
+
+    join2Series = new QLineSeries(cht);
+    join2Series->setPen(QPen(QBrush(Qt::darkCyan), 1));
+    join2Series->setName(QString("Join2"));
+    cht->addSeries(join2Series);
+
+    join3Series = new QLineSeries(cht);
+    join3Series->setPen(QPen(QBrush(Qt::darkYellow), 1));
+    join3Series->setName(QString("Join3"));
+    cht->addSeries(join3Series);
+
     ascendSeries = new QLineSeries(cht);
-    ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
+    ascendSeries->setPen(QPen(QBrush(Qt::green), 3));
     ascendSeries->setName(QString("Logist1"));
     cht->addSeries(ascendSeries);
 
     dscendSeries = new QLineSeries(cht);
-    dscendSeries->setPen(QPen(QBrush(Qt::green), 2));
+    dscendSeries->setPen(QPen(QBrush(Qt::blue), 3));
     dscendSeries->setName(QString("Logist2"));
     cht->addSeries(dscendSeries);
 
@@ -2221,6 +2515,15 @@ void equationDialog::dblLogPeak()
     ascendSeries->attachAxis(axisY);
     dscendSeries->attachAxis(axisXsel);
     dscendSeries->attachAxis(axisY);
+    join1Series->attachAxis(axisXsel);
+    join1Series->attachAxis(axisY);
+    join2Series->attachAxis(axisXsel);
+    join2Series->attachAxis(axisY);
+    join3Series->attachAxis(axisXsel);
+    join3Series->attachAxis(axisY);
+
+    cht->legend()->setVisible(true);
+    cht->legend()->setAlignment(Qt::AlignLeft);
 
     if (equationNum == 8)
         updateDblLogPeak();
@@ -2237,7 +2540,7 @@ void equationDialog::updateDblLogPeak()
     float t1 = 0, t1min, t1max, t1power;
     float t2 = 0, t2min, t2max, t2power;
     float jn1, jn2, jn3;
-    float final, upsel, dnsel;
+    float upsel, dnsel;
     int binM, i;
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
@@ -2247,26 +2550,39 @@ void equationDialog::updateDblLogPeak()
     float par6 = ui->doubleSpinBox_6_value->value();
     float par7 = ui->doubleSpinBox_7_value->value();
     float par8 = ui->doubleSpinBox_8_value->value();
-    ui->doubleSpinBox_1_trans->setValue(par1);
-    ui->doubleSpinBox_2_trans->setValue(par2);
-    ui->doubleSpinBox_3_trans->setValue(par3);
-    ui->doubleSpinBox_4_trans->setValue(par4);
-    ui->doubleSpinBox_5_trans->setValue(par5);
-    ui->doubleSpinBox_6_trans->setValue(par6);
-    ui->doubleSpinBox_7_trans->setValue(par7);
-    ui->doubleSpinBox_8_trans->setValue(par8);
+    float peak = par1;
+    float init = par2;
+    float infl_up = logist(par3);
+    float slope_up = par4;
+    float final = logist(par5);
+    float infl_dn = logist(par6);
+    float slope_dn = par7;
+    float binwid = par8;
+    ui->doubleSpinBox_1_trans->setValue(peak);
+    ui->doubleSpinBox_2_trans->setValue(init);
+    ui->doubleSpinBox_3_trans->setValue(infl_up);
+    ui->doubleSpinBox_4_trans->setValue(slope_up);
+    ui->doubleSpinBox_5_trans->setValue(final);
+    ui->doubleSpinBox_6_trans->setValue(infl_dn);
+    ui->doubleSpinBox_7_trans->setValue(slope_dn);
+    ui->doubleSpinBox_8_trans->setValue(binwid);
 
     selSeries->clear();
     firstPoints.clear();
     ascendSeries->clear();
     dscendSeries->clear();
+    join1Series->clear();
+    join2Series->clear();
+    join3Series->clear();
 //    t1=minL+(1./(1.+mfexp(-sp(3))))*(sp(1)-minL);    // INFL
 //    t1min=1./(1.+mfexp(-mfexp(sp(4))*(minL-t1)))*0.9999;  // asc value at minsize
 //    t1max=1./(1.+mfexp(-mfexp(sp(4))*(sp(1)-t1)))*1.0001;  // asc value at peak
 //    t1power=log(0.5)/log((0.5-t1min)/(t1max-t1min));  // so the parameter will actual correspond to 50% point
-    t1 = minX + (logist(par3) * (par1 - minX));
-    t1min = 1./(1. + exp(-exp(par4) * (minX - t1))) * 0.9999;
-    t1max = 1./(1. + exp(-exp(par4) * (par1 - t1))) * 1.0001;
+    t1 = minX + (infl_up * (peak - minX));
+    t1min = logist (exp(slope_up) * (minX - t1)) * 0.9999;
+    t1max = logist (exp(slope_up) * (peak - t1)) * 1.0001;
+//    t1min = 1./(1. + exp(-exp(slope_up) * (minX - t1))) * 0.9999;
+//    t1max = 1./(1. + exp(-exp(slope_up) * (peak - t1))) * 1.0001;
     t1power = log(0.5)/log((0.5 - t1min)/(t1max - t1min));
 
 //    if(seltype(f,4)==0) {sel_maxL=maxL;} else {sel_maxL=Ave_Size(styr,3,1,nages);}
@@ -2282,12 +2598,12 @@ void equationDialog::updateDblLogPeak()
 //    t2min=1./(1.+mfexp(-mfexp(sp(7))*(sp(1)+sp(8)-t2)))*0.9999;  // asc value at peak+
 //    t2max=1./(1.+mfexp(-mfexp(sp(7))*(sel_maxL-t2)))*1.0001;  // asc value at maxL
 //    t2power=log(0.5)/log((0.5-t2min)/(t2max-t2min));
-    t2 = (par1 + par8) + logist(par6) * (maxSelX - (par1 + par8));
-    t2min = 1./(1. + exp(-exp(par7) * (par1 + par8 - t2))) * 0.9999;
-    t2max = 1./(1. + exp(-exp(par7) * (maxSelX - t2))) * 1.0001;
+    t2 = (peak + binwid) + infl_dn * (maxSelX - (peak + binwid));
+    t2min = logist(exp(slope_dn) * (peak + binwid - t2)) * 0.9999;
+    t2max = logist(exp(slope_dn) * (maxSelX - t2)) * 1.0001;
     t2power = log(0.5) / log((0.5 - t2min)/(t2max - t2min));
 //    final=1./(1.+mfexp(-sp(5)));
-    final = logist (par5);
+//    final = logist (par5);
 
 /*    for (j=1; j<=nlength; j++)  //calculate the value over length bins
     {   join1=1./(1.+mfexp(10.*(len_bins_m(j)-sp(1))));
@@ -2300,19 +2616,25 @@ void equationDialog::updateDblLogPeak()
     for (i = 0; i < xValList.count(); i++)
     {
         binM = xValList.at(i);
-        jn1 = 1.0 / (1.0 + exp(10.0 * (binM - par1)));
-        jn2 = 1.0 / (1.0 + exp(10.0 * (binM - (par1 + par8))));
+        jn1 = logist(-join1 *(binM - peak));
+        jn2 = logist(-join2 *(binM - (peak + binwid)));
+        jn3 = logist(-join3 *(binM - maxSelX));
+        jn1 = 1.0 / (1.0 + exp(10.0 * (binM - peak)));
+        jn2 = 1.0 / (1.0 + exp(10.0 * (binM - (peak + binwid))));
         jn3 = 1.0 / (1.0 + exp(10.0 * (binM - maxSelX)));
-        upsel = par2 + (1.0 - par2) * pow((( 1.0 / (1.0 + exp(-exp(par4) * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
-        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-exp(par7) * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
+        upsel = init + (1.0 - init) * pow((( 1.0 / (1.0 + exp(-exp(slope_up) * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
+        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-exp(slope_dn) * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
         sel = ((((upsel * jn1) + 1.0 * (1.0 - jn1)) * jn2) + dnsel * (1.0 - jn2)) * jn3 + final * (1.0 - jn3);
+        join1Series->append(QPointF(binM, jn1));
+        join2Series->append(QPointF(binM, jn2));
+        join3Series->append(QPointF(binM, jn3));
         ascendSeries->append(QPointF(binM, upsel));
         dscendSeries->append(QPointF(binM, dnsel));
         selSeries->append(QPointF(xValList.at(i), sel));
     }
-    ui->spinBox_steep_join1->setValue(10);
-    ui->spinBox_steep_join2->setValue(10);
-    ui->spinBox_steep_join3->setValue(10);
+//    ui->spinBox_steep_join1->setValue(10);
+//    ui->spinBox_steep_join2->setValue(10);
+//    ui->spinBox_steep_join3->setValue(10);
 }
 
 void equationDialog::dblLogSmooth()
@@ -2352,12 +2674,17 @@ void equationDialog::updateDblLogSmooth()
     firstPoints.clear();
     ascendSeries->clear();
     dscendSeries->clear();
+    join1Series->clear();
+    join2Series->clear();
+    join3Series->clear();
 
 //    t1=0.+(1./(1.+mfexp(-sp(3))))*(sp(1)-0.);    // INFL
 //    t1min=1./(1.+mfexp(-sp(4)*(0.-t1)))*0.9999;  // asc value at minsize
 //    t1max=1./(1.+mfexp(-sp(4)*(sp(1)-t1)))*1.00001;  // asc value at peak
 //    t1power=log(0.5)/log((0.5-t1min)/(t1max-t1min));
     t1 = 0.0 + (logist(par3) * (par1 - 0.0));
+    t1min = logist(exp(par4) * (0.0 - t1)) * 0.9999;
+    t1max = logist(exp(par4) * (par1 - t1)) * 1.0001;
     t1min = 1.0/(1.0 + exp(-exp(par4) * (0.0 - t1))) * 0.9999;
     t1max = 1.0/(1.0 + exp(-exp(par4) * (par1 - t1))) * 1.0001;
     t1power = log(0.5)/log((0.5 - t1min)/(t1max - t1min));
@@ -2368,6 +2695,8 @@ void equationDialog::updateDblLogSmooth()
 //    t2max=1./(1.+mfexp(-sp(7)*(r_ages(nages)-t2)))*1.00001;  // asc value at maxage
 //    t2power=log(0.5)/log((0.5-t2min)/(t2max-t2min));
     t2 = (par1 + par8) + logist(par6) * (binMax - (par1 + par8));
+    t2min = logist(exp(par7) * (par1 + par8 - t2)) * 0.9999;
+    t2max = logist(exp(par7) * (binMax - t2)) * 1.0001;
     t2min = 1./(1. + exp(-exp(par7) * (par1 + par8 - t2))) * 0.9999;
     t2max = 1./(1. + exp(-exp(par7) * (binMax - t2))) * 1.0001;
     t2power = log(0.5) / log((0.5 - t2min)/(t2max - t2min));
@@ -2395,10 +2724,15 @@ void equationDialog::updateDblLogSmooth()
     for (i = 0; i < xValList.count(); i++)
     {
         binM = xValList.at(i);
+        jn1 = logist (-join1 * (binM - par1));
+        jn2 = logist (-join2 * (binM - (par1 + par8)));
         jn1 = 1.0 / (1.0 + exp(30.0 * (binM - par1)));
         jn2 = 1.0 / (1.0 + exp(30.0 * (binM - (par1 + par8))));
         upsel = par2 + (1.0 - par2) * pow((( 1.0 / (1.0 + exp(-par4 * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
         dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-par7 * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
+        join1Series->append(QPoint(binM, jn1));
+        join2Series->append(QPointF(binM, jn2));
+        join3Series->append(QPointF(binM, jn3));
         ascendSeries->append(QPointF(binM, upsel));
         dscendSeries->append(QPointF(binM, dnsel));
         sel = ((((upsel * jn1) + jn1) * jn2) + dnsel * jn2);
@@ -2450,21 +2784,29 @@ void equationDialog::dblNormCasal()
 
     resetChart();
 
-    selSeries->setPen(QPen(QBrush(Qt::red), 3));
-    cht->addSeries(selSeries);
-
     ascendSeries = new QLineSeries(cht);
-    ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
+    ascendSeries->setPen(QPen(QBrush(Qt::green), 2));
     cht->addSeries(ascendSeries);
     ascendSeries->attachAxis(axisXsel);
 
     dscendSeries = new QLineSeries(cht);
-    dscendSeries->setPen(QPen(QBrush(Qt::green), 2));
+    dscendSeries->setPen(QPen(QBrush(Qt::blue), 2));
     cht->addSeries(dscendSeries);
     dscendSeries->attachAxis(axisXsel);
 
+    selSeries->setPen(QPen(QBrush(Qt::red), 3));
+    cht->addSeries(selSeries);
+
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
+
+    ascendSeries->attachAxis(axisXsel);
+    ascendSeries->attachAxis(axisY);
+    dscendSeries->attachAxis(axisXsel);
+    dscendSeries->attachAxis(axisY);
+
+    cht->legend()->setVisible(true);
+    cht->legend()->setAlignment(Qt::AlignLeft);
 
     updateDblNormCasal();
 }
@@ -2526,7 +2868,7 @@ void equationDialog::dblNormal()
     ui->label_1_name->setText("Peak");
     ui->label_1_type->setText("Value");
     ui->label_2_name->setText("Top");
-    ui->label_2_type->setText("Log");
+    ui->label_2_type->setText("Peak+Log");
     ui->label_3_name->setText("Asc-width");
     ui->label_3_type->setText("Exp");
     ui->label_4_name->setText("Dsc-width");
@@ -2537,11 +2879,43 @@ void equationDialog::dblNormal()
 
     resetChart();
 
+    join1Series = new QLineSeries(cht);
+    join1Series->setPen(QPen(QBrush(Qt::darkYellow), 2));
+    join1Series->setName(QString("Join1"));
+    cht->addSeries(join1Series);
+
+    join2Series = new QLineSeries(cht);
+    join2Series->setPen(QPen(QBrush(Qt::yellow), 2));
+    join2Series->setName(QString("Join2"));
+    cht->addSeries(join2Series);
+
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::green), 3));
+    ascendSeries->setName(QString("Asc-Norm"));
+    cht->addSeries(ascendSeries);
+
+    dscendSeries = new QLineSeries(cht);
+    dscendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    dscendSeries->setName(QString("Desc-Norm"));
+    cht->addSeries(dscendSeries);
+
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
+
+    ascendSeries->attachAxis(axisXsel);
+    ascendSeries->attachAxis(axisY);
+    dscendSeries->attachAxis(axisXsel);
+    dscendSeries->attachAxis(axisY);
+    join1Series->attachAxis(axisXsel);
+    join1Series->attachAxis(axisY);
+    join2Series->attachAxis(axisXsel);
+    join2Series->attachAxis(axisY);
+
+    cht->legend()->setVisible(true);
+    cht->legend()->setAlignment(Qt::AlignLeft);
 
     updateDblNormal();
 }
@@ -2555,13 +2929,13 @@ void equationDialog::dblNormEndpts()
 {
     if (!title.isEmpty())
         title.clear();
-    title.append(QString("Double Normal with defined ends - not fully implemented"));
+    title.append(QString("Double Normal with defined ends"));
     ui->label_title->setText(title);
     showSliders(6);
     ui->label_1_name->setText("Peak");
     ui->label_1_type->setText("Value");
     ui->label_2_name->setText("Top");
-    ui->label_2_type->setText("Log");
+    ui->label_2_type->setText("Peak+Log");
     ui->label_3_name->setText("Asc-width");
     ui->label_3_type->setText("Exp");
     ui->label_4_name->setText("Dsc-width");
@@ -2574,10 +2948,44 @@ void equationDialog::dblNormEndpts()
     showJoins(2);
 
     resetChart();
+
+    join1Series = new QLineSeries(cht);
+    join1Series->setPen(QPen(QBrush(Qt::darkYellow), 2));
+    join1Series->setName(QString("Join1"));
+    cht->addSeries(join1Series);
+
+    join2Series = new QLineSeries(cht);
+    join2Series->setPen(QPen(QBrush(Qt::yellow), 2));
+    join2Series->setName(QString("Join2"));
+    cht->addSeries(join2Series);
+
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::green), 3));
+    ascendSeries->setName(QString("Asc-Norm"));
+    cht->addSeries(ascendSeries);
+
+    dscendSeries = new QLineSeries(cht);
+    dscendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    dscendSeries->setName(QString("Desc-Norm"));
+    cht->addSeries(dscendSeries);
+
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
+
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
+
+    ascendSeries->attachAxis(axisXsel);
+    ascendSeries->attachAxis(axisY);
+    dscendSeries->attachAxis(axisXsel);
+    dscendSeries->attachAxis(axisY);
+    join1Series->attachAxis(axisXsel);
+    join1Series->attachAxis(axisY);
+    join2Series->attachAxis(axisXsel);
+    join2Series->attachAxis(axisY);
+
+    cht->legend()->setVisible(true);
+    cht->legend()->setAlignment(Qt::AlignLeft);
 
     updateDblNormEndpts();
 }
@@ -2592,11 +3000,15 @@ void equationDialog::updateDblNormEndpts()
     float par6 = ui->doubleSpinBox_6_value->value();
 
     float peak = par1;
-    float top = logist(par2);
+    float top = peak+binWidth + (.99*binMax - peak - binWidth) * logist(par2);
     float asc_wd = exp(par3);
     float dsc_wd = exp(par4);
     float init = logist(par5);
     float final = logist(par6);
+    float valmin, valmax, valminpow, valmaxpow;
+    float limit, upsel, dnsel, jn1, jn2;
+    int i;
+    float xval = 0, sel = 0;
 
     ui->doubleSpinBox_1_trans->setValue(peak);
     ui->doubleSpinBox_2_trans->setValue(top);
@@ -2608,10 +3020,48 @@ void equationDialog::updateDblNormEndpts()
     ui->spinBox_steep_join1->setValue(20);
     ui->spinBox_steep_join2->setValue(20);
 
+    firstPoints.clear();
+    ascendSeries->clear();
+    dscendSeries->clear();
+    join1Series->clear();
+    join2Series->clear();
     selSeries->clear();
 
+    if (xValList.count() > 0)
+    {
+        limit = (par5 < -1000)? (-1000 - par5): -1;
+        valmin = binMin + binWidth * binMidWidth;
+        valmax = binMax + binWidth * binMidWidth;
+        valminpow = pow((valmin - peak), 2);
+        valmaxpow = pow((valmax - top), 2);
+        valmin = exp(-1 * valminpow/asc_wd);
+        valmax = exp(-1 * valmaxpow/dsc_wd);
 
-    updateTicks();
+        for (i = 0; i < xValList.count(); i++)
+        {
+            xval = xValList.at(i);
+            upsel = exp(-1*(pow(xval - peak, 2))/asc_wd);
+            if (par5 > -999)
+                upsel = init + (1 - init) * (upsel - valmin)/(1-valmin);
+            dnsel = exp(-1*(pow(xval - top, 2))/dsc_wd);
+            if (par6 > -999)
+                dnsel = (1 + (final - 1) * (dnsel - 1)/(valmax - 1));
+
+            jn1 = logist(join1 *(xval-peak)/(1 + fabs(xval-peak)));
+            jn2 = logist(join2 *(xval-top)/(1 + fabs(xval-top)));
+
+            if (xval > limit)
+                sel = upsel * (1-jn1) + jn1 * ((1-jn2) + (dnsel * jn2));
+            else
+                sel = 0.000001;
+
+            ascendSeries->append(xval, upsel);
+            dscendSeries->append(xval, dnsel);
+            join1Series->append(xval, jn1);
+            join2Series->append(xval, jn2);
+            selSeries->append(xval, sel);
+        }
+    }
 }
 
 void equationDialog::expLogistic()
@@ -2691,14 +3141,14 @@ void equationDialog::eachAge ()
 
     resetChart();
 
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(ascendSeries);
+
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
-
-    ascendSeries = new QLineSeries(cht);
-    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
-    cht->addSeries(ascendSeries);
 
     axisYalt->setTitleText("Value at age (blue)");
     cht->addAxis(axisYalt, Qt::AlignRight);
@@ -2758,15 +3208,15 @@ void equationDialog::randomWalk (float scale)
 
     resetChart();
 
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(ascendSeries);
+
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
     axisY->setTitleText("Selex (red)");
-
-    ascendSeries = new QLineSeries(cht);
-    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
-    cht->addSeries(ascendSeries);
 
     axisYalt->setTitleText("Use Parm (blue)");
     cht->addAxis(axisYalt, Qt::AlignRight);

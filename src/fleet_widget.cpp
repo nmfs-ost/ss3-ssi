@@ -518,10 +518,12 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
 
-        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexSizeEqDialog->setFleet(current_fleet);
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
-        selexAgeEqDialog->setMidBin(0);
+        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexAgeEqDialog->setFleet(current_fleet);
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
+        selexAgeEqDialog->setMidBin(0);
         setAgeLengthBins();
         selexSizeEqDialog->restoreAll();
         selexAgeEqDialog->restoreAll();
@@ -900,7 +902,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
             (current_fleet->getSizeSelectivity()->getPattern());
     ui->spinBox_selex_size_num_params->setValue
             (current_fleet->getSizeSelectivity()->getNumParameters());
-    sizeSelexParamsView->setHeight(current_fleet->getSizeSelectivity()->getSetupModel()->rowCount());
+    sizeSelexParamsView->setHeight(newNumParams);
     selexSizeEqDialog->setEquationNumber(pat);
     selexSizeEqDialog->restoreAll();
 }

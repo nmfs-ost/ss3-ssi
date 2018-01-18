@@ -203,10 +203,12 @@ private slots:
     void updateConstantRange ();
     void logistic ();
     void updateLogistic ();
-    void mirror (int sliders);
-    void updateMirror ();
+    void mirror (int sliders = 0);
+    void updateMirror (int sliders = 0);
     void linear (float scale);
+    void linearScaled();
     void updateLinear (float scale);
+    void updateLinearScaled();
     void updateLinearExp (float scale);
     void dblLogistic ();
     void updateDblLogistic ();
