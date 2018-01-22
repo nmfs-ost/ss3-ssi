@@ -136,13 +136,6 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="3" colspan="2">
-           <widget class="QLabel" name="label_units_info">
-            <property name="text">
-             <string>  1 = biomass, 2 = numbers</string>
-            </property>
-           </widget>
-          </item>
           <item row="6" column="2">
            <widget class="QCheckBox" name="checkBox_need_catch_mult">
             <property name="text">
@@ -156,7 +149,7 @@
              <number>1</number>
             </property>
             <property name="maximum">
-             <number>2</number>
+             <number>35</number>
             </property>
            </widget>
           </item>
@@ -484,6 +477,13 @@
              </widget>
             </item>
            </layout>
+          </item>
+          <item row="5" column="3" colspan="5">
+           <widget class="QLabel" name="label_units_info">
+            <property name="text">
+             <string>  1 = biomass, 2 = numbers, 30-35 = special size selectivity for surveys</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1620,7 +1620,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_selex">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_selex_size">
              <attribute name="title">
@@ -1783,7 +1783,7 @@
                        <string/>
                       </property>
                       <property name="maximum">
-                       <number>34</number>
+                       <number>35</number>
                       </property>
                      </widget>
                     </item>
@@ -2077,7 +2077,7 @@
                        <number>10</number>
                       </property>
                       <property name="maximum">
-                       <number>26</number>
+                       <number>43</number>
                       </property>
                      </widget>
                     </item>

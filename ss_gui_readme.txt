@@ -14,8 +14,10 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 History:
 ============================================================================
       3.3.10.02
-      2018-01-10
+      2018-01-17
 1. Improved selectivity graph repainting.
+2. Supporting curves showing.
+3. Added graphs for selectivity patterns 8 and 18.
 ============================================================================
       3.3.10.01
       2018-01-10

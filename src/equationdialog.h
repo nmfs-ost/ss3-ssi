@@ -35,6 +35,11 @@ public:
     Fleet *getFleet() const;
     void setFleet(Fleet *value);
 
+    QString getName() const;
+    void setName(const QString &value);
+    QString getTitle() const;
+    void setTitle(const QString &value);
+
 public slots:
     void setSelex (selectivity *slx);
     void changeSelex ();
@@ -138,6 +143,7 @@ signals:
 private:
     Ui::equationDialog *ui;
 
+    QString name;
     QString title;
 
     Fleet *fleet;
@@ -214,10 +220,12 @@ private slots:
     void updateDblLogistic ();
     void dblLogPeak ();
     void updateDblLogPeak ();
-    void dblLogSmooth ();
+    void updateDblLogIf ();
     void updateDblLogSmooth();
     void dblNormCasal ();
     void updateDblNormCasal ();
+    void dblNormPlateau ();
+    void updateDblNormPlateau ();
     void dblNormal ();
     void updateDblNormal ();
     void dblNormEndpts ();
