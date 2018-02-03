@@ -1,7 +1,7 @@
 readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.10
-        -------------------------------------------------
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.10.02
+        ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
 allow for changes to the data, run the executable, and display results.
@@ -13,10 +13,16 @@ Built on Windows 7 using MinGW 5.3 with Qt 5.7
 
 History:
 ============================================================================
+      3.3.10.02
+      2018-02-01
+1. Improved selectivity graph repainting.
+2. Supporting curves showing.
+3. Added graphs for selectivity patterns 8 and 18.
+============================================================================
       3.3.10.01
       2018-01-10
 1. Added graph view for selectivity patterns 9 and 19.
-2. Incorporated changes for bycatch data.
+2. Incorporated changes to support bycatch data.
    Compatible with SS ver 3.30.10.
 ============================================================================
       3.3.10.00
