@@ -26,7 +26,7 @@ class equationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit equationDialog(QWidget *parent = 0);
+    explicit equationDialog(QWidget *parent = 0, QString *typ = new QString(""));
     ~equationDialog();
 
     int getSpecial() const;
@@ -53,6 +53,7 @@ public slots:
 
     void getParameterValues();
     void setParameterValues();
+    void setParameterHeaders();
 
     void refresh ();  // update from fleet values
     void update ();   // update from dialog values
@@ -123,6 +124,7 @@ public slots:
     void join3Changed (int value);
 
     void apply();
+    void reset();
     void resetValues();
     void restoreAll();
     void close();
@@ -144,16 +146,19 @@ private:
     Ui::equationDialog *ui;
 
     QString name;
+    QString type;
     QString title;
 
     Fleet *fleet;
+    int fleetNum;
     selectivity * selex;
     ss_model * dataModel;
 
     int equationNum;
     int numSliders;
+    int numParams;
     tablemodel *parameters;
-    int special;
+    int special, male;
     bool building;
 
     QChart *cht;
@@ -198,24 +203,25 @@ private slots:
     void showBins (bool flag);
     void showJoins (int num);
     void updateTicks(QRectF rect);
-    void updateTicks(int xT = 7, int yT = 7);
+    void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
+    void resetXvals ();
 
     void blank (int num, int rep = 0, QString msg = QString(""));
     void constant (float val = 1.0);
-    void updateConstant();
+    void updateConstant(float val = 1.0);
     void updateConstant (float val, float first, float last);
     void constantRange ();
-    void updateConstantRange ();
+    void updateConstantRange (float val = 1.0);
     void logistic ();
     void updateLogistic ();
     void mirror (int sliders = 0);
     void updateMirror (int sliders = 0);
     void linear (float scale);
     void linearScaled();
-    void updateLinear (float scale);
+    void updateLinear (float scale = 0.);
     void updateLinearScaled();
-    void updateLinearExp (float scale);
+    void updateLinearExp (float scale = 0.);
     void dblLogistic ();
     void updateDblLogistic ();
     void dblLogPeak ();
@@ -234,12 +240,12 @@ private slots:
     void updateExpLogistic ();
     void eachAge ();
     void updateEachAge ();
-    void randomWalk (float scale);
-    void updateRandomWalk (float scale);
+    void randomWalk (float scale = 0.);
+    void updateRandomWalk (float scale = 0.);
     void coleGauss ();
     void updateColeGauss();
-    void cubicSpline (float scale);
-    void updateCubicSpline (float scale);
+    void cubicSpline (float scale = 0.);
+    void updateCubicSpline (float scale = 0.);
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
     float logist (double value);

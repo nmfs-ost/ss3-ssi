@@ -21,24 +21,28 @@ using namespace tk;
 
 double neglog19 = -1.0 * log(19);
 
-equationDialog::equationDialog(QWidget *parent) :
+equationDialog::equationDialog(QWidget *parent, QString *typ) :
     QDialog(parent),
     ui(new Ui::equationDialog)
 {
     ui->setupUi(this);
 
-    name = QString ("");
+    name = QString (QString("%1 Selectivity").arg(type));
+    type = QString (*typ);
     title = name;
 
     selex = NULL;
     dataModel = NULL;
     fleet = NULL;
 
-    equationNum = 0;
+    equationNum = -1;
     parameters = NULL;
+    numParams = 0;
+    numSliders = 0;
 
     yMax = -10;
 
+    setXvals(QStringList());
     resetChart(true);
     selSeries->append(0, 0);
     cht->addSeries(selSeries);
@@ -74,10 +78,9 @@ equationDialog::equationDialog(QWidget *parent) :
     ui->spinBox_bins_width->setValue(binWidth);
     ui->doubleSpinBox_bins_midbin->setValue(binMidWidth);
 
-    connect (ui->spinBox_bins_min, SIGNAL(valueChanged(int)), SLOT(binMinChanged(int)));
-    connect (ui->spinBox_bins_max, SIGNAL(valueChanged(int)), SLOT(binMaxChanged(int)));
-    connect (ui->spinBox_bins_width, SIGNAL(valueChanged(int)), SLOT(binWidthChanged(int)));
-//    connect (ui->doubleSpinBox_bins_midbin, SIGNAL(valueChanged(double)), SLOT(binMidChanged(double)));
+//    connect (ui->spinBox_bins_min, SIGNAL(valueChanged(int)), SLOT(binMinChanged(int)));
+//    connect (ui->spinBox_bins_max, SIGNAL(valueChanged(int)), SLOT(binMaxChanged(int)));
+//    connect (ui->spinBox_bins_width, SIGNAL(valueChanged(int)), SLOT(binWidthChanged(int)));
 
     connect (ui->horizontalSlider_1, SIGNAL(valueChanged(int)), SLOT(slider1Changed(int)));
     connect (ui->doubleSpinBox_1_value, SIGNAL(valueChanged(double)), SLOT(value1Changed(double)));
@@ -127,10 +130,9 @@ equationDialog::equationDialog(QWidget *parent) :
     connect (ui->spinBox_steep_join1, SIGNAL(valueChanged(int)), SLOT(join1Changed(int)));
     connect (ui->spinBox_steep_join2, SIGNAL(valueChanged(int)), SLOT(join2Changed(int)));
     connect (ui->spinBox_steep_join3, SIGNAL(valueChanged(int)), SLOT(join3Changed(int)));
-    connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
-//    connect (cht, SIGNAL(plotAreaChanged(QRectF)), SLOT(updateTicks(QRectF)));
-    connect (this, SIGNAL(linearUpdated(float)), SLOT(updateLinearExp(float)));
 
+    connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
+    connect (this, SIGNAL(linearUpdated(float)), SLOT(updateLinearExp(float)));
 
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
     building = false;
@@ -143,35 +145,32 @@ equationDialog::~equationDialog()
 
 void equationDialog::setSelex (selectivity *slx)
 {
-    if (parameters != NULL)
-        disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(update()));
     selex = slx;
-    special = selex->getSpecial();
-    equationNum = selex->getPattern();
-    parameters = selex->getParameterModel();
-    connect (parameters, SIGNAL(dataChanged()), SLOT(update()));
-//    restoreAll();
+    setParameters(selex->getParameterModel());
+    changeSelex();
 }
 
 void equationDialog::changeSelex()
 {
-    special = selex->getSpecial();
-    equationNum = selex->getPattern();
     restoreAll();
 }
 
 void equationDialog::setDataModel (ss_model *data)
 {
     dataModel = data;
-//    setLengths();
-//    setAges();
 }
 
 void equationDialog::setXvals(const QStringList &vals)
 {
     xValList.clear();
 
-    if (!vals.isEmpty())
+    if (vals.isEmpty())
+    {
+        xValList.append(0);
+        xValList.append(1);
+        xValList.append(2);
+    }
+    else
     {
         for (int i = 0; i < vals.count(); i++)
             xValList.append(QString(vals.at(i)).toFloat());
@@ -180,6 +179,12 @@ void equationDialog::setXvals(const QStringList &vals)
         ui->spinBox_bins_max->setValue(xValList.last());
         ui->spinBox_bins_width->setValue(xValList.at(2) - xValList.at(1));
     }
+}
+
+void equationDialog::resetXvals()
+{
+    setXvals(QStringList());
+    update();
 }
 
 void equationDialog::setMidBin(float val)
@@ -204,12 +209,13 @@ void equationDialog::setMidBin(float val)
 void equationDialog::setEquationNumber(int num)
 {
     equationNum = num;
-    getParameterValues();
 }
 
 void equationDialog::setParameters(tablemodel *params)
 {
+    disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
     parameters = params;
+    connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 }
 
 void equationDialog::getParameterValues()
@@ -217,100 +223,107 @@ void equationDialog::getParameterValues()
     QStringList values;
     if (parameters != NULL)
     {
-    int numParams = parameters->rowCount();
+        int oldnum = numParams;
+        numParams = parameters->rowCount();
+        if (oldnum != numParams)
+            disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
-    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
 
-    switch (numParams)
-    {
-    case 9:
-        values = parameters->getRowData(8);
-        min9 = (values.at(0)).toDouble();
-        max9 = (values.at(1)).toDouble();
-        val9 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_9_input->setRange(min9, max9);
-        ui->doubleSpinBox_9_input->setValue(val9);
-        setSlider9(min9, max9, val9);
-    case 8:
-        values = parameters->getRowData(7);
-        min8 = (values.at(0)).toDouble();
-        max8 = (values.at(1)).toDouble();
-        val8 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_8_input->setMinimum(min8);
-        ui->doubleSpinBox_8_input->setMaximum(max8);
-        ui->doubleSpinBox_8_input->setValue(val8);
-        setSlider8(min8, max8, val8);
-    case 7:
-        values = parameters->getRowData(6);
-        min7 = (values.at(0)).toDouble();
-        max7 = (values.at(1)).toDouble();
-        val7 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_7_input->setMinimum(min7);
-        ui->doubleSpinBox_7_input->setMaximum(max7);
-        ui->doubleSpinBox_7_input->setValue(val7);
-        setSlider7(min7, max7, val7);
-    case 6:
-        values = parameters->getRowData(5);
-        min6 = (values.at(0)).toDouble();
-        max6 = (values.at(1)).toDouble();
-        val6 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_6_input->setMinimum(min6);
-        ui->doubleSpinBox_6_input->setMaximum(max6);
-        ui->doubleSpinBox_6_input->setValue(val6);
-        setSlider6(min6, max6, val6);
-    case 5:
-        values = parameters->getRowData(4);
-        min5 = (values.at(0)).toDouble();
-        max5 = (values.at(1)).toDouble();
-        val5 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_5_input->setMinimum(min5);
-        ui->doubleSpinBox_5_input->setMaximum(max5);
-        ui->doubleSpinBox_5_input->setValue(val5);
-        setSlider5(min5, max5, val5);
-    case 4:
-        values = parameters->getRowData(3);
-        min4 = (values.at(0)).toDouble();
-        max4 = (values.at(1)).toDouble();
-        val4 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_4_input->setMinimum(min4);
-        ui->doubleSpinBox_4_input->setMaximum(max4);
-        ui->doubleSpinBox_4_input->setValue(val4);
-        setSlider4(min4, max4, val4);
-    case 3:
-        values = parameters->getRowData(2);
-        min3 = (values.at(0)).toDouble();
-        max3 = (values.at(1)).toDouble();
-        val3 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_3_input->setMinimum(min3);
-        ui->doubleSpinBox_3_input->setMaximum(max3);
-        ui->doubleSpinBox_3_input->setValue(val3);
-        setSlider3(min3, max3, val3);
-    case 2:
-        values = parameters->getRowData(1);
-        min2 = (values.at(0)).toDouble();
-        max2 = (values.at(1)).toDouble();
-        val2 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_2_input->setMinimum(min2);
-        ui->doubleSpinBox_2_input->setMaximum(max2);
-        ui->doubleSpinBox_2_input->setValue(val2);
-        setSlider2(min2, max2, val2);
-    case 1:
-        values = parameters->getRowData(0);
-        min1 = (values.at(0)).toDouble();
-        max1 = (values.at(1)).toDouble();
-        val1 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_1_input->setMinimum(min1);
-        ui->doubleSpinBox_1_input->setMaximum(max1);
-        ui->doubleSpinBox_1_input->setValue(val1);
-        setSlider1(min1, max1, val1);
-        showSliders(numParams);
-        break;
-    case 0:
-    default:
-        showSliders(0);
-    }
+        disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
 
-    connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
+        switch (numParams < 9? numParams: 9)
+        {
+        case 9:
+            values = parameters->getRowData(8);
+            min9 = (values.at(0)).toDouble();
+            max9 = (values.at(1)).toDouble();
+            val9 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_9_input->setRange(val9 < min9? val9: min9, max9);
+            ui->doubleSpinBox_9_input->setValue(val9);
+            setSlider9(min9, max9, val9);
+        case 8:
+            values = parameters->getRowData(7);
+            min8 = (values.at(0)).toDouble();
+            max8 = (values.at(1)).toDouble();
+            val8 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_8_input->setMinimum(min8);
+            ui->doubleSpinBox_8_input->setMaximum(max8);
+            ui->doubleSpinBox_8_input->setValue(val8);
+            setSlider8(min8, max8, val8);
+        case 7:
+            values = parameters->getRowData(6);
+            min7 = (values.at(0)).toDouble();
+            max7 = (values.at(1)).toDouble();
+            val7 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_7_input->setMinimum(min7);
+            ui->doubleSpinBox_7_input->setMaximum(max7);
+            ui->doubleSpinBox_7_input->setValue(val7);
+            setSlider7(min7, max7, val7);
+        case 6:
+            values = parameters->getRowData(5);
+            min6 = (values.at(0)).toDouble();
+            max6 = (values.at(1)).toDouble();
+            val6 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_6_input->setMinimum(min6);
+            ui->doubleSpinBox_6_input->setMaximum(max6);
+            ui->doubleSpinBox_6_input->setValue(val6);
+            setSlider6(min6, max6, val6);
+        case 5:
+            values = parameters->getRowData(4);
+            min5 = (values.at(0)).toDouble();
+            max5 = (values.at(1)).toDouble();
+            val5 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_5_input->setMinimum(min5);
+            ui->doubleSpinBox_5_input->setMaximum(max5);
+            ui->doubleSpinBox_5_input->setValue(val5);
+            setSlider5(min5, max5, val5);
+        case 4:
+            values = parameters->getRowData(3);
+            min4 = (values.at(0)).toDouble();
+            max4 = (values.at(1)).toDouble();
+            val4 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_4_input->setMinimum(min4);
+            ui->doubleSpinBox_4_input->setMaximum(max4);
+            ui->doubleSpinBox_4_input->setValue(val4);
+            setSlider4(min4, max4, val4);
+        case 3:
+            values = parameters->getRowData(2);
+            min3 = (values.at(0)).toDouble();
+            max3 = (values.at(1)).toDouble();
+            val3 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_3_input->setMinimum(min3);
+            ui->doubleSpinBox_3_input->setMaximum(max3);
+            ui->doubleSpinBox_3_input->setValue(val3);
+            setSlider3(min3, max3, val3);
+        case 2:
+            values = parameters->getRowData(1);
+            min2 = (values.at(0)).toDouble();
+            max2 = (values.at(1)).toDouble();
+            val2 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_2_input->setMinimum(min2);
+            ui->doubleSpinBox_2_input->setMaximum(max2);
+            ui->doubleSpinBox_2_input->setValue(val2);
+            setSlider2(min2, max2, val2);
+        case 1:
+            values = parameters->getRowData(0);
+            min1 = (values.at(0)).toDouble();
+            max1 = (values.at(1)).toDouble();
+            val1 = (values.at(2)).toDouble();
+            ui->doubleSpinBox_1_input->setMinimum(min1);
+            ui->doubleSpinBox_1_input->setMaximum(max1);
+            ui->doubleSpinBox_1_input->setValue(val1);
+            setSlider1(min1, max1, val1);
+            showSliders(numParams);
+            break;
+        case 0:
+        default:
+            showSliders(0);
+        }
+        connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
+        if (oldnum != numParams)
+            connect (parameters, SIGNAL(dataChanged()), SLOT(parametersChanged()));
+
+//        resetValues();
     }
 }
 
@@ -319,9 +332,9 @@ void equationDialog::setParameterValues()
     QStringList values;
     if (parameters != NULL)
     {
-    disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(update()));
+    disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
-    switch (parameters->rowCount())
+    switch (numSliders)
     {
     case 9:
         values = parameters->getRowData(8);
@@ -385,6 +398,24 @@ void equationDialog::setParameterValues()
     }
 }
 
+void equationDialog::setParameterHeaders()
+{
+    QString fltNum(QString::number(fleetNum));
+    QString fltTyp;
+    Fleet::FleetType ft = fleet->getType();
+    if     (ft == Fleet::Fishing ||
+            ft == Fleet::Bycatch)
+        fltTyp = QString("fishery");
+    else if (ft == Fleet::Survey)
+        fltTyp = QString("survey");
+
+    for (int i = 0; i < parameters->rowCount(); i++)
+    {
+        parameters->setRowHeader(i, QString("%1Sel p%2 %3 (%4)").arg(
+                     type, QString::number(i+1), fltTyp, fltNum));
+    }
+}
+
 void equationDialog::refresh()
 {
     ui->spinBox_bins_min->setValue(binMin);
@@ -396,9 +427,6 @@ void equationDialog::refresh()
 
 void equationDialog::update()
 {
-    QString msg;
-    int sliders = 0;
-
     if (!building)
     {
         building = true;
@@ -407,103 +435,120 @@ void equationDialog::update()
         {
         case 0:
         case 10:
-            constant(1.0);
+            numSliders = 0;
+            constant();
             break;
 
         case 11:
+            numSliders = 2;
             constantRange();
             break;
 
         case 1:
         case 12:
+            numSliders = 2;
             logistic();
             break;
 
         case 2:
         case 7:
+            numSliders = 8;
             blank(8, 8);
             break;
 
         case 3:
+            numSliders = 6;
             blank (6, 0);
             break;
 
         case 13:
+            numSliders = 8;
             dblLogPeak();
-//            blank (8, 0, QString("Pattern 13: Double logistic, IF joiners, Discouraged, use pattern #18"));
             break;
 
         case 4:
+            numSliders = 0;
             blank(0, 30);
             break;
 
         case 14:
+            numSliders = 0;
             eachAge();
             break;
 
         case 5:
-            sliders = 2;
+            numSliders = 2;
         case 15:
-            mirror(sliders);
+            mirror(numSliders);
             break;
 
         case 6:
+            numSliders = 2;
             linear(0);
             break;
 
         case 16:
+            numSliders = 2;
             coleGauss();
             break;
 
         case 17:
+            numSliders = 0;
             randomWalk(0);
             break;
 
         case 8:
         case 18:
+            numSliders = 8;
             dblLogPeak();
             break;
 
         case 9:
         case 19:
+            numSliders = 6;
             dblLogistic();
             break;
 
-        case 20:
         case 22:
+            numSliders = 4;
             dblNormCasal();
             break;
 
+        case 20:
         case 23:
-            blank(6, 0, QString("Double Normal with endpoints"));
-            break;
-
         case 24:
+            numSliders = 6;
             dblNormEndpts();
             break;
 
         case 25:
         case 26:
+            numSliders = 3;
             expLogistic();
             break;
 
         case 27:
-            cubicSpline(0);
+            numSliders = 3;
+            cubicSpline();
             break;
 
         case 41:
+            numSliders = 2;
             randomWalk(2.);
             break;
 
         case 42:
+            numSliders = 5;
             cubicSpline(2.);
             break;
 
         case 43:
+            numSliders = 4;
             linearScaled();
             break;
 
         default:
+            numSliders = 0;
             blank(0);
             break;
 
@@ -534,7 +579,7 @@ void equationDialog::updateSel()
             break;
 
         case 5:
-            updateMirror(2);
+            updateMirror(2.);
             break;
 
         case 6:
@@ -563,7 +608,7 @@ void equationDialog::updateSel()
             break;
 
         case 17:
-            updateRandomWalk(0);
+            updateRandomWalk();
             break;
 
         case 20:
@@ -575,13 +620,17 @@ void equationDialog::updateSel()
             updateDblNormCasal();
             break;
 
+        case 23:
+            updateDblNormPlateau();
+            break;
+
         case 25:
         case 26:
             updateExpLogistic();
             break;
 
         case 27:
-            updateCubicSpline(0);
+            updateCubicSpline();
             break;
 
         case 41:
@@ -593,7 +642,7 @@ void equationDialog::updateSel()
             break;
 
         case 43:
-            updateLinear(2);
+            updateLinear(2.);
             break;
 
         default:
@@ -611,7 +660,7 @@ void equationDialog::setSlider1(double min, double max, double value)
     ui->horizontalSlider_1->setMaximum(max1 * SLIDER_SCALE);
     ui->horizontalSlider_1->setMinimum(min1 * SLIDER_SCALE);
     ui->horizontalSlider_1->setValue(value * SLIDER_SCALE);
-    ui->doubleSpinBox_1_value->setMinimum(min1);
+//    ui->doubleSpinBox_1_value->setMinimum(min1);
     ui->doubleSpinBox_1_value->setMaximum(max1);
     ui->doubleSpinBox_1_value->setValue(value);
 }
@@ -642,7 +691,7 @@ void equationDialog::min1Changed (double value)
             min1 = max1;
         }
         ui->doubleSpinBox_1_min->setValue(min1);
-        ui->doubleSpinBox_1_value->setMinimum(min1);
+//        ui->doubleSpinBox_1_value->setMinimum(min1);
         ui->horizontalSlider_1->setMinimum(min1 * SLIDER_SCALE);
     }
 }
@@ -657,7 +706,7 @@ void equationDialog::max1Changed (double value)
             max1 = min1;
         }
         ui->doubleSpinBox_1_max->setValue(max1);
-        ui->doubleSpinBox_1_input->setMaximum(max1);
+        ui->doubleSpinBox_1_value->setMaximum(max1);
         ui->horizontalSlider_1->setMaximum(max1 * SLIDER_SCALE);
     }
 }
@@ -671,7 +720,7 @@ void equationDialog::setSlider2(float min, float max, float value)
     ui->horizontalSlider_2->setMinimum(min2 * SLIDER_SCALE);
     ui->horizontalSlider_2->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_2_value->setMaximum(max2);
-    ui->doubleSpinBox_2_value->setMinimum(min2);
+//    ui->doubleSpinBox_2_value->setMinimum(min2);
     ui->doubleSpinBox_2_value->setValue(value);
 }
 
@@ -701,7 +750,7 @@ void equationDialog::min2Changed (double value)
             min2 = max2;
         }
         ui->doubleSpinBox_2_min->setValue(min2);
-        ui->doubleSpinBox_2_value->setMinimum(min2);
+//        ui->doubleSpinBox_2_value->setMinimum(min2);
         ui->horizontalSlider_2->setMinimum(min2 * SLIDER_SCALE);
     }
 }
@@ -716,7 +765,7 @@ void equationDialog::max2Changed (double value)
             max2 = min2;
         }
         ui->doubleSpinBox_2_max->setValue(max2);
-        ui->doubleSpinBox_2_input->setMaximum(max2);
+        ui->doubleSpinBox_2_value->setMaximum(max2);
         ui->horizontalSlider_2->setMaximum(max2 * SLIDER_SCALE);
     }
 }
@@ -730,7 +779,7 @@ void equationDialog::setSlider3(float min, float max, float value)
     ui->horizontalSlider_3->setMinimum(min3 * SLIDER_SCALE);
     ui->horizontalSlider_3->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_3_value->setMaximum(max3);
-    ui->doubleSpinBox_3_value->setMinimum(min3);
+//    ui->doubleSpinBox_3_value->setMinimum(min3);
     ui->doubleSpinBox_3_value->setValue(value);
 }
 
@@ -760,7 +809,7 @@ void equationDialog::min3Changed (double value)
             min3 = max3;
         }
         ui->doubleSpinBox_3_min->setValue(min3);
-        ui->doubleSpinBox_3_value->setMinimum(min3);
+//        ui->doubleSpinBox_3_value->setMinimum(min3);
         ui->horizontalSlider_3->setMinimum(min3 * SLIDER_SCALE);
     }
 }
@@ -789,7 +838,7 @@ void equationDialog::setSlider4(float min, float max, float value)
     ui->horizontalSlider_4->setMinimum(min4 * SLIDER_SCALE);
     ui->horizontalSlider_4->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_4_value->setMaximum(max4);
-    ui->doubleSpinBox_4_value->setMinimum(min4);
+//    ui->doubleSpinBox_4_value->setMinimum(min4);
     ui->doubleSpinBox_4_value->setValue(value);
 }
 
@@ -819,7 +868,7 @@ void equationDialog::min4Changed (double value)
             min4 = max4;
         }
         ui->doubleSpinBox_4_min->setValue(min4);
-        ui->doubleSpinBox_4_value->setMinimum(min4);
+//        ui->doubleSpinBox_4_value->setMinimum(min4);
         ui->horizontalSlider_4->setMinimum(min4 * SLIDER_SCALE);
     }
 }
@@ -848,7 +897,7 @@ void equationDialog::setSlider5(float min, float max, float value)
     ui->horizontalSlider_5->setMinimum(min5 * SLIDER_SCALE);
     ui->horizontalSlider_5->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_5_value->setMaximum(max5);
-    ui->doubleSpinBox_5_value->setMinimum(min5);
+//    ui->doubleSpinBox_5_value->setMinimum(min5);
     ui->doubleSpinBox_5_value->setValue(value);
 }
 
@@ -878,7 +927,7 @@ void equationDialog::min5Changed (double value)
             min5 = max5;
         }
         ui->doubleSpinBox_5_min->setValue(min5);
-        ui->doubleSpinBox_5_value->setMinimum(min5);
+//        ui->doubleSpinBox_5_value->setMinimum(min5);
         ui->horizontalSlider_5->setMinimum(min5 * SLIDER_SCALE);
     }
 }
@@ -907,7 +956,7 @@ void equationDialog::setSlider6(float min, float max, float value)
     ui->horizontalSlider_6->setMinimum(min6 * SLIDER_SCALE);
     ui->horizontalSlider_6->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_6_value->setMaximum(max6);
-    ui->doubleSpinBox_6_value->setMinimum(min6);
+//    ui->doubleSpinBox_6_value->setMinimum(min6);
     ui->doubleSpinBox_6_value->setValue(value);
 }
 
@@ -932,12 +981,12 @@ void equationDialog::min6Changed (double value)
     if (min6 != value)
     {
         min6 = value;
-/*        if (min6 > max6)
+        if (min6 > max6)
         {
             min6 = max6;
         }
-        ui->doubleSpinBox_6_min->setValue(min6);*/
-        ui->doubleSpinBox_6_value->setMinimum(min6);
+        ui->doubleSpinBox_6_min->setValue(min6);
+//        ui->doubleSpinBox_6_value->setMinimum(min6);
         ui->horizontalSlider_6->setMinimum(min6 * SLIDER_SCALE);
     }
 }
@@ -966,7 +1015,7 @@ void equationDialog::setSlider7(float min, float max, float value)
     ui->horizontalSlider_7->setMinimum(min7 * SLIDER_SCALE);
     ui->horizontalSlider_7->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_7_value->setMaximum(max7);
-    ui->doubleSpinBox_7_value->setMinimum(min7);
+//    ui->doubleSpinBox_7_value->setMinimum(min7);
     ui->doubleSpinBox_7_value->setValue(value);
 }
 
@@ -996,7 +1045,7 @@ void equationDialog::min7Changed (double value)
             min7 = max7;
         }
         ui->doubleSpinBox_7_min->setValue(min7);
-        ui->doubleSpinBox_7_value->setMinimum(min7);
+//        ui->doubleSpinBox_7_value->setMinimum(min7);
         ui->horizontalSlider_7->setMinimum(min7 * SLIDER_SCALE);
     }
 }
@@ -1025,7 +1074,7 @@ void equationDialog::setSlider8(float min, float max, float value)
     ui->horizontalSlider_8->setMinimum(min8 * SLIDER_SCALE);
     ui->horizontalSlider_8->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_8_value->setMaximum(max8);
-    ui->doubleSpinBox_8_value->setMinimum(min8);
+//    ui->doubleSpinBox_8_value->setMinimum(min8);
     ui->doubleSpinBox_8_value->setValue(value);
 }
 
@@ -1055,7 +1104,7 @@ void equationDialog::min8Changed (double value)
             min8 = max8;
         }
         ui->doubleSpinBox_8_min->setValue(min8);
-        ui->doubleSpinBox_8_value->setMinimum(min8);
+//        ui->doubleSpinBox_8_value->setMinimum(min8);
         ui->horizontalSlider_8->setMinimum(min8 * SLIDER_SCALE);
     }
 }
@@ -1065,10 +1114,6 @@ void equationDialog::max8Changed (double value)
     if (max8 != value)
     {
         max8 = value;
-        if (max8 < min8)
-        {
-            max8 = min8;
-        }
         ui->doubleSpinBox_8_max->setValue(max8);
         ui->doubleSpinBox_8_value->setMaximum(max8);
         ui->horizontalSlider_8->setMaximum(max8 * SLIDER_SCALE);
@@ -1084,7 +1129,7 @@ void equationDialog::setSlider9(float min, float max, float value)
     ui->horizontalSlider_9->setMinimum(min9 * SLIDER_SCALE);
     ui->horizontalSlider_9->setValue(value * SLIDER_SCALE);
     ui->doubleSpinBox_9_value->setMaximum(max9);
-    ui->doubleSpinBox_9_value->setMinimum(min9);
+//    ui->doubleSpinBox_9_value->setMinimum(min9);
     ui->doubleSpinBox_9_value->setValue(value);
 }
 
@@ -1114,7 +1159,7 @@ void equationDialog::min9Changed (double value)
             min9 = max9;
         }
         ui->doubleSpinBox_9_min->setValue(min9);
-        ui->doubleSpinBox_9_value->setMinimum(min9);
+//        ui->doubleSpinBox_9_value->setMinimum(min9);
         ui->horizontalSlider_9->setMinimum(min9 * SLIDER_SCALE);
     }
 }
@@ -1200,51 +1245,61 @@ void equationDialog::apply()
     ui->doubleSpinBox_9_input->setValue(val9);
     // write values to parameters
     setParameterValues();
-    getParameterValues();
+//    getParameterValues();
+}
+
+void equationDialog::reset()
+{
+    resetValues();
+    emit numbersUpdated();
 }
 
 void equationDialog::resetValues()
 {
-    if (parameters->rowCount() < 9)
+    if (!building)
     {
-    // get values from input spinboxes
-    double min, max, val;
-    min = ui->doubleSpinBox_1_input->minimum();
-    max = ui->doubleSpinBox_1_input->maximum();
-    val = ui->doubleSpinBox_1_input->value();
-    setSlider1(min, max, val);
-    min = ui->doubleSpinBox_2_input->minimum();
-    max = ui->doubleSpinBox_2_input->maximum();
-    val = ui->doubleSpinBox_2_input->value();
-    setSlider2(min, max, val);
-    min = ui->doubleSpinBox_3_input->minimum();
-    max = ui->doubleSpinBox_3_input->maximum();
-    val = ui->doubleSpinBox_3_input->value();
-    setSlider3(min, max, val);
-    min = ui->doubleSpinBox_4_input->minimum();
-    max = ui->doubleSpinBox_4_input->maximum();
-    val = ui->doubleSpinBox_4_input->value();
-    setSlider4(min, max, val);
-    min = ui->doubleSpinBox_5_input->minimum();
-    max = ui->doubleSpinBox_5_input->maximum();
-    val = ui->doubleSpinBox_5_input->value();
-    setSlider5(min, max, val);
-    min = ui->doubleSpinBox_6_input->minimum();
-    max = ui->doubleSpinBox_6_input->maximum();
-    val = ui->doubleSpinBox_6_input->value();
-    setSlider6(min, max, val);
-    min = ui->doubleSpinBox_7_input->minimum();
-    max = ui->doubleSpinBox_7_input->maximum();
-    val = ui->doubleSpinBox_7_input->value();
-    setSlider7(min, max, val);
-    min = ui->doubleSpinBox_8_input->minimum();
-    max = ui->doubleSpinBox_8_input->maximum();
-    val = ui->doubleSpinBox_8_input->value();
-    setSlider8(min, max, val);
-    min = ui->doubleSpinBox_9_input->minimum();
-    max = ui->doubleSpinBox_9_input->maximum();
-    val = ui->doubleSpinBox_9_input->value();
-    setSlider9(min, max, val);
+        disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+        building = true;
+        // get values from input spinboxes
+        double min, max, val;
+        min = ui->doubleSpinBox_1_input->minimum();
+        max = ui->doubleSpinBox_1_input->maximum();
+        val = ui->doubleSpinBox_1_input->value();
+        setSlider1(min, max, val);
+        min = ui->doubleSpinBox_2_input->minimum();
+        max = ui->doubleSpinBox_2_input->maximum();
+        val = ui->doubleSpinBox_2_input->value();
+        setSlider2(min, max, val);
+        min = ui->doubleSpinBox_3_input->minimum();
+        max = ui->doubleSpinBox_3_input->maximum();
+        val = ui->doubleSpinBox_3_input->value();
+        setSlider3(min, max, val);
+        min = ui->doubleSpinBox_4_input->minimum();
+        max = ui->doubleSpinBox_4_input->maximum();
+        val = ui->doubleSpinBox_4_input->value();
+        setSlider4(min, max, val);
+        min = ui->doubleSpinBox_5_input->minimum();
+        max = ui->doubleSpinBox_5_input->maximum();
+        val = ui->doubleSpinBox_5_input->value();
+        setSlider5(min, max, val);
+        min = ui->doubleSpinBox_6_input->minimum();
+        max = ui->doubleSpinBox_6_input->maximum();
+        val = ui->doubleSpinBox_6_input->value();
+        setSlider6(min, max, val);
+        min = ui->doubleSpinBox_7_input->minimum();
+        max = ui->doubleSpinBox_7_input->maximum();
+        val = ui->doubleSpinBox_7_input->value();
+        setSlider7(min, max, val);
+        min = ui->doubleSpinBox_8_input->minimum();
+        max = ui->doubleSpinBox_8_input->maximum();
+        val = ui->doubleSpinBox_8_input->value();
+        setSlider8(min, max, val);
+        min = ui->doubleSpinBox_9_input->minimum();
+        max = ui->doubleSpinBox_9_input->maximum();
+        val = ui->doubleSpinBox_9_input->value();
+        setSlider9(min, max, val);
+        building = false;
+        connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     }
 }
 
@@ -1261,14 +1316,12 @@ void equationDialog::restoreAll()
     ui->spinBox_bins_min->setValue(binMin);
     ui->spinBox_bins_max->setValue(binMax);
     ui->spinBox_bins_width->setValue(binWidth);
-    ui->doubleSpinBox_bins_midbin->setValue(binWidth / 2.0);
-    // get values from parameters
+
     equationNum = selex->getPattern();
-
-    if (parameters != NULL)
-        getParameterValues();
-
-    resetValues ();
+    special = selex->getSpecial();
+    male = selex->getMale();
+    // get values from parameters
+    getParameterValues();
 
     update();
 }
@@ -1285,12 +1338,10 @@ void equationDialog::buttonClicked(QAbstractButton *btn)
         apply();
     }
     else if (btn->text().contains("Reset")){
-        resetValues();
-        emit numbersUpdated();
+        reset();
     }
     else if (btn->text().contains("Restore")){
         restoreAll();
-        emit numbersUpdated();
     }
     else if (btn->text().contains("Close")){
         close();
@@ -1299,6 +1350,7 @@ void equationDialog::buttonClicked(QAbstractButton *btn)
 
 void equationDialog::closeEvent(QCloseEvent *event)
 {
+    Q_UNUSED(event);
     emit closed();
 }
 
@@ -1311,6 +1363,7 @@ void equationDialog::resizeEvent(QResizeEvent *event)
 void equationDialog::parametersChanged()
 {
     getParameterValues();
+//    resetValues();
     emit numbersUpdated();
 }
 
@@ -1349,7 +1402,7 @@ Fleet *equationDialog::getFleet() const
 void equationDialog::setFleet(Fleet *value)
 {
     fleet = value;
-    binMidWidth = fleet->getSeasTiming();
+    fleetNum = fleet->getNumber();
 }
 
 int equationDialog::getSpecial() const
@@ -1684,9 +1737,9 @@ void equationDialog::resetChart(bool create)
     int sizew = cht->size().width();
     int sizeh = cht->size().height();
     resizeEvent(new QResizeEvent(QSize(sizew, sizeh), QSize(sizew, sizeh)));
-//    updateTicks (7, 7);
 }
 
+/* size selectivity 2, 3, 4, 7, */
 void equationDialog::blank (int num, int rep, QString msg)
 {
     resetChart();
@@ -1699,7 +1752,7 @@ void equationDialog::blank (int num, int rep, QString msg)
                         QString::number(equationNum)));
     // If replaced by another pattern
     if (rep > 0)
-        msg.append(QString(", use pattern %2 instead").arg(
+        msg.append(QString(", use pattern %1 instead").arg(
                        QString::number(rep)));
 
     setTitle(msg);
@@ -1715,10 +1768,11 @@ void equationDialog::blank (int num, int rep, QString msg)
     showJoins(0);
 }
 
-/* Size selex equation 0, age selex equation 10 */
+/* Size selectivity 0, age selectivity 10 */
 void equationDialog::constant (float val)
 {
     setTitle(QString("Pattern %1: Constant selectivity 1.0").arg(QString::number(equationNum)));
+    parameters->setRowCount(0);
     showSliders(0);
     showBins(true);
     showJoins(0);
@@ -1731,10 +1785,11 @@ void equationDialog::constant (float val)
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
 
-    updateConstant();
+    updateConstant(val);
 }
 
-void equationDialog::updateConstant ()
+/* Size selectivity 0, age selectivity 10 */
+void equationDialog::updateConstant (float val)
 {
     float binMid = binWidth * binMidWidth;
     float start = binMin + binMid;
@@ -1747,9 +1802,10 @@ void equationDialog::updateConstant ()
         else
             start = xValList.at(1) + binMid;
     }
-    updateConstant(1.0, start, end);
+    updateConstant(val, start, end);
 }
 
+/* general constant graph */
 void equationDialog::updateConstant (float val, float first, float last)
 {
     float binMid = binWidth * binMidWidth;
@@ -1779,14 +1835,21 @@ void equationDialog::updateConstant (float val, float first, float last)
     }
 }
 
+/* age selectivity 11 */
 void equationDialog::constantRange ()
 {
     setTitle(QString("Pattern %1: Constant selectivity 1.0 within age range").arg(equationNum));
-    showSliders(2);
+    parameters->setRowCount(2);
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); max2Changed(xValList.last());
+    min1Changed(xValList.first());min2Changed(xValList.first());
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    showSliders(numSliders);
     ui->label_1_name->setText("Lo age");
     ui->label_1_type->setText("Value");
     ui->label_2_name->setText("Hi age");
     ui->label_2_type->setText("Value");
+    setParameterHeaders();
     showBins(true);
     showJoins(0);
 
@@ -1797,10 +1860,12 @@ void equationDialog::constantRange ()
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
 
-    updateConstantRange();
+    if (parameters->rowCount() == 2)
+        updateConstantRange();
 }
 
-void equationDialog::updateConstantRange ()
+/* age selectivity 11 */
+void equationDialog::updateConstantRange (float val)
 {
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
@@ -1810,18 +1875,25 @@ void equationDialog::updateConstantRange ()
     ui->doubleSpinBox_1_trans->setValue(par1);
     ui->doubleSpinBox_2_trans->setValue(par2);
 
-    updateConstant(1.0, start, end);
+    updateConstant(val, start, end);
 }
 
-/* Size selex equation 1, age selex equation 12 */
+/* Size selectivity 1 and age selectivity 12 */
 void equationDialog::logistic ()
 {
     setTitle(QString("Pattern %1: Logistic").arg(equationNum));
-    showSliders(2);
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last());
+    min1Changed(0);
+    max2Changed(50);
+    min2Changed(-50);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     ui->label_1_name->setText("Value at 50%");
     ui->label_1_type->setText("Value");
     ui->label_2_name->setText("Diff 95% & 50%");
     ui->label_2_type->setText("Value");
+    showSliders(2);
+    setParameterHeaders();
     showBins(true);
     showJoins(0);
 
@@ -1833,9 +1905,11 @@ void equationDialog::logistic ()
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
 
-    updateLogistic();
+    if (parameters->rowCount() == 2)
+        updateLogistic();
 }
 
+/* Size selectivity 1 and age selectivity 12 */
 void equationDialog::updateLogistic()
 {
     float yVal = 0;
@@ -1857,51 +1931,62 @@ void equationDialog::updateLogistic()
     }
 }
 
-/* Size selex equation 5, size and age selex equation 15 */
+/* Size selectivity 5 and 15, size and age selectivity 15 */
 void equationDialog::mirror (int sliders)
 {
+    int flt = special < 1? 1: special;
     QString msg (QString("Pattern %1: Mirror of Fleet (%2)").arg(
                  QString::number(equationNum),
-                 QString::number(getSpecial())));
+                 QString::number(flt)));
     resetChart();
+    chartview->setVisible(false);
     if (sliders > 0)
     {
         int num = xValList.count();
-        min1Changed(-1.0); min2Changed(-1.0);
+        parameters->setRowCount(2);
+        disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
         max1Changed(num); max2Changed(num);
+        min1Changed(-1.0); min2Changed(-1.0);
         msg.append(QString(" between Lo and Hi bins"));
+        connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
         ui->label_1_name->setText("Lo Bin");
         ui->label_1_type->setText("Value");
         ui->label_2_name->setText("Hi Bin");
         ui->label_2_type->setText("Value");
+        setParameterHeaders();
+        parameters->setRowHeader(0, QString("SizeSel p1 fishery %1").arg(fleetNum));
+        parameters->setRowHeader(1, QString("SizeSel p2 fishery %1").arg(fleetNum));
     }
     setTitle(msg);
     showSliders(sliders);
     showBins (false);
     showJoins(0);
-    if (getSpecial() >= fleet->getNumber())
+    if (fleetNum <= flt)
     {
         msg = QString("Mirror must be of previous fleet.\n Change Special value.");
         ui->label_title->setText(msg);
+        ui->label_title->setVisible(true);
+        return;
     }
     updateMirror(sliders);
 }
 
+/* size selectivity 5 and size and age selectivity 15 */
 void equationDialog::updateMirror(int sliders)
 {
     if (sliders > 0)
     {
         QString msg;
-        int start = 0, end = 0;
-        float par1 = ui->doubleSpinBox_1_value->value();
-        float par2 = ui->doubleSpinBox_2_value->value();
+        int start = 1, end = 1;
+        float par1 = static_cast<int>(ui->doubleSpinBox_1_value->value());
+        float par2 = static_cast<int>(ui->doubleSpinBox_2_value->value());
         if (par1 < 1)
         {
             start = 1;
         }
         else
         {
-            start = static_cast<int>(par1);
+            start = par1;
         }
         if (par2 < 1 || par2 > xValList.count())
         {
@@ -1909,7 +1994,7 @@ void equationDialog::updateMirror(int sliders)
         }
         else
         {
-            end = static_cast<int>(par2);
+            end = par2;
         }
         ui->doubleSpinBox_1_trans->setValue(float(start));
         ui->doubleSpinBox_2_trans->setValue(float(end));
@@ -1920,46 +2005,60 @@ void equationDialog::updateMirror(int sliders)
             setSlider2(-1, xValList.count(), par1);
             return;
         }
-        else
-        {
-            msg = QString (QString("Mirroring selectivity from Fleet %1 \nFrom Bin %2  to Bin %3").arg(
-                               QString::number(getSpecial()),
-                               QString::number(start),
-                               QString::number(end)));
-            ui->label_title->setText(msg);
-        }
+        msg = QString (QString("Mirroring selectivity from Fleet %1 \nFrom Bin %2  to Bin %3").arg(
+                           QString::number(getSpecial()),
+                           QString::number(start),
+                           QString::number(end)));
+        ui->label_title->setText(msg);
     }
 }
 
-/* Size selex equation 6 */
+/* size selectivity 6 and age selectivity 43*/
 void equationDialog::linear (float scale)
 {
-    int num = getSpecial();
+    int numNodes = getSpecial(), num = 0;
     QString msg(QString("Pattern %1: Non-parametric, %2 Linear segments").arg(
                     QString::number(equationNum),
-                    QString::number(num)));
+                    QString::number(numNodes)));
     setTitle(msg);
 
-    if (scale > 0)
+    num = parameters->rowCount() - 2;
+    if (num < 2 || numNodes != num)
+    {
+        return;
+    }
+    else if (scale > 0)
     {
         linearScaled();
         return;
     }
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(xValList.first());
+    max2Changed(xValList.last()); min2Changed(xValList.first());
+    max3Changed(9); min3Changed(-5);
+    max4Changed(9); min4Changed(-5);
+    max5Changed(9); min5Changed(-5);
+    max6Changed(9); min6Changed(-5);
+    max7Changed(9); min7Changed(-5);
+    max8Changed(9); min8Changed(-5);
+    max9Changed(9); min9Changed(-5);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
 
     ui->label_1_name->setText("length for P1");
     ui->label_1_type->setText("Value");
     ui->label_2_name->setText("length for P2");
     ui->label_2_type->setText("Value");
-    if (num > 7)
+    setParameterHeaders();
+    if (numNodes > 7)
     {
         msg = QString("Non-parametric - too many segments(%1) to display!").arg(
-                    QString::number(num));
+                    QString::number(numNodes));
         blank(2, 0, msg);
         return;
     }
     else
     {
-        showSliders(num + 2);
+        showSliders(numNodes + 2);
         ui->label_3_name->setText("ln of sel at P1");
         ui->label_3_type->setText("Value");
         ui->label_4_name->setText("ln of sel midpt");
@@ -1972,32 +2071,29 @@ void equationDialog::linear (float scale)
         ui->label_7_type->setText("Value");
         ui->label_8_name->setText("ln of sel midpt");
         ui->label_8_type->setText("Value");
-        ui->label_9_name->setText("ln of sel midpt");
+        ui->label_9_name->setText("ln of sel at P2");
         ui->label_9_type->setText("Value");
+        setParameterHeaders();
 
-        if (num == 2)
+        if (numNodes == 2)
         {
             ui->label_4_name->setText("ln of sel at P2");
         }
-        else if (num == 3)
+        else if (numNodes == 3)
         {
             ui->label_5_name->setText("ln of sel at P2");
         }
-        else if (num == 4)
+        else if (numNodes == 4)
         {
             ui->label_6_name->setText("ln of sel at P2");
         }
-        else if (num == 5)
+        else if (numNodes == 5)
         {
             ui->label_7_name->setText("ln of sel at P2");
         }
-        else if (num == 6)
+        else if (numNodes == 6)
         {
             ui->label_8_name->setText("ln of sel at P2");
-        }
-        else if (num == 7)
-        {
-            ui->label_9_name->setText("ln of sel at P2");
         }
         showBins(true);
         showJoins(0);
@@ -2029,13 +2125,31 @@ void equationDialog::linear (float scale)
     }
 }
 
+/* age selectivity 43 */
 void equationDialog::linearScaled ()
 {
-    int num = getSpecial();
+    int numNodes = getSpecial(), num = 0;
     QString msg(QString("Pattern %1: Non-parametric %2 Linear segments").arg(
                     QString::number(equationNum),
-                    QString::number(num)));
+                    QString::number(numNodes)));
     setTitle(msg);
+
+    num = parameters->rowCount() - 4;
+    if (num < 2 || numNodes != num)
+    {
+        return;
+    }
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(1); min1Changed(xValList.count());
+    max2Changed(1); min2Changed(xValList.count());
+    max3Changed(xValList.last()); min3Changed(xValList.first());
+    max4Changed(xValList.last()); min4Changed(xValList.first());
+    max5Changed(9); min5Changed(-5);
+    max6Changed(9); min6Changed(-5);
+    max7Changed(9); min7Changed(-5);
+    max8Changed(9); min8Changed(-5);
+    max9Changed(9); min9Changed(-5);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
 
     ui->label_1_name->setText("Scale bin Lo");
     ui->label_1_type->setText("Value");
@@ -2045,14 +2159,15 @@ void equationDialog::linearScaled ()
     ui->label_3_type->setText("Value");
     ui->label_4_name->setText("length for P2");
     ui->label_4_type->setText("Value");
-    if (num > 5)
+    setParameterHeaders();
+    if (numNodes > 5)
     {
         msg.append(" - too many segments to display!");
         blank(4, 0, msg);
     }
     else
     {
-        showSliders(num + 4);
+        showSliders(numNodes + 4);
         ui->label_5_name->setText("ln of sel at P1");
         ui->label_5_type->setText("Value");
         ui->label_6_name->setText("ln of sel midpt");
@@ -2062,20 +2177,20 @@ void equationDialog::linearScaled ()
         ui->label_8_name->setText("ln of sel midpt");
         ui->label_8_type->setText("Value");
         ui->label_9_type->setText("Value");
-
-        if (num == 2)
+        setParameterHeaders();
+        if (numNodes == 2)
         {
             ui->label_6_name->setText("ln of sel at P2");
         }
-        else if (num == 3)
+        else if (numNodes == 3)
         {
             ui->label_7_name->setText("ln of sel at P2");
         }
-        else if (num == 4)
+        else if (numNodes == 4)
         {
             ui->label_8_name->setText("ln of sel at P2");
         }
-        else if (num == 5)
+        else if (numNodes == 5)
         {
             ui->label_9_name->setText("ln of sel at P2");
         }
@@ -2109,6 +2224,7 @@ void equationDialog::linearScaled ()
     }
 }
 
+/* size selectivity 6 */
 void equationDialog::updateLinear(float scale)
 {
     float y = 0;
@@ -2119,6 +2235,9 @@ void equationDialog::updateLinear(float scale)
     int num = getSpecial();
     float xVal[10];
     float yVal[10];
+
+    if (num < 2 || (parameters->rowCount() - 2) != num)
+        return;
 
     ascendSeries->clear();
 
@@ -2208,6 +2327,7 @@ void equationDialog::updateLinear(float scale)
     updateLinearExp(scale);
 }
 
+/* age selectivity 43 */
 void equationDialog::updateLinearScaled()
 {
     float y = 0;
@@ -2221,6 +2341,10 @@ void equationDialog::updateLinearScaled()
     float yVal[10];
     float xMin = ui->doubleSpinBox_1_value->value();
     float xMax = ui->doubleSpinBox_2_value->value();
+
+    if (num < 2 || (parameters->rowCount() - 4) != num)
+        return;
+
     if (xMin < 1)
     {
         xMin = 1;
@@ -2381,11 +2505,19 @@ float equationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
  *     sel += 1.0e-6;
  *     sel /= max(sel);
  */
-
+/* size selectivity 9, age selectivity 19 */
 void equationDialog::dblLogistic()
 {
     setTitle(QString("Pattern %1: Simple Double Logistic").arg(
                      QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(0);
+    max2Changed(1); min2Changed(0);
+    max3Changed(xValList.last()); min3Changed(xValList.first());
+    max4Changed(0); min4Changed(-1);
+    max5Changed(xValList.count()); min5Changed(1);
+    max6Changed(1); min6Changed(0);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     showSliders(6);
     ui->label_1_name->setText("Infl 1");
     ui->label_1_type->setText("Value");
@@ -2399,6 +2531,7 @@ void equationDialog::dblLogistic()
     ui->label_5_type->setText("Value");
     ui->label_6_name->setText("Offset");
     ui->label_6_type->setText("Value");
+    setParameterHeaders();
     showBins(true);
     showJoins(0);
 
@@ -2422,16 +2555,17 @@ void equationDialog::dblLogistic()
 //    cht->addAxis(axisYalt, Qt::AlignRight);
 
     ascendSeries->attachAxis(axisXsel);
-    ascendSeries->attachAxis(axisYalt);
+    ascendSeries->attachAxis(axisY);
 
     dscendSeries->attachAxis(axisXsel);
-    dscendSeries->attachAxis(axisYalt);
-    cht->addAxis(axisYalt, Qt::AlignRight);
+    dscendSeries->attachAxis(axisY);
+//    cht->addAxis(axisYalt, Qt::AlignRight);
 
     cht->legend()->setVisible(true);
     cht->legend()->setAlignment(Qt::AlignLeft);
 
-    updateDblLogistic();
+    if (parameters->rowCount() == 6)
+        updateDblLogistic();
 }
 
 void equationDialog::updateDblLogistic()
@@ -2440,22 +2574,22 @@ void equationDialog::updateDblLogistic()
     float sel = 0;
     float term1 = 0, term2 = 0;
     float term1log, term2log;
-    int limit = (xValList.count() - 1), i = 0;
+    int limit = (xValList.count() - 1), i = 0, offset;
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
     float par3 = ui->doubleSpinBox_3_value->value();
     float par4 = ui->doubleSpinBox_4_value->value();
-    float par5 = static_cast<int>(ui->doubleSpinBox_5_value->value());
-    float par6 = static_cast<int>(ui->doubleSpinBox_6_value->value());
+    int par5 = static_cast<int>(ui->doubleSpinBox_5_value->value());
+    float par6 = (ui->doubleSpinBox_6_value->value());
 
-    limit = (par5 < 0)? 0: ((par5 < xValList.count())? par5: limit);
-    par6 = (par6 < 0.5) ? 0: 1;
+    limit = (par5 < 1)? 0: ((par5 < xValList.count())? (par5 - 1): limit);
+    offset = (par6 < 0.5) ? 0: 1;
     ui->doubleSpinBox_1_trans->setValue(par1);
     ui->doubleSpinBox_2_trans->setValue(par2);
     ui->doubleSpinBox_3_trans->setValue(par3);
     ui->doubleSpinBox_4_trans->setValue(par4);
     ui->doubleSpinBox_5_trans->setValue(limit);
-    ui->doubleSpinBox_6_trans->setValue(par6);
+    ui->doubleSpinBox_6_trans->setValue(offset);
 
     ascendSeries->clear();
     dscendSeries->clear();
@@ -2491,8 +2625,8 @@ void equationDialog::updateDblLogistic()
         sel = (firstPoints.at(i).y() + .000001) / maxSel;
         selSeries->append(QPointF(xValList.at(i), sel));
     }
-    maxSel = maxYvalue(ascendSeries->points());
-    axisYalt->setRange(0, maxSel * 1.2);
+    maxSel = maxYvalue(dscendSeries->points());
+    axisYalt->setRange(0, (maxSel * 1.2));
     }
 }
 
@@ -2500,6 +2634,16 @@ void equationDialog::dblLogPeak()
 {
     setTitle(QString("Pattern %1: Double Logistic with IF joins ").arg(
                  QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(xValList.first());
+    max2Changed(1); min2Changed(0);
+    max3Changed(5); min3Changed(-5);
+    max4Changed(3); min4Changed(-5);
+    max5Changed(9); min5Changed(-5);
+    max6Changed(9); min6Changed(-5);
+    max7Changed(3); min7Changed(-5);
+    max8Changed(20); min8Changed(1);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     if (equationNum == 13)
         ui->label_title->setText(QString("This pattern is discouraged, use pattern #18"));
     showSliders(8);
@@ -2519,6 +2663,7 @@ void equationDialog::dblLogPeak()
     ui->label_7_type->setText("Value");
     ui->label_8_name->setText("BinWidth");
     ui->label_8_type->setText("Value");
+    setParameterHeaders();
 
     showBins(true);
     showJoins(3);
@@ -2570,24 +2715,30 @@ void equationDialog::dblLogPeak()
     cht->legend()->setVisible(true);
     cht->legend()->setAlignment(Qt::AlignLeft);
 
-    if (equationNum == 8)
-        updateDblLogPeak();
-    else if (equationNum == 13)
-        updateDblLogIf();
-    else
-        updateDblLogSmooth();
+    if (parameters->rowCount() == 8)
+    {
+        if (equationNum == 8)
+            updateDblLogPeak();
+        else if (equationNum == 13)
+            updateDblLogIf();
+        else
+            updateDblLogSmooth();
+    }
 }
 
+/* size selectivity 8 */
 void equationDialog::updateDblLogPeak()
 {
     float maxSelX = 0;
-    float minX = xValList.first();
-    float maxX = xValList.last();
+    float minVal = binMin + (binWidth * binMidWidth);
+    float maxVal = binMax + (binWidth * binMidWidth);
     float sel = 0;
     float t1 = 0, t1min, t1max, t1power;
     float t2 = 0, t2min, t2max, t2power;
+    float t1range, t2range;
+    float one_init, final_one;
     float jn1, jn2, jn3;
-    float upsel, dnsel;
+    float upselex, downselex;
     int binM, i;
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
@@ -2626,17 +2777,15 @@ void equationDialog::updateDblLogPeak()
 //    t1min=1./(1.+mfexp(-mfexp(sp(4))*(minL-t1)))*0.9999;  // asc value at minsize
 //    t1max=1./(1.+mfexp(-mfexp(sp(4))*(sp(1)-t1)))*1.0001;  // asc value at peak
 //    t1power=log(0.5)/log((0.5-t1min)/(t1max-t1min));  // so the parameter will actual correspond to 50% point
-    t1 = minX + (infl_up * (peak - minX));
-    t1min = logist (exp(slope_up) * (minX - t1)) * 0.9999;
-    t1max = logist (exp(slope_up) * (peak - t1)) * 1.0001;
-//    t1min = 1./(1. + exp(-exp(slope_up) * (minX - t1))) * 0.9999;
-//    t1max = 1./(1. + exp(-exp(slope_up) * (peak - t1))) * 1.0001;
-    t1power = log(0.5)/log((0.5 - t1min)/(t1max - t1min));
+    t1 = minVal + (infl_up * (peak - minVal));
+    t1min = logist (exp(slope_up) * (minVal - t1)) * 0.9999;// asc value at minsize
+    t1max = logist (exp(slope_up) * (peak - t1)) * 1.0001;  // asc value at peak
+    t1power = log(0.5)/log((0.5 - t1min)/(t1max - t1min));  // so the parameter will actual correspond to 50% point
 
 //    if(seltype(f,4)==0) {sel_maxL=maxL;} else {sel_maxL=Ave_Size(styr,3,1,nages);}
     if (special == 0)
     {
-        maxSelX = maxX;
+        maxSelX = maxVal;
     }
     else
     {
@@ -2646,12 +2795,10 @@ void equationDialog::updateDblLogPeak()
 //    t2min=1./(1.+mfexp(-mfexp(sp(7))*(sp(1)+sp(8)-t2)))*0.9999;  // asc value at peak+
 //    t2max=1./(1.+mfexp(-mfexp(sp(7))*(sel_maxL-t2)))*1.0001;  // asc value at maxL
 //    t2power=log(0.5)/log((0.5-t2min)/(t2max-t2min));
-    t2 = peakBwd + infl_dn * (maxSelX - peakBwd);
-    t2min = logist(exp(slope_dn) * (peakBwd - t2)) * 0.9999;
-    t2max = logist(exp(slope_dn) * (maxSelX - t2)) * 1.0001;
+    t2 = peakBwd + infl_dn * (maxSelX - peakBwd);    // INFL
+    t2min = logist(exp(slope_dn) * (peakBwd - t2)) * 0.9999;// asc value at peak+
+    t2max = logist(exp(slope_dn) * (maxSelX - t2)) * 1.0001;// asc value at maxL
     t2power = log(0.5) / log((0.5 - t2min)/(t2max - t2min));
-//    final=1./(1.+mfexp(-sp(5)));
-//    final = logist (par5);
 
 /*    for (j=1; j<=nlength; j++)  //calculate the value over length bins
     {   join1=1./(1.+mfexp(10.*(len_bins_m(j)-sp(1))));
@@ -2661,30 +2808,38 @@ void equationDialog::updateDblLogPeak()
         downselex=(1. + (final - 1.) * pow(fabs(((( 1./(1.+mfexp(-mfexp(sp(7))*(len_bins_m(j)-t2))) -t2min ) / (t2max-t2min) ))),t2power));
         sel(j) = ((((upselex*join1)+1.0*(1.0-join1))*join2) + downselex*(1-join2))*join3 + final*(1-join3);
     }*/
+    one_init = 1.0 - init;
+    final_one = final - 1.0;
+    t1range = t1max - t1min;
+    t2range = t2max - t2min;
+
     for (i = 0; i < xValList.count(); i++)
     {
-        binM = xValList.at(i);
-        jn1 = logist(-join1 *(binM - peak));
-        jn2 = logist(-join2 *(binM - peakBwd));
-        jn3 = logist(-join3 *(binM - maxSelX));
+        binM = xValList.at(i) + binWidth * binMidWidth;
+        jn1 = logist(-join1 * (binM - peak));
+        jn2 = logist(-join2 * (binM - peakBwd));
+        jn3 = logist(-join3 * (binM - maxVal));
 //        jn1 = 1.0 / (1.0 + exp(10.0 * (binM - peak)));
 //        jn2 = 1.0 / (1.0 + exp(10.0 * (binM - peakBwd)));
 //        jn3 = 1.0 / (1.0 + exp(10.0 * (binM - maxSelX)));
-        upsel = init + (1.0 - init) * pow((( 1.0 / (1.0 + exp(-exp(slope_up) * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
-        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-exp(slope_dn) * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
-        sel = ((((upsel * jn1) + 1.0 * (1.0 - jn1)) * jn2) + dnsel * (1.0 - jn2)) * jn3 + final * (1.0 - jn3);
+        upselex = init + (one_init) * pow(((logist(exp(slope_up) * (binM - t1)) - t1min) / (t1range)), t1power);
+        downselex = (1.0 + (final_one) * pow(fabs((((logist(exp(slope_dn) * (binM - t2)) -t2min) / (t2range)))), t2power));
+//        upselex = init + (1.0 - init) * pow((( 1.0 / (1.0 + exp(-exp(slope_up) * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
+//        downselex = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-exp(slope_dn) * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
+        sel = ((((upselex * jn1) + (1.0 - jn1)) * jn2) + downselex * (1.0 - jn2)) * jn3 + final * (1.0 - jn3);
         join1Series->append(QPointF(binM, jn1));
         join2Series->append(QPointF(binM, jn2));
         join3Series->append(QPointF(binM, jn3));
-        ascendSeries->append(QPointF(binM, upsel));
-        dscendSeries->append(QPointF(binM, dnsel));
-        selSeries->append(QPointF(xValList.at(i), sel));
+        ascendSeries->append(QPointF(binM, upselex));
+        dscendSeries->append(QPointF(binM, downselex));
+        selSeries->append(QPointF(binM, sel));
     }
 //    ui->spinBox_steep_join1->setValue(10);
 //    ui->spinBox_steep_join2->setValue(10);
 //    ui->spinBox_steep_join3->setValue(10);
 }
 
+/* age selectivity 13 */
 void equationDialog::updateDblLogIf()
 {
     float maxSelX = 0;
@@ -2867,6 +3022,12 @@ void equationDialog::dblNormCasal()
 {
     setTitle(QString("Pattern %1: Double Normal (like CASAL)").arg(
                  QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(xValList.first());
+    max2Changed(1); min2Changed(0);
+    max3Changed(10); min3Changed(0);
+    max4Changed(10); min4Changed(0);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     showSliders(4);
     ui->label_1_name->setText("Peak");
     ui->label_1_type->setText("Value");
@@ -2876,6 +3037,7 @@ void equationDialog::dblNormCasal()
     ui->label_3_type->setText("Exp");
     ui->label_4_name->setText("Dsc-width");
     ui->label_4_type->setText("Exp");
+    setParameterHeaders();
 
     showBins(true);
     showJoins(0);
@@ -2884,11 +3046,13 @@ void equationDialog::dblNormCasal()
 
     ascendSeries = new QLineSeries(cht);
     ascendSeries->setPen(QPen(QBrush(Qt::green), 2));
+    ascendSeries->setName(QString("Ascend"));
     cht->addSeries(ascendSeries);
     ascendSeries->attachAxis(axisXsel);
 
     dscendSeries = new QLineSeries(cht);
     dscendSeries->setPen(QPen(QBrush(Qt::blue), 2));
+    dscendSeries->setName(QString("Descend"));
     cht->addSeries(dscendSeries);
     dscendSeries->attachAxis(axisXsel);
 
@@ -2906,7 +3070,8 @@ void equationDialog::dblNormCasal()
     cht->legend()->setVisible(true);
     cht->legend()->setAlignment(Qt::AlignLeft);
 
-    updateDblNormCasal();
+    if (parameters->rowCount() == 4)
+        updateDblNormCasal();
 }
 
 void equationDialog::updateDblNormCasal()
@@ -2960,6 +3125,12 @@ void equationDialog::dblNormal()
 {
     setTitle(QString("Pattern %1: Double Normal").arg(
                  QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(xValList.first());
+    max2Changed(1); min2Changed(0);
+    max3Changed(10); min3Changed(0);
+    max4Changed(10); min4Changed(0);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     showSliders(4);
     ui->label_1_name->setText("Peak");
     ui->label_1_type->setText("Value");
@@ -2969,6 +3140,7 @@ void equationDialog::dblNormal()
     ui->label_3_type->setText("Exp");
     ui->label_4_name->setText("Dsc-width");
     ui->label_4_type->setText("Exp");
+    setParameterHeaders();
 
     showBins(true);
     showJoins(2);
@@ -3013,7 +3185,8 @@ void equationDialog::dblNormal()
     cht->legend()->setVisible(true);
     cht->legend()->setAlignment(Qt::AlignLeft);
 
-    updateDblNormal();
+    if (parameters->rowCount() == 4)
+        updateDblNormal();
 }
 
 void equationDialog::updateDblNormal()
@@ -3025,6 +3198,12 @@ void equationDialog::dblNormPlateau()
 {
     setTitle(QString("Pattern %1: Double Normal plateau").arg(
                  QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(xValList.first());
+    max2Changed(1); min2Changed(0);
+    max3Changed(10); min3Changed(0);
+    max4Changed(10); min4Changed(0);
+    max5Changed(100); min5Changed(0);
     showSliders(6);
     ui->label_1_name->setText("Peak");
     ui->label_1_type->setText("Value");
@@ -3038,9 +3217,18 @@ void equationDialog::dblNormPlateau()
     ui->label_5_type->setText("Log");
     ui->label_6_name->setText("Final");
     if(equationNum == 23)
+    {
+        max6Changed(1); min6Changed(0);
         ui->label_6_type->setText("Value");
+    }
     else
+    {
+        max6Changed(100); min6Changed(0);
         ui->label_6_type->setText("Log");
+    }
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    setParameterHeaders();
+
     showBins(true);
     showJoins(2);
 
@@ -3067,7 +3255,7 @@ void equationDialog::updateDblNormPlateau()
     float t1, t1min, t1term;
     float t2, t2min, t2term;
     float apical_selex = 1.0;
-    int first = 0, last = xValList.count() - 1;
+    int first, last;
     float jn1, jn2;
     int i;
     float xval = 0, asc = 0, des = 0, sel = 0;
@@ -3093,9 +3281,11 @@ void equationDialog::updateDblNormPlateau()
             first = -1000 - static_cast<int>(par5);
             init = 0;
             ui->doubleSpinBox_5_trans->setValue(first);
+            t1min = 0;
         }
         else if (par5 > -999)
         {
+            first = 0;
             init = logist(par5);
             ui->doubleSpinBox_5_trans->setValue(init);
             t1min = exp(-1 * (pow((xValList.at(first)-peak), 2)/upsel));
@@ -3105,10 +3295,13 @@ void equationDialog::updateDblNormPlateau()
             last = -1000 - static_cast<int>(par6);
             final = 0;
             ui->doubleSpinBox_6_trans->setValue(last);
+            t2min = 0;
         }
         else if (par6 > -999)
         {
-            final = logist(final);
+            last = xValList.count() - 1;
+            final = logist(par6);
+            ui->doubleSpinBox_6_trans->setValue(final);
             t2min = exp(-1 * (pow((xValList.at(last) - peak2), 2)/dnsel));
         }
         for (i = 0; i < xValList.count(); i++)
@@ -3155,6 +3348,13 @@ void equationDialog::updateDblNormPlateau()
 
 void equationDialog::dblNormEndpts()
 {
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last()); min1Changed(xValList.first());
+    max2Changed(3); min2Changed(-5);
+    max3Changed(12); min3Changed(-5);
+    max4Changed(10); min4Changed(-2);
+    max5Changed(5); min5Changed(-15);
+    max6Changed(5); min6Changed(-5);
     showSliders(6);
     ui->label_1_name->setText("Peak");
     ui->label_1_type->setText("Value");
@@ -3167,11 +3367,14 @@ void equationDialog::dblNormEndpts()
     ui->label_5_name->setText("Initial");
     ui->label_5_type->setText("Log");
     ui->label_6_name->setText("Final");
+    ui->label_6_type->setText("Log");
+    setParameterHeaders();
     if(equationNum == 23)
     {
         setTitle(QString("Pattern %1: Double Normal plateau").arg(
                      QString::number(equationNum)));
         ui->label_6_type->setText("Value");
+        max6Changed(1); min6Changed(0);
     }
     else
     {
@@ -3179,6 +3382,7 @@ void equationDialog::dblNormEndpts()
                      QString::number(equationNum)));
         ui->label_6_type->setText("Log");
     }
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     showBins(true);
     showJoins(2);
 
@@ -3225,10 +3429,13 @@ void equationDialog::dblNormEndpts()
     ui->spinBox_steep_join1->setValue(20);
     ui->spinBox_steep_join2->setValue(20);
 
-    if (equationNum == 23)
-        updateDblNormPlateau();
-    else
-        updateDblNormEndpts();
+    if (parameters->rowCount() == 6)
+    {
+        if (equationNum == 23)
+            updateDblNormPlateau();
+        else
+            updateDblNormEndpts();
+    }
 }
 
 void equationDialog::updateDblNormEndpts()
@@ -3306,6 +3513,11 @@ void equationDialog::expLogistic()
 {
     setTitle(QString("Pattern %1: Exponential-Logistic").arg(
                  QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(2); min1Changed(.02);
+    max2Changed(.999); min2Changed(.001);
+    max3Changed(.5); min3Changed(.001);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     showSliders(3);
     ui->label_1_name->setText("Width");
     ui->label_1_type->setText("Value");
@@ -3313,6 +3525,7 @@ void equationDialog::expLogistic()
     ui->label_2_type->setText("Scaled");
     ui->label_3_name->setText("Tail Ht");
     ui->label_3_type->setText("Value");
+    setParameterHeaders();
     showBins(true);
     showJoins(0);
 
@@ -3323,19 +3536,20 @@ void equationDialog::expLogistic()
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
 
-    updateExpLogistic();
+    if (parameters->rowCount() == 3)
+        updateExpLogistic();
 }
 
 void equationDialog::updateExpLogistic()
 {
-    int xRange = binMax - binMin;
+    int xRange = xValList.last() - xValList.first();
     float yVal = 0;
     float temp = 0;
     float xVal = 0;
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
     float par3 = ui->doubleSpinBox_3_value->value();
-    float peak = binMin + par2 * (xRange);
+    float peak = xValList.first() + par2 * (xRange);
     ui->doubleSpinBox_1_trans->setValue(par1);
     ui->doubleSpinBox_2_trans->setValue(peak);
     ui->doubleSpinBox_3_trans->setValue(par3);
@@ -3372,6 +3586,7 @@ void equationDialog::eachAge ()
     showSliders(0);
     showBins(true);
     showJoins(0);
+    setParameterHeaders();
 
     resetChart();
 
@@ -3389,7 +3604,8 @@ void equationDialog::eachAge ()
     ascendSeries->attachAxis(axisXsel);
     ascendSeries->attachAxis(axisYalt);
 
-    updateEachAge();
+    if (parameters->rowCount() > xValList.count())
+        updateEachAge();
 }
 
 void equationDialog::updateEachAge ()
@@ -3437,6 +3653,7 @@ void equationDialog::randomWalk (float scale)
     showSliders(0);
     showBins(true);
     showJoins(0);
+    setParameterHeaders();
 
     resetChart();
 
@@ -3455,7 +3672,8 @@ void equationDialog::randomWalk (float scale)
     ascendSeries->attachAxis(axisXsel);
     ascendSeries->attachAxis(axisYalt);
 
-    updateRandomWalk(scale);
+    if (parameters->rowCount() > xValList.count())
+        updateRandomWalk(scale);
 }
 
 void equationDialog::updateRandomWalk (float scale)
@@ -3570,11 +3788,16 @@ void equationDialog::coleGauss ()
     setTitle(QString("Pattern %1: Coleraine single Gaussian").arg(
                  QString::number(equationNum)));
 
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(5); min1Changed(-5);
+    max2Changed(40); min2Changed(-5);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     showSliders(2);
     ui->label_1_name->setText("Age limit");
     ui->label_1_type->setText("Log");
     ui->label_2_name->setText("Decline scaling");
     ui->label_2_type->setText("Value");
+    setParameterHeaders();
     showBins(true);
     showJoins(0);
 
@@ -3585,7 +3808,8 @@ void equationDialog::coleGauss ()
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
 
-    updateColeGauss();
+    if (parameters->rowCount() == 2)
+        updateColeGauss();
 }
 
 void equationDialog::updateColeGauss()
@@ -3645,7 +3869,8 @@ void equationDialog::cubicSpline(float scale)
     }
     setTitle(QString("Pattern %1: Cubic Spline %2 nodes- not completely implemented").arg(
                  QString::number(equationNum),
-                 QString::number(num)));
+                 QString::number(num/2)));
+    setParameterHeaders();
     showBins(true);
     showJoins(0);
 
@@ -3665,8 +3890,8 @@ void equationDialog::cubicSpline(float scale)
 void equationDialog::updateCubicSpline(float scale)
 {
     float xval = 0;
-    int start = 3;
-    int num = parameters->rowCount() - (scale > 0? 5: 3);
+    int start = (scale > 0? 5: 3);
+    int num = parameters->rowCount() - start;
     float scaleLo = 1, scaleHi = xValList.count() - 1;
     float setup = 0;
     float gradLo = 0;

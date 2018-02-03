@@ -35,18 +35,24 @@ QStringList readShortParameter(ss_file *file)
 
 bool useBlks(QStringList param)
 {
-    int val = QString(param.at(12)).toInt();
+    int val = 0;
+    if (param.count() > 13)
+        val = QString(param.at(12)).toInt();
     return (val != 0);
 }
 
 bool useDev(QStringList param)
 {
-    int val = QString(param.at(8)).toInt();
+    int val = 0;
+    if (param.count() > 13)
+        val = QString(param.at(8)).toInt();
     return (val != 0);
 }
 
 bool useEnv(QStringList param)
 {
-    int val = QString(param.at(7)).toInt();
+    int val = 0;
+    if (param.count() > 13)
+        val = QString(param.at(7)).toInt();
     return (val != 0);
 }

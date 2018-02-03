@@ -82,7 +82,9 @@ void selectivity::setMethod(int method)
 /*    if (equation != NULL)
         delete equation;
     equation = NULL;*/
+    int numparam = getNumParameters();
     int pattn = setup->getValue(0);
+    int special = setup->getValue(3);
     if (method == pattn)
     {
         switch (method)
@@ -111,7 +113,13 @@ void selectivity::setMethod(int method)
 //            equation = new mirror_range();
             break;
         case 6:
-            setNumParameters(2 + setup->getValue(3));
+            if (special < 2)
+            {
+                special = 2;
+            }
+            setSpecial(special);
+//            numparam = 2 + special;
+//            setNumParameters(numparam);
 //            equation = new linear_segments();
             break;
         case 7:
@@ -136,7 +144,8 @@ void selectivity::setMethod(int method)
 //            equation = new double_logistic();
             break;
         case 14:
-            setNumParameters(numAges+1);
+            numparam = numAges + 1;
+            setNumParameters(numparam);
 //            equation = new each_age();
             break;
         case 15:
@@ -148,7 +157,8 @@ void selectivity::setMethod(int method)
 //            equation = new coleraine();
             break;
         case 17:
-            setNumParameters(numAges+1);
+            numparam = numAges + 1;
+            setNumParameters(numparam);
 //            equation = new random_walk();
             break;
         case 20:
@@ -167,7 +177,13 @@ void selectivity::setMethod(int method)
 //            equation = new exponent_logistic();
             break;
         case 27:
-            setNumParameters(3 + (2 * setup->getValue(3)));
+            if (special < 3)
+            {
+                special = 3;
+            }
+            setSpecial(special);
+//            numparam = special * 2 + 3;
+//            setNumParameters(numparam);
 //            equation = new cubic_spline();
             break;
         case 30:  // equal to spawning biomass
@@ -177,6 +193,28 @@ void selectivity::setMethod(int method)
         case 34:  // spawning biomass depletion (B/B0)
             setNumParameters(0);
 //            equation = new none();
+            break;
+        case 41:
+            numparam = numAges + 1 + 2;
+            setNumParameters(2+numAges+1);
+            break;
+        case 42:
+            if (special < 3)
+            {
+                special = 3;
+            }
+            setSpecial(special);
+//            numparam = special * 2 + 3 + 2;
+//            setNumParameters(numparam);
+            break;
+        case 43:
+            if (special < 2)
+            {
+                special = 2;
+            }
+            setSpecial(special);
+//            numparam = special + 2 + 2;
+//            setNumParameters(numparam);
             break;
         default:
             setPattern(0);
@@ -311,7 +349,21 @@ void selectivity::setMale(int value)
 void selectivity::setSpecial(int value)
 {
     setup->setValue(3, value);
-//    special = value;
+    switch (getPattern())
+    {
+    case 6:
+        setNumParameters(2+value);
+        break;
+    case 27:
+        setNumParameters(3+2*value);
+        break;
+    case 42:
+        setNumParameters(2+3+2*value);
+        break;
+    case 43:
+        setNumParameters(2+2+value);
+        break;
+    }
 }
 
 void selectivity::setTimeVaryParameter (int index, QStringList strList)

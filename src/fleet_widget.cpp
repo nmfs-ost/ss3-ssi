@@ -93,11 +93,9 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ageSelexTimeVaryParamsView = new tableview();
     ageSelexTimeVaryParamsView->setParent(this);
     ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
-    selexSizeEqDialog = new equationDialog(this);
-    selexSizeEqDialog->setName(QString("Size Selectivity"));
+    selexSizeEqDialog = new equationDialog(this, new QString("Size"));
     selexSizeEqDialog->hide();
-    selexAgeEqDialog = new equationDialog(this);
-    selexAgeEqDialog->setName(QString("Age Selectivity"));
+    selexAgeEqDialog = new equationDialog(this, new QString("Age"));
     selexAgeEqDialog->hide();
 
     lambdaView = new tableview();
@@ -520,15 +518,13 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexTimeVaryParamsView->resizeColumnsToContents();
         ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
 
-        selexSizeEqDialog->setFleet(current_fleet);
-        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
-        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
-        selexAgeEqDialog->setFleet(current_fleet);
-        selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
-        selexAgeEqDialog->setMidBin(0);
         setAgeLengthBins();
-        selexSizeEqDialog->refresh();
-        selexAgeEqDialog->refresh();
+        selexSizeEqDialog->setFleet(current_fleet);
+        selexAgeEqDialog->setFleet(current_fleet);
+        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+        selexAgeEqDialog->setMidBin(0);
+        selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
+        selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
 
         ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());
@@ -846,19 +842,19 @@ void fleet_widget::changeSelexSizePattern(int pat)
         ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
         break;
     case 30:
-        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is spawning biomass"));
+        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is spawning biomass"));
         break;
     case 31:
-        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is exp(recr dev)"));
+        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev)"));
         break;
     case 32:
-        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is exp(recr dev) * spawn Biomass"));
+        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev) * spawn Biomass"));
         break;
     case 33:
-        ui->label_selex_size_pattern_info->setText(tr("Survey abundance is age 0 recr"));
+        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is age 0 recr"));
         break;
     case 34:
-        ui->label_selex_size_pattern_info->setText(tr("Spawning biomass depletion"));
+        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: spawning biomass depletion"));
         break;
     case 2:
     case 7:
@@ -881,16 +877,30 @@ void fleet_widget::changeSelexSizePattern(int pat)
     case 19:
     case 20:
     case 26:
+    case 41:
         ui->label_selex_size_pattern_info->setText(tr("Used for age selectivity only."));
         return;
     case 21:
     case 28:
     case 29:
+    case 35:
+    case 36:
+    case 37:
+    case 38:
+    case 39:
+    case 40:
         ui->label_selex_size_pattern_info->setText(tr("Not used, select another pattern."));
         return;
+    case 42:
+        ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
+        break;
+    case 43:
+        ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y) with scaling"));
+        break;
     default:
         ui->label_selex_size_pattern_info->setText(" ");
     }
+
     current_fleet->getSizeSelectivity()->setPattern(pat);
     newNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
     for (int i = oldNumParams; i < newNumParams; i++)
@@ -900,13 +910,11 @@ void fleet_widget::changeSelexSizePattern(int pat)
         current_fleet->getSizeSelectivity()->setParameter(i, prm);
     }
 
-    ui->spinBox_selex_size_pattern->setValue
-            (current_fleet->getSizeSelectivity()->getPattern());
-    ui->spinBox_selex_size_num_params->setValue
-            (current_fleet->getSizeSelectivity()->getNumParameters());
-    sizeSelexParamsView->setHeight(newNumParams);
-    selexSizeEqDialog->setEquationNumber(pat);
-    selexSizeEqDialog->restoreAll();
+    ui->spinBox_selex_size_pattern->setValue (pat);
+    ui->spinBox_selex_size_num_params->setValue (newNumParams);
+    sizeSelexParamsView->setHeight (newNumParams);
+
+    selexSizeEqDialog->changeSelex();
 }
 
 void fleet_widget::setAr1SelexSmoother(int val)
@@ -934,12 +942,14 @@ void fleet_widget::showSelexSizeInfo()
     msg.append("23\t6\tSimilar to #24.\n");
     msg.append("24\t6\tDouble normal with defined initial and final selex.\n");
     msg.append("25\t3\tExponential - logistic.\n");
-    msg.append("27\t3+\tCubic spline, 3 + Number of nodes parameters.\n");
+    msg.append("27\t3+Specl\tCubic spline, 3 + Number of nodes parameters.\n");
     msg.append("30\t0\tExpected survey abundance equals spawning biomass.\n");
     msg.append("31\t0\tExpected survey abundance equals exp(recr dev).\n");
     msg.append("32\t0\tExpected survey abundance equals exp(recr dev) * SpawnBiomass.\n");
     msg.append("33\t0\tExpected survey abundance equals age 0 recruitment.\n");
     msg.append("34\t0\tSpawning biomass depletion (B/B0).\n");
+    msg.append("42\t0\tCubic spline with user defined scaling.\n");
+    msg.append("43\t0\tLinear segements with user defined scaling.\n");
     msg.append("");
     /*int button = */QMessageBox::information(this, title, msg, QMessageBox::Ok);
 }
@@ -960,8 +970,7 @@ void fleet_widget::changeSelexSizeMale(int mal)
 void fleet_widget::changeSelexSizeSpecial(int spc)
 {
     current_fleet->getSizeSelectivity()->setSpecial(spc);
-    selexSizeEqDialog->setSpecial(spc);
-    selexSizeEqDialog->update();
+    selexSizeEqDialog->changeSelex();
 }
 
 void fleet_widget::sizeSelexParamsChanged()
@@ -985,7 +994,8 @@ void fleet_widget::sizeSelexTVParamsChanged()
 void fleet_widget::showSelexSizeCurve(bool flag)
 {
     selexSizeEqDialog->setVisible(flag);
-    selexSizeEqDialog->restoreAll();
+    if (flag)
+        selexSizeEqDialog->restoreAll();
 }
 
 void fleet_widget::selexSizeCurveClosed()
@@ -1049,18 +1059,38 @@ void fleet_widget::changeSelexAgePattern(int pat)
     case 26:
         ui->label_selex_age_pattern_info->setText(tr("Exponential - Logistic"));
         break;
+    case 27:
+        ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
+        break;
     case 21:
     case 28:
     case 29:
+    case 35:
+    case 36:
+    case 37:
+    case 38:
+    case 39:
+    case 40:
         ui->label_selex_age_pattern_info->setText(tr("Not used, select another pattern."));
         return;
     case 22:
     case 23:
     case 24:
     case 25:
-    case 27:
+    case 30:
+    case 31:
+    case 32:
+    case 33:
+    case 34:
+    case 43:
         ui->label_selex_age_pattern_info->setText(tr("Used for size selectivity only."));
         return;
+    case 41:
+        ui->label_selex_age_pattern_info->setText(tr("Random Walk with scaling"));
+        break;
+    case 42:
+        ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
+        break;
     default:
         ui->label_selex_age_pattern_info->setText(tr(" "));
     }
@@ -1070,14 +1100,15 @@ void fleet_widget::changeSelexAgePattern(int pat)
     ui->spinBox_selex_age_num_params->setValue
             (current_fleet->getAgeSelectivity()->getNumParameters());
     ageSelexParamsView->setHeight(ui->spinBox_selex_age_num_params->value());
-    selexAgeEqDialog->setEquationNumber(pat);
-    selexAgeEqDialog->restoreAll();
+
+    selexAgeEqDialog->changeSelex();
 }
 
 void fleet_widget::showSelexAgeCurve(bool flag)
 {
     selexAgeEqDialog->setVisible(flag);
-    selexAgeEqDialog->restoreAll();
+    if (flag)
+        selexAgeEqDialog->restoreAll();
 }
 
 void fleet_widget::selexAgeCurveClosed()
@@ -1097,7 +1128,7 @@ void fleet_widget::changeSelexAgeMale(int mal)
 void fleet_widget::changeSelexAgeSpecial(int spc)
 {
     current_fleet->getAgeSelectivity()->setSpecial(spc);
-    selexAgeEqDialog->setSpecial(spc);
+    selexAgeEqDialog->changeSelex();
 }
 
 void fleet_widget::showSelexAgeInfo()
@@ -1116,6 +1147,8 @@ void fleet_widget::showSelexAgeInfo()
     msg.append("19\t6\tSimple double logistic, no defined peak.\n");
     msg.append("20\t6\tDouble normal with defined init and final level.\n");
     msg.append("26\t3\tExponential - logistic.\n");
+    msg.append("41\t2+Nages+1\tRandom walk with user defined scaling.\n");
+    msg.append("42\t2+3+Specl\tCubic spline with user defined scaling.\n");
     msg.append("");
     QMessageBox::information(this, title, msg);
 }
