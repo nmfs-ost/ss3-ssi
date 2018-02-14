@@ -1,6 +1,8 @@
 #ifndef SELEX_EQUATION_H
 #define SELEX_EQUATION_H
 
+#include "tablemodel.h"
+
 class selex_equation
 {
 public:
@@ -9,6 +11,8 @@ public:
 
     int getNumParams() const;
     void setNumParams(int value);
+
+    void setParameters(tablemodel *params);
 
 protected:
     int numParams;

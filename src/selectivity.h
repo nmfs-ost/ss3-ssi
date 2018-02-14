@@ -18,15 +18,21 @@ public:
     explicit selectivity (ss_model *model, int method = 0);
     ~selectivity();
 
+signals:
+    void setupChanged(QStringList values);
+    void dataChanged();
+    void parametersChanged();
+    void startingSetupChanges();
+
 public slots:
     void setPattern (int value);
-    int getPattern () {return setup->getValue(0);}// pattern;}
+    int getPattern () {return setup->getTableValue(0);}// pattern;}
     void setDiscard (int value);
-    int getDiscard () {return setup->getValue(1);}//discard;}
+    int getDiscard () {return setup->getTableValue(1);}//discard;}
     void setMale (int value);
-    int getMale () {return setup->getValue(2);}// male;}
+    int getMale () {return setup->getTableValue(2);}// male;}
     void setSpecial (int value);
-    int getSpecial () {return setup->getValue(3);}// special;}
+    int getSpecial () {return setup->getTableValue(3);}// special;}
     void setNumAges(int ages) {numAges = ages;}
     int getNumAges() {return numAges;}
     void setSetup(QString text);

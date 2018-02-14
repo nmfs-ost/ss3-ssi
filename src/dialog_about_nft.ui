@@ -43,7 +43,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="stock_synth.qrc">:/images/images/nft_thumbnail.jpg</pixmap>
+      <pixmap resource="stock_synth.qrc">:/i/images/nft_thumbnail.jpg</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

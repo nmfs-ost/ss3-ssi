@@ -30,7 +30,7 @@ Dialog_about_gui::Dialog_about_gui(QWidget *parent) :
     ui->textEdit->setText(txt);
     ui->textEdit->setFont(qf);
 
-    connect (ui->toolButton_aboutSS, SIGNAL(clicked()), SIGNAL(showAboutSS()));
+    connect (ui->pushButton_userGuide, SIGNAL(clicked()), SIGNAL(showGuide()));
     connect (ui->toolButton_aboutQt, SIGNAL(clicked()), SIGNAL(showAboutQt()));
     connect (ui->pushButton_ok, SIGNAL(clicked()), SLOT(close()));
 }

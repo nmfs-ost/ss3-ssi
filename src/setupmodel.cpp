@@ -18,7 +18,7 @@ setupModel::setupModel(QObject *parent) : QObject(parent)
     setData(vals);
 
     connect (dataTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-             SLOT (updateData()));
+             SLOT (updateValues()));
 }
 
 setupModel::~setupModel()
@@ -44,18 +44,17 @@ void setupModel::setNumValues(int cols)
         }
         dataTable->setColumnCount(cols);
         dataTable->setRowData(0, setupVals);
-        updateData();
     }
 }
 
-void setupModel::setData(QStringList data)
+void setupModel::setData(QStringList &data)
 {
     setNumValues(data.count());
     dataTable->setRowData(0, data);
-    updateData();
+//    updateValues();
 }
 
-void setupModel::setHeader(QStringList hdr)
+void setupModel::setHeader(QStringList &hdr)
 {
     setNumValues(hdr.count());
     dataTable->setHeader(hdr);
@@ -67,27 +66,37 @@ void setupModel::setValue (int i, int value)
     {
         valuesList[i] = value;
         updateTable();
-        emit dataChanged(valuesList);
     }
 }
 
-int setupModel::getValue (int i)
+int setupModel::getTableValue (int i)
 {
     QStringList vals (getData());
     int value = QString(vals.at(i)).toInt();
     return value;
 }
 
+void setupModel::changeValue (int i, int value)
+{
+    valuesList[i] = value;
+    updateTable();
+    emit dataChanged();
+}
+
 void setupModel::updateTable()
 {
     int num = valuesList.count();
+    int val = 0;
     QStringList newvals;
     for (int i = 0; i < num; i++)
-        newvals.append(QString::number(valuesList.at(i)));
+    {
+        val = valuesList.at(i);
+        newvals.append(QString::number(val));
+    }
     setData(newvals);
 }
 
-void setupModel::updateData()
+void setupModel::updateValues()
 {
     int num = getNumValues();
     int item = 0;
@@ -103,7 +112,7 @@ void setupModel::updateData()
 
     for (int i = 0; i < num; i++)
     {
-        item = getValue(i);
+        item = getTableValue(i);
         dataItem = valuesList[i];
         if (dataItem != item)
         {
@@ -112,7 +121,7 @@ void setupModel::updateData()
         }
     }
     if (changed)
-        emit dataChanged(valuesList);
+        emit dataChanged();
 }
 
 

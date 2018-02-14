@@ -20,7 +20,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="stock_synth.qrc">:/images/images/admb_banner_deep_transparent.png</pixmap>
+      <pixmap resource="stock_synth.qrc">:/i/images/admb_banner_deep_transparent.png</pixmap>
      </property>
     </widget>
    </item>

@@ -81,7 +81,7 @@ QString tablemodel::getRowText(int row)
     return text;
 }
 
-void tablemodel::setHeader(QStringList titles)
+void tablemodel::setHeader(QStringList &titles)
 {
     int cols = titles.count();
     setColumnCount(cols);

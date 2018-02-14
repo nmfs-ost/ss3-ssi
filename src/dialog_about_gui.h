@@ -19,7 +19,7 @@ private:
     Ui::Dialog_about_gui *ui;
 
 signals:
-    void showAboutSS();
+    void showGuide();
     void showAboutQt();
 };
 

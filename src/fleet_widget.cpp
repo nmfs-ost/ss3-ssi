@@ -913,8 +913,6 @@ void fleet_widget::changeSelexSizePattern(int pat)
     ui->spinBox_selex_size_pattern->setValue (pat);
     ui->spinBox_selex_size_num_params->setValue (newNumParams);
     sizeSelexParamsView->setHeight (newNumParams);
-
-    selexSizeEqDialog->changeSelex();
 }
 
 void fleet_widget::setAr1SelexSmoother(int val)
@@ -970,7 +968,6 @@ void fleet_widget::changeSelexSizeMale(int mal)
 void fleet_widget::changeSelexSizeSpecial(int spc)
 {
     current_fleet->getSizeSelectivity()->setSpecial(spc);
-    selexSizeEqDialog->changeSelex();
 }
 
 void fleet_widget::sizeSelexParamsChanged()
@@ -1100,8 +1097,6 @@ void fleet_widget::changeSelexAgePattern(int pat)
     ui->spinBox_selex_age_num_params->setValue
             (current_fleet->getAgeSelectivity()->getNumParameters());
     ageSelexParamsView->setHeight(ui->spinBox_selex_age_num_params->value());
-
-    selexAgeEqDialog->changeSelex();
 }
 
 void fleet_widget::showSelexAgeCurve(bool flag)
@@ -1128,7 +1123,6 @@ void fleet_widget::changeSelexAgeMale(int mal)
 void fleet_widget::changeSelexAgeSpecial(int spc)
 {
     current_fleet->getAgeSelectivity()->setSpecial(spc);
-    selexAgeEqDialog->changeSelex();
 }
 
 void fleet_widget::showSelexAgeInfo()

@@ -20,23 +20,25 @@ public:
 
 signals:
     void dataChanged(QList<int> data);
+    void dataChanged();
 
 public slots:
     void setNumValues (int cols);
     int getNumValues () {return dataTable->columnCount();}
     void setValue (int i, int value);
-    int getValue (int i);
-    void setData (QStringList data);
+    int getTableValue (int i);
+    void changeValue (int i, int value);
+    void setData (QStringList &data);
     QStringList getData () {return dataTable->getRowData(0);}
-    void setHeader (QStringList hdr);
+    void setHeader (QStringList &hdr);
     void setColHeader (int i, QString hdr) {dataTable->setColumnHeader(i, hdr);}
     QString getColHeader (int i) {return dataTable->getColumnHeader(i);}
-    void setRowHeader (QString rhdr) {dataTable->setRowHeader(0, rhdr);}
+    void setRowHeader (QString &rhdr) {dataTable->setRowHeader(0, rhdr);}
     tablemodel *getTable () {return dataTable;}
     setupModel *getModel () {return this;}
 
     void updateTable ();
-    void updateData ();
+    void updateValues ();
     bool useParam (int index) {return valuesList.at(index);}
 
 protected:

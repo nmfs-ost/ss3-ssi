@@ -368,7 +368,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>:/images/images/NOAA_fisheries_banner_fish_trans.png</pixmap>
+        <pixmap resource="stock_synth.qrc">:/i/images/image7_no_background.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

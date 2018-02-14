@@ -12,11 +12,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     model_data = m_data;
     pop = model_data->pPopulation;
     currPattern = NULL;
-    spwn_rcr = pop->SR();
-    movemnt = pop->Move();
-    fecund = pop->Fec();
-    grwth = pop->Grow();
-    mort = pop->M();
 
 //    ui->verticalLayout_fishingMort_2_detail->addWidget();
 
@@ -775,7 +770,7 @@ void population_widget::changeCVmethod (int num)
 
 void population_widget::changeTimeVaryMethod(int num)
 {
-    grwth->setTimeVaryMethod(num+1);
+    pop->Grow()->setTimeVaryMethod(num+1);
 }
 
 void population_widget::changeGrowthMorphRatio(double ratio)
@@ -801,7 +796,7 @@ void population_widget::changeGrowthMorphRatio(double ratio)
 void population_widget::changeGrowthTimeVaryRead(int flag)
 {
     bool vis = (flag != 0);
-    grwth->setTimeVaryReadParams(flag);
+    pop->Grow()->setTimeVaryReadParams(flag);
 //    ui->label_growth_time_vary_params->setVisible(vis);
     growthTVParamsView->setEnabled(vis);
 //    ui->label_wt_len_time_vary_params->setVisible(vis);
@@ -934,7 +929,7 @@ void population_widget::changeRecrNumDevs(int num)
 void population_widget::changeSpwnRecReadTimeVary(int flag)
 {
     bool vis = (flag != 0);
-    spwn_rcr->setTimeVaryReadParams(flag);
+    pop->SR()->setTimeVaryReadParams(flag);
 //    ui->label_recr_time_vary_params->setVisible(vis);
     recruitTVParamsView->setEnabled(vis);
 }

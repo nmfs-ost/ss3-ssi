@@ -32,7 +32,7 @@
      <item>
       <widget class="QLabel" name="label_ver">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;For Stock Synthesis version 3.2x&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;For Stock Synthesis version 3.30x&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>
@@ -45,7 +45,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_icons">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_files">
          <property name="maximumSize">
           <size>
            <width>53</width>
@@ -56,7 +56,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="stock_synth.qrc">:/images/icons/papers.png</pixmap>
+          <pixmap resource="stock_synth.qrc">:/i/icons/papers.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -64,7 +64,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_config">
          <property name="maximumSize">
           <size>
            <width>43</width>
@@ -75,7 +75,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="stock_synth.qrc">:/images/images/admb_icon_trans.png</pixmap>
+          <pixmap resource="stock_synth.qrc">:/i/images/admb_icon_trans.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -83,7 +83,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_fleets">
          <property name="maximumSize">
           <size>
            <width>86</width>
@@ -94,7 +94,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="stock_synth.qrc">:/images/icons/trawler_NOAA_cropped.png</pixmap>
+          <pixmap resource="stock_synth.qrc">:/i/icons/trawler_NOAA_cropped.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -102,7 +102,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_icon">
+        <widget class="QLabel" name="label_population">
          <property name="maximumSize">
           <size>
            <width>67</width>
@@ -124,7 +124,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_forecast">
          <property name="maximumSize">
           <size>
            <width>67</width>
@@ -135,7 +135,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="stock_synth.qrc">:/images/images/modern_binocular_3-4_view.png</pixmap>
+          <pixmap resource="stock_synth.qrc">:/i/images/modern_binocular_3-4_view.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -170,6 +170,13 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
+        <widget class="QPushButton" name="pushButton_userGuide">
+         <property name="text">
+          <string>Open Guide</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer_left">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -183,29 +190,6 @@
         </spacer>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton_aboutSS">
-         <property name="toolTip">
-          <string>About Stock Synthesis</string>
-         </property>
-         <property name="whatsThis">
-          <string>Link to About SS</string>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="stock_synth.qrc">
-           <normaloff>:/icons/StockSynth_icon_128.png</normaloff>:/icons/StockSynth_icon_128.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>32</width>
-           <height>32</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QToolButton" name="toolButton_aboutQt">
          <property name="toolTip">
           <string>About Qt</string>
@@ -214,11 +198,11 @@
           <string>Link to About Qt</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string>Qt</string>
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
-           <normaloff>:/images/images/qt-logo.png</normaloff>:/images/images/qt-logo.png</iconset>
+           <normaloff>:/i/images/qt-logo.png</normaloff>:/i/images/qt-logo.png</iconset>
          </property>
          <property name="iconSize">
           <size>

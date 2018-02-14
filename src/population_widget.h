@@ -186,11 +186,7 @@ private:
 
     ss_model *model_data;
     population *pop;
-    spawn_recruit *spwn_rcr;
-    ss_movement *movemnt;
-    ss_fecundity *fecund;
-    ss_growth   *grwth;
-    ss_mortality *mort;
+
 
 //    tableview *timeVaryParamsView;
 };

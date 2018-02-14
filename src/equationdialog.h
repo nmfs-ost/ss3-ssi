@@ -42,6 +42,7 @@ public:
 
 public slots:
     void setSelex (selectivity *slx);
+    void changingSelex ();
     void changeSelex ();
     void setDataModel (ss_model *data);
     void setXvals(const QStringList &vals);
@@ -160,6 +161,8 @@ private:
     tablemodel *parameters;
     int special, male;
     bool building;
+    bool waiting;
+    bool updating;
 
     QChart *cht;
     QChartView *chartview;
