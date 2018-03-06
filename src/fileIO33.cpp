@@ -3152,13 +3152,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString(" 1=like 3.24; 2=main effects for GP, Settle timing, Area; 3=each Settle entity;"));
         chars += c_file->writeline(line);
         temp_int = pop->SR()->getDistribArea();
-        line = QString (QString("%1 # Recruitment: 1=global; 2=by area (future option)").arg(QString::number(temp_int)));
+        line = QString (QString("%1 # not yet implemented; Future usage: Spawner-Recruitment: 1=global; 2=by area").arg(QString::number(temp_int)));
         chars += c_file->writeline(line);
         num = pop->SR()->getNumAssignments();
         line = QString (QString("%1 # number of recruitment settlement assignments ").arg(QString::number(num)));
         chars += c_file->writeline(line);
         temp_int = pop->SR()->getDoRecruitInteract()? 1: 0;
-        line = QString (QString("%1 # unused quantity (formerly recr_dist_inx)").arg(QString::number(temp_int)));
+        line = QString (QString("%1 # unused option").arg(QString::number(temp_int)));
         chars += c_file->writeline(line);
         line = QString ("#GPat month area age (for each settlement assignment)");
         chars += c_file->writeline(line);
@@ -3267,12 +3267,11 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("%1 ").arg(QString::number(temp_int)));
         temp_int = data->getFleet(0)->getSelTimeVaryReadParams();
         line.append(QString("%1 ").arg(QString::number(temp_int)));
-        line.append(QString("# autogen"));//0=autogenerate time-varying parameters; 1=read each time-varying parameter line"));
+        line.append(QString("# autogen: 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex"));
         chars += c_file->writeline(line);
-        line = QString("# where: 0 = autogen all time-varying parms; 1 = read each time-varying parm line; 2 = read then autogen if min=-12345");
+        line = QString("# where: 0 = autogen all time-varying parms; 1 = read each time-varying parm line; 2 = read then autogen if parm min==-12345");
         chars += c_file->writeline(line);
-        line = QString("# 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex");
-        chars += c_file->writeline(line);
+        chars += c_file->writeline("#");
         chars += c_file->writeline("#");
         line = QString("# setup for M, growth, maturity, fecundity, recruitment distibution, movement ");
         chars += c_file->writeline(line);
@@ -3914,16 +3913,16 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             line = QString(QString (" %1 #_lambda for Fcast_recr_like occurring before endyr+1").arg(
                                QString::number(pop->SR()->getFcastLambda())));
             chars += c_file->writeline(line);
-            line = QString(QString (" %1 #_last_early_yr_nobias_adj_in_MPD").arg(
+            line = QString(QString (" %1 #_last_early_yr_nobias_adj_in_MPD; begin of ramp").arg(
                                QString::number(pop->SR()->getNobiasLastEarlyYr())));
             chars += c_file->writeline(line);
-            line = QString(QString (" %1 #_first_yr_fullbias_adj_in_MPD").arg(
+            line = QString(QString (" %1 #_first_yr_fullbias_adj_in_MPD; begin of plateau").arg(
                                QString::number(pop->SR()->getFullbiasFirstYr())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_last_yr_fullbias_adj_in_MPD").arg(
                                QString::number(pop->SR()->getFullbiasLastYr())));
             chars += c_file->writeline(line);
-            line = QString(QString (" %1 #_first_recent_yr_nobias_adj_in_MPD").arg(
+            line = QString(QString (" %1 #_end_yr_for_ramp_in_MPD (can be in forecast to shape ramp, but SS sets bias_adj to 0.0 for fcast yrs)").arg(
                                QString::number(pop->SR()->getNobiasFirstRecentYr())));
             chars += c_file->writeline(line);
             line = QString(QString (" %1 #_max_bias_adj_in_MPD (-1 to override ramp and set biasadj=1.0 for all estimated recdevs)").arg(
@@ -4068,7 +4067,17 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         c_file->newline();
 
         // Q_setup
-        line = QString("#_Q_setup");
+        line = QString("#_Q_setup for fleets with cpue or survey data");
+        chars += c_file->writeline(line);
+        line = QString("#_1:  link type: (1=simple q, 1 parm; 2=mirror simple q, 1 mirrored parm; 3=q and power, 2 parm)");
+        chars += c_file->writeline(line);
+        line = QString("#_2:  extra input for link, i.e. mirror fleet");
+        chars += c_file->writeline(line);
+        line = QString("#_3:  0/1 to select extra sd parameter");
+        chars += c_file->writeline(line);
+        line = QString("#_4:  0/1 for biasadj or not");
+        chars += c_file->writeline(line);
+        line = QString("#_5:  0/1 to float");
         chars += c_file->writeline(line);
         line = QString("#_fleet   link link_info extra_se biasadj float # fleetname");
         chars += c_file->writeline(line);

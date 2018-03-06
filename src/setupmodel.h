@@ -1,3 +1,8 @@
+/* This is a work of the U.S. Government and is not subject to copyright
+ * protection in the United States. Foreign copyrights may apply.
+ * See copyright.txt for more information.
+ */
+
 #ifndef SETUPMODEL_H
 #define SETUPMODEL_H
 
@@ -26,7 +31,7 @@ public slots:
     void setNumValues (int cols);
     int getNumValues () {return dataTable->columnCount();}
     void setValue (int i, int value);
-    int getTableValue (int i);
+    int getValue (int i);
     void changeValue (int i, int value);
     void setData (QStringList &data);
     QStringList getData () {return dataTable->getRowData(0);}

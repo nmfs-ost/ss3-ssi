@@ -7,8 +7,6 @@
 tablemodel::tablemodel(QObject *parent)
   : QStandardItemModel(parent)
 {
-    connect (this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-                    SIGNAL(dataChanged()));
     reset();
 }
 
@@ -18,8 +16,33 @@ tablemodel::~tablemodel()
 }
 
 
+void tablemodel::setRowCount(int rows)
+{
+    int chk = rowCount();
+    if (rows != chk)
+    {
+        int cols = columnCount();
+        QStringList ql, row;
+        QStandardItemModel::setRowCount(rows);
+        for (int i = 0; i < cols; i++)
+            ql << QString("0");
+        for (int i = chk; i < rows; i++)
+        {
+            row = getRowData(i);
+            if (row.count() < cols)
+                setRowData(i, ql);
+        }
+        emit dataChanged();
+    }
+}
+
 void tablemodel::setRowData(int row, QVector<double> rowdata)
 {
+    QStringList ql;
+    for (int i = 0; i < rowdata.count(); i++)
+        ql << QString::number(rowdata.at(i));
+    setRowData(row, ql);
+    /*
     QList<QStandardItem *> px;
     if (row >= rowCount())
         setRowCount(row + 1);
@@ -32,7 +55,7 @@ void tablemodel::setRowData(int row, QVector<double> rowdata)
     }
     insertRow(row, px);
     removeRow(row + 1);
-    emit dataChanged();
+    emit dataChanged();*/
 }
 
 void tablemodel::setRowData(int row, QStringList &rowstringlist)
@@ -44,12 +67,10 @@ void tablemodel::setRowData(int row, QStringList &rowstringlist)
     for (int i = 0; i < rowstringlist.count(); i++)
     {
         QStandardItem *pxi = new QStandardItem(rowstringlist.at(i));
-//        setItem(row, i, pxi);
         px << pxi;
     }
     insertRow(row, px);
-    if (rowCount() > row+1)
-        removeRow(row + 1);
+    removeRow(row + 1);
     emit dataChanged();
 }
 

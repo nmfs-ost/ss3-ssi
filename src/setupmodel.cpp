@@ -51,7 +51,6 @@ void setupModel::setData(QStringList &data)
 {
     setNumValues(data.count());
     dataTable->setRowData(0, data);
-//    updateValues();
 }
 
 void setupModel::setHeader(QStringList &hdr)
@@ -62,25 +61,35 @@ void setupModel::setHeader(QStringList &hdr)
 
 void setupModel::setValue (int i, int value)
 {
-    if (valuesList.at(i) != value)
+    while (valuesList.count() <= i)
+        valuesList.append(0);
+    if (getValue(i) != value)
     {
         valuesList[i] = value;
         updateTable();
     }
 }
 
-int setupModel::getTableValue (int i)
+int setupModel::getValue (int i)
 {
-    QStringList vals (getData());
-    int value = QString(vals.at(i)).toInt();
+    if (valuesList.count() <= i)
+    {
+        while(valuesList.count() <= i)
+            valuesList.append(0);
+        updateTable();
+    }
+    int value = valuesList.at(i);
     return value;
 }
 
 void setupModel::changeValue (int i, int value)
 {
-    valuesList[i] = value;
-    updateTable();
-    emit dataChanged();
+    if (getValue(i) != value)
+    {
+        valuesList[i] = value;
+        updateTable();
+        emit dataChanged();
+    }
 }
 
 void setupModel::updateTable()
@@ -110,10 +119,11 @@ void setupModel::updateValues()
             valuesList.takeLast();
     }
 
+    QStringList datalist(getData());
     for (int i = 0; i < num; i++)
     {
-        item = getTableValue(i);
-        dataItem = valuesList[i];
+        item = getValue(i);
+        dataItem = QString(datalist.at(i)).toInt();
         if (dataItem != item)
         {
             valuesList[i] = item;

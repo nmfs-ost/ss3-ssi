@@ -1,3 +1,8 @@
+/* This is a work of the U.S. Government and is not subject to copyright
+ * protection in the United States. Foreign copyrights may apply.
+ * See copyright.txt for more information.
+ */
+
 #ifndef FLEET_WIDGET_H
 #define FLEET_WIDGET_H
 

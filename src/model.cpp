@@ -226,6 +226,7 @@ void ss_model::reset()
     set_do_tags(false);
     set_num_tag_groups(0);
     setTagLoss(0);
+    addFleet(newFleet(QString("Fleet")));
 }
 
 void ss_model::set_start_year(int year)

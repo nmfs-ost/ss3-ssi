@@ -149,7 +149,8 @@ equationDialog::~equationDialog()
 
 void equationDialog::setSelex (selectivity *slx)
 {
-    if (selex != NULL)
+    if (selex != NULL &&
+            selex->getNumAges() > 0)
     {
         disconnect(selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
         disconnect(selex, SIGNAL(startingSetupChanges()), this, SLOT(changingSelex()));

@@ -15,10 +15,9 @@ seasonalEffectsModel::seasonalEffectsModel(QObject *parent) : QObject(parent)
     headr << "MlWtLn1" << "MlWtLn2" ;
     headr << "L1" << "K";
     setup->setHeader(headr);
-/*    headr.clear();
-    for (int i = 0; i < 10; i++)
-        headr.append("0");
-    setup->setData(headr);*/
+    headr.clear();
+    headr << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    setup->setData(headr);
     setNumSeasons(1);
 //    setParamHeaders();
 }

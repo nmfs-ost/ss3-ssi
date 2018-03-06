@@ -19,8 +19,8 @@ selectivity::selectivity(ss_model *model, int method)
     parameters = new longParameterModel();
     varParameters = new timeVaryParameterModel(model);
 
-    connect (setup, SIGNAL(setupChanged(QStringList)),
-             SLOT(setSetup(QStringList)));
+//    connect (setup, SIGNAL(setupChanged(QStringList)),
+//             SLOT(setSetup(QStringList)));
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
 
@@ -56,7 +56,7 @@ void selectivity::setSetup(QStringList strList)
     discard = strList.at(1).toInt();
     male = strList.at(2).toInt();
     special = strList.at(3).toInt();*/
-    emit dataChanged();
+//    emit dataChanged();
 }
 void selectivity::setSetup(QList<int> values)
 {
@@ -70,10 +70,10 @@ QString selectivity::getSetupText()
 {
     QString text("");
     text.append(QString(" %1 %2 %3 %4").arg(
-                QString::number(setup->getTableValue(0)),
-                QString::number(setup->getTableValue(1)),
-                QString::number(setup->getTableValue(2)),
-                QString::number(setup->getTableValue(3))));
+                QString::number(setup->getValue(0)),
+                QString::number(setup->getValue(1)),
+                QString::number(setup->getValue(2)),
+                QString::number(setup->getValue(3))));
     return text;
 }
 
@@ -84,8 +84,8 @@ void selectivity::setMethod(int method)
     equation = NULL;*/
     QStringList parm;
     int numparam = getNumParameters();
-    int pattn = setup->getTableValue(0);
-    int special = setup->getTableValue(3);
+    int pattn = setup->getValue(0);
+    int special = setup->getValue(3);
     if (method == pattn)
     {
         switch (method)
@@ -126,8 +126,7 @@ void selectivity::setMethod(int method)
             if (special < 2)
             {
                 special = 2;
-                setup->setValue(3, special);
-                //setSpecial(special);
+//                setup->setValue(3, special);
             }
             numparam = getNumParameters();
             numparam = 2 + special;
@@ -141,6 +140,7 @@ void selectivity::setMethod(int method)
             parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             for (int i = 2; i < numparam; i++)
                 setParameter(i, parm);
+            setSpecial(special);
 //            equation = new linear_segments();
             break;
         case 7:
@@ -417,7 +417,7 @@ void selectivity::setMethod(int method)
 
 void selectivity::setPattern(int value)
 {
-    if (setup->getTableValue(0) != value)
+    if (setup->getValue(0) != value)
     {
         emit startingSetupChanges();
         setup->setValue(0, value);
@@ -490,7 +490,7 @@ QString selectivity::getParameterLabel(int index)
 
 void selectivity::setDiscard(int value)
 {
-    int discard = setup->getTableValue(1);
+    int discard = setup->getValue(1);
     if (discard != value)
     {
         emit startingSetupChanges();
@@ -523,7 +523,7 @@ void selectivity::setDiscard(int value)
 
 void selectivity::setMale(int value)
 {
-    int male = setup->getTableValue(2);
+    int male = setup->getValue(2);
     if (male != value)
     {
         emit startingSetupChanges();
@@ -542,26 +542,34 @@ void selectivity::setMale(int value)
 
 void selectivity::setSpecial(int value)
 {
-    int special = setup->getTableValue(3);
+    int special = setup->getValue(3);
+    int scale = 0;
     if (special != value)
     {
         emit startingSetupChanges();
-        setup->setValue(3, value);
-        switch (getPattern())
+        switch(getPattern())
         {
-        case 6:
-            setNumParameters(2+value);
-            break;
-        case 27:
-            setNumParameters(3+2*value);
-            break;
-        case 42:
-            setNumParameters(2+3+2*value);
-            break;
         case 43:
-            setNumParameters(2+2+value);
+            scale = 2;
+        case 6:
+            if (value < 2)
+            {
+                value = 2;
+            }
+            setNumParameters(scale + 2 + value);
+            break;
+
+        case 42:
+            scale = 2;
+        case 27:
+            if (value < 3)
+            {
+                value = 3;
+            }
+            setNumParameters(scale + 3 + value * 2);
             break;
         }
+        setup->setValue(3, value);
         emit dataChanged();
     }
 }

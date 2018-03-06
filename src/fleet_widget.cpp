@@ -14,6 +14,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     titleFont.setPointSize(16);
     titleFont.setBold(true);
 
+    current_fleet = NULL;
     ui->comboBox_fleet_name->setFont(titleFont);
 
     ui->label_selex_age_discard->setVisible(false);
@@ -143,11 +144,10 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_age_comp_tails, SIGNAL(editingFinished()), SLOT(changeAgeMinTailComp()));
     connect (ui->lineEdit_age_constant, SIGNAL(editingFinished()), SLOT(changeAgeAddToData()));
 
-    current_fleet = NULL;
 //    connectFleet();
-    set_current_fleet(0);
+//    set_current_fleet(0);
 
-    refresh();
+//    refresh();
 //    ui->comboBox_fleet_name->setCurrentIndex(0);
     ui->tabWidget_fleet->setCurrentIndex(0);
 }
@@ -183,6 +183,7 @@ void fleet_widget::disconnectFleet()
     disconnect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
     disconnect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
 
+    disconnect (ui->groupBox_q_setup, SIGNAL(toggled(bool)), current_fleet, SLOT(setQSetupRead(bool)));
     disconnect (current_fleet->Q()->getSetupTable(), SIGNAL(dataChanged()), this, SLOT(qSetupChanged()));
     disconnect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(qSetupParamsChanged()));
     disconnect (current_fleet->Q()->getTVParams(), SIGNAL(dataChanged()), this, SLOT(qSetupTVParamsChanged()));
@@ -240,6 +241,7 @@ void fleet_widget::connectFleet()
     connect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
     connect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
 
+    connect (ui->groupBox_q_setup, SIGNAL(toggled(bool)), current_fleet, SLOT(setQSetupRead(bool)));
     connect (current_fleet->Q()->getSetupTable(), SIGNAL(dataChanged()),
              this, SLOT(qSetupChanged()));
     connect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()),
@@ -346,11 +348,12 @@ void fleet_widget::refresh()
     setQTimeVaryReadParams(model_data->getFleet(0)->getQTimeVaryReadParams());
     ui->spinBox_sel_time_vary_read->setValue(model_data->getFleet(0)->getSelTimeVaryReadParams());
 
-    if (curr >= 0)
-    {
-        ui->comboBox_fleet_name->setCurrentIndex(curr);
-        set_current_fleet(curr);
-    }
+    if (curr >= totalFleets)
+        curr == totalFleets - 1;
+    if (curr < 0)
+        curr = 0;
+    ui->comboBox_fleet_name->setCurrentIndex(curr);
+    set_current_fleet(curr);
 
     ui->tabWidget_fleet->setCurrentIndex(0);
     ui->tabWidget_obs->setCurrentIndex(0);

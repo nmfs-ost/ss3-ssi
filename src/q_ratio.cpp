@@ -37,6 +37,9 @@ q_ratio::~q_ratio()
 void q_ratio::reset()
 {
     QStringList ql;
+    ql << "Link" << "Link_Info" << "ExtraSD" << "Bias_Adj" << "Float" ;
+    setup->setHeader(ql);
+    ql.clear();
     ql << "0" << "0" << "0" << "0" << "0";
     setSetup(ql);
 }
@@ -51,6 +54,8 @@ void q_ratio::setFleetName(QString name)
 
 void q_ratio::setSetup(QStringList values)
 {
+    while (values.count() < 5)
+        values.append(QString("0"));
     setup->setData(values);
 }
 

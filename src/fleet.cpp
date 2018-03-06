@@ -466,14 +466,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
 
     //  q_section
     Q()->setSetup(oldfl->Q()->getSetup());
-/*    Q()->setDoPower(oldfl->Q()->getDoPower());
-    Q()->setDoEnvLink(oldfl->Q()->getDoEnvLink());
-    Q()->setDoExtraSD(oldfl->Q()->getDoExtraSD());
-    Q()->setType(oldfl->Q()->getType());*/
-/*    set_q_do_power(oldfl->q_do_power());
-    set_q_do_env_lnk(oldfl->q_do_env_lnk());
-    set_q_do_extra_sd(oldfl->q_do_extra_sd());
-    set_q_type(oldfl->q_type());*/
+
     for (i = 0; i < oldfl->Q()->getNumParams(); i++)
     {
         strList = oldfl->Q()->getParameter(i);
