@@ -23,7 +23,9 @@ chartDialog::chartDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle(tr("Report.sso  Time_Series charts"));
+    delete ui->verticalLayout_right;
+
+    setWindowTitle(tr("SS_summary.sso  Plots"));
 
     connect (ui->pushButton_refresh, SIGNAL(released()), SLOT(refreshData()));
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));
@@ -66,7 +68,9 @@ void chartDialog::refreshData()
 
 void chartDialog::readData()
 {
+    QString line;
     QStringList values;
+    QStringList title;
     float xvalue = 0.0;
     float yvalue = 0.0;
     bool okay = false;
@@ -75,16 +79,20 @@ void chartDialog::readData()
     int seas = 0;
     int index = 0;
 
-    QFile report(QString("Report.sso"));
+    QFile report(QString("ss_summary.sso"));
     if (!report.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return;
     }
 
     QTextStream stream(&report);
 
+    seriesNames << "SpwnBio" << "RecrBio" << "F_Bio" << "CtchBio";
+    createCharts(1, seriesNames);
+
     while (!stream.atEnd())
     {
-        QString line = stream.readLine();
+        line = stream.readLine();
+        /* Reading from Report.sso
         if (line.contains("Season_Durations", Qt::CaseInsensitive))
         {
             values = line.split(" ", QString::SkipEmptyParts);
@@ -100,7 +108,6 @@ void chartDialog::readData()
             for (int i = 4; i < values.count(); i++)
             {
                 seriesNames.append(values.at(i));
-//                setupCheckBoxes (seriesNames);
             }
 
             line = stream.readLine();
@@ -123,8 +130,6 @@ void chartDialog::readData()
                     xvalue = year;
                     for (int s = 2; s <= seas; s++)
                         xvalue += seasons.at(s - 2);
-//                    if (seas > 1)
-//                        xvalue += seasons.at(seas - 2);
                     if (year < firstYear)
                         firstYear = year;
                     if (year > lastYear)
@@ -164,9 +169,73 @@ void chartDialog::readData()
             if (!okay)
                 break;
 
+        }*/
+        if    (line.contains("SSB_"))
+        {
+            values = line.split(' ');
+            title = values.at(0).split('_');
+            xvalue = title.last().toFloat();
+            yvalue = values.at(1).toFloat(&okay);
+            if (okay && xvalue > 1900)
+            {
+                if (xvalue < firstYear)
+                    firstYear = xvalue;
+                if (xvalue > lastYear)
+                    lastYear = xvalue;
+                if (yvalue > maxBmass)
+                    maxBmass = yvalue;
+                bmassSeries.at(0)->append(xvalue, yvalue);
+            }
         }
+        else if (line.contains("Recr_"))
+        {
+            if (line.contains("ForeRecr"))
+                continue;
 
+            values = line.split(' ');
+            title = values.at(0).split('_');
+            xvalue = title.last().toFloat();
+            yvalue = values.at(1).toFloat(&okay);
+            if (okay && xvalue > 1900)
+            {
+                if (yvalue > maxBmass)
+                    maxBmass = yvalue;
+                bmassSeries.at(1)->append(xvalue, yvalue);
+            }
+        }
+        else if (line.contains("F_"))
+        {
+            values = line.split(' ');
+            title = values.at(0).split('_');
+            xvalue = title.last().toFloat();
+            yvalue = values.at(1).toFloat(&okay);
+            if (okay && xvalue > 1900)
+            {
+                if (yvalue > maxBmass)
+                    maxBmass = yvalue;
+                bmassSeries.at(2)->append(xvalue, yvalue);
+            }
+
+        }
+        else if (line.contains("TotCatch"))
+        {
+            values = line.split(' ');
+            title = values.at(0).split('_');
+            xvalue = title.last().toFloat();
+            yvalue = values.at(1).toFloat(&okay);
+            if (okay && xvalue > 1900)
+            {
+                if (yvalue > maxBmass)
+                    maxBmass = yvalue;
+                bmassSeries.at(3)->append(xvalue, yvalue);
+            }
+
+        }
     }
+    bmassSeries[0]->setName(QString("SpwnStck"));
+    bmassSeries[1]->setName(QString("SpwnRcrt"));
+    bmassSeries[2]->setName(QString("Fishing"));
+    bmassSeries[3]->setName(QString("TotCatch"));
     report.close();
 }
 
@@ -197,7 +266,7 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
     {
         // create layout
         newcht = new QChart();
-        newcht->setTitle(QString("Area %1").arg(QString::number(areaNum)));
+        newcht->setTitle(QString("Summary Charts"));//("Area %1").arg(QString::number(areaNum)));
         newcht->legend()->setAlignment(Qt::AlignRight);
         newcht->setGeometry(0, 0, 100, 100);
         newview = new QChartView (newcht);
@@ -215,7 +284,8 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
 
         ui->verticalLayout_left->addWidget(newview, 1);
 
-
+/*        if (serNames.count() > 4)
+        {
         newcht = new QChart ();
         newcht->setTitle(QString("Area %1").arg(QString::number(areaNum)));
         newcht->legend()->setAlignment(Qt::AlignRight);
@@ -234,7 +304,7 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
         newcht->createDefaultAxes();
 
         ui->verticalLayout_right->addWidget(newview, 1);
-
+        }*/
 
         if (areaNum == 1)
         {

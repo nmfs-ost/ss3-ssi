@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     readSettings();
 
     // set up information dock widget
+
     QFont title_font ("Tw Cen MT Condensed", 28, 4);
     title_font.setFamily("Arial");
     title_font.setBold(true);
@@ -433,6 +434,7 @@ void MainWindow::readFiles()
 {
     bool worked = true;
     int choice = 1;
+    fleets->set_current_fleet(0);
     modelData->reset();
     worked = files->read_files(modelData);
     if (worked)

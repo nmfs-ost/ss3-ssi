@@ -96,8 +96,14 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
     selexSizeEqDialog = new equationDialog(this, new QString("Size"));
     selexSizeEqDialog->hide();
+    selexSizeInfoDialog = new DialogInfo (this);
+    setupSelexSizeInfo();
+    selexSizeInfoDialog->hide();
     selexAgeEqDialog = new equationDialog(this, new QString("Age"));
     selexAgeEqDialog->hide();
+    selexAgeInfoDialog = new DialogInfo (this);
+    setupSelexAgeInfo();
+    selexAgeInfoDialog->hide();
 
     lambdaView = new tableview();
     lambdaView->setParent(this);
@@ -124,7 +130,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
 
     connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
     connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
-    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), SLOT(showSelexSizeInfo()));
+    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), selexSizeInfoDialog, SLOT(show()));
     connect (ui->spinBox_selex_size_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexSizePattern(int)));
     connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
     connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
@@ -132,7 +138,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->pushButton_selex_size_curve, SIGNAL(clicked(bool)), SLOT(showSelexSizeCurve(bool)));
     connect (selexSizeEqDialog, SIGNAL(closed()), SLOT(selexSizeCurveClosed()));
 
-    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), SLOT(showSelexAgeInfo()));
+    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), selexAgeInfoDialog, SLOT(show()));
     connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
@@ -924,9 +930,9 @@ void fleet_widget::setAr1SelexSmoother(int val)
         model_data->getFleet(i)->setAr1SelSmoother(val);
 }
 
-void fleet_widget::showSelexSizeInfo()
+void fleet_widget::setupSelexSizeInfo()
 {
-    QString title("Size Selectivity Pattern Information");
+    QString title("Size Selectivity Pattern Numbers");
     QString msg ("Pattern\tNumParams\tDescription\n");
     msg.append("0\t0\tSelectivity = 1.0 for all sizes.\n");
     msg.append("1\t2\tLogistic.\n");
@@ -952,7 +958,10 @@ void fleet_widget::showSelexSizeInfo()
     msg.append("42\t0\tCubic spline with user defined scaling.\n");
     msg.append("43\t0\tLinear segements with user defined scaling.\n");
     msg.append("");
-    /*int button = */QMessageBox::information(this, title, msg, QMessageBox::Ok);
+    selexSizeInfoDialog->setWindowTitle(tr("Information"));
+    selexSizeInfoDialog->setTitle(title);
+    selexSizeInfoDialog->setText(msg);
+//    /*int button = */QMessageBox::information(this, title, msg, QMessageBox::Ok);
 }
 
 void fleet_widget::changeSelexSizeDiscard(int disc)
@@ -1128,9 +1137,9 @@ void fleet_widget::changeSelexAgeSpecial(int spc)
     current_fleet->getAgeSelectivity()->setSpecial(spc);
 }
 
-void fleet_widget::showSelexAgeInfo()
+void fleet_widget::setupSelexAgeInfo()
 {
-    QString title("Age Selectivity Pattern Information");
+    QString title("Age Selectivity Pattern Numbers");
     QString msg ("Pattern\tNumParams\tDescription\n");
     msg.append("10\t0\tSelectivity = 1.0 for all ages, age 1+.\n");
     msg.append("11\t2\tChoose minimum and maximum ages.\n");
@@ -1147,7 +1156,10 @@ void fleet_widget::showSelexAgeInfo()
     msg.append("41\t2+Nages+1\tRandom walk with user defined scaling.\n");
     msg.append("42\t2+3+Specl\tCubic spline with user defined scaling.\n");
     msg.append("");
-    QMessageBox::information(this, title, msg);
+    selexAgeInfoDialog->setWindowTitle(tr("Information"));
+    selexAgeInfoDialog->setTitle(title);
+    selexAgeInfoDialog->setText(msg);
+//    QMessageBox::information(this, title, msg);
 }
 
 void fleet_widget::setGenMethodTotal(int num)

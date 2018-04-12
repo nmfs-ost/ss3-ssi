@@ -226,7 +226,7 @@ void ss_model::reset()
     set_do_tags(false);
     set_num_tag_groups(0);
     setTagLoss(0);
-    addFleet(newFleet(QString("Fleet")));
+    set_num_fleets(1);
 }
 
 void ss_model::set_start_year(int year)
@@ -589,20 +589,23 @@ void ss_model::set_num_fleets(int n_fleets)
 //    Fleet *fleet;
 
     if (fleets.isEmpty())
+    {
         fleets.append(new Fleet(this));
+    }
+    else
+    {
+        for (int i = 0; i < fleets.count(); i++)
+            fleets.at(i)->reset();
+    }
 
     while (fleets.count() > n_fleets)
     {
-        index = n_fleets - 1;
         deleteFleet(index);
     }
     while (n_fleets > fleets.count())
     {
         addFleet(newFleet());
     }
-    assignFleetNumbers();
-
-    forecast->set_num_fleets(n_fleets);
 }
 
 

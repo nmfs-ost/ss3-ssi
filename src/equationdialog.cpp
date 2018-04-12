@@ -1399,13 +1399,14 @@ void equationDialog::close()
 
 void equationDialog::buttonClicked(QAbstractButton *btn)
 {
-    if (btn->text().contains("Apply")) {
+    if      (btn->text().contains("Apply")) {
         apply();
     }
     else if (btn->text().contains("Reset")){
         reset();
     }
     else if (btn->text().contains("Restore")){
+        selex->setDefaultParams(equationNum, special);
         restoreAll();
     }
     else if (btn->text().contains("Close")){
@@ -2712,7 +2713,7 @@ void equationDialog::updateDblLogistic()
     for (i = 0; i < limit; i++)
     {
         term1 = par2 * (xValList.at(i) - par1);
-        term2 = par4 * (xValList.at(i) - (par1 * par6 + par3));
+        term2 = par4 * (xValList.at(i) - (par1 * offset + par3));
         term1log = logist(term1);
         term2log = logist(term2);
         ascendSeries->append(QPointF(xValList.at(i), term1log));
@@ -2722,7 +2723,7 @@ void equationDialog::updateDblLogistic()
     for (i = limit; i < xValList.count(); i++)
     {
         term1 = par2 * (xValList.at(i) - par1);
-        term2 = par4 * (xValList.at(i) - (par1 * par6 + par3));
+        term2 = par4 * (xValList.at(i) - (par1 * offset + par3));
         term1log = logist(term1);
         term2log = logist(term2);
         ascendSeries->append(QPointF(xValList.at(i), term1log));
@@ -4087,7 +4088,7 @@ void equationDialog::cubicSpline(float scale)
 
 void equationDialog::updateCubicSpline(float scale)
 {
-    float xval = 0;
+/*    float xval = 0;
     int start = (scale > 0? 5: 3);
     int num = parameters->rowCount() - start;
     float scaleLo = 1, scaleHi = xValList.count() - 1;
@@ -4174,7 +4175,7 @@ void equationDialog::updateCubicSpline(float scale)
             firstPoints[i].setY(firstPoints.at(i).y() / divisor);
 
         selSeries->append(firstPoints);
-    }
+    }*/
 }
 
 /** Returns the maximum x-value of a point list */

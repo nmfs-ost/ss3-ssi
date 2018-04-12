@@ -1007,11 +1007,14 @@
    </item>
    <item row="4" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset resets parameter values to data.&lt;/p&gt;&lt;p&gt;Restore Defaults creates sensible parameters.&lt;/p&gt;&lt;p&gt;Apply changes the underlying data values.&lt;/p&gt;&lt;p&gt;Close closes this dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Reset</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
      </property>
      <property name="centerButtons">
       <bool>false</bool>

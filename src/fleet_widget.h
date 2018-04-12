@@ -15,6 +15,7 @@
 #include "catchdelegate.h"
 #include "abundancedelegate.h"
 #include "equationdialog.h"
+#include "dialoginfo.h"
 
 namespace Ui {
 class fleet_widget;
@@ -77,7 +78,7 @@ public slots:
     void setAr1SelexSmoother(int val);
 
     void changeSelexSizePattern(int pat);
-    void showSelexSizeInfo();
+    void setupSelexSizeInfo();
     void changeSelexSizeDiscard(int disc);
     void changeSelexSizeMale (int mal);
     void changeSelexSizeSpecial (int spc);
@@ -90,7 +91,7 @@ public slots:
     void changeSelexAgePattern(int pat);
     void changeSelexAgeMale (int mal);
     void changeSelexAgeSpecial (int spc);
-    void showSelexAgeInfo();
+    void setupSelexAgeInfo();
     void ageSelexParamsChanged();
     void ageSelexTVParamsChanged();
     void showSelexAgeCurve(bool flag);
@@ -132,11 +133,13 @@ private:
     tableview *sizeSelexDiscardView;
     tableview *sizeSelexMaleView;
     tableview *sizeSelexTimeVaryParamsView;
+    equationDialog *selexSizeEqDialog;
+    DialogInfo * selexSizeInfoDialog;
     tableview *ageSelexParamsView;
     tableview *ageSelexMaleView;
     tableview *ageSelexTimeVaryParamsView;
-    equationDialog *selexSizeEqDialog;
     equationDialog *selexAgeEqDialog;
+    DialogInfo * selexAgeInfoDialog;
 
     tableview *lambdaView;
 

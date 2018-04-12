@@ -12,7 +12,7 @@ tablemodel::tablemodel(QObject *parent)
 
 tablemodel::~tablemodel()
 {
-    reset();
+//    reset();
 }
 
 

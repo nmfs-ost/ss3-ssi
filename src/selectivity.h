@@ -102,6 +102,7 @@ public slots:
 //    double evaluate();
 
     void setMethod (int method);
+    void setDefaultParams (int method, int num);
 
 protected:
 //    void setEquation (int method);

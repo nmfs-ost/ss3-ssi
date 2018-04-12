@@ -99,7 +99,8 @@ SOURCES += main.cpp\
     conversions.cpp \
     chartdialog.cpp \
     equationdialog.cpp \
-    ttk_spline.cpp
+    ttk_spline.cpp \
+    dialoginfo.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -188,7 +189,8 @@ HEADERS  += mainwindow.h \
     conversions.h \
     chartdialog.h \
     equationdialog.h \
-    ttk_spline.h
+    ttk_spline.h \
+    dialoginfo.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -222,7 +224,8 @@ FORMS    += mainwindow.ui \
     fileconversiondialog.ui \
     dialog_runoptions.ui \
     chartdialog.ui \
-    equationdialog.ui
+    equationdialog.ui \
+    dialoginfo.ui
 
 OTHER_FILES +=
 

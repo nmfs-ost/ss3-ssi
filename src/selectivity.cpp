@@ -19,8 +19,8 @@ selectivity::selectivity(ss_model *model, int method)
     parameters = new longParameterModel();
     varParameters = new timeVaryParameterModel(model);
 
-//    connect (setup, SIGNAL(setupChanged(QStringList)),
-//             SLOT(setSetup(QStringList)));
+    connect (setup, SIGNAL(dataChanged(QList<int>)),
+             SLOT(setSetup(QList<int>)));
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
 
@@ -60,10 +60,10 @@ void selectivity::setSetup(QStringList strList)
 }
 void selectivity::setSetup(QList<int> values)
 {
-    setMethod (values.at(0));
-    setDiscard(values.at(1));
-    setMale   (values.at(2));
     setSpecial(values.at(3));
+    setMale   (values.at(2));
+    setDiscard(values.at(1));
+    setMethod (values.at(0));
 }
 
 QString selectivity::getSetupText()
@@ -97,6 +97,8 @@ void selectivity::setMethod(int method)
             break;
         case 1:  // Simple logistic with 2 parameters
         case 12:
+            if (parameters->getNumParams() != 2)
+            {
             setNumParameters(2);
             parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
@@ -104,6 +106,7 @@ void selectivity::setMethod(int method)
             parm[1] = QString("50");
             parm[2] = QString("0");
             setParameter(1, parm);
+            }
 //            equation = new simple_logistic();
             break;
         case 2:  // discontinued
@@ -116,19 +119,22 @@ void selectivity::setMethod(int method)
             setPattern(30);
             break;
         case 5:
+            if (parameters->getNumParams() != 2)
+            {
             setNumParameters(2);
             parm << "-1" << "25" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             setParameter(1, parm);
+            }
 //            equation = new mirror_range();
             break;
-        case 6:
+        case 6:   // linear segments
             if (special < 2)
             {
                 special = 2;
-//                setup->setValue(3, special);
+                setup->setValue(3, special);
             }
-            numparam = getNumParameters();
+//            numparam = getNumParameters();
             numparam = 2 + special;
             if (getNumParameters() < numparam)
                 setNumParameters(numparam);
@@ -140,7 +146,6 @@ void selectivity::setMethod(int method)
             parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             for (int i = 2; i < numparam; i++)
                 setParameter(i, parm);
-            setSpecial(special);
 //            equation = new linear_segments();
             break;
         case 7:
@@ -148,7 +153,10 @@ void selectivity::setMethod(int method)
             break;
         case 8:
         case 18:
+            if (parameters->getNumParams() != 8)
+            {
             setNumParameters(8);
+            }
             parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -172,7 +180,10 @@ void selectivity::setMethod(int method)
             break;
         case 9:
         case 19:
+            if (parameters->getNumParams() != 6)
+            {
             setNumParameters(6);
+            }
             parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             setParameter(2, parm);
@@ -187,7 +198,10 @@ void selectivity::setMethod(int method)
 //            equation = new simple_double_logistic();
             break;
         case 11:
+            if (parameters->getNumParams() != 2)
+            {
             setNumParameters(2);
+            }
             parm << "0" << "25" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm[2] = QString("25");
@@ -195,7 +209,10 @@ void selectivity::setMethod(int method)
 //            equation = new constant_for_range();
             break;
         case 13:
+            if (parameters->getNumParams() != 8)
+            {
             setNumParameters(8);
+            }
             parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -219,7 +236,10 @@ void selectivity::setMethod(int method)
             break;
         case 14:
             numparam = numAges + 1;
+            if (parameters->getNumParams() != numparam)
+            {
             setNumParameters(numparam);
+            }
             parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             for (int i = 0; i < numparam; i++)
                 setParameter(i, parm);
@@ -230,7 +250,10 @@ void selectivity::setMethod(int method)
 //            equation = new mirror();
             break;
         case 16:
+            if (parameters->getNumParams() != 2)
+            {
             setNumParameters(2);
+            }
             parm << "-5" << "5" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -240,7 +263,10 @@ void selectivity::setMethod(int method)
             break;
         case 17:
             numparam = numAges + 1;
+            if (parameters->getNumParams() != 2)
+            {
             setNumParameters(numparam);
+            }
             parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -252,7 +278,10 @@ void selectivity::setMethod(int method)
         case 20:
         case 23:
         case 24:
+            if (parameters->getNumParams() != 6)
+            {
             setNumParameters(6);
+            }
             parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -273,7 +302,10 @@ void selectivity::setMethod(int method)
 //            equation = new double_normal_plateau_ends();
             break;
         case 22:
+            if (parameters->getNumParams() != 4)
+            {
             setNumParameters(4);
+            }
             parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -287,7 +319,10 @@ void selectivity::setMethod(int method)
             break;
         case 25:
         case 26:
+            if (parameters->getNumParams() != 3)
+            {
             setNumParameters(3);
+            }
             parm << ".02" << "2" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -303,11 +338,14 @@ void selectivity::setMethod(int method)
             if (special < 3)
             {
                 special = 3;
+                setup->setValue(3, special);
             }
-            setup->setValue(3, special);
             //setSpecial(special);
             numparam = special * 2 + 3;
+            if (parameters->getNumParams() != numparam)
+            {
             setNumParameters(numparam);
+            }
             parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm.clear();
@@ -337,7 +375,10 @@ void selectivity::setMethod(int method)
             break;
         case 41:
             numparam = numAges + 1 + 2;
+            if (parameters->getNumParams() != numparam)
+            {
             setNumParameters(numparam);
+            }
             parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm[2] = QString("10");
@@ -358,7 +399,10 @@ void selectivity::setMethod(int method)
             setup->setValue(3, special);
             //setSpecial(special);
             numparam = special * 2 + 3 + 2;
+            if (parameters->getNumParams() != numparam)
+            {
             setNumParameters(numparam);
+            }
             parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm[2] = QString("10");
@@ -389,7 +433,10 @@ void selectivity::setMethod(int method)
             setup->setValue(3, special);
             //setSpecial(special);
             numparam = special + 2 + 2;
+            if (parameters->getNumParams() != numparam)
+            {
             setNumParameters(numparam);
+            }
             parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm[2] = QString("10");
@@ -426,6 +473,345 @@ void selectivity::setPattern(int value)
         emit setupChanged(getSetup());
 //        emit dataChanged();
     }
+}
+
+void selectivity::setDefaultParams(int method, int num)
+{
+    int numparam;
+    QStringList parm;
+    int special = setup->getValue(3);
+    switch (method)
+    {
+    case 0: // selectivity = 1 for all
+    case 10:
+        setNumParameters(0);
+        break;
+    case 1:  // Simple logistic with 2 parameters
+    case 12:
+        parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[0] = QString("-50");
+        parm[1] = QString("50");
+        parm[2] = QString("0");
+        setParameter(1, parm);
+        break;
+    case 5:  // mirror other fleet selectivity with bounds
+
+        if (num != 2)
+        {
+        setNumParameters(2);
+        parm << "-1" << "25" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        setParameter(1, parm);
+        }
+        break;
+    case 6:
+        if (special < 2)
+        {
+            special = 2;
+            setup->setValue(3, special);
+        }
+        numparam = 2 + special;
+        if (num < numparam)
+            setNumParameters(numparam);
+        parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("20");
+        setParameter(1, parm);
+        parm.clear();
+        parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 2; i < numparam; i++)
+            setParameter(i, parm);
+        setSpecial(special);
+        break;
+    case 8:
+    case 18: // new double logistic
+        if (num != 8)
+        {
+        setNumParameters(8);
+        }
+        parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        parm.clear();
+        parm << "-5" << "5" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-5" << "3" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        setParameter(6, parm);
+        parm.clear();
+        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(4, parm);
+        setParameter(5, parm);
+        parm.clear();
+        parm << "1" << "20" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(7, parm);
+        break;
+    case 9:
+    case 19:  // simple double logistic
+        if (num != 6)
+        {
+        setNumParameters(6);
+        }
+        parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        setParameter(2, parm);
+        setParameter(4, parm);
+        parm.clear();
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        setParameter(5, parm);
+        parm.clear();
+        parm << "-1" << "0" << "-.01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        break;
+    case 11:  // constant with range
+        if (num != 2)
+        {
+        setNumParameters(2);
+        }
+        parm << "0" << "25" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("25");
+        setParameter(1, parm);
+        break;
+    case 13:  // double logistic
+        if (num != 8)
+        {
+        setNumParameters(8);
+        }
+        parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        parm.clear();
+        parm << "-5" << "5" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-5" << "3" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        setParameter(6, parm);
+        parm.clear();
+        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(4, parm);
+        setParameter(5, parm);
+        parm.clear();
+        parm << "1" << "20" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(7, parm);
+        break;
+    case 14:  // value at each age
+        numparam = numAges + 1;
+        if (parameters->getNumParams() != numparam)
+        {
+        setNumParameters(numparam);
+        }
+        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 0; i < numparam; i++)
+            setParameter(i, parm);
+        break;
+    case 15:  // mirror with no bounds
+        setNumParameters(0);
+        break;
+    case 16:  // coleraine
+        if (num != 2)
+        {
+        setNumParameters(2);
+        }
+        parm << "-5" << "5" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "-5" << "40" << "20" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        break;
+    case 17:  // random walk
+        numparam = numAges + 1;
+        if (num != 2)
+        {
+        setNumParameters(numparam);
+        }
+        parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "-10" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 1; i < numparam; i++)
+            setParameter(i, parm);
+        break;
+    case 20:
+    case 23:
+    case 24:  // double normal with plateau and defined ends
+        if (num != 6)
+        {
+        setNumParameters(6);
+        }
+        parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "-5" << "3" << "-.01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        parm.clear();
+        parm << "-5" << "12" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-2" << "10" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        parm.clear();
+        parm << "-15" << "5" << "-2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(4, parm);
+        parm.clear();
+        parm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(5, parm);
+        break;
+    case 22:  // double normal with plateau
+        if (num != 4)
+        {
+        setNumParameters(4);
+        }
+        parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        parm.clear();
+        parm << "0" << "10" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        setParameter(3, parm);
+        break;
+    case 25:
+    case 26:  // exponential-logistic
+        if (parameters->getNumParams() != 3)
+        {
+        setNumParameters(3);
+        }
+        parm << ".02" << "2" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << ".001" << ".999" << ".5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        parm.clear();
+        parm << ".001" << ".5" << ".1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        break;
+    case 27:  // cubic spline
+        int index;
+        if (special < 3)
+        {
+            special = 3;
+            setup->setValue(3, special);
+        }
+        //setSpecial(special);
+        numparam = special * 2 + 3;
+        if (parameters->getNumParams() != numparam)
+        {
+        setNumParameters(numparam);
+        }
+        parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm.clear();
+        parm << "-.001" << "1" << ".13" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(1, parm);
+        parm.clear();
+        parm << "-1" << ".001" << "-.03" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm.clear();
+        parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        index = 3;
+        for (int i = 0; i < special; i++, index++)
+            setParameter(index, parm);
+        parm.clear();
+        parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 0; i < special; i++)
+            setParameter(index, parm);
+        break;
+    case 30:  // equal to spawning biomass
+    case 31:  // equal to exp(recruitment dev)
+    case 32:  // equal to exp(rec dev) * spawn biomass
+    case 33:  // expected survey abund = age 0 recruitment
+    case 34:  // spawning biomass depletion (B/B0)
+        setNumParameters(0);
+        break;
+    case 41:
+        numparam = numAges + 1 + 2;
+        if (parameters->getNumParams() != numparam)
+        {
+        setNumParameters(numparam);
+        }
+        parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("10");
+        setParameter(1, parm);
+        parm.clear();
+        parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-10" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 1; i < numparam; i++)
+            setParameter(i, parm);
+        break;
+    case 42:
+        if (special < 3)
+        {
+            special = 3;
+            setup->setValue(3, special);
+        }
+        numparam = special * 2 + 3 + 2;
+        if (parameters->getNumParams() != numparam)
+        {
+        setNumParameters(numparam);
+        }
+        parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("10");
+        setParameter(1, parm);
+        parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-.001" << "1" << ".13" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        parm.clear();
+        parm << "-1" << ".001" << "-.03" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(4, parm);
+        parm.clear();
+        parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        index = 5;
+        for (int i = 0; i < special; i++, index++)
+            setParameter(index, parm);
+        parm.clear();
+        parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 0; i < special; i++)
+            setParameter(index, parm);
+        break;
+    case 43:
+        if (special < 2)
+        {
+            special = 2;
+            setup->setValue(3, special);
+        }
+        numparam = special + 2 + 2;
+        if (parameters->getNumParams() != numparam)
+        {
+        setNumParameters(numparam);
+        }
+        parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("10");
+        setParameter(1, parm);
+        parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(2, parm);
+        parm[2] = QString("20");
+        setParameter(3, parm);
+        parm.clear();
+        parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (int i = 4; i < getNumParameters(); i++)
+            setParameter(i, parm);
+        break;
+    default:
+        setNumParameters(0);
+    }
+
 }
 
 int selectivity::getNumParameters()
@@ -570,7 +956,7 @@ void selectivity::setSpecial(int value)
             break;
         }
         setup->setValue(3, value);
-        emit dataChanged();
+        setDefaultParams(setup->getValue(0), getNumParameters());
     }
 }
 

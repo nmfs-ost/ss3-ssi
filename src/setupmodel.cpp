@@ -47,13 +47,14 @@ void setupModel::setNumValues(int cols)
     }
 }
 
-void setupModel::setData(QStringList &data)
+void setupModel::setData(QStringList data)
 {
     setNumValues(data.count());
     dataTable->setRowData(0, data);
+    updateValues();
 }
 
-void setupModel::setHeader(QStringList &hdr)
+void setupModel::setHeader(QStringList hdr)
 {
     setNumValues(hdr.count());
     dataTable->setHeader(hdr);
@@ -67,6 +68,7 @@ void setupModel::setValue (int i, int value)
     {
         valuesList[i] = value;
         updateTable();
+        emit dataChanged(valuesList);
     }
 }
 
@@ -88,7 +90,7 @@ void setupModel::changeValue (int i, int value)
     {
         valuesList[i] = value;
         updateTable();
-        emit dataChanged();
+        emit dataChanged(valuesList);
     }
 }
 
@@ -126,12 +128,15 @@ void setupModel::updateValues()
         dataItem = QString(datalist.at(i)).toInt();
         if (dataItem != item)
         {
-            valuesList[i] = item;
+            valuesList[i] = dataItem;
             changed = true;
         }
     }
     if (changed)
-        emit dataChanged();
+    {
+
+        emit dataChanged(valuesList);
+    }
 }
 
 
@@ -201,13 +206,13 @@ void shortParameterModel::setTotalNumParams(int num)
 
 void shortParameterModel::setParamHeader(int row, QString title)
 {
-    int tblrow = paramNum.indexOf(row);
+//    int tblrow = paramNum.indexOf(row);
     if (row >= paramData->rowCount())
         setTotalNumParams(row + 1);
     paramData->setRowHeader(row, title);
 //    updateParamHeaders();
-    if (tblrow >= 0)
-        paramTable->setRowHeader(tblrow, title);
+//    if (tblrow >= 0)
+//        paramTable->setRowHeader(tblrow, title);
 }
 
 void shortParameterModel::setParameter(int row, QStringList &rowstringlist)

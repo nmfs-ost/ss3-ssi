@@ -32,27 +32,22 @@ public:
     QString getSetup();
     tablemodel *getSetupTable () {return setup->getTable();}
 
-
+    int getLinkType ();
+    int getLinkVal ();
     bool getDoPower();
-    void setDoPower(bool value);
-
+    bool getDoMirror();
     bool getDoExtraSD();
-    void setDoExtraSD(bool value);
-
-//    float getOffset();
-//    void setOffset(float value);
+    bool getDoBiasAdj();
+    bool getDoFloat();
 
     QString getPower();
     void setPower(QStringList values);
 
-//    QString getVariable();
-//    void setEnvLink(QStringList values);
-
     QString getExtra();
     void setExtra(QStringList values);
 
-    QString getBase();
-    void setBase(QStringList values);
+    QString getLink();
+    void setLink(QStringList values);
 
     void setNumParams (int num) {params->setNumParams(num);}
     int getNumParams() {return params->getNumParams();}
@@ -70,14 +65,11 @@ public:
 
     int getAutoGenerate () {return varParams->getAutoGenerate();}
     void setAutoGenerate (int flag) {varParams->setAutoGenerate(flag);}
-    int getLinkType ();
-    int getDoBiasAdj ();
-    int getFloatQ ();
 
 public slots:
     void changeSetupData(QList<int> values);
     void changeSetup (int errType);
-    void changeSetup ();
+//    void changeSetup ();
 
     void changeParamData();
     void checkParamValues(int index, QStringList paramValues);

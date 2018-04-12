@@ -37,11 +37,12 @@ q_ratio::~q_ratio()
 void q_ratio::reset()
 {
     QStringList ql;
+    QList <int> vals;
     ql << "Link" << "Link_Info" << "ExtraSD" << "Bias_Adj" << "Float" ;
     setup->setHeader(ql);
     ql.clear();
     ql << "0" << "0" << "0" << "0" << "0";
-    setSetup(ql);
+    setup->setData(ql);
 }
 
 
@@ -54,6 +55,7 @@ void q_ratio::setFleetName(QString name)
 
 void q_ratio::setSetup(QStringList values)
 {
+    reset();
     while (values.count() < 5)
         values.append(QString("0"));
     setup->setData(values);
@@ -194,7 +196,7 @@ void q_ratio::changeParamData()
 
 void q_ratio::setParamHdrs(int errType)
 {
-//    params->setTotalNumParams(3);
+    params->setTotalNumParams(3);
     QStringList varHdrs;
     QString hdr;
     if (errType > 0)
@@ -260,25 +262,29 @@ int q_ratio::getTypeIndex() const
 }*/
 
 
-bool q_ratio::getDoPower()
+int q_ratio::getLinkType ()
 {
     int val = setup->getValue(0);
+    return (val);
+}
+
+int q_ratio::getLinkVal ()
+{
+    int val = setup->getValue(1);
+    return (val);
+}
+
+bool q_ratio::getDoMirror()
+{
+    int val = getLinkType();
+    return (val == 2);
+}
+
+bool q_ratio::getDoPower()
+{
+    int val = getLinkType();
     return (val == 3);
 }
-
-void q_ratio::setDoPower(bool value)
-{
-    int curVal = setup->getValue(0);
-    if (value)
-    {
-        if (curVal != 3)
-        {
-            setup->setValue(0, 3);
-            setup->setValue(1, 0);
-        }
-    }
-}
-
 
 bool q_ratio::getDoExtraSD()
 {
@@ -286,15 +292,16 @@ bool q_ratio::getDoExtraSD()
     return (val > 0);
 }
 
-void q_ratio::setDoExtraSD(bool value)
+bool q_ratio::getDoBiasAdj ()
 {
-    if (getDoExtraSD() != value)
-    {
-        if (value)
-            setup->setValue(2, 1);
-        else
-            setup->setValue(2, 0);
-    }
+    int val = setup->getValue(3);
+    return (val > 0);
+}
+
+bool q_ratio::getDoFloat()
+{
+    int val = setup->getValue(4);
+    return (val > 0);
 }
 
 
@@ -342,7 +349,7 @@ void q_ratio::setExtra(QStringList values)
     varParams->setParameter(2, values);
 }
 
-QString q_ratio::getBase()
+QString q_ratio::getLink()
 {
     QString txt("");
     if (setup->getValue(0) > 0)
@@ -354,7 +361,7 @@ QString q_ratio::getBase()
     return txt;
 }
 
-void q_ratio::setBase(QStringList values)
+void q_ratio::setLink(QStringList values)
 {
     params->setParamData(0, values);
     varParams->setParameter(0, values);
@@ -365,10 +372,10 @@ void q_ratio::changeSetup(int errType)
     setParamHdrs(errType);
 }
 
-void q_ratio::changeSetup()
+/*void q_ratio::changeSetup()
 {
 
-}
+}*/
 
 
 
