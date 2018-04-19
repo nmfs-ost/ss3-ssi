@@ -8,6 +8,7 @@
 
 #include <QFile>
 #include <QStringList>
+#include "dialoginputerror.h"
 
 #define MAX_LINE_LENGTH 1024
 
@@ -76,10 +77,16 @@ public:
   */
     int write_vector (QStringList vect, int spcng = 0, QString info = QString(""));
 
+    float getFloatValue (QString desc, float min, float max, float dfault);
+    int   getIntValue (QString desc, int min, int max, int dfault);
+    void  stopWait ();
+    QString getStringValue (QString desc, QString dfault = QString(""));
+
     bool at_eol ();
 
 private:
     int line_num;
+    bool wait;
     QString *current_line;
     QStringList *current_tokens;
     int current_line_num_tokens;
@@ -89,6 +96,9 @@ protected:
     QStringList *get_line_tokens(QString *line);
 
     void append_file_line_info (QString &txt);
+
+    DialogInputError *inputErrDialog;
+
 
 signals:
     

@@ -600,6 +600,7 @@ void equationDialog::update()
 //        building = false;
         updating = false;
     }
+    QDialog::update();
 }
 
 void equationDialog::updateSel()
@@ -3348,7 +3349,6 @@ void equationDialog::updateDblNormal()
     float top = exp(-par2);
     float upsel = exp(par3);
     float dnsel = exp(par4);
-
 }
 
 void equationDialog::dblNormPlateau()
@@ -3391,7 +3391,7 @@ void equationDialog::dblNormPlateau()
 
     resetChart();
 
-
+    updateDblNormPlateau();
 }
 
 void equationDialog::updateDblNormPlateau()

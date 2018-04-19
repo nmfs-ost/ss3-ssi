@@ -1,5 +1,5 @@
 #include "input_file.h"
-
+#include "dialoginputerror.h"
 #include <QMessageBox>
 
 ss_file::ss_file(QString name, QObject *parent) :
@@ -7,13 +7,18 @@ ss_file::ss_file(QString name, QObject *parent) :
 {
     setFileName(name);
     line_num = 0;
+    wait = false;
     current_line = new QString("");
     current_tokens = new QStringList(*current_line);
     current_tokens->clear();
+
+    inputErrDialog = new DialogInputError();
+    inputErrDialog->setFileName(fileName());
 }
 
 ss_file::~ss_file ()
 {
+    delete inputErrDialog;
     delete current_line;
     delete current_tokens;
 }
@@ -27,6 +32,7 @@ QString ss_file::read_line()
     {
         QByteArray qba = readLine(MAX_LINE_LENGTH);
         line_num++;
+        inputErrDialog->setLineNum(line_num);
         return QString (qba);
     }
 }
@@ -122,10 +128,10 @@ int ss_file::newline()
  * and separate by tabs and spaces into separate tokens. */
 QStringList *ss_file::get_line_tokens()
 {
-    QString line;
+    QString line(read_line());
     if (current_line->count() > 0)
         current_line->clear();
-    line = read_line();
+//    line = ;
     current_line->append(line);
 
     return get_line_tokens(current_line);
@@ -309,3 +315,30 @@ int ss_file::write_vector(QStringList vect, int spcng, QString info)
         line.append(QString("# %1").arg(info));
     return writeline(line);
 }
+
+float ss_file::getFloatValue(QString desc, float min, float max, float dfault)
+{
+    float value = get_next_value(desc).toFloat();
+    if (value < min ||
+            value > max)
+    {
+        inputErrDialog->getNewFloatValue(value, desc, min, max, dfault);
+        inputErrDialog->exec();
+        value = inputErrDialog->getFloatValue();
+    }
+    return value;
+}
+
+int ss_file::getIntValue(QString desc, int min, int max, int dfault)
+{
+    int value = get_next_value(desc).toInt();
+    if (value < min ||
+            value > max)
+    {
+        inputErrDialog->getNewIntValue(value, desc, min, max, dfault);
+        inputErrDialog->exec();
+        value = inputErrDialog->getIntValue();
+    }
+    return value;
+}
+

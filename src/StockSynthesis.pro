@@ -100,7 +100,8 @@ SOURCES += main.cpp\
     chartdialog.cpp \
     equationdialog.cpp \
     ttk_spline.cpp \
-    dialoginfo.cpp
+    dialoginfo.cpp \
+    dialoginputerror.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -190,7 +191,8 @@ HEADERS  += mainwindow.h \
     chartdialog.h \
     equationdialog.h \
     ttk_spline.h \
-    dialoginfo.h
+    dialoginfo.h \
+    dialoginputerror.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -225,7 +227,8 @@ FORMS    += mainwindow.ui \
     dialog_runoptions.ui \
     chartdialog.ui \
     equationdialog.ui \
-    dialoginfo.ui
+    dialoginfo.ui \
+    dialoginputerror.ui
 
 OTHER_FILES +=
 

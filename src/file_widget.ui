@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_input">
       <attribute name="title">
@@ -522,78 +522,6 @@
        </item>
        <item row="11" column="0">
         <layout class="QGridLayout" name="gridLayout_outputs">
-         <item row="2" column="0" colspan="2">
-          <widget class="QLabel" name="label_report_level">
-           <property name="text">
-            <string>Report.sso include age-structured report</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2" colspan="4">
-          <widget class="QComboBox" name="comboBox_cumreport">
-           <item>
-            <property name="text">
-             <string>0 - Omit</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1 - Brief Report</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2 - Full Report</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="2">
-          <widget class="QLabel" name="label_datafiles">
-           <property name="text">
-            <string>Number of extra data files to produce</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="7">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="7" column="2" colspan="4">
-          <widget class="QComboBox" name="comboBox_MCMC_output">
-           <item>
-            <property name="text">
-             <string>0 - Default</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1 - Likelihood components with lambda values</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2 - Expanded output</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="7" column="0" colspan="2">
-          <widget class="QLabel" name="label_mcmc_output">
-           <property name="text">
-            <string>MCMC Output format </string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="0" colspan="2">
           <widget class="QLabel" name="label_detail_level">
            <property name="text">
@@ -821,6 +749,88 @@ It is undocumented and mostly used by the developer.</string>
             </spacer>
            </item>
           </layout>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QLabel" name="label_report_level">
+           <property name="text">
+            <string>Report.sso include age-structured report</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2" colspan="4">
+          <widget class="QComboBox" name="comboBox_cumreport">
+           <item>
+            <property name="text">
+             <string>0 - Omit</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1 - Brief Report</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2 - Full Report</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="6" column="0" colspan="2">
+          <widget class="QLabel" name="label_datafiles">
+           <property name="text">
+            <string>Number of extra data files to produce</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="7">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="7" column="2" colspan="4">
+          <widget class="QComboBox" name="comboBox_MCMC_output">
+           <item>
+            <property name="text">
+             <string>0 - Default</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1 - Likelihood components with lambda values</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2 - Expanded output</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <widget class="QLabel" name="label_mcmc_output">
+           <property name="text">
+            <string>MCMC Output format </string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0" colspan="2">
+          <widget class="QLabel" name="label_mcmc_bump_val">
+           <property name="text">
+            <string>MCMC Bump value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2" colspan="2">
+          <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
          </item>
         </layout>
        </item>

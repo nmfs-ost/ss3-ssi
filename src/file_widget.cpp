@@ -685,49 +685,37 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->get_next_value("control file");
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
-        token = starterFile->get_next_value("ss.par choice");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("ss.par choice"), 0, 1, 0);
         set_par_file(temp_int != 0);
-        token = starterFile->get_next_value("run display detail");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
-        token = starterFile->get_next_value("detail choice in Report.sso");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("detailed age-structured reports in REPORT.SSO"), 0, 2, 1);
         ui->comboBox_report_level->setCurrentIndex(temp_int);
-        token = starterFile->get_next_value("write EchoInput.sso choice");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("write EchoInput.sso choice"), 0, 1, 1);
         ui->checkBox_checkup->setChecked(temp_int);
-        token = starterFile->get_next_value("what to write to ParmTrace.sso");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("what to write to ParmTrace.sso"), 0, 4, 1);
         set_parmtr_write(temp_int);
 
-        token = starterFile->get_next_value("what to write to CumReport.sso");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("what to write to CumReport.sso"), 0, 2, 1);
         ui->comboBox_cumreport->setCurrentIndex(temp_int);
-        token = starterFile->get_next_value("prior likelihood");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("calculate all prior likelihoods"), 0, 1, 1);
         model_info->set_prior_likelihood (temp_int);
-        token = starterFile->get_next_value("soft bounds");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("use soft bounds"), 0, 1, 1);
         model_info->set_use_softbounds(temp_int);
-        token = starterFile->get_next_value("number of datafiles");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("number of datafiles"), 0, 100, 1);
         ui->spinBox_datafiles->setValue(temp_int);
-        token = starterFile->get_next_value("last estimation phase");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("last estimation phase"), 0, 100, 8);
         model_info->set_last_estim_phase(temp_int);
-        token = starterFile->get_next_value("MC burn interval");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("MC burn interval"), 0, 500, 10);
         model_info->set_mc_burn(temp_int);
-        token = starterFile->get_next_value("MC thin interval");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("MC thin interval"), 0, 10, 2);
         model_info->set_mc_thin(temp_int);
-        token = starterFile->get_next_value("jitter value");
-        model_info->set_jitter_param(token.toDouble());
-        token = starterFile->get_next_value("sd report begin year");
+        temp_float = starterFile->getFloatValue(QString("jitter value"), 0.0, 11.0, 0.0);
+        model_info->set_jitter_param(temp_float);
+        token = starterFile->get_next_value("std dev report begin year");
         temp_int = token.toInt();
         model_info->set_bio_sd_min_year(temp_int);
-        token = starterFile->get_next_value("sd report end year");
+        token = starterFile->get_next_value("std dev report end year");
         temp_int = token.toInt();
         model_info->set_bio_sd_max_year(temp_int);
         token = starterFile->get_next_value("extra sd report years");
@@ -740,25 +728,21 @@ bool file_widget::read_starter_file (QString filename)
         }
         starterFile->skip_line();
 
-        token = starterFile->get_next_value("convergence criteria");
-//        temp_int = token.toInt();
-        model_info->set_convergence_criteria(token.toDouble());
+        temp_float = starterFile->getFloatValue(QString("convergence criteria"), 0.0, 1.0, 0.0001);
+        model_info->set_convergence_criteria(temp_float);
         token = starterFile->get_next_value("retrospective year");
         temp_int = token.toInt();
         model_info->set_retrospect_year(temp_int);
         token = starterFile->get_next_value("summary biomass min age");
         temp_int = token.toInt();
         model_info->set_biomass_min_age(temp_int);
-        token = starterFile->get_next_value("depletion basis");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 3, 1);
         model_info->set_depletion_basis(temp_int);
         token = starterFile->get_next_value("depletion denominator");
         model_info->set_depletion_denom(token.toDouble());
-        token = starterFile->get_next_value("SPR report basis");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("SPR report basis"), 0, 4, 1);
         model_info->set_spr_basis(temp_int);
-        token = starterFile->get_next_value("F std report");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("F std report value"), 0, 4, 1);
         model_info->set_f_units(temp_int);
         // min and max age over which average F will be calculated with F_reporting=4
         if (model_info->get_f_units() == 4)
@@ -770,8 +754,7 @@ bool file_widget::read_starter_file (QString filename)
             temp_int = token.toInt();
             model_info->set_f_max_age(temp_int);
         }
-        token = starterFile->get_next_value("F std report basis");
-        temp_int = token.toInt();
+        temp_int = starterFile->getIntValue(QString("F std report basis"), 0, 4, 1);
         model_info->set_f_basis(temp_int);
 
 
@@ -785,8 +768,11 @@ bool file_widget::read_starter_file (QString filename)
         }
         else
         {
-            temp_int = token.toFloat(); // MCMC output format
+            // MCMC output format
             ui->comboBox_MCMC_output->setCurrentIndex(temp_int);
+            // MCMC Bump value
+            temp_float = token.toFloat() - temp_int;
+            ui->lineEdit_mcmc_bump_val->setText(QString::number(temp_float));
 
             token = starterFile->get_next_value("ALK Tolerance");
             temp_float = token.toFloat();

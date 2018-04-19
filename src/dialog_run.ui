@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>784</width>
-    <height>520</height>
+    <height>527</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -216,7 +216,7 @@
           <string>Show time-series charts from Report.sso</string>
          </property>
          <property name="text">
-          <string/>
+          <string>Results</string>
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">

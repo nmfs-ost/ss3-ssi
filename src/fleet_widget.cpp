@@ -404,7 +404,7 @@ void fleet_widget::set_current_fleet(int index)
     else
     {
     Fleet *temp_flt = model_data->getFleet(index);
-    if (temp_flt != current_fleet)
+ //   if (temp_flt != current_fleet)
     {
         disconnectFleet ();
         current_fleet = temp_flt;
