@@ -633,7 +633,7 @@ e.g. 0, -1, -2, -3, ...</string>
                 <string>Turn benchmarks on or off</string>
                </property>
                <property name="text">
-                <string>Calculate benchmarks F_spr, F_btgt, F_msy</string>
+                <string>Calculate benchmarks/reference points</string>
                </property>
               </widget>
              </item>
@@ -651,30 +651,6 @@ e.g. 0, -1, -2, -3, ...</string>
                </item>
                <item>
                 <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_benchmarks">
-               <item>
-                <widget class="QCheckBox" name="checkBox_benchmarks">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1254,6 +1230,42 @@ e.g. 0, -1, -2, ...</string>
                 <string>SPR target (e.g. 0.45)</string>
                </property>
               </widget>
+             </item>
+             <item row="0" column="2" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_benchmarks">
+               <item>
+                <widget class="QComboBox" name="comboBox_benchmarks">
+                 <item>
+                  <property name="text">
+                   <string>0 = omit</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>1 = calc Fspr, Fbtarget, Fmsy</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = calc Fspr, Fbtarget, Fmsy, F0.10</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_benchmarks">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>

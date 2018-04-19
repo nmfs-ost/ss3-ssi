@@ -47,7 +47,7 @@ void DialogInputError::getNewIntValue(int errValue, QString valDesc,
     ui->label_minValue->setText(QString::number(minValue));
     ui->label_maxValue->setText(QString::number(maxValue));
     ui->lineEdit_newValue->setText(QString::number(defaultValue));
-    intDefault = defaultValue;
+    floatDefault = defaultValue;
     intVal = defaultValue;
     show();
 }
@@ -129,6 +129,11 @@ void DialogInputError::checkIntString(QString text)
 
 void DialogInputError::buttonClicked(QAbstractButton *btn)
 {
+    if (btn->text().contains("Abort"))
+    {
+        floatVal = intVal = -999999;
+        hide();
+    }
     if      (btn->text().contains("Restore"))
     {
         ui->lineEdit_newValue->setText(QString::number(floatDefault));

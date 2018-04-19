@@ -24,7 +24,6 @@ signals:
 
 public slots:
     void set_benchmarks (int bmark) {i_bmark = bmark;}
-    void set_benchmarks (bool flag) {i_bmark = flag? 1: 0;}
     int get_benchmarks () {return i_bmark;}
     void set_MSY (int msy) {i_msy = msy;}
     void set_combo_box_MSY (int msy);

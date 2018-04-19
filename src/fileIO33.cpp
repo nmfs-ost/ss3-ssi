@@ -25,47 +25,47 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     {
         //  SS_Label_Info_2.1.1 #Read comments
         d_file->seek(0);
+        d_file->resetLineNum();
         d_file->read_comments();
 
         //  SS_Label_Info_2.1.2 #Read model time dimensions
-        token = d_file->get_next_value("start year");
+        token = d_file->get_next_value(QString("start year"));
         temp_int = token.toInt();
         data->set_start_year (temp_int);
-        token = d_file->get_next_value("end year");
+        token = d_file->get_next_value(QString("end year"));
         temp_int = token.toInt();
         data->set_end_year(temp_int);
-        token = d_file->get_next_value("seasons per year");
+        token = d_file->get_next_value(QString("seasons per year"));
         temp_int = token.toInt();
         data->set_num_seasons(temp_int);
         for (i = 1; i <= data->get_num_seasons(); i++)
         {
-            token = d_file->get_next_value("months per season");
+            token = d_file->get_next_value(QString("months per season"));
             temp_float = token.toFloat();
             data->set_months_per_season(i, temp_float);
         }
         //  SS_Label_Info_2.1.3 #Set up seasons
         data->rescale_months_per_season();
-        token = d_file->get_next_value("subseasons");
+        token = d_file->get_next_value(QString("subseasons"));
         temp_int = token.toInt();
         data->set_num_subseasons(temp_int);
-        token = d_file->get_next_value("spawning month");
+        token = d_file->get_next_value(QString("spawning month"));
         temp_float = token.toFloat();
         data->set_spawn_month(temp_float);
-        token = d_file->get_next_value("number of genders");
-        temp_int = token.toInt();
+        temp_int = d_file->getIntValue(QString("Number of genders"), 1, 2, 2);
         n_genders = temp_int;
         data->set_num_genders(n_genders);
-        token = d_file->get_next_value("number of ages");
+        token = d_file->get_next_value(QString("number of ages"));
         temp_int = token.toInt();
         n_ages = temp_int;
         data->set_num_ages(n_ages);
-        token = d_file->get_next_value("number of areas");
+        token = d_file->get_next_value(QString("number of areas"));
         temp_int = token.toInt();
         n_areas = temp_int;
         data->set_num_areas(n_areas);
         data->getPopulation()->Move()->setNumAreas(n_areas);
         //  SS_Label_Info_2.1.5  #Define fleets, surveys and areas
-        token = d_file->get_next_value("number of fleets");
+        token = d_file->get_next_value(QString("number of fleets"));
         temp_int = token.toInt();
         total_fleets = temp_int;
         data->set_num_fleets(total_fleets);
@@ -77,23 +77,23 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->setActive(true);
             flt->getSizeSelectivity()->setNumAges(data->get_num_ages());
             flt->getAgeSelectivity()->setNumAges (data->get_num_ages());
-            temp_int = d_file->get_next_value("fleet type").toInt();
+            temp_int = d_file->getIntValue(QString("fleet type"), 1, 3, 1);
             flt->setTypeInt(temp_int);
             if (temp_int == 2)
                 num_vals++;
-            temp_float = d_file->get_next_value("timing").toFloat();
+            temp_float = d_file->get_next_value(QString("timing")).toFloat();
             flt->setSeasTiming(temp_float);
-            temp_int = d_file->get_next_value("area").toInt();
+            temp_int = d_file->get_next_value(QString("area")).toInt();
             flt->setArea(temp_int);
-            temp_int = d_file->get_next_value("catch units").toInt();
+            temp_int = d_file->getIntValue(QString("catch units"), 1, 2, 1);
             flt->setCatchUnits(temp_int);
 /*            temp_float = d_file->next_value("equ_catch_se").toFloat();
             flt->set_equ_catch_se(temp_float);
             temp_float = d_file->next_value("catch_se").toFloat();
             flt->set_catch_se(temp_float);*/
-            temp_int = d_file->get_next_value("use_catch_mult").toInt();
+            temp_int = d_file->getIntValue(QString("use_catch_mult"), 0, 1, 0);
             flt->setCatchMultiplier(temp_int);
-            temp_str = d_file->get_next_value("fleet name");
+            temp_str = d_file->get_next_value(QString("fleet name"));
             flt->setName(temp_str);
             flt->setNumGenders(data->get_num_genders());
             flt->setNumSeasons(data->get_num_seasons());
@@ -105,21 +105,21 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         // Read bycatch data, if any
         for (i = 0; i < num_vals; i++)
         {
-            temp_int = d_file->get_next_value("fleet index").toInt();
+            temp_int = d_file->getIntValue(QString("Fleet Index"), 1, num_vals, 1);
             Fleet *flt = data->getFleet(temp_int - 1);
             if (flt->getTypeInt() != 2)
             {
                 d_file->error(QString("Provided bycatch data for non-bycatch fleet: %1").arg(QString::number(temp_int)));
             }
-            temp_int = d_file->get_next_value("include dead").toInt();
+            temp_int = d_file->getIntValue(QString("Include in MSY"), 1, 2, 1);
             flt->setBycatchDead(temp_int);
-            temp_int = d_file->get_next_value("f method").toInt();
+            temp_int = d_file->getIntValue(QString("F multiplier"), 1, 3, 1);
             flt->setBycatchF(temp_int);
-            temp_str = d_file->get_next_value("first year");
+            temp_str = d_file->get_next_value(QString("First year"));
             flt->setBycFirstYr(temp_str);
-            temp_str = d_file->get_next_value("last year");
+            temp_str = d_file->get_next_value(QString("Last year"));
             flt->setBycLastYr(temp_str);
-            temp_str = d_file->get_next_value("unused");
+            temp_str = d_file->get_next_value(QString("unused"));
             flt->setBycUnused(temp_str);
         }
 
@@ -1481,6 +1481,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         ss_forecast *fcast = data->forecast;
         fcast->reset();
         f_file->seek(0);
+        f_file->resetLineNum();
         f_file->read_comments();
 
         fcast->set_num_seasons(data->get_num_seasons());
@@ -1961,6 +1962,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     if(c_file->open(QIODevice::ReadOnly))
     {
         c_file->seek(0);
+        c_file->resetLineNum();
         c_file->read_comments();
 
         // read wtatage.ss

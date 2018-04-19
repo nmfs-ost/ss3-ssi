@@ -48,7 +48,7 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_catch_basis->addWidget(inputFcastCatch);
     inputFcastCatch->setHeight(0);
 
-    connect (ui->checkBox_benchmarks, SIGNAL(toggled(bool)), fcast, SLOT(set_benchmarks(bool)));
+    connect (ui->comboBox_benchmarks, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_benchmarks(int)));
     connect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_MSY(int)));
     connect (ui->lineEdit_SPR_target, SIGNAL(editingFinished()), SLOT(set_spr_target()));
     connect (ui->lineEdit_biomass_target, SIGNAL(editingFinished()), SLOT(set_biomass_target()));
@@ -123,7 +123,7 @@ forecast_widget::~forecast_widget()
 
 void forecast_widget::reset()
 {
-    ui->checkBox_benchmarks->setChecked(true);
+    ui->comboBox_benchmarks->setCurrentIndex(1);
     ui->comboBox_MSY_options->setCurrentIndex(1);
     ui->lineEdit_SPR_target->setText("0.4");
     ui->lineEdit_biomass_target->setText("0.2");
@@ -177,7 +177,7 @@ void forecast_widget::refresh()
     QString txt("");
     ss_forecast *fcast = model_data->forecast;
 
-    ui->checkBox_benchmarks->setChecked(fcast->get_benchmarks() == 1);
+    ui->comboBox_benchmarks->setCurrentIndex(fcast->get_benchmarks());
     set_combo_box(ui->comboBox_MSY_options, fcast->get_MSY());
     ui->lineEdit_SPR_target->setText(QString::number(fcast->get_spr_target()));
     ui->lineEdit_biomass_target->setText(QString::number(fcast->get_biomass_target()));

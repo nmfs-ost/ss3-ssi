@@ -324,12 +324,18 @@ float ss_file::getFloatValue(QString desc, float min, float max, float dfault)
 
 float ss_file::checkFloatValue(float val, QString desc, float min, float max, float dfault)
 {
-    if (val < min ||
+    while (val < min ||
             val > max)
     {
         inputErrDialog->getNewFloatValue(val, desc, min, max, dfault);
         inputErrDialog->exec();
         val = inputErrDialog->getFloatValue();
+        if (val < -999990)
+        {
+            QMessageBox::critical(0, QString("Exit on Reading Error"),
+                  QString("User has aborted application while reading files"));
+            exit(-999999);
+        }
     }
     return val;
 }
@@ -342,12 +348,18 @@ int ss_file::getIntValue(QString desc, int min, int max, int dfault)
 
 int ss_file::checkIntValue(int val, QString desc, int min, int max, int dfault)
 {
-    if (val < min ||
+    while (val < min ||
             val > max)
     {
         inputErrDialog->getNewIntValue(val, desc, min, max, dfault);
         inputErrDialog->exec();
         val = inputErrDialog->getIntValue();
+        if (val < -999990)
+        {
+            QMessageBox::critical(0, QString("Exit on Reading Error"),
+                  QString("User has aborted application while reading files"));
+            exit(-999999);
+        }
     }
     return val;
 }

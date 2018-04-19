@@ -677,6 +677,7 @@ bool file_widget::read_starter_file (QString filename)
     if(okay)
     {
         starterFile->seek(0);
+        starterFile->resetLineNum();
         starterFile->read_comments();
 
         token = starterFile->get_next_value("data file");
@@ -728,7 +729,7 @@ bool file_widget::read_starter_file (QString filename)
         }
         starterFile->skip_line();
 
-        temp_float = starterFile->getFloatValue(QString("convergence criteria"), 0.0, 1.0, 0.0001);
+        temp_float = starterFile->getFloatValue(QString("convergence criteria"), 0.0, 0.1, 0.0001);
         model_info->set_convergence_criteria(temp_float);
         token = starterFile->get_next_value("retrospective year");
         temp_int = token.toInt();
@@ -950,6 +951,7 @@ int file_widget::read_run_num_file (QString filename)
 
     if(runNumberFile->open(QIODevice::ReadOnly))
     {
+        runNumberFile->seek(0);
         token = runNumberFile->get_next_value();
         temp_int = token.toInt();
         model_info->set_run_number (temp_int);

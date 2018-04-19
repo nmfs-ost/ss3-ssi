@@ -42,6 +42,7 @@ public:
 
     QString get_line();
     int getLineNum() {return line_num;}
+    void resetLineNum () {line_num = 0;}
 
     void skip_line();// {current_line->clear(); current_tokens->clear();}
 

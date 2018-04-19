@@ -19,7 +19,9 @@ History:
 ============================================================================
       3.3.11.01
       2018-04-19
-1. Added some error checking to reading input files starter and forecast.
+1. Fixed Forecast benchmarks/reference pts to be a list instead of on/off.
+2. Added error checking routines.
+3. Implemented in reading input files starter.ss and forecast.ss
 ============================================================================
       3.3.10.03
       2018-02-07

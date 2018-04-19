@@ -49,7 +49,7 @@ private:
     float floatDefault;
     float floatVal;
     int intVal;
-    int intDefault;
+//    int intDefault;
 
 };
 
