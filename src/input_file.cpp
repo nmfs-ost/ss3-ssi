@@ -319,26 +319,36 @@ int ss_file::write_vector(QStringList vect, int spcng, QString info)
 float ss_file::getFloatValue(QString desc, float min, float max, float dfault)
 {
     float value = get_next_value(desc).toFloat();
-    if (value < min ||
-            value > max)
+    return checkFloatValue(value, desc, min, max, dfault);
+}
+
+float ss_file::checkFloatValue(float val, QString desc, float min, float max, float dfault)
+{
+    if (val < min ||
+            val > max)
     {
-        inputErrDialog->getNewFloatValue(value, desc, min, max, dfault);
+        inputErrDialog->getNewFloatValue(val, desc, min, max, dfault);
         inputErrDialog->exec();
-        value = inputErrDialog->getFloatValue();
+        val = inputErrDialog->getFloatValue();
     }
-    return value;
+    return val;
 }
 
 int ss_file::getIntValue(QString desc, int min, int max, int dfault)
 {
     int value = get_next_value(desc).toInt();
-    if (value < min ||
-            value > max)
+    return checkIntValue(value, desc, min, max, dfault);
+}
+
+int ss_file::checkIntValue(int val, QString desc, int min, int max, int dfault)
+{
+    if (val < min ||
+            val > max)
     {
-        inputErrDialog->getNewIntValue(value, desc, min, max, dfault);
+        inputErrDialog->getNewIntValue(val, desc, min, max, dfault);
         inputErrDialog->exec();
-        value = inputErrDialog->getIntValue();
+        val = inputErrDialog->getIntValue();
     }
-    return value;
+    return val;
 }
 

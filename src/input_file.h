@@ -78,7 +78,9 @@ public:
     int write_vector (QStringList vect, int spcng = 0, QString info = QString(""));
 
     float getFloatValue (QString desc, float min, float max, float dfault);
+    float checkFloatValue (float val, QString desc, float min, float max, float dfault);
     int   getIntValue (QString desc, int min, int max, int dfault);
+    int   checkIntValue (int val, QString desc, int min, int max, int dfault);
     void  stopWait ();
     QString getStringValue (QString desc, QString dfault = QString(""));
 

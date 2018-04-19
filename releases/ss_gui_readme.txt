@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.10.03
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.01
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -16,6 +16,10 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+      3.3.11.01
+      2018-04-19
+1. Added some error checking to reading input files starter and forecast.
 ============================================================================
       3.3.10.03
       2018-02-07

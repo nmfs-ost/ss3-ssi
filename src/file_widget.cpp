@@ -764,11 +764,13 @@ bool file_widget::read_starter_file (QString filename)
         {
             datafile_version = 3.2;
             ui->comboBox_MCMC_output->setCurrentIndex(0);
+            ui->lineEdit_mcmc_bump_val->setText(QString("0.01"));
             model_info->setALKTol(0.0);
         }
         else
         {
             // MCMC output format
+            starterFile->checkIntValue(temp_int, QString("MCMC output detail"), 0, 3, 0);
             ui->comboBox_MCMC_output->setCurrentIndex(temp_int);
             // MCMC Bump value
             temp_float = token.toFloat() - temp_int;

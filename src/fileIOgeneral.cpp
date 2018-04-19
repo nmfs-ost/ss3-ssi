@@ -9,9 +9,11 @@ int writeVersionComment(ss_file *file)
 {
     int chars = 0;
     QString line;
-    line = QString ("# File written by GUI version %1 for SS version %2").arg
-            (getAppVersion(), getAppAppliesTo());
+    line = QString ("#V%1;_Stock_Synthesis_by_Richard_Methot_(NOAA)").arg
+            (getAppAppliesTo());
     chars = file->writeline (line);
+    line = QString ("#_File written by GUI version %1").arg(getAppVersion());
+    chars += file->writeline (line);
     return chars;
 }
 

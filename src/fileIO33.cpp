@@ -1487,103 +1487,91 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_num_fleets(data->get_num_fleets());
         fcast->set_num_genders(data->get_num_genders());
 
-        token = f_file->get_next_value("benchmarks type");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Benchmarks/Reference points"), 0, 2, 1);
         fcast->set_benchmarks(temp_int);
 
-        token = f_file->get_next_value("Forecast method");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("MSY Method"), 0, 4, 1);
         fcast->set_MSY(temp_int);
 
-        token = f_file->get_next_value("SPR target");
+        token = f_file->get_next_value(QString("SPR target"));
         temp_float = token.toFloat();
         fcast->set_spr_target(temp_float);
 
-        token = f_file->get_next_value("biomass target");
+        token = f_file->get_next_value(QString("biomass target"));
         temp_float = token.toFloat();
         fcast->set_biomass_target(temp_float);
 
         for (i = 0; i < 10; i++)
         {
-            token = f_file->get_next_value("benchmark year");
+            token = f_file->get_next_value(QString("benchmark year"));
             temp_int = token.toInt();
             fcast->set_benchmark_years(i, temp_int);
         }
-        token = f_file->get_next_value("bmark rel f basis");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Benchmark Rel F basis"), 1, 2, 1);
         fcast->set_benchmark_rel_f(temp_int);
 
-        token = f_file->get_next_value("forecast type");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Forecast type"), 0, 5, 2);
         fcast->set_forecast(temp_int);
-        token = f_file->get_next_value("number of forecast years");
+        token = f_file->get_next_value(QString("number of forecast years"));
         temp_int = token.toInt();
         fcast->set_num_forecast_years(temp_int);
-        token = f_file->get_next_value("F scalar");
+        token = f_file->get_next_value(QString("F scalar"));
         temp_float = token.toFloat();
         fcast->set_f_scalar(temp_float);
         for (i = 0; i < 6; i++)
         {
-            token = f_file->get_next_value("forecast year");
+            token = f_file->get_next_value(QString("forecast year"));
             temp_int = token.toInt();
             fcast->set_forecast_year(i, temp_int);
         }
 
-        token = f_file->get_next_value("Forecast selectivity (not yet implemented)");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Forecast selectivity"), 0, 1, 0);
         fcast->setSelectivity (temp_int);
-        token = f_file->get_next_value("control rule method");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Control Rule"), 1, 2, 1);
         fcast->set_cr_method(temp_int);
-        token = f_file->get_next_value("control rule upper limit");
+        token = f_file->get_next_value(QString("control rule upper limit"));
         temp_float = token.toFloat();
         fcast->set_cr_biomass_const_f(temp_float);
-        token = f_file->get_next_value("control rule lower limit");
+        token = f_file->get_next_value(QString("control rule lower limit"));
         temp_float = token.toFloat();
         fcast->set_cr_biomass_no_f(temp_float);
-        token = f_file->get_next_value("control rule buffer");
+        token = f_file->get_next_value(QString("control rule buffer"));
         temp_float = token.toFloat();
         fcast->set_cr_target(temp_float);
 
-        token = f_file->get_next_value("number of loops");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Number of forecast loops"), 1, 3, 3);
         fcast->set_num_forecast_loops(temp_int);
-        token = f_file->get_next_value("loop with recruitment");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("First forecast loop with stochastic recruitment"), 1, 3, 3);
         fcast->set_forecast_loop_recruitment(temp_int);
-        token = f_file->get_next_value("loop control 3");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Forecast recruitment"), 0, 3, 0);
         fcast->set_forecast_recr_adjust(temp_int);
-        token = f_file->get_next_value("loop control 4");
+        token = f_file->get_next_value(QString("Scalar or N years to ave recruitment"));
         temp_float = token.toFloat();
         fcast->set_forecast_recr_adj_value(temp_float);
-        token = f_file->get_next_value("loop control 5");
+        token = f_file->get_next_value(QString("loop control 5"));
         temp_int = token.toInt();
         fcast->set_forecast_loop_ctl5(temp_int);
 
-        token = f_file->get_next_value("caps and allocs first yr");
+        token = f_file->get_next_value(QString("caps and allocs first yr"));
         temp_int = token.toInt();
         fcast->set_caps_alloc_st_year(temp_int);
 
-        token = f_file->get_next_value("std dev log(catch/tgt)");
+        token = f_file->get_next_value(QString("std dev log(catch/tgt)"));
         temp_float = token.toFloat();
         fcast->set_log_catch_std_dev(temp_float);
-        token = f_file->get_next_value("West Coast rebuilder");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Do West Coast rebuilder"), 0, 1, 0);
         fcast->set_do_rebuilder(temp_int == 1? true: false);
-        token = f_file->get_next_value("rebuilder: first year");
+        token = f_file->get_next_value(QString("rebuilder: first year"));
         temp_int = token.toInt();
         fcast->set_rebuilder_first_year(temp_int);
-        token = f_file->get_next_value("rebuilder: curr year");
+        token = f_file->get_next_value(QString("rebuilder: curr year"));
         temp_int = token.toInt();
         fcast->set_rebuilder_curr_year(temp_int);
 
-        token = f_file->get_next_value("fleet relative F");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Fleet Relative F"), 1, 2, 1);
         fcast->set_fleet_rel_f(temp_int);
 
-        token = f_file->get_next_value("max forecast catch basis");
-        temp_int = token.toInt();
+        temp_int = f_file->getIntValue(QString("Basis for max forecast catch"), 2, 6, 2);
         fcast->set_catch_tuning_basis(temp_int);
 
         // season, fleet, relF
@@ -1593,9 +1581,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 for (int j = 0; j < data->get_num_fleets(); j++)
                     fcast->setSeasFleetRelF(i, j, 1.0);
             do {
-                temp_int = f_file->get_next_value("season").toInt();
-                fleet = f_file->get_next_value("fleet").toInt();
-                temp_float = f_file->get_next_value("relF").toFloat();
+                temp_int = f_file->get_next_value(QString("season")).toInt();
+                fleet = f_file->get_next_value(QString("fleet")).toInt();
+                temp_float = f_file->get_next_value(QString("relF")).toFloat();
                 if (temp_int != -9999)
                     fcast->setSeasFleetRelF(temp_int, fleet, temp_float);
 
@@ -1605,7 +1593,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         // max catch fleet
         do {
             fleet = f_file->get_next_value().toInt();
-            temp_float = f_file->get_next_value("max catch fleet").toFloat();
+            temp_float = f_file->get_next_value(QString("max catch fleet")).toFloat();
             if (fleet != -9999)
                 fcast->set_max_catch_fleet((fleet - 1), temp_float);
         } while (fleet != -9999);
@@ -1615,7 +1603,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             fcast->set_max_catch_area(i, 0);
         do {
             area = f_file->get_next_value().toInt();
-            temp_float = f_file->get_next_value("max catch area").toFloat();
+            temp_float = f_file->get_next_value(QString("max catch area")).toFloat();
             if (area != -9999)
                 fcast->set_max_catch_area((area - 1), temp_float);
         } while (area != -9999);
@@ -1625,8 +1613,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         for (i = 0; i < data->get_num_fleets(); i++)
             data->getFleet(i)->setAllocGroup(0);
         do {
-            fleet = f_file->get_next_value("fleet alloc grp").toInt();
-            temp_int = f_file->get_next_value("alloc grp").toInt();
+            fleet = f_file->get_next_value(QString("fleet alloc grp")).toInt();
+            temp_int = f_file->get_next_value(QString("alloc grp")).toInt();
             if (fleet != -9999)
             {
                 data->getFleet(fleet - 1)->setAllocGroup(temp_int);
@@ -1640,12 +1628,12 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             do
             {
                 str_lst.clear();
-                token = f_file->get_next_value("alloc grp frac year");
+                token = f_file->get_next_value(QString("alloc grp frac year"));
                 temp_int = token.toInt();
                 str_lst.append(token);
                 for (i = 0; i < fcast->get_num_alloc_groups(); i++)
                 {
-                    token = f_file->get_next_value("alloc group fraction");
+                    token = f_file->get_next_value(QString("alloc group fraction"));
                     str_lst.append(token);
                 }
                 if (temp_int != -9999)
@@ -1655,26 +1643,26 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
         // Forecast Catch
         fcast->setNumFixedFcastCatch(0);
-        token = f_file->get_next_value("input catch basis");
+        token = f_file->get_next_value(QString("Basis for forecast catch"));
         num = token.toInt();
         fcast->set_input_catch_basis(num);
         do
         {
             str_lst.clear();
-            token = f_file->get_next_value("Year");
+            token = f_file->get_next_value(QString("Year"));
             temp_int = token.toInt();
             str_lst.append(token);                // Year
-            str_lst.append(f_file->get_next_value("Season")); // Season
-            str_lst.append(f_file->get_next_value("Fleet")); // Fleet
-            str_lst.append(f_file->get_next_value("Catch")); // Catch
+            str_lst.append(f_file->get_next_value(QString("Season"))); // Season
+            str_lst.append(f_file->get_next_value(QString("Fleet"))); // Fleet
+            str_lst.append(f_file->get_next_value(QString("Catch"))); // Catch
             if (num == -1)
-                str_lst.append(f_file->get_next_value("Basis")); // Basis
+                str_lst.append(f_file->get_next_value(QString("Basis"))); // Basis
             if (temp_int != -9999)
                 fcast->addFixedFcastCatch(str_lst);
         } while (temp_int != -9999);
 
         //  SS_Label_Info_3.5 #End of datafile indicator
-        token = f_file->get_next_value("End of data indicator");
+        token = f_file->get_next_value(QString("End of data indicator"));
         temp_int = token.toInt();
         if (temp_int != END_OF_DATA)
         {
@@ -1717,10 +1705,10 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
 
         chars += f_file->write_val(fcast->get_benchmarks(), 5,
-                                   QString("Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F_0.1,F_msy"));
+                                   QString("Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F_0.1,F_msy "));
 
         chars += f_file->write_val(fcast->get_MSY(), 5,
-                                   QString("MSY: 1=F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F(0.1); 4=F(endyr)"));
+                                   QString("MSY: 1=F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F(0.1); 4=F(endyr) "));
 
         chars += f_file->write_val(fcast->get_spr_target(), 5, QString("SPR target (e.g. 0.40)"));
 
@@ -1768,7 +1756,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         temp_string.append(" # after processing ");
         chars += f_file->writeline(temp_string);
 
-        chars += f_file->write_val(fcast->getSelectivity(), 5, QString("Forecast selectivity (not yet implemented)"));
+        chars += f_file->write_val(fcast->getSelectivity(), 5, QString("Forecast selectivity (0=fcast selex is mean from year range; 1=fcast selectivity from annual time-vary parms)"));
         chars += f_file->write_val(fcast->get_cr_method(), 5, QString("Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB))"));
         chars += f_file->write_val(fcast->get_cr_biomass_const_f(), 5, QString("Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below)"));
         chars += f_file->write_val(fcast->get_cr_biomass_no_f(), 5, QString("Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10)"));
@@ -1828,7 +1816,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         }
         temp_string.clear();
 
-        line = QString("# enter list of fleet number and max for fleets with max annual catch; terminate with fleet=-9999");
+        line = QString("# enter list of: fleet number, max annual catch for fleets with a max; terminate with fleet=-9999");
         chars += f_file->writeline(line);
         str_lst = fcast->getMaxCatchFleets();
         line.clear();
@@ -1890,11 +1878,11 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         fcast->getAllocFractModel()->sort(0);
         temp_string = QString::number(fcast->get_num_alloc_groups());
-        line = QString("#_if N allocation groups >0, list year, allocation fraction for each group");
+        line = QString("#_if N allocation groups >0, list year, allocation fraction for each group ");
         chars += f_file->writeline(line);
         line = QString("# list sequentially because read values fill to end of N forecast");
         chars += f_file->writeline(line);
-        line = QString("# terminate with -9999 in year field");
+        line = QString("# terminate with -9999 in year field ");
         chars += f_file->writeline(line);
         line.clear();
         if (fcast->get_num_alloc_groups() > 0)
@@ -1927,7 +1915,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->write_val(temp_int, 5, QString("basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input Hrate(F)"));
         line = QString("#enter list of Fcast catches; terminate with line having year=-9999");
         chars += f_file->writeline(line);
-        line = QString("#_Year Seas Fleet Catch(or_F)");
+        line = QString("#_Yr Seas Fleet Catch(or_F)");
         if (temp_int < 0)
             line.append(QString(" Basis"));
         chars += f_file->writeline(line);
@@ -1952,7 +1940,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
         chars += f_file->writeline("#");
 
-        chars += f_file->write_val(END_OF_DATA, 6, QString("verify end of input"));
+        chars += f_file->write_val(END_OF_DATA, 6, QString("verify end of input "));
 
         f_file->close();
     }
