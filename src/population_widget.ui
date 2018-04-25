@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -82,7 +82,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-133</y>
+            <y>0</y>
             <width>894</width>
             <height>546</height>
            </rect>
@@ -892,7 +892,7 @@
                       <number>-999</number>
                      </property>
                      <property name="maximum">
-                      <number>2</number>
+                      <number>3000</number>
                      </property>
                     </widget>
                    </item>
