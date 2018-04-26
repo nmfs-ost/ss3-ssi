@@ -15,6 +15,7 @@
 #include <qlineseries.h>
 #include <QChartView>
 #include <QValueAxis>
+#include <qscatterseries.h>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -177,6 +178,7 @@ private:
     QLineSeries *join2Series;
     QLineSeries *join3Series;
     QLineSeries *selSeries;
+    QScatterSeries *ptSeries;
     QList<QPointF> firstPoints;
 
     float yMax;
@@ -257,11 +259,12 @@ private slots:
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
     float logist (double value);
+    float minXvalue (const QList<QPointF> &pointlist);
     float maxXvalue (const QList<QPointF> &pointlist);
     float minYvalue (const QList<QPointF> &pointlist);
     float maxYvalue (const QList<QPointF> &pointlist);
     float aveXvalue (const QList<float> &xvals);
-    float aveYvalue (const QList<QPointF> &pointlist);
+    float aveYvalue (const QList<QPointF> &pointlist, int start, int stop);
 };
 
 #endif // EQUATIONDIALOG_H

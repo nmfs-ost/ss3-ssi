@@ -686,7 +686,7 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->get_next_value("control file");
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
-        temp_int = starterFile->getIntValue(QString("ss.par choice"), 0, 1, 0);
+        temp_int = starterFile->getIntValue(QString("Read ss.par choice"), 0, 1, 0);
         set_par_file(temp_int != 0);
         temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);

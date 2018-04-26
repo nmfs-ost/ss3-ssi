@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.02
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.03
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -16,6 +16,10 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+      3.3.11.03
+      2018-04-26
+1. Implemented cubic spline selectivity.
 ============================================================================
       3.3.11.02
       2018-04-25

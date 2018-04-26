@@ -4,6 +4,7 @@
 #include <QAbstractButton>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
+#include <QtCharts/QScatterSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QValueAxis>
 #include <QMessageBox>
@@ -1777,6 +1778,8 @@ void equationDialog::resetChart(bool create)
             delete join2Series;
         if (join3Series != NULL)
             delete join3Series;
+        if (ptSeries != NULL)
+            delete ptSeries;
         delete selSeries;
         delete cht;
         delete chartview;
@@ -1789,6 +1792,7 @@ void equationDialog::resetChart(bool create)
     join1Series = NULL;
     join2Series = NULL;
     join3Series = NULL;
+    ptSeries = NULL;
     selSeries = new QLineSeries(cht);
     selSeries->setName(QString("Selex"));
     axisXsel = new QValueAxis();
@@ -4065,7 +4069,8 @@ void equationDialog::cubicSpline(float scale)
         ui->label_3_name->setText("GradHi");
         ui->label_3_type->setText("Value");
     }
-    setTitle(QString("Pattern %1: Cubic Spline %2 nodes- not completely implemented").arg(
+
+    setTitle(QString("Pattern %1: Cubic Spline %2 nodes").arg(
                  QString::number(equationNum),
                  QString::number(num/2)));
     setParameterHeaders();
@@ -4079,6 +4084,16 @@ void equationDialog::cubicSpline(float scale)
     cht->addSeries(selSeries);
     cht->setAxisX(axisXsel, selSeries);
     cht->setAxisY(axisY, selSeries);
+    axisY->setTitleText("Selex (red)");
+
+    ptSeries = new QScatterSeries(cht);
+    ptSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(ptSeries);
+
+    axisYalt->setTitleText("Cubic Nodes (blue)");
+    cht->addAxis(axisYalt, Qt::AlignRight);
+    ptSeries->attachAxis(axisXsel);
+    ptSeries->attachAxis(axisYalt);
 
     if (num > 5 && (num % 2) == 0)
     {
@@ -4088,15 +4103,18 @@ void equationDialog::cubicSpline(float scale)
 
 void equationDialog::updateCubicSpline(float scale)
 {
-/*    float xval = 0;
-    int start = (scale > 0? 5: 3);
+    float xval = 0, yval = 0;
+    int start = 3 + scale;
     int num = parameters->rowCount() - start;
-    float scaleLo = 1, scaleHi = xValList.count() - 1;
-    float setup = 0;
+    int scaleLo = -1, scaleHi = -1;
+    int setup = 0;
     float gradLo = 0;
     float gradHi = 0;
     float divisor = 1;
+    int i;
+    bool okay;
     QString msg;
+    float maxVal, minVal, max, min;
 
     if ((num % 2) == 1 || num < 6)
     {
@@ -4105,6 +4123,7 @@ void equationDialog::updateCubicSpline(float scale)
     }
     else
     {
+        num /= 2;
         std::vector<double> X(num), Y(num);
         tk::spline cubicspl;
 
@@ -4132,50 +4151,104 @@ void equationDialog::updateCubicSpline(float scale)
             ui->doubleSpinBox_5_trans->setValue(gradHi);
         }
 
-        num /= 2;
-        X[0] = QString(parameters->getRowData(start++).at(2)).toFloat();
-        for (int i = 1; i < num; i++)
+        switch (setup)
         {
-            X[i] = QString(parameters->getRowData(start++).at(2)).toFloat();
-            if (X[i] <= X[i-1])
-                X[i] = X[i-1] + 2.;
+        case 0:
+            for (i = 0; i < num; i++)
+                X[i] = QString(parameters->getRowData(start++).at(2)).toFloat();
+            break;
+        case 1:
+        case 2:
+            int x0 = xValList.first();
+            int xn = xValList.last();
+            int num_1 = num - 1;
+            float dist = xn - x0;
+            float incr = dist / (num_1);
+            X[0]     = x0 + (2.5 * dist) / 100;
+            X[num_1] = x0 + (97.5 * dist) / 100;
+            for (i = 1; i < num_1; i++)
+                X[i] = X[i-1] + incr;
+            for (i = 0; i < num; i++)
+                parameters->setItem(start++, 2, new QStandardItem(QString::number(X[i])));
         }
-        for (int i = 0; i < num; i++)
+
+        for (i = 0; i < num; i++)
         {
             Y[i] = QString(parameters->getRowData(start++).at(2)).toFloat();
         }
-    //    X[0]=0.1; X[1]=0.4; X[2]=1.2; X[3]=1.8; X[4]=2.0;
-    //    Y[0]=0.1; Y[1]=0.7; Y[2]=0.6; Y[3]=1.1; Y[4]=0.9;
 
+        i = num;
+        while (i > 1)
+        {
+            i--;
+            for (int j = 0; j < i; j++)
+            {
+                float x, y;
+                if (X[j+1] < X[j])
+                {
+                    x = X[j];
+                    y = Y[j];
+                    X[j] = X[j+1];
+                    Y[j] = Y[j+1];
+                    X[j+1] = x;
+                    Y[j+1] = y;
+                }
+            }
+        }
+        // currently it is required that X is already sorted
         cubicspl.set_boundary(tk::spline::first_deriv, gradLo,
                               tk::spline::first_deriv, gradHi);
-        cubicspl.set_points(X, Y); // currently it is required that X is already sorted
+        cubicspl.set_points(X, Y);
+
+        ptSeries->clear();
+        for (i = 0; i < num; i++)
+            ptSeries->append(QPointF(X[i], Y[i]));
 
         firstPoints.clear();
         selSeries->clear();
-        for (int i = 0; i < xValList.count(); i++)
+        for (i = 0; i < xValList.count(); i++)
         {
             xval = xValList.at(i);
-            firstPoints.append(QPointF(xval, cubicspl(xval)));
+            yval = cubicspl(xval);
+            firstPoints.append(QPointF(xval, yval));
         }
+        minVal = minYvalue (firstPoints);
+        maxVal = maxYvalue (firstPoints);
+        max = minVal + ((maxVal - minVal) * 1.2);
+        axisYalt->setRange(minVal, max);
+        maxVal -= minVal;
+
+        for (i = 0; i < firstPoints.count(); i++)
+        {
+            yval = firstPoints.at(i).y();
+            firstPoints[i].setY(yval - minVal);
+        }
+
         if (scale > 0)
         {
-            float total = 0;
-            for (int i = scaleLo; i <= scaleHi; i++)
-                total += firstPoints.at(i).y();
-
-            divisor = total / (scaleHi - scaleLo + 1);
+            divisor = aveYvalue(firstPoints, scaleLo, scaleHi);
         }
         else
         {
-            divisor = maxXvalue(firstPoints);
-
+            divisor = maxVal;
         }
-        for (int i = 0; i < xValList.count(); i++)
+        for (i = 0; i < firstPoints.count(); i++)
             firstPoints[i].setY(firstPoints.at(i).y() / divisor);
 
         selSeries->append(firstPoints);
-    }*/
+    }
+}
+
+/** Returns the minimum x-value of a point list */
+float equationDialog::minXvalue(const QList<QPointF> &pointlist)
+{
+    float value = 1000;
+    for (int i = 0; i < pointlist.count(); i++)
+    {
+        if (pointlist.at(i).x() < value)
+            value = pointlist.at(i).x();
+    }
+    return value;
 }
 
 /** Returns the maximum x-value of a point list */
@@ -4226,14 +4299,15 @@ float equationDialog::aveXvalue(const QList<float> &xvals)
 }
 
 /** Returns the average of the y-values of a point list */
-float equationDialog::aveYvalue(const QList<QPointF> &pointlist)
+float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
 {
     float value = 0.;
-    int i = 0;
-    for (i = 0; i < pointlist.count(); i++)
+    int i = (start == -1)? 0: start;
+    int end = (stop == -1)? pointlist.count() - 1: stop;
+
+    for (; i <= end; i++)
     {
-        if (pointlist.at(i).y() > value)
-            value += pointlist.at(i).y();
+        value += pointlist.at(i).y();
     }
     return (value / i);
 }
