@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.04
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.03
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -17,15 +17,14 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-      3.3.11.04
-      2018-04-26
-1. Corrected Selectivity male and discard parameter number.
-2. Added contrainsts on sliders for Constant Range selectivity.
-3.
-============================================================================
       3.3.11.03
-      2018-04-26
-1. Implemented cubic spline selectivity.
+      2018-05-31
+1. Reads and writes dirichlet multinomial parameters.
+2. Changed selex retain, discard, and male params to full params.
+3. Added time varying parameters for each of above.
+4. Minor changes to run dialog.
+5. Added check for presence of ss.par file and wtatage.ss when copying.
+6. increased allowable input line length.
 ============================================================================
       3.3.11.02
       2018-04-25
