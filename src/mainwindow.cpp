@@ -493,16 +493,17 @@ void MainWindow::copyFiles(QString oldDir, QString newDir)
     copyFile (oldDir + QString("/wtatage.ss"), newDir);
     copyFile (oldDir + QString("/ss.par"), newDir);
     copyFile (oldDir + QString("/ss.bar"), newDir);
-/*    if (modelData->getReadWtAtAge())
-    {
-        // copy wtatage.ss
-//        copy_file (oldDir + QString("/wtatage.ss_new"), newDir + QString("/wtatage.ss"));
-    }
-    if (files->getReadParFile())
+    QFileInfo qfi (oldDir + QString("/ss.par"));
+    if (qfi.exists())
     {
         // copy ss.par file
-//        copy_file (oldDir + QString("/ss.par"), newDir + QString("/ss.par"));
-    }*/
+        copyFile (qfi.absoluteFilePath(), newDir);
+    }
+    if (modelData->getReadWtAtAge())
+    {
+        // copy wtatage.ss
+        copy_file (oldDir + QString("/wtatage.ss_new"), newDir + QString("/wtatage.ss"));
+    }
 }
 
 void MainWindow::copyFile(QString fname, QString newDir)
@@ -819,7 +820,7 @@ void MainWindow::run_trans()
     Dialog_run drun(this);
     // edit starter.ss to set max phase 0 and turn off reading parameter file
     modelData->set_last_estim_phase(0);
-    files->set_par_file(false);
+    files->setReadParFile(false);
     files->write_starter_file();
     // use run dialog to run ss_trans
     drun.setDir(current_dir);

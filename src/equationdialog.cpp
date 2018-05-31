@@ -28,8 +28,8 @@ equationDialog::equationDialog(QWidget *parent, QString *typ) :
 {
     ui->setupUi(this);
 
-    name = QString (QString("%1 Selectivity").arg(type));
     type = QString (*typ);
+    name = QString (QString("%1 Selectivity").arg(type));
     title = name;
 
     selex = NULL;
@@ -1946,12 +1946,16 @@ void equationDialog::updateConstantRange (float val)
         return;
     if (par1 < xValList.first())
         par1 = xValList.first();
+    if (par1 >= par2)
+        par1 = par2 - .001;
+    ui->doubleSpinBox_1_trans->setValue(par1);
     if (par2 < xValList.first())
         par2 = xValList.last();
+    if (par2 <= par1)
+        par2 = par1 + .001;
+    ui->doubleSpinBox_2_trans->setValue(par2);
     float start = par1 + binMid;
     float end = par2 + binMid;
-    ui->doubleSpinBox_1_trans->setValue(par1);
-    ui->doubleSpinBox_2_trans->setValue(par2);
 
     updateConstant(val, start, end);
 }
@@ -2952,6 +2956,7 @@ void equationDialog::updateDblLogPeak()
 //        upselex = init + (1.0 - init) * pow((( 1.0 / (1.0 + exp(-exp(slope_up) * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
 //        downselex = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-exp(slope_dn) * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
         sel = ((((upselex * jn1) + (1.0 - jn1)) * jn2) + downselex * (1.0 - jn2)) * jn3 + final * (1.0 - jn3);
+//        sel = ((upselex * jn1) + (jn2 - jn1) + (downselex * (jn3 - jn2)) + (final * (1.0 - jn3)));
         join1Series->append(QPointF(binM, jn1));
         join2Series->append(QPointF(binM, jn2));
         join3Series->append(QPointF(binM, jn3));
@@ -3132,6 +3137,7 @@ void equationDialog::updateDblLogSmooth()
         ascendSeries->append(QPointF(binM, upsel));
         dscendSeries->append(QPointF(binM, dnsel));
         sel = ((((upsel * jn1) + jn1) * jn2) + dnsel * jn2);
+        sel = (upsel * jn1) + (jn2 - jn1) + (dnsel * (1.0 - jn2));
         selSeries->append(QPointF(binM, sel));
     }
 }

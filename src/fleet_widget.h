@@ -129,15 +129,19 @@ private:
     tableview *qTvParamsView;
 
     tableview *sizeSelexParamsView;
-    tableview *sizeSelexRetainView;
-    tableview *sizeSelexDiscardView;
-    tableview *sizeSelexMaleView;
     tableview *sizeSelexTimeVaryParamsView;
+    tableview *sizeSelexRetainParamsView;
+    tableview *sizeSelexRetainTVParamsView;
+    tableview *sizeSelexDiscardParamsView;
+    tableview *sizeSelexDiscardTVParamsView;
+    tableview *sizeSelexMaleParamsView;
+    tableview *sizeSelexMaleTVParamsView;
     equationDialog *selexSizeEqDialog;
     DialogInfo * selexSizeInfoDialog;
     tableview *ageSelexParamsView;
-    tableview *ageSelexMaleView;
     tableview *ageSelexTimeVaryParamsView;
+    tableview *ageSelexMaleParamsView;
+    tableview *ageSelexMaleTVParamsView;
     equationDialog *selexAgeEqDialog;
     DialogInfo * selexAgeInfoDialog;
 

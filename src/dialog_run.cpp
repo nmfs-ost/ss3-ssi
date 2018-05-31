@@ -15,7 +15,6 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui->pushButton_increase->setVisible(false);
     ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
-    ui->pushButton_cRptCharts->setVisible(false);
 
     ui->plainTextEdit_output->setCenterOnScroll(true);
 
@@ -69,6 +68,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
 
     dfont = QFont(fontInfo().family(), fontInfo().pointSize());
     setFontSize(9);
+    ui->pushButton_run->setDefault(true);
 }
 
 Dialog_run::~Dialog_run()
@@ -118,9 +118,9 @@ void Dialog_run::runSS()
 
 void Dialog_run::runStarted()
 {
+    setUiEnabled(false);
     ui->pushButton_pause->setEnabled(true);
     ui->pushButton_stop->setEnabled(true);
-    setUiEnabled(false);
     running = true;
 }
 
@@ -161,15 +161,17 @@ void Dialog_run::runCompleted(int code)
         default:
             message = QString ("Unknown error running Stock Synthesis.\n");
         }
+        ui->pushButton_showWarn->setDefault(true);
     }
     else
     {
         message = QString("Stock Synthesis executed with no errors.\n");
+
+        ui->pushButton_rptCharts->setDefault(true);
     }
     ui->plainTextEdit_error->insertPlainText(message);
     ui->plainTextEdit_error->scroll(0,1);
 
-    ui->pushButton_run->setEnabled(true);
     ui->pushButton_pause->setEnabled(false);
     ui->pushButton_stop->setEnabled(false);
 }
@@ -223,7 +225,7 @@ void Dialog_run::changeExe()
 void Dialog_run::showOptions()
 {
     runoptions->show();
-
+    ui->pushButton_run->setDefault(true);
 }
 
 void Dialog_run::applyOptions()
@@ -289,12 +291,14 @@ void Dialog_run::stdError()
 
 void Dialog_run::setUiEnabled(bool flag)
 {
-    ui->pushButton_cancel->setEnabled(flag);
+    ui->pushButton_changeExe->setEnabled(flag);
+    ui->pushButton_options->setEnabled(flag);
+    ui->lineEdit_options->setEnabled(flag);
+    ui->pushButton_run->setEnabled(flag);
     ui->pushButton_rptCharts->setEnabled(flag);
-    ui->pushButton_cRptCharts->setEnabled(flag);
+    ui->pushButton_cancel->setEnabled(flag);
     ui->pushButton_showWarn->setEnabled(flag);
     ui->pushButton_showEcho->setEnabled(flag);
-    ui->lineEdit_options->setEnabled(flag);
 }
 
 void Dialog_run::outputLine()

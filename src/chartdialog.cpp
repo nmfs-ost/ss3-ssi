@@ -25,7 +25,7 @@ chartDialog::chartDialog(QWidget *parent) :
 
     delete ui->verticalLayout_right;
 
-    setWindowTitle(tr("SS_summary.sso  Plots"));
+    setWindowTitle(tr("ss_summary.sso  Plots"));
 
     connect (ui->pushButton_refresh, SIGNAL(released()), SLOT(refreshData()));
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));

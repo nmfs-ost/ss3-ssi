@@ -206,13 +206,13 @@ void shortParameterModel::setTotalNumParams(int num)
 
 void shortParameterModel::setParamHeader(int row, QString title)
 {
-//    int tblrow = paramNum.indexOf(row);
+    int tblrow = paramNum.indexOf(row);
     if (row >= paramData->rowCount())
         setTotalNumParams(row + 1);
     paramData->setRowHeader(row, title);
 //    updateParamHeaders();
-//    if (tblrow >= 0)
-//        paramTable->setRowHeader(tblrow, title);
+    if (tblrow >= 0)
+        paramTable->setRowHeader(tblrow, title);
 }
 
 void shortParameterModel::setParameter(int row, QStringList &rowstringlist)

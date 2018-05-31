@@ -57,9 +57,16 @@ public:
     void setNumberObs (int obs) {i_num_obs = obs;}
     int getNumberObs () {return i_num_obs;}
 
+    void setDirichletParam (int i, QStringList data) {dirichletParams->setParameter(i, data);}
+    QStringList getDirichletParam (int i) {return dirichletParams->getParameter(i);}
+    int getNumDirichletParams () {return dirichletParams->getParamCount();}
+    tablemodel *getDirichletParamTable () {return dirichletParams->getParameters();}
+
 protected:
     tablemodel *binsModel;
     tablemodel *altBinsModel;
+
+    longParameterTable *dirichletParams;
 
     int i_method;
     int i_bin_width;

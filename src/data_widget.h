@@ -119,11 +119,11 @@ private:
 
     tableview *lengthBins;
     spinBoxDelegate *lBinsDelegate;
-
-//    tableview *lengthObs;
+    tableview *lengthDirichlet;
 
     tableview *ageBins;
     spinBoxDelegate *aBinsDelegate;
+    tableview *ageDirichlet;
 
     tableview *ageError;
 

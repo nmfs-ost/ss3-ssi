@@ -128,12 +128,14 @@ public slots:
 
     void print_files ();
 
-    void set_par_file (bool flag);
+    void setReadParFile (bool flag);
+    void changeReadParFile (bool flag);
     bool getReadParFile ();
 //    void set_par_file (QString fname, bool keep = false);
-    void set_pro_file (bool flag);
+    void setReadProFile (bool flag);
+    void changeReadProFile (bool flag);
     bool getReadProFile ();
-    void set_pro_file (QString fname, bool keep = false);
+    void setReadProFile (QString fname, bool keep = false);
     void set_parmtr_write(int flag = 0);
     int get_parmtr_write ();
 //    void set_cumrpt_write(int flag = 0);

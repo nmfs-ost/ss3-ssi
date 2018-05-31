@@ -9,6 +9,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     QWidget(parent), ui(new Ui::population_widget)
 {
     ui->setupUi(this);
+    ui->radioButton_global->setChecked(true);
     model_data = m_data;
     pop = model_data->pPopulation;
     currPattern = NULL;
@@ -1207,32 +1208,8 @@ void population_widget::changeSpawnRecrSpec(int num)
     if (mthd != old_mthd)
     {
         pop->SR()->setMethod(mthd);
-        switch (mthd)
-        {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 6:
-            if (old_mthd == 5 ||
-                    old_mthd == 7 ||
-                    old_mthd == 8)
-            {
-                pop->SR()->removeFullParameter(3);
-            }
-            break;
-        case 5:
-        case 7:
-        case 8:
-            if (old_mthd < 5 ||
-                    old_mthd == 6)
-            {
-                pop->SR()->insertFullParameter(3);
-            }
-            break;
-        }
     }
-    recruitParamsView->setHeight(pop->SR()->getFullParameters());
+    recruitParamsView->setHeight(pop->SR()->getNumFullParameters());// getFullParameters());
 }
 
 void population_widget::changeMoveNumDefs(int value)

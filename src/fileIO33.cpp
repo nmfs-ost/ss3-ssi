@@ -127,7 +127,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             str_lst.append(d_file->get_next_value(QString("catch")));
             str_lst.append(d_file->get_next_value(QString("catch_se")));
             year   = str_lst.at(0).toInt();
-            if (year == -9999)
+            if (year == END_OF_LIST)
                 break;
             fleet  = abs(str_lst.at(2).toInt());
             fleet  = d_file->checkIntValue(fleet, QString("Fleet number"), 1, num_vals, 1);
@@ -135,7 +135,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             if (year == -999)
                 data->getFleet(fleet - 1)->set_catch_equil(ctch);
             data->getFleet(fleet - 1)->addCatchObservation(str_lst);
-        } while (year != -9999);
+        } while (year != END_OF_LIST);
 
         //  SS_Label_Info_2.3 #Read fishery CPUE, effort, and Survey index or abundance
         // before we record abundance, get units and error type for all fleets
@@ -162,14 +162,14 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             str_lst.append(d_file->get_next_value(QString("Abund obs")));
             str_lst.append(d_file->get_next_value(QString("Abund err")));
             year = str_lst.at(0).toInt();
-            if (year == -9999)
+            if (year == END_OF_LIST)
                 break;
 
             fleet = abs(str_lst.at(2).toInt());
             fleet = d_file->checkIntValue(fleet, QString("Fleet number"), 1, total_fleets, 1);
             data->getFleet(fleet - 1)->addAbundanceObs(str_lst);
 
-        } while (year != -9999);
+        } while (year != END_OF_LIST);
 
         //  SS_Label_Info_2.4 #read Discard data
         token = d_file->get_next_value("num fleets with discard");
@@ -199,7 +199,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 fleet = abs(d_file->get_next_value().toInt()) - 1;
                 obs = d_file->get_next_value().toFloat();
                 err = d_file->get_next_value().toFloat();*/
-                if (year == -9999)
+                if (year == END_OF_LIST)
                     break;
 
                 fleet = abs(str_lst.at(2).toInt());
@@ -207,7 +207,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(fleet - 1)->addDiscard(str_lst);
                 if (str_lst.last().compare(QString("EOF")) == 0)
                     return false;
-            } while (year != -9999);
+            } while (year != END_OF_LIST);
         }
 
         //  SS_Label_Info_2.5 #Read Mean Body Weight data
@@ -225,14 +225,14 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 for (int j = 0; j < 6; j++)
                     str_lst.append(d_file->get_next_value(QString("mean bwt")));
                 year = str_lst.at(0).toInt();
-                if (year == -9999)
+                if (year == END_OF_LIST)
                     break;
                 fleet = abs(str_lst.at(2).toInt());
                 fleet = d_file->checkIntValue(fleet, QString("Fleet number"), 1, total_fleets, 1);
                 data->getFleet(fleet - 1)->addMbwtObservation(str_lst);
                 if (str_lst.at(4).compare(QString("EOF")) == 0)
                     return false;
-            } while (year != -9999);
+            } while (year != END_OF_LIST);
         }
 
         //  SS_Label_Info_2.6 #Setup population Length bins
@@ -289,8 +289,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(i)->setLengthCompError(temp_int);
                 temp_int = d_file->get_next_value(QString("error parameter")).toInt();
                 data->getFleet(i)->setLengthCompErrorParm(temp_int);
-                temp_int = d_file->get_next_value(QString("min sample size")).toInt();
-                data->getFleet(i)->setLengthMinSampleSize(temp_int);
+                temp_float = d_file->get_next_value(QString("min sample size")).toFloat();
+                data->getFleet(i)->setLengthMinSampleSize(temp_float);
             }
             temp_int = d_file->get_next_value(QString("Length comp number bins")).toInt();//token.toInt();
             l_data->setNumberBins(temp_int);
@@ -321,13 +321,13 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     token = d_file->get_next_value(QString("Length comp data"));
                     str_lst.append(token);
                 }
-                if (str_lst.at(0).toInt() == -9999)
+                if (str_lst.at(0).toInt() == END_OF_LIST)
                     break;
                 if (str_lst.at(0).compare("EOF") == 0)
                     return false;
                 temp_int = abs(str_lst.at(2).toInt());
                 data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
-            } while (str_lst.at(0).toInt() != -9999);
+            } while (str_lst.at(0).toInt() != END_OF_LIST);
             data->set_length_composition(l_data);
         }
         }
@@ -379,8 +379,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             data->getFleet(i)->setAgeCompError(temp_int);
             temp_int = d_file->get_next_value(QString("error parm")).toInt();
             data->getFleet(i)->setAgeCompErrorParm(temp_int);
-            temp_int = d_file->get_next_value(QString("min sample size")).toInt();
-            data->getFleet(i)->setAgeCompMinSampleSize(temp_int);
+            temp_float = d_file->get_next_value(QString("min sample size")).toFloat();
+            data->getFleet(i)->setAgeCompMinSampleSize(temp_float);
         }
 
         temp_int = d_file->getIntValue(QString("Age comp alt bin method"), 1, 3, 1);
@@ -395,20 +395,20 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             {
                 token = d_file->get_next_value(QString("Age data"));
                 str_lst.append(token);
-                if (token.contains("-9999"))
+                if (token.contains("END_OF_LIST"))
                 {
                     d_file->skip_line();
                     break;
                 }
             }
-            if (str_lst.at(0).toInt() == -9999)
+            if (str_lst.at(0).toInt() == END_OF_LIST)
                 break;
             if (str_lst.at(0).compare(QString("EOF")) == 0)
                 return false;
             fleet = abs(str_lst.at(2).toInt());
             fleet = d_file->checkIntValue(fleet, QString("Fleet Number"), 1, total_fleets, 1);
             data->getFleet(fleet - 1)->addAgeObservation(str_lst);
-        } while (str_lst.at(0).toInt() != -9999);
+        } while (str_lst.at(0).toInt() != END_OF_LIST);
 
         //  SS_Label_Info_2.9 #Read mean Size_at_Age data
         temp_int = d_file->get_next_value().toInt();
@@ -424,14 +424,14 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     token = d_file->get_next_value(QString("mean Size_at_Age"));
                     str_lst.append(token);
                 }
-                if (str_lst.at(0).toInt() == -9999)
+                if (str_lst.at(0).toInt() == END_OF_LIST)
                     break;
                 if (str_lst.at(0).compare(QString("EOF")) == 0)
                     return false;
                 fleet = abs(str_lst.at(2).toInt());
                 fleet = d_file->checkIntValue(fleet, QString("Fleet Number"), 1, total_fleets, 1);
                 data->getFleet(fleet - 1)->addSaaObservation(str_lst);
-            } while (str_lst.at(0).toInt() != -9999);
+            } while (str_lst.at(0).toInt() != END_OF_LIST);
         }
         }
 
@@ -450,11 +450,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     str_lst.append(d_file->get_next_value(QString("env var data")));
                 }
                 temp_int = str_lst.at(0).toInt();
-                if (temp_int != -9999)
+                if (temp_int != END_OF_LIST)
                     data->addEnvironVarObs (str_lst);
                 if (str_lst.at(0).compare(QString("EOF")) == 0)
                     return false;
-            } while (temp_int != -9999);
+            } while (temp_int != END_OF_LIST);
         }
 
         //  SS_Label_Info_2.11 #Start generalized size composition section
@@ -1581,19 +1581,19 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 temp_int = f_file->getIntValue(QString("Season"), 1, numSeas, 1);
                 fleet = f_file->getIntValue(QString("Fleet num"), 1, numFleets, 1);
                 temp_float = f_file->get_next_value(QString("relF")).toFloat();
-                if (temp_int != -9999)
+                if (temp_int != END_OF_LIST)
                     fcast->setSeasFleetRelF(temp_int, fleet, temp_float);
 
-            } while (temp_int != -9999);
+            } while (temp_int != END_OF_LIST);
         }
 
         // max catch fleet
         do {
             fleet = f_file->get_next_value().toInt();
             temp_float = f_file->get_next_value(QString("max catch fleet")).toFloat();
-            if (fleet != -9999)
+            if (fleet != END_OF_LIST)
                 fcast->set_max_catch_fleet((fleet - 1), temp_float);
-        } while (fleet != -9999);
+        } while (fleet != END_OF_LIST);
 
         // max catch area
         for (i = 0; i < fcast->get_num_areas(); i++)
@@ -1601,9 +1601,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         do {
             area = f_file->get_next_value().toInt();
             temp_float = f_file->get_next_value(QString("max catch area")).toFloat();
-            if (area != -9999)
+            if (area != END_OF_LIST)
                 fcast->set_max_catch_area((area - 1), temp_float);
-        } while (area != -9999);
+        } while (area != END_OF_LIST);
 
         // Allocation groups
         fcast->set_num_alloc_groups(0);
@@ -1612,12 +1612,12 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         do {
             fleet = f_file->get_next_value(QString("fleet alloc grp")).toInt();
             temp_int = f_file->get_next_value(QString("alloc grp")).toInt();
-            if (fleet != -9999)
+            if (fleet != END_OF_LIST)
             {
                 data->getFleet(fleet - 1)->setAllocGroup(temp_int);
                 fcast->setAllocGrp(fleet - 1, temp_int);
             }
-        } while (fleet != -9999);
+        } while (fleet != END_OF_LIST);
 
         if (fcast->get_num_alloc_groups() > 0)
         {
@@ -1633,9 +1633,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                     token = f_file->get_next_value(QString("alloc group fraction"));
                     str_lst.append(token);
                 }
-                if (temp_int != -9999)
+                if (temp_int != END_OF_LIST)
                     fcast->setAllocFractions(j++, str_lst);
-            } while (temp_int != -9999);
+            } while (temp_int != END_OF_LIST);
         }
 
         // Forecast Catch
@@ -1654,9 +1654,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             str_lst.append(f_file->get_next_value(QString("Catch"))); // Catch
             if (num == -1)
                 str_lst.append(f_file->get_next_value(QString("Basis"))); // Basis
-            if (temp_int != -9999)
+            if (temp_int != END_OF_LIST)
                 fcast->addFixedFcastCatch(str_lst);
-        } while (temp_int != -9999);
+        } while (temp_int != END_OF_LIST);
 
         //  SS_Label_Info_3.5 #End of datafile indicator
         token = f_file->get_next_value(QString("End of data indicator"));
@@ -2082,11 +2082,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         temp_int = c_file->getIntValue(QString("Autogenerate Tagging time-varying params"), 0, 2, 0);
         data->setTagTimeVaryReadParams(temp_int); // for future capability
         temp_int = c_file->getIntValue(QString("Autogenerate Fleet selex time-varying params"), 0, 2, 0);
-        data->getFleet(0)->setSelTimeVaryReadParams(temp_int);
+        for (i = 0; i < data->get_num_fleets(); i++)
+            data->getFleet(i)->setSelTimeVaryReadParams(temp_int);
 
         // natural Mort
         temp_int = c_file->getIntValue(QString("Natural Mortality type"), 0, 4, 0);
         pop->Grow()->setNatural_mortality_type(temp_int);
+        datalist.append(temp_string);
         switch (temp_int)
         {
         default:
@@ -2175,7 +2177,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setCv_growth_pattern(temp_int);
 
         // maturity
-        temp_int = c_file->getIntValue(QString("Maturity option"), 1, 4, 2);
+        temp_int = c_file->getIntValue(QString("Maturity option"), 1, 6, 2);
         pop->Grow()->setMaturity_option(temp_int);
         if (temp_int == 3 ||
             temp_int == 4)
@@ -2570,15 +2572,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setFeature (temp_int);
         i = 0;
         // SR params
+        num = pop->SR()->getNumFullParameters();
+        for (i = 0; i < num; i++)
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, QString("SR_LN(R0)"));
+//            pop->SR()->setFullParameterHeader(i++, QString("SR_LN(R0)"));
         }
-        {
+/*        {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, QString("SR_BH_steep"));
+//            pop->SR()->setFullParameterHeader(i++, QString("SR_BH_steep"));
         }
         if (temp_int == 5 ||
                 temp_int == 7 ||
@@ -2586,26 +2590,26 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, QString("SR_3rd_PARM"));
+//            pop->SR()->setFullParameterHeader(i++, QString("SR_3rd_PARM"));
         }
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, QString("SR_sigmaR"));
+//            pop->SR()->setFullParameterHeader(i++, QString("SR_sigmaR"));
         }
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i++, QString("SR_regime"));
+//            pop->SR()->setFullParameterHeader(i++, QString("SR_regime"));
         }
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-            pop->SR()->setFullParameterHeader(i, QString("SR_autocorr"));
+//            pop->SR()->setFullParameterHeader(i, QString("SR_autocorr"));
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;
-
+*/
         // SR time vary params
         timevaryread = pop->SR()->getTimeVaryReadParams();
         readTimeVaryParams(c_file, data, pop->SR()->getFullParameters(), timevaryread, pop->SR()->getTVParameterModel()->getVarParamTable());
@@ -2795,22 +2799,30 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < num_fleets; i++)
         {
             sizesel = data->getFleet(i)->getSizeSelectivity();
-            datalist.clear();
+            temp_int = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
+            sizesel->setPattern(temp_int);
+            temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
+            sizesel->setDiscard(temp_int);
+            temp_int = c_file->getIntValue(QString("Size selex Male"), 0, 4, 0);
+            sizesel->setMale(temp_int);
+            temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
+            sizesel->setSpecial(temp_int);
+/*            datalist.clear();
             for (int j = 0; j < 4; j++)
                 datalist.append(c_file->get_next_value(QString("size selex setup")));
-            sizesel->setSetup(datalist);
+            sizesel->setSetup(datalist);*/
         }
         // Age selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
             agesel = data->getFleet(i)->getAgeSelectivity();
-            temp_int = c_file->get_next_value(QString("age selex pattern")).toInt();
+            temp_int = c_file->getIntValue(QString("Age selex Pattern"), 10, 45, 0);
             agesel->setPattern(temp_int);
-            temp_int = c_file->get_next_value(QString("age selex discard")).toInt();
+            temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
             agesel->setDiscard(temp_int);
-            temp_int = c_file->get_next_value(QString("age selex male")).toInt();
+            temp_int = c_file->getIntValue(QString("Age selex Male"), 0, 4, 0);
             agesel->setMale(temp_int);
-            temp_int = c_file->get_next_value(QString("age selex special")).toInt();
+            temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
             agesel->setSpecial(temp_int);
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
@@ -2911,6 +2923,31 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;
 
+        // Dirichlet Mult parameter
+        num_vals = 0;
+        for (i = 0; i < data->get_num_fleets(); i++)
+        {
+            temp_int = data->getFleet(i)->getLengthCompErrorParm();
+            if (temp_int > num_vals)
+                num_vals = temp_int;
+        }
+        for (i = 0; i < num_vals; i++)
+        {
+            datalist = readParameter (c_file);
+            data->get_length_composition()->setDirichletParam(i, datalist);
+        }
+        num_vals = 0;
+        for (i = 0; i < data->get_num_fleets(); i++)
+        {
+            temp_int = data->getFleet(i)->getAgeCompErrorParm();
+            if (temp_int > num_vals)
+                num_vals = temp_int;
+        }
+        for (i = 0; i < num_vals; i++)
+        {
+            datalist = readParameter (c_file);
+            data->get_age_composition()->setDirichletParam(i, datalist);
+        }
 
         timevaryread = data->getFleet(0)->getSelTimeVaryReadParams();
         if (timevaryread > 0)
@@ -2922,15 +2959,33 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 // size selex time varying
                 sizesel = data->getFleet(i)->getSizeSelectivity();
-                paramtable = data->getFleet(i)->getSizeSelexModel();
                 varParamtable = sizesel->getTimeVaryParameterModel();
+                paramtable = data->getFleet(i)->getSizeSelexModel();
                 readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+                // size selex retain
+                paramtable = sizesel->getRetainParameterTable();
+                varParamtable = sizesel->getRetainTimeVaryParameterModel();
+                readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+                // size selex discard
+                paramtable = sizesel->getDiscardParameterTable();
+                varParamtable = sizesel->getDiscardTimeVaryParameterModel();
+                readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+                // size selex male
+                paramtable = sizesel->getMaleParameterTable();
+                varParamtable = sizesel->getMaleTimeVaryParameterModel();
+                readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+
             }
             for (i = 0; i < data->get_num_fleets(); i++)
             {
+                // age selex time varying
                 agesel = data->getFleet(i)->getAgeSelectivity();
                 paramtable = agesel->getParameterModel();
                 varParamtable = agesel->getTimeVaryParameterModel();
+                readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+                // size selex male
+                paramtable = agesel->getMaleParameterTable();
+                varParamtable = agesel->getMaleTimeVaryParameterModel();
                 readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
             }
         }
@@ -2967,7 +3022,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->get_next_value(QString("input var value")).toFloat();
             if (temp_string.compare(QString("EOF")) == 0)
                 return false;
-            if (id == -9999)
+            if (id == END_OF_LIST)
                 break;
             data->setInputValueVariance(1);
             switch (id)
@@ -2994,7 +3049,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             default:
                 break;
             }
-        } while (id != -9999);
+        } while (id != END_OF_LIST);
 
         // Max lambda phase
         temp_int = c_file->get_next_value(QString("Lambda max phase")).toInt();
@@ -3020,9 +3075,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
             if (datalist.contains(QString("EOF")))
                 return false;
-            if (datalist.at(0).toInt() != -9999)
+            if (datalist.at(0).toInt() != END_OF_LIST)
                 data->getFleet(flt-1)->appendLambda(datalist);
-        } while (datalist.at(0).toInt() != -9999);
+        } while (datalist.at(0).toInt() != END_OF_LIST);
 
         temp_int = c_file->getIntValue(QString("Additional Std dev reporting? 0/1"), 0, 1, 0);
         data->getAddSdReporting()->setActive(temp_int);
@@ -3257,11 +3312,12 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.append(QString("%1 ").arg(QString::number(temp_int)));
         temp_int = data->getFleet(0)->getSelTimeVaryReadParams();
         line.append(QString("%1 ").arg(QString::number(temp_int)));
-        line.append(QString("# autogen: 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex"));
+        line.append(QString("# autogen "));
         chars += c_file->writeline(line);
         line = QString("# where: 0 = autogen all time-varying parms; 1 = read each time-varying parm line; 2 = read then autogen if parm min==-12345");
         chars += c_file->writeline(line);
-        chars += c_file->writeline("#");
+        line = QString("# 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex");
+        chars += c_file->writeline(line);
         chars += c_file->writeline("#");
         line = QString("# setup for M, growth, maturity, fecundity, recruitment distibution, movement ");
         chars += c_file->writeline(line);
@@ -4186,7 +4242,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_42; parm=2+special+3; // like 27, with 2 additional param for scaling (average over bin range)");
         chars += c_file->writeline(line);
-        line = QString("#_discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
+        line = QString("#__options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
         chars += c_file->writeline(line);
         line = QString("#_Pattern Discard Male Special");
         chars += c_file->writeline(line);
@@ -4281,6 +4337,20 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
 
+        // Dirichlet Mult parameter
+        composition *comp = data->get_length_composition();
+        num_vals = comp->getNumDirichletParams();
+        for (i = 0; i < num_vals; i++)
+        {
+            chars += c_file->write_vector(comp->getDirichletParam(i), 6, QString("ln(EffN mult) Length %1 Dirichlet").arg(i+1));
+        }
+        comp = data->get_age_composition();
+        num_vals = comp->getNumDirichletParams();
+        for (i = 0; i < num_vals; i++)
+        {
+            chars += c_file->write_vector(comp->getDirichletParam(i), 6, QString("ln(EffN mult) Age %1 Dirichlet").arg(i+1));
+        }
+
         line = QString(QString("# timevary selex parameters"));
         chars += c_file->writeline(line);
         line = QString(QString("#_   LO       HI     INIT    PRIOR    PR_SD    PR_type  PHASE"));
@@ -4295,6 +4365,21 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             {
                 chars += c_file->write_vector(slx->getTimeVaryParameter(j), 8, slx->getTimeVaryParameterLabel(j));
             }
+            num = slx->getNumRetainTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                chars += c_file->write_vector(slx->getRetainTimeVaryParameter(j), 8, slx->getRetainTimeVaryParameterLabel(j));
+            }
+            num = slx->getNumDiscardTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                chars += c_file->write_vector(slx->getDiscardTimeVaryParameter(j), 8, slx->getDiscardTimeVaryParameterLabel(j));
+            }
+            num = slx->getNumMaleTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                chars += c_file->write_vector(slx->getMaleTimeVaryParameter(j), 8, slx->getMaleTimeVaryParameterLabel(j));
+            }
         }
         for (i = 0; i < data->get_num_fleets(); i++)
         { // age selectivity
@@ -4303,6 +4388,11 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             for (int j = 0; j < num; j++)
             {
                 chars += c_file->write_vector(slx->getTimeVaryParameter(j), 8, slx->getTimeVaryParameterLabel(j));
+            }
+            num = slx->getNumMaleTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                chars += c_file->write_vector(slx->getMaleTimeVaryParameter(j), 8, slx->getMaleTimeVaryParameterLabel(j));
             }
         }
         }

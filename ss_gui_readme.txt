@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.03
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.04
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -16,6 +16,12 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+      3.3.11.04
+      2018-04-26
+1. Corrected Selectivity male and discard parameter number.
+2. Added contrainsts on sliders for Constant Range selectivity.
+3.
 ============================================================================
       3.3.11.03
       2018-04-26

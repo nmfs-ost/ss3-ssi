@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -83,7 +83,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>894</width>
+            <width>895</width>
             <height>546</height>
            </rect>
           </property>
@@ -170,7 +170,7 @@
                </item>
                <item>
                 <property name="text">
-                 <string>2: Schnute's gen growth curve (3 parameters)</string>
+                 <string>2: Schnute's general growth curve (3 parameters)</string>
                 </property>
                </item>
                <item>
@@ -203,6 +203,9 @@
               <widget class="QDoubleSpinBox" name="doubleSpinBox_exp_decay">
                <property name="minimum">
                 <double>-999.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
                </property>
               </widget>
              </item>
@@ -555,7 +558,7 @@
              <item row="2" column="0">
               <widget class="QLabel" name="label_recr_spec">
                <property name="text">
-                <string>Function</string>
+                <string>Spawn-Recruitment relationship</string>
                </property>
               </widget>
              </item>
@@ -637,6 +640,21 @@
                <item>
                 <property name="text">
                  <string>7=survivorship function (3 parameters)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>8=Shepherd (3 parameters)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>9=Shepherd re-param (3 parameters)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>10=Ricker re-param (3 parameters)</string>
                 </property>
                </item>
               </widget>
@@ -1144,7 +1162,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>903</width>
+            <width>877</width>
             <height>548</height>
            </rect>
           </property>
@@ -1204,6 +1222,9 @@
                <property name="checkable">
                 <bool>true</bool>
                </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
                <layout class="QGridLayout" name="gridLayout_6">
                 <item row="3" column="0">
                  <widget class="QLabel" name="label_hermaph_params">
@@ -1216,7 +1237,7 @@
                  </widget>
                 </item>
                 <item row="2" column="0" colspan="3">
-                 <widget class="QLabel" name="label_fecund_hermaph_male">
+                 <widget class="QLabel" name="label_hermaph_male">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1231,7 +1252,7 @@
                 <item row="2" column="4">
                  <widget class="QLabel" name="label_hermaph_male_info">
                   <property name="text">
-                   <string>0= no males in spawning biomass; 1= simple add males to females; &gt;1 reserved for future</string>
+                   <string>0 = no males in spawning biomass; 1 = simple add males to females; &gt;1 = reserved for future</string>
                   </property>
                  </widget>
                 </item>
@@ -1262,6 +1283,9 @@
                   <property name="maximum">
                    <number>12</number>
                   </property>
+                  <property name="value">
+                   <number>-1</number>
+                  </property>
                  </widget>
                 </item>
                 <item row="1" column="4">
@@ -1273,7 +1297,7 @@
                    </sizepolicy>
                   </property>
                   <property name="text">
-                   <string>-1 do transition at end of each season; or select specific season</string>
+                   <string>-1 = do transition at end of each season; or select specific season</string>
                   </property>
                  </widget>
                 </item>
@@ -1290,6 +1314,16 @@
                   </property>
                  </widget>
                 </item>
+                <item row="4" column="0" colspan="5">
+                 <layout class="QVBoxLayout" name="verticalLayout_hermaph_params"/>
+                </item>
+                <item row="0" column="3" colspan="2">
+                 <widget class="QRadioButton" name="radioButton_herm_FtM">
+                  <property name="text">
+                   <string>Female to Male</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="0" column="0">
                  <widget class="QRadioButton" name="radioButton_herm_MtF">
                   <property name="text">
@@ -1299,16 +1333,6 @@
                    <bool>true</bool>
                   </property>
                  </widget>
-                </item>
-                <item row="0" column="3" colspan="2">
-                 <widget class="QRadioButton" name="radioButton_herm_FtM">
-                  <property name="text">
-                   <string>Female to Male</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0" colspan="5">
-                 <layout class="QVBoxLayout" name="verticalLayout_hermaph_params"/>
                 </item>
                </layout>
               </widget>
@@ -1452,17 +1476,22 @@
                </item>
                <item>
                 <property name="text">
-                 <string>3: Read age-specific maturity for fem</string>
+                 <string>3: Read age-maturity matrix by GP</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>4: Read age-specific fecundity</string>
+                 <string>4: Read age-fecundity</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>5: read empirical data from file wtatage.ss</string>
+                 <string>5: Disabled</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>6: read length-maturity</string>
                 </property>
                </item>
               </widget>

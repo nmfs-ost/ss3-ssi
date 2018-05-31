@@ -10,6 +10,8 @@ composition::composition(QObject *parent)
 
     altBinsModel = new tablemodel(this);
 
+    dirichletParams = new longParameterTable(this);
+
     reset();
 }
 
@@ -17,12 +19,14 @@ composition::~composition()
 {
     delete binsModel;
     delete altBinsModel;
+    delete dirichletParams;
 }
 
 void composition::reset()
 {
     altBinsModel->setRowCount(0);
     altBinsModel->setColumnCount(0);
+    dirichletParams->setParamCount(0);
 
     i_method = 0;
     i_bin_width = 0;

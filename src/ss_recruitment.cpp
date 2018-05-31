@@ -6,9 +6,22 @@ spawn_recruit::spawn_recruit(ss_model *parent)
      parnt = parent;
 
     full_parameters = new longParameterModel();
-    full_parameters->setNumParams(5);
-
     tvParameters = new timeVaryParameterModel (parnt);
+
+    full_parameters->setNumParams(10);
+    tvParameters->setNumParams(10);
+    full_parameters->setParamHeader(0, QString("SR_LN(R0)"));
+    full_parameters->setParamHeader(1, QString("SR_BH_steep"));
+    full_parameters->setParamHeader(2, QString("SR_R_min"));
+    full_parameters->setParamHeader(3, QString("SR_Zfrac"));
+    full_parameters->setParamHeader(4, QString("SR_Beta"));
+    full_parameters->setParamHeader(5, QString("SR_shape"));
+    full_parameters->setParamHeader(6, QString("SR_Rick_pow"));
+    full_parameters->setParamHeader(7, QString("SR_sigmaR"));
+    full_parameters->setParamHeader(8, QString("SR_regime"));
+    full_parameters->setParamHeader(9, QString("SR_autocorr"));
+    parmsUsed << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0;
+    full_parameters->setParamsUsed(parmsUsed);
 
     connect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
              tvParameters, SLOT(changeVarParamData(int,QStringList)));
@@ -53,7 +66,7 @@ void spawn_recruit::reset()
 {
     distrib_method = 1;
     distrib_area = 1;
-    method = 3;
+    setMethod(3);
     env_link = 0;
     env_target = 0;
     rec_dev_code = 1;
@@ -79,47 +92,86 @@ void spawn_recruit::reset()
     use_steepness = 0;
 }
 
+void spawn_recruit::setOption(int option)
+{
+    setMethod (1);
+    if (1 != option)
+        setMethod(option);
+}
+
 void spawn_recruit::setMethod(int value)
 {
     method = value;
-    int num = 2;
+
     switch (value)
     {
     case 1:
-        num = 0;
+        parmsUsed.clear();
+        parmsUsed << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
         break;
     case 2:
     case 3:
     case 4:
     case 6:
-        num = 5;
+        parmsUsed.clear();
+        parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
         break;
     case 5:
+        parmsUsed.clear();
+        parmsUsed << 1 << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
+        break;
     case 7:
+        parmsUsed.clear();
+        parmsUsed << 1 << 0 << 0 << 1 << 1 << 0 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
+        break;
     case 8:
-        num = 6;
+    case 9:
+        parmsUsed.clear();
+        parmsUsed << 1 << 1 << 0 << 0 << 0 << 1 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
+        break;
+    case 10:
+        parmsUsed.clear();
+        parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
         break;
     }
-
-    setNumFullParameters(num);
+    setParamNums ();
 }
 
-void spawn_recruit::setNumFullParameters(int num)
+void spawn_recruit::setParamNums()
 {
-    full_parameters->setNumParams(num);
-    tvParameters->setTotalNumVarTables(num);
+    parmNums.clear();
+    for (int i = 0; i < parmsUsed.count(); i++)
+    {
+        if (parmsUsed.at(i) > 0)
+            parmNums.append(i);
+    }
 }
+
 
 void spawn_recruit::setFullParameter(int index, QStringList values)
 {
-    full_parameters->setParamData(index, values);
-    tvParameters->setParameter(index, values);
+    int i = parmNums.at(index);
+    full_parameters->setParamData(i, values);
+    tvParameters->setParameter(i, values);
 }
 
 void spawn_recruit::setFullParameterHeader(int index, QString hdr)
 {
-    full_parameters->setParamHeader(index, hdr);
-    tvParameters->setTableTitle(index, hdr);
+    int i = parmNums.at(index);
+    full_parameters->setParamHeader(i, hdr);
+    tvParameters->setTableTitle(i, hdr);
+}
+
+QStringList spawn_recruit::getFullParameter(int index)
+{
+    int i = parmNums.at(index);
+    return full_parameters->getParameter(i);
 }
 
 void spawn_recruit::setDistribMethod(int value)
@@ -176,7 +228,7 @@ QStringList spawn_recruit::getAssignTimings() const
 void spawn_recruit::setAssignTimings()
 {
     int num = getNumAssignments();
-    int settle, i, j, timings = 0;
+    int settle, timings = 0;
     QString month;
     QStringList datalist;
     QStringList assignment;

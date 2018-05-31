@@ -45,6 +45,7 @@ public slots:
     void setSetup(QStringList strList);
     QStringList getSetup () {return setup->getData();}
     void setSetup(QList<int> values);
+    void setTVautogenerate (int val);
 
     tablemodel *getSetupModel () {return setup->getTable();}
 
@@ -73,6 +74,15 @@ public slots:
     QStringList getRetainParameter (int index) {return retainParameters->getParameter(index);}
     QString getRetainParameterLabel (int index) {return retainParameters->getParamHeader(index);}
     shortParameterModel *getRetainParameterModel () {return retainParameters;}
+    tablemodel *getRetainParameterTable () {return retainParameters->getParamTable();}
+
+    int getNumRetainTimeVaryParameters ();
+    void setRetainTimeVaryParameter (int index, QStringList strList);
+    void setRetainTimeVaryParameterLabel (int index, QString label);
+    QString getRetainTimeVaryParameterText (int index);
+    QStringList getRetainTimeVaryParameter (int index) {return retainVarParameters->getVarParameter(index);}
+    QString getRetainTimeVaryParameterLabel (int index) {return retainVarParameters->getVarParamHeader(index);}
+    tablemodel *getRetainTimeVaryParameterModel() {return retainVarParameters->getVarParamTable();}
 
     int getNumDiscardParameters();
     void setDiscardParameter(int index, QStringList strList);
@@ -81,14 +91,24 @@ public slots:
     QStringList getDiscardParameter (int index) {return discardParameters->getParameter(index);}
     QString getDiscardParameterLabel (int index) {return discardParameters->getParamHeader(index);}
     shortParameterModel *getDiscardParameterModel () {return discardParameters;}
+    tablemodel *getDiscardParameterTable () {return discardParameters->getParamTable();}
 
-    int getNumSpecialParameters();
+    int getNumDiscardTimeVaryParameters ();
+    void setDiscardTimeVaryParameter (int index, QStringList strList);
+    void setDiscardTimeVaryParameterLabel (int index, QString label);
+    QString getDiscardTimeVaryParameterText (int index);
+    QStringList getDiscardTimeVaryParameter (int index) {return discardVarParameters->getVarParameter(index);}
+    QString getDiscardTimeVaryParameterLabel (int index) {return discardVarParameters->getVarParamHeader(index);}
+    tablemodel *getDiscardTimeVaryParameterModel() {return discardVarParameters->getVarParamTable();}
+
+/*    int getNumSpecialParameters();
     void setSpecialParameter(int index, QStringList strList);
     void setSpecialParameterLabel (int index, QString label);
     QString getSpecialParameterText (int index);
     QStringList getSpecialParameter (int index) {return specialParameters->getParameter(index);}
     QString getSpecialParameterLabel (int index) {return specialParameters->getParamHeader(index);}
     shortParameterModel *getSpecialParameterModel () {return specialParameters;}
+    tablemodel * getSpecialParameterTable () {return specialParameters->getParamTable();}*/
 
     int getNumMaleParameters();
     void setMaleParameter(int index, QStringList strList);
@@ -97,6 +117,15 @@ public slots:
     QStringList getMaleParameter (int index) {return maleParameters->getParameter(index);}
     QString getMaleParameterLabel (int index) {return maleParameters->getParamHeader(index);}
     shortParameterModel *getMaleParameterModel () {return maleParameters;}
+    tablemodel * getMaleParameterTable () {return maleParameters->getParamTable();}
+
+    int getNumMaleTimeVaryParameters ();
+    void setMaleTimeVaryParameter (int index, QStringList strList);
+    void setMaleTimeVaryParameterLabel (int index, QString label);
+    QString getMaleTimeVaryParameterText (int index);
+    QStringList getMaleTimeVaryParameter (int index) {return maleVarParameters->getVarParameter(index);}
+    QString getMaleTimeVaryParameterLabel (int index) {return maleVarParameters->getVarParamHeader(index);}
+    tablemodel *getMaleTimeVaryParameterModel() {return maleVarParameters->getVarParamTable();}
 
 //    double operator()() {return evaluate();}
 //    double evaluate();
@@ -113,12 +142,14 @@ protected:
     longParameterModel *parameters;
     timeVaryParameterModel *varParameters;
 
-    shortParameterModel *retainParameters;
-    shortParameterModel *discardParameters;
-    shortParameterModel *maleParameters;
-    shortParameterModel *specialParameters;
+    longParameterModel *retainParameters;
+    timeVaryParameterModel *retainVarParameters;
+    longParameterModel *discardParameters;
+    timeVaryParameterModel *discardVarParameters;
+    longParameterModel *maleParameters;
+    timeVaryParameterModel *maleVarParameters;
 
-//    double evaluate(int f, float m);
+    //    double evaluate(int f, float m);
 
 //    selex_equation *equation;
 

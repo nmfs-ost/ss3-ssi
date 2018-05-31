@@ -227,29 +227,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_cRptCharts">
-         <property name="minimumSize">
-          <size>
-           <width>35</width>
-           <height>35</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Show CumReport Charts</string>
-         </property>
-         <property name="whatsThis">
-          <string>Show charts from CumReport.sso</string>
-         </property>
-         <property name="icon">
-          <iconset resource="stock_synth.qrc">
-           <normaloff>:/i/icons/charts.png</normaloff>:/i/icons/charts.png</iconset>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
     </layout>

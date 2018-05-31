@@ -37,10 +37,10 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     lengthBins->setModel(model_data->get_length_composition()->getBinsModel());
     lengthBins->setHeight(1);
     ui->horizontalLayout_length_bins->addWidget(lengthBins);
-/*    lengthObs = new tableview();
-    lengthObs->setParent(this);
-    lengthObs->setModel(model_data->get_length_composition()->obsModel);
-    ui->horizontalLayout_len_obs->addWidget(lengthObs);*/
+    lengthDirichlet = new tableview();
+    lengthDirichlet->setParent(this);
+    lengthDirichlet->setModel(model_data->get_length_composition()->getDirichletParamTable());
+    ui->verticalLayout_length_dirichlet_parms->addWidget(lengthDirichlet);
 
     ageBins = new tableview();
     ageBins->setParent(this);
@@ -52,15 +52,14 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ageBins->setModel(model_data->get_age_composition()->getBinsModel());
     ageBins->setHeight(1);
     ui->horizontalLayout_age_bins->addWidget(ageBins);
-/*    ageObs = new tableview();
-    ageObs->setParent(this);
-    ageObs->setModel(model_data->get_age_composition()->obsModel);
-    ui->verticalLayout_age_obs->addWidget(ageObs);*/
+    ageDirichlet = new tableview();
+    ageDirichlet->setParent(this);
+    ageDirichlet->setModel(model_data->get_age_composition()->getDirichletParamTable());
+    ui->verticalLayout_age_dirichlet_parms->addWidget(ageDirichlet);
     ageError = new tableview();
     ageError->setParent(this);
     ageError->setModel(model_data->get_age_composition()->getErrorModel());
     ageError->setHeight(model_data->get_age_composition()->getErrorModel());
-//    ui->scrollArea_comp_age_err->setWidget(ageError);
     ui->horizontalLayout_age_error->addWidget(ageError);
 
     genBins = new tableview();
@@ -127,7 +126,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_subseasons, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_subseasons(int)));
     connect (ui->spinBox_season, SIGNAL(valueChanged(int)), SLOT(changeSeason(int)));
     connect (ui->lineEdit_num_mo_season, SIGNAL(textChanged(QString)), SLOT(changeMoPerSeason(QString)));
-    connect (ui->doubleSpinBox_spawn_month, SIGNAL(valueChanged(double)), SLOT(changeSpawnMonth(double)));// model_data, SLOT(set_spawn_season(int)));
+    connect (ui->doubleSpinBox_spawn_month, SIGNAL(valueChanged(double)), SLOT(changeSpawnMonth(double)));
     connect (ui->spinBox_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_ages(int)));
     connect (ui->spinBox_num_areas, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_areas(int)));
     connect (ui->spinBox_num_genders, SIGNAL(valueChanged(int)), SLOT(changeNumGenders(int)));

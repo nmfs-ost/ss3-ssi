@@ -24,10 +24,12 @@ selectivity::selectivity(ss_model *model, int method)
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
 
-    discardParameters = new shortParameterModel();
-    specialParameters = new shortParameterModel();
-    retainParameters = new shortParameterModel();
-    maleParameters = new shortParameterModel();
+    discardParameters = new longParameterModel();
+    discardVarParameters = new timeVaryParameterModel(model);
+    retainParameters = new longParameterModel();
+    retainVarParameters = new timeVaryParameterModel(model);
+    maleParameters = new longParameterModel();
+    maleVarParameters = new timeVaryParameterModel(model);
 
     setMethod(method);
 }
@@ -35,9 +37,11 @@ selectivity::selectivity(ss_model *model, int method)
 selectivity::~selectivity()
 {
 //    delete equation;
+    delete maleVarParameters;
     delete maleParameters;
+    delete retainVarParameters;
     delete retainParameters;
-    delete specialParameters;
+    delete discardVarParameters;
     delete discardParameters;
     delete varParameters;
     delete parameters;
@@ -64,6 +68,14 @@ void selectivity::setSetup(QList<int> values)
     setMale   (values.at(2));
     setDiscard(values.at(1));
     setMethod (values.at(0));
+}
+
+void selectivity::setTVautogenerate(int val)
+{
+    varParameters->setAutoGenerate(val);
+    retainVarParameters->setAutoGenerate(val);
+    discardVarParameters->setAutoGenerate(val);
+    maleVarParameters->setAutoGenerate(val);
 }
 
 QString selectivity::getSetupText()
@@ -881,7 +893,7 @@ void selectivity::setDiscard(int value)
     {
         emit startingSetupChanges();
         setup->setValue(1, value);
-        switch (discard)
+        switch (value)
         {
         case 1:
             retainParameters->setNumParams(4);
@@ -914,7 +926,7 @@ void selectivity::setMale(int value)
     {
         emit startingSetupChanges();
         setup->setValue(2, value);
-        switch (male)
+        switch (value)
         {
         case 1:
             maleParameters->setNumParams(4);
@@ -1017,28 +1029,28 @@ QString selectivity::getDiscardParameterText (int index)
     return text;
 }
 
-int selectivity::getNumSpecialParameters()
+void selectivity::setDiscardTimeVaryParameter (int index, QStringList strList)
 {
-    return specialParameters->getNumParams();
+    discardVarParameters->setVarParameter(index, strList);
 }
 
-void selectivity::setSpecialParameter(int index, QStringList strList)
+void selectivity::setDiscardTimeVaryParameterLabel(int index, QString label)
 {
-    specialParameters->setParameter(index, strList);
+    discardVarParameters->setVarParamHeader(index, label);
 }
 
-void selectivity::setSpecialParameterLabel(int index, QString label)
+QString selectivity::getDiscardTimeVaryParameterText (int index)
 {
-    specialParameters->setParamHeader(index, label);
-}
-
-QString selectivity::getSpecialParameterText (int index)
-{
-    QStringList data = specialParameters->getParameter(index);
-    QString text (data.at(0));
-    for (int i = 1; i < data.count(); i++)
-        text.append(QString(" %1").arg(data.at(i)));
+    QString text("");
+    QStringList ql (discardVarParameters->getVarParameter(index));
+    for (int i = 0; i < 7; i++)
+        text.append(QString (" %1").arg(ql[i]));
     return text;
+}
+
+int selectivity::getNumDiscardTimeVaryParameters ()
+{
+    return discardVarParameters->getNumVarParams();
 }
 
 void selectivity::setRetainParameter(int index, QStringList strList)
@@ -1058,6 +1070,30 @@ QString selectivity::getRetainParameterText (int index)
     for (int i = 1; i < data.count(); i++)
         text.append(QString(" %1").arg(data.at(i)));
     return text;
+}
+
+void selectivity::setRetainTimeVaryParameter (int index, QStringList strList)
+{
+    retainVarParameters->setVarParameter(index, strList);
+}
+
+void selectivity::setRetainTimeVaryParameterLabel(int index, QString label)
+{
+    retainVarParameters->setVarParamHeader(index, label);
+}
+
+QString selectivity::getRetainTimeVaryParameterText (int index)
+{
+    QString text("");
+    QStringList ql (retainVarParameters->getVarParameter(index));
+    for (int i = 0; i < 7; i++)
+        text.append(QString (" %1").arg(ql[i]));
+    return text;
+}
+
+int selectivity::getNumRetainTimeVaryParameters ()
+{
+    return retainVarParameters->getNumVarParams();
 }
 
 int selectivity::getNumMaleParameters()
@@ -1083,6 +1119,31 @@ QString selectivity::getMaleParameterText (int index)
         text.append(QString(" %1").arg(data.at(i)));
     return text;
 }
+
+void selectivity::setMaleTimeVaryParameter (int index, QStringList strList)
+{
+    maleVarParameters->setVarParameter(index, strList);
+}
+
+void selectivity::setMaleTimeVaryParameterLabel(int index, QString label)
+{
+    maleVarParameters->setVarParamHeader(index, label);
+}
+
+QString selectivity::getMaleTimeVaryParameterText (int index)
+{
+    QString text("");
+    QStringList ql (maleVarParameters->getVarParameter(index));
+    for (int i = 0; i < 7; i++)
+        text.append(QString (" %1").arg(ql[i]));
+    return text;
+}
+
+int selectivity::getNumMaleTimeVaryParameters ()
+{
+    return maleVarParameters->getNumVarParams();
+}
+
 /*
 double selectivity::evaluate()
 {

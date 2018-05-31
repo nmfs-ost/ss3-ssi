@@ -38,6 +38,8 @@ public:
     void reset ();
 
 public slots:
+    void setOption (int option);
+    int getOption () {return getMethod();}
     void setMethod (int value);
     int getMethod () {return method;}
 
@@ -49,13 +51,11 @@ public slots:
 
     longParameterModel *getFullParameterModel () {return full_parameters;}
     tablemodel *getFullParameters() {return full_parameters->getParamTable();}
-    void setNumFullParameters(int num);
-    int getNumFullParameters() {return full_parameters->getNumParams();}
+    int getNumFullParameters() {return getFullParameters()->rowCount();}
     void setFullParameter(int index, QStringList values);
-    void insertFullParameter (int index) {full_parameters->getParamTable()->insertRow(index, 0);}
-    void removeFullParameter (int index) {full_parameters->getParamTable()->removeRow(index);}
     void setFullParameterHeader(int index, QString hdr);
-    QStringList getFullParameter(int index) {return full_parameters->getParameter(index);}
+    QStringList getFullParameter(int index);
+    void setParamNums();
 
     int getDistribMethod() const {return distrib_method;}
     void setDistribMethod (int value);
@@ -199,6 +199,8 @@ private:
     bool doRecruitInteract;
     QStringList header;
 
+    QList<int> parmsUsed;
+    QList<int> parmNums;
     longParameterModel *full_parameters;
     int readtvparams;
     timeVaryParameterModel *tvParameters;

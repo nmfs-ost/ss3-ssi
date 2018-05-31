@@ -34,7 +34,7 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     dataFile = new ss_file(DATA_FILE, this);
     controlFile = new ss_file(CONTROL_FILE, this);
     runNumberFile = new ss_file(RUN_NUMBER_FILE, this);
-//    parameterFile = new ss_file(PARAMETER_FILE, this);
+    parameterFile = new ss_file(PARAMETER_FILE, this);
     profileFile = new ss_file(PROFILE_VAL_FILE, this);
     userDataFile = NULL;
 
@@ -69,16 +69,16 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     ui->spinBox_datafiles->setMinimum(1);
     ui->spinBox_datafiles->setMaximum(10);
 
-    connect (ui->checkBox_par_file, SIGNAL(toggled(bool)), SLOT(set_par_file(bool)));
-    connect (ui->checkBox_pro_file, SIGNAL(toggled(bool)), SLOT(set_pro_file(bool)));
+    connect (ui->checkBox_pro_file, SIGNAL(toggled(bool)), SLOT(changeReadProFile(bool)));
+    connect (ui->checkBox_par_file, SIGNAL(toggled(bool)), SLOT(changeReadParFile(bool)));
     connect (ui->pushButton_runnum_file, SIGNAL(clicked()), SLOT(reset_run_num()));
 
     connect (ui->doubleSpinBox_version, SIGNAL(valueChanged(double)), SLOT(setDatafileVersion(double)));
     ui->label_version->setVisible(false);
     ui->doubleSpinBox_version->setVisible(false);
 
-    set_par_file(false);
-    set_pro_file(false);
+    setReadParFile(false);
+    setReadProFile(false);
 
     show_input_files();
 #ifdef DEBUG
@@ -94,13 +94,13 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
 
 void file_widget::reset()
 {
-    set_par_file(false);
+    setReadParFile(false);
     ui->comboBox_detail_level->setCurrentIndex(1);
     ui->comboBox_report_level->setCurrentIndex(0);
     ui->checkBox_checkup->setChecked(false);
     set_parmtr_write(0);
     ui->comboBox_cumreport->setCurrentIndex(1);
-    set_pro_file(false);
+    setReadProFile(false);
     ui->spinBox_datafiles->setValue(0);
     viewer->viewFile(QString(""));
     setReadWtAtAge(model_info->getReadWtAtAge());
@@ -118,7 +118,7 @@ file_widget::~file_widget()
     delete forecastFile;
     delete controlFile;
     delete runNumberFile;
-//    delete parameterFile;
+    delete parameterFile;
     delete profileFile;
     delete userDataFile;
 
@@ -250,9 +250,27 @@ QString file_widget::get_run_num_file()
     return QString("RunNumber.SS");
 }
 
-void file_widget::set_par_file(bool flag)
+void file_widget::setReadParFile(bool flag)
 {
     ui->checkBox_par_file->setChecked(flag);
+    changeReadParFile(flag);
+}
+
+void file_widget::changeReadParFile(bool flag)
+{
+    if (flag)
+    {
+        QString name(QString("%1/%2").arg(current_dir_name, QString(PARAMETER_FILE)));
+        parameterFile->setFileName(name);
+        int btn = 0;
+        if (!parameterFile->exists())
+            btn = QMessageBox::information(this,
+                 tr("File information"),
+                 tr(QString("File %1 does not exist, do still want to set read to true?").arg(name).toUtf8().data()),
+                 QMessageBox::Yes, QMessageBox::No);
+        if (btn == QMessageBox::No)
+            ui->checkBox_par_file->setChecked(false);
+    }
 }
 
 bool file_widget::getReadParFile()
@@ -290,11 +308,10 @@ QString file_widget::get_profile_file()
     return ui->label_profile_file->text();
 }
 
-void file_widget::set_pro_file(bool flag)
+void file_widget::setReadProFile(bool flag)
 {
     ui->checkBox_pro_file->setChecked(flag);
-    ui->label_profile_file->setVisible(flag);
-    ui->pushButton_pro_file->setVisible(flag);
+    changeReadProFile(flag);
 }
 
 bool file_widget::getReadProFile()
@@ -302,12 +319,18 @@ bool file_widget::getReadProFile()
     return ui->checkBox_pro_file->isChecked();
 }
 
-void file_widget::set_pro_file(QString fname, bool keep)
+void file_widget::changeReadProFile(bool flag)
+{
+    ui->label_profile_file->setVisible(flag);
+    ui->pushButton_pro_file->setVisible(flag);
+}
+
+void file_widget::setReadProFile(QString fname, bool keep)
 {
     QStringList commnts;
     if (fname.isEmpty())
     {
-        set_pro_file(false);
+        setReadProFile(false);
     }
     else
     {
@@ -320,7 +343,7 @@ void file_widget::set_pro_file(QString fname, bool keep)
             profileFile->setFileName(fname);
         }
         ui->label_profile_file->setText(fname);
-        set_pro_file(true);
+        setReadProFile(true);
     }
 }
 
@@ -405,7 +428,7 @@ void file_widget::set_default_file_names(QString dir, bool keep)
     set_data_file(QString("%1/%2").arg(dir, QString(data_file_name)), keep);
     set_control_file(QString("%1/%2").arg(dir, QString(control_file_name)), keep);
 //    set_par_file(QString("%1/%2").arg(dir, QString(PARAMETER_FILE)));
-    set_pro_file(QString("%1/%2").arg(dir, QString(PROFILE_VAL_FILE)));
+    setReadProFile(QString("%1/%2").arg(dir, QString(PROFILE_VAL_FILE)));
 
     ui->label_comp_report_file->setText(QString("%1/%2").arg(dir, QString(COMP_REPORT_FILE)));
     ui->label_cum_report_file->setText(QString("%1/%2").arg(dir, QString(CUM_REPORT_FILE)));
@@ -425,10 +448,10 @@ void file_widget::set_default_file_names(QString dir, bool keep)
         ui->label_wtatage->hide();
     }
     // reset defaults
-    set_par_file(false);
-    set_pro_file(false);
+    setReadParFile(false);
+    setReadProFile(false);
 
-    parm_trace_changed(false);
+//    parm_trace_changed(false);
     show_input_files();
     // our plucky error file
 #ifdef DEBUG
@@ -687,7 +710,7 @@ bool file_widget::read_starter_file (QString filename)
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
         temp_int = starterFile->getIntValue(QString("Read ss.par choice"), 0, 1, 0);
-        set_par_file(temp_int != 0);
+        ui->checkBox_par_file->setChecked(temp_int != 0);
         temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
         temp_int = starterFile->getIntValue(QString("detailed age-structured reports in REPORT.SSO"), 0, 2, 1);
@@ -829,7 +852,7 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->write_val(control_file_name, 24,
                     QString("control file name"));
 
-        temp_int = ui->checkBox_par_file->isChecked()? 1: 0;
+        temp_int = getReadParFile()? 1: 0;
         chars += starterFile->write_val(temp_int, 5,
                     QString("0=use init values in control file; 1=use ss.par"));
 
