@@ -411,13 +411,16 @@ void fleet_widget::setAgeLengthBins()
 
 void fleet_widget::set_current_fleet(int index)
 {
-    int tabset = ui->tabWidget_fleet->currentIndex();
     if (index >= totalFleets)
         ui->comboBox_fleet_name->setCurrentIndex(totalFleets - 1);
     else if (index < 0)
         ui->comboBox_fleet_name->setCurrentIndex(0);
     else
     {
+    int tabfleet = ui->tabWidget_fleet->currentIndex();
+    int tabcomp = ui->tabWidget_comp->currentIndex();
+    int tabobs = ui->tabWidget_obs->currentIndex();
+    int tabsel = ui->tabWidget_selex->currentIndex();
     Fleet *temp_flt = model_data->getFleet(index);
  //   if (temp_flt != current_fleet)
     {
@@ -572,7 +575,10 @@ void fleet_widget::set_current_fleet(int index)
         connectFleet ();
 
     }
-    ui->tabWidget_fleet->setCurrentIndex(tabset);
+    ui->tabWidget_fleet->setCurrentIndex(tabfleet);
+    ui->tabWidget_comp->setCurrentIndex(tabcomp);
+    ui->tabWidget_obs->setCurrentIndex(tabobs);
+    ui->tabWidget_selex->setCurrentIndex(tabsel);
     }
 }
 

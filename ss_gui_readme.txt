@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.03
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.04
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -16,6 +16,13 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+      3.3.11.04
+      2018-06-04
+1. Added option 3 for MCMC output.
+2. Increased allowable MC Eval burn interval.
+3. Set size of Dirichlet parameter table view.
+4. Fixed changing tab viewed when changing fleets.
 ============================================================================
       3.3.11.03
       2018-05-31

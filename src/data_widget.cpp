@@ -262,6 +262,10 @@ void data_widget::refresh()
         lengthBins->resizeColumnsToContents();
 //        lengthObs->setModel(model_data->get_length_composition()->getObsModel());
 //        lengthObs->resizeColumnsToContents();
+        lengthDirichlet->setModel(model_data->get_length_composition()->getDirichletParamTable());
+        lengthDirichlet->setHeight(model_data->get_length_composition()->getDirichletParamTable());
+        lengthDirichlet->resizeColumnsToContents();
+
 
         ui->spinBox_age_bin_method->setValue(model_data->get_age_composition()->getAltBinMethod());
         setAgeBins(model_data->get_age_composition()->getNumberBins());
@@ -277,6 +281,10 @@ void data_widget::refresh()
         ageError->resizeColumnsToContents();
 //        ageObs->setModel(model_data->get_age_composition()->getObsModel());
 //        ageObs->resizeColumnsToContents();
+        ageDirichlet->setModel(model_data->get_age_composition()->getDirichletParamTable());
+        ageDirichlet->setHeight(model_data->get_age_composition()->getDirichletParamTable());
+        ageDirichlet->resizeColumnsToContents();
+
         ui->label_gen_comp_total->setText(QString::number(model_data->getNumGeneralCompMethods()));
         setGenCompMethod(0);
 

@@ -33,5 +33,5 @@ Dialog_about::~Dialog_about()
 
 void Dialog_about::goToWebsite()
 {
-    emit show_webpage("http://nft.nefsc.noaa.gov/SS3.html");
+    emit show_webpage("https://vlab.ncep.noaa.gov/web/stock-synthesis");
 }

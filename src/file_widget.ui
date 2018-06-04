@@ -314,8 +314,8 @@
              <string>Save As</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/icons/file-save-as.png</normaloff>:/images/icons/file-save-as.png</iconset>
+             <iconset resource="stock_synth.qrc">
+              <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
             </property>
            </widget>
           </item>
@@ -331,8 +331,8 @@
              <string>Save As</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/icons/file-save-as.png</normaloff>:/images/icons/file-save-as.png</iconset>
+             <iconset resource="stock_synth.qrc">
+              <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
             </property>
            </widget>
           </item>
@@ -345,11 +345,11 @@
              <string>New file</string>
             </property>
             <property name="text">
-             <string>...</string>
+             <string>Change</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/icons/file-new.png</normaloff>:/images/icons/file-new.png</iconset>
+             <iconset resource="stock_synth.qrc">
+              <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
             </property>
            </widget>
           </item>
@@ -362,11 +362,11 @@
              <string>New file</string>
             </property>
             <property name="text">
-             <string>...</string>
+             <string>Change</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/icons/file-new.png</normaloff>:/images/icons/file-new.png</iconset>
+             <iconset resource="stock_synth.qrc">
+              <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
             </property>
            </widget>
           </item>
@@ -376,11 +376,11 @@
              <string>Read current files.</string>
             </property>
             <property name="text">
-             <string>...</string>
+             <string>Read</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/icons/file-read.png</normaloff>:/images/icons/file-read.png</iconset>
+             <iconset resource="stock_synth.qrc">
+              <normaloff>:/i/icons/file-read.png</normaloff>:/i/icons/file-read.png</iconset>
             </property>
            </widget>
           </item>
@@ -811,6 +811,11 @@ It is undocumented and mostly used by the developer.</string>
            <item>
             <property name="text">
              <string>2 - Expanded output</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3 - Separate dir for each MCMC vector</string>
             </property>
            </item>
           </widget>

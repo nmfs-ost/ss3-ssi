@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>258</height>
+    <width>751</width>
+    <height>257</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,12 +26,35 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_technical">
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_guiGuide">
        <property name="text">
-        <string>Technical Description:</string>
+        <string>Interface Guide</string>
        </property>
       </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEdit_guiGuide"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QPushButton" name="pushButton_guiGuide">
+       <property name="text">
+        <string>Choose</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_file">
+       <property name="text">
+        <string>File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEdit_technical"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEdit_manual"/>
      </item>
      <item row="2" column="2">
       <widget class="QPushButton" name="pushButton_technical">
@@ -40,17 +63,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="pushButton_manual">
-       <property name="text">
-        <string>Choose</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_technical"/>
-     </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -63,16 +76,6 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_manual">
-       <property name="text">
-        <string>User Manual:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_manual"/>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_name">
        <property name="text">
@@ -80,10 +83,45 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_file">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_manual">
        <property name="text">
-        <string>File</string>
+        <string>User Manual:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="pushButton_manual">
+       <property name="text">
+        <string>Choose</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_technical">
+       <property name="text">
+        <string>Technical Description:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="pushButton_viewManual">
+       <property name="text">
+        <string>View</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QPushButton" name="pushButton_viewTechnical">
+       <property name="text">
+        <string>View</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QPushButton" name="pushButton_viewGuiGuide">
+       <property name="text">
+        <string>View</string>
        </property>
       </widget>
      </item>

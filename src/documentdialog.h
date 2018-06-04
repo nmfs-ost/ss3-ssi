@@ -22,9 +22,17 @@ public:
     explicit documentDialog(QWidget *parent = 0);
     ~documentDialog();
 
+    void getSettings();
+    void saveSettings();
+
 public slots:
+    void viewManual ();
+    void viewTechnical ();
+    void viewGuiGuide ();
+    void viewDocument (QString filename);
     void chooseManual ();
     void chooseTechnical ();
+    void chooseGuiGuide ();
     QString chooseDocument (QString title);
 
 private:
