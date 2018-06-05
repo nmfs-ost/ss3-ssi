@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.04
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.05
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -16,6 +16,16 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+      3.3.11.05
+      2018-06-05
+1. Changing Selectivity Male and Discard options no longer overwrites
+   method parameters.
+2. The default directory is now used in every file search instead of the
+   location of the executable.
+3. Added option to add Dirichlet parameters.
+4. Removed option for the technical document.
+5. Added option for the Interface User Guide.
 ============================================================================
       3.3.11.04
       2018-06-04

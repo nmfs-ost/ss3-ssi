@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -1095,15 +1095,39 @@
                </property>
               </widget>
              </item>
-             <item row="8" column="0" colspan="2">
-              <widget class="QLabel" name="label_length_dirichlet_parms">
-               <property name="text">
-                <string>Dirichlet Multinomial Parameters</string>
-               </property>
-              </widget>
-             </item>
              <item row="9" column="0" colspan="4">
               <layout class="QVBoxLayout" name="verticalLayout_length_dirichlet_parms"/>
+             </item>
+             <item row="8" column="0" colspan="4">
+              <layout class="QHBoxLayout" name="horizontalLayout_length_dirichlet">
+               <item>
+                <widget class="QLabel" name="label_length_dirichlet_parms">
+                 <property name="text">
+                  <string>Dirichlet Multinomial Parameters</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_length_dirichlet">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_length_dirichlet_add">
+                 <property name="text">
+                  <string>Add Dirchlet Parameter</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
@@ -1203,12 +1227,36 @@
              <item row="11" column="0" colspan="3">
               <layout class="QVBoxLayout" name="verticalLayout_age_dirichlet_parms"/>
              </item>
-             <item row="10" column="0" colspan="2">
-              <widget class="QLabel" name="label_age_dirichlet_parms">
-               <property name="text">
-                <string>Dirichlet Multinomial Parameters</string>
-               </property>
-              </widget>
+             <item row="10" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_age_dirichlet">
+               <item>
+                <widget class="QLabel" name="label_age_dirichlet_parms">
+                 <property name="text">
+                  <string>Dirichlet Multinomial Parameters</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_age_dirichlet">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_age_dirichlet_add">
+                 <property name="text">
+                  <string>Add Dirichlet Parameter</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>

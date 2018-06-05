@@ -30,6 +30,10 @@ signals:
     void startingSetupChanges();
 
 public slots:
+    void setFleetName (QString name) {fisheryName = name;}
+    void setFleetNum (int num) {fisheryNum = num;}
+    void setNumAges(int ages) {numAges = ages;}
+    int getNumAges() {return numAges;}
     void setPattern (int value);
     int getPattern () {return setup->getValue(0);}// pattern;}
     void setDiscard (int value);
@@ -38,8 +42,6 @@ public slots:
     int getMale () {return setup->getValue(2);}// male;}
     void setSpecial (int value);
     int getSpecial () {return setup->getValue(3);}// special;}
-    void setNumAges(int ages) {numAges = ages;}
-    int getNumAges() {return numAges;}
     void setSetup(QString text);
     QString getSetupText ();
     void setSetup(QStringList strList);
@@ -135,6 +137,8 @@ public slots:
 
 protected:
 //    void setEquation (int method);
+    QString fisheryName;
+    int fisheryNum;
 
     int numAges;
 

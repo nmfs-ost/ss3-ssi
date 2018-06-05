@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     // furnish the ui with the default model
-    files = new file_widget (modelData, this);
+    files = new file_widget (modelData, current_dir, this);
     data = new data_widget(modelData, this);
     forecast = new forecast_widget(modelData, this);
     fleets = new fleet_widget(modelData, this);
@@ -283,7 +283,7 @@ void MainWindow::readSettings()
 
 void MainWindow::openNewDirectory()
 {
-    QString old_dir(current_dir);
+    QString old_dir(default_dir);
     QString new_dir(QFileDialog::getExistingDirectory(this, tr("Select New Directory"),
                                 old_dir, QFileDialog::ShowDirsOnly));
     if (!new_dir.isEmpty() && new_dir != old_dir)
@@ -303,7 +303,7 @@ void MainWindow::openNewDirectory()
 
 void MainWindow::createNewDirectory()
 {
-    QString oldDir (current_dir);
+    QString oldDir (default_dir);
     int btn =
     QMessageBox::question(this, tr("Create New Model"),
              tr("This will reset data to the default values and write the files to the selected directory.\nDo you wish to continue?"),

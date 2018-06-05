@@ -1007,8 +1007,11 @@ void fleet_widget::changeSelexSizeDiscard(int disc)
 
 void fleet_widget::changeSelexSizeMale(int mal)
 {
+    int ht = 0;
     current_fleet->getSizeSelectivity()->setMale(mal);
-    sizeSelexMaleParamsView->setHeight(current_fleet->getSizeSelectivity()->getMaleParameterModel()->getNumParams());
+    ht = current_fleet->getSizeSelectivity()->getMaleParameterModel()->getNumParams();
+    sizeSelexMaleParamsView->setHeight(ht);
+    sizeSelexMaleParamsView->resizeColumnsToContents();
 }
 
 void fleet_widget::changeSelexSizeSpecial(int spc)

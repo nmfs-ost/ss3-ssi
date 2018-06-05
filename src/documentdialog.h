@@ -38,6 +38,7 @@ public slots:
 private:
     Ui::documentDialog *ui;
     QSettings settings;
+    void closeEvent(QCloseEvent *evt);
 };
 
 #endif // DOCUMENTDIALOG_H

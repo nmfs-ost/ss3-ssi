@@ -106,6 +106,8 @@ signals:
 private slots:
     void changeTotalYears();
     void numSdYearsChanged();
+    void addLengthDirichlet();
+    void addAgeDirichlet();
 
 private:
     Ui::data_widget *ui;

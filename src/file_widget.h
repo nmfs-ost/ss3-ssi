@@ -54,7 +54,7 @@ class file_widget : public QWidget
     Q_OBJECT
 
 public:
-    explicit file_widget (ss_model *mod = 0, QWidget *parent = 0);
+    explicit file_widget (ss_model *mod = 0, QString dir = QString(""), QWidget *parent = 0);
     ~file_widget();
 
     void reset();

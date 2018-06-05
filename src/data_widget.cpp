@@ -159,12 +159,14 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
 //    connect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), SLOT(changeLengthCompress()));
 //    connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAdd()));
     connect (ui->pushButton_length_obs, SIGNAL(clicked()), SIGNAL(showLengthObs()));
+    connect (ui->pushButton_length_dirichlet_add, SIGNAL(clicked()), SLOT(addLengthDirichlet()));
 
     connect (ui->spinBox_age_bin_method, SIGNAL(valueChanged(int)), SLOT(changeAgeCompMethod(int)));
     connect (ui->spinBox_age_num_bins, SIGNAL(valueChanged(int)), SLOT(changeAgeBins(int)));
     connect (ui->spinBox_age_error_num, SIGNAL(valueChanged(int)), SLOT(changeAgeError(int)));
     connect (ui->pushButton_age_obs, SIGNAL(clicked()), SIGNAL(showAgeObs()));
     connect (ui->pushButton_saa_obs, SIGNAL(clicked()), SIGNAL(showSAAObs()));
+    connect (ui->pushButton_age_dirichlet_add, SIGNAL(clicked()), SLOT(addAgeDirichlet()));
 
     connect (ui->pushButton_gen_obs, SIGNAL(clicked()), SLOT(showGenObs()));
 
@@ -910,3 +912,20 @@ void data_widget::changeDepDenom()
     ui->lineEdit_dep_denom->setText(QString::number(db));
 }
 
+void data_widget::addLengthDirichlet()
+{
+    QStringList ql;
+    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    int num = model_data->get_length_composition()->getNumDirichletParams();
+    model_data->get_length_composition()->setDirichletParam(num, ql);
+    lengthDirichlet->setHeight(num+1);
+}
+
+void data_widget::addAgeDirichlet()
+{
+    QStringList ql;
+    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    int num = model_data->get_age_composition()->getNumDirichletParams();
+    model_data->get_age_composition()->setDirichletParam(num, ql);
+    ageDirichlet->setHeight(num+1);
+}

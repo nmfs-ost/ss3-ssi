@@ -16,8 +16,9 @@ using namespace std;
 #include "ui_file_widget.h"
 #include "dialog_view.h"
 
-file_widget::file_widget(ss_model *mod, QWidget *parent) :
+file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     QWidget(parent),
+    current_dir_name(dir),
     ui(new Ui::file_widget)
 {
     ui->setupUi(this);
@@ -28,6 +29,8 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
     ui->label_version->setVisible(check);
     ui->doubleSpinBox_version->setVisible(check);
     }
+
+    current_dir = QDir(dir);
 
     starterFile = new ss_file(STARTER_FILE, this);
     forecastFile = new ss_file(FORECAST_FILE, this);
@@ -84,10 +87,12 @@ file_widget::file_widget(ss_model *mod, QWidget *parent) :
 #ifdef DEBUG
     error = new QFile(this);
 #endif
-    current_dir = QDir (qApp->applicationDirPath());
+    if (current_dir_name.isEmpty())
+        current_dir = QDir (qApp->applicationDirPath());
+    current_dir_name = current_dir.absolutePath();
     data_file_name = QString (DATA_FILE);
     control_file_name = QString (CONTROL_FILE);
-    set_default_file_names (current_dir.absolutePath(), false);
+    set_default_file_names (current_dir_name, false);
     viewer = new Dialog_fileView(this);
 
 }

@@ -11,6 +11,12 @@ documentDialog::documentDialog(QWidget *parent) :
     ui(new Ui::documentDialog)
 {
     ui->setupUi(this);
+
+    ui->label_technical->setVisible(false);
+    ui->lineEdit_technical->setVisible(false);
+    ui->pushButton_technical->setVisible(false);
+    ui->pushButton_viewTechnical->setVisible(false);
+
     connect (ui->pushButton_manual,    SIGNAL(clicked()), SLOT(chooseManual()));
     connect (ui->pushButton_technical, SIGNAL(clicked()), SLOT(chooseTechnical()));
     connect (ui->pushButton_guiGuide,  SIGNAL(clicked()), SLOT(chooseGuiGuide()));
@@ -23,7 +29,6 @@ documentDialog::documentDialog(QWidget *parent) :
 
 documentDialog::~documentDialog()
 {
-    saveSettings();
     delete ui;
 }
 
@@ -100,5 +105,11 @@ QString documentDialog::chooseDocument(QString title)
     filename = (QFileDialog::getOpenFileName (this, tr(str.toUtf8()),
         qApp->applicationDirPath(), tr("documentation files (*.pdf)")));
     return filename;
+}
+
+void documentDialog::closeEvent(QCloseEvent *evt)
+{
+    saveSettings();
+    QDialog::closeEvent(evt);
 }
 

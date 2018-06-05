@@ -283,15 +283,17 @@ void tableview::deleteRows()
     QModelIndexList list = selmodel->selectedIndexes();
 
     qSort(list);
+    if (!list.isEmpty())
+    {
+        int firstrow, lastrow;
+        firstrow = list.first().row();
+        lastrow = list.last().row();
 
-    int firstrow, lastrow;
-    firstrow = list.first().row();
-    lastrow = list.last().row();
+        for (int i = firstrow; i <= lastrow; i++)
+            abmodel->takeRow(i);
 
-    for (int i = firstrow; i <= lastrow; i++)
-        abmodel->takeRow(i);
-
-    setHeight(abmodel);
+        setHeight(abmodel);
+    }
 }
 
 QList<QStandardItem *> tableview::blankRow()

@@ -48,9 +48,11 @@ Fleet::Fleet(ss_model *parent) :
     q_read = false;
     q_R = new q_ratio(parent);
     s_name = new QString("");
-    setName(QString("new_fleet"));
     size_selex = new selectivity(parent);
     age_selex = new selectivity(parent);
+    setName(QString("new_fleet"));
+    size_selex->setFleetNum(i_number);
+    age_selex->setFleetNum(i_number);
     reset();
 }
 
@@ -113,6 +115,8 @@ void Fleet::setName(QString fname)
         s_name->clear();
     s_name->append(fname);
     q_R->setFleetName(fname);
+    size_selex->setFleetName(fname);
+    age_selex->setFleetName(fname);
 }
 
 QString Fleet::getName()
@@ -133,6 +137,8 @@ void Fleet::setNumber (int n)
     QString posFltNo (QString::number(n));
     QString negFltNo (QString("-%1").arg(posFltNo));
     i_number = n;
+    size_selex->setFleetNum(i_number);
+    age_selex->setFleetNum(i_number);
 
     for (i = 0; i < getNumCatchObs(); i++)
     {
@@ -479,20 +485,18 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //   size selex
-    set_size_selex_pattern(oldfl->size_selex_pattern());
     set_size_selex_discard(oldfl->size_selex_discard());
     set_size_selex_male(oldfl->size_selex_male());
     set_size_selex_special(oldfl->size_selex_special());
-    size_selex->setPattern(size_selex_pattern());
+    set_size_selex_pattern(oldfl->size_selex_pattern());
     for (i = 0; i < oldfl->getSizeSelectivity()->getNumParameters(); i++)
         size_selex->setParameter(i, oldfl->getSizeSelectivity()->getParameter(i));
 
     //   age selex
-    set_age_selex_pattern(oldfl->age_selex_pattern());
-    set_age_selex_gt_lt(oldfl->age_selex_gt_lt()); // <>
+    set_age_selex_gt_lt(oldfl->age_selex_gt_lt());
     set_age_selex_male(oldfl->age_selex_male());
     set_age_selex_special(oldfl->age_selex_special());
-    age_selex->setPattern(age_selex_pattern());
+    set_age_selex_pattern(oldfl->age_selex_pattern());
     for (i = 0; i < oldfl->getAgeSelectivity()->getNumParameters(); i++)
         age_selex->setParameter(i, oldfl->getAgeSelectivity()->getParameter(i));
 

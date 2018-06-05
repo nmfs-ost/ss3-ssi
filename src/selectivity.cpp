@@ -19,17 +19,23 @@ selectivity::selectivity(ss_model *model, int method)
     parameters = new longParameterModel();
     varParameters = new timeVaryParameterModel(model);
 
-    connect (setup, SIGNAL(dataChanged(QList<int>)),
-             SLOT(setSetup(QList<int>)));
+//    connect (setup, SIGNAL(dataChanged(QList<int>)),
+//             SLOT(setSetup(QList<int>)));
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
 
     discardParameters = new longParameterModel();
     discardVarParameters = new timeVaryParameterModel(model);
+    connect (discardParameters, SIGNAL(paramChanged(int,QStringList)),
+             discardVarParameters, SLOT(changeVarParamData(int,QStringList)));
     retainParameters = new longParameterModel();
     retainVarParameters = new timeVaryParameterModel(model);
+    connect (retainParameters, SIGNAL(paramChanged(int,QStringList)),
+             retainVarParameters, SLOT(changeVarParamData(int,QStringList)));
     maleParameters = new longParameterModel();
     maleVarParameters = new timeVaryParameterModel(model);
+    connect (maleParameters, SIGNAL(paramChanged(int,QStringList)),
+             maleVarParameters, SLOT(changeVarParamData(int,QStringList)));
 
     setMethod(method);
 }
@@ -478,11 +484,11 @@ void selectivity::setPattern(int value)
 {
     if (setup->getValue(0) != value)
     {
-        emit startingSetupChanges();
+//        emit startingSetupChanges();
         setup->setValue(0, value);
     //    pattern = value;
-    //    setMethod(value);
-        emit setupChanged(getSetup());
+        setMethod(value);
+//        emit setupChanged(getSetup());
 //        emit dataChanged();
     }
 }
@@ -891,17 +897,38 @@ void selectivity::setDiscard(int value)
     int discard = setup->getValue(1);
     if (discard != value)
     {
-        emit startingSetupChanges();
+//        emit startingSetupChanges();
         setup->setValue(1, value);
         switch (value)
         {
         case 1:
             retainParameters->setNumParams(4);
             discardParameters->setNumParams(0);
+            for (int i = 0; i < 4; i++)
+            {
+                setRetainParameterLabel(i, QString("Retain_P%1_%2(%3)").arg(
+                                               QString::number(i+1),
+                                               fisheryName,
+                                               QString::number(fisheryNum)));
+            }
             break;
         case 2:
             retainParameters->setNumParams(4);
             discardParameters->setNumParams(4);
+            for (int i = 0; i < 4; i++)
+            {
+                setRetainParameterLabel(i, QString("Retain_P%1_%2(%3)").arg(
+                                               QString::number(i+1),
+                                               fisheryName,
+                                               QString::number(fisheryNum)));
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                setDiscardParameterLabel(i, QString("Discard_P%1_%2(%3)").arg(
+                                               QString::number(i+1),
+                                               fisheryName,
+                                               QString::number(fisheryNum)));
+            }
             break;
         case 3:
             retainParameters->setNumParams(0);
@@ -910,12 +937,26 @@ void selectivity::setDiscard(int value)
         case 4:
             retainParameters->setNumParams(7);
             discardParameters->setNumParams(4);
+            for (int i = 0; i < 7; i++)
+            {
+                setRetainParameterLabel(i, QString("Retain_P%1_%2(%3)").arg(
+                                               QString::number(i+1),
+                                               fisheryName,
+                                               QString::number(fisheryNum)));
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                setDiscardParameterLabel(i, QString("Discard_P%1_%2(%3)").arg(
+                                               QString::number(i+1),
+                                               fisheryName,
+                                               QString::number(fisheryNum)));
+            }
             break;
         default:
             retainParameters->setNumParams(0);
             discardParameters->setNumParams(0);
         }
-        emit dataChanged();
+//        emit dataChanged();
     }
 }
 
@@ -924,17 +965,24 @@ void selectivity::setMale(int value)
     int male = setup->getValue(2);
     if (male != value)
     {
-        emit startingSetupChanges();
+//        emit startingSetupChanges();
         setup->setValue(2, value);
         switch (value)
         {
         case 1:
             maleParameters->setNumParams(4);
+            for (int i = 0; i < 4; i++)
+            {
+                setMaleParameterLabel(i, QString("Male_P%1_%2(%3)").arg(
+                                               QString::number(i+1),
+                                               fisheryName,
+                                               QString::number(fisheryNum)));
+            }
             break;
         default:
             maleParameters->setNumParams(0);
         }
-        emit dataChanged();
+//        emit dataChanged();
     }
 }
 
@@ -944,7 +992,7 @@ void selectivity::setSpecial(int value)
     int scale = 0;
     if (special != value)
     {
-        emit startingSetupChanges();
+//        emit startingSetupChanges();
         switch(getPattern())
         {
         case 43:
