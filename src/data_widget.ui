@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>841</width>
+    <width>880</width>
     <height>621</height>
    </rect>
   </property>
@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -454,454 +454,491 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QGridLayout" name="gridLayout_settings">
-         <item row="13" column="1" colspan="4">
-          <widget class="QComboBox" name="comboBox_spr_basis">
+        <widget class="QScrollArea" name="scrollArea_3">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>-106</y>
+            <width>807</width>
+            <height>584</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_18">
            <item>
-            <property name="text">
-             <string>0: Skip</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1: (1-SPR) / (1 - SPR_target)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2: (1-SPR) / (1 - SPR at MSY)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3: (1-SPR) / (1 - SPR at B_target)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>4:  (1-SPR) / 1 (actual values)</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_jitter">
-           <property name="text">
-            <string>Jitter value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="6">
-          <widget class="QSpinBox" name="spinBox_f_max_age"/>
-         </item>
-         <item row="12" column="0">
-          <widget class="QLabel" name="label_f_dep">
-           <property name="text">
-            <string>Depletion basis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="5">
-          <widget class="QLabel" name="label_f_max_age">
-           <property name="text">
-            <string>F calculation max age</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="0">
-          <widget class="QLabel" name="labe_f_bmass_min_age">
-           <property name="text">
-            <string>Summary biomass min age</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2" colspan="3">
-          <spacer name="horizontalSpacer_setings">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="16" column="0">
-          <widget class="QLabel" name="label_f_report_basis">
-           <property name="text">
-            <string>F Report basis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="7">
-          <spacer name="horizontalSpacer_MC">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="12" column="5">
-          <widget class="QLabel" name="label_f_dep_denom">
-           <property name="text">
-            <string>Depletion denomination - Frac(X)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="1" colspan="4">
-          <widget class="QComboBox" name="comboBox_f_dep">
-           <item>
-            <property name="text">
-             <string>0: Skip</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1: X * B0</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2: X * B_msy</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3: X * B_styr</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="14" column="0">
-          <widget class="QLabel" name="label_f_rpt_units">
-           <property name="text">
-            <string>F Report values</string>
-           </property>
-          </widget>
-         </item>
-         <item row="16" column="1" colspan="4">
-          <widget class="QComboBox" name="comboBox_f_report_basis">
-           <item>
-            <property name="text">
-             <string>0: Raw vlaues</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1: F / F_spr</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2: F / F_msy</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3: F / F_btgt</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="15" column="0">
-          <widget class="QLabel" name="label_f_min_age">
-           <property name="text">
-            <string>F calculation min age</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="6" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_dep_denom"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_mc_burn">
-           <property name="text">
-            <string>MC burn interval</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QCheckBox" name="checkBox_soft_bounds">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="6" colspan="3">
-          <widget class="QCheckBox" name="checkBox_priors">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="0">
-          <widget class="QLabel" name="label_spr_basis">
-           <property name="text">
-            <string>SPR Report basis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="1">
-          <widget class="QSpinBox" name="spinBox_f_min_age"/>
-         </item>
-         <item row="10" column="1">
-          <widget class="QSpinBox" name="spinBox_f_bmass_min_age"/>
-         </item>
-         <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBox_retrospect_yr">
-           <property name="minimum">
-            <number>-99</number>
-           </property>
-           <property name="maximum">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0" colspan="2">
-          <widget class="QLabel" name="label_retrospect_yr">
-           <property name="text">
-            <string>Retrospective year relative to end year</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" colspan="7">
-          <layout class="QHBoxLayout" name="horizontalLayout_last_phase">
-           <item>
-            <widget class="QSpinBox" name="spinBox_last_phase">
-             <property name="minimum">
-              <number>-1</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_last_phase_info">
-             <property name="text">
-              <string>-1-exit after reading files, 0-exit after producing ss_new and sso files</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_last_phase">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            <layout class="QGridLayout" name="gridLayout_settings">
+             <item row="10" column="5">
+              <spacer name="horizontalSpacer_mc">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="3" column="1" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_jitter"/>
+             </item>
+             <item row="14" column="0">
+              <widget class="QLabel" name="label_alktol">
+               <property name="text">
+                <string>Age Length Key tolerance</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_f_dep">
+               <property name="text">
+                <string>Depletion basis</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="labe_f_bmass_min_age">
+               <property name="text">
+                <string>Summary biomass min age</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <spacer name="horizontalSpacer_setings">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLabel" name="label_f_report_basis">
+               <property name="text">
+                <string>F Report basis</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_jitter">
+               <property name="text">
+                <string>Jitter value</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="checkBox_soft_bounds">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_retrospect_yr">
+               <property name="text">
+                <string>Retrospective year</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1" colspan="4">
+              <layout class="QHBoxLayout" name="horizontalLayout_last_phase">
+               <item>
+                <widget class="QSpinBox" name="spinBox_last_phase">
+                 <property name="minimum">
+                  <number>-1</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_last_phase_info">
+                 <property name="text">
+                  <string>-1-exit after reading files, 0-exit after producing ss_new and sso files</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_last_phase">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_last_phase">
+               <property name="text">
+                <string>Exit after completing phase</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="4" colspan="2">
+              <spacer name="horizontalSpacer_convergence">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="7" column="1">
+              <widget class="QSpinBox" name="spinBox_f_bmass_min_age"/>
+             </item>
+             <item row="6" column="2" colspan="2">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>(A negative value relative to end year)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_soft_bounds">
+               <property name="text">
+                <string>Use soft boundaries (recommended)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="label_priors">
+               <property name="text">
+                <string>Calculate prior likelihood for all params</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="5">
+              <widget class="QGroupBox" name="groupBox_sd_report">
+               <property name="title">
+                <string>SD Reporting</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_2">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_num_std_yrs">
+                  <property name="text">
+                   <string>Num of individual years</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_sdrpt_min_yr">
+                  <property name="text">
+                   <string>Min year for output</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_sdrpt_max_yr">
+                  <property name="text">
+                   <string>Max year for output</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="spinBox_sdrpt_min_yr">
+                  <property name="minimum">
+                   <number>-99</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2500</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QSpinBox" name="spinBox_sdrpt_max_yr">
+                  <property name="minimum">
+                   <number>-99</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2500</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="spinBox_num_std_yrs"/>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_std_yrs">
+                  <property name="text">
+                   <string>Vector of years </string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="4">
+                 <spacer name="horizontalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="1" colspan="4">
+                 <layout class="QHBoxLayout" name="horizontalLayout_sdYears"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLabel" name="label_f_min_age">
+               <property name="text">
+                <string>F calculation min age</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_f_dep_denom">
+               <property name="text">
+                <string>Depletion denomination - Frac(X)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="label_spr_basis">
+               <property name="text">
+                <string>SPR Report basis</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0" colspan="5">
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title">
+                <string>MC intervals</string>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <item>
+                 <widget class="QLabel" name="label_mc_burn">
+                  <property name="text">
+                   <string>MC burn interval</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinBox_mc_burn">
+                  <property name="maximum">
+                   <number>1000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_mc_thin">
+                  <property name="text">
+                   <string>MC thin interval</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinBox_mc_thin"/>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="label_f_rpt_units">
+               <property name="text">
+                <string>F Report values</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1" colspan="3">
+              <widget class="QComboBox" name="comboBox_f_dep">
+               <item>
+                <property name="text">
+                 <string>0: Skip</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1: X * B0</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2: X * B_msy</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3: X * B_styr</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="10" column="1" colspan="3">
+              <widget class="QComboBox" name="comboBox_spr_basis">
+               <item>
+                <property name="text">
+                 <string>0: Skip</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1: (1-SPR) / (1 - SPR_target)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2: (1-SPR) / (1 - SPR at MSY)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3: (1-SPR) / (1 - SPR at B_target)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4:  (1-SPR) / 1 (actual values)</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="11" column="1" colspan="3">
+              <widget class="QComboBox" name="comboBox_f_rpt_units">
+               <item>
+                <property name="text">
+                 <string>0: Skip</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1: Exploitation (Bio)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2: Exploitation (Num)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3: Sum (sum Fs by fleet)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4: True F for range of ages</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="12" column="1">
+              <widget class="QSpinBox" name="spinBox_f_min_age"/>
+             </item>
+             <item row="13" column="1" colspan="3">
+              <widget class="QComboBox" name="comboBox_f_report_basis">
+               <item>
+                <property name="text">
+                 <string>0: Raw vlaues</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1: F / F_spr</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2: F / F_msy</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3: F / F_btgt</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="14" column="1" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_alktol"/>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_convergence">
+               <property name="text">
+                <string>Convergence </string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_convergence"/>
+             </item>
+             <item row="9" column="1" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_dep_denom"/>
+             </item>
+             <item row="6" column="1">
+              <widget class="QSpinBox" name="spinBox_retrospect_yr">
+               <property name="minimum">
+                <number>-99</number>
+               </property>
+               <property name="maximum">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="2" colspan="2">
+              <widget class="QLabel" name="label_f_max_age">
+               <property name="text">
+                <string>F calculation max age</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="4">
+              <widget class="QSpinBox" name="spinBox_f_max_age"/>
+             </item>
+             <item row="0" column="4">
+              <widget class="QCheckBox" name="checkBox_priors">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
-         </item>
-         <item row="3" column="5">
-          <widget class="QLabel" name="label_mc_thin">
-           <property name="text">
-            <string>MC thin interval</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_last_phase">
-           <property name="text">
-            <string>Exit after completing phase</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1" colspan="4">
-          <widget class="QComboBox" name="comboBox_f_rpt_units">
-           <item>
-            <property name="text">
-             <string>0: Skip</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1: Exploitation (Bio)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2: Exploitation (Num)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3: Sum (sum Fs by fleet)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>4: True F for range of ages</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="3" column="6">
-          <widget class="QSpinBox" name="spinBox_mc_thin"/>
-         </item>
-         <item row="4" column="8">
-          <spacer name="horizontalSpacer_convergence">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="4" column="4">
-          <spacer name="horizontalSpacer_jitter">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="4" column="1" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_jitter"/>
-         </item>
-         <item row="9" column="3" colspan="4">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>(A negative value)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_num_std_yrs">
-           <property name="text">
-            <string>Num of individual sd report years</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_sdrpt_min_yr">
-           <property name="text">
-            <string>Min year for sdreport output</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="5">
-          <widget class="QLabel" name="label_sdrpt_max_yr">
-           <property name="text">
-            <string>Max year for sdreport output</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="6">
-          <widget class="QSpinBox" name="spinBox_sdrpt_max_yr">
-           <property name="minimum">
-            <number>-99</number>
-           </property>
-           <property name="maximum">
-            <number>2500</number>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QSpinBox" name="spinBox_sdrpt_min_yr">
-           <property name="minimum">
-            <number>-99</number>
-           </property>
-           <property name="maximum">
-            <number>2500</number>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_std_yrs">
-           <property name="text">
-            <string>Vector of years </string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_soft_bounds">
-           <property name="text">
-            <string>Use soft boundaries (recommended)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QSpinBox" name="spinBox_num_std_yrs"/>
-         </item>
-         <item row="0" column="5">
-          <widget class="QLabel" name="label_priors">
-           <property name="text">
-            <string>Calculate prior likelihood for all params</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_convergence">
-           <property name="text">
-            <string>Convergence </string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_convergence"/>
-         </item>
-         <item row="7" column="1" colspan="7">
-          <layout class="QHBoxLayout" name="horizontalLayout_sdYears"/>
-         </item>
-         <item row="17" column="1" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_alktol"/>
-         </item>
-         <item row="17" column="0">
-          <widget class="QLabel" name="label_alktol">
-           <property name="text">
-            <string>Age Length Key tolerance</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QSpinBox" name="spinBox_mc_burn">
-           <property name="maximum">
-            <number>1000</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_settings">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -913,7 +950,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_comp">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tab_length">
           <attribute name="title">
@@ -1282,6 +1319,19 @@
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <layout class="QGridLayout" name="gridLayout_comp_age_err">
+             <item row="3" column="1">
+              <spacer name="verticalSpacer_comp_age_error_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item row="0" column="1">
               <widget class="QLabel" name="label_age_error_num">
                <property name="text">
@@ -1661,7 +1711,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>789</width>
+            <width>828</width>
             <height>478</height>
            </rect>
           </property>
@@ -1764,7 +1814,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>789</width>
+            <width>828</width>
             <height>478</height>
            </rect>
           </property>

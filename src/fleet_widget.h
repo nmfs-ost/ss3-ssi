@@ -97,6 +97,11 @@ public slots:
     void showSelexAgeCurve(bool flag);
     void selexAgeCurveClosed ();
 
+    void lambdaPhaseChanged(int phs);
+    void lambdaOffsetChanged(int val);
+    void lambdaNumChanged(int num);
+    void lambdaParamsChanged();
+
 private:
 
     Ui::fleet_widget *ui;
@@ -138,6 +143,7 @@ private:
     tableview *sizeSelexMaleTVParamsView;
     equationDialog *selexSizeEqDialog;
     DialogInfo * selexSizeInfoDialog;
+    
     tableview *ageSelexParamsView;
     tableview *ageSelexTimeVaryParamsView;
     tableview *ageSelexMaleParamsView;

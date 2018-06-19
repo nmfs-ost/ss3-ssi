@@ -161,6 +161,12 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
     connect (ui->lineEdit_age_comp_tails, SIGNAL(editingFinished()), SLOT(changeAgeMinTailComp()));
     connect (ui->lineEdit_age_constant, SIGNAL(editingFinished()), SLOT(changeAgeAddToData()));
+    connect (ui->spinBox_lambda_max_phase, SIGNAL(valueChanged(int)),
+             SLOT(lambdaPhaseChanged(int)));
+    connect (ui->spinBox_lambda_sd_offset, SIGNAL(valueChanged(int)),
+             SLOT(lambdaOffsetChanged(int)));
+    connect (ui->spinBox_lambda_num_changes, SIGNAL(valueChanged(int)),
+                SLOT(lambdaNumChanged(int)));
 
 //    connectFleet();
 //    set_current_fleet(0);
@@ -227,41 +233,69 @@ void fleet_widget::disconnectFleet()
 void fleet_widget::connectFleet()
 {
     connect (current_fleet, SIGNAL(newDataRead()), SLOT(refresh()));
-    connect (ui->doubleSpinBox_timing, SIGNAL(valueChanged(double)), current_fleet, SLOT(setSeasTiming(double)));
-    connect (ui->spinBox_area, SIGNAL(valueChanged(int)), current_fleet, SLOT(setArea(int)));
+    connect (ui->doubleSpinBox_timing, SIGNAL(valueChanged(double)), 
+             current_fleet, SLOT(setSeasTiming(double)));
+    connect (ui->spinBox_area, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setArea(int)));
 //    connect (ui->spinBox_need_catch_mult, SIGNAL(valueChanged(int)), current_fleet, SLOT()));
-    connect (ui->spinBox_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setCatchUnits(int)));
-    connect (ui->checkBox_need_catch_mult, SIGNAL(toggled(bool)), current_fleet, SLOT(setCatchMultiplier(bool)));
+    connect (ui->spinBox_units, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setCatchUnits(int)));
+    connect (ui->checkBox_need_catch_mult, SIGNAL(toggled(bool)), 
+             current_fleet, SLOT(setCatchMultiplier(bool)));
 //    connect (ui->listWidget_init_catch, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(edit_catch_line(QListWidgetItem*)));
-    connect (ui->spinBox_abund_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAbundUnits(int)));
-    connect (ui->spinBox_abund_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAbundErrType(int)));
-    connect (ui->spinBox_discard_units, SIGNAL(valueChanged(int)), current_fleet, SLOT(setDiscardUnits(int)));
-    connect (ui->spinBox_discard_err, SIGNAL(valueChanged(int)), current_fleet, SLOT(setDiscardErrType(int)));
+    connect (ui->spinBox_abund_units, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAbundUnits(int)));
+    connect (ui->spinBox_abund_err, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAbundErrType(int)));
+    connect (ui->spinBox_discard_units, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setDiscardUnits(int)));
+    connect (ui->spinBox_discard_err, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setDiscardErrType(int)));
 
-    connect (ui->spinBox_mbwt_df, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMbwtDF(int)));
-    connect (ui->spinBox_num_mbwt, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMbwtNumObs(int)));
+    connect (ui->spinBox_mbwt_df, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setMbwtDF(int)));
+    connect (ui->spinBox_num_mbwt, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setMbwtNumObs(int)));
 
-    connect (ui->spinBox_obs_len_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthNumObs(int)));
-    connect (ui->spinBox_length_combine, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCombineGen(int)));
-    connect (ui->spinBox_length_comp_bins, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCompressBins(int)));
-    connect (ui->spinBox_length_comp_error, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCompError(int)));
-    connect (ui->spinBox_length_comp_error_parm, SIGNAL(valueChanged(int)), current_fleet, SLOT(setLengthCompErrorParm(int)));
-    connect (ui->doubleSpinBox_length_min_sample, SIGNAL(valueChanged(double)), current_fleet, SLOT(setLengthMinSampleSize(double)));
+    connect (ui->spinBox_obs_len_numObs, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setLengthNumObs(int)));
+    connect (ui->spinBox_length_combine, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setLengthCombineGen(int)));
+    connect (ui->spinBox_length_comp_bins, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setLengthCompressBins(int)));
+    connect (ui->spinBox_length_comp_error, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setLengthCompError(int)));
+    connect (ui->spinBox_length_comp_error_parm, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setLengthCompErrorParm(int)));
+    connect (ui->doubleSpinBox_length_min_sample, SIGNAL(valueChanged(double)), 
+             current_fleet, SLOT(setLengthMinSampleSize(double)));
 
-    connect (ui->spinBox_obs_age_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeNumObs(int)));
-    connect (ui->spinBox_age_combine, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCombineGen(int)));
-    connect (ui->spinBox_age_comp_bins, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompressBins(int)));
-    connect (ui->spinBox_age_comp_error, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompError(int)));
-    connect (ui->spinBox_age_comp_error_parm, SIGNAL(valueChanged(int)), current_fleet, SLOT(setAgeCompErrorParm(int)));
-    connect (ui->doubleSpinBox_age_min_sample, SIGNAL(valueChanged(double)), current_fleet, SLOT(setAgeCompMinSampleSize(double)));
+    connect (ui->spinBox_obs_age_numObs, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAgeNumObs(int)));
+    connect (ui->spinBox_age_combine, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAgeCombineGen(int)));
+    connect (ui->spinBox_age_comp_bins, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAgeCompressBins(int)));
+    connect (ui->spinBox_age_comp_error, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAgeCompError(int)));
+    connect (ui->spinBox_age_comp_error_parm, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setAgeCompErrorParm(int)));
+    connect (ui->doubleSpinBox_age_min_sample, SIGNAL(valueChanged(double)), 
+             current_fleet, SLOT(setAgeCompMinSampleSize(double)));
 
-    connect (ui->spinBox_obs_saa_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setSaaNumObs(int)));
-    connect (ui->spinBox_obs_gen_num, SIGNAL(valueChanged(int)), SLOT(changeGenMethodNum(int)));
-    connect (ui->spinBox_obs_gen_numObs, SIGNAL(valueChanged(int)), SLOT(changeGenNumObs(int)));
-    connect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setRecapNumEvents(int)));
-    connect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), current_fleet, SLOT(setMorphNumObs(int)));
+    connect (ui->spinBox_obs_saa_numObs, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setSaaNumObs(int)));
+    connect (ui->spinBox_obs_gen_num, SIGNAL(valueChanged(int)), 
+             SLOT(changeGenMethodNum(int)));
+    connect (ui->spinBox_obs_gen_numObs, SIGNAL(valueChanged(int)), 
+             SLOT(changeGenNumObs(int)));
+    connect (ui->spinBox_obs_rec_numObs, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setRecapNumEvents(int)));
+    connect (ui->spinBox_obs_morph_numObs, SIGNAL(valueChanged(int)), 
+             current_fleet, SLOT(setMorphNumObs(int)));
 
-    connect (ui->groupBox_q_setup, SIGNAL(toggled(bool)), current_fleet, SLOT(setQSetupRead(bool)));
+    connect (ui->groupBox_q_setup, SIGNAL(toggled(bool)), 
+             current_fleet, SLOT(setQSetupRead(bool)));
     connect (current_fleet->Q()->getSetupTable(), SIGNAL(dataChanged()),
              this, SLOT(qSetupChanged()));
     connect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()),
@@ -282,6 +316,9 @@ void fleet_widget::connectFleet()
              SIGNAL(dataChanged()), this, SLOT(ageSelexTVParamsChanged()));
     connect (ui->spinBox_selex_age_num_params, SIGNAL(valueChanged(int)),
              current_fleet->getAgeSelectivity(), SLOT(setNumParameters(int)));
+
+    connect (current_fleet->getLambdaModel(), SIGNAL(dataChanged()),
+             SLOT(lambdaParamsChanged()));
 
     sizeSelexTVParamsChanged();
 }
@@ -570,7 +607,7 @@ void fleet_widget::set_current_fleet(int index)
         ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());
         ui->spinBox_lambda_num_changes->setValue(current_fleet->getNumLambdas());
         lambdaView->setModel(current_fleet->getLambdaModel());
-        lambdaView->resizeColumnsToContents();
+        lambdaParamsChanged();
 
         connectFleet ();
 
@@ -1266,6 +1303,27 @@ void fleet_widget::changeGenNumObs(int num)
     {
         current_fleet->setGenNumObs(cur_gen_obs, num);
     }
+}
+
+void fleet_widget::lambdaPhaseChanged(int phs)
+{
+    model_data->setLambdaMaxPhase(phs);
+}
+
+void fleet_widget::lambdaOffsetChanged(int val)
+{
+    model_data->setLambdaSdOffset(val);
+}
+
+void fleet_widget::lambdaNumChanged(int num)
+{
+    current_fleet->setNumLambdas(num);
+}
+
+void fleet_widget::lambdaParamsChanged()
+{
+    lambdaView->setHeight (current_fleet->getLambdaModel());
+    lambdaView->resizeColumnsToContents();
 }
 
 

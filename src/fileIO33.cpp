@@ -3056,7 +3056,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         data->setLambdaMaxPhase(temp_int);
 
         // sd offset
-        temp_int = c_file->get_next_value(QString("Lambda sd offset")).toInt();
+        temp_int = c_file->getIntValue(QString("Lambda sd offset"), 0, 1, 0);
         data->setLambdaSdOffset(temp_int);
 
         // lambda changes
@@ -3065,7 +3065,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             int flt = 1;
             datalist.clear();
-            datalist.append(c_file->get_next_value(QString("lambda component")));
+            temp_string = c_file->get_next_value(QString("lambda component"));
+            temp_int = temp_string.toInt();
+            datalist.append(temp_string);
             if (datalist.contains(QString("EOF")))
                 return false;
             flt = abs(c_file->get_next_value(QString("Lambda fleet num")).toInt());
@@ -3075,9 +3077,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
             if (datalist.contains(QString("EOF")))
                 return false;
-            if (datalist.at(0).toInt() != END_OF_LIST)
+            if (temp_int != END_OF_LIST)
+            {
+                temp_int = c_file->checkIntValue(temp_int, QString("lambda component"), 1, 17, 4);
+                datalist[0] = QString::number(temp_int);
                 data->getFleet(flt-1)->appendLambda(datalist);
-        } while (datalist.at(0).toInt() != END_OF_LIST);
+            }
+        } while (temp_int != END_OF_LIST);
 
         temp_int = c_file->getIntValue(QString("Additional Std dev reporting? 0/1"), 0, 1, 0);
         data->getAddSdReporting()->setActive(temp_int);

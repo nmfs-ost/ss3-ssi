@@ -63,10 +63,10 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="movable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <widget class="QWidget" name="tab_growth">
       <attribute name="title">
@@ -81,8 +81,8 @@
          <widget class="QWidget" name="scrollAreaWidgetContents_2">
           <property name="geometry">
            <rect>
-            <x>0</x>
-            <y>0</y>
+            <x>-2</x>
+            <y>-133</y>
             <width>895</width>
             <height>546</height>
            </rect>
@@ -742,7 +742,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-200</y>
             <width>762</width>
             <height>634</height>
            </rect>
@@ -1161,7 +1161,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-60</y>
             <width>877</width>
             <height>548</height>
            </rect>

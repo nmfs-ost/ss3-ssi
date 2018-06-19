@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.05
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.06
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -16,6 +16,11 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+      3.3.11.06
+      2018-06-19
+1. Fleet Lambdas now respond to interface changes.
+2. Moved around some items in Configuration Settings.
 ============================================================================
       3.3.11.05
       2018-06-05

@@ -14,12 +14,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     pop = model_data->pPopulation;
     currPattern = NULL;
 
-//    ui->verticalLayout_fishingMort_2_detail->addWidget();
-
     // Growth
     growthMorphDistView = new tableview();
     growthMorphDistView->setParent(this);
-//    growthMorphDistView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     ui->horizontalLayout_growth_submorph_dist->addWidget(growthMorphDistView);
     growthParamsView = new tableview();
     growthParamsView->setParent(this);
@@ -158,6 +155,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     moveParamsView->setParent(this);
     ui->verticalLayout_move_params->addWidget(moveParamsView);
 
+    connect (ui->spinBox_num_move_defs, SIGNAL(valueChanged(int)), SLOT(changeMoveNumDefs(int)));
+    connect (ui->lineEdit_move_age, SIGNAL(editingFinished()), SLOT(changeMoveFirstAge()));
+
     // Mortality
     mortBreakPtsView = new tableview();
     mortBreakPtsView->setParent (this);
@@ -182,6 +182,15 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->comboBox_mort_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMortOption(int)));
     connect (ui->spinBox_mort_num_breakpoints, SIGNAL(valueChanged(int)), SLOT(changeMortNumBkpts(int)));
 
+    connect (ui->lineEdit_fishingMort_bpark, SIGNAL(editingFinished()), SLOT(changeFMortBpark()));
+    connect (ui->spinBox_fishingMort_bpark_year, SIGNAL(valueChanged(int)), SLOT(changeFMortBparkYr(int)));
+    connect (ui->lineEdit_fishingMort_max, SIGNAL(editingFinished()), SLOT(changeFMortMaxF()));
+    connect (ui->comboBox_fishingMort_method, SIGNAL(currentIndexChanged(int)), SLOT(changeFMortMethod(int)));
+    connect (ui->lineEdit_fishingMort_2_fstart, SIGNAL(editingFinished()), SLOT(changeFMortStartF()));
+    connect (ui->spinBox_fishingMort_2_phase, SIGNAL(valueChanged(int)), SLOT(changeFMortPhase(int)));
+    connect (ui->spinBox_fishingMort_2_num_detail, SIGNAL(valueChanged(int)), SLOT(changeFMortNumInput(int)));
+    connect (ui->spinBox_fishingMort_3_num_iters, SIGNAL(valueChanged(int)), SLOT(changeFMortNumIters(int)));
+
     // Seasonal
     seasonParamsView = new tableview();
     seasonParamsView->setParent(this);
@@ -198,18 +207,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->checkBox_seas_maleWtLen2, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
     connect (ui->checkBox_seas_L1, SIGNAL(toggled(bool)), SLOT(changeSeasParams()));
     connect (ui->checkBox_seas_K, SIGNAL(stateChanged(int)), SLOT(changeSeasParams()));
-
-    connect (ui->spinBox_num_move_defs, SIGNAL(valueChanged(int)), SLOT(changeMoveNumDefs(int)));
-    connect (ui->lineEdit_move_age, SIGNAL(editingFinished()), SLOT(changeMoveFirstAge()));
-
-    connect (ui->lineEdit_fishingMort_bpark, SIGNAL(editingFinished()), SLOT(changeFMortBpark()));
-    connect (ui->spinBox_fishingMort_bpark_year, SIGNAL(valueChanged(int)), SLOT(changeFMortBparkYr(int)));
-    connect (ui->lineEdit_fishingMort_max, SIGNAL(editingFinished()), SLOT(changeFMortMaxF()));
-    connect (ui->comboBox_fishingMort_method, SIGNAL(currentIndexChanged(int)), SLOT(changeFMortMethod(int)));
-    connect (ui->lineEdit_fishingMort_2_fstart, SIGNAL(editingFinished()), SLOT(changeFMortStartF()));
-    connect (ui->spinBox_fishingMort_2_phase, SIGNAL(valueChanged(int)), SLOT(changeFMortPhase(int)));
-    connect (ui->spinBox_fishingMort_2_num_detail, SIGNAL(valueChanged(int)), SLOT(changeFMortNumInput(int)));
-    connect (ui->spinBox_fishingMort_3_num_iters, SIGNAL(valueChanged(int)), SLOT(changeFMortNumIters(int)));
 
     set_model(m_data);
     ui->tabWidget->setCurrentIndex(0);
@@ -873,7 +870,7 @@ void population_widget::changeFecundityParams()
 
 void population_widget::changeFecundityTVParams()
 {
-    int num = pop->Fec()->getFemaleParams()->rowCount();
+    int num = pop->Fec()->getFemaleTVParams()->rowCount();
     fecundTVParamsView->setHeight(num);
     fecundTVParamsView->resizeColumnsToContents();
 }
