@@ -815,7 +815,7 @@ void MainWindow::run_trans()
 {
     int lastEstPhase = modelData->get_last_estim_phase();
     QString notice ("If the model has complex features, it may not convert completely.\n");
-//    notice.append("Parameter file use is disabled for conversion.");
+    notice.append("Also note that reading the parameter file is set to false.\n");
     QMessageBox::information(this, "NOTICE", notice);
     Dialog_run drun(this);
     // edit starter.ss to set max phase 0 and turn off reading parameter file
@@ -839,36 +839,36 @@ void MainWindow::run_trans()
     files->write_starter_file();
     // ask user for new directory and copy files there
     {
-        // save old directory
-        QString old_dir (current_dir);
-        // open new directory and move there
-        openNewDirectory();
-        if (old_dir == current_dir)
+    // save old directory
+    QString old_dir (current_dir);
+    // open new directory and move there
+    openNewDirectory();
+    if (old_dir == current_dir)
+    {
+        int btn =
+        QMessageBox::question(this, tr("Same Directory"), tr("You may not select the same directory.\nDo you wish to try again?"), QMessageBox::Yes, QMessageBox::No);
+        if (btn == QMessageBox::Yes)
+            openNewDirectory();
+    }
+    if (old_dir != current_dir)
+    {
+        // copy files
+        copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
+        files->read_starter_file("starter.ss");
+        copy_file (old_dir + QString("/forecast.ss_new"), current_dir + QString("/forecast.ss"));
+        copy_file (old_dir + QString("/data.ss_new"), current_dir + QString("/") + files->getDataFileName());
+        copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
+        copy_file (old_dir + QString("/ss.par"), current_dir + QString("/ss.par"));
+        copy_file (old_dir + QString("/ss.bar"), current_dir + QString("/ss.bar"));
+        if (QFile(old_dir + QString("/wtatage.ss")).exists())
         {
-            int btn =
-            QMessageBox::question(this, tr("Same Directory"), tr("You may not select the same directory.\nDo you wish to try again?"), QMessageBox::Yes, QMessageBox::No);
-            if (btn == QMessageBox::Yes)
-                openNewDirectory();
+            copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
         }
-        if (old_dir != current_dir)
-        {
-            // copy files
-            copy_file (old_dir + QString("/starter.ss_new"), current_dir + QString("/starter.ss"));
-            files->read_starter_file("starter.ss");
-            copy_file (old_dir + QString("/forecast.ss_new"), current_dir + QString("/forecast.ss"));
-            copy_file (old_dir + QString("/data.ss_new"), current_dir + QString("/") + files->getDataFileName());
-            copy_file (old_dir + QString("/control.ss_new"), current_dir + QString("/") + files->getControlFileName());
-            copy_file (old_dir + QString("/ss.par"), current_dir + QString("/ss.par"));
-            copy_file (old_dir + QString("/ss.bar"), current_dir + QString("/ss.bar"));
-            if (QFile(old_dir + QString("/wtatage.ss")).exists())// (modelData->getReadWtAtAge())
-            {
-                copy_file (old_dir + QString("/wtatage.ss_new"), current_dir + QString("/wtatage.ss"));
-            }
-            // read data into GUI
-            readFiles();
-            modelData->set_last_estim_phase(lastEstPhase);
-            files->write_starter_file();
-        }
+        // read data into GUI
+        readFiles();
+        modelData->set_last_estim_phase(lastEstPhase);
+        files->write_starter_file();
+    }
     }
 }
 

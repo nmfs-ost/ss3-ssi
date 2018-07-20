@@ -17,6 +17,12 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+      3.3.11.07
+      2018-07-19
+1. Added depletion basis 4=X*SPB_endyr.
+2. Added 'Type' field to mean body size input/output.
+3. Added age selex patterns 44 and 45.
+============================================================================
       3.3.11.06
       2018-06-19
 1. Fleet Lambdas now respond to interface changes.

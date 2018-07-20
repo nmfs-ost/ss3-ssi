@@ -58,6 +58,8 @@ void ssObservation::setObservation(int index, QStringList txtlst)
 {
     if (getNumObs() <= index)
         setNumObs(index + 1);
+    if (observations->columnCount() < txtlst.count())
+        observations->setColumnCount(txtlst.count());
     observations->setRowData(index, txtlst);
 }
 
@@ -93,7 +95,7 @@ meanBwtObservation::meanBwtObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Fleet" << "Part." << "Obs." << "SE";
+    obsHeader << "Year" << "Month" << "Fleet" << "Part."  << "Type" << "Obs." << "SE";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);

@@ -104,8 +104,10 @@ void selectivity::setMethod(int method)
     int numparam = getNumParameters();
     int pattn = setup->getValue(0);
     int special = setup->getValue(3);
+    int i, j;
     if (method == pattn)
     {
+        emit startingSetupChanges();
         switch (method)
         {
         case 0: // selectivity = 1 for all
@@ -406,7 +408,7 @@ void selectivity::setMethod(int method)
             setParameter(2, parm);
             parm.clear();
             parm << "-10" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (int i = 1; i < numparam; i++)
+            for (i = 1; i < numparam; i++)
                 setParameter(i, parm);
             break;
         case 42:
@@ -440,7 +442,7 @@ void selectivity::setMethod(int method)
                 setParameter(index, parm);
             parm.clear();
             parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (int i = 0; i < special; i++)
+            for (i = 0; i < special; i++, index++)
                 setParameter(index, parm);
             break;
         case 43:
@@ -465,7 +467,63 @@ void selectivity::setMethod(int method)
             setParameter(3, parm);
             parm.clear();
             parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (int i = 4; i < getNumParameters(); i++)
+            for (i = 4; i < getNumParameters(); i++)
+                setParameter(i, parm);
+            break;
+        case 44:
+            if (special < 1)
+            {
+                special = 1;
+            }
+            setup->setValue(3, special);
+            numparam = (special * 2) + 4;
+            if (parameters->getNumParams() != numparam)
+            {
+                setNumParameters(numparam);
+            }
+            parm << "0" << QString::number(numAges) << "0" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            parm[2] = QString("2");
+            setParameter(1, parm);
+            setParameter(2, parm);
+            parm.clear();
+            parm << "-1" << "2" << "-.001" << "-.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(3, parm);
+            parm.clear();
+            parm << "-10" << "10" << "3" << "3" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (i = 4, j = 0; j < special; i++, j++)
+                setParameter(i, parm);
+            parm.clear();
+            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (j = 0; j < special; i++, j++)
+                setParameter(i, parm);
+            break;
+        case 45:
+            if (special < 1)
+            {
+                special = 1;
+            }
+            setup->setValue(3, special);
+            numparam = (special * 2) + 4;
+            if (parameters->getNumParams() != numparam)
+            {
+                setNumParameters(numparam);
+            }
+            parm << "1" << QString::number(numAges) << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            parm[2] = QString("5");
+            setParameter(1, parm);
+            setParameter(2, parm);
+            parm.clear();
+            parm << "-1" << "2" << "-0.001" << "-0.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(3, parm);
+            parm.clear();
+            parm << "-10" << "10" << "-5.0" << "-5.0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (i = 4, j = 0; j < special; i++, j++)
+                setParameter(i, parm);
+            parm.clear();
+            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (j = 0; j < special; i++, j++)
                 setParameter(i, parm);
             break;
         default:
@@ -476,6 +534,7 @@ void selectivity::setMethod(int method)
     {
         setPattern (method);
     }
+    emit setupChanged(setup->getData());
 }
 
 
@@ -498,12 +557,16 @@ void selectivity::setDefaultParams(int method, int num)
     int numparam;
     QStringList parm;
     int special = setup->getValue(3);
+    int i, j;
+
+    emit startingSetupChanges();
     switch (method)
     {
     case 0: // selectivity = 1 for all
     case 10:
         setNumParameters(0);
         break;
+
     case 1:  // Simple logistic with 2 parameters
     case 12:
         parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -513,16 +576,17 @@ void selectivity::setDefaultParams(int method, int num)
         parm[2] = QString("0");
         setParameter(1, parm);
         break;
-    case 5:  // mirror other fleet selectivity with bounds
 
+    case 5:  // mirror other fleet selectivity with bounds
         if (num != 2)
         {
-        setNumParameters(2);
+            setNumParameters(2);
+        }
         parm << "-1" << "25" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         setParameter(1, parm);
-        }
         break;
+
     case 6:
         if (special < 2)
         {
@@ -538,15 +602,16 @@ void selectivity::setDefaultParams(int method, int num)
         setParameter(1, parm);
         parm.clear();
         parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 2; i < numparam; i++)
+        for (i = 2; i < numparam; i++)
             setParameter(i, parm);
         setSpecial(special);
         break;
+
     case 8:
     case 18: // new double logistic
         if (num != 8)
         {
-        setNumParameters(8);
+            setNumParameters(8);
         }
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -568,11 +633,12 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "1" << "20" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
+
     case 9:
     case 19:  // simple double logistic
         if (num != 6)
         {
-        setNumParameters(6);
+            setNumParameters(6);
         }
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -586,20 +652,22 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-1" << "0" << "-.01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         break;
+
     case 11:  // constant with range
         if (num != 2)
         {
-        setNumParameters(2);
+            setNumParameters(2);
         }
         parm << "0" << "25" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("25");
         setParameter(1, parm);
         break;
+
     case 13:  // double logistic
         if (num != 8)
         {
-        setNumParameters(8);
+            setNumParameters(8);
         }
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -621,23 +689,26 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "1" << "20" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
+
     case 14:  // value at each age
         numparam = numAges + 1;
         if (parameters->getNumParams() != numparam)
         {
-        setNumParameters(numparam);
+            setNumParameters(numparam);
         }
         parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (int i = 0; i < numparam; i++)
             setParameter(i, parm);
         break;
+
     case 15:  // mirror with no bounds
         setNumParameters(0);
         break;
+
     case 16:  // coleraine
         if (num != 2)
         {
-        setNumParameters(2);
+            setNumParameters(2);
         }
         parm << "-5" << "5" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -645,25 +716,27 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-5" << "40" << "20" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         break;
+
     case 17:  // random walk
         numparam = numAges + 1;
         if (num != 2)
         {
-        setNumParameters(numparam);
+            setNumParameters(numparam);
         }
         parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
         parm << "-10" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 1; i < numparam; i++)
+        for (i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
+
     case 20:
     case 23:
     case 24:  // double normal with plateau and defined ends
         if (num != 6)
         {
-        setNumParameters(6);
+            setNumParameters(6);
         }
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -683,10 +756,11 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(5, parm);
         break;
+
     case 22:  // double normal with plateau
         if (num != 4)
         {
-        setNumParameters(4);
+            setNumParameters(4);
         }
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -698,11 +772,12 @@ void selectivity::setDefaultParams(int method, int num)
         setParameter(2, parm);
         setParameter(3, parm);
         break;
+
     case 25:
     case 26:  // exponential-logistic
         if (parameters->getNumParams() != 3)
         {
-        setNumParameters(3);
+            setNumParameters(3);
         }
         parm << ".02" << "2" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -713,6 +788,7 @@ void selectivity::setDefaultParams(int method, int num)
         parm << ".001" << ".5" << ".1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         break;
+
     case 27:  // cubic spline
         int index;
         if (special < 3)
@@ -724,7 +800,7 @@ void selectivity::setDefaultParams(int method, int num)
         numparam = special * 2 + 3;
         if (parameters->getNumParams() != numparam)
         {
-        setNumParameters(numparam);
+            setNumParameters(numparam);
         }
         parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -737,13 +813,14 @@ void selectivity::setDefaultParams(int method, int num)
         parm.clear();
         parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         index = 3;
-        for (int i = 0; i < special; i++, index++)
+        for (i = 0; i < special; i++, index++)
             setParameter(index, parm);
         parm.clear();
         parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 0; i < special; i++)
+        for (i = 0; i < special; i++)
             setParameter(index, parm);
         break;
+
     case 30:  // equal to spawning biomass
     case 31:  // equal to exp(recruitment dev)
     case 32:  // equal to exp(rec dev) * spawn biomass
@@ -751,11 +828,12 @@ void selectivity::setDefaultParams(int method, int num)
     case 34:  // spawning biomass depletion (B/B0)
         setNumParameters(0);
         break;
+
     case 41:
         numparam = numAges + 1 + 2;
         if (parameters->getNumParams() != numparam)
         {
-        setNumParameters(numparam);
+            setNumParameters(numparam);
         }
         parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -766,9 +844,10 @@ void selectivity::setDefaultParams(int method, int num)
         setParameter(2, parm);
         parm.clear();
         parm << "-10" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 1; i < numparam; i++)
+        for (i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
+
     case 42:
         if (special < 3)
         {
@@ -778,7 +857,7 @@ void selectivity::setDefaultParams(int method, int num)
         numparam = special * 2 + 3 + 2;
         if (parameters->getNumParams() != numparam)
         {
-        setNumParameters(numparam);
+            setNumParameters(numparam);
         }
         parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -795,13 +874,14 @@ void selectivity::setDefaultParams(int method, int num)
         parm.clear();
         parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         index = 5;
-        for (int i = 0; i < special; i++, index++)
+        for (i = 0; i < special; i++, index++)
             setParameter(index, parm);
         parm.clear();
         parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 0; i < special; i++)
+        for (i = 0; i < special; i++)
             setParameter(index, parm);
         break;
+
     case 43:
         if (special < 2)
         {
@@ -811,7 +891,7 @@ void selectivity::setDefaultParams(int method, int num)
         numparam = special + 2 + 2;
         if (parameters->getNumParams() != numparam)
         {
-        setNumParameters(numparam);
+            setNumParameters(numparam);
         }
         parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -823,12 +903,72 @@ void selectivity::setDefaultParams(int method, int num)
         setParameter(3, parm);
         parm.clear();
         parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 4; i < getNumParameters(); i++)
+        for (i = 4; i < getNumParameters(); i++)
             setParameter(i, parm);
         break;
+
+    case 44:
+        if (special < 1)
+        {
+            special = 1;
+            setup->setValue(3, special);
+        }
+        numparam = (special * 2) + 4;
+        if (parameters->getNumParams() != numparam)
+        {
+            setNumParameters(numparam);
+        }
+        parm << "0" << QString::number(numAges) << "0" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("2");
+        setParameter(1, parm);
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-1" << "2" << "-.001" << "-.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        parm.clear();
+        parm << "-10" << "10" << "3" << "3" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (i = 4, j = 0; j < special; i++, j++)
+            setParameter(i, parm);
+        parm.clear();
+        parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (j = 0; j < special; i++, j++)
+            setParameter(i, parm);
+        break;
+
+    case 45:
+        if (special < 1)
+        {
+            special = 1;
+            setup->setValue(3, special);
+        }
+        numparam = (special * 2) + 4;
+        if (parameters->getNumParams() != numparam)
+        {
+            setNumParameters(numparam);
+        }
+        parm << "1" << QString::number(numAges) << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("5");
+        setParameter(1, parm);
+        setParameter(2, parm);
+        parm.clear();
+        parm << "-1" << "2" << "-0.001" << "-0.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(3, parm);
+        parm.clear();
+        parm << "-10" << "10" << "-5.0" << "-5.0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (i = 4, j = 0; j < special; i++, j++)
+            setParameter(i, parm);
+        parm.clear();
+        parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (j = 0; j < special; i++, j++)
+            setParameter(i, parm);
+        break;
+
     default:
         setNumParameters(0);
     }
+    emit setupChanged(getSetup());
 
 }
 
@@ -839,16 +979,16 @@ int selectivity::getNumParameters()
 
 void selectivity::setNumParameters(int num)
 {
-    QStringList ql;
-    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+//    QStringList ql;
+//    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     int curr = getNumParameters();
     if (curr != num)
     {
         parameters->setNumParams(num);
-        for (int i = curr; i < num; i++)
-        {
-            setParameter(i, ql);
-        }
+//        for (int i = curr; i < num; i++)
+//        {
+//            setParameter(i, ql);
+//        }
     }
     varParameters->setTotalNumVarTables(num);
 }
@@ -992,7 +1132,7 @@ void selectivity::setSpecial(int value)
     int scale = 0;
     if (special != value)
     {
-//        emit startingSetupChanges();
+        emit startingSetupChanges();
         switch(getPattern())
         {
         case 43:

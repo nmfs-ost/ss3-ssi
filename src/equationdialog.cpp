@@ -155,10 +155,12 @@ void equationDialog::setSelex (selectivity *slx)
     {
         disconnect(selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
         disconnect(selex, SIGNAL(startingSetupChanges()), this, SLOT(changingSelex()));
+        disconnect(selex, SIGNAL(setupChanged(QStringList)), this, SLOT(changedSelex(QStringList)));
     }
     selex = slx;
     connect(selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
     connect(selex, SIGNAL(startingSetupChanges()), this, SLOT(changingSelex()));
+    connect(selex, SIGNAL(setupChanged(QStringList)), this, SLOT(changedSelex(QStringList)));
     setParameters(selex->getParameterModel());
     changeSelex();
 }
@@ -166,6 +168,12 @@ void equationDialog::setSelex (selectivity *slx)
 void equationDialog::changingSelex()
 {
     disconnect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+}
+
+void equationDialog::changedSelex(QStringList ql)
+{
+    connect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+    changeSelex();
 }
 
 void equationDialog::changeSelex()

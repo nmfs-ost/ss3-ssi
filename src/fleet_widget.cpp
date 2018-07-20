@@ -1174,6 +1174,12 @@ void fleet_widget::changeSelexAgePattern(int pat)
     case 42:
         ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
         break;
+    case 44:
+        ui->label_selex_size_pattern_info->setText(tr("Similar to random walk - separate params for male/female"));
+        break;
+    case 45:
+        ui->label_selex_size_pattern_info->setText(tr("Similar to 14 - separate params for male/female"));
+        break;
     default:
         ui->label_selex_age_pattern_info->setText(tr(" "));
     }

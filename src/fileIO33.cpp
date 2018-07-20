@@ -220,9 +220,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < data->get_num_fleets(); i++)
                 data->getFleet(i)->setMbwtDF(temp_int);
             do
-            {    // year, month, fleet_number, partition, obs, stderr
+            {    // year, month, fleet_number, partition, type, obs, stderr
                 str_lst.clear();
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < 7; j++)
                     str_lst.append(d_file->get_next_value(QString("mean bwt")));
                 year = str_lst.at(0).toInt();
                 if (year == END_OF_LIST)
@@ -894,7 +894,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString ("# note:  use positive partition value for mean body wt, negative partition for mean body length");
         chars += d_file->writeline (line);
-        line = QString ("#_yr month fleet part obs stderr");
+        line = QString ("#_yr month fleet part type obs stderr");
         chars += d_file->writeline (line);
         for (i = 1; i <= total_fleets; i++)
         {
@@ -915,7 +915,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         line.clear();
         if (num == 0)
             line.append("# ");
-        line.append(QString("-9999 0 0 0 0 0 # terminator for mean body size data "));
+        line.append(QString("-9999 0 0 0 0 0 0 # terminator for mean body size data "));
         chars += d_file->writeline (line);
         chars += d_file->writeline ("#");
 

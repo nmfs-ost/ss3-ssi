@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -462,7 +462,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-106</y>
+            <y>0</y>
             <width>807</width>
             <height>584</height>
            </rect>
@@ -785,17 +785,22 @@
                </item>
                <item>
                 <property name="text">
-                 <string>1: X * B0</string>
+                 <string>1: rel X * SPB0</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>2: X * B_msy</string>
+                 <string>2: rel SPB_msy</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>3: X * B_styr</string>
+                 <string>3: rel X * SPB_styr</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4: rel X * SPB_endyr</string>
                 </property>
                </item>
               </widget>

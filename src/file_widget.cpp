@@ -765,7 +765,7 @@ bool file_widget::read_starter_file (QString filename)
         token = starterFile->get_next_value("summary biomass min age");
         temp_int = token.toInt();
         model_info->set_biomass_min_age(temp_int);
-        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 3, 1);
+        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 4, 1);
         model_info->set_depletion_basis(temp_int);
         token = starterFile->get_next_value("depletion denominator");
         model_info->set_depletion_denom(token.toDouble());
@@ -919,7 +919,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("min age for calc of summary biomass"));
 
         chars += starterFile->write_val(model_info->get_depletion_basis(), 5,
-                    QString("Depletion basis:  denom is: 0=skip; 1=rel X*B0; 2=rel X*Bmsy; 3=rel X*B_styr"));
+                    QString("Depletion basis:  denom is: 0=skip; 1=rel X*B0; 2=rel X*Bmsy; 3=rel X*B_styr; 4=rel X*B_endyr"));
 
         chars += starterFile->write_val(model_info->get_depletion_denom(), 5,
                     QString("Fraction (X) for Depletion denominator (e.g. 0.4)"));

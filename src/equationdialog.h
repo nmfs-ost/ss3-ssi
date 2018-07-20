@@ -49,6 +49,7 @@ public:
 public slots:
     void setSelex (selectivity *slx);
     void changingSelex ();
+    void changedSelex (QStringList ql);
     void changeSelex ();
     void setDataModel (ss_model *data);
     void setXvals(const QStringList &vals);
