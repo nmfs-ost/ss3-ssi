@@ -33,8 +33,8 @@ equationDialog::equationDialog(QWidget *parent, QString *typ) :
     title = name;
 
     selex = NULL;
-    dataModel = NULL;
     fleet = NULL;
+    genders = 2;
 
     equationNum = -1;
     parameters = NULL;
@@ -42,6 +42,7 @@ equationDialog::equationDialog(QWidget *parent, QString *typ) :
     numSliders = 0;
 
     yMax = -10;
+    chartview = NULL;
 
     setXvals(QStringList());
     resetChart(true);
@@ -151,13 +152,14 @@ equationDialog::~equationDialog()
 void equationDialog::setSelex (selectivity *slx)
 {
     if (selex != NULL &&
-            selex->getNumAges() > 0)
+            selex->getNumXvals() > 0)
     {
         disconnect(selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
         disconnect(selex, SIGNAL(startingSetupChanges()), this, SLOT(changingSelex()));
         disconnect(selex, SIGNAL(setupChanged(QStringList)), this, SLOT(changedSelex(QStringList)));
     }
     selex = slx;
+    genders = selex->getNumGenders();
     connect(selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
     connect(selex, SIGNAL(startingSetupChanges()), this, SLOT(changingSelex()));
     connect(selex, SIGNAL(setupChanged(QStringList)), this, SLOT(changedSelex(QStringList)));
@@ -181,10 +183,10 @@ void equationDialog::changeSelex()
     restoreAll();
 }
 
-void equationDialog::setDataModel (ss_model *data)
+/*void equationDialog::setDataModel (ss_model *data)
 {
     dataModel = data;
-}
+}*/
 
 void equationDialog::setXvals(const QStringList &vals)
 {
@@ -247,21 +249,29 @@ void equationDialog::setParameters(tablemodel *params)
 void equationDialog::getParameterValues()
 {
     QStringList values;
+    int switchnum = numParams;
     equationNum = selex->getPattern();
     special = selex->getSpecial();
+    genders = selex->getNumGenders();
     parameters = selex->getParameterModel();
-    if (parameters != NULL)
-    {
-        int oldnum = numParams;
+    if (NULL == parameters)
+        switchnum = numParams = 0;
+    else
         numParams = parameters->rowCount();
-        if (oldnum != numParams)
+
+//    if (parameters != NULL)
+    {
+//        int oldnum = numParams;
+//        numParams = parameters->rowCount();
+        if (switchnum != numParams)
             disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
 
         disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
 
-        switch (numParams < 9? numParams: 9)
+        switch (switchnum)
         {
+        default:
         case 9:
             values = parameters->getRowData(8);
             min9 = (values.at(0)).toDouble();
@@ -345,19 +355,18 @@ void equationDialog::getParameterValues()
             showSliders(numParams);
             break;
         case 0:
-        default:
             showSliders(0);
         }
         connect (this, SIGNAL(numbersUpdated()), SLOT(updateSel()));
-        if (oldnum != numParams)
+        if (switchnum != numParams)
             connect (parameters, SIGNAL(dataChanged()), SLOT(parametersChanged()));
 
 //        resetValues();
     }
-    else
-    {
-        numParams = 0;
-    }
+//    else
+//    {
+//        numParams = 0;
+//    }
 }
 
 void equationDialog::setParameterValues()
@@ -483,120 +492,141 @@ void equationDialog::update()
 //        building = true;
         disconnect (selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
 
+        resetChart();
+
         switch (equationNum)
         {
-        case 0:
-        case 10:
+        case 0:  // case 0 constant size selectivity
+        case 10: // 10 #Constant age-specific selex for ages 1 to nages
             numSliders = 0;
             constant();
             break;
 
-        case 11:
+        case 11: // 11 #Constant age-specific selex for specified age range
             numSliders = 2;
             constantRange();
             break;
 
-        case 1:
-        case 12:
+        case 1:  // case 1 logistic size selectivity
+        case 12: // 12 #age selectivity - logistic
             numSliders = 2;
             logistic();
             break;
 
-        case 2:
-        case 7:
+        case 2:  // case 2 discontinued; use pattern 8 for double logistic
+        case 7:  // case 7 discontinued; use pattern 8 for double logistic
             numSliders = 8;
             blank(8, 8);
             break;
 
-        case 3:
+        case 3:  // case 3 discontinued
             numSliders = 6;
             blank (6, 0);
             break;
 
-        case 13:
+        case 13: // 13 #age selectivity - double logistic
             numSliders = 8;
             dblLogPeak();
             break;
 
-        case 4:
+        case 4:  // case 4 discontinued; use pattern 30 to get spawning biomass
             numSliders = 0;
             blank(0, 30);
             break;
 
-        case 14:
+        case 14: // 14 #age selectivity - separate parm for each age
             numSliders = 0;
             eachAge();
             break;
 
-        case 5:
+        case 5:  // case 5 mirror another fleets size selectivity for specified bin range
             numSliders = 2;
-        case 15:
+        case 15: // case 15 mirror another fleets size selectivity for all size bins
+                 // 15 #age selectivity - mirror selex for lower numbered fleet
             mirror(numSliders);
             break;
 
-        case 6:
+        case 6:  // case 6 non-parametric size selex pattern
             numSliders = 2;
             linear(0);
             break;
 
-        case 16:
+        case 16: // case 16 Coleraine - Gaussian age selectivity
             numSliders = 2;
             coleGauss();
             break;
 
-        case 17:
+        case 17: // 17 #age selectivity: each age has parameter as random walk
+            //          transformation is selex=exp(parm); some special codes
             numSliders = 0;
             randomWalk(0);
             break;
 
-        case 8:
-        case 18:
+        case 8:  // case 8 double logistic with eight parameters
+        case 18: // 18 #age selectivity: double logistic with smooth transition
             numSliders = 8;
             dblLogPeak();
             break;
 
-        case 9:
-        case 19:
+        case 9:  // case 9 old double logistic with 4 parameters
+        case 19: // 19 #age selectivity: old double logistic
             numSliders = 6;
             dblLogistic();
             break;
 
-        case 22:
+        case 21: // case 21 non-parametric size selectivity
+            numSliders = 0;
+            linear(1);
+            break;
+
+        case 22: // case 22 size selectivity using double_normal_plateau (similar to CASAL)
             numSliders = 4;
             dblNormCasal();
             break;
 
-        case 20:
-        case 23:
-        case 24:
+        case 20: // 20 #age selectivity: double normal with plateau
+        case 23: // case 23 size selectivity double_normal_plateau where final value can be greater than 1.0
+        case 24: // case 24 size selectivity using double_normal_plateau and lots of bells and whistles
             numSliders = 6;
             dblNormEndpts();
             break;
 
-        case 25:
-        case 26:
+        case 25: // case 25 size selectivity using exponential-logistic
+        case 26: // 26 #age selectivity: exponential logistic
             numSliders = 3;
             expLogistic();
             break;
 
-        case 27:
+        case 27: // 27 #age selectivity: cubic spline
             numSliders = 3;
             cubicSpline();
             break;
 
-        case 41:
+        case 41: // 41 each age has parameter as random walk scaled by average of values at low age through high age
+            //    transformation as selex=exp(parm); some special codes
             numSliders = 2;
             randomWalk(2.);
             break;
 
-        case 42:
+        case 42: // 42 cubic spline scaled by average of values at low age through high age
             numSliders = 5;
             cubicSpline(2.);
             break;
 
-        case 43:
+        case 43: // 43 non-parametric size selex scaled by average of values at low bin through high bin
             numSliders = 4;
             linearScaled();
+            break;
+
+        case 44: // 44 like age selex 17 but with separate parameters for males and with revised controls
+            numSliders = genders + 2;
+            blank(numSliders, 0, "Not yet implemented");
+//            twoSexRandomWalk();
+            break;
+
+        case 45: // 45 like age selex 14 but with separate parameters for males and with revised controls
+            numSliders = genders + 2;
+            twoSexEachAge();
             break;
 
         default:
@@ -637,85 +667,99 @@ void equationDialog::updateSel()
         disconnect (selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
         switch (equationNum)
         {
-        case 0:
-        case 10:
+        case 0:  // case 0 constant size selectivity
+        case 10: // 10 #Constant age-specific selex for ages 1 to nages
             updateConstant();
             break;
 
-        case 11:
+        case 11: // 11 #Constant age-specific selex for specified age range
             updateConstantRange();
             break;
 
-        case 1:
-        case 12:
+        case 1:  // case 1 logistic size selectivity
+        case 12: // 12 #age selectivity - logistic
             updateLogistic();
             break;
 
-        case 5:
+        case 5:  // case 5 mirror another fleets size selectivity for specified bin range
             updateMirror(2.);
             break;
 
-        case 6:
+        case 6:  // case 6 non-parametric size selex pattern
             updateLinear(0);
             break;
 
-        case 8:
+        case 8:  // case 8 double logistic with eight parameters
             updateDblLogPeak();
             break;
 
-        case 18:
+        case 18: // 18 #age selectivity: double logistic with smooth transition
             updateDblLogSmooth();
             break;
 
-        case 9:
-        case 19:
+        case 9:  // case 9 old double logistic with 4 parameters
+        case 19: // 19 #age selectivity: old double logistic
             updateDblLogistic();
             break;
 
-        case 14:
+        case 14: // 14 #age selectivity - separate parm for each age
             updateEachAge();
             break;
 
-        case 16:
+        case 16: // case 16 Coleraine - Gaussian age selectivity
             updateColeGauss();
             break;
 
-        case 17:
+        case 17: // 17 #age selectivity: each age has parameter as random walk
+            //          transformation is selex=exp(parm); some special codes
             updateRandomWalk();
             break;
 
-        case 20:
-        case 24:
+        case 20: // 20 #age selectivity: double normal with plateau
+        case 24: // case 24 size selectivity using double_normal_plateau and lots of bells and whistles
             updateDblNormEndpts();
             break;
 
-        case 22:
+        case 21: // case 21 non-parametric size selectivity
+            updateLinearPlain();
+            break;
+
+        case 22: // case 22 size selectivity using double_normal_plateau (similar to CASAL)
             updateDblNormCasal();
             break;
 
-        case 23:
+        case 23: // case 23 size selectivity double_normal_plateau where final value can be greater than 1.0
             updateDblNormPlateau();
             break;
 
-        case 25:
-        case 26:
+        case 25: // case 25 size selectivity using exponential-logistic
+        case 26: // 26 #age selectivity: exponential logistic
             updateExpLogistic();
             break;
 
-        case 27:
+        case 27: // 27 #age selectivity: cubic spline
             updateCubicSpline();
             break;
 
-        case 41:
+        case 41: // 41 each age has parameter as random walk scaled by average of values at low age through high age
+            //    transformation as selex=exp(parm); some special codes
             updateRandomWalk(2.);
             break;
 
-        case 42:
+        case 42: // 42 cubic spline scaled by average of values at low age through high age
             updateCubicSpline(2.);
             break;
 
-        case 43:
+        case 43: // 43 non-parametric size selex scaled by average of values at low bin through high bin
             updateLinear(2.);
+            break;
+
+        case 44: // 44 like age selex 17 but with separate parameters for males and with revised controls
+            updateTwoSexRandom();
+            break;
+
+        case 45: // 45 like age selex 14 but with separate parameters for males and with revised controls
+            updateTwoSexEachAge();
             break;
 
         default:
@@ -1415,7 +1459,7 @@ void equationDialog::buttonClicked(QAbstractButton *btn)
     else if (btn->text().contains("Reset")){
         reset();
     }
-    else if (btn->text().contains("Restore")){
+    else if (btn->text().contains("Defaults")){
         selex->setDefaultParams(equationNum, special);
         restoreAll();
     }
@@ -1770,9 +1814,15 @@ void equationDialog::updateTicks(int xT, int yT)
 void equationDialog::resetChart(bool create)
 {
     ui->label_title->hide();
-    ui->verticalLayout_graph->removeWidget(chartview);
+    if (chartview != NULL)
+    {
+        chartview->setVisible(false);
+        ui->verticalLayout_graph->removeWidget(chartview);
+    }
     if (!create)
     {
+        chartview->hide();
+        cht->hide();
         delete axisXsel;
         delete axisY;
         delete axisYalt;
@@ -1813,16 +1863,19 @@ void equationDialog::resetChart(bool create)
 
     yMax = 0;
     ui->verticalLayout_graph->addWidget(chartview);
+    chartview->show();
+    cht->show();
     cht->legend()->setVisible(false);
     int sizew = cht->size().width();
     int sizeh = cht->size().height();
     resizeEvent(new QResizeEvent(QSize(sizew, sizeh), QSize(sizew, sizeh)));
+    repaint();
 }
 
 /* size selectivity 2, 3, 4, 7, */
 void equationDialog::blank (int num, int rep, QString msg)
 {
-    resetChart();
+//    resetChart();
     // If discontinued
     if (msg.isEmpty())
         msg.append(QString("Pattern %1 is discontinued").arg(
@@ -1838,17 +1891,19 @@ void equationDialog::blank (int num, int rep, QString msg)
     setTitle(msg);
 
     // INTENTIONALLY LEFT BLANK
-
     msg = QString("\n\n\n THIS PAGE INTENTIONALLY LEFT BANK");
-
     ui->label_title->setText(msg);
     ui->label_title->show();
-    showSliders(num);
-    showBins (true);
+
+    chartview->setVisible(false);
+    showSliders(0);
+    showBins (false);
     showJoins(0);
 }
 
-/* Size selectivity 0, age selectivity 10 */
+// case 0 constant size selectivity
+// 10 #Constant age-specific selex for ages 1 to nages
+// Size selectivity 0, age selectivity 10 */
 void equationDialog::constant (float val)
 {
     setTitle(QString("Pattern %1: Constant selectivity 1.0").arg(QString::number(equationNum)));
@@ -1857,7 +1912,7 @@ void equationDialog::constant (float val)
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
@@ -1868,12 +1923,12 @@ void equationDialog::constant (float val)
     updateConstant(val);
 }
 
-/* Size selectivity 0, age selectivity 10 */
+// Size selectivity 0, age selectivity 10
 void equationDialog::updateConstant (float val)
 {
     float binMid = binWidth * binMidWidth;
-    float start = binMin + binMid;
-    float end = binMax + binMid;
+    float start;
+    float end;
 
     if (!xValList.isEmpty())
     {
@@ -1882,10 +1937,11 @@ void equationDialog::updateConstant (float val)
         else
             start = xValList.at(1) + binMid;
     }
+    end = xValList.last() + binMid;
     updateConstant(val, start, end);
 }
 
-/* general constant graph */
+// general constant graph
 void equationDialog::updateConstant (float val, float first, float last)
 {
     float binMid = binWidth * binMidWidth;
@@ -1915,7 +1971,7 @@ void equationDialog::updateConstant (float val, float first, float last)
     }
 }
 
-/* age selectivity 11 */
+// case 11: Constant age-specific selex for specified age range
 void equationDialog::constantRange ()
 {
     setTitle(QString("Pattern %1: Constant selectivity 1.0 within age range").arg(equationNum));
@@ -1933,7 +1989,7 @@ void equationDialog::constantRange ()
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
@@ -1944,7 +2000,7 @@ void equationDialog::constantRange ()
         updateConstantRange();
 }
 
-/* age selectivity 11 */
+// 11 #Constant age-specific selex for specified age range
 void equationDialog::updateConstantRange (float val)
 {
     float par1 = ui->doubleSpinBox_1_value->value();
@@ -1968,7 +2024,9 @@ void equationDialog::updateConstantRange (float val)
     updateConstant(val, start, end);
 }
 
-/* Size selectivity 1 and age selectivity 12 */
+// case 1 logistic size selectivity
+// 12 #age selectivity - logistic
+// Size selectivity 1 and age selectivity 12
 void equationDialog::logistic ()
 {
     setTitle(QString("Pattern %1: Logistic").arg(equationNum));
@@ -1987,7 +2045,7 @@ void equationDialog::logistic ()
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
@@ -1999,7 +2057,7 @@ void equationDialog::logistic ()
         updateLogistic();
 }
 
-/* Size selectivity 1 and age selectivity 12 */
+// Size selectivity 1 and age selectivity 12
 void equationDialog::updateLogistic()
 {
     float yVal = 0;
@@ -2027,14 +2085,23 @@ void equationDialog::updateLogistic()
     }
 }
 
-/* Size selectivity 5 and 15, size and age selectivity 15 */
+// case 5 mirror another fleets size selectivity for specified bin range
+//   parm1 = lo bin; parm2 = hi bin
+// case 15 mirror another fleets size selectivity for all size bins
+// 15 #age selectivity - mirror selex for lower numbered fleet
 void equationDialog::mirror (int sliders)
 {
     int flt = special;
     QString msg (QString("Pattern %1: Mirror of Fleet (%2)").arg(
                  QString::number(equationNum),
                  QString::number(flt)));
-    resetChart();
+    if (flt >= fleet->getNumber())
+    {
+        msg.append(QString("\nMust use fleet (special) previously defined!"));
+    }
+    else
+    {
+//    resetChart();
     chartview->setVisible(false);
     if (sliders == 2)
     {
@@ -2051,8 +2118,7 @@ void equationDialog::mirror (int sliders)
         ui->label_2_name->setText("Hi Bin");
         ui->label_2_type->setText("Value");
         setParameterHeaders();
-        parameters->setRowHeader(0, QString("SizeSel p1 fishery %1").arg(fleetNum));
-        parameters->setRowHeader(1, QString("SizeSel p2 fishery %1").arg(fleetNum));
+    }
     }
     setTitle(msg);
     showSliders(sliders);
@@ -2062,7 +2128,7 @@ void equationDialog::mirror (int sliders)
     updateMirror(sliders);
 }
 
-/* size selectivity 5 and size and age selectivity 15 */
+// size selectivity 5 and size and age selectivity 15
 void equationDialog::updateMirror(int sliders)
 {
     int flt = special < 1? 1: special;
@@ -2081,11 +2147,6 @@ void equationDialog::updateMirror(int sliders)
         float par2 = static_cast<int>(ui->doubleSpinBox_2_value->value());
         if (numParams < 2)
             return;
-        if (par1 > par2)
-        {
-            ui->doubleSpinBox_1_value->setValue(par2);
-            return;
-        }
         if (par1 < 1)
         {
             start = 1;
@@ -2119,25 +2180,32 @@ void equationDialog::updateMirror(int sliders)
     }
 }
 
-/* size selectivity 6 and age selectivity 43*/
+// size selectivity 6 and age selectivity 43
+// case 21 non-parametric size selectivity
 void equationDialog::linear (float scale)
 {
     int numNodes = getSpecial(), num = 0;
     QString msg(QString("Pattern %1: Non-parametric, %2 Linear segments").arg(
                     QString::number(equationNum),
-                    QString::number(numNodes)));
+                    QString::number(numNodes + 1)));
     setTitle(msg);
+
+    if (scale == 1)
+    {
+        linearPlain ();
+        return;
+    }
+    else if (scale == 2)
+    {
+        linearScaled();
+        return;
+    }
 
     num = parameters->rowCount() - 2;
     if (num < 2 || numNodes != num)
     {
         ui->label_title->setText(tr("Incorrect number of parameters. \nShould be Special +2"));
         ui->label_title->setVisible(true);
-        return;
-    }
-    else if (scale > 0)
-    {
-        linearScaled();
         return;
     }
     disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
@@ -2206,7 +2274,7 @@ void equationDialog::linear (float scale)
         showBins(true);
         showJoins(0);
 
-        resetChart();
+//        resetChart();
 
         axisY->setTitleText("Selex");
         cht->addAxis(axisY, Qt::AlignLeft);
@@ -2232,18 +2300,82 @@ void equationDialog::linear (float scale)
         updateLinear(scale);
     }
 }
+/* This is the code from SS_selex.tpl
+ *    while(j<=nlength)
+ *    {
+ *      if(len_bins(j)<=sp(z))
+ *      {
+ *        sel(j) = lastsel + (len_bins(j)-lastSelPoint)/(sp(z)-lastSelPoint) * (sp(z+k)-lastsel);
+ *        j++;
+ *      }
+ *      else if(z<=k)
+ *      {
+ *        lastSelPoint=sp(z);
+ *        lastsel=sp(z+k);
+ *        z++;
+ *      }
+ *      else  //  for sizes beyond last point
+ *      {
+ *        sel(j)=sp(k+k);
+ *        j++;
+ *      }
+ *    }
+ * I've simplified it to just the points given */
+// case 21 non-parametric size selectivity
+void equationDialog::linearPlain()
+{
+    int numNodes = getSpecial(), num = 0;
+    float min, max;
+    QStringList rowdata;
+    QString msg(QString("Pattern %1: Non-parametric %2 Linear segments").arg(
+                    QString::number(equationNum),
+                    QString::number(numNodes + 1)));
+    setTitle(msg);
 
-/* age selectivity 43 */
+    num = numNodes * 2;
+    if (parameters->rowCount() < num)
+    {
+        QMessageBox::information(this, tr("Parameter error"), tr("Incorrect number of parameters. \nShould be (Special * 2)"));
+        return;
+    }
+    showSliders(0);
+    showBins(true);
+    showJoins(0);
+//    resetChart();
+
+    axisY->setTitleText("Selex");
+    cht->addAxis(axisY, Qt::AlignLeft);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+
+    selSeries->setPen(QPen(QBrush(Qt::red), 3));
+    cht->addSeries(selSeries);
+    selSeries->attachAxis(axisXsel);
+    selSeries->attachAxis(axisY);
+
+    setParameterHeaders();
+    // set parameter min and max
+    min = xValList.first();
+    max = xValList.last();
+    for (int i = 0; i < special; i++)
+    {
+        rowdata = parameters->getRowData(i);
+        rowdata[0] = min; rowdata[1] = max;
+        parameters->setRowData(i, rowdata);
+    }
+    updateLinearPlain();
+}
+
+// age selectivity 43
 void equationDialog::linearScaled ()
 {
     int numNodes = getSpecial(), num = 0;
     QString msg(QString("Pattern %1: Non-parametric %2 Linear segments").arg(
                     QString::number(equationNum),
-                    QString::number(numNodes)));
+                    QString::number(numNodes + 1)));
     setTitle(msg);
 
     num = parameters->rowCount() - 4;
-    if (num < 2 || numNodes != num)
+    if (num < 3 || numNodes != num)
     {
         QMessageBox::information(this, tr("Parameter error"), tr("Incorrect number of parameters. \nShould be Special +4"));
         return;
@@ -2306,7 +2438,7 @@ void equationDialog::linearScaled ()
         showBins(true);
         showJoins(0);
 
-        resetChart();
+//        resetChart();
 
         axisY->setTitleText("Selex");
         cht->addAxis(axisY, Qt::AlignLeft);
@@ -2333,7 +2465,7 @@ void equationDialog::linearScaled ()
     }
 }
 
-/* size selectivity 6 */
+// size selectivity 6
 void equationDialog::updateLinear(float scale)
 {
     float y = 0;
@@ -2424,8 +2556,8 @@ void equationDialog::updateLinear(float scale)
                 if (y > yMax)
                     yMax = y;
                 if (y < axisYMin)
-                    axisYMin = (int)y - 2;
-                axisYMax = (int)yMax + 1;
+                    axisYMin = abs(y) - 2;
+                axisYMax = abs(yMax) + 1;
                 firstPoints.append(QPointF(len, y));
                 break;
             }
@@ -2440,7 +2572,29 @@ void equationDialog::updateLinear(float scale)
     updateLinearExp(scale);
 }
 
-/* age selectivity 43 */
+// case 21 non-parametric size selectivity
+void equationDialog::updateLinearPlain()
+{
+    int i = 0;
+    float xVal;
+    float yVal;
+    selSeries->clear();
+    xVal = QString(parameters->getRowData(0).at(2)).toFloat();
+    while (xVal > xValList.at(i))
+    {
+        selSeries->append(QPointF(xValList.at(i++), 0.0));
+    }
+    for (i = 0; i < special; i++)
+    {
+        xVal = QString(parameters->getRowData(i).at(2)).toFloat();
+        yVal = QString(parameters->getRowData(i + special).at(2)).toFloat();
+        selSeries->append(QPointF(xVal, yVal));
+    }
+    if (xVal < xValList.last())
+        selSeries->append(QPointF(xValList.last(), yVal));
+}
+
+// age selectivity 43
 void equationDialog::updateLinearScaled()
 {
     float y = 0;
@@ -2630,7 +2784,8 @@ float equationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
  *     sel += 1.0e-6;
  *     sel /= max(sel);
  */
-/* size selectivity 9, age selectivity 19 */
+// case 9 old double logistic with 4 parameters
+// 19 #age selectivity: old double logistic
 void equationDialog::dblLogistic()
 {
     setTitle(QString("Pattern %1: Simple Double Logistic").arg(
@@ -2660,7 +2815,7 @@ void equationDialog::dblLogistic()
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     ascendSeries = new QLineSeries(cht);
     ascendSeries->setName(QString("Logist1"));
@@ -2759,6 +2914,11 @@ void equationDialog::updateDblLogistic()
     }
 }
 
+// case 8 double logistic with eight parameters
+// 13 #age selectivity - double logistic
+// 18 #age selectivity: double logistic with smooth transition
+// 1=peak, 2=init,  3=infl,  4=slope, 5=final, 6=infl2, 7=slope2
+// 1=peak, 2=init,  3=infl,  4=slope, 5=final, 6=infl2, 7=slope2 8=binwidth
 void equationDialog::dblLogPeak()
 {
     setTitle(QString("Pattern %1: Double Logistic with IF joins ").arg(
@@ -2797,7 +2957,7 @@ void equationDialog::dblLogPeak()
     showBins(true);
     showJoins(3);
 
-    resetChart();
+//    resetChart();
 
     join1Series = new QLineSeries(cht);
     join1Series->setPen(QPen(QBrush(Qt::darkGreen), 1));
@@ -2855,7 +3015,7 @@ void equationDialog::dblLogPeak()
     }
 }
 
-/* size selectivity 8 */
+// size selectivity 8
 void equationDialog::updateDblLogPeak()
 {
     float maxSelX = 0;
@@ -2977,7 +3137,7 @@ void equationDialog::updateDblLogPeak()
 //    ui->spinBox_steep_join3->setValue(10);
 }
 
-/* age selectivity 13 */
+// 13 #age selectivity - double logistic
 void equationDialog::updateDblLogIf()
 {
     float maxSelX = 0;
@@ -3197,7 +3357,7 @@ void equationDialog::dblNormCasal()
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     ascendSeries = new QLineSeries(cht);
     ascendSeries->setPen(QPen(QBrush(Qt::green), 2));
@@ -3308,7 +3468,7 @@ void equationDialog::dblNormal()
     showBins(true);
     showJoins(2);
 
-    resetChart();
+//    resetChart();
 
     join1Series = new QLineSeries(cht);
     join1Series->setPen(QPen(QBrush(Qt::darkYellow), 2));
@@ -3407,7 +3567,7 @@ void equationDialog::dblNormPlateau()
     showBins(true);
     showJoins(2);
 
-    resetChart();
+//    resetChart();
 
     updateDblNormPlateau();
 }
@@ -3527,6 +3687,10 @@ void equationDialog::updateDblNormPlateau()
     }
 }
 
+// 20 #age selectivity: double normal with plateau
+// case 23 size selectivity double_normal_plateau where final value can be greater than 1.0
+// case 24 size selectivity using double_normal_plateau and lots of bells and whistles
+// selex 20, 23, 24
 void equationDialog::dblNormEndpts()
 {
     disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
@@ -3570,7 +3734,7 @@ void equationDialog::dblNormEndpts()
     showBins(true);
     showJoins(2);
 
-    resetChart();
+//    resetChart();
 
     join1Series = new QLineSeries(cht);
     join1Series->setPen(QPen(QBrush(Qt::darkYellow), 2));
@@ -3696,6 +3860,15 @@ void equationDialog::updateDblNormEndpts()
     }
 }
 
+// case 25 size selectivity using exponential-logistic
+// 26 #age selectivity: exponential logistic
+/* peak = len_bins_m(1) + sp(2)*(len_bins_m(nlength)-len_bins_m(1));
+   for (j=1;j<=nlength;j++)
+   {
+     sel(j) = mfexp(sp(3)*sp(1)*(peak-len_bins_m(j)))/
+              (1.0-sp(3)*(1.0-mfexp(sp(1)*(peak-len_bins_m(j)))));
+   }
+*/
 void equationDialog::expLogistic()
 {
     setTitle(QString("Pattern %1: Exponential-Logistic").arg(
@@ -3716,7 +3889,7 @@ void equationDialog::expLogistic()
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
@@ -3765,9 +3938,10 @@ float equationDialog::logist(double value)
     return (1./(1. + temp));
 }
 
+// 14 #age selectivity - separate parm for each age
 void equationDialog::eachAge ()
 {
-    setTitle(QString("Pattern %1: Value for each age").arg(
+    setTitle(QString("Pattern %1: Revise Age").arg(
                  QString::number(equationNum)));
 /*    binMin = xValList.at(0);
     binMax = binMin + (binWidth * selex->getNumAges());
@@ -3779,7 +3953,7 @@ void equationDialog::eachAge ()
     showJoins(0);
     setParameterHeaders();
 
-    resetChart();
+//    resetChart();
     connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
     ascendSeries = new QLineSeries(cht);
@@ -3836,7 +4010,14 @@ void equationDialog::updateEachAge ()
 
     for (int i = 0; i < firstPoints.count(); i++)
     {
-        parm = firstPoints.at(i + 1).y();
+        if (i < firstPoints.count() - 1)
+        {
+            parm = firstPoints.at(i + 1).y();
+        }
+        else
+        {
+            parm = firstPoints.at(i).y();
+        }
         if (parm > -999)
         {
             asc = (parm + temp);
@@ -3850,6 +4031,8 @@ void equationDialog::updateEachAge ()
     axisYalt->setRange(min, max);
 }
 
+// 17 #age selectivity: each age has parameter as random walk
+//    transformation is selex=exp(parm); some special codes
 void equationDialog::randomWalk (float scale)
 {
     setTitle(QString("Pattern %1: Random Walk").arg(
@@ -3860,7 +4043,7 @@ void equationDialog::randomWalk (float scale)
     showJoins(0);
     setParameterHeaders();
 
-    resetChart();
+//    resetChart();
     connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
     ascendSeries = new QLineSeries(cht);
@@ -3989,6 +4172,7 @@ void equationDialog::updateRandomWalk (float scale)
     }
 }
 
+// case 16 Coleraine - Gaussian age selectivity
 void equationDialog::coleGauss ()
 {
     setTitle(QString("Pattern %1: Coleraine single Gaussian").arg(
@@ -4007,7 +4191,7 @@ void equationDialog::coleGauss ()
     showBins(true);
     showJoins(0);
 
-    resetChart();
+//    resetChart();
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
@@ -4018,6 +4202,20 @@ void equationDialog::coleGauss ()
         updateColeGauss();
 }
 
+// Coleraine - Gaussian
+/*  t1 = 1/(1+mfexp(-sp(1)))*nages;
+    for (a=0;a<=nages;a++)
+    {
+      if(a<t1)
+      {
+        sel_a(y,fs,1,a) = mfexp(-square(r_ages(a)-t1)/mfexp(sp(2)));
+      }
+      else
+      {
+        sel_a(y,fs,1,a)=1.0;
+      }
+    }
+ */
 void equationDialog::updateColeGauss()
 {
     int i;
@@ -4045,6 +4243,11 @@ void equationDialog::updateColeGauss()
     }
 }
 
+// case 27 size selectivity using cubic spline
+//  first N parameters are the spline knots; second N parameters are ln(selex) at the knot
+//  scaled by max(raw vector) to achieve scale to 1.0
+// case 42 size and selectivity using cubic spline
+//  scaled by average of values at low bin through high bin
 void equationDialog::cubicSpline(float scale)
 {
     int num = parameters->rowCount();
@@ -4053,11 +4256,11 @@ void equationDialog::cubicSpline(float scale)
     {
         num -= 5;
         showSliders(5);
-        max1Changed(xValList.count()); min1Changed(2);
+/*        max1Changed(xValList.count()); min1Changed(2);
         max2Changed(xValList.count()); min2Changed(1);
         max3Changed(2); min3Changed(0);
         max4Changed(1); min4Changed(-.001);
-        max5Changed(.001); min5Changed(-1.0);
+        max5Changed(.001); min5Changed(-1.0);*/
         ui->label_1_name->setText("ScaleLo");
         ui->label_1_type->setText("Value");
         ui->label_2_name->setText("ScaleHi");
@@ -4073,9 +4276,9 @@ void equationDialog::cubicSpline(float scale)
     {
         num -= 3;
         showSliders(3);
-        max1Changed(2); min1Changed(0);
+/*        max1Changed(2); min1Changed(0);
         max2Changed(1); min2Changed(-.001);
-        max3Changed(.001); min3Changed(-1.0);
+        max3Changed(.001); min3Changed(-1.0);*/
         ui->label_1_name->setText("Setup");
         ui->label_1_type->setText("Value");
         ui->label_2_name->setText("GradLo");
@@ -4091,7 +4294,7 @@ void equationDialog::cubicSpline(float scale)
     showBins(true);
     showJoins(0);
 
-    resetChart();
+ //   resetChart();
     connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
@@ -4253,6 +4456,334 @@ void equationDialog::updateCubicSpline(float scale)
     }
 }
 
+// 44 like age selex 17 but with separate parameters for males and with revised controls
+void equationDialog::twoSexRandomWalk()
+{
+    setTitle(QString("Pattern %1: Random Walk - female/male").arg(
+                 QString::number(equationNum)));
+
+    showSliders(genders + 2);
+    showBins(true);
+    showJoins(0);
+    setParameterHeaders();
+
+//    resetChart();
+    connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+
+    // female ln(selex)
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(ascendSeries);
+
+    // male ln(selex)
+    dscendSeries = new QLineSeries(cht);
+    dscendSeries->setPen(QPen(QBrush(Qt::green), 3));
+    cht->addSeries(dscendSeries);
+
+    // female selex
+    selSeries->setPen(QPen(QBrush(Qt::red), 3));
+    cht->addSeries(selSeries);
+    cht->setAxisX(axisXsel, selSeries);
+    cht->setAxisY(axisY, selSeries);
+
+    // male selex
+    join3Series = new QLineSeries(cht);
+    join3Series->setPen(QPen(QBrush(Qt::magenta), 3));
+    cht->addSeries(join3Series);
+    cht->setAxisX(axisXsel, join3Series);
+    cht->setAxisY(axisY, join3Series);
+
+    axisY->setTitleText("Selex (red)");
+
+    axisYalt->setTitleText("Use Parm (blue)");
+    cht->addAxis(axisYalt, Qt::AlignRight);
+    ascendSeries->attachAxis(axisXsel);
+    ascendSeries->attachAxis(axisYalt);
+
+    updateTwoSexRandom();
+}
+
+void equationDialog::updateTwoSexRandom()
+{
+    float useparm = 0.;
+    float sel = 0.;
+    float parm = 0.;
+    float cumparm = 0;
+    float temp = 0, mean = 0, max = 0;
+    QList<float> parms;
+//    int age = binMin;
+    int lastage = binMax;
+    int lastageIndex = xValList.count() - 1;
+    int minAge = QString(parameters->getRowData(0).at(2)).toInt();
+    int maxAge = QString(parameters->getRowData(1).at(2)).toInt();
+    ascendSeries->clear();
+    selSeries->clear();
+    firstPoints.clear();
+
+    if (special != 0)
+        lastage = abs(special);
+    for (int i = 0; i < xValList.count(); i++) {
+        if (xValList.at(i) > lastage) {
+            lastageIndex = i - 1;
+            break;
+        }
+    }
+
+    parm = QString(parameters->getRowData(0).at(2)).toFloat();
+    if (parm == -1000)
+    {
+        parm = 0.0;
+    }
+    cumparm = useparm = parm;
+    if (xValList.count() > 0)
+    {
+    selSeries->append(QPointF(xValList.at(0), parm));
+
+    parms.append(parm);
+    ascendSeries->append(QPointF(xValList.at(0), useparm));
+    firstPoints.append(QPointF(xValList.at(0), cumparm));
+
+    for (int i = 1; i <= lastageIndex; i++)
+    {
+        parm = QString(parameters->getRowData(i).at(2)).toFloat();
+        parms.append(parm);
+        if (parms[i] > -999)
+            useparm = parms[i];
+        if (fabs(useparm) > max)
+            max = fabs(useparm);
+        ascendSeries->append(QPointF(xValList.at(i), useparm));
+        cumparm += useparm;
+        firstPoints.append(QPointF(xValList.at(i), cumparm));
+    }
+    axisYalt->setRange(-max, max);
+
+    {
+        int low_bin;
+        int high_bin;
+        float total = 0;
+        if (minAge < 0)
+        {
+            minAge = 0;
+        }
+        if (maxAge > binMax)
+        {
+            maxAge = binMax;
+        }
+        if (maxAge < minAge)
+            maxAge = minAge;
+        if (minAge > maxAge)
+            minAge = maxAge;
+
+        low_bin = xValList.indexOf(minAge);
+        high_bin = xValList.indexOf(maxAge);
+//        sp(1) = low_bin;
+//        sp(2) = high_bin;
+//        temp = mean(tempvec_a(low_bin,high_bin));
+
+        for (int i = low_bin; i <= high_bin; i++)
+            total += firstPoints.at(i).y();
+        temp = total / (high_bin - low_bin + 1);
+    }
+
+    for (int i = 1; i < firstPoints.count(); i++)
+    {
+        int next = i + 1;
+        if ((next < parms.count()) && (parms.at(next) == -1000))
+            sel = 0.0;
+        else
+            sel = exp(firstPoints.at(i).y() - temp);
+        selSeries->append(QPointF(xValList.at(i), sel));
+    }
+
+    for (int i = firstPoints.count(); i < xValList.count(); i++)
+    {
+        if (special > 0)
+            selSeries->append(QPointF(xValList.at(i), selSeries->points().at(i-1).y()));
+        else
+            selSeries->append(QPointF(xValList.at(i), 0.0));
+    }
+    }
+}
+
+// 45 similar to selex 14 but with separate parameters for males and with revised controls
+void equationDialog::twoSexEachAge()
+{
+    setTitle(QString("Pattern %1: Revise Age - female/male").arg(
+                 QString::number(equationNum)));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    max1Changed(xValList.last());
+    min1Changed(xValList.first());
+    max2Changed(xValList.last());
+    min2Changed(xValList.first());
+    max3Changed(xValList.last());
+    min3Changed(xValList.first());
+    max4Changed(2.0);
+    min4Changed(-1.0);
+    connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
+    ui->label_1_name->setText("First age non-zero");
+    ui->label_1_type->setText("Value");
+    ui->label_2_name->setText("First age peak");
+    ui->label_2_type->setText("Value");
+    ui->label_3_name->setText("Last age peak");
+    ui->label_3_type->setText("Value");
+    ui->label_4_name->setText("Male ln(ratio)");
+    ui->label_4_type->setText("Value");
+    showSliders(genders + 2);
+    showBins(true);
+    showJoins(0);
+    setParameterHeaders();
+
+//    resetChart();
+    connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+
+    // female ln(selex)
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(ascendSeries);
+
+    // female selex
+    selSeries->setPen(QPen(QBrush(Qt::red), 3));
+    cht->addSeries(selSeries);
+    cht->setAxisX(axisXsel, selSeries);
+    cht->setAxisY(axisY, selSeries);
+
+    // male ln(selex)
+    dscendSeries = new QLineSeries(cht);
+    dscendSeries->setPen(QPen(QBrush(Qt::green), 3));
+    cht->addSeries(dscendSeries);
+
+    // male selex
+    join3Series = new QLineSeries(cht);
+    join3Series->setPen(QPen(QBrush(Qt::magenta), 3));
+    cht->addSeries(join3Series);
+    cht->setAxisX(axisXsel, join3Series);
+    cht->setAxisY(axisY, join3Series);
+
+    axisY->setTitleText("Selex (red)");
+
+    axisYalt->setTitleText("Parm val (blue)");
+    cht->addAxis(axisYalt, Qt::AlignRight);
+    ascendSeries->attachAxis(axisXsel);
+    ascendSeries->attachAxis(axisYalt);
+
+    updateTwoSexEachAge();
+}
+
+void equationDialog::updateTwoSexEachAge()
+{
+    float parmfm = 0.;
+    float parmml = 0.;
+    float temp = 0.;
+    float sel = 0.;
+    float max = 0, min = 0;
+    float age = binMin + binMidWidth * binWidth;
+    int firstage = 0, lastage = xValList.last();
+    int i, j, minbin, maxbin;
+    int offset = genders + 2;
+    int maleoffset = offset + special;
+    int endoffset = maleoffset + special;
+    float par;
+    float par1 = ui->doubleSpinBox_1_value->value();
+    float par2 = ui->doubleSpinBox_2_value->value();
+    float par3 = ui->doubleSpinBox_3_value->value();
+    float mlratio = 0;
+    if (genders > 1)
+        mlratio = ui->doubleSpinBox_4_value->value();
+    QString msg("");
+
+    firstPoints.clear();
+    ascendSeries->clear();
+    selSeries->clear();
+    dscendSeries->clear();
+    join3Series->clear();
+
+    firstage = par1;
+    if (par2 > par3)
+    {
+        minbin = par3;
+        maxbin = par2;
+    }
+    else
+    {
+        minbin = par2;
+        maxbin = par3;
+    }
+    if (firstage > 0)
+    {
+        ascendSeries->append(QPointF(xValList.first(), 0.0));
+    }
+    if (firstage > 1)
+    {
+        ascendSeries->append(QPointF(xValList.at(firstage - 1), 0.0));
+    }
+    for (i = firstage, j = offset; j < maleoffset; i++, j++)
+    {
+        par = QString(parameters->getRowData(j).at(2)).toFloat();
+        if (par != -999)
+            parmfm = par;
+        ascendSeries->append(QPointF(xValList.at(i), parmfm));
+    }
+    for (; i < xValList.count(); i++)
+    {
+        ascendSeries->append(QPointF(xValList.at(i), parmfm));
+    }
+    min = minYvalue(ascendSeries->points());
+    max = maxYvalue(ascendSeries->points());
+    axisYalt->setRange(min, max);
+
+    // female selex
+    firstPoints.clear();
+    fillValues(ascendSeries->points(), xValList, firstPoints);
+    selSeries->append(firstPoints);
+
+    temp = 8. - aveYvalue(firstPoints, minbin, maxbin);
+    sel = 0.;
+
+    for (int i = 0; i < firstPoints.count(); i++)
+    {
+        sel = logist(firstPoints.at(i).y() + temp);
+        selSeries->append(QPointF(firstPoints.at(i).x(), sel));
+    }
+    if (genders > 1)
+    {
+        if (firstage > 0)
+        {
+            dscendSeries->append(QPointF(xValList.first(), 0.0));
+        }
+        if (firstage > 1)
+        {
+            dscendSeries->append(QPointF(xValList.at(firstage - 1), 0.0));
+        }
+        for (i = firstage, j = offset; j < maleoffset; i++, j++)
+        {
+            par = QString(parameters->getRowData(j + special).at(2)).toFloat();
+            if (par == -1000)
+                parmml = QPointF(ascendSeries->points().at(i)).x();
+            else if (par != -999)
+                parmml = par;
+            dscendSeries->append(QPointF(xValList.at(i), parmml));
+        }
+        for (; i < xValList.count(); i++)
+        {
+            dscendSeries->append(QPointF(xValList.at(i), parmml));
+        }
+
+        // male selex
+        firstPoints.clear();
+        fillValues(dscendSeries->points(), xValList, firstPoints);
+        selSeries->append(firstPoints);
+
+        temp = 8. - aveYvalue(firstPoints, minbin, maxbin);
+        sel = 0.;
+
+        for (int i = 0; i < firstPoints.count(); i++)
+        {
+            sel = logist(firstPoints.at(i).y() + temp);
+            join3Series->append(QPointF(firstPoints.at(i).x(), sel));
+        }
+    }
+}
+
 /** Returns the minimum x-value of a point list */
 float equationDialog::minXvalue(const QList<QPointF> &pointlist)
 {
@@ -4324,4 +4855,28 @@ float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int 
         value += pointlist.at(i).y();
     }
     return (value / i);
+}
+
+void equationDialog::fillValues(const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints)
+{
+    int i = 0, j =0;
+    float yVal = 0;
+
+    while (xvals.at(j) < fewpoints.at(0).x())
+    {
+        yVal = 0.0;
+        fullpoints.append(QPointF(xvals.at(j++), yVal));
+    }
+    for (i = 0; i < fewpoints.count(); i++)
+    {
+        while (j < xvals.count() && xvals.at(j) < fewpoints.at(i+1).x())
+        {
+            yVal = evaluateLine(fewpoints.at(i), fewpoints.at(i+1), xvals.at(j));
+            fullpoints.append(QPointF(xvals.at(j++), yVal));
+        }
+    }
+    for (; j < xvals.count(); j++)
+    {
+        fullpoints.append(QPointF(xvals.at(j), yVal));
+    }
 }

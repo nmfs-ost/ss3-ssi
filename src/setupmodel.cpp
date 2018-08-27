@@ -134,7 +134,6 @@ void setupModel::updateValues()
     }
     if (changed)
     {
-
         emit dataChanged(valuesList);
     }
 }

@@ -9,6 +9,7 @@ selectivity::selectivity(ss_model *model, int method)
 //    male = 0;
 //    special = 0;
 
+    numXvals = 0;
     numAges = 0;
 //    equation = NULL;
     setup = new setupModel();
@@ -97,9 +98,6 @@ QString selectivity::getSetupText()
 
 void selectivity::setMethod(int method)
 {
-/*    if (equation != NULL)
-        delete equation;
-    equation = NULL;*/
     QStringList parm;
     int numparam = getNumParameters();
     int pattn = setup->getValue(0);
@@ -107,15 +105,16 @@ void selectivity::setMethod(int method)
     int i, j;
     if (method == pattn)
     {
-        emit startingSetupChanges();
+        setDefaultParams(method, special);
+/*        emit startingSetupChanges();
         switch (method)
         {
-        case 0: // selectivity = 1 for all
+        case 0: // case 0 constant size selectivity = 1.0
         case 10:
             setNumParameters(0);
 //            equation = new none();
             break;
-        case 1:  // Simple logistic with 2 parameters
+        case 1:  // case 1 logistic size selectivity
         case 12:
             if (parameters->getNumParams() != 2)
             {
@@ -129,29 +128,25 @@ void selectivity::setMethod(int method)
             }
 //            equation = new simple_logistic();
             break;
-        case 2:  // discontinued
+        case 2:  // case 2 discontinued; use pattern 8 for double logistic (size)
             setPattern(8);
             break;
-        case 3:  // discontinued
+        case 3:  // case 3 discontinued
             setPattern(0);
             break;
-        case 4:  // discontinued
+        case 4:  // case 4 discontinued; use pattern 30 to get spawning biomass
             setPattern(30);
             break;
-        case 5:
-            if (parameters->getNumParams() != 2)
-            {
+        case 5: // case 5 mirror another fleet size selectivity for specified bin range
             setNumParameters(2);
             parm << "-1" << "25" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             setParameter(1, parm);
-            }
-//            equation = new mirror_range();
             break;
-        case 6:   // linear segments
-            if (special < 2)
+        case 6: // case 6 non-parametric size selex pattern
+            if (special < 3)
             {
-                special = 2;
+                special = 3;
                 setup->setValue(3, special);
             }
 //            numparam = getNumParameters();
@@ -168,11 +163,11 @@ void selectivity::setMethod(int method)
                 setParameter(i, parm);
 //            equation = new linear_segments();
             break;
-        case 7:
+        case 7:  // case 7 discontinued; use pattern 8 for double logistic
             setPattern(8);
             break;
         case 8:
-        case 18:
+        case 18: // 18 #age selectivity: double logistic with smooth transition
             if (parameters->getNumParams() != 8)
             {
             setNumParameters(8);
@@ -198,7 +193,7 @@ void selectivity::setMethod(int method)
             setParameter(7, parm);
 //            equation = new double_logistic();
             break;
-        case 9:
+        case 9:  // case 9 old double logistic with 4 parameters
         case 19:
             if (parameters->getNumParams() != 6)
             {
@@ -265,11 +260,11 @@ void selectivity::setMethod(int method)
                 setParameter(i, parm);
 //            equation = new each_age();
             break;
-        case 15:
+        case 15: // case 15 mirror another fleet size selectivity for all size bins
             setNumParameters(0);
 //            equation = new mirror();
             break;
-        case 16:
+        case 16: // 16 #age selectivity: Coleraine - Gaussian
             if (parameters->getNumParams() != 2)
             {
             setNumParameters(2);
@@ -296,7 +291,7 @@ void selectivity::setMethod(int method)
 //            equation = new random_walk();
             break;
         case 20:
-        case 23:
+        case 23: // case 23 size selectivity double_normal_plateau where final value can be greater than 1.0
         case 24:
             if (parameters->getNumParams() != 6)
             {
@@ -337,7 +332,7 @@ void selectivity::setMethod(int method)
             setParameter(3, parm);
 //            equation = new double_normal_plateau();
             break;
-        case 25:
+        case 25: // case 25 size selectivity using exponential-logistic
         case 26:
             if (parameters->getNumParams() != 3)
             {
@@ -445,18 +440,15 @@ void selectivity::setMethod(int method)
             for (i = 0; i < special; i++, index++)
                 setParameter(index, parm);
             break;
-        case 43:
+        case 43: // case 43 non-parametric size selex scaled by average of values from low bin through high bin
             if (special < 2)
             {
                 special = 2;
+                setup->setValue(3, special);
             }
-            setup->setValue(3, special);
             //setSpecial(special);
             numparam = special + 2 + 2;
-            if (parameters->getNumParams() != numparam)
-            {
             setNumParameters(numparam);
-            }
             parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm[2] = QString("10");
@@ -467,20 +459,17 @@ void selectivity::setMethod(int method)
             setParameter(3, parm);
             parm.clear();
             parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (i = 4; i < getNumParameters(); i++)
+            for (i = 4; i < numparam; i++)
                 setParameter(i, parm);
             break;
         case 44:
             if (special < 1)
             {
                 special = 1;
+                setup->setValue(3, special);
             }
-            setup->setValue(3, special);
-            numparam = (special * 2) + 4;
-            if (parameters->getNumParams() != numparam)
-            {
-                setNumParameters(numparam);
-            }
+            numparam = (special * numGenders) + 4;
+            setNumParameters(numparam);
             parm << "0" << QString::number(numAges) << "0" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             setParameter(0, parm);
             parm[2] = QString("2");
@@ -493,10 +482,13 @@ void selectivity::setMethod(int method)
             parm << "-10" << "10" << "3" << "3" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             for (i = 4, j = 0; j < special; i++, j++)
                 setParameter(i, parm);
-            parm.clear();
-            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (j = 0; j < special; i++, j++)
-                setParameter(i, parm);
+            if (numGenders > 1)
+            {
+                parm.clear();
+                parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                for (j = 0; j < special; i++, j++)
+                    setParameter(i, parm);
+            }
             break;
         case 45:
             if (special < 1)
@@ -504,7 +496,7 @@ void selectivity::setMethod(int method)
                 special = 1;
             }
             setup->setValue(3, special);
-            numparam = (special * 2) + 4;
+            numparam = (special * numGenders) + 4;
             if (parameters->getNumParams() != numparam)
             {
                 setNumParameters(numparam);
@@ -521,54 +513,61 @@ void selectivity::setMethod(int method)
             parm << "-10" << "10" << "-5.0" << "-5.0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
             for (i = 4, j = 0; j < special; i++, j++)
                 setParameter(i, parm);
-            parm.clear();
-            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (j = 0; j < special; i++, j++)
-                setParameter(i, parm);
+            if (numGenders > 1)
+            {
+                parm.clear();
+                parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                for (j = 0; j < special; i++, j++)
+                    setParameter(i, parm);
+            }
             break;
         default:
             setPattern(0);
         }
+        emit setupChanged(setup->getData());*/
     }
     else
     {
         setPattern (method);
     }
-    emit setupChanged(setup->getData());
 }
 
+void selectivity::setNumXvals(int num)
+{
+    numXvals = num;
+    setDefaultParams(getPattern(), getSpecial());
+}
 
 
 void selectivity::setPattern(int value)
 {
     if (setup->getValue(0) != value)
     {
-//        emit startingSetupChanges();
         setup->setValue(0, value);
-    //    pattern = value;
         setMethod(value);
-//        emit setupChanged(getSetup());
-//        emit dataChanged();
     }
 }
 
-void selectivity::setDefaultParams(int method, int num)
+void selectivity::setDefaultParams(int method, int special)
 {
     int numparam;
     QStringList parm;
-    int special = setup->getValue(3);
     int i, j;
+    float val;
 
     emit startingSetupChanges();
     switch (method)
     {
-    case 0: // selectivity = 1 for all
-    case 10:
+    case 0:  // case 0 constant size selectivity = 1.0
+    case 10: // case 10 Constant age-specific selex for ages 1 to nages
+    {
         setNumParameters(0);
         break;
-
-    case 1:  // Simple logistic with 2 parameters
+    }
+    case 1:  // case 1 logistic size selectivity
     case 12:
+    {
+        setNumParameters(2);
         parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[0] = QString("-50");
@@ -576,26 +575,40 @@ void selectivity::setDefaultParams(int method, int num)
         parm[2] = QString("0");
         setParameter(1, parm);
         break;
-
-    case 5:  // mirror other fleet selectivity with bounds
-        if (num != 2)
-        {
-            setNumParameters(2);
-        }
+    }
+    case 2:  // case 2 discontinued; use pattern 8 for double logistic (size)
+    {
+        setPattern(8);
+        break;
+    }
+    case 3:  // case 3 discontinued
+    {
+        setPattern(0);
+        break;
+    }
+    case 4:  // case 4 discontinued; use pattern 30 to get spawning biomass
+    {
+        setPattern(30);
+        break;
+    }
+    case 5:  // case 5 mirror another fleets size selectivity for specified bin range
+    {
+        setNumParameters(2);
         parm << "-1" << "25" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         setParameter(1, parm);
         break;
-
-    case 6:
-        if (special < 2)
+    }
+    case 6:  // case 6 non-parametric size selex pattern
+    {
+        if (special < 3)
         {
-            special = 2;
+            special = 3;
             setup->setValue(3, special);
         }
         numparam = 2 + special;
-        if (num < numparam)
-            setNumParameters(numparam);
+        setNumParameters(numparam);
+
         parm << "0" << "25" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("20");
@@ -606,13 +619,17 @@ void selectivity::setDefaultParams(int method, int num)
             setParameter(i, parm);
         setSpecial(special);
         break;
-
-    case 8:
-    case 18: // new double logistic
-        if (num != 8)
-        {
-            setNumParameters(8);
-        }
+    }
+    case 7:  // case 7 discontinued; use pattern 8 for double logistic
+    {
+        setPattern(8);
+        break;
+    }
+    case 8:  // case 8 double logistic with eight parameters
+    case 18: // 18 #age selectivity: double logistic with smooth transition
+        // 1=peak, 2=init, 3=infl, 4=slope, 5=final, 6=infl2, 7=slope2 8=binwidth;    Mirror=1===const_above_Linf
+    {
+        setNumParameters(8);
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -633,13 +650,11 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "1" << "20" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
-
-    case 9:
-    case 19:  // simple double logistic
-        if (num != 6)
-        {
-            setNumParameters(6);
-        }
+    }
+    case 9:  // case 9 old double logistic with six parameters
+    case 19: // simple double logistic
+    {
+        setNumParameters(6);
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         setParameter(2, parm);
@@ -652,23 +667,19 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-1" << "0" << "-.01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         break;
-
-    case 11:  // constant with range
-        if (num != 2)
-        {
-            setNumParameters(2);
-        }
+    }
+    case 11:  // case 11 Constant age-specific selex for specified age range
+    {
+        setNumParameters(2);
         parm << "0" << "25" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("25");
         setParameter(1, parm);
         break;
-
+    }
     case 13:  // double logistic
-        if (num != 8)
-        {
-            setNumParameters(8);
-        }
+    {
+        setNumParameters(8);
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -689,40 +700,37 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "1" << "20" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
-
-    case 14:  // value at each age
+    }
+    case 14:  // case 14 separate parm for each age
+    {
         numparam = numAges + 1;
-        if (parameters->getNumParams() != numparam)
-        {
-            setNumParameters(numparam);
-        }
+        setNumParameters(numparam);
+
         parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (int i = 0; i < numparam; i++)
             setParameter(i, parm);
         break;
-
-    case 15:  // mirror with no bounds
+    }
+    case 15:  // case 15 mirror another fleets size selectivity for all size bins
+    {
         setNumParameters(0);
         break;
-
-    case 16:  // coleraine
-        if (num != 2)
-        {
-            setNumParameters(2);
-        }
+    }
+    case 16:  // case 16 Coleraine - Gaussian age selectivity
+    {
+        setNumParameters(2);
         parm << "-5" << "5" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
         parm << "-5" << "40" << "20" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         break;
-
-    case 17:  // random walk
+    }
+    case 17:  // 17 #age selectivity: each age has parameter as random walk
+        //    transformation as selex=exp(parm); some special codes
+    {
         numparam = numAges + 1;
-        if (num != 2)
-        {
-            setNumParameters(numparam);
-        }
+        setNumParameters(numparam);
         parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -730,14 +738,39 @@ void selectivity::setDefaultParams(int method, int num)
         for (i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
-
-    case 20:
-    case 23:
-    case 24:  // double normal with plateau and defined ends
-        if (num != 6)
+    }
+    case 21: // case 21 non-parametric size selectivity
+        /*  N points; where the first N parameters is vector of sizes for the line segment ends
+           and second N parameters is selectivity at that size (no transformations) */
+    {
+        if (special < 2)
         {
-            setNumParameters(6);
+            special = 2;
+            setup->setValue(3, special);
         }
+        numparam = special * 2;
+        setNumParameters(numparam);
+        val = (float)numXvals / special;
+        parm.clear();
+        parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (i = 0; i < special; i++)
+        {
+            parm[2] = QString::number(1.0 + i * val);
+            setParameter(i, parm);
+        }
+        parm.clear();
+        parm << "0" << "1" << "1.0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        for (; i < numparam; i++)
+        {
+            setParameter(i, parm);
+        }
+        break;
+    }
+    case 20: // 20 #age selectivity: double normal with plateau
+    case 23: // case 23 size selectivity double_normal_plateau where final value can be greater than 1.0
+    case 24: // double normal with plateau and defined ends
+    {
+        setNumParameters(6);
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -756,12 +789,10 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(5, parm);
         break;
-
-    case 22:  // double normal with plateau
-        if (num != 4)
-        {
-            setNumParameters(4);
-        }
+    }
+    case 22:  // case 22 size selectivity using double_normal_plateau (similar to CASAL)
+    {
+        setNumParameters(4);
         parm << "0" << "25" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -772,13 +803,11 @@ void selectivity::setDefaultParams(int method, int num)
         setParameter(2, parm);
         setParameter(3, parm);
         break;
-
-    case 25:
-    case 26:  // exponential-logistic
-        if (parameters->getNumParams() != 3)
-        {
-            setNumParameters(3);
-        }
+    }
+    case 25: // case 25 size selectivity using exponential-logistic
+    case 26: // 26 #age selectivity: exponential logistic
+    {
+        setNumParameters(3);
         parm << ".02" << "2" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -788,9 +817,13 @@ void selectivity::setDefaultParams(int method, int num)
         parm << ".001" << ".5" << ".1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         break;
-
-    case 27:  // cubic spline
+    }
+    case 27:  // case 27 size selectivity using cubic spline
+    {
         int index;
+        float val;
+        float xval1 = 1;
+        float xval20 = 20;
         if (special < 3)
         {
             special = 3;
@@ -798,10 +831,16 @@ void selectivity::setDefaultParams(int method, int num)
         }
         //setSpecial(special);
         numparam = special * 2 + 3;
-        if (parameters->getNumParams() != numparam)
-        {
-            setNumParameters(numparam);
+        if (xVals.isEmpty()) {
+            val = 21.0 / (float)special;
+        } else {
+            xval1 = xVals.first();
+            xval20 = xVals.last();
+            numXvals = xVals.count();
+            val = xVals.at(numXvals - 2) - xVals.at(1);
+            val /= (float)special; //(float)19 / special;
         }
+        setNumParameters(numparam);
         parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
@@ -811,31 +850,37 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-1" << ".001" << "-.03" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm.clear();
-        parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << QString::number(xval1) << QString::number(xval20) << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         index = 3;
-        for (i = 0; i < special; i++, index++)
-            setParameter(index, parm);
+        for (i = 0; i < special; i++)
+        {
+            parm[2] = QString::number(xVals.at(1) + ((float)val * (i + 1)));
+            setParameter(index++, parm);
+        }
         parm.clear();
         parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 0; i < special; i++)
-            setParameter(index, parm);
+            setParameter(index++, parm);
         break;
-
+    }
     case 30:  // equal to spawning biomass
     case 31:  // equal to exp(recruitment dev)
     case 32:  // equal to exp(rec dev) * spawn biomass
     case 33:  // expected survey abund = age 0 recruitment
     case 34:  // spawning biomass depletion (B/B0)
+    {
         setNumParameters(0);
         break;
-
-    case 41:
-        numparam = numAges + 1 + 2;
+    }
+    case 41: // case 41 each age has parameter as random walk scaled by average of values at low age through high age
+        //    transformation as selex=exp(parm); some special codes
+    {
+        numparam = numXvals + 1 + 2;
         if (parameters->getNumParams() != numparam)
         {
             setNumParameters(numparam);
         }
-        parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << QString::number(numXvals) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("10");
         setParameter(1, parm);
@@ -847,19 +892,28 @@ void selectivity::setDefaultParams(int method, int num)
         for (i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
-
-    case 42:
+    }
+    case 42: // case 42 size selectivity using cubic spline scaled by average of values at low bin through high bin
+    {
+        int index = 0;
+        float xval1 = 1, xval20 = 20;
         if (special < 3)
         {
             special = 3;
             setup->setValue(3, special);
         }
         numparam = special * 2 + 3 + 2;
-        if (parameters->getNumParams() != numparam)
-        {
-            setNumParameters(numparam);
+        if (xVals.isEmpty()) {
+            val = 21.0 / (float)special;
+        } else {
+            xval1 = xVals.first();
+            xval20 = xVals.last();
+            numXvals = xVals.count();
+            val = xVals.at(numXvals - 2) - xVals.at(1);
+            val /= (float)special; //(float)19 / special;
         }
-        parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setNumParameters(numparam);
+        parm << "1" << QString::number(numXvals) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("10");
         setParameter(1, parm);
@@ -872,28 +926,30 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-1" << ".001" << "-.03" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(4, parm);
         parm.clear();
-        parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << QString::number(xval1) << QString::number(xval20) << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         index = 5;
-        for (i = 0; i < special; i++, index++)
-            setParameter(index, parm);
+        for (i = 0; i < special; i++)
+        {
+            parm[2] = QString::number(xVals.at(1) + ((float)val * (i + 1)));
+            setParameter(index++, parm);
+        }
         parm.clear();
         parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 0; i < special; i++)
-            setParameter(index, parm);
+            setParameter(index++, parm);
         break;
-
-    case 43:
-        if (special < 2)
+    }
+    case 43: // case 43 non-parametric size selex scaled by average of values from low bin through high bin
+    {
+        if (special < 3)
         {
-            special = 2;
+            special = 3;
             setup->setValue(3, special);
         }
         numparam = special + 2 + 2;
-        if (parameters->getNumParams() != numparam)
-        {
-            setNumParameters(numparam);
-        }
-        parm << "1" << QString::number(numAges) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setNumParameters(numparam);
+
+        parm << "1" << QString::number(numXvals) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("10");
         setParameter(1, parm);
@@ -906,19 +962,17 @@ void selectivity::setDefaultParams(int method, int num)
         for (i = 4; i < getNumParameters(); i++)
             setParameter(i, parm);
         break;
-
-    case 44:
+    }
+    case 44: // case 44 like age selex 17 but with separate parameters for males and with revised controls
+    {
         if (special < 1)
         {
             special = 1;
             setup->setValue(3, special);
         }
-        numparam = (special * 2) + 4;
-        if (parameters->getNumParams() != numparam)
-        {
-            setNumParameters(numparam);
-        }
-        parm << "0" << QString::number(numAges) << "0" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        numparam = (special * numGenders) + 4;
+        setNumParameters(numparam);
+        parm << "0" << QString::number(numXvals) << "0" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("2");
         setParameter(1, parm);
@@ -930,24 +984,28 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-10" << "10" << "3" << "3" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 4, j = 0; j < special; i++, j++)
             setParameter(i, parm);
-        parm.clear();
-        parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (j = 0; j < special; i++, j++)
-            setParameter(i, parm);
+        if (numGenders > 1)
+        {
+            parm.clear();
+            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (j = 0; j < special; i++, j++)
+                setParameter(i, parm);
+        }
         break;
-
-    case 45:
+    }
+    case 45: // 45 like age selex 14 but with separate parameters for males and with revised controls
+    {
         if (special < 1)
         {
             special = 1;
-            setup->setValue(3, special);
         }
-        numparam = (special * 2) + 4;
+        setup->setValue(3, special);
+        numparam = (special * numGenders) + 4;
         if (parameters->getNumParams() != numparam)
         {
             setNumParameters(numparam);
         }
-        parm << "1" << QString::number(numAges) << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << QString::number(numXvals) << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("5");
         setParameter(1, parm);
@@ -959,17 +1017,46 @@ void selectivity::setDefaultParams(int method, int num)
         parm << "-10" << "10" << "-5.0" << "-5.0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 4, j = 0; j < special; i++, j++)
             setParameter(i, parm);
-        parm.clear();
-        parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (j = 0; j < special; i++, j++)
-            setParameter(i, parm);
+        if (numGenders > 1)
+        {
+            parm.clear();
+            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (j = 0; j < special; i++, j++)
+                setParameter(i, parm);
+        }
         break;
-
+    }
     default:
+    {
         setNumParameters(0);
+    }
     }
     emit setupChanged(getSetup());
 
+}
+
+QList<float> selectivity::getXVals() const
+{
+    return xVals;
+}
+
+void selectivity::setXVals(const QStringList &value)
+{
+    xVals.clear();
+    for (int i = 0; i < value.count(); i++)
+        xVals.append(QString(value.at(i)).toFloat());
+    setNumXvals(value.count());
+}
+
+int selectivity::getNumGenders() const
+{
+    return numGenders;
+}
+
+void selectivity::setNumGenders(int value)
+{
+    numGenders = value;
+    setDefaultParams(getPattern(), getSpecial());
 }
 
 int selectivity::getNumParameters()
@@ -979,7 +1066,7 @@ int selectivity::getNumParameters()
 
 void selectivity::setNumParameters(int num)
 {
-//    QStringList ql;
+    //    QStringList ql;
 //    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     int curr = getNumParameters();
     if (curr != num)
@@ -1156,7 +1243,7 @@ void selectivity::setSpecial(int value)
             break;
         }
         setup->setValue(3, value);
-        setDefaultParams(setup->getValue(0), getNumParameters());
+        setDefaultParams(getPattern(), getSpecial());
     }
 }
 

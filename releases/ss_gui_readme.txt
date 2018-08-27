@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.06
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.11.08
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application, 
@@ -17,8 +17,13 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-      3.3.11.07
-      2018-07-19
+    3.3.11.08
+    2018-08-24
+1. Default parameters for cubic spline now work.
+2. Fixed seg-fault when scrolling through selectivity equation numbers.
+============================================================================
+    3.3.11.07
+    2018-07-19
 1. Added depletion basis 4=X*SPB_endyr.
 2. Added 'Type' field to mean body size input/output.
 3. Added age selex patterns 44 and 45.

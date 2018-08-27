@@ -883,6 +883,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
 {
     int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
     int newNumParams = 0;
+    ui->spinBox_selex_size_special->setValue(0);
     switch (pat)
     {
     case 0:
@@ -983,14 +984,15 @@ void fleet_widget::changeSelexSizePattern(int pat)
 
     current_fleet->getSizeSelectivity()->setPattern(pat);
     newNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
-    for (int i = oldNumParams; i < newNumParams; i++)
+/*    for (int i = oldNumParams; i < newNumParams; i++)
     {
         QStringList prm;
         prm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         current_fleet->getSizeSelectivity()->setParameter(i, prm);
-    }
+    }*/
 
-    ui->spinBox_selex_size_pattern->setValue (pat);
+    if (ui->spinBox_selex_size_pattern->value() != pat)
+        ui->spinBox_selex_size_pattern->setValue (pat);
     ui->spinBox_selex_size_num_params->setValue (newNumParams);
     sizeSelexParamsView->setHeight (newNumParams);
 }
@@ -1101,6 +1103,7 @@ void fleet_widget::ageSelexTVParamsChanged()
 
 void fleet_widget::changeSelexAgePattern(int pat)
 {
+    ui->spinBox_selex_age_special->setValue(0);
     switch (pat)
     {
     case 0:
@@ -1184,8 +1187,10 @@ void fleet_widget::changeSelexAgePattern(int pat)
         ui->label_selex_age_pattern_info->setText(tr(" "));
     }
     current_fleet->getAgeSelectivity()->setPattern(pat);
-    ui->spinBox_selex_age_pattern->setValue
-            (current_fleet->getAgeSelectivity()->getPattern());
+    if (ui->spinBox_selex_age_pattern->value() != pat)
+        ui->spinBox_selex_age_pattern->setValue(pat);
+//    ui->spinBox_selex_age_pattern->setValue
+//            (current_fleet->getAgeSelectivity()->getPattern());
     ui->spinBox_selex_age_num_params->setValue
             (current_fleet->getAgeSelectivity()->getNumParameters());
     ageSelexParamsView->setHeight(ui->spinBox_selex_age_num_params->value());

@@ -485,20 +485,24 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //   size selex
+    size_selex->setLenBins(model->get_length_composition()->getBins());
+    size_selex->setNumAges(model->get_age_composition()->getNumberBins());
+    for (i = 0; i < oldfl->getSizeSelectivity()->getNumParameters(); i++)
+        size_selex->setParameter(i, oldfl->getSizeSelectivity()->getParameter(i));
     set_size_selex_discard(oldfl->size_selex_discard());
     set_size_selex_male(oldfl->size_selex_male());
     set_size_selex_special(oldfl->size_selex_special());
     set_size_selex_pattern(oldfl->size_selex_pattern());
-    for (i = 0; i < oldfl->getSizeSelectivity()->getNumParameters(); i++)
-        size_selex->setParameter(i, oldfl->getSizeSelectivity()->getParameter(i));
 
     //   age selex
+    age_selex->setAgeBins(model->get_age_composition()->getBins());
+    age_selex->setNumAges(model->get_age_composition()->getNumberBins());
+    for (i = 0; i < oldfl->getAgeSelectivity()->getNumParameters(); i++)
+        age_selex->setParameter(i, oldfl->getAgeSelectivity()->getParameter(i));
     set_age_selex_gt_lt(oldfl->age_selex_gt_lt());
     set_age_selex_male(oldfl->age_selex_male());
     set_age_selex_special(oldfl->age_selex_special());
     set_age_selex_pattern(oldfl->age_selex_pattern());
-    for (i = 0; i < oldfl->getAgeSelectivity()->getNumParameters(); i++)
-        age_selex->setParameter(i, oldfl->getAgeSelectivity()->getParameter(i));
 
     // lambdas
     {
@@ -643,6 +647,13 @@ void Fleet::setGenObservation(int index, int row, QStringList data)
 void Fleet::setNumSeasons(int n_seasons)
 {
     i_num_seasons = n_seasons;
+}
+
+void Fleet::setNumGenders(int num)
+{
+    i_num_genders = num;
+    size_selex->setNumGenders(num);
+    age_selex->setNumGenders(num);
 }
 
 int Fleet::getNumSeasons()

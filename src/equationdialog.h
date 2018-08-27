@@ -51,7 +51,6 @@ public slots:
     void changingSelex ();
     void changedSelex (QStringList ql);
     void changeSelex ();
-    void setDataModel (ss_model *data);
     void setXvals(const QStringList &vals);
     void setMidBin (float val);
 //    void setAges ();
@@ -160,7 +159,7 @@ private:
     Fleet *fleet;
     int fleetNum;
     selectivity * selex;
-    ss_model * dataModel;
+    int genders;
 
     int equationNum;
     int numSliders;
@@ -229,9 +228,11 @@ private slots:
     void mirror (int sliders = 0);
     void updateMirror (int sliders = 0);
     void linear (float scale);
+    void linearPlain();
     void linearScaled();
     void updateLinear (float scale = 0.);
     void updateLinearScaled();
+    void updateLinearPlain();
     void updateLinearExp (float scale = 0.);
     void dblLogistic ();
     void updateDblLogistic ();
@@ -257,6 +258,10 @@ private slots:
     void updateColeGauss();
     void cubicSpline (float scale = 0.);
     void updateCubicSpline (float scale = 0.);
+    void twoSexRandomWalk ();
+    void updateTwoSexRandom ();
+    void twoSexEachAge ();
+    void updateTwoSexEachAge ();
 
     float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
     float logist (double value);
@@ -266,6 +271,7 @@ private slots:
     float maxYvalue (const QList<QPointF> &pointlist);
     float aveXvalue (const QList<float> &xvals);
     float aveYvalue (const QList<QPointF> &pointlist, int start, int stop);
+    void fillValues (const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints);
 };
 
 #endif // EQUATIONDIALOG_H

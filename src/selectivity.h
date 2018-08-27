@@ -23,6 +23,14 @@ public:
     explicit selectivity (ss_model *model, int method = 0);
     ~selectivity();
 
+    int getNumGenders() const;
+    void setNumGenders(int value);
+
+    QList<float> getXVals() const;
+    void setXVals(const QStringList &value);
+    void setAgeBins (const QStringList &value) {setXVals(value);}
+    void setLenBins (const QStringList &value) {setXVals(value);}
+
 signals:
     void setupChanged(QStringList values);
     void dataChanged();
@@ -32,8 +40,10 @@ signals:
 public slots:
     void setFleetName (QString name) {fisheryName = name;}
     void setFleetNum (int num) {fisheryNum = num;}
-    void setNumAges(int ages) {numAges = ages;}
-    int getNumAges() {return numAges;}
+    void setNumAges (int ages) {numAges = ages;}
+    void setNumLens (int lens) {setNumXvals(lens);}
+    void setNumXvals(int num);
+    int getNumXvals() {return numXvals;}
     void setPattern (int value);
     int getPattern () {return setup->getValue(0);}// pattern;}
     void setDiscard (int value);
@@ -45,7 +55,7 @@ public slots:
     void setSetup(QString text);
     QString getSetupText ();
     void setSetup(QStringList strList);
-    QStringList getSetup () {return setup->getData();}
+    const QStringList getSetup () {return setup->getData();}
     void setSetup(QList<int> values);
     void setTVautogenerate (int val);
 
@@ -133,14 +143,17 @@ public slots:
 //    double evaluate();
 
     void setMethod (int method);
-    void setDefaultParams (int method, int num);
+    void setDefaultParams (int method, int special);
 
 protected:
 //    void setEquation (int method);
     QString fisheryName;
     int fisheryNum;
 
+    QList<float> xVals;
+    int numXvals;
     int numAges;
+    int numGenders;
 
     setupModel *setup;
     longParameterModel *parameters;

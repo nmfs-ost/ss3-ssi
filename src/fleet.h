@@ -79,7 +79,7 @@ public slots:
     int getTotalYears () {return i_num_years;}
     void setNumSeasons (int n_seasons);
     int getNumSeasons ();
-    void setNumGenders (int num) {i_num_genders = num;}
+    void setNumGenders (int num);
     int getNumGenders () {return i_num_genders;}
     void setAllocGroup (int grp) {i_alloc_group = grp;}
     int getAllocGroup () {return i_alloc_group;}

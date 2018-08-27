@@ -76,7 +76,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->reset();
             flt->setActive(true);
             flt->getSizeSelectivity()->setNumAges(data->get_num_ages());
+            flt->getSizeSelectivity()->setXVals(data->get_length_composition()->getBins());
             flt->getAgeSelectivity()->setNumAges (data->get_num_ages());
+            flt->getAgeSelectivity()->setXVals(data->get_age_composition()->getBins());
             temp_int = d_file->getIntValue(QString("Fleet type"), 1, 3, 1);
             flt->setTypeInt(temp_int);
             if (temp_int == 2)
@@ -310,6 +312,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 l_data->setAltBinMax(l_data->getBin(l_data->getNumberBins()-1));
                 l_data->setAltBinWidth(l_data->getBin(1) - l_data->getBin(0));
             }
+            for (i = 0; i < total_fleets; i++)
+            {
+                data->getFleet(i)->getSizeSelectivity()->setNumXvals(l_data->getNumberBins());
+                data->getFleet(i)->getSizeSelectivity()->setXVals(l_data->getBins());
+            }
 
             //  SS_Label_Info_2.7.4 #Read Length composition data
             obslength = data->getFleet(0)->getLengthObsLength();
@@ -369,6 +376,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         for (i = 0; i < total_fleets; i++)
         {
+            data->getFleet(i)->getSizeSelectivity()->setNumAges(a_data->getNumberBins());
+            data->getFleet(i)->getAgeSelectivity()->setNumAges(a_data->getNumberBins());
+            data->getFleet(i)->getAgeSelectivity()->setNumXvals(a_data->getNumberBins());
+            data->getFleet(i)->getAgeSelectivity()->setXVals(a_data->getBins());
             data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value(QString("min tail comp")));
             data->getFleet(i)->setAgeAddToData(d_file->get_next_value(QString("add to data")));
             temp_int = d_file->get_next_value(QString("combine genders")).toInt();
