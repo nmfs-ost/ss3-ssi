@@ -1498,7 +1498,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         temp_int = f_file->getIntValue(QString("Benchmarks/Reference points"), 0, 2, 1);
         fcast->set_benchmarks(temp_int);
 
-        temp_int = f_file->getIntValue(QString("MSY Method"), 0, 4, 1);
+        temp_int = f_file->getIntValue(QString("MSY Method"), 1, 4, 1);
         fcast->set_MSY(temp_int);
 
         token = f_file->get_next_value(QString("SPR target"));
@@ -1535,7 +1535,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
         temp_int = f_file->getIntValue(QString("Forecast selectivity"), 0, 1, 0);
         fcast->setSelectivity (temp_int);
-        temp_int = f_file->getIntValue(QString("Control Rule"), 1, 2, 1);
+        temp_int = f_file->getIntValue(QString("Control Rule"), 1, 4, 1);
         fcast->set_cr_method(temp_int);
         token = f_file->get_next_value(QString("control rule upper limit"));
         temp_float = token.toFloat();
@@ -1571,9 +1571,13 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_do_rebuilder(temp_int == 1? true: false);
         token = f_file->get_next_value(QString("rebuilder: first year"));
         temp_int = token.toInt();
+        if (temp_int == -1)
+            temp_int = 1999;
         fcast->set_rebuilder_first_year(temp_int);
         token = f_file->get_next_value(QString("rebuilder: curr year"));
         temp_int = token.toInt();
+        if (temp_int == -1)
+            temp_int = data->get_end_year() + 1;
         fcast->set_rebuilder_curr_year(temp_int);
 
         temp_int = f_file->getIntValue(QString("Fleet Relative F"), 1, 2, 1);
