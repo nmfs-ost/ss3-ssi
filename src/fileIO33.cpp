@@ -3177,7 +3177,8 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     QString ("N_Growth_Patterns"));
 
         // morphs or platoons
-        chars += c_file->write_val(pop->Grow()->getNum_morphs(), 1,
+        num = pop->Grow()->getNum_morphs();
+        chars += c_file->write_val(num, 1,
                     QString("N_platoons_Within_GrowthPattern "));
 
         line.clear();

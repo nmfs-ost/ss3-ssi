@@ -20,6 +20,7 @@ History:
     3.3.12.02
     2018-09-24
 1. Fixed reading of certain model files.
+2. Corrected writing multiple morphs/platoons.
 ============================================================================
     3.3.12.01
     2018-09-17
