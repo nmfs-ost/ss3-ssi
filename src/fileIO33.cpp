@@ -2831,7 +2831,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < num_fleets; i++)
         {
             agesel = data->getFleet(i)->getAgeSelectivity();
-            temp_int = c_file->getIntValue(QString("Age selex Pattern"), 10, 45, 0);
+            temp_int = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
             agesel->setPattern(temp_int);
             temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
             agesel->setDiscard(temp_int);
@@ -3128,8 +3128,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setNatAgeBins(datalist);
         }
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+//        if (QString(datalist.last()).compare(QString("EOF")) == 0)
+//            return false;
 
         temp_int = c_file->get_next_value().toInt();
         if (temp_int != 999)

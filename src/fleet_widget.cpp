@@ -411,7 +411,7 @@ void fleet_widget::refresh()
     if (curr < 0)
         curr = 0;
     ui->comboBox_fleet_name->setCurrentIndex(curr);
-    set_current_fleet(curr);
+//    set_current_fleet(curr);
 
     ui->tabWidget_fleet->setCurrentIndex(0);
     ui->tabWidget_obs->setCurrentIndex(0);
