@@ -215,7 +215,7 @@ private slots:
     void updateTicks(QRectF rect);
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
-    void resetXvals ();
+//    void resetXvals ();
 
     void blank (int num, int rep = 0, QString msg = QString(""));
     void constant (float val = 1.0);

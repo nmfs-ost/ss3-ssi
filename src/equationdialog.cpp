@@ -8,6 +8,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QValueAxis>
 #include <QMessageBox>
+#include <QMap>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -194,26 +195,28 @@ void equationDialog::setXvals(const QStringList &vals)
 
     if (vals.isEmpty())
     {
-        xValList.append(0);
-        xValList.append(1);
-        xValList.append(2);
+        float xmin = ui->spinBox_bins_min->value();
+        float xmax = ui->spinBox_bins_max->value();
+        float xincr = ui->spinBox_bins_width->value();
+        for (float xval = xmin; xval <= xmax; xval+=xincr)
+            xValList.append(xval);
     }
     else
     {
         for (int i = 0; i < vals.count(); i++)
             xValList.append(QString(vals.at(i)).toFloat());
 
-        ui->spinBox_bins_min->setValue(xValList.first());
-        ui->spinBox_bins_max->setValue(xValList.last());
-        ui->spinBox_bins_width->setValue(xValList.at(2) - xValList.at(1));
     }
+    ui->spinBox_bins_min->setValue(xValList.first());
+    ui->spinBox_bins_max->setValue(xValList.last());
+    ui->spinBox_bins_width->setValue(xValList.at(2) - xValList.at(1));
 }
 
-void equationDialog::resetXvals()
-{
-    setXvals(QStringList());
-    update();
-}
+//void equationDialog::resetXvals()
+//{
+//    setXvals(QStringList());
+//    update();
+//}
 
 void equationDialog::setMidBin(float val)
 {
@@ -1861,7 +1864,7 @@ void equationDialog::resetChart(bool create)
     firstPoints.clear();
     disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
-    yMax = 0;
+    yMax = 1;
     ui->verticalLayout_graph->addWidget(chartview);
     chartview->show();
     cht->show();
@@ -4331,6 +4334,7 @@ void equationDialog::updateCubicSpline(float scale)
     int i;
     bool okay;
     QString msg;
+    QMap<float, float> pts;
     float maxVal, minVal, max, min;
 
     if ((num % 2) == 1 || num < 6)
@@ -4367,12 +4371,18 @@ void equationDialog::updateCubicSpline(float scale)
             ui->doubleSpinBox_4_trans->setValue(gradLo);
             ui->doubleSpinBox_5_trans->setValue(gradHi);
         }
+        if (scaleLo > scaleHi)
+        {
+            xval = scaleHi;
+            scaleHi = scaleLo;
+            scaleLo = xval;
+        }
 
         switch (setup)
         {
         case 0:
             for (i = 0; i < num; i++)
-                X[i] = QString(parameters->getRowData(start++).at(2)).toFloat();
+                X[i] = (QString(parameters->getRowData(start++).at(2)).toFloat());
             break;
         case 1:
         case 2:
@@ -4381,20 +4391,34 @@ void equationDialog::updateCubicSpline(float scale)
             int num_1 = num - 1;
             float dist = xn - x0;
             float incr = dist / (num_1);
-            X[0]     = x0 + (2.5 * dist) / 100;
-            X[num_1] = x0 + (97.5 * dist) / 100;
+            X[0] = (x0 + (2.5 * dist) / 100);
+            X[num_1] = (x0 + (97.5 * dist) / 100);
             for (i = 1; i < num_1; i++)
-                X[i] = X[i-1] + incr;
-            for (i = 0; i < num; i++)
-                parameters->setItem(start++, 2, new QStandardItem(QString::number(X[i])));
+                X[i] = (X[i-1] + incr);
+//            for (i = 0; i < num; i++)
+//                parameters->setItem(start++, 2, new QStandardItem(QString::number(X[i])));
         }
 
         for (i = 0; i < num; i++)
         {
-            Y[i] = QString(parameters->getRowData(start++).at(2)).toFloat();
+            Y[i] = (QString(parameters->getRowData(start++).at(2)).toFloat());
+        }
+        for (i = 0; i < num; i++)
+            pts.insert(X[i], Y[i]);
+
+        ptSeries->clear();
+        QMapIterator<float, float> mi(pts);
+        i = 0;
+        while (mi.hasNext())
+        {
+            mi.next();
+            X[i] = mi.key();
+            Y[i] = mi.value();
+            ptSeries->append(X[i], Y[i]);
+            i++;
         }
 
-        i = num;
+/*        i = num;
         while (i > 1)
         {
             i--;
@@ -4411,15 +4435,11 @@ void equationDialog::updateCubicSpline(float scale)
                     Y[j+1] = y;
                 }
             }
-        }
+        }*/
         // currently it is required that X is already sorted
         cubicspl.set_boundary(tk::spline::first_deriv, gradLo,
                               tk::spline::first_deriv, gradHi);
         cubicspl.set_points(X, Y);
-
-        ptSeries->clear();
-        for (i = 0; i < num; i++)
-            ptSeries->append(QPointF(X[i], Y[i]));
 
         firstPoints.clear();
         selSeries->clear();
@@ -4431,6 +4451,8 @@ void equationDialog::updateCubicSpline(float scale)
         }
         minVal = minYvalue (firstPoints);
         maxVal = maxYvalue (firstPoints);
+        if (minVal == maxVal)
+            minVal = maxVal - 1.0;
         max = minVal + ((maxVal - minVal) * 1.2);
         axisYalt->setRange(minVal, max);
         maxVal -= minVal;
@@ -4443,14 +4465,17 @@ void equationDialog::updateCubicSpline(float scale)
 
         if (scale > 0)
         {
-            divisor = aveYvalue(firstPoints, scaleLo, scaleHi);
+            divisor = abs(aveYvalue(firstPoints, scaleLo, scaleHi));
         }
         else
         {
-            divisor = maxVal;
+            divisor = abs(maxVal);
         }
-        for (i = 0; i < firstPoints.count(); i++)
-            firstPoints[i].setY(firstPoints.at(i).y() / divisor);
+        if (divisor != 0.0)
+        {
+            for (i = 0; i < firstPoints.count(); i++)
+                firstPoints[i].setY(firstPoints.at(i).y() / divisor);
+        }
 
         selSeries->append(firstPoints);
     }
@@ -4847,8 +4872,17 @@ float equationDialog::aveXvalue(const QList<float> &xvals)
 float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
 {
     float value = 0.;
-    int i = (start == -1)? 0: start;
-    int end = (stop == -1)? pointlist.count() - 1: stop;
+    int i = 0, end = 2;
+    int listend = pointlist.count() - 1;
+    if (start > listend ||
+            start < 0)
+        start = 0;
+    if (stop > listend ||
+            stop < 0)
+        stop = listend;
+
+    i = start;
+    end = stop;
 
     for (; i <= end; i++)
     {

@@ -1631,7 +1631,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_selex">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab_selex_size">
              <attribute name="title">
@@ -1648,8 +1648,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>490</width>
-                   <height>379</height>
+                   <width>737</width>
+                   <height>415</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">

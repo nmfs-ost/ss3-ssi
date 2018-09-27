@@ -2814,6 +2814,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < num_fleets; i++)
         {
             sizesel = data->getFleet(i)->getSizeSelectivity();
+            sizesel->disconnectSigs();
             temp_int = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
             sizesel->setPattern(temp_int);
             temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
@@ -2822,6 +2823,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             sizesel->setMale(temp_int);
             temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
             sizesel->setSpecial(temp_int);
+            sizesel->connectSigs();
 /*            datalist.clear();
             for (int j = 0; j < 4; j++)
                 datalist.append(c_file->get_next_value(QString("size selex setup")));
@@ -2831,6 +2833,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < num_fleets; i++)
         {
             agesel = data->getFleet(i)->getAgeSelectivity();
+            agesel->disconnectSigs();
             temp_int = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
             agesel->setPattern(temp_int);
             temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
@@ -2839,6 +2842,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             agesel->setMale(temp_int);
             temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
             agesel->setSpecial(temp_int);
+            agesel->connectSigs();
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;
@@ -2847,6 +2851,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         for (int i = 0; i < num_fleets; i++)
         {
             sizesel = data->getFleet(i)->getSizeSelectivity();
+            sizesel->disconnectSigs();
             int num = sizesel->getNumParameters();
             //read num_params parameters
             for (int j = 0; j < num; j++)
@@ -2898,11 +2903,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             num = sizesel->getSpecial();
             if (sizesel->getPattern() == 7)
                 sizesel->setSpecial(1);
+            sizesel->connectSigs();
         }
         // read age selectivity parameters
         for (int i = 0; i < num_fleets; i++)
         {
             agesel = data->getFleet(i)->getAgeSelectivity();
+            agesel->disconnectSigs();
             int num = agesel->getNumParameters();
             //read num_params parameters
             for (int j = 0; j < num; j++)
@@ -2934,6 +2941,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             num = agesel->getSpecial();
             if (temp_int == 7)
                 agesel->setSpecial(1);
+            agesel->connectSigs();
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;

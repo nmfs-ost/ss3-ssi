@@ -31,6 +31,9 @@ public:
     void setAgeBins (const QStringList &value) {setXVals(value);}
     void setLenBins (const QStringList &value) {setXVals(value);}
 
+    void connectSigs ();
+    void disconnectSigs ();
+
 signals:
     void setupChanged(QStringList values);
     void dataChanged();

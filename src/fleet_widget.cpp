@@ -441,7 +441,7 @@ void fleet_widget::setAgeLengthBins()
             age += interval;
             agelist.append(QString::number(age));
         }
-        selexAgeEqDialog->setXvals(agelist);
+        selexAgeEqDialog->setXvals(agebinlist);
     }
     selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
 }
@@ -1240,6 +1240,8 @@ void fleet_widget::setupSelexAgeInfo()
     msg.append("26\t3\tExponential - logistic.\n");
     msg.append("41\t2+Nages+1\tRandom walk with user defined scaling.\n");
     msg.append("42\t2+3+Specl\tCubic spline with user defined scaling.\n");
+    msg.append("44\t4+Specl*2\tSimilar to pattern #17 but with separate parameters for males and females.\n");
+    msg.append("45\t4+Specl*2\tSimilar to pattern #14 but with separate parameters for males and females.\n");
     msg.append("");
     selexAgeInfoDialog->setWindowTitle(tr("Information"));
     selexAgeInfoDialog->setTitle(title);

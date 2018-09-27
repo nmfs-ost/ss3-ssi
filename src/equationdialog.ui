@@ -1049,12 +1049,18 @@
          <property name="maximum">
           <number>250</number>
          </property>
+         <property name="value">
+          <number>50</number>
+         </property>
         </widget>
        </item>
        <item row="1" column="3">
         <widget class="QSpinBox" name="spinBox_bins_width">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="value">
+          <number>2</number>
          </property>
         </widget>
        </item>
@@ -1076,16 +1082,31 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="value">
+          <number>10</number>
+         </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QSpinBox" name="spinBox_steep_join1"/>
+        <widget class="QSpinBox" name="spinBox_steep_join1">
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QSpinBox" name="spinBox_steep_join2"/>
+        <widget class="QSpinBox" name="spinBox_steep_join2">
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
        </item>
        <item row="3" column="3">
-        <widget class="QSpinBox" name="spinBox_steep_join3"/>
+        <widget class="QSpinBox" name="spinBox_steep_join3">
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="label_steep_join1">
@@ -1174,6 +1195,9 @@
          </property>
          <property name="maximum">
           <double>1.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.500000000000000</double>
          </property>
         </widget>
        </item>
