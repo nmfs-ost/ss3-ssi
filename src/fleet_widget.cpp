@@ -883,6 +883,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
 {
     int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
     int newNumParams = 0;
+    bool changePat = true;
     ui->spinBox_selex_size_special->setValue(0);
     switch (pat)
     {
@@ -959,6 +960,9 @@ void fleet_widget::changeSelexSizePattern(int pat)
     case 20:
     case 26:
     case 41:
+    case 44:
+    case 45:
+        changePat = false;
         ui->label_selex_size_pattern_info->setText(tr("Used for age selectivity only."));
         return;
     case 21:
@@ -970,6 +974,7 @@ void fleet_widget::changeSelexSizePattern(int pat)
     case 38:
     case 39:
     case 40:
+        changePat = false;
         ui->label_selex_size_pattern_info->setText(tr("Not used, select another pattern."));
         return;
     case 42:
@@ -982,7 +987,8 @@ void fleet_widget::changeSelexSizePattern(int pat)
         ui->label_selex_size_pattern_info->setText(" ");
     }
 
-    current_fleet->getSizeSelectivity()->setPattern(pat);
+    if (changePat)
+        current_fleet->getSizeSelectivity()->setPattern(pat);
     newNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
 /*    for (int i = oldNumParams; i < newNumParams; i++)
     {
@@ -1103,6 +1109,7 @@ void fleet_widget::ageSelexTVParamsChanged()
 
 void fleet_widget::changeSelexAgePattern(int pat)
 {
+    bool changePat = true;
     ui->spinBox_selex_age_special->setValue(0);
     switch (pat)
     {
@@ -1157,6 +1164,7 @@ void fleet_widget::changeSelexAgePattern(int pat)
     case 38:
     case 39:
     case 40:
+        changePat = false;
         ui->label_selex_age_pattern_info->setText(tr("Not used, select another pattern."));
         return;
     case 22:
@@ -1169,6 +1177,7 @@ void fleet_widget::changeSelexAgePattern(int pat)
     case 33:
     case 34:
     case 43:
+        changePat = false;
         ui->label_selex_age_pattern_info->setText(tr("Used for size selectivity only."));
         return;
     case 41:
@@ -1186,7 +1195,8 @@ void fleet_widget::changeSelexAgePattern(int pat)
     default:
         ui->label_selex_age_pattern_info->setText(tr(" "));
     }
-    current_fleet->getAgeSelectivity()->setPattern(pat);
+    if (changePat)
+        current_fleet->getAgeSelectivity()->setPattern(pat);
     if (ui->spinBox_selex_age_pattern->value() != pat)
         ui->spinBox_selex_age_pattern->setValue(pat);
 //    ui->spinBox_selex_age_pattern->setValue

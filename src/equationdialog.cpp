@@ -1459,14 +1459,14 @@ void equationDialog::buttonClicked(QAbstractButton *btn)
     if      (btn->text().contains("Apply")) {
         apply();
     }
-    else if (btn->text().contains("Reset")){
-        reset();
-    }
-    else if (btn->text().contains("Defaults")){
-        selex->setDefaultParams(equationNum, special);
+    else if (btn->text().contains("Reset")) {
         restoreAll();
     }
-    else if (btn->text().contains("Close")){
+//    else if (btn->text().contains("Defaults")) {
+//        selex->setDefaultParams(equationNum, special);
+//        restoreAll();
+//    }
+    else if (btn->text().contains("Close")) {
         close();
     }
 }
@@ -4334,6 +4334,7 @@ void equationDialog::updateCubicSpline(float scale)
     int i;
     bool okay;
     QString msg;
+    // QMap automatically sorts on key.
     QMap<float, float> pts;
     float maxVal, minVal, max, min;
 
@@ -4872,6 +4873,7 @@ float equationDialog::aveXvalue(const QList<float> &xvals)
 float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
 {
     float value = 0.;
+    float count = 0.0;
     int i = 0, end = 2;
     int listend = pointlist.count() - 1;
     if (start > listend ||
@@ -4887,21 +4889,23 @@ float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int 
     for (; i <= end; i++)
     {
         value += pointlist.at(i).y();
+        count += 1.0;
     }
-    return (value / i);
+    return (value / count);
 }
 
 void equationDialog::fillValues(const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints)
 {
     int i = 0, j =0;
     float yVal = 0;
+    int fplimit = fewpoints.count() - 1;
 
     while (xvals.at(j) < fewpoints.at(0).x())
     {
         yVal = 0.0;
         fullpoints.append(QPointF(xvals.at(j++), yVal));
     }
-    for (i = 0; i < fewpoints.count(); i++)
+    for (i = 0; i < fplimit; i++)
     {
         while (j < xvals.count() && xvals.at(j) < fewpoints.at(i+1).x())
         {
@@ -4909,6 +4913,7 @@ void equationDialog::fillValues(const QList<QPointF> fewpoints, QList<float> xva
             fullpoints.append(QPointF(xvals.at(j++), yVal));
         }
     }
+    yVal = fewpoints.last().x();
     for (; j < xvals.count(); j++)
     {
         fullpoints.append(QPointF(xvals.at(j), yVal));
