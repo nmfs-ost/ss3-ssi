@@ -51,7 +51,8 @@ public slots:
     void changingSelex ();
     void changedSelex (QStringList ql);
     void changeSelex ();
-    void setXvals(const QStringList &vals);
+    void setXvals(const QList<float> &vals);
+    void setXvalStrings(const QStringList &vals);
     void setMidBin (float val);
 //    void setAges ();
 

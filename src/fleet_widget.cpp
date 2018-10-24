@@ -214,6 +214,8 @@ void fleet_widget::disconnectFleet()
     disconnect (current_fleet->Q()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(qSetupParamsChanged()));
     disconnect (current_fleet->Q()->getTVParams(), SIGNAL(dataChanged()), this, SLOT(qSetupTVParamsChanged()));
 
+    disconnect (current_fleet->getSizeSelectivity(), SIGNAL(setupChanged(QStringList)),
+             this, SLOT(sizeSelexDataChanged()));
     disconnect (current_fleet->getSizeSelectivity()->getParameterModel(),
              SIGNAL(dataChanged()), this, SLOT(sizeSelexParamsChanged()));
     disconnect (current_fleet->getSizeSelectivity()->getTimeVaryParameterModel(),
@@ -221,6 +223,8 @@ void fleet_widget::disconnectFleet()
     disconnect (ui->spinBox_selex_size_num_params, SIGNAL(valueChanged(int)),
              current_fleet->getSizeSelectivity(), SLOT(setNumParameters(int)));
 
+    disconnect (current_fleet->getAgeSelectivity(), SIGNAL(setupChanged(QStringList)),
+             this, SLOT(ageSelexDataChanged()));
     disconnect (current_fleet->getAgeSelectivity()->getParameterModel(),
              SIGNAL(dataChanged()), this, SLOT(ageSelexParamsChanged()));
     disconnect (current_fleet->getAgeSelectivity()->getTimeVaryParameterModel(),
@@ -303,6 +307,8 @@ void fleet_widget::connectFleet()
     connect (current_fleet->Q()->getTVParams(), SIGNAL(dataChanged()),
              this, SLOT(qSetupTVParamsChanged()));
 
+    connect (current_fleet->getSizeSelectivity(), SIGNAL(setupChanged(QStringList)),
+             this, SLOT(sizeSelexDataChanged()));
     connect (current_fleet->getSizeSelectivity()->getParameterModel(),
              SIGNAL(dataChanged()), this, SLOT(sizeSelexParamsChanged()));
     connect (current_fleet->getSizeSelectivity()->getTimeVaryParameterModel(),
@@ -310,6 +316,8 @@ void fleet_widget::connectFleet()
     connect (ui->spinBox_selex_size_num_params, SIGNAL(valueChanged(int)),
              current_fleet->getSizeSelectivity(), SLOT(setNumParameters(int)));
 
+    connect (current_fleet->getAgeSelectivity(), SIGNAL(setupChanged(QStringList)),
+             this, SLOT(ageSelexDataChanged()));
     connect (current_fleet->getAgeSelectivity()->getParameterModel(),
              SIGNAL(dataChanged()), this, SLOT(ageSelexParamsChanged()));
     connect (current_fleet->getAgeSelectivity()->getTimeVaryParameterModel(),
@@ -441,9 +449,9 @@ void fleet_widget::setAgeLengthBins()
             age += interval;
             agelist.append(QString::number(age));
         }
-        selexAgeEqDialog->setXvals(agebinlist);
+        selexAgeEqDialog->setXvalStrings(agebinlist);
     }
-    selexSizeEqDialog->setXvals(model_data->get_length_composition()->getBins());
+    selexSizeEqDialog->setXvalStrings(model_data->get_length_composition()->getBins());
 }
 
 void fleet_widget::set_current_fleet(int index)
@@ -1043,6 +1051,17 @@ void fleet_widget::setupSelexSizeInfo()
 //    /*int button = */QMessageBox::information(this, title, msg, QMessageBox::Ok);
 }
 
+void fleet_widget::sizeSelexDataChanged()
+{
+    int pat = current_fleet->getSizeSelectivity()->getPattern();
+    int spc = current_fleet->getSizeSelectivity()->getSpecial();
+    int mal = current_fleet->getSizeSelectivity()->getMale();
+    ui->spinBox_selex_size_pattern->setValue(pat);
+    ui->spinBox_selex_size_special->setValue(spc);
+    ui->spinBox_selex_size_male->setValue(mal);
+    selexSizeEqDialog->restoreAll();
+}
+
 void fleet_widget::changeSelexSizeDiscard(int disc)
 {
     current_fleet->getSizeSelectivity()->setDiscard(disc);
@@ -1085,8 +1104,7 @@ void fleet_widget::sizeSelexTVParamsChanged()
 void fleet_widget::showSelexSizeCurve(bool flag)
 {
     selexSizeEqDialog->setVisible(flag);
-    if (flag)
-        selexSizeEqDialog->restoreAll();
+    selexSizeEqDialog->restoreAll();
 }
 
 void fleet_widget::selexSizeCurveClosed()
@@ -1209,8 +1227,7 @@ void fleet_widget::changeSelexAgePattern(int pat)
 void fleet_widget::showSelexAgeCurve(bool flag)
 {
     selexAgeEqDialog->setVisible(flag);
-    if (flag)
-        selexAgeEqDialog->restoreAll();
+    selexAgeEqDialog->restoreAll();
 }
 
 void fleet_widget::selexAgeCurveClosed()
@@ -1257,6 +1274,17 @@ void fleet_widget::setupSelexAgeInfo()
     selexAgeInfoDialog->setTitle(title);
     selexAgeInfoDialog->setText(msg);
 //    QMessageBox::information(this, title, msg);
+}
+
+void fleet_widget::ageSelexDataChanged()
+{
+    int pat = current_fleet->getAgeSelectivity()->getPattern();
+    int spc = current_fleet->getAgeSelectivity()->getSpecial();
+    int mal = current_fleet->getAgeSelectivity()->getMale();
+    ui->spinBox_selex_age_pattern->setValue(pat);
+    ui->spinBox_selex_age_special->setValue(spc);
+    ui->spinBox_selex_age_male->setValue(mal);
+    selexAgeEqDialog->restoreAll();
 }
 
 void fleet_widget::setGenMethodTotal(int num)

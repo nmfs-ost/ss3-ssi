@@ -79,6 +79,7 @@ public slots:
 
     void changeSelexSizePattern(int pat);
     void setupSelexSizeInfo();
+    void sizeSelexDataChanged();
     void changeSelexSizeDiscard(int disc);
     void changeSelexSizeMale (int mal);
     void changeSelexSizeSpecial (int spc);
@@ -92,6 +93,7 @@ public slots:
     void changeSelexAgeMale (int mal);
     void changeSelexAgeSpecial (int spc);
     void setupSelexAgeInfo();
+    void ageSelexDataChanged();
     void ageSelexParamsChanged();
     void ageSelexTVParamsChanged();
     void showSelexAgeCurve(bool flag);

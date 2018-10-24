@@ -45,7 +45,7 @@ equationDialog::equationDialog(QWidget *parent, QString *typ) :
     yMax = -10;
     chartview = NULL;
 
-    setXvals(QStringList());
+    setXvalStrings(QStringList());
     resetChart(true);
     selSeries->append(0, 0);
     selSeries->append(1, 0);
@@ -189,9 +189,26 @@ void equationDialog::changeSelex()
     dataModel = data;
 }*/
 
-void equationDialog::setXvals(const QStringList &vals)
+void equationDialog::setXvals(const QList<float> &vals)
 {
-    xValList.clear();
+    float val;
+    if (!vals.isEmpty())
+    {
+        xValList.clear();
+        for (int i = 0; i < vals.count(); i++)
+        {
+            val = vals.at(i);
+            xValList.append(val);
+        }
+        ui->spinBox_bins_min->setValue(xValList.first());
+        ui->spinBox_bins_max->setValue(xValList.last());
+        ui->spinBox_bins_width->setValue(xValList.at(2) - xValList.at(1));
+    }
+}
+
+void equationDialog::setXvalStrings(const QStringList &vals)
+{
+    QList<float> f_vals;
 
     if (vals.isEmpty())
     {
@@ -199,17 +216,14 @@ void equationDialog::setXvals(const QStringList &vals)
         float xmax = ui->spinBox_bins_max->value();
         float xincr = ui->spinBox_bins_width->value();
         for (float xval = xmin; xval <= xmax; xval+=xincr)
-            xValList.append(xval);
+            f_vals.append(xval);
     }
     else
     {
         for (int i = 0; i < vals.count(); i++)
-            xValList.append(QString(vals.at(i)).toFloat());
-
+            f_vals.append(QString(vals.at(i)).toFloat());
     }
-    ui->spinBox_bins_min->setValue(xValList.first());
-    ui->spinBox_bins_max->setValue(xValList.last());
-    ui->spinBox_bins_width->setValue(xValList.at(2) - xValList.at(1));
+    setXvals(f_vals);
 }
 
 //void equationDialog::resetXvals()
@@ -1427,6 +1441,7 @@ void equationDialog::resetValues()
 
 void equationDialog::restoreAll()
 {
+    setXvals(selex->getXVals());
     if (!xValList.isEmpty())
     {
         // get bin values

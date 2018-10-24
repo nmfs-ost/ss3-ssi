@@ -434,6 +434,8 @@ void MainWindow::readFiles()
 {
     bool worked = true;
     int choice = 1;
+    fleets->selexAgeCurveClosed();
+    fleets->selexSizeCurveClosed();
     fleets->set_current_fleet(0);
     modelData->reset();
     worked = files->read_files(modelData);
