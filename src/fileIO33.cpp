@@ -2813,16 +2813,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Size selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
+            int pat = 0;
             sizesel = data->getFleet(i)->getSizeSelectivity();
             sizesel->disconnectSigs();
-            temp_int = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
-            sizesel->setPattern(temp_int);
+            pat = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
             temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
             sizesel->setDiscard(temp_int);
             temp_int = c_file->getIntValue(QString("Size selex Male"), 0, 4, 0);
             sizesel->setMale(temp_int);
             temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
             sizesel->setSpecial(temp_int);
+            sizesel->setPattern(pat);
             sizesel->connectSigs();
 /*            datalist.clear();
             for (int j = 0; j < 4; j++)
@@ -2832,16 +2833,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Age selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
+            int pat = 0;
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
-            temp_int = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
-            agesel->setPattern(temp_int);
+            pat = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
             temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
             agesel->setDiscard(temp_int);
             temp_int = c_file->getIntValue(QString("Age selex Male"), 0, 4, 0);
             agesel->setMale(temp_int);
             temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
             agesel->setSpecial(temp_int);
+            agesel->setPattern(pat);
             agesel->connectSigs();
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
