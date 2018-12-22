@@ -271,7 +271,7 @@ private slots:
     float minYvalue (const QList<QPointF> &pointlist);
     float maxYvalue (const QList<QPointF> &pointlist);
     float aveXvalue (const QList<float> &xvals);
-    float aveYvalue (const QList<QPointF> &pointlist, int start, int stop);
+    float aveYvalue (const QList<QPointF> &pointlist, int start = 0, int stop = 1000);
     void fillValues (const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints);
 };
 

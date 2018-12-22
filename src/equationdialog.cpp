@@ -637,8 +637,7 @@ void equationDialog::update()
 
         case 44: // 44 like age selex 17 but with separate parameters for males and with revised controls
             numSliders = genders + 2;
-            blank(numSliders, 0, "Not yet implemented");
-//            twoSexRandomWalk();
+            twoSexRandomWalk();
             break;
 
         case 45: // 45 like age selex 14 but with separate parameters for males and with revised controls
@@ -4315,6 +4314,10 @@ void equationDialog::cubicSpline(float scale)
  //   resetChart();
     connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
+    ascendSeries = new QLineSeries(cht);
+    ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
+    cht->addSeries(ascendSeries);
+
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
     cht->setAxisX(axisXsel, selSeries);
@@ -4329,6 +4332,8 @@ void equationDialog::cubicSpline(float scale)
     cht->addAxis(axisYalt, Qt::AlignRight);
     ptSeries->attachAxis(axisXsel);
     ptSeries->attachAxis(axisYalt);
+    ascendSeries->attachAxis(axisXsel);
+    ascendSeries->attachAxis(axisYalt);
 
     if (num > 5 && (num % 2) == 0)
     {
@@ -4352,6 +4357,7 @@ void equationDialog::updateCubicSpline(float scale)
     // QMap automatically sorts on key.
     QMap<float, float> pts;
     float maxVal, minVal, max, min;
+    float altMaxVal, altMinVal, altMax, altMin;
 
     if ((num % 2) == 1 || num < 6)
     {
@@ -4364,7 +4370,7 @@ void equationDialog::updateCubicSpline(float scale)
         std::vector<double> X(num), Y(num);
         tk::spline cubicspl;
 
-        if (scale < 2)
+        if (scale < 1)
         {
             setup = ui->doubleSpinBox_1_value->value();
             gradLo = ui->doubleSpinBox_2_value->value();
@@ -4386,12 +4392,12 @@ void equationDialog::updateCubicSpline(float scale)
             ui->doubleSpinBox_3_trans->setValue(setup);
             ui->doubleSpinBox_4_trans->setValue(gradLo);
             ui->doubleSpinBox_5_trans->setValue(gradHi);
-        }
-        if (scaleLo > scaleHi)
-        {
-            xval = scaleHi;
-            scaleHi = scaleLo;
-            scaleLo = xval;
+            if (scaleLo > scaleHi)
+            {
+                xval = scaleHi;
+                scaleHi = scaleLo;
+                scaleLo = xval;
+            }
         }
 
         switch (setup)
@@ -4434,24 +4440,6 @@ void equationDialog::updateCubicSpline(float scale)
             i++;
         }
 
-/*        i = num;
-        while (i > 1)
-        {
-            i--;
-            for (int j = 0; j < i; j++)
-            {
-                float x, y;
-                if (X[j+1] < X[j])
-                {
-                    x = X[j];
-                    y = Y[j];
-                    X[j] = X[j+1];
-                    Y[j] = Y[j+1];
-                    X[j+1] = x;
-                    Y[j+1] = y;
-                }
-            }
-        }*/
         // currently it is required that X is already sorted
         cubicspl.set_boundary(tk::spline::first_deriv, gradLo,
                               tk::spline::first_deriv, gradHi);
@@ -4459,41 +4447,57 @@ void equationDialog::updateCubicSpline(float scale)
 
         firstPoints.clear();
         selSeries->clear();
+        ascendSeries->clear();
+
         for (i = 0; i < xValList.count(); i++)
         {
             xval = xValList.at(i);
             yval = cubicspl(xval);
             firstPoints.append(QPointF(xval, yval));
         }
-        minVal = minYvalue (firstPoints);
-        maxVal = maxYvalue (firstPoints);
-        if (minVal == maxVal)
-            minVal = maxVal - 1.0;
-        max = minVal + ((maxVal - minVal) * 1.2);
-        axisYalt->setRange(minVal, max);
-        maxVal -= minVal;
+        ascendSeries->append(firstPoints);
+
+        altMinVal = minYvalue (firstPoints);
+        altMaxVal = maxYvalue (firstPoints);
+//        range = maxVal - minVal;
+//        if (range < 1.0)
+//            minVal = maxVal - 1.0;
+        altMax = altMinVal + ((altMaxVal - altMinVal) * 1.2);
+        axisYalt->setRange(altMinVal, altMax);
+        altMaxVal -= fabs(altMinVal);
 
         for (i = 0; i < firstPoints.count(); i++)
         {
             yval = firstPoints.at(i).y();
-            firstPoints[i].setY(yval - minVal);
+            firstPoints[i].setY(yval - altMinVal);
         }
+        maxVal = maxYvalue(firstPoints);
 
         if (scale > 0)
         {
-            divisor = abs(aveYvalue(firstPoints, scaleLo, scaleHi));
+            divisor = fabs(aveYvalue(firstPoints, scaleLo, scaleHi));
         }
         else
         {
-            divisor = abs(maxVal);
+            divisor = fabs(maxVal);
         }
         if (divisor != 0.0)
         {
             for (i = 0; i < firstPoints.count(); i++)
                 firstPoints[i].setY(firstPoints.at(i).y() / divisor);
         }
-
+/*        for (i = 0; i < firstPoints.count(); i++)
+        {
+            yval = firstPoints[i].y();
+            if (yval > 1.0)
+                firstPoints[i].setY(1.0);
+        }*/
+        maxVal = maxYvalue (firstPoints);
+        max = maxVal * 1.2;
+        axisY->setRange(0.0, max);
         selSeries->append(firstPoints);
+        if (scale > 1)
+            axisYalt->setRange(altMinVal, (altMinVal + max));
     }
 }
 
@@ -4508,7 +4512,7 @@ void equationDialog::twoSexRandomWalk()
     showJoins(0);
     setParameterHeaders();
 
-//    resetChart();
+    resetChart();
     connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
     // female ln(selex)
@@ -4558,7 +4562,9 @@ void equationDialog::updateTwoSexRandom()
     int minAge = QString(parameters->getRowData(0).at(2)).toInt();
     int maxAge = QString(parameters->getRowData(1).at(2)).toInt();
     ascendSeries->clear();
+    dscendSeries->clear();
     selSeries->clear();
+    join3Series->clear();
     firstPoints.clear();
 
     if (special != 0)
@@ -4775,7 +4781,7 @@ void equationDialog::updateTwoSexEachAge()
     // female selex
     firstPoints.clear();
     fillValues(ascendSeries->points(), xValList, firstPoints);
-    selSeries->append(firstPoints);
+//    ascendSeries->append(firstPoints);
 
     temp = 8. - aveYvalue(firstPoints, minbin, maxbin);
     sel = 0.;
@@ -4891,12 +4897,14 @@ float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int 
     float count = 0.0;
     int i = 0, end = 2;
     int listend = pointlist.count() - 1;
-    if (start > listend ||
-            start < 0)
+    if (start > listend)
+        start = listend;
+    if (start < 0)
         start = 0;
-    if (stop > listend ||
-            stop < 0)
+    if (stop > listend)
         stop = listend;
+    if (stop < 0)
+        stop = 0;
 
     i = start;
     end = stop;
