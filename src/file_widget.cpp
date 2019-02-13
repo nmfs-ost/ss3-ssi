@@ -39,7 +39,7 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     runNumberFile = new ss_file(RUN_NUMBER_FILE, this);
     parameterFile = new ss_file(PARAMETER_FILE, this);
     profileFile = new ss_file(PROFILE_VAL_FILE, this);
-    userDataFile = NULL;
+    userDataFile = nullptr;
 
     model_info = mod;
 
@@ -169,7 +169,7 @@ void file_widget::set_starter_file(QString fname, bool keep)
     current_dir.cd(current_dir_name);
     current_dir_name = current_dir.absolutePath();
 
-    if (starterFile == NULL)
+    if (starterFile == nullptr)
     {
         starterFile = new ss_file(fname);
     }
@@ -189,7 +189,7 @@ void file_widget::set_forecast_file(QString fname, bool keep)
 {
     ui->label_fcast_file->setText(fname);
 
-    if (forecastFile == NULL)
+    if (forecastFile == nullptr)
     {
         forecastFile = new ss_file(fname);
     }
@@ -206,7 +206,7 @@ QString file_widget::get_forecast_file ()
 
 void file_widget::set_control_file(QString fname, bool keep)
 {
-    if (controlFile == NULL)
+    if (controlFile == nullptr)
     {
         controlFile = new ss_file(fname);
     }
@@ -229,7 +229,7 @@ QString file_widget::get_control_file()
 
 void file_widget::set_data_file(QString fname, bool keep)
 {
-    if (dataFile == NULL)
+    if (dataFile == nullptr)
     {
         dataFile = new ss_file(fname);\
     }
@@ -296,7 +296,7 @@ QString file_widget::get_param_file()
     }
     else
     {
-        if (parameterFile == NULL)
+        if (parameterFile == nullptr)
         {
             parameterFile = new ss_file(fname);
         }
@@ -339,7 +339,7 @@ void file_widget::setReadProFile(QString fname, bool keep)
     }
     else
     {
-        if (profileFile == NULL)
+        if (profileFile == nullptr)
         {
             profileFile = new ss_file(fname);
         }
@@ -568,7 +568,7 @@ int file_widget::get_cumrpt_write()
 */
 bool file_widget::read_files()
 {
-    if (model_info == NULL)
+    if (model_info == nullptr)
         model_info = new ss_model((QWidget*)this->parent());
     else
         model_info->reset();
@@ -693,7 +693,7 @@ bool file_widget::read_starter_file (QString filename)
     {
         filename = ui->label_starter_file->text();
     }
-    if (starterFile != NULL)
+    if (starterFile != nullptr)
         delete starterFile;
 
     starterFile = new ss_file (filename, this);
@@ -771,10 +771,10 @@ bool file_widget::read_starter_file (QString filename)
         model_info->set_depletion_denom(token.toDouble());
         temp_int = starterFile->getIntValue(QString("SPR report basis"), 0, 4, 1);
         model_info->set_spr_basis(temp_int);
-        temp_int = starterFile->getIntValue(QString("F std report value"), 0, 4, 1);
+        temp_int = starterFile->getIntValue(QString("F std report value"), 0, 5, 1);
         model_info->set_f_units(temp_int);
-        // min and max age over which average F will be calculated with F_reporting=4
-        if (model_info->get_f_units() == 4)
+        // min and max age over which average F will be calculated with F_reporting=4 or 5
+        if (model_info->get_f_units() >= 4)
         {
             token = starterFile->get_next_value("F min age");
             temp_int = token.toInt();
@@ -928,7 +928,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("SPR_report_basis:  0=skip; 1=(1-SPR)/(1-SPR_tgt); 2=(1-SPR)/(1-SPR_MSY); 3=(1-SPR)/(1-SPR_Btarget); 4=rawSPR"));
 
         chars += starterFile->write_val(model_info->get_f_units(), 5,
-                    QString("F_report_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Frates); 4=true F for range of ages"));
+                    QString("F_report_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Frates); 4=true F for range of ages; 5=ave F for range of ages"));
 
         line.clear();
         line.append(QString(" %1 %2 #_min and max age over which average F will be calculated" ).arg
@@ -937,7 +937,7 @@ void file_widget::write_starter_file (QString filename)
         if (model_info->get_f_units() < 4)
         {
             line.prepend(QString ("#COND"));
-            line.append(QString(" with F_reporting=4"));
+            line.append(QString(" with F_reporting>3"));
         }
         chars += starterFile->writeline (line);
         chars += starterFile->write_val (model_info->get_f_basis(), 5,
@@ -973,7 +973,7 @@ int file_widget::read_run_num_file (QString filename)
     if (filename.isEmpty())
         filename = QString(QString("%1/%2").arg(current_dir_name, RUN_NUMBER_FILE));
 
-    if (runNumberFile != NULL)
+    if (runNumberFile != nullptr)
         delete runNumberFile;
     runNumberFile = new ss_file (filename, this);
 
@@ -1003,7 +1003,7 @@ void file_widget::write_run_num_file (QString filename)
     if (filename.isEmpty())
         filename = QString("%1/%2").arg(current_dir_name, RUN_NUMBER_FILE);
 
-    if (runNumberFile == NULL)
+    if (runNumberFile == nullptr)
         runNumberFile = new ss_file (filename, this);
     else
         runNumberFile->setFileName(filename);
@@ -1020,7 +1020,7 @@ void file_widget::write_run_num_file (QString filename)
 
 void file_widget::show_file_info(ss_file *file)
 {
-    if (file != NULL)
+    if (file != nullptr)
     {
         file_info_dialog(file).exec();
     }

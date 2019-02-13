@@ -14,7 +14,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     titleFont.setPointSize(16);
     titleFont.setBold(true);
 
-    current_fleet = NULL;
+    current_fleet = nullptr;
     ui->comboBox_fleet_name->setFont(titleFont);
 
     ui->label_selex_age_discard->setVisible(false);
@@ -370,7 +370,7 @@ void fleet_widget::setActive(bool flag)
 void fleet_widget::readingNewModel()
 {
     disconnectFleet();
-    current_fleet = NULL;
+    current_fleet = nullptr;
 }
 
 void fleet_widget::reset ()
@@ -744,7 +744,7 @@ void fleet_widget::delete_fleet(int index)
             index < totalFleets)
         {
             disconnectFleet();
-            current_fleet = NULL;
+            current_fleet = nullptr;
             model_data->deleteFleet(index);
             totalFleets--;
         }

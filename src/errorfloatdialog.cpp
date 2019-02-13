@@ -59,7 +59,7 @@ void ErrorFloatDialog::setSumLabel (QString label)
 
 void ErrorFloatDialog::setNumValues(int num)
 {
-    QDoubleSpinBox *ds = NULL;
+    QDoubleSpinBox *ds = nullptr;
 
     while (boxes.count() < num)
     {

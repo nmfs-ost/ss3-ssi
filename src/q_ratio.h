@@ -36,9 +36,13 @@ public:
     int getLinkVal ();
     bool getDoPower();
     bool getDoMirror();
+    bool getDoMirOffset();
     bool getDoExtraSD();
     bool getDoBiasAdj();
     bool getDoFloat();
+
+    QString getMirOffset();
+    void setMirOffset(QStringList values);
 
     QString getPower();
     void setPower(QStringList values);

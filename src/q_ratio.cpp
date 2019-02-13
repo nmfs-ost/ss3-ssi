@@ -286,6 +286,12 @@ bool q_ratio::getDoPower()
     return (val == 3);
 }
 
+bool q_ratio::getDoMirOffset()
+{
+    int val = getLinkType();
+    return (val == 4);
+}
+
 bool q_ratio::getDoExtraSD()
 {
     int val = setup->getValue(2);
@@ -305,6 +311,23 @@ bool q_ratio::getDoFloat()
 }
 
 
+QString q_ratio::getMirOffset()
+{
+    QString txt("");
+    if (getDoMirOffset())
+    {
+        QStringList values(params->getParameter(1));
+        for (int j = 0; j < values.count(); j++)
+            txt.append(QString("  %1 ").arg(values.at(j)));
+    }
+    return txt;
+}
+
+void q_ratio::setMirOffset(QStringList values)
+{
+    params->setParamData(1, values);
+    varParams->setParameter(1, values);
+}
 
 QString q_ratio::getPower()
 {
@@ -332,7 +355,7 @@ QString q_ratio::getExtra()
     int index = 1;
     if (getDoExtraSD())
     {
-        if (getDoPower())
+        if (getDoPower() || getDoMirOffset())
         {
             index = 2;
         }

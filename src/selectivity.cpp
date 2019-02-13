@@ -11,7 +11,7 @@ selectivity::selectivity(ss_model *model, int method)
 
     numXvals = 0;
     numAges = 0;
-//    equation = NULL;
+//    equation = nullptr;
     setup = new setupModel();
     QStringList hdr;
     hdr << tr("Pattern") << tr("Discard") << tr("Male") << tr("Special");
@@ -1471,7 +1471,7 @@ double selectivity::evaluate()
 double selectivity::evaluate(int f, float m)
 {
     double val;
-    if (equation == NULL)
+    if (equation == nullptr)
         val = 0.0;
     else
         val = equation->evaluate();

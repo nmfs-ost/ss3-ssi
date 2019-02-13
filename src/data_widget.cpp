@@ -65,7 +65,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     genBins = new tableview();
     genBins->setParent(this);
     ui->horizontalLayout_gen_bins->addWidget(genBins);
-    current_gen_comp = NULL;
+    current_gen_comp = nullptr;
     connect (ui->spinBox_gen_comp, SIGNAL(valueChanged(int)), SLOT(changeGenCompMethod(int)));
     connect (ui->pushButton_gen_new, SIGNAL(released()), SLOT(newGenCompMethod()));
     connect (ui->pushButton_gen_copy, SIGNAL(released()), SLOT(copyGenCompMethod()));
@@ -209,7 +209,7 @@ void data_widget::reset()
 
 void data_widget::refresh()
 {
-    if (model_data != NULL)
+    if (model_data != nullptr)
     {
         ui->spinBox_year_start->setValue(model_data->get_start_year());
         ui->spinBox_year_end->setValue(model_data->get_end_year());
@@ -637,12 +637,12 @@ void data_widget::changeGenCompMethod(int method)
     {
         ui->spinBox_gen_comp->setValue(0);
         ui->label_gen_comp_total->setText("0");
-        current_gen_comp = NULL;
+        current_gen_comp = nullptr;
         ui->spinBox_gen_units->setValue(0);
         ui->spinBox_gen_scale->setValue(0);
         ui->lineEdit_gen_mincomp->setText(" ");
         ui->spinBox_gen_num_bins->setValue(0);
-        genBins->setModel(NULL);
+        genBins->setModel(nullptr);
     }
 }
 
@@ -696,7 +696,7 @@ void data_widget::changeGenUnits(int units)
     else if (units > 2)
         ui->spinBox_gen_units->setValue(2);
 
-    if (current_gen_comp != NULL)
+    if (current_gen_comp != nullptr)
         current_gen_comp->setUnits(units);
 }
 
@@ -707,14 +707,14 @@ void data_widget::changeGenScale(int scale)
     else if (scale > 4)
         ui->spinBox_gen_scale->setValue(4);
 
-    if (current_gen_comp != NULL)
+    if (current_gen_comp != nullptr)
         current_gen_comp->setScale(scale);
 }
 
 void data_widget::changeGenMinComp()
 {
     float temp = ui->lineEdit_gen_mincomp->text().toFloat();
-    if (current_gen_comp != NULL)
+    if (current_gen_comp != nullptr)
         current_gen_comp->setMinComp(temp);
 }
 
@@ -722,7 +722,7 @@ void data_widget::changeGenBins(int numBins)
 {
     if (numBins < 0)
         ui->spinBox_gen_num_bins->setValue(0);
-    else if (current_gen_comp != NULL)
+    else if (current_gen_comp != nullptr)
     {
         int method = ui->spinBox_gen_comp->value();
         current_gen_comp->setNumberBins(numBins);
@@ -797,7 +797,7 @@ void data_widget::changeDoTags(bool flag)
         ui->spinBox_tag_num_groups->setValue(0);
         ui->spinBox_tag_latency->setValue(0);
         ui->spinBox_tag_max_per->setValue(0);
-        tagGroups->setModel(NULL);
+        tagGroups->setModel(nullptr);
     }
 }
 

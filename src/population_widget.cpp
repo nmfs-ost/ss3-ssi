@@ -12,7 +12,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     ui->radioButton_global->setChecked(true);
     model_data = m_data;
     pop = model_data->pPopulation;
-    currPattern = NULL;
+    currPattern = nullptr;
 
     // Growth
     growthMorphDistView = new tableview();
@@ -219,9 +219,9 @@ population_widget::~population_widget()
 
 void population_widget::set_model(ss_model *model)
 {
-    if (model != NULL)
+    if (model != nullptr)
     {
-        if (model_data != NULL)
+        if (model_data != nullptr)
         {
 /*            disconnect (pop->Move()->getMovementDefs(),
                         SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -286,7 +286,7 @@ void population_widget::changeGrowthPattern (int num)
     growthPattern *gp = pop->Grow()->getPattern(num - 1);
     if (currPattern != gp)
     {
-        if (currPattern != NULL)
+        if (currPattern != nullptr)
         {
             // disconnect
             disconnect (currPattern->getGrowthParams(), SIGNAL(dataChanged()),

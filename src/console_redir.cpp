@@ -2,7 +2,7 @@
 
 console_redir::console_redir(QWidget *parent)
 {
-    process = NULL;
+    process = nullptr;
 }
 
 console_redir::~console_redir()
@@ -28,7 +28,7 @@ bool console_redir::StartChildProcess(bool bShowChildWindow)
 
 bool console_redir::IsChildRunning() const
 {
-    return (process != NULL);
+    return (process != nullptr);
 }
 
 void console_redir::TerminateChildProcess()
@@ -37,7 +37,7 @@ void console_redir::TerminateChildProcess()
     {
         process->close();
         delete process;
-        process = NULL;
+        process = nullptr;
     }
 }
 

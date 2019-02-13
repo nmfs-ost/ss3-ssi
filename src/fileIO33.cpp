@@ -240,7 +240,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.6 #Setup population Length bins
         {
         compositionLength *l_data = data->get_length_composition();
-        if (l_data == NULL)
+        if (l_data == nullptr)
             l_data = new compositionLength();
         data->set_length_composition(l_data);
         temp_int = d_file->getIntValue(QString("Length comp alt bin method"), 1, 3, 1);
@@ -342,7 +342,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.8 #Start age composition data section
         {
         compositionAge *a_data = data->get_age_composition();
-        if (a_data == NULL)
+        if (a_data == nullptr)
             a_data = new compositionAge ();
         token = d_file->get_next_value(QString("age comp num bins"));
         temp_int = token.toInt();
@@ -2771,10 +2771,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (fleet->getQSetupRead())
             {
                 // Q Link
-                if (datalist.at(0).toInt() > 0)
+                int link = datalist.at(0).toInt();
+                if (link > 0)
                 {
                     datalist = readParameter(c_file);
                     fleet->Q()->setLink(datalist);
+                }
+                // Q Mirror Offset
+                if (fleet->Q()->getDoMirOffset())
+                {
+                    datalist = readParameter(c_file);
+                    fleet->Q()->setMirOffset(datalist);
                 }
                 // Q Power
                 if (fleet->Q()->getDoPower())
@@ -4186,35 +4193,44 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             {
                 line.clear();
                 temp_string = fleet->Q()->getLink();
-//                for (int k = 0; k < str_list.count(); k++)
-//                    line.append(QString("  ").arg(str_list.at(k)));
                 line.append(QString("%1 #  LnQ_base_%2(%3)").arg(
                                 temp_string,
                                 fleet->getName(),
                                 QString::number(i+1)));
                 chars += c_file->writeline(line);
-            }
-            // Q Power
-            if (fleet->getQSetupRead() && fleet->Q()->getDoPower())
-            {
-                line.clear();
-                temp_string = fleet->Q()->getPower();
-                line.append(QString("%1  #  Q_power_%2(%3)").arg(
-                                temp_string,
-                                fleet->getName(),
-                                QString::number(i+1)));
-                chars += c_file->writeline(line);
-            }
-            // Q Extra SD
-            if (fleet->getQSetupRead() && fleet->Q()->getDoExtraSD())
-            {
-                line.clear();
-                temp_string = fleet->Q()->getExtra();
-                line.append(QString("%1  #  Q_extraSD_%2(%3)").arg(
-                                temp_string,
-                                fleet->getName(),
-                                QString::number(i+1)));
-                chars += c_file->writeline(line);
+                // Q Mirror Offset
+                if (fleet->Q()->getDoMirOffset())
+                {
+                    line.clear();
+                    temp_string = fleet->Q()->getMirOffset();
+                    line.append(QString("%1  #  Q_Mirror_Offset_%2(%3)").arg(
+                                    temp_string,
+                                    fleet->getName(),
+                                    QString::number(i+1)));
+                    chars += c_file->writeline(line);
+                }
+                // Q Power
+                if (fleet->Q()->getDoPower())
+                {
+                    line.clear();
+                    temp_string = fleet->Q()->getPower();
+                    line.append(QString("%1  #  Q_power_%2(%3)").arg(
+                                    temp_string,
+                                    fleet->getName(),
+                                    QString::number(i+1)));
+                    chars += c_file->writeline(line);
+                }
+                // Q Extra SD
+                if (fleet->Q()->getDoExtraSD())
+                {
+                    line.clear();
+                    temp_string = fleet->Q()->getExtra();
+                    line.append(QString("%1  #  Q_extraSD_%2(%3)").arg(
+                                    temp_string,
+                                    fleet->getName(),
+                                    QString::number(i+1)));
+                    chars += c_file->writeline(line);
+                }
             }
         }
 

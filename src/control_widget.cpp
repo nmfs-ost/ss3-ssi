@@ -34,7 +34,7 @@ void control_widget::read_file(QString fname)
 {
     if (!fname.isEmpty())
     {
-        if (in_file != NULL)
+        if (in_file != nullptr)
             delete in_file;
         filename = fname;
         in_file = new ss_file(filename);
@@ -52,7 +52,7 @@ void control_widget::write_file(QString fname)
 {
     if (!fname.isEmpty())
     {
-        if (out_file != NULL)
+        if (out_file != nullptr)
             delete out_file;
         filename = fname;
         out_file = new ss_file(filename);

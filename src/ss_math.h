@@ -8,10 +8,14 @@
 
 #include <math.h>
 
-float SS_PI = 3.1415926536;
-float SS_E  = 2.7182818285;
+#ifndef nullptr
+#define nullptr NULL
+#endif
 
-float SS_SQRT_2PI = sqrt(2 * SS_PI);
+double SS_PI = 3.1415926536;
+double SS_E  = 2.7182818285;
+
+double SS_SQRT_2PI = sqrt(2 * SS_PI);
 
 float normal_dist (int num, int place)
 {

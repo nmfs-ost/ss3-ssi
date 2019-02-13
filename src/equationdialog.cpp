@@ -33,17 +33,17 @@ equationDialog::equationDialog(QWidget *parent, QString *typ) :
     name = QString (QString("%1 Selectivity").arg(type));
     title = name;
 
-    selex = NULL;
-    fleet = NULL;
+    selex = nullptr;
+    fleet = nullptr;
     genders = 2;
 
     equationNum = -1;
-    parameters = NULL;
+    parameters = nullptr;
     numParams = 0;
     numSliders = 0;
 
     yMax = -10;
-    chartview = NULL;
+    chartview = nullptr;
 
     setXvalStrings(QStringList());
     resetChart(true);
@@ -152,7 +152,7 @@ equationDialog::~equationDialog()
 
 void equationDialog::setSelex (selectivity *slx)
 {
-    if (selex != NULL &&
+    if (selex != nullptr &&
             selex->getNumXvals() > 0)
     {
         disconnect(selex, SIGNAL(dataChanged()), this, SLOT(changeSelex()));
@@ -242,7 +242,7 @@ void equationDialog::setMidBin(float val)
 {
     QStringList ages;
     compositionAge *ageComp = dataModel->get_age_composition();
-    if (ageComp == NULL)
+    if (ageComp == nullptr)
         ages.clear();
     else
         ages = ageComp->getBins();
@@ -271,12 +271,12 @@ void equationDialog::getParameterValues()
     special = selex->getSpecial();
     genders = selex->getNumGenders();
     parameters = selex->getParameterModel();
-    if (NULL == parameters)
+    if (nullptr == parameters)
         switchnum = numParams = 0;
     else
         numParams = parameters->rowCount();
 
-//    if (parameters != NULL)
+//    if (parameters != nullptr)
     {
 //        int oldnum = numParams;
 //        numParams = parameters->rowCount();
@@ -389,7 +389,7 @@ void equationDialog::getParameterValues()
 void equationDialog::setParameterValues()
 {
     QStringList values;
-    if (parameters != NULL)
+    if (parameters != nullptr)
     {
     disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
@@ -483,9 +483,9 @@ void equationDialog::refresh()
 
 void equationDialog::update()
 {
-    if (parameters == NULL)
+    if (parameters == nullptr)
         return;
-    if (selex == NULL)
+    if (selex == nullptr)
         return;
 
 /*    if (waiting)
@@ -660,9 +660,9 @@ void equationDialog::update()
 
 void equationDialog::updateSel()
 {
-    if (parameters == NULL)
+    if (parameters == nullptr)
         return;
-    if (selex == NULL)
+    if (selex == nullptr)
         return;
 
     if (waiting)
@@ -1831,7 +1831,7 @@ void equationDialog::updateTicks(int xT, int yT)
 void equationDialog::resetChart(bool create)
 {
     ui->label_title->hide();
-    if (chartview != NULL)
+    if (chartview != nullptr)
     {
         chartview->setVisible(false);
         ui->verticalLayout_graph->removeWidget(chartview);
@@ -1843,17 +1843,17 @@ void equationDialog::resetChart(bool create)
         delete axisXsel;
         delete axisY;
         delete axisYalt;
-        if (ascendSeries != NULL)
+        if (ascendSeries != nullptr)
             delete ascendSeries;
-        if (dscendSeries != NULL)
+        if (dscendSeries != nullptr)
             delete dscendSeries;
-        if (join1Series != NULL)
+        if (join1Series != nullptr)
             delete join1Series;
-        if (join2Series != NULL)
+        if (join2Series != nullptr)
             delete join2Series;
-        if (join3Series != NULL)
+        if (join3Series != nullptr)
             delete join3Series;
-        if (ptSeries != NULL)
+        if (ptSeries != nullptr)
             delete ptSeries;
         delete selSeries;
         delete cht;
@@ -1862,12 +1862,12 @@ void equationDialog::resetChart(bool create)
     chartview = new QChartView(this);
     chartview->setChart(new QChart());
     cht = chartview->chart();
-    ascendSeries = NULL;
-    dscendSeries = NULL;
-    join1Series = NULL;
-    join2Series = NULL;
-    join3Series = NULL;
-    ptSeries = NULL;
+    ascendSeries = nullptr;
+    dscendSeries = nullptr;
+    join1Series = nullptr;
+    join2Series = nullptr;
+    join3Series = nullptr;
+    ptSeries = nullptr;
     selSeries = new QLineSeries(cht);
     selSeries->setName(QString("Selex"));
     axisXsel = new QValueAxis();

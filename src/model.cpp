@@ -65,10 +65,10 @@ void Season::setDuration(float value)
 ss_model::ss_model(QWidget *parent) :
     QObject(parent)
 {
-    ageData = NULL;
-    lengthData = NULL;
-    morphData = NULL;
-    tag_loss_param = NULL;
+    ageData = nullptr;
+    lengthData = nullptr;
+    morphData = nullptr;
+    tag_loss_param = nullptr;
     sdYearsModel = new tablemodel(this);
     sdYearsModel->setColumnCount(0);
     sdYearsModel->setRowCount(1);
@@ -114,17 +114,17 @@ void ss_model::clear()
 
     for (int i = 0; i < fleets.count(); i++)
         deleteFleet(i);
-    if (pPopulation) delete pPopulation;
-    pPopulation = NULL;
+    if (pPopulation != nullptr) delete pPopulation;
+    pPopulation = nullptr;
  //   populations.clear();
-    if (forecast) delete forecast;
-    forecast = NULL;
-    if (lengthData) delete lengthData;
-    lengthData = NULL;
-    if (ageData) delete ageData;
-    ageData = NULL;
-    if (morphData) delete morphData;
-    morphData = NULL;
+    if (forecast != nullptr) delete forecast;
+    forecast = nullptr;
+    if (lengthData != nullptr) delete lengthData;
+    lengthData = nullptr;
+    if (ageData != nullptr) delete ageData;
+    ageData = nullptr;
+    if (morphData != nullptr) delete morphData;
+    morphData = nullptr;
     while (!cListGeneralMethods.isEmpty())
     {
         compositionGeneral *a = cListGeneralMethods.takeFirst();
@@ -183,7 +183,7 @@ void ss_model::reset()
     iNumRuns = 0;
 //    QMessageBox::information(this, "Program Flow", "Model Forecast and Population reset.");
 
-    if (ageData == NULL)
+    if (ageData == nullptr)
         ageData = new compositionAge(this);
     ageData->setNumberBins(0);
     ageData->setNumberObs(0);
@@ -192,7 +192,7 @@ void ss_model::reset()
     ageData->set_number_ages(0);
 //    QMessageBox::information(this, "Program Flow", "Model age comp set up.");
 
-    if (lengthData == NULL)
+    if (lengthData == nullptr)
         lengthData = new compositionLength();
     lengthData->setNumberBins(0);
     lengthData->setNumberObs(0);
@@ -212,7 +212,7 @@ void ss_model::reset()
     setDoMorphComp(false);
     if (morphData)
         delete morphData;
-    morphData = NULL;
+    morphData = nullptr;
     while (!cListGeneralMethods.isEmpty())
     {
         compositionGeneral *a = cListGeneralMethods.takeFirst();
@@ -325,7 +325,7 @@ void ss_model::setALKTol (float val)
 
 Season *ss_model::getSeason (int index)
 {
-    Season *season = NULL;
+    Season *season = nullptr;
     if (index > 0 && index <= seasons.count())
         season = seasons.at(index - 1);
     return season;
@@ -352,7 +352,7 @@ float ss_model::getMonthBySeasonFleet(int seas, int fleet)
     for (int i = 1; i < seas; i++)
     {
         seasn = getSeason(i);
-        if (seasn != NULL)
+        if (seasn != nullptr)
             month += seasn->getNumMonths();
     }
     seasn = getSeason(seas);
@@ -516,7 +516,7 @@ int ss_model::getTotalSeasons()
 
 void ss_model::addFleet(Fleet *flt)
 {
-    if (flt != NULL)
+    if (flt != nullptr)
     {
         flt->setStartYear(get_start_year());
         flt->setTotalYears(getTotalYears());
@@ -529,7 +529,7 @@ void ss_model::addFleet(Fleet *flt)
 
 Fleet * ss_model::getFleet(int index)
 {
-    Fleet * flt = NULL;
+    Fleet * flt = nullptr;
     if (index >= 0 && index < fleets.count())
     {
         flt = fleets.at(index);
@@ -562,12 +562,12 @@ Fleet * ss_model::newFleet(QString name)
 
 void ss_model::deleteFleet(int index)
 {
-    Fleet * flt = NULL;
+    Fleet * flt = nullptr;
     if (index >= 0 && index < fleets.count())
     {
         flt = fleets.takeAt(index);
         delete flt;
-        flt = NULL;
+        flt = nullptr;
         assignFleetNumbers();
     }
     forecast->set_num_fleets(get_num_fleets());
@@ -802,14 +802,14 @@ void ss_model::setTagLoss(int flag)
     tag_loss = flag;
     if (tag_loss == 1)
     {
-        if (tag_loss_param == NULL)
+        if (tag_loss_param == nullptr)
             tag_loss_param =  new longParameter();
     }
     else
     {
-        if (tag_loss_param != NULL)
+        if (tag_loss_param != nullptr)
             delete tag_loss_param;
-        tag_loss_param = NULL;
+        tag_loss_param = nullptr;
     }
 }
 
@@ -1183,7 +1183,7 @@ int ss_model::getNumActiveFleets()
 
 Fleet *ss_model::getActiveFleet(int num)
 {
-    Fleet *flt = NULL;
+    Fleet *flt = nullptr;
     for (int i = 0; i < get_num_fleets(); i++)
     {
         flt = getFleet(i);

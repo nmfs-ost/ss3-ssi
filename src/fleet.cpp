@@ -59,53 +59,53 @@ Fleet::Fleet(ss_model *parent) :
 Fleet::~Fleet()
 {
     reset();
-    if (s_name != NULL)
+    if (s_name != nullptr)
         delete s_name;
-    s_name = NULL;
-    if (retainCatch != NULL)
+    s_name = nullptr;
+    if (retainCatch != nullptr)
         delete retainCatch;
-    retainCatch = NULL;
-    if (abundModel != NULL)
+    retainCatch = nullptr;
+    if (abundModel != nullptr)
         delete abundModel;
-    abundModel = NULL;
-    if (discardModel != NULL)
+    abundModel = nullptr;
+    if (discardModel != nullptr)
         delete discardModel;
-    discardModel = NULL;
-    if (lengthComp != NULL)
+    discardModel = nullptr;
+    if (lengthComp != nullptr)
         delete lengthComp;
-    lengthComp = NULL;
-    if (ageComp != NULL)
+    lengthComp = nullptr;
+    if (ageComp != nullptr)
         delete ageComp;
-    ageComp = NULL;
-    if (morphComp != NULL)
+    ageComp = nullptr;
+    if (morphComp != nullptr)
         delete morphComp;
-    morphComp = NULL;
+    morphComp = nullptr;
     while (generalComps.count() > 0)
     {
         fleet_comp_general*cg = generalComps.takeLast();
         delete cg;
-        cg = NULL;
+        cg = nullptr;
     }
-    if (mbwtObs != NULL)
+    if (mbwtObs != nullptr)
         delete mbwtObs;
-    mbwtObs = NULL;
-    if (saaObs != NULL)
+    mbwtObs = nullptr;
+    if (saaObs != nullptr)
         delete saaObs;
-    saaObs = NULL;
-    if (recapObs != NULL)
+    saaObs = nullptr;
+    if (recapObs != nullptr)
         delete recapObs;
-    recapObs = NULL;
-    if (lambdaModel != NULL)
+    recapObs = nullptr;
+    if (lambdaModel != nullptr)
         delete lambdaModel;
-    lambdaModel = NULL;
+    lambdaModel = nullptr;
 
     delete size_selex;
-    size_selex = NULL;
+    size_selex = nullptr;
     delete age_selex;
-    age_selex = NULL;
+    age_selex = nullptr;
 
     delete q_R;
-    q_R = NULL;
+    q_R = nullptr;
     lambdas.clear();
 }
 
@@ -122,7 +122,7 @@ void Fleet::setName(QString fname)
 QString Fleet::getName()
 {
     QString nm("");
-    if (s_name == NULL)
+    if (s_name == nullptr)
         nm.append("None");
     else
         nm.append(*s_name);
@@ -732,7 +732,7 @@ void Fleet::set_abundance(int year, int season, float obs)
 float Fleet::abundance(int year, int month)
 {
     double val = 0.0;
- //   yearIndexMeasure *yim = NULL;
+ //   yearIndexMeasure *yim = nullptr;
  //   yim = getYearIndexMeasure(f_abundance, year, month);
  //   if (yim)
  //       val = yim->getValue();
@@ -749,7 +749,7 @@ void Fleet::set_abundance_error(int i_year, int month, float err)
 float Fleet::abundance_error(int year, int month)
 {
     double val = 0.0;
-//    yearIndexMeasure *yim = NULL;
+//    yearIndexMeasure *yim = nullptr;
 //    yim = getYearIndexMeasure(f_abundance_error, year, month);
  //   if (yim)
  //       val = yim->getValue();
@@ -788,7 +788,7 @@ int Fleet::abundance_count()
     }
     return count;
 /*    int count = 0;
-    yearIndexMeasure *yim = NULL;
+    yearIndexMeasure *yim = nullptr;
     for (int i = 0; i < f_abundance.count(); i++)
     {
         yim = f_abundance.at(i);

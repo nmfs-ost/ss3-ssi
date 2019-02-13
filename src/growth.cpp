@@ -98,7 +98,7 @@ void ss_growth::reset()
 /*
 growth_pattern * ss_growth::getPattern(int i) const
 {
-    growth_pattern * gp = NULL;
+    growth_pattern * gp = nullptr;
     if (i < patterns.count())
         gp = patterns[i];
     return gp;
@@ -155,7 +155,7 @@ QStringList ss_growth::getParameter(int index)
 
 /*longParameter *ss_growth::getParam(int i) const
 {
-    longParameter *lp = NULL;
+    longParameter *lp = nullptr;
     if (i < params.count())
         lp = params.at(i);
     return lp;
