@@ -11,10 +11,10 @@
 #define app_name          ("Stock Synthesis Interface")
 #define app_version_major  3
 #define app_version_minor  3
-#define app_version_sub    12
-#define app_version_bugfix 4
+#define app_version_sub    13
+#define app_version_bugfix 1
 #define app_release_level  " "  // a - alpha, b - beta, blank - release candidate
-#define app_version_apply ("3.30.12")
+#define app_version_apply ("3.30.13")
 #define app_copyright_date  __DATE__
 #define app_copyright_org ("NOAA")
 

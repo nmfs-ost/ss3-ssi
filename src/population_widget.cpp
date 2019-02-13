@@ -573,7 +573,7 @@ int population_widget::getFecundityAdjustment()
 
 void population_widget::setMortOption(int opt)
 {
-    int numgen = model_data->get_num_genders() > 1? 2: 1;
+    int numgen = (model_data->get_num_genders() > 1)? 2: 1;
     ui->comboBox_mort_option->setCurrentIndex(opt);
     ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);

@@ -17,6 +17,12 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.3.13.01
+    2019-02-13
+1. Allows gender to be -1 to invoke Female SSB=SSB*fracfem.
+2. Q option 4, Mirror with Offset is included.
+
+============================================================================
     3.3.12.06
     2018-12-21
 1. Spline selectivity scaling working differently now.

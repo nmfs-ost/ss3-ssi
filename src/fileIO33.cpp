@@ -1489,7 +1489,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
         numFleets = data->get_num_fleets();
         numSeas  = data->get_num_seasons();
-        numGenders = data->get_num_genders();
+        numGenders = (data->get_num_genders() > 1)? 2: 1;
 
         fcast->set_num_seasons(numSeas);
         fcast->set_num_fleets(numFleets);

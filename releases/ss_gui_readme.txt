@@ -9,13 +9,28 @@ allow for changes to the data, run the executable, and display results.
 Currently, the only results displayed are the files warnings.sso and
 echoinput.sso and the TIME-SERIES charts from Report.sso.
 
-Built on Windows 7 using MinGW 5.9 with Qt 5.7
+Built on Windows 10 using MinGW 5.3 with Qt 5.11
 
 This is a work of the U.S. Government and is not subject to copyright
 protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.3.13.01
+    2019-02-13
+1. Allows gender to be -1 to invoke Female SSB=SSB*fracfem.
+2. Q option 4, Mirror with Offset is included.
+
+============================================================================
+    3.3.12.06
+    2018-12-21
+1. Spline selectivity scaling working differently now.
+
+============================================================================
+    3.3.12.05
+    2018-10-31
+1. Moved to Windows 10 and Qt 5.11.
 ============================================================================
     3.3.12.04
     2018-10-05

@@ -40,8 +40,8 @@ public:
 
     void setAltBinMethod (int method);
     int getAltBinMethod () {return i_method;}
-    void setAltBinWidth (int width) {i_bin_width = width;}
-    int getAltBinWidth () {return i_bin_width;}
+    void setAltBinWidth (float width) {f_bin_width = width;}
+    int getAltBinWidth () {return f_bin_width;}
     void setAltBinMin (int min) {i_bin_min = min;}
     int getAltBinMin () {return i_bin_min;}
     void setAltBinMax (int max) {i_bin_max = max;}
@@ -69,7 +69,7 @@ protected:
     longParameterTable *dirichletParams;
 
     int i_method;
-    int i_bin_width;
+    float f_bin_width;
     int i_bin_min;
     int i_bin_max;
 
@@ -81,7 +81,7 @@ protected:
 class compositionLength : public composition
 {
 public:
-    compositionLength (QObject *parent = 0);
+    compositionLength (QObject *parent = nullptr);
 
     void setNumberBins(int num);
 
@@ -91,7 +91,7 @@ public:
 class compositionAge : public composition
 {
 public:
-    compositionAge (QObject *parent = 0);
+    compositionAge (QObject *parent = nullptr);
     ~compositionAge ();
 
     void reset();

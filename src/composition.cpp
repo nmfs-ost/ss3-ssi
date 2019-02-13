@@ -29,7 +29,7 @@ void composition::reset()
     dirichletParams->setParamCount(0);
 
     i_method = 0;
-    i_bin_width = 0;
+    f_bin_width = 0;
     i_bin_max = 0;
     i_bin_min = 0;
 
@@ -61,8 +61,8 @@ int composition::generateAltBins ()
     int num = 0, bin;
     if (i_method == 2)
     {
-        num = (i_bin_max - i_bin_min) / i_bin_width + 1;
-        for (bin = i_bin_min; bin <= i_bin_max; bin += i_bin_width)
+        num = (i_bin_max - i_bin_min) / f_bin_width + 1;
+        for (bin = i_bin_min; bin <= i_bin_max; bin += f_bin_width)
         {
             bins.append(QString::number(bin));
         }

@@ -8,14 +8,11 @@
 
 #include <math.h>
 
-#ifndef nullptr
-#define nullptr NULL
-#endif
 
-double SS_PI = 3.1415926536;
-double SS_E  = 2.7182818285;
+static double SS_PI = 3.1415926536;
+static double SS_E  = 2.7182818285;
 
-double SS_SQRT_2PI = sqrt(2 * SS_PI);
+static double SS_SQRT_2PI = sqrt(2.0 * SS_PI);
 
 float normal_dist (int num, int place)
 {
@@ -28,7 +25,7 @@ float normal_dist (int num, int place)
         start += interval * .5;
     }
     x = start + interval * place;
-    nrm = pow(SS_E, -(x * x / 4)) / SS_SQRT_2PI;
+    nrm = pow(SS_E, -(x * x / 4.0)) / SS_SQRT_2PI;
     return nrm;
 }
 
