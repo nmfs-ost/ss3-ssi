@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -81,10 +81,10 @@
          <widget class="QWidget" name="scrollAreaWidgetContents_2">
           <property name="geometry">
            <rect>
-            <x>-2</x>
-            <y>-133</y>
-            <width>895</width>
-            <height>546</height>
+            <x>0</x>
+            <y>0</y>
+            <width>775</width>
+            <height>553</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -491,8 +491,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>783</width>
-            <height>434</height>
+            <width>775</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -580,7 +580,7 @@
               </widget>
              </item>
              <item row="10" column="4">
-              <spacer name="horizontalSpacer_18">
+              <spacer name="horizontalSpacer_recr2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -649,12 +649,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string>9=Shepherd re-param (3 parameters)</string>
+                 <string>9=Shepherd re-param (3 parameters) - beta</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>10=Ricker re-param (3 parameters)</string>
+                 <string>10=Ricker re-parm (3 parameters) - beta</string>
                 </property>
                </item>
               </widget>
@@ -707,6 +707,33 @@
                </property>
               </widget>
              </item>
+             <item row="2" column="4">
+              <layout class="QHBoxLayout" name="horizontalLayout_equation">
+               <item>
+                <widget class="QPushButton" name="pushButton_equation">
+                 <property name="text">
+                  <string>Show Equation</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_equation">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
             </layout>
            </item>
            <item>
@@ -742,9 +769,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-200</y>
-            <width>762</width>
-            <height>634</height>
+            <y>0</y>
+            <width>749</width>
+            <height>646</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -1161,9 +1188,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-60</y>
-            <width>877</width>
-            <height>548</height>
+            <y>0</y>
+            <width>749</width>
+            <height>565</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -1576,8 +1603,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>783</width>
-            <height>434</height>
+            <width>775</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1717,8 +1744,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>783</width>
-            <height>434</height>
+            <width>775</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1974,8 +2001,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>783</width>
-            <height>434</height>
+            <width>775</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -2278,8 +2305,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>783</width>
-            <height>434</height>
+            <width>775</width>
+            <height>429</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">

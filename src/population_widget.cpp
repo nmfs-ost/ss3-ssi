@@ -30,6 +30,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_cv_params->addWidget(cvParamsView);
 
     // Recruitment
+    srOptionDialog = new srEquationDialog(this);
+    srOptionDialog->hide();
+    srOptionDialog->setPopulation(pop);
     recruitAssignParamsView = new tableview();
     recruitAssignParamsView->setParent(this);
     ui->horizontalLayout_recr_assigns->addWidget(recruitAssignParamsView);
@@ -60,6 +63,8 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 //    setRecrDistParam(1);
 //    ui->checkBox_recr_interaction->setChecked(false);
     connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
+    connect (ui->pushButton_equation, SIGNAL(toggled(bool)), SLOT(setSRequationDialogVisible(bool)));
+    connect (srOptionDialog, SIGNAL(closed()), SLOT(setSRequationDialogVisible()));
     connect (ui->spinBox_spwn_recr_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeSpwnRecReadTimeVary(int)));
     connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
     connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
@@ -1007,6 +1012,8 @@ void population_widget::changeRecrFullParams()
 {
     recruitParamsView->setHeight(pop->SR()->getFullParameters());
     recruitParamsView->resizeColumnsToContents();
+    srOptionDialog->setParameters(pop->SR()->getFullParameters());
+    srOptionDialog->update();
 }
 void population_widget::changeRecrTVParams()
 {
@@ -1194,8 +1201,9 @@ void population_widget::changeRecrDevMax (QString s_max)
 void population_widget::setSpawnRecrSpec(int spec)
 {
     if (spec < 1) spec = 1;
-    if (spec > 7) spec = 7;
+    if (spec > 10) spec = 10;
     ui->comboBox_recr_spec->setCurrentIndex(spec - 1);
+    srOptionDialog->setEquationNumber(spec);
 }
 
 void population_widget::changeSpawnRecrSpec(int num)
@@ -1207,6 +1215,15 @@ void population_widget::changeSpawnRecrSpec(int num)
         pop->SR()->setMethod(mthd);
     }
     recruitParamsView->setHeight(pop->SR()->getNumFullParameters());// getFullParameters());
+    srOptionDialog->changeEquationNumber(mthd);
+}
+
+void population_widget::setSRequationDialogVisible(bool checked)
+{
+    srOptionDialog->setVisible(checked);
+    ui->pushButton_equation->setChecked(checked);
+    if (checked)
+        srOptionDialog->refresh();
 }
 
 void population_widget::changeMoveNumDefs(int value)

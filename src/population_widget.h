@@ -13,6 +13,7 @@
 #include "ss_recruitment.h"
 #include "growth.h"
 #include "ss_fecundity.h"
+#include "srequationdialog.h"
 
 
 namespace Ui {
@@ -137,6 +138,7 @@ private slots:
     void changeRecrDevMin (QString s_min);
     void changeRecrDevMax (QString s_max);
     void changeRecrNumDevs (int num);
+    void setSRequationDialogVisible(bool checked = false);
 
     void changeMoveNumDefs(int value);
     void moveDefsChanged(QModelIndex tl, QModelIndex br);
@@ -157,6 +159,7 @@ private:
     tableview *cvParamsView;
 //    tableview *cvTVParamsView;
 
+    srEquationDialog *srOptionDialog;
     tableview *recruitDistView;
     tableview *recruitParamsView;
     tableview *recruitTVParamsView;
