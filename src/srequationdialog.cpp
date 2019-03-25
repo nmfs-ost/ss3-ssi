@@ -13,10 +13,13 @@ QT_CHARTS_USE_NAMESPACE
 
 using namespace tk;
 
-#define SLIDER_SPAN  100000
-
-#define SLIDER_SCALE 10000
-#define VALUE_SCALE .0001
+#ifndef PRECISION
+#define PRECISION .001
+#endif
+#ifndef SLIDER_SCALE
+#define SLIDER_SCALE 1000
+#define VALUE_SCALE .001
+#endif
 
 #include <cmath>
 
@@ -91,11 +94,11 @@ srEquationDialog::~srEquationDialog()
 
 void srEquationDialog::setXvals()
 {
-    float val;
+    double val;
     xValList.clear();
-    for (int i = 0; i <= 100; i++)
+    for (int i = 0; i <= 100; i+=2)
     {
-        val = static_cast<double>(i) / 100.0;
+        val = static_cast<double>(i / 100.0);
         xValList.append(val);
     }
 }
@@ -118,8 +121,8 @@ void srEquationDialog::setEquationNumber(int num)
 void srEquationDialog::changeEquationNumber(int num)
 {
     setEquationNumber(num);
-    getParameterValues();
-    update();
+    //getParameterValues();
+    restoreAll();
 }
 
 void srEquationDialog::setParameters(tablemodel *params)
@@ -142,33 +145,45 @@ void srEquationDialog::getParameterValues()
     {
      case 3:
         values = parameters->getRowData(2);
-        min3 = (values.at(0)).toFloat();
-        max3 = (values.at(1)).toFloat();
-        val3 = (values.at(2)).toFloat();
+        min1Changed(values.at(0).toDouble());
+        max1Changed(values.at(1).toDouble());
+        value1Changed(values.at(2).toDouble());
+        ui->doubleSpinBox_3_input->setValue(val3);
+/*        min3 = (values.at(0)).toDouble();
+        max3 = (values.at(1)).toDouble();
+        val3 = (values.at(2)).toDouble();
         ui->doubleSpinBox_3_input->setMinimum(min3);
         ui->doubleSpinBox_3_input->setMaximum(max3);
         ui->doubleSpinBox_3_input->setValue(val3);
-        setSlider3(min3, max3, val3);
+        setSlider3(min3, max3, val3);*/
         [[clang::fallthrough]];
     case 2:
         values = parameters->getRowData(1);
-        min2 = (values.at(0)).toFloat();
-        max2 = (values.at(1)).toFloat();
-        val2 = (values.at(2)).toFloat();
+        min2Changed(values.at(0).toDouble());
+        max2Changed(values.at(1).toDouble());
+        value2Changed(values.at(2).toDouble());
+        ui->doubleSpinBox_2_input->setValue(val2);
+ /*       min2 = (values.at(0)).toDouble();
+        max2 = (values.at(1)).toDouble();
+        val2 = (values.at(2)).toDouble();
         ui->doubleSpinBox_2_input->setMinimum(min2);
         ui->doubleSpinBox_2_input->setMaximum(max2);
         ui->doubleSpinBox_2_input->setValue(val2);
-        setSlider2(min2, max2, val2);
+        setSlider2(min2, max2, val2);*/
         [[clang::fallthrough]];
     case 1:
         values = parameters->getRowData(0);
-        min1 = (values.at(0)).toFloat();
-        max1 = (values.at(1)).toFloat();
-        val1 = (values.at(2)).toFloat();
+        min1Changed(values.at(0).toDouble());
+        max1Changed(values.at(1).toDouble());
+        value1Changed(values.at(2).toDouble());
+        ui->doubleSpinBox_1_input->setValue(val1);
+/*        min1 = (values.at(0)).toDouble();
+        max1 = (values.at(1)).toDouble();
+        val1 = (values.at(2)).toDouble();
         ui->doubleSpinBox_1_input->setMinimum(min1);
         ui->doubleSpinBox_1_input->setMaximum(max1);
         ui->doubleSpinBox_1_input->setValue(val1);
-        setSlider1(min1, max1, val1);
+        setSlider1(min1, max1, val1);*/
         break;
     default:
     case 0:
@@ -193,6 +208,7 @@ void srEquationDialog::setParameterValues()
         values[1] = QString::number(max3);
         values[2] = QString::number(val3);
         parameters->setRowData(2, values);
+        ui->doubleSpinBox_3_input->setValue(val3);
         [[clang::fallthrough]];
     case 2:
         values = parameters->getRowData(1);
@@ -200,6 +216,7 @@ void srEquationDialog::setParameterValues()
         values[1] = QString::number(max2);
         values[2] = QString::number(val2);
         parameters->setRowData(1, values);
+        ui->doubleSpinBox_2_input->setValue(val2);
         [[clang::fallthrough]];
     case 1:
         values = parameters->getRowData(0);
@@ -207,6 +224,7 @@ void srEquationDialog::setParameterValues()
         values[1] = QString::number(max1);
         values[2] = QString::number(val1);
         parameters->setRowData(0, values);
+        ui->doubleSpinBox_1_input->setValue(val1);
         [[clang::fallthrough]];
     case 0:
     default:
@@ -237,7 +255,7 @@ void srEquationDialog::refresh()
     restoreAll();
 }
 
-void srEquationDialog::update()
+void srEquationDialog::setup()
 {
     if (parameters == nullptr)
         return;
@@ -317,38 +335,119 @@ void srEquationDialog::update()
     QDialog::update();
 }
 
+void srEquationDialog::update()
+{
+    if (parameters == nullptr)
+        return;
+    if (pop == nullptr)
+        return;
+
+    while (updating)
+        continue;
+
+    {
+        updating = true;
+
+        switch (equationNum)
+        {
+//        case 1: // case 1: null
+//            numSliders = 0;
+//            blank (1, 6, QString("For B-H constrained curve"));
+//            break;
+
+        case 2:  // case 2: Ricker - 2 parameters: log(R0) and steepness
+            numSliders = 2;
+            updateRicker ();
+            break;
+
+        case 3:  // case 3: Standard Beverton-Holt - 2 parameters
+            numSliders = 2;
+            updateBevertonHoltStandard ();
+            break;
+
+        case 4:  // case 4: Ignore Steepness and no bias adjustment, like CAGEAN - 2 parameters, uses only first one
+            numSliders = 1;
+            updateCageanLike ();
+            break;
+
+        case 5:  // case 5: Hockey stick - 3 prarmenters: log(R0), steepness and Rmin
+            numSliders = 3;
+            updateHockeyStick ();
+            break;
+
+        case 6:  // case 6: Beverton-Holt with flat-top beyond Bzero - 2 parameters
+            numSliders = 2;
+            updateBevertonHoltBzeroFlat ();
+            break;
+
+        case 7: // case 7: Survivorship function - 3 parameters: log(R0), Zfrac, and Beta
+            numSliders = 3;
+            updateSurvivorship ();
+            break;
+
+        case 8:  // case 8: Shepherd - 3 parameters: log(R0), steepness, and shape C
+            numSliders = 3;
+            updateShepherd ();
+            break;
+
+        case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
+//            numSliders = 3;
+//            notYet();
+//            shepherdReParm ();
+            break;
+
+        case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
+//            numSliders = 3;
+//            notYet();
+//            rickerReParm ();
+            break;
+
+        default:
+            numSliders = 0;
+            blank(0);
+            break;
+
+        }
+        updating = false;
+    }
+    QDialog::update();
+}
 
 void srEquationDialog::setSlider1(double min, double max, double value)
 {
-    min1 = min; max1 = max;
+    min1 = min; max1 = max; val1 = value;
+/*    min1Changed(min);
+    max1Changed(max);
+    value1Changed(value);*/
     ui->doubleSpinBox_1_max->setValue(max1);
     ui->doubleSpinBox_1_min->setValue(min1);
-    ui->horizontalSlider_1->setMaximum(max1 * SLIDER_SCALE);
-    ui->horizontalSlider_1->setMinimum(min1 * SLIDER_SCALE);
-    ui->horizontalSlider_1->setValue(value * SLIDER_SCALE);
+    ui->horizontalSlider_1->setMaximum(static_cast<int>(max1 * SLIDER_SCALE));
+    ui->horizontalSlider_1->setMinimum(static_cast<int>(min1 * SLIDER_SCALE));
+    ui->horizontalSlider_1->setValue(static_cast<int>(value * SLIDER_SCALE));
     ui->doubleSpinBox_1_value->setMaximum(max1);
-    ui->doubleSpinBox_1_value->setValue(value);
+    ui->doubleSpinBox_1_value->setMinimum(min1);
+//    ui->doubleSpinBox_1_value->setValue(value);
 }
 
 void srEquationDialog::slider1Changed(int value)
 {
-    double val = (double)value * VALUE_SCALE;
+    double val = static_cast<double>(value * VALUE_SCALE);
     ui->doubleSpinBox_1_value->setValue(val);
 }
 
 void srEquationDialog::value1Changed (double value)
 {
-    if (val1 != value)
+    if (value > (val1 + PRECISION) || value < (val1 - PRECISION))
     {
         val1 = value;
         emit numbersUpdated();
-        ui->horizontalSlider_1->setValue(val1 * SLIDER_SCALE);
+        ui->horizontalSlider_1->setValue(static_cast<int>(val1 * SLIDER_SCALE));
     }
 }
 
 void srEquationDialog::min1Changed (double value)
 {
-    if (min1 != value)
+    if (value > (min1 + PRECISION) || value < (min1 - PRECISION))
     {
         min1 = value;
         if (min1 > max1)
@@ -356,13 +455,14 @@ void srEquationDialog::min1Changed (double value)
             min1 = max1;
         }
         ui->doubleSpinBox_1_min->setValue(min1);
-        ui->horizontalSlider_1->setMinimum(min1 * SLIDER_SCALE);
+        ui->doubleSpinBox_1_value->setMinimum(min1);
+        ui->horizontalSlider_1->setMinimum(static_cast<int>(min1 * SLIDER_SCALE));
     }
 }
 
 void srEquationDialog::max1Changed (double value)
 {
-    if (max1 != value)
+    if (value > (max1 + PRECISION) || value < (max1 - PRECISION))
     {
         max1 = value;
         if (max1 < min1)
@@ -371,7 +471,7 @@ void srEquationDialog::max1Changed (double value)
         }
         ui->doubleSpinBox_1_max->setValue(max1);
         ui->doubleSpinBox_1_value->setMaximum(max1);
-        ui->horizontalSlider_1->setMaximum(max1 * SLIDER_SCALE);
+        ui->horizontalSlider_1->setMaximum(static_cast<int>(max1 * SLIDER_SCALE));
     }
 }
 
@@ -380,32 +480,32 @@ void srEquationDialog::setSlider2(double min, double max, double value)
     min2 = min; max2 = max;
     ui->doubleSpinBox_2_max->setValue(max2);
     ui->doubleSpinBox_2_min->setValue(min2);
-    ui->horizontalSlider_2->setMaximum(max2 * SLIDER_SCALE);
-    ui->horizontalSlider_2->setMinimum(min2 * SLIDER_SCALE);
-    ui->horizontalSlider_2->setValue(value * SLIDER_SCALE);
+    ui->horizontalSlider_2->setMaximum(static_cast<int>(max2 * SLIDER_SCALE));
+    ui->horizontalSlider_2->setMinimum(static_cast<int>(min2 * SLIDER_SCALE));
+    ui->horizontalSlider_2->setValue(static_cast<int>(value * SLIDER_SCALE));
     ui->doubleSpinBox_2_value->setMaximum(max2);
     ui->doubleSpinBox_2_value->setValue(value);
 }
 
 void srEquationDialog::slider2Changed(int value)
 {
-    double val = (double)value * VALUE_SCALE;
+    double val = static_cast<double>(value * VALUE_SCALE);
     ui->doubleSpinBox_2_value->setValue(val);
 }
 
 void srEquationDialog::value2Changed (double value)
 {
-    if (val2 != value)
+    if (val2 > (value + PRECISION) || val2 < (value - PRECISION))
     {
         val2 = value;
         emit numbersUpdated();
-        ui->horizontalSlider_2->setValue(val2 * SLIDER_SCALE);
+        ui->horizontalSlider_2->setValue(static_cast<int>(val2 * SLIDER_SCALE));
     }
 }
 
 void srEquationDialog::min2Changed (double value)
 {
-    if (min2 != value)
+    if (min2 > (value + PRECISION) || min2 < (value - PRECISION))
     {
         min2 = value;
         if (min2 > max2)
@@ -413,13 +513,14 @@ void srEquationDialog::min2Changed (double value)
             min2 = max2;
         }
         ui->doubleSpinBox_2_min->setValue(min2);
-        ui->horizontalSlider_2->setMinimum(min2 * SLIDER_SCALE);
+        ui->doubleSpinBox_2_value->setMinimum(min2);
+        ui->horizontalSlider_2->setMinimum(static_cast<int>(min2 * SLIDER_SCALE));
     }
 }
 
 void srEquationDialog::max2Changed (double value)
 {
-    if (max2 != value)
+    if (max2 > (value + PRECISION) || max2 < (value - PRECISION))
     {
         max2 = value;
         if (max2 < min2)
@@ -428,7 +529,7 @@ void srEquationDialog::max2Changed (double value)
         }
         ui->doubleSpinBox_2_max->setValue(max2);
         ui->doubleSpinBox_2_value->setMaximum(max2);
-        ui->horizontalSlider_2->setMaximum(max2 * SLIDER_SCALE);
+        ui->horizontalSlider_2->setMaximum(static_cast<int>(max2 * SLIDER_SCALE));
     }
 }
 
@@ -437,32 +538,32 @@ void srEquationDialog::setSlider3(double min, double max, double value)
     min3 = min; max3 = max;
     ui->doubleSpinBox_3_max->setValue(max3);
     ui->doubleSpinBox_3_min->setValue(min3);
-    ui->horizontalSlider_3->setMaximum(max3 * SLIDER_SCALE);
-    ui->horizontalSlider_3->setMinimum(min3 * SLIDER_SCALE);
-    ui->horizontalSlider_3->setValue(value * SLIDER_SCALE);
+    ui->horizontalSlider_3->setMaximum(static_cast<int>(max3 * SLIDER_SCALE));
+    ui->horizontalSlider_3->setMinimum(static_cast<int>(min3 * SLIDER_SCALE));
+    ui->horizontalSlider_3->setValue(static_cast<int>(value * SLIDER_SCALE));
     ui->doubleSpinBox_3_value->setMaximum(max3);
     ui->doubleSpinBox_3_value->setValue(value);
 }
 
 void srEquationDialog::slider3Changed(int value)
 {
-    double val = (double)value * VALUE_SCALE;
+    double val = static_cast<double>(value * VALUE_SCALE);
     ui->doubleSpinBox_3_value->setValue(val);
 }
 
 void srEquationDialog::value3Changed (double value)
 {
-    if (val3 != value)
+    if (val3 > (value + PRECISION) || val3 < (value - PRECISION))
     {
         val3 = value;
         emit numbersUpdated();
-        ui->horizontalSlider_3->setValue(val3 * SLIDER_SCALE);
+        ui->horizontalSlider_3->setValue(static_cast<int>(val3 * SLIDER_SCALE));
     }
 }
 
 void srEquationDialog::min3Changed (double value)
 {
-    if (min3 != value)
+    if (min3 > (value + PRECISION) || min3 < (value - PRECISION))
     {
         min3 = value;
         if (min3 > max3)
@@ -471,13 +572,13 @@ void srEquationDialog::min3Changed (double value)
         }
         ui->doubleSpinBox_3_min->setValue(min3);
 //        ui->doubleSpinBox_3_value->setMinimum(min3);
-        ui->horizontalSlider_3->setMinimum(min3 * SLIDER_SCALE);
+        ui->horizontalSlider_3->setMinimum(static_cast<int>(min3 * SLIDER_SCALE));
     }
 }
 
 void srEquationDialog::max3Changed (double value)
 {
-    if (max3 != value)
+    if (max3 > (value + PRECISION) || max3 < (value - PRECISION))
     {
         max3 = value;
         if (max3 < min3)
@@ -486,7 +587,7 @@ void srEquationDialog::max3Changed (double value)
         }
         ui->doubleSpinBox_3_max->setValue(max3);
         ui->doubleSpinBox_3_value->setMaximum(max3);
-        ui->horizontalSlider_3->setMaximum(max3 * SLIDER_SCALE);
+        ui->horizontalSlider_3->setMaximum(static_cast<int>(max3 * SLIDER_SCALE));
     }
 }
 
@@ -539,8 +640,8 @@ void srEquationDialog::restoreAll()
 {
     // get values from parameters
     getParameterValues();
-
-    update();
+    setup();
+//    update();
 }
 
 void srEquationDialog::close()
@@ -714,8 +815,8 @@ void srEquationDialog::showSliders(int num)
 
 void srEquationDialog::updateTicks(QRectF rect)
 {
-    int xTicks = rect.width() / 100;
-    int yTicks = rect.height() / 60;
+    int xTicks = static_cast<int>(rect.width() / 100);
+    int yTicks = static_cast<int>(rect.height() / 60);
 
     updateTicks(xTicks % 2? xTicks: xTicks + 1,
                 yTicks % 2? yTicks: yTicks + 1);
@@ -776,8 +877,8 @@ void srEquationDialog::resetChart(bool create)
     chartview->show();
     cht->show();
     cht->legend()->setVisible(false);
-    int sizew = cht->size().width();
-    int sizeh = cht->size().height();
+    int sizew = static_cast<int>(cht->size().width());
+    int sizeh = static_cast<int>(cht->size().height());
     resizeEvent(new QResizeEvent(QSize(sizew, sizeh), QSize(sizew, sizeh)));
     repaint();
 }
@@ -882,6 +983,8 @@ void srEquationDialog::updateRicker()
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(h);
 
+    cht->removeSeries(selSeries);
+    cht->update();
     selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
@@ -942,6 +1045,8 @@ void srEquationDialog::updateBevertonHoltStandard()
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(steep);
 
+    cht->removeSeries(selSeries);
+    cht->update();
     selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
@@ -991,6 +1096,8 @@ void srEquationDialog::updateCageanLike()
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
 
+    cht->removeSeries(selSeries);
+    cht->update();
     selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
@@ -1006,7 +1113,7 @@ void srEquationDialog::updateCageanLike()
 //  SS_Label_43.3.5  Hockey stick
 //      case 5:  // hockey stick  where "steepness" is now the fraction of B0 below which recruitment declines linearly
 //               //  the 3rd parameter allows for a minimum recruitment level
-// case 5: Hockey stick - not yet implemented
+// case 5: Hockey stick
 //  3 parameters: log(R0), steepness, and Rmin for ln(R0),
 //  fraction of virgin SSB at which inflection occurs,
 //  and the Recruits level at SSB=0.0.
@@ -1049,6 +1156,10 @@ void srEquationDialog::updateHockeyStick()
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(steep);
     ui->doubleSpinBox_3_trans->setValue(Rmin);
+
+    cht->removeSeries(selSeries);
+    cht->update();
+    selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
     {
@@ -1101,6 +1212,8 @@ void srEquationDialog::updateBevertonHoltBzeroFlat()
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(steep);
 
+    cht->removeSeries(selSeries);
+    cht->update();
     selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
@@ -1154,7 +1267,7 @@ void srEquationDialog::survivorship()
 // Case 7: Suvivorship function
 void srEquationDialog::updateSurvivorship()
 {
-    double SB_virgin_adj = 1.0, temp, SB_curr_adj, Recruits;
+    double SB_virgin_adj = 1.0, SB_curr_adj, Recruits;
     double Recr_virgin_adj = exp(ui->doubleSpinBox_1_value->value());
     double Zfrac = ui->doubleSpinBox_2_value->value();
     double Beta = ui->doubleSpinBox_3_value->value();
@@ -1165,6 +1278,10 @@ void srEquationDialog::updateSurvivorship()
     double SRZ_0 = log(Recr_virgin_adj / SB_virgin_adj); // 1.0/(SB_virgin_adj/Recr_virgin_adj)
     double srz_min = SRZ_0 * (1.0 - Zfrac);
     double SRZ_surv = 0;
+
+    cht->removeSeries(selSeries);
+    cht->update();
+    selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
     {
@@ -1226,6 +1343,8 @@ void srEquationDialog::updateShepherd()
     ui->doubleSpinBox_2_trans->setValue(h);
     ui->doubleSpinBox_3_trans->setValue(shepherd);
 
+    cht->removeSeries(selSeries);
+    cht->update();
     selSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
@@ -1316,18 +1435,18 @@ double srEquationDialog::joinFunction(double minPoss, double maxPoss, double inf
 }
 
 // Evaluate a line between two points at a specific x value
-float srEquationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
+double srEquationDialog::evaluateLine(QPointF pt1, QPointF pt2, double x)
 {
-    float slope = (pt2.y() - pt1.y()) / (pt2.x() - pt1.x());
-    float y = slope * (x - pt2.x()) + pt2.y();
+    double slope = (pt2.y() - pt1.y()) / (pt2.x() - pt1.x());
+    double y = slope * (x - pt2.x()) + pt2.y();
     return y;
 }
 
 
 /** Returns the minimum x-value of a point list */
-float srEquationDialog::minXvalue(const QList<QPointF> &pointlist)
+double srEquationDialog::minXvalue(const QList<QPointF> &pointlist)
 {
-    float value = 1000;
+    double value = 1000.0;
     for (int i = 0; i < pointlist.count(); i++)
     {
         if (pointlist.at(i).x() < value)
@@ -1337,9 +1456,9 @@ float srEquationDialog::minXvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the maximum x-value of a point list */
-float srEquationDialog::maxXvalue(const QList<QPointF> &pointlist)
+double srEquationDialog::maxXvalue(const QList<QPointF> &pointlist)
 {
-    float value = -1000;
+    double value = -1000.0;
     for (int i = 0; i < pointlist.count(); i++)
     {
         if (pointlist.at(i).x() > value)
@@ -1349,9 +1468,9 @@ float srEquationDialog::maxXvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the minimum y-value of a point list */
-float srEquationDialog::minYvalue(const QList<QPointF> &pointlist)
+double srEquationDialog::minYvalue(const QList<QPointF> &pointlist)
 {
-    float value = 1000;
+    double value = 1000.0;
     for (int i = 0; i < pointlist.count(); i++)
     {
         if (pointlist.at(i).y() < value)
@@ -1361,9 +1480,9 @@ float srEquationDialog::minYvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the maximum y-value of a point list */
-float srEquationDialog::maxYvalue(const QList<QPointF> &pointlist)
+double srEquationDialog::maxYvalue(const QList<QPointF> &pointlist)
 {
-    float value = -1000;
+    double value = -1000;
     for (int i = 0; i < pointlist.count(); i++)
     {
         if (pointlist.at(i).y() > value)
@@ -1373,21 +1492,21 @@ float srEquationDialog::maxYvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the average of the values of a float list */
-float srEquationDialog::aveXvalue(const QList<float> &xvals)
+double srEquationDialog::aveXvalue(const QList<float> &xvals)
 {
-    float value = 0.;
+    double value = 0.;
     int i = 0;
     for (i = 0; i < xvals.count(); i++)
-        value += (float)xvals.at(i);
+        value += static_cast<double>(xvals.at(i));
     value /= i;
     return value;
 }
 
 /** Returns the average of the y-values of a point list */
-float srEquationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
+double srEquationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
 {
-    float value = 0.;
-    float count = 0.0;
+    double value = 0.;
+    double count = 0.0;
     int i = 0, end = 2;
     int listend = pointlist.count() - 1;
     if (start > listend)
@@ -1410,10 +1529,10 @@ float srEquationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, in
     return (value / count);
 }
 
-void srEquationDialog::fillValues(const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints)
+void srEquationDialog::fillValues(const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints)
 {
     int i = 0, j =0;
-    float yVal = 0;
+    double yVal = 0;
     int fplimit = fewpoints.count() - 1;
 
     while (xvals.at(j) < fewpoints.at(0).x())

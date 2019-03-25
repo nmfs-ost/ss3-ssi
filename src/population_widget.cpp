@@ -1013,7 +1013,7 @@ void population_widget::changeRecrFullParams()
     recruitParamsView->setHeight(pop->SR()->getFullParameters());
     recruitParamsView->resizeColumnsToContents();
     srOptionDialog->setParameters(pop->SR()->getFullParameters());
-    srOptionDialog->update();
+//    srOptionDialog->update();
 }
 void population_widget::changeRecrTVParams()
 {

@@ -409,6 +409,7 @@ void ss_forecast::set_input_catch_basis(int &basis)
         break;
     default:
         i_input_fcast_ctch_basis = basis = 2;
+        [[clang::fallthrough]];
     case 2:
         fixedFcastCatch->setColumnCount(4);
         fixedFcastCatch->setColumnHeader(3, QString("Dead Catch"));

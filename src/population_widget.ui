@@ -83,7 +83,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>775</width>
+            <width>767</width>
             <height>553</height>
            </rect>
           </property>
@@ -649,12 +649,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string>9=Shepherd re-param (3 parameters) - beta</string>
+                 <string>9=Shepherd re-param (3 parameters) - not implemented</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>10=Ricker re-parm (3 parameters) - beta</string>
+                 <string>10=Ricker re-parm (3 parameters) - not implemented</string>
                 </property>
                </item>
               </widget>

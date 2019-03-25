@@ -80,6 +80,7 @@ public slots:
     void setupChanged();
 
     void refresh ();  // update from population values
+    void setup(); // start new
     void update ();   // update from dialog values
     void resizeEvent(QResizeEvent *event);
 
@@ -126,7 +127,7 @@ private:
     QValueAxis *axisY;
     QValueAxis *axisYalt;
 
-    QList<float> xValList;
+    QList<double> xValList;
 
     double min1, max1, val1;
     double min2, max2, val2;
@@ -163,14 +164,14 @@ private slots:
 
     double joinFunction (double minPoss, double maxPoss, double inflec, double xVar, double y1, double y2);
 
-    float evaluateLine(QPointF pt1, QPointF pt2, float x = 0);
-    float minXvalue (const QList<QPointF> &pointlist);
-    float maxXvalue (const QList<QPointF> &pointlist);
-    float minYvalue (const QList<QPointF> &pointlist);
-    float maxYvalue (const QList<QPointF> &pointlist);
-    float aveXvalue (const QList<float> &xvals);
-    float aveYvalue (const QList<QPointF> &pointlist, int start = 0, int stop = 1000);
-    void fillValues (const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints);
+    double evaluateLine (QPointF pt1, QPointF pt2, double x = 0);
+    double minXvalue (const QList<QPointF> &pointlist);
+    double maxXvalue (const QList<QPointF> &pointlist);
+    double minYvalue (const QList<QPointF> &pointlist);
+    double maxYvalue (const QList<QPointF> &pointlist);
+    double aveXvalue (const QList<float> &xvals);
+    double aveYvalue(const QList<QPointF> &pointlist, int start = 0, int stop = 1000);
+    void fillValues (const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints);
 
 private:
     Ui::srEquationDialog *ui;

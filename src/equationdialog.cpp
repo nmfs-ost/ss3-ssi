@@ -14,10 +14,13 @@ QT_CHARTS_USE_NAMESPACE
 
 using namespace tk;
 
-#define SLIDER_SPAN  100000
-
-#define SLIDER_SCALE 10000
-#define VALUE_SCALE .0001
+#ifndef PRECISION
+#define PRECISION .0005
+#endif
+#ifndef SLIDER_SCALE
+#define SLIDER_SCALE 1000
+#define VALUE_SCALE .001
+#endif
 
 #include <cmath>
 

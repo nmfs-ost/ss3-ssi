@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
+    <width>826</width>
     <height>518</height>
    </rect>
   </property>
@@ -26,6 +26,9 @@
        </property>
        <property name="maximum">
         <double>2000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -65,10 +68,13 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
         <double>2000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -135,6 +141,9 @@
        <property name="maximum">
         <double>2000.000000000000000</double>
        </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="1" column="3">
@@ -149,10 +158,10 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>999999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -171,7 +180,10 @@
         <double>-2000.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -184,10 +196,10 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -227,10 +239,10 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -253,7 +265,10 @@
         <double>-2000.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -266,7 +281,10 @@
         <double>-2000.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -289,10 +307,10 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -302,10 +320,13 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
         <double>2000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -341,6 +362,9 @@
        <property name="maximum">
         <double>2000.000000000000000</double>
        </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="2" column="4">
@@ -349,10 +373,13 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
         <double>2000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.001000000000000</double>
        </property>
       </widget>
      </item>
@@ -368,10 +395,10 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -387,10 +414,10 @@
         <number>3</number>
        </property>
        <property name="minimum">
-        <double>-2000.000000000000000</double>
+        <double>-99999.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>2000.000000000000000</double>
+        <double>99999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -432,7 +459,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0" rowspan="2">
-      <layout class="QVBoxLayout" name="verticalLayout_graph" stretch=""/>
+      <layout class="QVBoxLayout" name="verticalLayout_graph"/>
      </item>
      <item row="0" column="1">
       <spacer name="verticalSpacer">
