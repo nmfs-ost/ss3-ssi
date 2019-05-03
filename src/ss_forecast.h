@@ -21,6 +21,7 @@ public:
 
 signals:
     void allocGrpsChanged();
+    void SPRchanged (float spr);
 
 public slots:
     void set_benchmarks (int bmark) {i_bmark = bmark;}
@@ -28,7 +29,7 @@ public slots:
     void set_MSY (int msy) {i_msy = msy;}
     void set_combo_box_MSY (int msy);
     int get_MSY () {return i_msy;}
-    void set_spr_target (double spr) {f_spr_tgt = (float)spr;}
+    void set_spr_target (double spr);
     float get_spr_target () {return f_spr_tgt;}
     void set_biomass_target (double bmss) {f_bmass_tgt = (float)bmss;}
     float get_biomass_target () {return f_bmass_tgt;}

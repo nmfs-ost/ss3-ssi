@@ -1,9 +1,9 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.13.03
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.13.04
         ----------------------------------------------------
 
-This GUI is created to display input to the Stock Synthesis application, 
+This GUI is created to display input to the Stock Synthesis application,
 allow for changes to the data, run the executable, and display results.
 
 Currently, the only results displayed are the files warnings.sso and
@@ -17,8 +17,13 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.3.13.04
+    2019-04-26
+1. Added grid to graph for Spawn-Recruit graphs.
+2. All Spawn-Recruit equations (except Shepherd Re-parm) are working.
+============================================================================
     3.3.13.03
-    2019-03-
+    2019-03-21
 1. Rebuilt with correct toolkit.
 ============================================================================
     3.3.13.02
@@ -290,7 +295,7 @@ History:
       2.3.1
       2016-07-25
 1. Data displays and is interactive.
-2. Four main data files read/write correctly. 
+2. Four main data files read/write correctly.
 
 ============================================================================
 

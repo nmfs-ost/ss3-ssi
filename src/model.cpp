@@ -85,6 +85,7 @@ ss_model::ss_model(QWidget *parent) :
 
     pPopulation = new population (this);
     forecast = new ss_forecast(1, 1, (QObject *)this);
+    connect (forecast, SIGNAL(SPRchanged(float)), pPopulation, SLOT(changeSPR(float)));
 
     doTags = false;
     doMorphComp = false;

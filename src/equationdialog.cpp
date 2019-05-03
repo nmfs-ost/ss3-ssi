@@ -1937,8 +1937,8 @@ void equationDialog::constant (float val)
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     updateConstant(val);
 }
@@ -2013,8 +2013,8 @@ void equationDialog::constantRange ()
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     if (parameters->rowCount() == 2)
         updateConstantRange();
@@ -2070,8 +2070,8 @@ void equationDialog::logistic ()
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     if (parameters->rowCount() == 2)
         updateLogistic();
@@ -2296,7 +2296,7 @@ void equationDialog::linear (float scale)
 
 //        resetChart();
 
-        axisY->setTitleText("Selex");
+        axisY->setTitleText("Recruit");
         cht->addAxis(axisY, Qt::AlignLeft);
         cht->addAxis(axisXsel, Qt::AlignBottom);
 
@@ -2850,8 +2850,8 @@ void equationDialog::dblLogistic()
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 //    cht->addAxis(axisYalt, Qt::AlignRight);
 
     ascendSeries->attachAxis(axisXsel);
@@ -3007,8 +3007,8 @@ void equationDialog::dblLogPeak()
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     ascendSeries->attachAxis(axisXsel);
     ascendSeries->attachAxis(axisY);
@@ -3394,8 +3394,8 @@ void equationDialog::dblNormCasal()
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     ascendSeries->attachAxis(axisXsel);
     ascendSeries->attachAxis(axisY);
@@ -3779,8 +3779,8 @@ void equationDialog::dblNormEndpts()
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
 
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     ascendSeries->attachAxis(axisXsel);
     ascendSeries->attachAxis(axisY);
@@ -3913,8 +3913,8 @@ void equationDialog::expLogistic()
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     if (parameters->rowCount() == 3)
         updateExpLogistic();
@@ -3982,8 +3982,8 @@ void equationDialog::eachAge ()
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     axisYalt->setTitleText("Value at age (blue)");
     cht->addAxis(axisYalt, Qt::AlignRight);
@@ -4072,8 +4072,8 @@ void equationDialog::randomWalk (float scale)
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
     axisY->setTitleText("Selex (red)");
 
     axisYalt->setTitleText("Use Parm (blue)");
@@ -4215,8 +4215,8 @@ void equationDialog::coleGauss ()
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     if (parameters->rowCount() == 2)
         updateColeGauss();
@@ -4323,8 +4323,8 @@ void equationDialog::cubicSpline(float scale)
 
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
     axisY->setTitleText("Selex (red)");
 
     ptSeries = new QScatterSeries(cht);
@@ -4531,15 +4531,15 @@ void equationDialog::twoSexRandomWalk()
     // female selex
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     // male selex
     join3Series = new QLineSeries(cht);
     join3Series->setPen(QPen(QBrush(Qt::magenta), 3));
     cht->addSeries(join3Series);
-    cht->setAxisX(axisXsel, join3Series);
-    cht->setAxisY(axisY, join3Series);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     axisY->setTitleText("Selex (red)");
 
@@ -4694,8 +4694,8 @@ void equationDialog::twoSexEachAge()
     // female selex
     selSeries->setPen(QPen(QBrush(Qt::red), 3));
     cht->addSeries(selSeries);
-    cht->setAxisX(axisXsel, selSeries);
-    cht->setAxisY(axisY, selSeries);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     // male ln(selex)
     dscendSeries = new QLineSeries(cht);
@@ -4706,8 +4706,8 @@ void equationDialog::twoSexEachAge()
     join3Series = new QLineSeries(cht);
     join3Series->setPen(QPen(QBrush(Qt::magenta), 3));
     cht->addSeries(join3Series);
-    cht->setAxisX(axisXsel, join3Series);
-    cht->setAxisY(axisY, join3Series);
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 
     axisY->setTitleText("Selex (red)");
 

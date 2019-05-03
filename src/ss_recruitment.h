@@ -36,12 +36,17 @@ public:
   //  void fromJSON (json_file *file);
 
     void reset ();
+    void setParameterHeaders();
+    void setDefaultParameters();
 
 public slots:
     void setOption (int option);
     int getOption () {return getMethod();}
     void setMethod (int value);
     int getMethod () {return method;}
+
+    void setSPR (float spr) {tempSPR = spr;}
+    float getSPR () {return tempSPR;}
 
     void setUseSteepness (int value) {use_steepness = value;}
     int getUseSteepness () {return use_steepness;}
@@ -169,6 +174,7 @@ public slots:
 private:
     ss_model *parnt;
 
+    float tempSPR;
     int   method; // 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm
     int   use_steepness; // 0/1 to use steepness in initial equ recruitment calculation
     float env_link;     //

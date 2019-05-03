@@ -20,7 +20,7 @@ class setupModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit setupModel(QObject *parent = 0);
+    explicit setupModel(QObject *parent = nullptr);
     ~setupModel ();
 
 signals:
@@ -60,7 +60,7 @@ class shortParameterModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit shortParameterModel(QObject *parent = 0);
+    explicit shortParameterModel(QObject *parent = nullptr);
     ~shortParameterModel();
 
 signals:
@@ -109,7 +109,7 @@ class shortParamMultModel : public shortParameterModel
 {
     Q_OBJECT
 public:
-    explicit shortParamMultModel(QObject *parent = 0);
+    explicit shortParamMultModel(QObject *parent = nullptr);
     ~shortParamMultModel();
 
 signals:
@@ -149,7 +149,7 @@ class longParameterModel : public shortParameterModel
 {
     Q_OBJECT
 public:
-    explicit longParameterModel(QObject *parent = 0);
+    explicit longParameterModel(QObject *parent = nullptr);
     ~longParameterModel();
 
 signals:
@@ -177,7 +177,7 @@ class timeVaryParameterModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit timeVaryParameterModel(ss_model *parent = 0);
+    explicit timeVaryParameterModel(ss_model *parent = nullptr);
     ~timeVaryParameterModel();
 
 signals:

@@ -136,7 +136,7 @@ private:
 
 private slots:
     void showSliders (int num);
-    void updateTicks(QRectF rect);
+    void updateGrid(QRectF rect);
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
 
@@ -147,8 +147,8 @@ private slots:
     void updateRicker ();
     void bevertonHoltStandard ();
     void updateBevertonHoltStandard ();
-    void cageanLike ();
-    void updateCageanLike ();
+    void constant ();
+    void updateConstant ();
     void hockeyStick ();
     void updateHockeyStick ();
     void bevertonHoltBzeroFlat ();
@@ -172,6 +172,7 @@ private slots:
     double aveXvalue (const QList<float> &xvals);
     double aveYvalue(const QList<QPointF> &pointlist, int start = 0, int stop = 1000);
     void fillValues (const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints);
+    double posfun(const double &x, const double eps, double& pen);
 
 private:
     Ui::srEquationDialog *ui;

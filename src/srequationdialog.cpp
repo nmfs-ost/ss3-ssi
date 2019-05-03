@@ -15,6 +15,7 @@ using namespace tk;
 
 #ifndef PRECISION
 #define PRECISION .001
+#define HALFPREC .0005
 #endif
 #ifndef SLIDER_SCALE
 #define SLIDER_SCALE 1000
@@ -23,7 +24,9 @@ using namespace tk;
 
 #include <cmath>
 
-static double neglog19 = -1.0 * log(19);
+#define XMAX   (100)
+
+//static double neglog19 = -1.0 * log(19);
 
 srEquationDialog::srEquationDialog(QWidget *parent) :
     QDialog(parent),
@@ -33,7 +36,7 @@ srEquationDialog::srEquationDialog(QWidget *parent) :
     name = QString (QString("Spawner-Recruitment Relationship"));
     title = name;
 
-    pop = nullptr;
+    pop = static_cast<population *>(static_cast<void *>(parent));
     genders = 2;
 
     equationNum = 1;
@@ -82,7 +85,7 @@ srEquationDialog::srEquationDialog(QWidget *parent) :
     building = false;
     waiting = false;
     updating = false;
-    refresh();
+ //   refresh();
 }
 
 srEquationDialog::~srEquationDialog()
@@ -96,7 +99,7 @@ void srEquationDialog::setXvals()
 {
     double val;
     xValList.clear();
-    for (int i = 0; i <= 100; i+=2)
+    for (int i = 0; i <= XMAX; i+=2)
     {
         val = static_cast<double>(i / 100.0);
         xValList.append(val);
@@ -120,7 +123,7 @@ void srEquationDialog::setEquationNumber(int num)
 
 void srEquationDialog::changeEquationNumber(int num)
 {
-    setEquationNumber(num);
+    pop->SR()->setMethod(num);
     //getParameterValues();
     restoreAll();
 }
@@ -145,17 +148,10 @@ void srEquationDialog::getParameterValues()
     {
      case 3:
         values = parameters->getRowData(2);
-        min1Changed(values.at(0).toDouble());
-        max1Changed(values.at(1).toDouble());
-        value1Changed(values.at(2).toDouble());
+        min3Changed(values.at(0).toDouble());
+        max3Changed(values.at(1).toDouble());
+        value3Changed(values.at(2).toDouble());
         ui->doubleSpinBox_3_input->setValue(val3);
-/*        min3 = (values.at(0)).toDouble();
-        max3 = (values.at(1)).toDouble();
-        val3 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_3_input->setMinimum(min3);
-        ui->doubleSpinBox_3_input->setMaximum(max3);
-        ui->doubleSpinBox_3_input->setValue(val3);
-        setSlider3(min3, max3, val3);*/
         [[clang::fallthrough]];
     case 2:
         values = parameters->getRowData(1);
@@ -163,13 +159,6 @@ void srEquationDialog::getParameterValues()
         max2Changed(values.at(1).toDouble());
         value2Changed(values.at(2).toDouble());
         ui->doubleSpinBox_2_input->setValue(val2);
- /*       min2 = (values.at(0)).toDouble();
-        max2 = (values.at(1)).toDouble();
-        val2 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_2_input->setMinimum(min2);
-        ui->doubleSpinBox_2_input->setMaximum(max2);
-        ui->doubleSpinBox_2_input->setValue(val2);
-        setSlider2(min2, max2, val2);*/
         [[clang::fallthrough]];
     case 1:
         values = parameters->getRowData(0);
@@ -177,13 +166,6 @@ void srEquationDialog::getParameterValues()
         max1Changed(values.at(1).toDouble());
         value1Changed(values.at(2).toDouble());
         ui->doubleSpinBox_1_input->setValue(val1);
-/*        min1 = (values.at(0)).toDouble();
-        max1 = (values.at(1)).toDouble();
-        val1 = (values.at(2)).toDouble();
-        ui->doubleSpinBox_1_input->setMinimum(min1);
-        ui->doubleSpinBox_1_input->setMaximum(max1);
-        ui->doubleSpinBox_1_input->setValue(val1);
-        setSlider1(min1, max1, val1);*/
         break;
     default:
     case 0:
@@ -208,6 +190,7 @@ void srEquationDialog::setParameterValues()
         values[1] = QString::number(max3);
         values[2] = QString::number(val3);
         parameters->setRowData(2, values);
+        parameters->setRowHeader(2, ui->label_3_name->text());
         ui->doubleSpinBox_3_input->setValue(val3);
         [[clang::fallthrough]];
     case 2:
@@ -216,6 +199,7 @@ void srEquationDialog::setParameterValues()
         values[1] = QString::number(max2);
         values[2] = QString::number(val2);
         parameters->setRowData(1, values);
+        parameters->setRowHeader(1, ui->label_2_name->text());
         ui->doubleSpinBox_2_input->setValue(val2);
         [[clang::fallthrough]];
     case 1:
@@ -224,6 +208,7 @@ void srEquationDialog::setParameterValues()
         values[1] = QString::number(max1);
         values[2] = QString::number(val1);
         parameters->setRowData(0, values);
+        parameters->setRowHeader(0, ui->label_1_name->text());
         ui->doubleSpinBox_1_input->setValue(val1);
         [[clang::fallthrough]];
     case 0:
@@ -240,13 +225,13 @@ void srEquationDialog::setParameterHeaders()
     switch (parameters->rowCount())
     {
     case 3:
-        parameters->setRowHeader(2, QString("SR p3 "));
+        parameters->setRowHeader(2, ui->label_3_name->text());//QString("SR p3 "));
         [[clang::fallthrough]];
     case 2:
-        parameters->setRowHeader(1, QString("SR p2 steepness"));
+        parameters->setRowHeader(1, ui->label_2_name->text());//QString("SR p2 steepness"));
         [[clang::fallthrough]];
     case 1:
-        parameters->setRowHeader(0, QString("SR p1 log(R0)"));
+        parameters->setRowHeader(0, ui->label_1_name->text());//QString("SR p1 log(R0)"));
     }
 }
 
@@ -289,7 +274,7 @@ void srEquationDialog::setup()
 
         case 4:  // case 4: Ignore Steepness and no bias adjustment, like CAGEAN - 2 parameters, uses only first one
             numSliders = 1;
-            cageanLike ();
+            constant ();
             break;
 
         case 5:  // case 5: Hockey stick - 3 prarmenters: log(R0), steepness and Rmin
@@ -321,7 +306,7 @@ void srEquationDialog::setup()
         case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
             numSliders = 3;
             notYet();
-//            rickerReParm ();
+            rickerReParm ();
             break;
 
         default:
@@ -355,19 +340,19 @@ void srEquationDialog::update()
 //            blank (1, 6, QString("For B-H constrained curve"));
 //            break;
 
-        case 2:  // case 2: Ricker - 2 parameters: log(R0) and steepness
+        case 2:  // case 2: Ricker - 2 : log(R0) and steepness
             numSliders = 2;
             updateRicker ();
             break;
 
-        case 3:  // case 3: Standard Beverton-Holt - 2 parameters
+        case 3:  // case 3: Standard Beverton-Holt - 2
             numSliders = 2;
             updateBevertonHoltStandard ();
             break;
 
         case 4:  // case 4: Ignore Steepness and no bias adjustment, like CAGEAN - 2 parameters, uses only first one
             numSliders = 1;
-            updateCageanLike ();
+            updateConstant ();
             break;
 
         case 5:  // case 5: Hockey stick - 3 prarmenters: log(R0), steepness and Rmin
@@ -391,15 +376,15 @@ void srEquationDialog::update()
             break;
 
         case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-//            numSliders = 3;
+            numSliders = 3;
 //            notYet();
-//            shepherdReParm ();
+//            updateShepherdReParm ();
             break;
 
         case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
-//            numSliders = 3;
+            numSliders = 3;
 //            notYet();
-//            rickerReParm ();
+            updateRickerReParm ();
             break;
 
         default:
@@ -410,12 +395,14 @@ void srEquationDialog::update()
         }
         updating = false;
     }
+    updateGrid(cht->rect());
+
     QDialog::update();
 }
 
 void srEquationDialog::setSlider1(double min, double max, double value)
 {
-    min1 = min; max1 = max; val1 = value;
+    min1 = min; max1 = max; val1 = value - max;
 /*    min1Changed(min);
     max1Changed(max);
     value1Changed(value);*/
@@ -423,10 +410,10 @@ void srEquationDialog::setSlider1(double min, double max, double value)
     ui->doubleSpinBox_1_min->setValue(min1);
     ui->horizontalSlider_1->setMaximum(static_cast<int>(max1 * SLIDER_SCALE));
     ui->horizontalSlider_1->setMinimum(static_cast<int>(min1 * SLIDER_SCALE));
-    ui->horizontalSlider_1->setValue(static_cast<int>(value * SLIDER_SCALE));
+//    ui->horizontalSlider_1->setValue(static_cast<int>(val1 * SLIDER_SCALE));
     ui->doubleSpinBox_1_value->setMaximum(max1);
     ui->doubleSpinBox_1_value->setMinimum(min1);
-//    ui->doubleSpinBox_1_value->setValue(value);
+    ui->doubleSpinBox_1_value->setValue(value);
 }
 
 void srEquationDialog::slider1Changed(int value)
@@ -441,7 +428,7 @@ void srEquationDialog::value1Changed (double value)
     {
         val1 = value;
         emit numbersUpdated();
-        ui->horizontalSlider_1->setValue(static_cast<int>(val1 * SLIDER_SCALE));
+        ui->horizontalSlider_1->setValue(static_cast<int>((val1 + HALFPREC) * SLIDER_SCALE));
     }
 }
 
@@ -456,7 +443,7 @@ void srEquationDialog::min1Changed (double value)
         }
         ui->doubleSpinBox_1_min->setValue(min1);
         ui->doubleSpinBox_1_value->setMinimum(min1);
-        ui->horizontalSlider_1->setMinimum(static_cast<int>(min1 * SLIDER_SCALE));
+        ui->horizontalSlider_1->setMinimum(static_cast<int>((min1 + HALFPREC) * SLIDER_SCALE));
     }
 }
 
@@ -477,13 +464,14 @@ void srEquationDialog::max1Changed (double value)
 
 void srEquationDialog::setSlider2(double min, double max, double value)
 {
-    min2 = min; max2 = max;
+    min2 = min; max2 = max; val2 = value - max;
     ui->doubleSpinBox_2_max->setValue(max2);
     ui->doubleSpinBox_2_min->setValue(min2);
     ui->horizontalSlider_2->setMaximum(static_cast<int>(max2 * SLIDER_SCALE));
     ui->horizontalSlider_2->setMinimum(static_cast<int>(min2 * SLIDER_SCALE));
-    ui->horizontalSlider_2->setValue(static_cast<int>(value * SLIDER_SCALE));
+//    ui->horizontalSlider_2->setValue(static_cast<int>(value * SLIDER_SCALE));
     ui->doubleSpinBox_2_value->setMaximum(max2);
+    ui->doubleSpinBox_2_value->setMinimum(min2);
     ui->doubleSpinBox_2_value->setValue(value);
 }
 
@@ -498,8 +486,8 @@ void srEquationDialog::value2Changed (double value)
     if (val2 > (value + PRECISION) || val2 < (value - PRECISION))
     {
         val2 = value;
+        ui->horizontalSlider_2->setValue(static_cast<int>((val2 + HALFPREC) * SLIDER_SCALE));
         emit numbersUpdated();
-        ui->horizontalSlider_2->setValue(static_cast<int>(val2 * SLIDER_SCALE));
     }
 }
 
@@ -535,7 +523,7 @@ void srEquationDialog::max2Changed (double value)
 
 void srEquationDialog::setSlider3(double min, double max, double value)
 {
-    min3 = min; max3 = max;
+    min3 = min; max3 = max; val3 = value - max;
     ui->doubleSpinBox_3_max->setValue(max3);
     ui->doubleSpinBox_3_min->setValue(min3);
     ui->horizontalSlider_3->setMaximum(static_cast<int>(max3 * SLIDER_SCALE));
@@ -557,7 +545,7 @@ void srEquationDialog::value3Changed (double value)
     {
         val3 = value;
         emit numbersUpdated();
-        ui->horizontalSlider_3->setValue(static_cast<int>(val3 * SLIDER_SCALE));
+        ui->horizontalSlider_3->setValue(static_cast<int>((val3 + HALFPREC) * SLIDER_SCALE));
     }
 }
 
@@ -594,6 +582,7 @@ void srEquationDialog::max3Changed (double value)
 
 void srEquationDialog::apply()
 {
+    pop->SR()->setOption(equationNum);
     // set input spinboxes
     ui->doubleSpinBox_1_input->setRange(min1, max1);
     ui->doubleSpinBox_1_input->setValue(val1);
@@ -639,9 +628,9 @@ void srEquationDialog::resetValues()
 void srEquationDialog::restoreAll()
 {
     // get values from parameters
+    setEquationNumber(pop->SR()->getMethod());
     getParameterValues();
     setup();
-//    update();
 }
 
 void srEquationDialog::close()
@@ -672,7 +661,7 @@ void srEquationDialog::closeEvent(QCloseEvent *event)
 void srEquationDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
-    updateTicks(cht->rect());
+    updateGrid(cht->rect());
 }
 
 void srEquationDialog::parametersChanged()
@@ -813,22 +802,28 @@ void srEquationDialog::showSliders(int num)
     }
 }
 
-void srEquationDialog::updateTicks(QRectF rect)
+void srEquationDialog::updateGrid(QRectF rect)
 {
     int xTicks = static_cast<int>(rect.width() / 100);
     int yTicks = static_cast<int>(rect.height() / 60);
 
-    updateTicks(xTicks % 2? xTicks: xTicks + 1,
-                yTicks % 2? yTicks: yTicks + 1);
+    int yMax = static_cast<int>((maxYvalue(selSeries->points()) + 500)/1000) * 1000 + 1000;
+    axisXsel->setRange(0, (XMAX / 100.0));
+    axisY->setRange(0, yMax);
+    selSeries->attachAxis(axisXsel);
+    selSeries->attachAxis(axisY);
+
+    updateTicks(3, yTicks);
 }
 
 void srEquationDialog::updateTicks(int xT, int yT)
 {
-    axisXsel->setTickCount(xT);
+    int xticks = xT;// % 2? xT: (xT + 1);
+    int yticks = yT % 2? yT: (yT + 1);
+    axisXsel->setTickCount(xticks);
 
-    axisY->setRange(0, 1.2);
-    axisY->setTickCount(yT);
-    axisYalt->setTickCount(yT);
+    axisY->setTickCount(yticks);
+    axisYalt->setTickCount(yticks);
 }
 
 void srEquationDialog::resetChart(bool create)
@@ -869,6 +864,9 @@ void srEquationDialog::resetChart(bool create)
     axisY->setTitleText(QString("SB"));
     axisXsel->setTitleText(QString("R"));
     axisYalt = new QValueAxis();
+    axisXsel->setRange(0, 1.5);
+    selSeries->attachAxis(axisXsel);
+    selSeries->attachAxis(axisY);
 
     firstPoints.clear();
 
@@ -932,7 +930,7 @@ void srEquationDialog::blank (int num, int rep, QString msg)
     setLabel(info);
 
     chartview->setVisible(false);
-    showSliders(num);
+    showSliders(numSliders);
 }
 
 //  SS_Label_43.3.2  Ricker
@@ -945,9 +943,9 @@ void srEquationDialog::ricker()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_Ricker_beta");
     ui->label_2_type->setText("Value");
     setParameterHeaders();
 
@@ -956,6 +954,8 @@ void srEquationDialog::ricker()
     updateRicker();
     chartview->setVisible(true);
 
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -966,32 +966,36 @@ void srEquationDialog::ricker()
 
 void srEquationDialog::updateRicker()
 {
-    /* R code ??
+    /* R code
     SB = seq(0,1, 0.05)
     h = 0.95
     R0 = 10
 
-    R = (R0*SB / SB0) * exp(h * (1−SBy/SB0))
+    R = R0 * (SB / SB0) * exp(h * (1−SB/SB0))
 
     plot(SB,R) */
 
-    double SB_virgin_adj = 1.0, SB_curr_adj, Recruits;
+//    double SPRtemp =
+//    double SB_virgin_adj = 1.0;
+    double SSB_curr_adj, Recruits;
     double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
-    double h = ui->doubleSpinBox_2_value->value();
+    double steepness = ui->doubleSpinBox_2_value->value();
 
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
-    ui->doubleSpinBox_2_trans->setValue(h);
+    ui->doubleSpinBox_2_trans->setValue(steepness);
 
     cht->removeSeries(selSeries);
     cht->update();
     selSeries->clear();
 
+    // SSB_virgin_adj = 1.0, so it factors out
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        Recruits = (Recr_virgin_adj * SB_curr_adj / SB_virgin_adj) * (exp(h * (1.0 - (SB_curr_adj/SB_virgin_adj))));
-        selSeries->append(SB_curr_adj, Recruits);
+        SSB_curr_adj = xValList.at(i);
+//        Recruits = Recr_virgin_adj * (SSB_curr_adj/SSB_virgin_adj) * (exp(steepness * (1.0 - SSB_curr_adj/SSB_virgin_adj)));
+        Recruits = Recr_virgin_adj * (SSB_curr_adj) * (exp(steepness * (1.0 - SSB_curr_adj)));
+        selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);
 }
@@ -1007,9 +1011,9 @@ void srEquationDialog::bevertonHoltStandard()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_BH_steep");
     ui->label_2_type->setText("Value");
     setParameterHeaders();
 
@@ -1017,6 +1021,9 @@ void srEquationDialog::bevertonHoltStandard()
     showSliders(numSliders);
     updateBevertonHoltStandard();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -1029,15 +1036,17 @@ void srEquationDialog::bevertonHoltStandard()
 void srEquationDialog::updateBevertonHoltStandard()
 {
     /* R code from C. Wetzel
+    SB0 = 1
     SB = seq(0,1, 0.05)
     h = 0.95
     R0 = 10
 
-    R = (4*h*SB)/(SB0*(1-h)+SB*(5*h-1))
+    R = R0*(4*h*SB)/(SB0*(1-h)+SB*(5*h-1))
 
     plot(SB,R) */
 
-    double SB_virgin_adj = 1.0, SB_curr_adj, Recruits;
+//    double SSB_virgin_adj = 1.0;
+    double SSB_curr_adj, Recruits;
     double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
     double steep = ui->doubleSpinBox_2_value->value();
 
@@ -1049,12 +1058,13 @@ void srEquationDialog::updateBevertonHoltStandard()
     cht->update();
     selSeries->clear();
 
+    // SSB_virgin_adj = 1.0
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        Recruits = (4.0 * Recr_virgin_adj * steep * SB_curr_adj) /
-                (SB_virgin_adj * (1.0-steep) + SB_curr_adj * (5.0*steep - 1.0));
-        selSeries->append(SB_curr_adj, Recruits);
+        SSB_curr_adj = xValList.at(i);
+        Recruits = (4.0 * Recr_virgin_adj * steep * SSB_curr_adj) /
+                ((1.0-steep) + SSB_curr_adj * (5.0*steep - 1.0));
+        selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);
 }
@@ -1067,30 +1077,34 @@ void srEquationDialog::updateBevertonHoltStandard()
 //  Ignore Steepness and no bias adjustment. Use this in
 //  conjunction with very low emphasis on recruitment deviations
 //  to get CAGEAN-like unconstrained recruitment estimates,
-void srEquationDialog::cageanLike()
+void srEquationDialog::constant()
 {
     QString msg(QString("Option 4: Ignore steepness and no bias adjustment"));
     setTitle(msg);
-    setLabel("Ignore steepness and no bias adjustment");
+    setLabel("Ignore steepness and no bias adjustment - only first parameter used.");
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
+    ui->label_2_name->setText("SR_steepness");
+    ui->label_2_type->setText("Value");
     setParameterHeaders();
 
-    numSliders = 1;
+    numSliders = 2;
     showSliders(numSliders);
-    updateCageanLike();
+    updateConstant();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
-//    Recr_virgin_adj = exp(SR_parm_work(1));
 //    NewRecruits=Recr_virgin_adj;
 
-void srEquationDialog::updateCageanLike()
+void srEquationDialog::updateConstant()
 {
-    double SB_virgin_adj = 1.0, SB_curr_adj, Recruits;
+    double SSB_curr_adj, Recruits;
     double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
 
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
@@ -1102,12 +1116,12 @@ void srEquationDialog::updateCageanLike()
 
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        Recruits = (Recr_virgin_adj * SB_curr_adj) / (Recr_virgin_adj + SB_curr_adj);
-//        Recruits = logRecr_virgin_adj > 0.999? 0.999: logRecr_virgin_adj;//(Recr_virgin_adj * SB_curr_adj) / (1.0 + SB_curr_adj);
-        selSeries->append(SB_curr_adj, Recruits);
+        SSB_curr_adj = xValList.at(i);
+        Recruits = Recr_virgin_adj;
+        selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);
+    updateGrid(cht->rect());
 }
 
 //  SS_Label_43.3.5  Hockey stick
@@ -1125,11 +1139,11 @@ void srEquationDialog::hockeyStick()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_hockey_infl");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Rmin");
+    ui->label_3_name->setText("SR_hockey_min_R");
     ui->label_3_type->setText("Value");
     setParameterHeaders();
 
@@ -1137,6 +1151,9 @@ void srEquationDialog::hockeyStick()
     showSliders(numSliders);
     updateHockeyStick();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -1149,24 +1166,31 @@ void srEquationDialog::hockeyStick()
 
 void srEquationDialog::updateHockeyStick()
 {
-    double SB_virgin_adj = 1.0, temp, SB_curr_adj, Recruits;
+    double SSB_virgin_adj = 1.0;
+    double temp, SSB_curr_adj, Recruits;
     double Recr_virgin_adj = exp(ui->doubleSpinBox_1_value->value());
-    double steep = ui->doubleSpinBox_2_value->value();
+    double inflection = ui->doubleSpinBox_2_value->value();
     double Rmin = ui->doubleSpinBox_3_value->value();
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
-    ui->doubleSpinBox_2_trans->setValue(steep);
+    ui->doubleSpinBox_2_trans->setValue(inflection);
     ui->doubleSpinBox_3_trans->setValue(Rmin);
 
     cht->removeSeries(selSeries);
     cht->update();
     selSeries->clear();
 
+    // SSB_virgin_adj = 1.0, so it factors out
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        temp = Rmin * Recr_virgin_adj + SB_curr_adj / (steep * Recr_virgin_adj) * (Recr_virgin_adj - Rmin * Recr_virgin_adj);
-        Recruits = joinFunction (0.0, SB_virgin_adj, steep * SB_virgin_adj, SB_curr_adj, temp, SB_virgin_adj);
-        selSeries->append(SB_curr_adj, Recruits);
+        SSB_curr_adj = xValList.at(i);
+        temp = Rmin * Recr_virgin_adj +
+              SSB_curr_adj / (inflection * SSB_virgin_adj) *
+              (Recr_virgin_adj - Rmin * Recr_virgin_adj);
+        Recruits = joinFunction(0.0 * SSB_virgin_adj, SSB_virgin_adj, inflection * SSB_virgin_adj, SSB_curr_adj, temp, Recr_virgin_adj);
+//        temp = Rmin + SSB_curr_adj / (inflection) * (1 - Rmin);
+//        temp *= Recr_virgin_adj;
+//        Recruits = joinFunction (0.0, (XMAX/100), inflection, SSB_curr_adj, temp, Recr_virgin_adj);
+        selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);
 }
@@ -1182,9 +1206,9 @@ void srEquationDialog::bevertonHoltBzeroFlat()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_BH_flat_steep");
     ui->label_2_type->setText("Value");
     setParameterHeaders();
 
@@ -1192,6 +1216,9 @@ void srEquationDialog::bevertonHoltBzeroFlat()
     showSliders(numSliders);
     updateBevertonHoltBzeroFlat();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -1204,10 +1231,12 @@ void srEquationDialog::bevertonHoltBzeroFlat()
 // case 6: Beverton-Holt with flat top beyond Bzero
 void srEquationDialog::updateBevertonHoltBzeroFlat()
 {
-    double SB_virgin_adj = 0.5, SB_curr_adj, Recruits, SB_BH1;
+    double SSB_virgin_adj = 0.8;
+    double SSB_curr_adj, Recruits, SSB_BH1;
     double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     double steep = ui->doubleSpinBox_2_value->value();
+    double alpha, beta;
 
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(steep);
@@ -1216,18 +1245,22 @@ void srEquationDialog::updateBevertonHoltBzeroFlat()
     cht->update();
     selSeries->clear();
 
+    // SSB_virgin_adj = 1.0, so it factors out
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        if (SB_curr_adj > Recr_virgin_adj)
-            SB_BH1 = Recr_virgin_adj;
+        SSB_curr_adj = xValList.at(i);
+//        alpha = 4.0 * steep * Recr_virgin_adj / (.5 * steep - 1);
+//        beta = (SSB_virgin_adj * (1 - steep)) / (.5 * steep - 1);
+        if (SSB_curr_adj > SSB_virgin_adj)
+            SSB_BH1 = SSB_virgin_adj;
         else
-            SB_BH1 = SB_curr_adj;
-        Recruits = (4.0 * Recr_virgin_adj * steep * SB_BH1) /
-                (SB_virgin_adj * (1.0 - steep) + SB_BH1 * (5.0*steep - 1.0));
-        selSeries->append(SB_curr_adj, Recruits);
+            SSB_BH1 = SSB_curr_adj;
+        Recruits = (4.0 * Recr_virgin_adj * steep * SSB_BH1) /
+                ((1.0 - steep) + SSB_BH1 * (5.0*steep - 1.0));
+        selSeries->append(SSB_curr_adj, Recruits);
     }
-    cht->addSeries(selSeries);}
+    cht->addSeries(selSeries);
+}
 
 
 //  SS_Label_44.1.7  3 parameter survival based
@@ -1242,11 +1275,11 @@ void srEquationDialog::survivorship()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Zfrac");
+    ui->label_2_name->setText("SR_surv_Zfrac");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Beta");
+    ui->label_3_name->setText("SR_surv_Beta");
     ui->label_3_type->setText("Value");
     setParameterHeaders();
 
@@ -1254,6 +1287,9 @@ void srEquationDialog::survivorship()
     showSliders(numSliders);
     updateRicker();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -1267,7 +1303,8 @@ void srEquationDialog::survivorship()
 // Case 7: Suvivorship function
 void srEquationDialog::updateSurvivorship()
 {
-    double SB_virgin_adj = 1.0, SB_curr_adj, Recruits;
+//    double SSB_virgin_adj = 1.0;
+    double SSB_curr_adj, Recruits;
     double Recr_virgin_adj = exp(ui->doubleSpinBox_1_value->value());
     double Zfrac = ui->doubleSpinBox_2_value->value();
     double Beta = ui->doubleSpinBox_3_value->value();
@@ -1275,7 +1312,8 @@ void srEquationDialog::updateSurvivorship()
     ui->doubleSpinBox_2_trans->setValue(Zfrac);
     ui->doubleSpinBox_3_trans->setValue(Beta);
 
-    double SRZ_0 = log(Recr_virgin_adj / SB_virgin_adj); // 1.0/(SB_virgin_adj/Recr_virgin_adj)
+    // SSB_virgin_adj = 1.0, so it factors out
+    double SRZ_0 = log(Recr_virgin_adj); // 1.0/(SB_virgin_adj/Recr_virgin_adj)
     double srz_min = SRZ_0 * (1.0 - Zfrac);
     double SRZ_surv = 0;
 
@@ -1285,12 +1323,14 @@ void srEquationDialog::updateSurvivorship()
 
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        SRZ_surv = exp((1.0 - pow((SB_curr_adj/SB_virgin_adj), Beta)) * (srz_min - SRZ_0) + SRZ_0); // survival
-        Recruits = SB_curr_adj * SRZ_surv;
-        selSeries->append(SB_curr_adj, Recruits);
+        SSB_curr_adj = xValList.at(i);
+        SRZ_surv = exp((1.0 - pow((SSB_curr_adj), Beta)) * (srz_min - SRZ_0) + SRZ_0); // survival
+        Recruits = SSB_curr_adj * SRZ_surv;
+        selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);
+//    int maxY = static_cast<int>(maxYvalue(selSeries->points()) + 1);
+//    axisY->setRange(0, maxY);
 }
 
 //  SS_Label_43.3.8  Shepherd
@@ -1303,11 +1343,11 @@ void srEquationDialog::shepherd()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_steepness");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Shape");
+    ui->label_3_name->setText("SR_Shepherd_c");
     ui->label_3_type->setText("Value");
     setParameterHeaders();
 
@@ -1315,6 +1355,9 @@ void srEquationDialog::shepherd()
     showSliders(numSliders);
     updateShepherd();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -1328,32 +1371,35 @@ void srEquationDialog::shepherd()
 
 void srEquationDialog::updateShepherd()
 {
-    double SB_virgin_adj = 1.0, SB_curr_adj, Recruits;
+//    double SSB_virgin_adj = 1.0;
+    double SSB_curr_adj, Recruits;
     double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
-    double h = ui->doubleSpinBox_2_value->value();
-    double shepherd = ui->doubleSpinBox_3_value->value();
-    if (shepherd == 0.0) shepherd = .0000001;
-    double shepherd2 = pow(.2, shepherd);
-    double Hupper = 1.0 / (5.0 * shepherd2);
-    double steep = 0.2 + (h - 0.2) / (0.8) * (Hupper - 0.2);
+    double SRparm2 = ui->doubleSpinBox_2_value->value();
+    double shepherd_c = ui->doubleSpinBox_3_value->value();
+    if (shepherd_c == 0.0)
+        shepherd_c = .0000001;
+    double shepherd_c2 = pow(.2, shepherd_c);
+    double Hupper = 1.0 / (5.0 * shepherd_c2);
+    double steep = 0.2 + (SRparm2 - 0.2) / (0.8) * (Hupper - 0.2);
     double temp;
 
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
-    ui->doubleSpinBox_2_trans->setValue(h);
-    ui->doubleSpinBox_3_trans->setValue(shepherd);
+    ui->doubleSpinBox_2_trans->setValue(SRparm2);
+    ui->doubleSpinBox_3_trans->setValue(shepherd_c);
 
     cht->removeSeries(selSeries);
     cht->update();
     selSeries->clear();
 
+    // SSB_virgin_adj = 1.0, so it factors out
     for (int i = 0; i < xValList.count(); i++)
     {
-        SB_curr_adj = xValList.at(i);
-        temp = SB_curr_adj / SB_virgin_adj;
-        Recruits = (5.0 * steep * SB_virgin_adj * (1.0 - shepherd2) * temp) /
-                (1.0 - 5.0 * steep * shepherd2 + (5.0 * steep - 1.0) * pow (temp, shepherd2));
-        selSeries->append(SB_curr_adj, Recruits);
+        SSB_curr_adj = xValList.at(i);
+//        temp = SSB_curr_adj;
+        Recruits = (5.0 * steep * (1.0 - shepherd_c2) * SSB_curr_adj) /
+                (1.0 - 5.0 * steep * shepherd_c2 + (5.0 * steep - 1.0) * pow (SSB_curr_adj, shepherd_c));
+        selSeries->append(SSB_curr_adj, Recruits * Recr_virgin_adj);
     }
     cht->addSeries(selSeries);
 }
@@ -1368,50 +1414,139 @@ void srEquationDialog::shepherdReParm()
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_ShpReParm_steep");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Shape");
+    ui->label_3_name->setText("SR_ShpReParm_c");
     ui->label_3_type->setText("Value");
     setParameterHeaders();
 
     numSliders = 3;
     showSliders(numSliders);
-    updateShepherd();
+    updateShepherdReParm();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
+
+//  Andre's FORTRAN
+//        TOP = 5*Steep*(1-0.2**POWER)*SPR/SPRF0-(1-5*Steep*0.2**POWER)
+//      BOT = (5*Steep-1)
+//       REC = (TOP/BOT)**(1.0/POWER)*SPRF0/SPR
+// Power = exp(logC);
+// Hupper = 1.0/(5.0 * pow(0.2,Power));
+//dvariable Shep_top;
+//dvariable Shep_bot;
+//dvariable Hupper;
+//dvariable Shep_top2;
+//Shepherd_c=exp(SRparm3);
+//Shepherd_c2=pow(0.2,Shepherd_c);
+//Hupper=1.0/(5.0*Shepherd_c2);
+//steepness=0.20001+((0.8)/(1.0+exp(-SRparm2))-0.2)/(0.8)*(Hupper-0.2);
+//        steep2=0.20001+(steepness-0.2)/(0.8)*(Hupper-0.2);
+//Shep_top=5.0*steepness*(1.0-Shepherd_c2)*(SPR_temp*Recr_virgin)/SSB_virgin-(1.0-5.0*steepness*Shepherd_c2);
+//Shep_bot=5.0*steepness-1.0;
+//Shep_top2=posfun(Shep_top,0.001,temp);
+//R_equil=(SSB_virgin/SPR_temp) * pow((Shep_top2/Shep_bot),(1.0/Shepherd_c));
+//B_equil=R_equil*SPR_temp;
 
 void srEquationDialog::updateShepherdReParm()
 {
+    double SPRtemp = pop->SR()->getSPR();
+    double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
+    double SRparm2 = ui->doubleSpinBox_2_value->value();
+    double SRparm3 = ui->doubleSpinBox_3_value->value();
+    double Recr_virgin_adj = exp(logRecr_virgin_adj);
+    ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
+    ui->doubleSpinBox_2_trans->setValue(SRparm2);
+    ui->doubleSpinBox_3_trans->setValue(SRparm3);
+    double Shep_top, penalty, SSB_virgin, Recr_virgin;
+    double Shep_bot;
+    double Shep_top2;
+    double Shepherd_c=exp(SRparm3);
+    double Shepherd_c2=pow(0.2,Shepherd_c);
+    double Hupper=1.0/(5.0*Shepherd_c2);
+    double steepness=0.20001+((0.8)/(1.0+exp(-SRparm2))-0.2)/(0.8)*(Hupper-0.2);
+    for (int i = 0; i < xValList.count(); i++)
+    {
+        SSB_virgin = xValList.at(i);
+        Shep_top=5.0*steepness*(1.0-Shepherd_c2)*(SPRtemp*Recr_virgin)/SSB_virgin-(1.0-5.0*steepness*Shepherd_c2);
+        Shep_bot=5.0*steepness-1.0;
+        Shep_top2=posfun(Shep_top,0.001,penalty);
+        double R_equil=(SSB_virgin/SPRtemp) * pow((Shep_top2/Shep_bot),(1.0/Shepherd_c));
+        double B_equil=R_equil*SPRtemp;
+    }
 }
 
-// 10: Ricker re-parameterization (beta) - not yet implemented
+// 10: Ricker re-parameterization (beta) - power
 //  3 Parameters: log(R0), steepness, and Ricker power, gamma.
 void srEquationDialog::rickerReParm()
 {
-    QString msg (QString("Option 8: Shepherd"));
+    QString msg (QString("Option 10: Ricker Power - Beta"));
     setTitle(msg);
     setLabel("Shepherd");
 
     chartview->setVisible(false);
 
-    ui->label_1_name->setText("Log (R0)");
+    ui->label_1_name->setText("SR_LN(R0)");
     ui->label_1_type->setText("Exp");
-    ui->label_2_name->setText("Steepness");
+    ui->label_2_name->setText("SR_RkrPwr_steep");
     ui->label_2_type->setText("Value");
-    ui->label_3_name->setText("Shape");
+    ui->label_3_name->setText("SR_RkrPwr_gamma");
     ui->label_3_type->setText("Value");
     setParameterHeaders();
 
     numSliders = 3;
     showSliders(numSliders);
-    updateShepherd();
+    updateRickerReParm();
     chartview->setVisible(true);
+
+    cht->addAxis(axisXsel, Qt::AlignBottom);
+    cht->addAxis(axisY, Qt::AlignLeft);
 }
+
+// steepness = SR_parm_work(2);
+// dvariable RkrPower=SR_parm_work(3);
+// temp=SSB_curr_adj/SSB_virgin_adj;
+// temp2 = posfun(1.0-temp,0.0000001,temp3);
+// temp=1.0-temp2;  //  Rick's new line to stabilize recruitment at R0 if B>B0
+// dvariable RkrTop =  log(5.0*steepness) * pow(temp2,RkrPower) / pow(0.8,RkrPower);
+// NewRecruits = Recr_virgin_adj * temp * mfexp(RkrTop);
 
 void srEquationDialog::updateRickerReParm()
 {
+//    double SB_virgin_adj = 1.0;
+    double SB_curr_adj, Recruits;
+    double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
+    double steepness = ui->doubleSpinBox_2_value->value();
+    double rkrPower = ui->doubleSpinBox_3_value->value();
+    double rkrTop = 1.0;
+    double temp, temp2, penalty;
+
+    double Recr_virgin_adj = exp(logRecr_virgin_adj);
+    ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
+    ui->doubleSpinBox_2_trans->setValue(steepness);
+    ui->doubleSpinBox_3_trans->setValue(rkrPower);
+
+    cht->removeSeries(selSeries);
+    cht->update();
+    selSeries->clear();
+
+    // SSB_virgin_adj = 1.0, so it factors out
+    for (int i = 0; i < xValList.count(); i++)
+    {
+        SB_curr_adj = xValList.at(i);
+        temp = SB_curr_adj; // / SB_virgin_adj;
+        temp2 = posfun ((1.0 - temp), 0.0000001, penalty);
+        temp = 1.0 - temp2;  // Rick's new line to stabilize recruitment at R0 if B> R0
+        rkrTop = log(5.0 * steepness) * pow(temp2, rkrPower) / pow(0.8, rkrPower);
+        Recruits = Recr_virgin_adj * temp * exp (rkrTop);
+
+        selSeries->append(SB_curr_adj, Recruits);
+    }
+    cht->addSeries(selSeries);
 }
 
 // JoinFunction from tpl code:
@@ -1553,4 +1688,18 @@ void srEquationDialog::fillValues(const QList<QPointF> fewpoints, QList<double> 
     {
         fullpoints.append(QPointF(xvals.at(j), yVal));
     }
+}
+
+// posfun from ADMB source (more or less)
+double srEquationDialog::posfun(const double &x, const double eps, double& pen)
+{
+  if (x >= eps)
+  {
+    return x;
+  }
+  else
+  {
+    pen += .01 * (x-eps * x-eps);
+    return eps / (2-x/eps);
+  }
 }

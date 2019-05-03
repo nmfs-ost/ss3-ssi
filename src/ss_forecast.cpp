@@ -58,6 +58,14 @@ ss_forecast::~ss_forecast()
     delete fixedFcastCatch;
 }
 
+void ss_forecast::set_spr_target(double spr)
+{
+    float SPR = static_cast<float>(spr);
+    if (f_spr_tgt < SPR || f_spr_tgt > SPR)
+        f_spr_tgt = SPR;
+    emit SPRchanged(SPR);
+}
+
 void ss_forecast::set_combo_box_MSY(int msy)
 {
     switch (msy)

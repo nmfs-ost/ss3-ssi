@@ -2592,39 +2592,33 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
-//            pop->SR()->setFullParameterHeader(i++, QString("SR_LN(R0)"));
         }
-/*        {
-            datalist = readParameter(c_file);
-            pop->SR()->setFullParameter(i, datalist);
-//            pop->SR()->setFullParameterHeader(i++, QString("SR_BH_steep"));
-        }
-        if (temp_int == 5 ||
-                temp_int == 7 ||
-                temp_int == 8)
+        temp_int = pop->SR()->getMethod();
+        if (temp_int > 1)
         {
-            datalist = readParameter(c_file);
-            pop->SR()->setFullParameter(i, datalist);
-//            pop->SR()->setFullParameterHeader(i++, QString("SR_3rd_PARM"));
+            pop->SR()->setFullParameterHeader(0, QString("SR_LN(R0)"));
+            pop->SR()->setFullParameterHeader(1, QString("SR_BH_steep"));
+            if (temp_int == 5) {
+                pop->SR()->setFullParameterHeader(2, QString("SR_R_min"));
+            }
+            else if (temp_int == 7) {
+                pop->SR()->setFullParameterHeader(1, QString("SR_Zfrac"));
+                pop->SR()->setFullParameterHeader(2, QString("SR_Beta"));
+            }
+            else if (temp_int == 8) {
+                pop->SR()->setFullParameterHeader(2, QString("SR_shape_c"));
+            }
+            else if (temp_int == 9) {
+                pop->SR()->setFullParameterHeader(2, QString("SR_shape_c"));
+            }
+            else if (temp_int == 10) {
+                pop->SR()->setFullParameterHeader(2, QString("SR_Rick_pow"));
+            }
         }
-        {
-            datalist = readParameter(c_file);
-            pop->SR()->setFullParameter(i, datalist);
-//            pop->SR()->setFullParameterHeader(i++, QString("SR_sigmaR"));
-        }
-        {
-            datalist = readParameter(c_file);
-            pop->SR()->setFullParameter(i, datalist);
-//            pop->SR()->setFullParameterHeader(i++, QString("SR_regime"));
-        }
-        {
-            datalist = readParameter(c_file);
-            pop->SR()->setFullParameter(i, datalist);
-//            pop->SR()->setFullParameterHeader(i, QString("SR_autocorr"));
-        }
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
-*/
+        pop->SR()->setFullParameterHeader(num-3, QString("SR_sigmaR"));
+        pop->SR()->setFullParameterHeader(num-2, QString("SR_regime"));
+        pop->SR()->setFullParameterHeader(num-1, QString("SR_autocorr"));
+
         // SR time vary params
         timevaryread = pop->SR()->getTimeVaryReadParams();
         readTimeVaryParams(c_file, data, pop->SR()->getFullParameters(), timevaryread, pop->SR()->getTVParameterModel()->getVarParamTable());

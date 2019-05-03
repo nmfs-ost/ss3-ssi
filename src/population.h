@@ -44,6 +44,7 @@ public slots:
     void setMeanBwt (int index, QStringList values) {meanBwtModel->setRowData(index, values);}
     QStringList getMeanBwt (int index) {return meanBwtModel->getRowData(index);}
 
+    void changeSPR(float spr) {SR()->setSPR(spr);}
 //    void readSeasonalEffects(ss_file *input);
 //    QString writeSeasonalEffects();
 

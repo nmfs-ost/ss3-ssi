@@ -118,10 +118,10 @@ QString selectivity::getSetupText()
 void selectivity::setMethod(int method)
 {
     QStringList parm;
-    int numparam = getNumParameters();
+//    int numparam = getNumParameters();
     int pattn = setup->getValue(0);
     int special = setup->getValue(3);
-    int i, j;
+//    int i, j;
     if (method == pattn)
     {
         setDefaultParams(method, special);

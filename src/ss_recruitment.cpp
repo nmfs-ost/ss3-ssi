@@ -9,19 +9,11 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     tvParameters = new timeVaryParameterModel (parnt);
 
     full_parameters->setNumParams(10);
-    tvParameters->setNumParams(10);
-    full_parameters->setParamHeader(0, QString("SR_LN(R0)"));
-    full_parameters->setParamHeader(1, QString("SR_BH_steep"));
-    full_parameters->setParamHeader(2, QString("SR_R_min"));
-    full_parameters->setParamHeader(3, QString("SR_Zfrac"));
-    full_parameters->setParamHeader(4, QString("SR_Beta"));
-    full_parameters->setParamHeader(5, QString("SR_shape"));
-    full_parameters->setParamHeader(6, QString("SR_Rick_pow"));
-    full_parameters->setParamHeader(7, QString("SR_sigmaR"));
-    full_parameters->setParamHeader(8, QString("SR_regime"));
-    full_parameters->setParamHeader(9, QString("SR_autocorr"));
-    parmsUsed << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0;
+/*    parmsUsed << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
     full_parameters->setParamsUsed(parmsUsed);
+    setDefaultParameters();
+    setParameterHeaders();*/
+    tvParameters->setNumParams(10);
 
     connect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
              tvParameters, SLOT(changeVarParamData(int,QStringList)));
@@ -50,6 +42,7 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     reset();
 }
 
+
 spawn_recruit::~spawn_recruit()
 {
 //    delete parameters;
@@ -64,6 +57,10 @@ spawn_recruit::~spawn_recruit()
 
 void spawn_recruit::reset()
 {
+    parmsUsed << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
+    full_parameters->setParamsUsed(parmsUsed);
+    setDefaultParameters();
+    setParameterHeaders();
     distrib_method = 1;
     distrib_area = 1;
     setMethod(3);
@@ -92,6 +89,55 @@ void spawn_recruit::reset()
     use_steepness = 0;
 }
 
+void spawn_recruit::setDefaultParameters()
+{
+    QStringList parmvalues;
+    parmvalues = full_parameters->getParameter(0);  // SR_R(0)
+    parmvalues << "3.0" << "31.0" << "8.85" << "10.3" << "10" << "0" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(0, parmvalues);
+    parmvalues = full_parameters->getParameter(1);  // SR_steepness
+    parmvalues << "0.2" << "1.0" << "0.598" << "0.7" << "0.05" << "1" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(1, parmvalues);
+    parmvalues = full_parameters->getParameter(2);  // SR_Rmin (hockey stick)
+    parmvalues << "0.0" << "1.0" << "0.0" << "1" << "0.5" << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(2, parmvalues);
+    parmvalues = full_parameters->getParameter(3);  // SR_Zfrac (survival)
+    parmvalues << "-0.05" << "5.0" << "-1.2" << "0.8" << "0.5" << "1"  << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(3, parmvalues);
+    parmvalues = full_parameters->getParameter(4);  // SR_Beta (survival)
+    parmvalues << "-0.05" << "5.0" << "0.35" << "1" << "0.5"  << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(4, parmvalues);
+    parmvalues = full_parameters->getParameter(5);  // SR_Shep_C (shepherd)
+    parmvalues << "-0.5" << "5.0" << "1.166" << "1" << "0.5" << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(5, parmvalues);
+    parmvalues = full_parameters->getParameter(6);  // SR_RkrPwr_gamma
+    parmvalues << "-0.5" << "5.0" << "1.0" << "1" << "0.5" << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(6, parmvalues);
+    parmvalues = full_parameters->getParameter(7);  // SigmaR
+    parmvalues << "0" << "2" << "0.6" << "0.8" << "0.8" << "0" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(7, parmvalues);
+    parmvalues = full_parameters->getParameter(8);  // regime
+    parmvalues << "-5" << "5" << "0" << "0" << "1" << "0" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(8, parmvalues);
+    parmvalues = full_parameters->getParameter(9);  // autocorr
+    parmvalues << "0" << "0" << "0" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    full_parameters->setParameter(9, parmvalues);
+}
+
+void spawn_recruit::setParameterHeaders()
+{
+    full_parameters->setParamHeader(0, QString("SR_LN(R0)"));
+    full_parameters->setParamHeader(1, QString("SR_BH_steep"));
+    full_parameters->setParamHeader(2, QString("SR_R_min"));
+    full_parameters->setParamHeader(3, QString("SR_Zfrac"));
+    full_parameters->setParamHeader(4, QString("SR_Beta"));
+    full_parameters->setParamHeader(5, QString("SR_shape"));
+    full_parameters->setParamHeader(6, QString("SR_Rick_pow"));
+    full_parameters->setParamHeader(7, QString("SR_sigmaR"));
+    full_parameters->setParamHeader(8, QString("SR_regime"));
+    full_parameters->setParamHeader(9, QString("SR_autocorr"));
+}
+
 void spawn_recruit::setOption(int option)
 {
     setMethod (1);
@@ -105,42 +151,57 @@ void spawn_recruit::setMethod(int value)
 
     switch (value)
     {
-    case 1:
+    case 1: // null
         parmsUsed.clear();
         parmsUsed << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
         break;
-    case 2:
-    case 3:
-    case 4:
-    case 6:
+    case 2: // Ricker
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
         break;
-    case 5:
+    case 3: // Beverton-Holt
+    case 6: // Beverton-Holt flattop
+        parmsUsed.clear();
+        parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
+        break;
+    case 4: // Ignore steepness, no bias
+        parmsUsed.clear();
+        parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
+        full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
+        break;
+    case 5: // Hockey stick
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
         break;
-    case 7:
+    case 7: // Survivorship
         parmsUsed.clear();
         parmsUsed << 1 << 0 << 0 << 1 << 1 << 0 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
         break;
-    case 8:
-    case 9:
+    case 8: // Shepherd
+    case 9: // Shepherd re-param
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 0 << 0 << 0 << 1 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
         break;
-    case 10:
+    case 10: // Ricker re-parm
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
+        setParamNums ();
         break;
     }
-    setParamNums ();
 }
 
 void spawn_recruit::setParamNums()
@@ -156,22 +217,22 @@ void spawn_recruit::setParamNums()
 
 void spawn_recruit::setFullParameter(int index, QStringList values)
 {
-    int i = parmNums.at(index);
-    full_parameters->setParamData(i, values);
-    tvParameters->setParameter(i, values);
+//    int i = parmNums.at(index);
+    full_parameters->setParamData(index, values);
+    tvParameters->setParameter(index, values);
 }
 
 void spawn_recruit::setFullParameterHeader(int index, QString hdr)
 {
-    int i = parmNums.at(index);
-    full_parameters->setParamHeader(i, hdr);
-    tvParameters->setTableTitle(i, hdr);
+//    int i = parmNums.at(index);
+    full_parameters->setParamHeader(index, hdr);
+    tvParameters->setTableTitle(index, hdr);
 }
 
 QStringList spawn_recruit::getFullParameter(int index)
 {
-    int i = parmNums.at(index);
-    return full_parameters->getParameter(i);
+//    int i = parmNums.at(index);
+    return full_parameters->getParameter(index);
 }
 
 void spawn_recruit::setDistribMethod(int value)
