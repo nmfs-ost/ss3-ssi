@@ -2590,6 +2590,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         num = pop->SR()->getNumFullParameters();
         for (i = 0; i < num; i++)
         {
+            datalist.clear();
             datalist = readParameter(c_file);
             pop->SR()->setFullParameter(i, datalist);
         }

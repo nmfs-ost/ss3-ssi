@@ -46,6 +46,7 @@ public slots:
 
     void setEquationNumber (int num);
     void changeEquationNumber (int num);
+//    void updateGraph ();
     void setParameters (tablemodel *params);
 
     void getParameterValues();
@@ -69,6 +70,9 @@ public slots:
     void value3Changed (double value);
     void min3Changed (double value);
     void max3Changed (double value);
+
+    void setIntVar1 (int value);
+    void intVar1Changed (int value);
 
     void apply();
     void reset();
@@ -132,6 +136,8 @@ private:
     double min1, max1, val1;
     double min2, max2, val2;
     double min3, max3, val3;
+
+    int intvar1;
 
 
 private slots:

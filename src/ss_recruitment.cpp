@@ -92,34 +92,43 @@ void spawn_recruit::reset()
 void spawn_recruit::setDefaultParameters()
 {
     QStringList parmvalues;
-    parmvalues = full_parameters->getParameter(0);  // SR_R(0)
+//    parmvalues = full_parameters->getParameter(0);  // SR_R(0)
     parmvalues << "3.0" << "31.0" << "8.85" << "10.3" << "10" << "0" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(0, parmvalues);
-    parmvalues = full_parameters->getParameter(1);  // SR_steepness
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(1);  // SR_steepness
     parmvalues << "0.2" << "1.0" << "0.598" << "0.7" << "0.05" << "1" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(1, parmvalues);
-    parmvalues = full_parameters->getParameter(2);  // SR_Rmin (hockey stick)
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(2);  // SR_Rmin (hockey stick)
     parmvalues << "0.0" << "1.0" << "0.0" << "1" << "0.5" << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(2, parmvalues);
-    parmvalues = full_parameters->getParameter(3);  // SR_Zfrac (survival)
-    parmvalues << "-0.05" << "5.0" << "-1.2" << "0.8" << "0.5" << "1"  << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(3);  // SR_Zfrac (survival)
+    parmvalues << "0.0" << "1.0" << ".5" << "0.8" << "0.5" << "1"  << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(3, parmvalues);
-    parmvalues = full_parameters->getParameter(4);  // SR_Beta (survival)
-    parmvalues << "-0.05" << "5.0" << "0.35" << "1" << "0.5"  << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(4);  // SR_Beta (survival)
+    parmvalues << "0.0" << "1.0" << "0.8" << "1" << "0.5"  << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(4, parmvalues);
-    parmvalues = full_parameters->getParameter(5);  // SR_Shep_C (shepherd)
+    parmvalues.clear();
+ //   parmvalues = full_parameters->getParameter(5);  // SR_Shep_C (shepherd)
     parmvalues << "-0.5" << "5.0" << "1.166" << "1" << "0.5" << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(5, parmvalues);
-    parmvalues = full_parameters->getParameter(6);  // SR_RkrPwr_gamma
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(6);  // SR_RkrPwr_gamma
     parmvalues << "-0.5" << "5.0" << "1.0" << "1" << "0.5" << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(6, parmvalues);
-    parmvalues = full_parameters->getParameter(7);  // SigmaR
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(7);  // SigmaR
     parmvalues << "0" << "2" << "0.6" << "0.8" << "0.8" << "0" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(7, parmvalues);
-    parmvalues = full_parameters->getParameter(8);  // regime
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(8);  // regime
     parmvalues << "-5" << "5" << "0" << "0" << "1" << "0" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(8, parmvalues);
-    parmvalues = full_parameters->getParameter(9);  // autocorr
+    parmvalues.clear();
+//    parmvalues = full_parameters->getParameter(9);  // autocorr
     parmvalues << "0" << "0" << "0" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(9, parmvalues);
 }
@@ -127,7 +136,7 @@ void spawn_recruit::setDefaultParameters()
 void spawn_recruit::setParameterHeaders()
 {
     full_parameters->setParamHeader(0, QString("SR_LN(R0)"));
-    full_parameters->setParamHeader(1, QString("SR_BH_steep"));
+    full_parameters->setParamHeader(1, QString("SR_steep"));
     full_parameters->setParamHeader(2, QString("SR_R_min"));
     full_parameters->setParamHeader(3, QString("SR_Zfrac"));
     full_parameters->setParamHeader(4, QString("SR_Beta"));
@@ -195,7 +204,7 @@ void spawn_recruit::setMethod(int value)
         full_parameters->setParamsUsed(parmsUsed);
         setParamNums ();
         break;
-    case 10: // Ricker re-parm
+    case 10: // Ricker power
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);

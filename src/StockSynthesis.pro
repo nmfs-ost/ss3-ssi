@@ -239,4 +239,6 @@ RESOURCES += \
     stock_synth.qrc
 
 DISTFILES += \
-    ../ss_gui_readme.txt
+    ../ss_gui_readme.txt \
+    ../ss_gui_readme_archive.txt \
+    ../ss_gui_copyright.txt

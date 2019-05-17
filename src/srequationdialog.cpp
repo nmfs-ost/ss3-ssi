@@ -56,12 +56,10 @@ srEquationDialog::srEquationDialog(QWidget *parent) :
     cht->addSeries(selSeries);
     chartview->setChart(cht);
 
-    setSlider1(-5, 5, 0);
-    value1Changed(0);
-    setSlider2(-5, 5, 0);
-    value2Changed(0);
-    setSlider3(-5, 5, 0);
-    value3Changed(0);
+    setSlider1(-5, 5, 8);
+    setSlider2(-5, 5, .5);
+    setSlider3(-5, 5, 1);
+    intVar1Changed(8);
 
     connect (ui->horizontalSlider_1, SIGNAL(valueChanged(int)), SLOT(slider1Changed(int)));
     connect (ui->doubleSpinBox_1_value, SIGNAL(valueChanged(double)), SLOT(value1Changed(double)));
@@ -78,6 +76,8 @@ srEquationDialog::srEquationDialog(QWidget *parent) :
     connect (ui->doubleSpinBox_3_min, SIGNAL(valueChanged(double)), SLOT(min3Changed(double)));
     connect (ui->doubleSpinBox_3_max, SIGNAL(valueChanged(double)), SLOT(max3Changed(double)));
 
+    connect (ui->spinBox_SPR, SIGNAL(valueChanged(int)), SLOT(intVar1Changed(int)));
+
     connect (this, SIGNAL(numbersUpdated()), SLOT(update()));
 //    connect (this, SIGNAL(linearUpdated(float)), SLOT(updateLinearExp(float)));
 
@@ -85,6 +85,7 @@ srEquationDialog::srEquationDialog(QWidget *parent) :
     building = false;
     waiting = false;
     updating = false;
+    update();
  //   refresh();
 }
 
@@ -124,7 +125,6 @@ void srEquationDialog::setEquationNumber(int num)
 void srEquationDialog::changeEquationNumber(int num)
 {
     pop->SR()->setMethod(num);
-    //getParameterValues();
     restoreAll();
 }
 
@@ -138,11 +138,16 @@ void srEquationDialog::setParameters(tablemodel *params)
 void srEquationDialog::getParameterValues()
 {
     QStringList values;
-    int switchnum = numSliders;
-    if (nullptr == parameters)
-        switchnum = numParams = 0;
+    int switchnum;
+    if (nullptr == parameters) {
+        switchnum = numSliders = 0;
+    }
+    else {
+        switchnum = numSliders = pop->SR()->getNumFullParameters() - 3;
+    }
 
     disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
 
     switch (switchnum)
     {
@@ -172,6 +177,7 @@ void srEquationDialog::getParameterValues()
         break;
     }
     connect (parameters, SIGNAL(dataChanged()), SLOT(parametersChanged()));
+    connect (this, SIGNAL(numbersUpdated()), SLOT(update()));
     showSliders(numSliders);
 }
 
@@ -222,7 +228,7 @@ void srEquationDialog::setParameterValues()
 void srEquationDialog::setParameterHeaders()
 {
     QString parTyp("log(R0)");
-    switch (parameters->rowCount())
+    switch (numSliders)
     {
     case 3:
         parameters->setRowHeader(2, ui->label_3_name->text());//QString("SR p3 "));
@@ -317,6 +323,7 @@ void srEquationDialog::setup()
         }
         updating = false;
     }
+    updateGrid(cht->rect());
     QDialog::update();
 }
 
@@ -579,6 +586,16 @@ void srEquationDialog::max3Changed (double value)
     }
 }
 
+void srEquationDialog::setIntVar1(int value)
+{
+    intvar1 = value;
+}
+
+void srEquationDialog::intVar1Changed(int value)
+{
+    setIntVar1 (value);
+    emit numbersUpdated();
+}
 
 void srEquationDialog::apply()
 {
@@ -807,13 +824,15 @@ void srEquationDialog::updateGrid(QRectF rect)
     int xTicks = static_cast<int>(rect.width() / 100);
     int yTicks = static_cast<int>(rect.height() / 60);
 
-    int yMax = static_cast<int>((maxYvalue(selSeries->points()) + 500)/1000) * 1000 + 1000;
+    selSeries->detachAxis(axisY);
+    int yMax = static_cast<int>((maxYvalue(selSeries->points()) + 100) / 100) * 100;
     axisXsel->setRange(0, (XMAX / 100.0));
     axisY->setRange(0, yMax);
-    selSeries->attachAxis(axisXsel);
+//    selSeries->attachAxis(axisXsel);
     selSeries->attachAxis(axisY);
 
-    updateTicks(3, yTicks);
+    xTicks = xTicks < 5? 3: 5;
+    updateTicks(xTicks, yTicks);
 }
 
 void srEquationDialog::updateTicks(int xT, int yT)
@@ -828,6 +847,9 @@ void srEquationDialog::updateTicks(int xT, int yT)
 
 void srEquationDialog::resetChart(bool create)
 {
+    ui->label_SPR->hide();
+    ui->label_SPR_info->hide();
+    ui->spinBox_SPR->hide();
     ui->label_title->hide();
     if (chartview != nullptr)
     {
@@ -1047,8 +1069,8 @@ void srEquationDialog::updateBevertonHoltStandard()
 
 //    double SSB_virgin_adj = 1.0;
     double SSB_curr_adj, Recruits;
-    double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
-    double steep = ui->doubleSpinBox_2_value->value();
+    double logRecr_virgin_adj = val1;// ui->doubleSpinBox_1_value->value();
+    double steep = val2; // ui->doubleSpinBox_2_value->value();
 
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
@@ -1167,10 +1189,13 @@ void srEquationDialog::hockeyStick()
 void srEquationDialog::updateHockeyStick()
 {
     double SSB_virgin_adj = 1.0;
-    double temp, SSB_curr_adj, Recruits;
+    double temp, join, SSB_curr_adj, Recruits;
     double Recr_virgin_adj = exp(ui->doubleSpinBox_1_value->value());
     double inflection = ui->doubleSpinBox_2_value->value();
     double Rmin = ui->doubleSpinBox_3_value->value();
+    Rmin = Rmin < 0? 0: Rmin;
+    Rmin = Rmin > 1? 1: Rmin;
+
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(inflection);
     ui->doubleSpinBox_3_trans->setValue(Rmin);
@@ -1183,13 +1208,13 @@ void srEquationDialog::updateHockeyStick()
     for (int i = 0; i < xValList.count(); i++)
     {
         SSB_curr_adj = xValList.at(i);
+//        temp = Rmin + Recr_virgin_adj * (1.0 - (inflection - SSB_curr_adj));
+//        join = 1.0 / (1.0 + exp(1000.0 * (SSB_curr_adj - inflection)/(Recr_virgin_adj-Rmin)));
+//        Recruits = temp * join + Recr_virgin_adj * (1.0 - join);
         temp = Rmin * Recr_virgin_adj +
               SSB_curr_adj / (inflection * SSB_virgin_adj) *
               (Recr_virgin_adj - Rmin * Recr_virgin_adj);
         Recruits = joinFunction(0.0 * SSB_virgin_adj, SSB_virgin_adj, inflection * SSB_virgin_adj, SSB_curr_adj, temp, Recr_virgin_adj);
-//        temp = Rmin + SSB_curr_adj / (inflection) * (1 - Rmin);
-//        temp *= Recr_virgin_adj;
-//        Recruits = joinFunction (0.0, (XMAX/100), inflection, SSB_curr_adj, temp, Recr_virgin_adj);
         selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);
@@ -1272,6 +1297,9 @@ void srEquationDialog::survivorship()
 {
     setTitle(QString("Option 7: Survivorship"));
     setLabel("Survivorship");
+    ui->label_SPR->show();
+    ui->label_SPR_info->show();
+    ui->spinBox_SPR->show();
 
     chartview->setVisible(false);
 
@@ -1285,11 +1313,13 @@ void srEquationDialog::survivorship()
 
     numSliders = 3;
     showSliders(numSliders);
-    updateRicker();
+    updateSurvivorship();
     chartview->setVisible(true);
 
     cht->addAxis(axisXsel, Qt::AlignBottom);
     cht->addAxis(axisY, Qt::AlignLeft);
+    cht->addAxis(axisYalt, Qt::AlignRight);
+    cht->addSeries(selSeries);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -1297,24 +1327,34 @@ void srEquationDialog::survivorship()
 //    Beta = SR_parm_work(3);
 //    SRZ_0=log(1.0/(SSB_virgin_adj/Recr_virgin_adj));
 //    srz_min=SRZ_0*(1.0-Zfrac);
-//    SRZ_surv=mfexp((1.-pow((SSB_curr_adj/SSB_virgin_adj),SR_parm_work(3)) )*(srz_min-SRZ_0)+SRZ_0);  //  survival
+//    SRZ_surv=mfexp((1.-pow((SSB_curr_adj/SSB_virgin_adj),Beta) )*(srz_min-SRZ_0)+SRZ_0);  //  survival
 //    NewRecruits=SSB_curr_adj*SRZ_surv;
+
+//Recr_virgin_adj = exp(ln_R0)
+//SPB_virgin_adj = Recr_virgin_adj * SPR_0
+//SRZ_0 = ln(1.0/(SPB_virgin_adj/Recr_virgin_adj))
+//SRZ_min = SRZ_0 * (1.0 - ZFrac)
+
+//surv = exp((1.0-xval^shape) * (SRZ_min-SRZ_0) + SRZ_0)
+//recr = surv * xval * SPB_virgin_adj
 
 // Case 7: Suvivorship function
 void srEquationDialog::updateSurvivorship()
 {
-//    double SSB_virgin_adj = 1.0;
+    double SPR = intvar1;
     double SSB_curr_adj, Recruits;
-    double Recr_virgin_adj = exp(ui->doubleSpinBox_1_value->value());
+    double ln_R0 = ui->doubleSpinBox_1_value->value();
+    double Recr_virgin_adj = exp(ln_R0);
     double Zfrac = ui->doubleSpinBox_2_value->value();
     double Beta = ui->doubleSpinBox_3_value->value();
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(Zfrac);
     ui->doubleSpinBox_3_trans->setValue(Beta);
 
-    // SSB_virgin_adj = 1.0, so it factors out
-    double SRZ_0 = log(Recr_virgin_adj); // 1.0/(SB_virgin_adj/Recr_virgin_adj)
-    double srz_min = SRZ_0 * (1.0 - Zfrac);
+    double SPB_virgin_adj = Recr_virgin_adj * SPR;
+
+    double SRZ_0 = log(1.0/SPR); // 1.0/(SB_virgin_adj/Recr_virgin_adj)
+    double SRZ_min = SRZ_0 * (1.0 - Zfrac);
     double SRZ_surv = 0;
 
     cht->removeSeries(selSeries);
@@ -1324,8 +1364,8 @@ void srEquationDialog::updateSurvivorship()
     for (int i = 0; i < xValList.count(); i++)
     {
         SSB_curr_adj = xValList.at(i);
-        SRZ_surv = exp((1.0 - pow((SSB_curr_adj), Beta)) * (srz_min - SRZ_0) + SRZ_0); // survival
-        Recruits = SSB_curr_adj * SRZ_surv;
+        SRZ_surv = exp((1.0 - pow(SSB_curr_adj, Beta)) * (SRZ_min - SRZ_0) + SRZ_0); // survival
+        Recruits = SRZ_surv * SSB_curr_adj * SPB_virgin_adj;
         selSeries->append(SSB_curr_adj, Recruits);
     }
     cht->addSeries(selSeries);

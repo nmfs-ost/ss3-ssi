@@ -18,6 +18,6 @@ int main(int argc, char *argv[])
         w.openDirectory(fname);
     }
     w.show();
-    
+
     return a.exec();
 }
