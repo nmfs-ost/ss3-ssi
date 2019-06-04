@@ -630,6 +630,7 @@ bool file_widget::read_files(ss_model *model_inf)
                            (current_dir_name, QString(RUN_NUMBER_FILE)));
         }
     }
+    emit (files_read());
 
     return okay;
 }
@@ -735,9 +736,11 @@ bool file_widget::read_starter_file (QString filename)
         ui->spinBox_datafiles->setValue(temp_int);
         temp_int = starterFile->getIntValue(QString("last estimation phase"), 0, 100, 8);
         model_info->set_last_estim_phase(temp_int);
-        temp_int = starterFile->getIntValue(QString("MC burn interval"), 0, 500, 10);
+        temp_int = starterFile->get_next_value("MCMC burn interval").toInt(); //getIntValue(QString("MC burn interval"), 0, 10000, 10);
+        temp_int =  (temp_int < 0)? 0: temp_int;
         model_info->set_mc_burn(temp_int);
-        temp_int = starterFile->getIntValue(QString("MC thin interval"), 0, 10, 2);
+        temp_int = starterFile->get_next_value("MCMC thin interval").toInt(); //getIntValue(QString("MC thin interval"), 1, 1000, 2);
+        temp_int = temp_int < 1? 1: temp_int;
         model_info->set_mc_thin(temp_int);
         temp_float = starterFile->getFloatValue(QString("jitter value"), 0.0, 11.0, 0.0);
         model_info->set_jitter_param(temp_float);

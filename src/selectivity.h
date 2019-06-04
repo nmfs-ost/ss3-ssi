@@ -88,7 +88,7 @@ public slots:
     QString getRetainParameterText (int index);
     QStringList getRetainParameter (int index) {return retainParameters->getParameter(index);}
     QString getRetainParameterLabel (int index) {return retainParameters->getParamHeader(index);}
-    shortParameterModel *getRetainParameterModel () {return retainParameters;}
+    longParameterModel *getRetainParameterModel () {return retainParameters;}
     tablemodel *getRetainParameterTable () {return retainParameters->getParamTable();}
 
     int getNumRetainTimeVaryParameters ();
@@ -105,7 +105,7 @@ public slots:
     QString getDiscardParameterText (int index);
     QStringList getDiscardParameter (int index) {return discardParameters->getParameter(index);}
     QString getDiscardParameterLabel (int index) {return discardParameters->getParamHeader(index);}
-    shortParameterModel *getDiscardParameterModel () {return discardParameters;}
+    longParameterModel *getDiscardParameterModel () {return discardParameters;}
     tablemodel *getDiscardParameterTable () {return discardParameters->getParamTable();}
 
     int getNumDiscardTimeVaryParameters ();
@@ -131,7 +131,7 @@ public slots:
     QString getMaleParameterText (int index);
     QStringList getMaleParameter (int index) {return maleParameters->getParameter(index);}
     QString getMaleParameterLabel (int index) {return maleParameters->getParamHeader(index);}
-    shortParameterModel *getMaleParameterModel () {return maleParameters;}
+    longParameterModel *getMaleParameterModel () {return maleParameters;}
     tablemodel * getMaleParameterTable () {return maleParameters->getParamTable();}
 
     int getNumMaleTimeVaryParameters ();

@@ -155,7 +155,7 @@ signals:
     void save_control_file();
     void choose_data_file();
     void save_data_file();
-
+    void files_read();
 
 private slots:
 

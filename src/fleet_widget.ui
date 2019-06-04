@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>841</width>
-    <height>695</height>
+    <width>998</width>
+    <height>709</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>40</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -1515,7 +1521,7 @@
                <item row="2" column="1">
                 <widget class="QLabel" name="label_q_parameters">
                  <property name="text">
-                  <string>Parameters</string>
+                  <string>Q Parameters</string>
                  </property>
                 </widget>
                </item>
@@ -1525,7 +1531,7 @@
                <item row="4" column="1" colspan="2">
                 <widget class="QLabel" name="label_q_tv_parameters">
                  <property name="text">
-                  <string>Time Varying Parameters</string>
+                  <string>Q Time Varying Parameters</string>
                  </property>
                 </widget>
                </item>
@@ -1639,7 +1645,158 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
-               <widget class="QScrollArea" name="scrollArea_sel_size">
+               <layout class="QGridLayout" name="gridLayout_selex_size_heading">
+                <item row="1" column="7">
+                 <widget class="QSpinBox" name="spinBox_selex_size_discard">
+                  <property name="minimum">
+                   <number>-4</number>
+                  </property>
+                  <property name="maximum">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="6">
+                 <widget class="QPushButton" name="pushButton_selex_size_pattern_info">
+                  <property name="text">
+                   <string>Info</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_selex_size_pattern">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Pattern</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1" colspan="2">
+                 <widget class="QLabel" name="label_selex_size_special">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Special</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="spinBox_selex_size_pattern">
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                  <property name="maximum">
+                   <number>43</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2" colspan="3">
+                 <widget class="QLabel" name="label_selex_size_pattern_info">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="7">
+                 <spacer name="horizontalSpacer_33">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>37</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="5">
+                 <widget class="QSpinBox" name="spinBox_selex_size_male">
+                  <property name="maximum">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="8">
+                 <widget class="QPushButton" name="pushButton_selex_size_curve">
+                  <property name="text">
+                   <string>Show Curve</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QLabel" name="label_selex_size_male">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Male</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="6">
+                 <widget class="QLabel" name="label_selex_size_discard">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Discard</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="9">
+                 <spacer name="horizontalSpacer_23">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QSpinBox" name="spinBox_selex_size_special"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QScrollArea" name="scrollArea_selex_size">
                 <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
@@ -1648,17 +1805,43 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>737</width>
-                   <height>415</height>
+                   <width>852</width>
+                   <height>348</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">
                   <item>
-                   <layout class="QGridLayout" name="selex_size">
+                   <layout class="QGridLayout" name="selex_size_parameters">
+                    <item row="15" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_male_params">
+                      <property name="text">
+                       <string>Male parameters</string>
+                      </property>
+                     </widget>
+                    </item>
                     <item row="17" column="0" colspan="3">
                      <widget class="QLabel" name="label_sel_size_male_tv_params">
                       <property name="text">
                        <string>Male time varying parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="18" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_male_tv_parms"/>
+                    </item>
+                    <item row="14" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_discard_tv_parms"/>
+                    </item>
+                    <item row="6" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_timevary_parms"/>
+                    </item>
+                    <item row="10" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_retain_tv_parms"/>
+                    </item>
+                    <item row="5" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_timevary_parms">
+                      <property name="text">
+                       <string>Time varying parameters</string>
                       </property>
                      </widget>
                     </item>
@@ -1669,140 +1852,7 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="13" column="0" colspan="3">
-                     <widget class="QLabel" name="label_sel_size_discard_tv_params">
-                      <property name="text">
-                       <string>Discard time varying parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="12" column="0" colspan="11">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_discard"/>
-                    </item>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_selex_size_pattern">
-                      <property name="text">
-                       <string>Pattern</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="8" column="0" colspan="11">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_retain"/>
-                    </item>
-                    <item row="4" column="0" colspan="11">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_params"/>
-                    </item>
-                    <item row="11" column="0" colspan="4">
-                     <widget class="QLabel" name="label_sel_size_discard_params">
-                      <property name="text">
-                       <string>Discard parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="5" column="0" colspan="3">
-                     <widget class="QLabel" name="label_selex_size_timevary_parms">
-                      <property name="text">
-                       <string>Time varying parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="15" column="0" colspan="3">
-                     <widget class="QLabel" name="label_sel_size_male_params">
-                      <property name="text">
-                       <string>Male parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="0" colspan="3">
-                     <widget class="QLabel" name="label_sel_size_pattern_params">
-                      <property name="text">
-                       <string>Pattern parameters </string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="5">
-                     <widget class="QLabel" name="label_selex_size_male">
-                      <property name="text">
-                       <string>Male</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="3">
-                     <widget class="QSpinBox" name="spinBox_selex_size_num_params">
-                      <property name="readOnly">
-                       <bool>false</bool>
-                      </property>
-                      <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::PlusMinus</enum>
-                      </property>
-                      <property name="prefix">
-                       <string/>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="6">
-                     <widget class="QSpinBox" name="spinBox_selex_size_male">
-                      <property name="maximum">
-                       <number>4</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="9">
-                     <widget class="QSpinBox" name="spinBox_selex_size_discard">
-                      <property name="minimum">
-                       <number>-4</number>
-                      </property>
-                      <property name="maximum">
-                       <number>4</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="8">
-                     <widget class="QLabel" name="label_selex_size_discard">
-                      <property name="text">
-                       <string>Discard</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="16" column="0" colspan="11">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_male"/>
-                    </item>
-                    <item row="2" column="10">
-                     <spacer name="horizontalSpacer_23">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item row="2" column="5">
-                     <spacer name="horizontalSpacer_26">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item row="2" column="8">
+                    <item row="3" column="5">
                      <spacer name="horizontalSpacer_28">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1815,57 +1865,16 @@
                       </property>
                      </spacer>
                     </item>
-                    <item row="2" column="0">
-                     <widget class="QPushButton" name="pushButton_selex_size_curve">
+                    <item row="13" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_discard_tv_params">
+                      <property name="minimumSize">
+                       <size>
+                        <width>155</width>
+                        <height>0</height>
+                       </size>
+                      </property>
                       <property name="text">
-                       <string>Show Curve</string>
-                      </property>
-                      <property name="checkable">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QPushButton" name="pushButton_selex_size_pattern_info">
-                      <property name="text">
-                       <string>Info</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="3">
-                     <widget class="QSpinBox" name="spinBox_selex_size_special"/>
-                    </item>
-                    <item row="0" column="2" colspan="8">
-                     <widget class="QLabel" name="label_selex_size_pattern_info">
-                      <property name="text">
-                       <string/>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1" colspan="2">
-                     <widget class="QLabel" name="label_selex_size_special">
-                      <property name="text">
-                       <string>Special</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="1" colspan="2">
-                     <widget class="QLabel" name="label_selex_size_num_params">
-                      <property name="text">
-                       <string>Number of parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_size_pattern">
-                      <property name="prefix">
-                       <string/>
-                      </property>
-                      <property name="maximum">
-                       <number>43</number>
+                       <string>Discard time varying parameters</string>
                       </property>
                      </widget>
                     </item>
@@ -1876,17 +1885,170 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="6" column="0" colspan="9">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_timevary_parms"/>
+                    <item row="3" column="8">
+                     <spacer name="horizontalSpacer_26">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
-                    <item row="10" column="0" colspan="9">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_retain_tv_parms"/>
+                    <item row="3" column="4">
+                     <spacer name="horizontalSpacer_22">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
-                    <item row="14" column="0" colspan="9">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_discard_tv_parms"/>
+                    <item row="4" column="0" colspan="9">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_params"/>
                     </item>
-                    <item row="18" column="0" colspan="9">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_size_male_tv_parms"/>
+                    <item row="8" column="0" colspan="9">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_retain"/>
+                    </item>
+                    <item row="12" column="0" colspan="9">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_discard"/>
+                    </item>
+                    <item row="16" column="0" colspan="9">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_size_male"/>
+                    </item>
+                    <item row="3" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_num_params">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                      <property name="prefix">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_pattern_params">
+                      <property name="minimumSize">
+                       <size>
+                        <width>155</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Pattern parameters </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="11" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_discard_params">
+                      <property name="text">
+                       <string>Discard parameters</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numTVParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numRetnParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numRetnTVParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="11" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numDiscParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="13" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numDiscTVParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="15" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numMaleParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="17" column="3">
+                     <widget class="QSpinBox" name="spinBox_selex_size_numMaleTVParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </item>
@@ -1915,7 +2077,176 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <item>
-               <widget class="QScrollArea" name="scrollArea_2">
+               <layout class="QGridLayout" name="gridLayout_selex_age_heading">
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="spinBox_selex_age_pattern">
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                  <property name="minimum">
+                   <number>10</number>
+                  </property>
+                  <property name="maximum">
+                   <number>45</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2" colspan="3">
+                 <widget class="QLabel" name="label_selex_age_pattern_info">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="6">
+                 <widget class="QPushButton" name="pushButton_selex_age_pattern_info">
+                  <property name="text">
+                   <string>Info</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_selex_age_pattern">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Pattern</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="8">
+                 <widget class="QPushButton" name="pushButton_selex_age_curve">
+                  <property name="text">
+                   <string>Show Curve</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="7">
+                 <spacer name="horizontalSpacer_32">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>37</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="1" colspan="2">
+                 <widget class="QLabel" name="label_selex_age_special">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Special</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QSpinBox" name="spinBox_selex_age_special"/>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QLabel" name="label_selex_age_male">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Male</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="5">
+                 <widget class="QSpinBox" name="spinBox_selex_age_male">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximum">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="6">
+                 <widget class="QLabel" name="label_selex_age_discard">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Discard</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="7">
+                 <widget class="QSpinBox" name="spinBox_selex_age_discard">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>-4</number>
+                  </property>
+                  <property name="maximum">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="9">
+                 <spacer name="horizontalSpacer_30">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QScrollArea" name="scrollArea_selex_age">
                 <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
@@ -1924,38 +2255,47 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>737</width>
-                   <height>415</height>
+                   <width>878</width>
+                   <height>345</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
                   <item>
-                   <layout class="QGridLayout" name="gridLayout_selex_age">
-                    <item row="3" column="0" colspan="5">
-                     <widget class="QLabel" name="label_selex_age_params">
+                   <layout class="QGridLayout" name="gridLayout_selex_age_parameters">
+                    <item row="4" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_age_timevary_parms">
                       <property name="text">
-                       <string>Pattern Parameters</string>
+                       <string>Time varying parameters</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="7" column="0" colspan="6">
-                     <widget class="QLabel" name="label_selex_age_male_params">
+                    <item row="9" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_age_male_tv_params">
+                      <property name="minimumSize">
+                       <size>
+                        <width>155</width>
+                        <height>0</height>
+                       </size>
+                      </property>
                       <property name="text">
-                       <string>Male Parameters</string>
+                       <string>Male time varying parameters</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_selex_age_pattern">
-                      <property name="text">
-                       <string>Pattern</string>
+                    <item row="0" column="5">
+                     <spacer name="horizontalSpacer_27">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
                       </property>
-                     </widget>
+                     </spacer>
                     </item>
-                    <item row="2" column="10">
+                    <item row="0" column="6">
                      <spacer name="horizontalSpacer_15">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1968,181 +2308,124 @@
                       </property>
                      </spacer>
                     </item>
-                    <item row="1" column="0">
-                     <widget class="QPushButton" name="pushButton_selex_age_pattern_info">
-                      <property name="text">
-                       <string>Info</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
-                     <widget class="QPushButton" name="pushButton_selex_age_curve">
-                      <property name="text">
-                       <string>Show Curve</string>
-                      </property>
-                      <property name="checkable">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="2" colspan="7">
-                     <widget class="QLabel" name="label_selex_age_pattern_info">
+                    <item row="0" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_age_params">
                       <property name="minimumSize">
                        <size>
-                        <width>100</width>
+                        <width>155</width>
                         <height>0</height>
                        </size>
                       </property>
                       <property name="text">
-                       <string/>
+                       <string>Pattern Parameters</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="2" column="1" colspan="2">
-                     <widget class="QLabel" name="label_selex_age_num_params">
-                      <property name="text">
-                       <string>Number of parameters</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1" colspan="2">
-                     <widget class="QLabel" name="label_selex_age_special">
-                      <property name="text">
-                       <string>Special</string>
+                    <item row="0" column="4">
+                     <widget class="QSpinBox" name="spinBox_selex_age_num_params">
+                      <property name="minimumSize">
+                       <size>
+                        <width>20</width>
+                        <height>0</height>
+                       </size>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                       </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QSpinBox" name="spinBox_selex_age_pattern">
-                      <property name="prefix">
-                       <string/>
-                      </property>
-                      <property name="minimum">
-                       <number>10</number>
-                      </property>
-                      <property name="maximum">
-                       <number>45</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="9">
-                     <widget class="QSpinBox" name="spinBox_selex_age_discard">
                       <property name="readOnly">
                        <bool>true</bool>
                       </property>
-                      <property name="minimum">
-                       <number>-4</number>
-                      </property>
-                      <property name="maximum">
-                       <number>4</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="3">
-                     <widget class="QSpinBox" name="spinBox_selex_age_special"/>
-                    </item>
-                    <item row="1" column="5">
-                     <widget class="QLabel" name="label_selex_age_male">
-                      <property name="text">
-                       <string>Male</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="6">
-                     <widget class="QSpinBox" name="spinBox_selex_age_male">
-                      <property name="maximum">
-                       <number>4</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="8">
-                     <widget class="QLabel" name="label_selex_age_discard">
-                      <property name="text">
-                       <string>Discard</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="4" column="0" colspan="11">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_params"/>
-                    </item>
-                    <item row="2" column="5">
-                     <layout class="QHBoxLayout" name="horizontalLayout_4">
-                      <item>
-                       <spacer name="horizontalSpacer_27">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                    <item row="2" column="8">
-                     <layout class="QHBoxLayout" name="horizontalLayout_5">
-                      <item>
-                       <spacer name="horizontalSpacer_7">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                    <item row="2" column="3">
-                     <widget class="QSpinBox" name="spinBox_selex_age_num_params">
-                      <property name="readOnly">
-                       <bool>false</bool>
-                      </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::PlusMinus</enum>
+                       <enum>QAbstractSpinBox::NoButtons</enum>
                       </property>
                       <property name="prefix">
                        <string/>
                       </property>
                      </widget>
                     </item>
-                    <item row="8" column="0" colspan="11">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_age_male_params"/>
-                    </item>
-                    <item row="5" column="0" colspan="4">
-                     <widget class="QLabel" name="label_selex_age_timevary_parms">
+                    <item row="6" column="0" colspan="4">
+                     <widget class="QLabel" name="label_selex_age_male_params">
                       <property name="text">
-                       <string>Time varying parameters</string>
+                       <string>Male Parameters</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="10" column="0" colspan="4">
-                     <widget class="QLabel" name="label_selex_age_male_tv_parms">
-                      <property name="text">
-                       <string>Male time varying parameters</string>
+                    <item row="4" column="4">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numTVParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
                       </property>
                      </widget>
                     </item>
-                    <item row="11" column="0" colspan="9">
+                    <item row="6" column="4">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numMaleParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="4">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numMaleTVParams">
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                      <property name="buttonSymbols">
+                       <enum>QAbstractSpinBox::NoButtons</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="0" colspan="7">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_timevary_parms"/>
+                    </item>
+                    <item row="10" column="0" colspan="7">
                      <layout class="QVBoxLayout" name="verticalLayout_selex_age_male_tv_parms"/>
                     </item>
-                    <item row="6" column="0" colspan="9">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_timevary_parms"/>
+                    <item row="0" column="7">
+                     <spacer name="horizontalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="10" column="7">
+                     <spacer name="verticalSpacer_4">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="7" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_age_male_params"/>
+                    </item>
+                    <item row="1" column="0" rowspan="3" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_params"/>
                     </item>
                    </layout>
                   </item>
@@ -2153,8 +2436,8 @@
                     </property>
                     <property name="sizeHint" stdset="0">
                      <size>
-                      <width>20</width>
-                      <height>142</height>
+                      <width>0</width>
+                      <height>0</height>
                      </size>
                     </property>
                    </spacer>

@@ -82,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (files, SIGNAL(choose_data_file()),SLOT(openDataFile()));
     connect (files, SIGNAL(save_control_file()), SLOT(saveControlFile()));
     connect (files, SIGNAL(choose_control_file()), SLOT(openControlFile()));
+    connect (files, SIGNAL(files_read()), SLOT(refreshAll()));
 
     connect (ui->action_New, SIGNAL(triggered()), SLOT(createNewDirectory()));
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
@@ -161,10 +162,11 @@ void MainWindow::reset()
 
 void MainWindow::refreshAll()
 {
-    files->reset();
+//    files->reset();
     data->refresh();
     forecast->refresh();
     fleets->refresh();
+    fleets->set_current_fleet();
     population->refresh();
 }
 

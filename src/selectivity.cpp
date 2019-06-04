@@ -1266,6 +1266,7 @@ void selectivity::setSpecial(int value)
         {
         case 43:
             scale = 2;
+            [[clang::fallthrough]];
         case 6:
             if (value < 2)
             {
@@ -1276,6 +1277,7 @@ void selectivity::setSpecial(int value)
 
         case 42:
             scale = 2;
+            [[clang::fallthrough]];
         case 27:
             if (value < 3)
             {
@@ -1292,13 +1294,11 @@ void selectivity::setSpecial(int value)
 void selectivity::setTimeVaryParameter (int index, QStringList strList)
 {
     varParameters->setVarParameter(index, strList);
-//    timeVaryParameters->setParameter(index, strList);
 }
 
 void selectivity::setTimeVaryParameterLabel(int index, QString label)
 {
     varParameters->setVarParamHeader(index, label);
-//    timeVaryParameters->setParamHeader(index, label);
 }
 
 QString selectivity::getTimeVaryParameterText (int index)
@@ -1318,13 +1318,6 @@ int selectivity::getNumTimeVaryParameters ()
 int selectivity::getNumDiscardParameters()
 {
     return discardParameters->getNumParams();
-/*    int num = 0;
-    QStringList data;
-    for (int i = 0; i < parameters->rowCount(); i++)
-    {
-        num += parameters->envLink(i)? 1: 0;
-    }
-    return num;*/
 }
 
 void selectivity::setDiscardParameter(int index, QStringList strList)

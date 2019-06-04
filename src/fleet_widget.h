@@ -37,7 +37,7 @@ public slots:
     void refresh();
     void set_model (ss_model *model);
     void setAgeLengthBins ();
-    void set_current_fleet (int index);
+    void set_current_fleet (int index = -1);
     void set_fleet_type (int type);
     void set_type_fleet (Fleet::FleetType ft);
     void nextFleet();
@@ -77,25 +77,31 @@ public slots:
 
     void setAr1SelexSmoother(int val);
 
-    void changeSelexSizePattern(int pat);
-    void setupSelexSizeInfo();
-    void sizeSelexDataChanged();
-    void changeSelexSizeDiscard(int disc);
-    void changeSelexSizeMale (int mal);
-    void changeSelexSizeSpecial (int spc);
-    void sizeSelexParamsChanged();
-    void sizeSelexTVParamsChanged();
     void setSelTimeVaryReadParams(int flag);
+    void changeSelexSizePattern(int pat);
+    void selexSizeParamsChanged();
+    void selexSizeTVParamsChanged();
+    void setupSelexSizeInfo();
+    void selexSizeDataChanged();
+    void changeSelexSizeDiscard(int disc);
+    void selexSizeDiscParamsChanged();
+    void selexSizeDiscTVParamsChanged();
+    void changeSelexSizeMale (int mal);
+    void selexSizeMaleParamsChanged();
+    void selexSizeMaleTVParamsChanged();
+    void changeSelexSizeSpecial (int spc);
     void showSelexSizeCurve(bool flag);
     void selexSizeCurveClosed ();
 
     void changeSelexAgePattern(int pat);
+    void selexAgeParamsChanged();
+    void selexAgeTVParamsChanged();
     void changeSelexAgeMale (int mal);
+    void selexAgeMaleParamsChanged();
+    void selexAgeMaleTVParamsChanged();
     void changeSelexAgeSpecial (int spc);
     void setupSelexAgeInfo();
-    void ageSelexDataChanged();
-    void ageSelexParamsChanged();
-    void ageSelexTVParamsChanged();
+    void selexAgeDataChanged();
     void showSelexAgeCurve(bool flag);
     void selexAgeCurveClosed ();
 
@@ -145,7 +151,7 @@ private:
     tableview *sizeSelexMaleTVParamsView;
     equationDialog *selexSizeEqDialog;
     DialogInfo * selexSizeInfoDialog;
-    
+
     tableview *ageSelexParamsView;
     tableview *ageSelexTimeVaryParamsView;
     tableview *ageSelexMaleParamsView;

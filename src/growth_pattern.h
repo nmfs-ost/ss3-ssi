@@ -100,10 +100,12 @@ private:
 
     longParameterModel *growthParams;
     timeVaryParameterModel *growthVarParams;
+
     longParameterModel *cvParams;
+    timeVaryParameterModel *cvVarParams;
 
     longParameterModel *fracFmParams;
-
+    timeVaryParameterModel *fracFmVarParams;
 
     longParameterModel *matureParams;
     timeVaryParameterModel *matureVarParams;
