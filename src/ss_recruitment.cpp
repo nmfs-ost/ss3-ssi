@@ -6,17 +6,17 @@ spawn_recruit::spawn_recruit(ss_model *parent)
      parnt = parent;
 
     full_parameters = new longParameterModel();
-    tvParameters = new timeVaryParameterModel (parnt);
+    varParameters = new timeVaryParameterModel (parnt);
 
     full_parameters->setNumParams(10);
 /*    parmsUsed << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
     full_parameters->setParamsUsed(parmsUsed);
     setDefaultParameters();
     setParameterHeaders();*/
-    tvParameters->setNumParams(10);
+    varParameters->setNumParams(10);
 
     connect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
-             tvParameters, SLOT(changeVarParamData(int,QStringList)));
+             varParameters, SLOT(changeVarParamData(int,QStringList)));
 
     assignments = new tablemodel();
     assignments->setColumnCount(4);
@@ -29,10 +29,14 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     assignTimings->setRowHeader(0, QString("Settle Timings"));
 
     interactParams = new longParameterModel();
+    interVarParams = new timeVaryParameterModel();
     distParams = new longParameterModel();
     distParams->setNumParams(2);
+    distVarParams = new timeVaryParameterModel();
+    distVarParams->setNumParams(2);
 
     cycleParams = new longParameterModel();
+    cycleVarParams = new timeVaryParameterModel();
 
     header.clear();
     header << "Year" << "Input_value";
@@ -47,7 +51,7 @@ spawn_recruit::~spawn_recruit()
 {
 //    delete parameters;
     delete full_parameters;
-    delete tvParameters;
+    delete varParameters;
     delete assignments;
     delete interactParams;
     delete distParams;
@@ -228,14 +232,14 @@ void spawn_recruit::setFullParameter(int index, QStringList values)
 {
 //    int i = parmNums.at(index);
     full_parameters->setParamData(index, values);
-    tvParameters->setParameter(index, values);
+    varParameters->setParameter(index, values);
 }
 
 void spawn_recruit::setFullParameterHeader(int index, QString hdr)
 {
 //    int i = parmNums.at(index);
     full_parameters->setParamHeader(index, hdr);
-    tvParameters->setTableTitle(index, hdr);
+    varParameters->setTableTitle(index, hdr);
 }
 
 QStringList spawn_recruit::getFullParameter(int index)
@@ -354,11 +358,34 @@ void spawn_recruit::setInteractParam(int index, QStringList data)
     interactParams->setParameter(index, data);
 }
 
+void spawn_recruit::setNumDistParams(int num)
+{
+    distParams->setNumParams(num);
+    distVarParams->setTotalNumVarTables(num);
+}
+
 void spawn_recruit::setDistParam(int index, QStringList data)
 {
     if (index >= distParams->getNumParams())
-        distParams->setNumParams(index + 1);
+        setNumDistParams(index + 1);
     distParams->setParameter(index, data);
+    distVarParams->setParameter(index, data);
+}
+
+void spawn_recruit::setDistTVParam(int index, QStringList values)
+{
+    if (index < distVarParams->getNumVarParams())
+        distVarParams->setVarParameter(index, values);
+}
+
+void spawn_recruit::setTimeVaryReadParams(int flag)
+{
+    readtvparams = flag;
+    varParameters->setAutoGenerate(flag);
+    distVarParams->setAutoGenerate(flag);
+    interVarParams->setAutoGenerate(flag);
+    cycleVarParams->setAutoGenerate(flag);
+
 }
 
 void spawn_recruit::setCycleParam(int index, QStringList data)
@@ -370,9 +397,9 @@ void spawn_recruit::setCycleParam(int index, QStringList data)
 
 void spawn_recruit::setTVParameter(int index, QStringList values)
 {
-    if (index >= tvParameters->getNumVarParams())
-        tvParameters->setNumVarParams(index + 1);
-    tvParameters->setVarParameter(index, values);
+    if (index >= varParameters->getNumVarParams())
+        varParameters->setNumVarParams(index + 1);
+    varParameters->setVarParameter(index, values);
 }
 
 int spawn_recruit::getRecDevStartYr() const
@@ -445,42 +472,42 @@ void spawn_recruit::setFcastLambda(float value)
     fcast_lambda = value;
 }
 
-int spawn_recruit::getNobiasLastEarlyYr() const
+double spawn_recruit::getNobiasLastEarlyYr() const
 {
     return nobias_last_early_yr;
 }
 
-void spawn_recruit::setNobiasLastEarlyYr(int value)
+void spawn_recruit::setNobiasLastEarlyYr(double value)
 {
     nobias_last_early_yr = value;
 }
 
-int spawn_recruit::getFullbiasFirstYr() const
+double spawn_recruit::getFullbiasFirstYr() const
 {
     return fullbias_first_yr;
 }
 
-void spawn_recruit::setFullbiasFirstYr(int value)
+void spawn_recruit::setFullbiasFirstYr(double value)
 {
     fullbias_first_yr = value;
 }
 
-int spawn_recruit::getFullbiasLastYr() const
+double spawn_recruit::getFullbiasLastYr() const
 {
     return fullbias_last_yr;
 }
 
-void spawn_recruit::setFullbiasLastYr(int value)
+void spawn_recruit::setFullbiasLastYr(double value)
 {
     fullbias_last_yr = value;
 }
 
-int spawn_recruit::getNobiasFirstRecentYr() const
+double spawn_recruit::getNobiasFirstRecentYr() const
 {
     return nobias_first_recent_yr;
 }
 
-void spawn_recruit::setNobiasFirstRecentYr(int value)
+void spawn_recruit::setNobiasFirstRecentYr(double value)
 {
     nobias_first_recent_yr = value;
 }

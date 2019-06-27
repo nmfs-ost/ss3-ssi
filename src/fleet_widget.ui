@@ -1543,6 +1543,19 @@
                </item>
               </layout>
              </item>
+             <item>
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
            </widget>
           </item>
@@ -1571,7 +1584,7 @@
             <item>
              <widget class="QLabel" name="label_sel_time_vary_read">
               <property name="text">
-               <string>Reading selx time vary parameters</string>
+               <string>Reading selex time vary parameters</string>
               </property>
              </widget>
             </item>
@@ -1645,153 +1658,278 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
-               <layout class="QGridLayout" name="gridLayout_selex_size_heading">
-                <item row="1" column="7">
-                 <widget class="QSpinBox" name="spinBox_selex_size_discard">
-                  <property name="minimum">
-                   <number>-4</number>
-                  </property>
-                  <property name="maximum">
-                   <number>4</number>
-                  </property>
-                 </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_21">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_selex_size_pattern">
+                  <item>
+                   <widget class="QLabel" name="label_selex_size_pattern">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Pattern</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox_selex_size_pattern">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>1</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>450</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>0 : Constant 1.0. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>1 : Logistic. 2 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2 : Discontinued, use pattern #8.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>3 : Discontinued.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>4 : Discontinued, use special pattern #30.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>5 : Mirror another selectivity, special is source fleet. 2 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>6 : Linear, special value is num of segments. 2+special Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>7 : Discontinued, use pattern #8.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>8 : Double logistic with defined peak, smooth joiners. 8 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>9 : Simple double logistic, no defined peak. 6 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>15 : Mirror another selex, special is source fleet. </string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>22 : Double normal, similar to CASAL. 4 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>23 : Similar to #24. 6 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>24 : Double normal with defined initial and final selex. 6 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>25 : Exponential - logistic. 3 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>27 : Cubic spline. 3 + special Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>30 : Expected survey abundance equals spawning biomass. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>31 : Expected survey abundance equals exp(recr dev). 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>32 : Expected survey abundance equals exp(recr dev) * SpawnBiomass. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>33 : Expected survey abundance equals age 0 recruitment. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>34 : Spawning biomass depletion (B/B0). 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>42 : Cubic spline with user defined scaling. 5 + special Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>43 : Linear segements with user defined scaling. 4 + special Params.</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer__selex_size_pattern">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_selex_size_curve">
+                    <property name="text">
+                     <string>Show Curve</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_32">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
                 </item>
-                <item row="0" column="6">
-                 <widget class="QPushButton" name="pushButton_selex_size_pattern_info">
-                  <property name="text">
-                   <string>Info</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_selex_size_pattern">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Pattern</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1" colspan="2">
-                 <widget class="QLabel" name="label_selex_size_special">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Special</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QSpinBox" name="spinBox_selex_size_pattern">
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="maximum">
-                   <number>43</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2" colspan="3">
-                 <widget class="QLabel" name="label_selex_size_pattern_info">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="7">
-                 <spacer name="horizontalSpacer_33">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>37</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="1" column="5">
-                 <widget class="QSpinBox" name="spinBox_selex_size_male">
-                  <property name="maximum">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="8">
-                 <widget class="QPushButton" name="pushButton_selex_size_curve">
-                  <property name="text">
-                   <string>Show Curve</string>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="4">
-                 <widget class="QLabel" name="label_selex_size_male">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Male</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="6">
-                 <widget class="QLabel" name="label_selex_size_discard">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Discard</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="9">
-                 <spacer name="horizontalSpacer_23">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="1" column="3">
-                 <widget class="QSpinBox" name="spinBox_selex_size_special"/>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_2">
+                  <item>
+                   <widget class="QLabel" name="label_selex_size_discard">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Discard</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_selex_size_discard">
+                    <property name="minimum">
+                     <number>-4</number>
+                    </property>
+                    <property name="maximum">
+                     <number>4</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_selex_size_male">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Male</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_selex_size_male">
+                    <property name="maximum">
+                     <number>4</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_selex_size_special">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Special</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_selex_size_special"/>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_23">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -1939,19 +2077,6 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="3" column="0" colspan="3">
-                     <widget class="QLabel" name="label_sel_size_pattern_params">
-                      <property name="minimumSize">
-                       <size>
-                        <width>155</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Pattern parameters </string>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="11" column="0" colspan="3">
                      <widget class="QLabel" name="label_sel_size_discard_params">
                       <property name="text">
@@ -2050,6 +2175,19 @@
                       </property>
                      </widget>
                     </item>
+                    <item row="3" column="0" colspan="3">
+                     <widget class="QLabel" name="label_sel_size_pattern_params">
+                      <property name="minimumSize">
+                       <size>
+                        <width>155</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Pattern parameters </string>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
                   </item>
                   <item>
@@ -2077,171 +2215,257 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <item>
-               <layout class="QGridLayout" name="gridLayout_selex_age_heading">
-                <item row="0" column="1">
-                 <widget class="QSpinBox" name="spinBox_selex_age_pattern">
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="minimum">
-                   <number>10</number>
-                  </property>
-                  <property name="maximum">
-                   <number>45</number>
-                  </property>
-                 </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_20">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_selex_age_pattern">
+                  <item>
+                   <widget class="QLabel" name="label_selex_age_pattern">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Pattern</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox_selex_age_pattern">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>1</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>450</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>0 : Constant 1.0. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>10 : Constant 1.0 for ages 1+. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>11 : Constant 1.0 between minimum and maximum ages. 2 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>12 : Logistic. 2 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>13 : Double logistic, Discouraged, use pattern #18. 8 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>14 : Each age, value at age is 1/(1+exp(-x)). Nages+1 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>15 : Mirror another selectivity, special is source fleet. 0 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>16 : Coleraine single Gaussian. 2 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>17 : Each age as random walk. Nages+1 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>18 : Double logistic with defined peak, smooth joiners. 8 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>19 : Simple double logistic, no defined peak. 6 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>20 : Double normal with defined init and final level. 6 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>26 : Exponential - logistic. 3 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>41 : Random walk with user defined scaling. 2+Nages+1 Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>42 : Cubic spline with user defined scaling. 2+3+Special Params.</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>44 : Similar to pattern #17 but with separate parameters for males and females. 4+Specl*2 Params. </string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>45 : Similar to pattern #14 but with separate parameters for males and females. 4+Specl*2 Params.</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_29">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_selex_age_curve">
+                    <property name="text">
+                     <string>Show Curve</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_31">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
                 </item>
-                <item row="0" column="2" colspan="3">
-                 <widget class="QLabel" name="label_selex_age_pattern_info">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="6">
-                 <widget class="QPushButton" name="pushButton_selex_age_pattern_info">
-                  <property name="text">
-                   <string>Info</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_selex_age_pattern">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Pattern</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="8">
-                 <widget class="QPushButton" name="pushButton_selex_age_curve">
-                  <property name="text">
-                   <string>Show Curve</string>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="7">
-                 <spacer name="horizontalSpacer_32">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>37</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="1" column="1" colspan="2">
-                 <widget class="QLabel" name="label_selex_age_special">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Special</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="3">
-                 <widget class="QSpinBox" name="spinBox_selex_age_special"/>
-                </item>
-                <item row="1" column="4">
-                 <widget class="QLabel" name="label_selex_age_male">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Male</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="5">
-                 <widget class="QSpinBox" name="spinBox_selex_age_male">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximum">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="6">
-                 <widget class="QLabel" name="label_selex_age_discard">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Discard</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="7">
-                 <widget class="QSpinBox" name="spinBox_selex_age_discard">
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="minimum">
-                   <number>-4</number>
-                  </property>
-                  <property name="maximum">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="9">
-                 <spacer name="horizontalSpacer_30">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <item>
+                   <widget class="QLabel" name="label_selex_age_discard">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Discard</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_selex_age_discard">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                    <property name="minimum">
+                     <number>-4</number>
+                    </property>
+                    <property name="maximum">
+                     <number>4</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_selex_age_male">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Male</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_selex_age_male">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximum">
+                     <number>4</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_selex_age_special">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Special</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_selex_age_special"/>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_30">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -2256,7 +2480,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>878</width>
-                   <height>345</height>
+                   <height>341</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">

@@ -11,6 +11,8 @@ ss_movement::ss_movement(ss_model *parent, int n_fleets)
     movement_defs->setRowCount(0);
     movement_parms = new longParameterModel((QObject*)parnt);// parameterModelTV(parnt);
     movement_parms->setNumParams(0);
+    moveTVParams = new timeVaryParameterModel(parnt);
+    moveTVParams->setNumParams(0);
     num_fleets = n_fleets;
     first_year = 0;
     num_years = 0;
@@ -22,6 +24,7 @@ ss_movement::~ss_movement()
 {
     delete movement_defs;
     delete movement_parms;
+    delete moveTVParams;
 }
 
 void ss_movement::reset()
@@ -58,8 +61,12 @@ void ss_movement::setDefinition(int index, QStringList valuelist)
 void ss_movement::setParameter(int index, QStringList valuelist)
 {
     if (index >= movement_parms->getNumParams())
+    {
         movement_parms->setNumParams(index + 1);
+        moveTVParams->setNumParams(index + 1);
+    }
     movement_parms->setParameter(index, valuelist);
+    moveTVParams->setParameter(index, valuelist);
 }
 
 int ss_movement::getMethod() const

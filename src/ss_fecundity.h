@@ -25,6 +25,7 @@ public:
 
     int getMethod() const;
     void setMethod(int value);
+    void setAutogenerate(int value);
 
     void setHermParam (int index, QStringList data);
     QStringList getHermParam(int index) {return hermaphParams->getParameter(index);}

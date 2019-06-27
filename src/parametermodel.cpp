@@ -155,8 +155,10 @@ longParameterTable::longParameterTable(QObject *parent)
     paramTable.setHeader(header);
     setParamCount(0);
 
-    connect (&paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-             SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+//    disconnect (&paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
+//             SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    connect (&paramTable, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), this,
+             SLOT(checkParameters(QModelIndex, QModelInes, QVector<int>)));
 }
 
 longParameterTable::~longParameterTable()
@@ -166,35 +168,89 @@ longParameterTable::~longParameterTable()
 
 void longParameterTable::setParamCount(int rows)
 {
+    while (parEnvLink.count() < rows)
+    {
+        parEnvLink.append(0);
+        parUseDev.append(0);
+        parBlock.append(0);
+    }
     for (int i = paramTable.rowCount(); i < rows; i++)
+    {
         paramTable.setRowData(i, defaultParam);
+    }
+    while (parEnvLink.count() > rows)
+    {
+        parEnvLink.removeLast();
+        parUseDev.removeLast();
+        parBlock.removeLast();
+    }
     paramTable.setRowCount(rows);
 }
 
-bool longParameterTable::envLink(int index)
+void longParameterTable::setParameter(int row, QStringList param)
 {
-    bool flag = false;
-    if (index < paramTable.rowCount())
-        if (paramTable.getRowData(index).at(7).toInt() > 0)
-            flag = true;
-    return (flag);
+    paramTable.setRowData(row, param);
+    parEnvLink[row] = envLink(row);
+    parUseDev[row] = useDev(row);
+    parBlock[row] = useBlock(row);
 }
 
-bool longParameterTable::useBlock(int index)
+int longParameterTable::envLink(int index)
 {
-    bool flag = false;
-    if (index < paramTable.rowCount())
-        if (paramTable.getRowData(index).at(12).toInt() > 0)
-            flag = true;
-    return (flag);
+    return paramTable.getRowData(index).at(7).toInt();
 }
 
-bool longParameterTable::useDev(int index)
+int longParameterTable::useDev(int index)
 {
-    bool flag = false;
-    if (index < paramTable.rowCount())
-        if (paramTable.getRowData(index).at(8).toInt() > 0)
-            flag = true;
-    return (flag);
+    return paramTable.getRowData(index).at(8).toInt();
+}
+
+int longParameterTable::useBlock(int index)
+{
+    return paramTable.getRowData(index).at(12).toInt();
+}
+
+void longParameterTable::checkParameters(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect)
+{
+    int startRow = tplt.row();
+//    int startCol = tplt.column();
+    int endRow = btrt.row();
+    int endCol = btrt.column();
+    bool varChanged = false;
+    int lnk, dev, blk;
+
+    Q_UNUSED(ivect);
+
+    if (endCol > 7)
+    {
+     //   changeVarData (startRow, startCol, endRow, endCol);
+        for (int i = startRow; i <= endRow; i++)
+        {
+            lnk = envLink(i);
+            dev = useDev(i);
+            blk = useBlock(i);
+            if (parEnvLink[i] != lnk)
+            {
+                varChanged = true;
+                parEnvLink[i] = lnk;
+            }
+            if (parUseDev[i] != dev)
+            {
+                varChanged = true;
+                parUseDev[i] = dev;
+            }
+            if (parBlock[i] != blk)
+            {
+                varChanged = true;
+                parBlock[i] = blk;
+            }
+
+        }
+        if (varChanged)
+        {
+
+            emit varDataChanged();
+        }
+    }
 }
 

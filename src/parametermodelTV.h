@@ -71,7 +71,7 @@ signals:
 private:
     ss_model *parentModel;
 
-    QStringList header;
+ //   QStringList header;
 
 //    parameterModel *params;
     QList<QStringList> paramData;

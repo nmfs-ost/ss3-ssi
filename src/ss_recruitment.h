@@ -100,22 +100,26 @@ public slots:
 
 
     tablemodel *getDistParams() {return distParams->getParamTable();}
-    void setNumDistParams (int num) {distParams->setNumParams(num);}
+    void setNumDistParams (int num);
     int getNumDistParams () {return distParams->getNumParams();}
     void addDistParam (QStringList data) {setDistParam(getNumDistParams(), data);}
     void setDistParam (int index, QStringList data);
     QStringList getDistParam(int index) {return distParams->getParameter(index);}
+    void setDistTVParam (int index, QStringList data);
+    tablemodel *getDistTVParams() {return distVarParams->getVarParamTable();}
+    int getNumDistTVParams () {return distVarParams->getNumVarParams();}
+    QStringList getDistTVParam(int index) {return distVarParams->getVarParameter(index);}
 
-    void setTimeVaryReadParams(int flag) {readtvparams = flag;}
+    void setTimeVaryReadParams(int flag);
     int getTimeVaryReadParams() {return readtvparams;}
-    tablemodel *getTimeVaryParams () {return tvParameters->getVarParamTable();}
-    timeVaryParameterModel *getTVParameterModel() {return tvParameters;}
-    void setNumTVParameters(int num) {tvParameters->setNumVarParams(num);}
-    int getNumTVParameters() {return tvParameters->getNumVarParams();}
-    void addTVParameter(QStringList values) {setTVParameter(tvParameters->getNumVarParams(), values);}
+    tablemodel *getTimeVaryParams () {return varParameters->getVarParamTable();}
+    timeVaryParameterModel *getTVParameterModel() {return varParameters;}
+    void setNumTVParameters(int num) {varParameters->setNumVarParams(num);}
+    int getNumTVParameters() {return varParameters->getNumVarParams();}
+    void addTVParameter(QStringList values) {setTVParameter(varParameters->getNumVarParams(), values);}
     void setTVParameter(int index, QStringList values);
-    void setTVParameterHeader(int index, QString hdr) {tvParameters->setVarParamHeader(index, hdr);}
-    QStringList getTVParameter(int index) {return tvParameters->getVarParameter(index);}
+    void setTVParameterHeader(int index, QString hdr) {varParameters->setVarParamHeader(index, hdr);}
+    QStringList getTVParameter(int index) {return varParameters->getVarParameter(index);}
 
     int getRecDevStartYr() const;
     void setRecDevStartYr(int value);
@@ -141,17 +145,17 @@ public slots:
     float getFcastLambda() const;
     void setFcastLambda(float value);
 
-    int getNobiasLastEarlyYr() const;
-    void setNobiasLastEarlyYr(int value);
+    double getNobiasLastEarlyYr() const;
+    void setNobiasLastEarlyYr(double value);
 
-    int getFullbiasFirstYr() const;
-    void setFullbiasFirstYr(int value);
+    double getFullbiasFirstYr() const;
+    void setFullbiasFirstYr(double value);
 
-    int getFullbiasLastYr() const;
-    void setFullbiasLastYr(int value);
+    double getFullbiasLastYr() const;
+    void setFullbiasLastYr(double value);
 
-    int getNobiasFirstRecentYr() const;
-    void setNobiasFirstRecentYr(int value);
+    double getNobiasFirstRecentYr() const;
+    void setNobiasFirstRecentYr(double value);
 
     float getMaxBiasAdjust() const;
     void setMaxBiasAdjust(float value);
@@ -188,10 +192,10 @@ private:
     int   rec_dev_early_phase; //
     int   fcast_rec_phase;  // forecast recruitment phase, 0 resets to maxphase + 1
     float fcast_lambda;  //
-    int   nobias_last_early_yr; //
-    int   fullbias_first_yr; //
-    int   fullbias_last_yr; //
-    int   nobias_first_recent_yr; //
+    double nobias_last_early_yr; //
+    double fullbias_first_yr; //
+    double fullbias_last_yr; //
+    double nobias_first_recent_yr; //
     float max_bias_adjust;  // max bias adjustment in MPD
 //    int   rec_cycles;   // period of cycles in recruitment
     int   rec_dev_min;  // min num of rec devs
@@ -209,11 +213,14 @@ private:
     QList<int> parmNums;
     longParameterModel *full_parameters;
     int readtvparams;
-    timeVaryParameterModel *tvParameters;
+    timeVaryParameterModel *varParameters;
 
     longParameterModel *distParams;
+    timeVaryParameterModel *distVarParams;
     longParameterModel *interactParams;
+    timeVaryParameterModel *interVarParams;
     longParameterModel *cycleParams;
+    timeVaryParameterModel *cycleVarParams;
 
     tablemodel *recruitDevs;
 

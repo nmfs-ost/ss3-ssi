@@ -25,13 +25,8 @@ ss_growth::ss_growth(ss_model *parent)
     matAgeValues = new tablemodel((QObject *)parnt);
     matAgeValues->setRowCount(1);
 
-    wtLenParams = new longParameterModel((QObject *)parnt);
-    wtLenParams->setNumParams(0);
-    wtLenVarParams = new timeVaryParameterModel(parnt);
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
-    connect (wtLenParams, SIGNAL(paramChanged(int,QStringList)),
-             wtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
 
     cohortParam = new longParameterModel((QObject *)parnt);
     cohortParam->setNumParams(1);
@@ -55,9 +50,7 @@ ss_growth::~ss_growth()
     delete natMortBreakPoints;
     delete natMortAges;
     delete matAgeValues;
-    delete wtLenParams;
-    delete wtLenVarParams;
-    delete cohortParam;
+     delete cohortParam;
     delete cohortVarParam;
     customEnvLink = -1;
 //    delete environmentParams;
@@ -84,7 +77,6 @@ void ss_growth::reset()
 
     num_params = 0;
     matAgeValues->setRowCount(1);
-    wtLenParams->setNumParams(2);
     setTimeVaryMethod(1);
     setTimeVaryReadParams(0);
     cohortParam->setNumParams(1);
@@ -321,16 +313,16 @@ void ss_growth::setNatural_mortality_type(int value)
     {
     case 0:
         for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getNatMParams()->setRowCount(2);
+            getPattern(i)->getFemNatMParams()->setRowCount(2);
         break;
     case 1:
         for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getNatMParams()->setRowCount(2 * natMortNumBreakPoints);
+            getPattern(i)->getFemNatMParams()->setRowCount(2 * natMortNumBreakPoints);
         natMortBreakPoints->setColumnCount(natMortNumBreakPoints);
         break;
     case 2:
         for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getNatMParams()->setRowCount(2);
+            getPattern(i)->getFemNatMParams()->setRowCount(2);
         break;
     case 3:
     case 4:
@@ -350,7 +342,7 @@ void ss_growth::setNatMortNumBreakPts(int num)
     natMortNumBreakPoints = num;
     natMortBreakPoints->setColumnCount(num);
     for (int i = 0; i < num_patterns; i++)
-        getPattern(i)->getNatMParams()->setRowCount(2 * natMortNumBreakPoints);
+        getPattern(i)->getFemNatMParams()->setRowCount(2 * natMortNumBreakPoints);
 }
 
 QStringList ss_growth::getNatMortBreakPts ()
@@ -474,32 +466,6 @@ void ss_growth::setMaturity_option(int value)
 {
     maturity_option = value;
 }
-
-void ss_growth::setNumWtLenParams(int num)
-{
-    wtLenParams->setNumParams(num);
-    wtLenVarParams->setTotalNumVarTables(num);
-}
-
-void ss_growth::setWtLenParam(int index, QStringList data)
-{
-    if (index >= wtLenParams->getNumParams())
-        wtLenParams->setNumParams(index + 1);
-    wtLenParams->setParameter(index, data);
-    wtLenVarParams->setParameter(index, data);
-}
-
-void ss_growth::setWtLenParamHeader(int index, QString hdr)
-{
-    wtLenParams->setParamHeader(index, hdr);
-    wtLenVarParams->setTableTitle(index, hdr);
-}
-
-void ss_growth::setWtLenTVParam(int index, QStringList data)
-{
-    wtLenVarParams->setParameter(index, data);
-}
-
 
 
 int ss_growth::getParam_offset_method() const

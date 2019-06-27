@@ -63,12 +63,9 @@ public:
     int getParamCount() {return paramTable.rowCount();}
     void setParameter (int row, QStringList param) {paramTable.setRowData(row, param);}
     QStringList getParameter (int row) {return paramTable.getRowData(row);}
-    tablemodel *getParameters () {return &paramTable;}
-//    QStringList getParameter (int row);
     void setParamHeader (int row, QString hdr) {paramTable.setRowHeader (row, hdr);}
     QString getParamHeader (int row) {return paramTable.getRowHeader(row);}
-
-    tablemodel paramTable;
+    tablemodel *getParameters () {return &paramTable;}
 
 signals:
     void dataChanged(QModelIndex, QModelIndex, QVector<int>);
@@ -77,6 +74,7 @@ signals:
 protected:
     QStringList header;
     QStringList defaultParam;
+    tablemodel paramTable;
 };
 
 class longParameterTable : public shortParameterTable
@@ -88,12 +86,36 @@ public:
     ~longParameterTable();
 
     void setParamCount(int rows);
+    void setParameter (int row, QStringList param);
 
-    bool envLink (int index);
-    bool useBlock (int index);
-    bool useDev (int index);
+    int envLink (int index);
+    int useDev(int index);
+    int useBlock (int index);
+
+    void setVarParamCount(int rows);
+    int getVarParamCount() {return varParamTable.rowCount();}
+    void setVarParameter (int row, QStringList param) {varParamTable.setRowData(row, param);}
+    QStringList getVarParameter (int row) {return varParamTable.getRowData(row);}
+    void seVartParamHeader (int row, QString hdr) {varParamTable.setRowHeader (row, hdr);}
+    QString getVarParamHeader (int row) {return varParamTable.getRowHeader(row);}
+    tablemodel *getVarParameters () {return &varParamTable;}
+
+public slots:
+    void checkParameters(QModelIndex, QModelIndex, QVector<int> = QVector<int>());
+//    void changeVarData (int startRow, int startCol, int endRow, int endCol);
+
+
+signals:
+    void varDataChanged();
+    void varDataChanged(QModelIndex, QModelIndex, QVector<int>);
 
 private:
+    QList<int> parEnvLink;
+    QList<int> parUseDev;
+    QList<int> parBlock;
+    QList<int> varParamsPerParameter;
+    tablemodel varParamTable;
+
 };
 
 #endif // PARAMETERMODEL_H

@@ -656,6 +656,21 @@ void Fleet::setNumGenders(int num)
     age_selex->setNumGenders(num);
 }
 
+void Fleet::setCatchMultParam(QStringList& data)
+{
+    catchMult->setParameter(0, data);
+}
+
+const QStringList& Fleet::getCatchMultParam()
+{
+    return catchMult->getParameter(0);
+}
+
+tablemodel *Fleet::getCatchMultParameters()
+{
+    return catchMult->getParamTable();
+}
+
 int Fleet::getNumSeasons()
 {
     return i_num_seasons;

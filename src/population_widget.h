@@ -84,7 +84,8 @@ signals:
     void readWtAtAgeSS (bool flag);
 
 private slots:
-    void changeFractionFemale();
+    void changeFracFemParams();
+    void changeFracFemTVParams();
     void setHermaphOptions(int herm);
     void changeHermaph(bool flag);
     void changeHermaphSeas(int seas);
@@ -102,6 +103,7 @@ private slots:
     void changeGrowthParams();
     void changeGrowthTVParams();
     void changeCVParams();
+    void changeCVTVParams();
     void changeNatMParams();
     void changeNatMTVParams();
     void changeWtLenParams();
@@ -115,6 +117,7 @@ private slots:
     void changeRecrTVParams ();
     void changeRecrAssignParams ();
     void changeRecrDistParams ();
+    void changeRecrDistTVParams ();
     void changeRecrCycleParams ();
     void changeRecrDevParams ();
     void changeRecNumAssigns(int num);
@@ -129,10 +132,10 @@ private slots:
     void changeRecrDevEarlyPhase (int phase);
     void changeRecrFcastPhase (int phase);
     void changeRecrFcastLambda (QString s_lam);
-    void changeRecrNoBiasLastYr (int yr);
-    void changeRecrFullBiasFirstYr (int yr);
-    void changeRecrFullBiasLastYr (int yr);
-    void changeRecrNoBiasFirstYr (int yr);
+    void changeRecrNoBiasLastYr (double yr);
+    void changeRecrFullBiasFirstYr (double yr);
+    void changeRecrFullBiasLastYr (double yr);
+    void changeRecrNoBiasFirstYr (double yr);
     void changeRecrBiasMax (QString s_max);
     void changeRecrCycles (int cycles);
     void changeRecrDevMin (QString s_min);
@@ -145,49 +148,62 @@ private slots:
     void setMoveParamTitles();
     void setMoveParamTitle(int def);
     void changeMoveFirstAge();
+    void changeMoveParams();
+    void changeMoveTVParams();
 
     void changeSeasParams();
 
 private:
     Ui::population_widget *ui;
 
+    tableview *mortBreakPtsView;
+    tableview *mortAgesView;
+    tableview *mortFemParamsView;
+    tableview *mortFemTVParamsView;
+    tableview *mortMaleParamsView;
+    tableview *mortMaleTVParamsView;
+
+    tableview *mortInputsView;
+    tableview *mortInitialParamsView;
+
     growthPattern *currPattern;
 
     tableview *growthMorphDistView;
-    tableview *growthParamsView;
-    tableview *growthTVParamsView;
-    tableview *cvParamsView;
-//    tableview *cvTVParamsView;
+    tableview *growthFemParamsView;
+    tableview *growthFemTVParamsView;
+    tableview *cvFemParamsView;
+    tableview *cvFemTVParamsView;
+    tableview *wtlenFemParamsView;
+    tableview *wtlenFemTVParamsView;
 
-    srEquationDialog *srOptionDialog;
-    tableview *recruitDistView;
-    tableview *recruitParamsView;
-    tableview *recruitTVParamsView;
-    tableview *recruitAssignParamsView;
-    tableview *recruitCyclesParamsView;
-    tableview *recruitDevsView;
-
-    tableview *wtlenParamsView;
-    tableview *wtlenTVParamsView;
+    tableview *growthMaleParamsView;
+    tableview *growthMaleTVParamsView;
+    tableview *cvMaleParamsView;
+    tableview *cvMaleTVParamsView;
+    tableview *wtlenMaleParamsView;
+    tableview *wtlenMaleTVParamsView;
 
     tableview *maturityParamsView;
     tableview *maturityTVParamsView;
 
     tableview *fecundParamsView;
     tableview *fecundTVParamsView;
-    tableview *fractionFemView;
+    tableview *fracFemParamsView;
+    tableview *fracFemTVParamsView;
     tableview *hermaphParamsView;
+
+    srEquationDialog *srOptionDialog;
+    tableview *recruitParamsView;
+    tableview *recruitTVParamsView;
+    tableview *recruitDistParamsView;
+    tableview *recruitDistTVParamsView;
+    tableview *recruitAssignParamsView;
+    tableview *recruitCyclesParamsView;
+    tableview *recruitDevsView;
 
     tableview *moveDefsView;
     tableview *moveParamsView;
-
-    tableview *mortBreakPtsView;
-    tableview *mortAgesView;
-    tableview *mortParamsView;
-    tableview *mortTVParamsView;
-
-    tableview *mortInputsView;
-    tableview *mortInitialParamsView;
+    tableview *moveTVParamsView;
 
     tableview *seasonParamsView;
     tableview *seasonTVParamsView;
@@ -196,7 +212,6 @@ private:
     population *pop;
 
 
-//    tableview *timeVaryParamsView;
 };
 
 #endif // POPULATION_WIDGET_H

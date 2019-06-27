@@ -35,11 +35,19 @@ public:
 
     tablemodel *getMovementParams() {return movement_parms->getParamTable();}
     int getNumParams () {return movement_parms->getNumParams();}
-    void setNumParams (int value) {movement_parms->setNumParams(value);}
+    void setNumParams (int value) {movement_parms->setNumParams(value);
+                                  moveTVParams->setNumParams(value);}
     QStringList getParameter (int index) {return movement_parms->getParameter(index);}
     void setParameter (int index, QStringList valuelist);
     QString getParamHeader (int index) {return movement_parms->getParamHeader(index);}
-    void setParamHeader (int index, QString hdr) {movement_parms->setParamHeader(index, hdr);}
+    void setParamHeader (int index, QString hdr) {movement_parms->setParamHeader(index, hdr);
+                                                 moveTVParams->setTableTitle(index, hdr);}
+    void setAutogenerate (int val) {moveTVParams->setAutoGenerate(val);}
+    tablemodel * getMoveTVParams() {return moveTVParams->getVarParamTable();}
+    int getNumTVParams() {return moveTVParams->getNumParams();}
+    void setTVParameter (int index, QStringList data) {moveTVParams->setVarParameter(index, data);}
+    QStringList getTVParameter (int value) {return moveTVParams->getVarParameter(value);}
+    QString getTVParamHeader (int value) {return moveTVParams->getVarParamHeader(value);}
 
     int getMethod() const;
     void setMethod(int value);
@@ -60,7 +68,7 @@ private:
 
     tablemodel *movement_defs;
     longParameterModel *movement_parms;
-//    parameterModelTV *movement_parms;
+    timeVaryParameterModel *moveTVParams;
 };
 
 #endif // SS_MOVEMENT_H

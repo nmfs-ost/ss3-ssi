@@ -80,22 +80,6 @@ public slots:
     QStringList getMatAgeVals () {return matAgeValues->getRowData(0);}
     void setMatAgeVals (QStringList data) {matAgeValues->setRowData(0, data);}
 
-    void setNumWtLenParams (int num);// {wtLenParams->setNumParams(num);}
-    int getNumWtLenParams () {return wtLenParams->getNumParams();}
-    void addWtLenParam (QStringList data) {setWtLenParam(getNumWtLenParams(), data);}
-    void setWtLenParam (int index, QStringList data);
-    QStringList getWtLenParam (int index) {return wtLenParams->getParameter(index);}
-    void setWtLenParamHeader (int index, QString hdr);
-    QString getWtLenParamHeader (int index) {return wtLenParams->getParamHeader(index);}
-    tablemodel *getWtLenParams () {return wtLenParams->getParamTable();}
-    longParameterModel *getWtLenParamModel () {return wtLenParams;}
-//    void setNumWtLenTVParams (int num) {wtLenVarParams->setNumParams(num);}
-    int getNumWtLenTVParams () {return wtLenVarParams->getNumVarParams();}
-//    void addWtLenTVParam (QStringList data) {setWtLenTVParam(getNumWtLenParams(), data);}
-    void setWtLenTVParam (int index, QStringList data);
-    QStringList getWtLenTVParam (int index) {return wtLenVarParams->getVarParameter(index);}
-    QString getWtLenTVParamHeader (int index) {return wtLenVarParams->getVarParamHeader(index);}
-    tablemodel *getWtLenTVParams () {return wtLenVarParams->getVarParamTable();}
     float getFirst_mature_age() const;
     void setFirst_mature_age(float value);
 
@@ -191,8 +175,6 @@ private:
     int maturity_option;
     tablemodel *matAgeValues;
     float first_mature_age;
-    longParameterModel *wtLenParams;
-    timeVaryParameterModel *wtLenVarParams;
 
     int param_offset_method;
     int adjustment_method;

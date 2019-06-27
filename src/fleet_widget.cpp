@@ -141,18 +141,18 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_byc_lastYear, SIGNAL(editingFinished()), SLOT(changeBycatchLastYr()));
     connect (ui->spinBox_q_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setQTimeVaryReadParams(int)));
 
-    connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
+    connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setSelTimeVaryReadParams(int)));// model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
     connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
-    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), selexSizeInfoDialog, SLOT(show()));
-    connect (ui->spinBox_selex_size_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexSizePattern(int)));
+//    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), selexSizeInfoDialog, SLOT(show()));
+    connect (ui->comboBox_selex_size_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexSizePattern(int)));
     connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
     connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
     connect (ui->spinBox_selex_size_special, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeSpecial(int)));
     connect (ui->pushButton_selex_size_curve, SIGNAL(clicked(bool)), SLOT(showSelexSizeCurve(bool)));
     connect (selexSizeEqDialog, SIGNAL(closed()), SLOT(selexSizeCurveClosed()));
 
-    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), selexAgeInfoDialog, SLOT(show()));
-    connect (ui->spinBox_selex_age_pattern, SIGNAL(valueChanged(int)), SLOT(changeSelexAgePattern(int)));
+//    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), selexAgeInfoDialog, SLOT(show()));
+    connect (ui->comboBox_selex_age_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexAgePattern(int)));
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
     connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
@@ -228,7 +228,7 @@ void fleet_widget::disconnectFleet()
     disconnect (current_fleet->getSizeSelectivity()->getDiscardTimeVaryParameterModel(),
                 SIGNAL(dataChanged()), this, SLOT(selexSizeDiscTVParamsChanged()));
     disconnect (current_fleet->getSizeSelectivity()->getRetainParameterTable(),
-                SIGNAL(dataChanged), this, SLOT(selexSizeDiscParamsChanged()));
+                SIGNAL(dataChanged()), this, SLOT(selexSizeDiscParamsChanged()));
     disconnect (current_fleet->getSizeSelectivity()->getRetainTimeVaryParameterModel(),
                 SIGNAL(dataChanged()), this, SLOT(selexSizeDiscTVParamsChanged()));
     disconnect (current_fleet->getSizeSelectivity()->getMaleParameterTable(),
@@ -455,10 +455,10 @@ void fleet_widget::refresh()
     ui->comboBox_fleet_name->setCurrentIndex(curr);
 //    set_current_fleet(curr);
 
-    ui->tabWidget_fleet->setCurrentIndex(0);
+/*    ui->tabWidget_fleet->setCurrentIndex(0);
     ui->tabWidget_obs->setCurrentIndex(0);
     ui->tabWidget_comp->setCurrentIndex(0);
-    ui->tabWidget_selex->setCurrentIndex(0);
+    ui->tabWidget_selex->setCurrentIndex(0);*/
 }
 
 void fleet_widget::set_model (ss_model *model)
@@ -591,7 +591,8 @@ void fleet_widget::set_current_fleet(int index)
         qTvParamsView->resizeColumnsToContents();
         current_fleet->Q()->getTVParamModel()->updateVarParams();
 
-        ui->spinBox_selex_size_pattern->setValue(current_fleet->getSizeSelectivity()->getPattern());
+        setSelexSizePattern(current_fleet->getSizeSelectivity()->getPattern());
+//        ui->spinBox_selex_size_pattern->setValue(current_fleet->getSizeSelectivity()->getPattern());
         ui->spinBox_selex_size_discard->setValue(current_fleet->getSizeSelectivity()->getDiscard());
         ui->spinBox_selex_size_male->setValue(current_fleet->getSizeSelectivity()->getMale());
         ui->spinBox_selex_size_special->setValue(current_fleet->getSizeSelectivity()->getSpecial());
@@ -607,7 +608,8 @@ void fleet_widget::set_current_fleet(int index)
         sizeSelexMaleTVParamsView->setModel(current_fleet->getSizeSelectivity()->getMaleTimeVaryParameterModel());
         selexSizeMaleParamsChanged();
 
-        ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
+        setSelexAgePattern(current_fleet->getAgeSelectivity()->getPattern());
+//        ui->spinBox_selex_age_pattern->setValue(current_fleet->getAgeSelectivity()->getPattern());
         ui->spinBox_selex_age_discard->setValue(current_fleet->getAgeSelectivity()->getDiscard());
         ui->spinBox_selex_age_male->setValue(current_fleet->getAgeSelectivity()->getMale());
         ui->spinBox_selex_age_special->setValue(current_fleet->getAgeSelectivity()->getSpecial());
@@ -901,126 +903,198 @@ void fleet_widget::setSelTimeVaryReadParams(int flag)
     ageSelexMaleTVParamsView->setEnabled(enable);
 }
 
-void fleet_widget::changeSelexSizePattern(int pat)
+void fleet_widget::setSelexSizePattern(int pat)
 {
-    int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
-    int newNumParams = 0;
-    bool changePat = true;
-    ui->spinBox_selex_size_special->setValue(0);
-    switch (pat)
-    {
+    int index = 0;
+    int currIndex = ui->comboBox_selex_size_pattern->currentIndex();
+    switch (pat) {
     case 0:
-        ui->label_selex_size_pattern_info->setText(tr("Selex = 1.0"));
+        index = 0;
         break;
     case 1:
-        ui->label_selex_size_pattern_info->setText(tr("Logistic"));
-        break;
-    case 5:
-        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special) with limits"));
-        break;
-    case 6:
-        ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y)"));
-        break;
-    case 8:
-        ui->label_selex_size_pattern_info->setText(tr("Double logistic with smooth joins"));
-        break;
-    case 9:
-        ui->label_selex_size_pattern_info->setText(tr("Simple double logistic"));
-        break;
-    case 15:
-        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special)"));
-        break;
-    case 22:
-        ui->label_selex_size_pattern_info->setText(tr("Double normal, similar to CASAL"));
-        break;
-    case 23:
-        ui->label_selex_size_pattern_info->setText(tr("Similar to #24"));
-        break;
-    case 24:
-        ui->label_selex_size_pattern_info->setText(tr("Double normal with start and end values"));
-        break;
-    case 25:
-        ui->label_selex_size_pattern_info->setText(tr("Exponential - Logistic"));
-        break;
-    case 27:
-        ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
-        break;
-    case 30:
-        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is spawning biomass"));
-        break;
-    case 31:
-        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev)"));
-        break;
-    case 32:
-        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev) * spawn Biomass"));
-        break;
-    case 33:
-        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is age 0 recr"));
-        break;
-    case 34:
-        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: spawning biomass depletion"));
+        index = 1;
         break;
     case 2:
-    case 7:
-        ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #8."));
-        return;
+        index = 2;
+        break;
     case 3:
-        ui->label_selex_size_pattern_info->setText(tr("Discontinued, select another pattern."));
-        return;
+        index = 3;
+        break;
     case 4:
-        ui->label_selex_size_pattern_info->setText(tr("Discontinued, use pattern #30."));
-        return;
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 16:
-    case 17:
-    case 18:
-    case 19:
-    case 20:
-    case 26:
-    case 41:
-    case 44:
-    case 45:
-        changePat = false;
-        ui->label_selex_size_pattern_info->setText(tr("Used for age selectivity only."));
-        return;
-    case 21:
-    case 28:
-    case 29:
-    case 35:
-    case 36:
-    case 37:
-    case 38:
-    case 39:
-    case 40:
-        changePat = false;
-        ui->label_selex_size_pattern_info->setText(tr("Not used, select another pattern."));
-        return;
+        index = 4;
+        break;
+    case 5:
+        index = 5;
+        break;
+    case 6:
+        index = 6;
+        break;
+    case 7:
+        index = 7;
+        break;
+    case 8:
+        index = 8;
+        break;
+    case 9:
+        index = 9;
+        break;
+    case 15:
+        index = 10;
+        break;
+    case 22:
+        index = 11;
+        break;
+    case 23:
+        index = 12;
+        break;
+    case 24:
+        index = 13;
+        break;
+    case 25:
+        index = 14;
+        break;
+    case 27:
+        index = 15;
+        break;
+    case 30:
+        index = 16;
+        break;
+    case 31:
+        index = 17;
+        break;
+    case 32:
+        index = 18;
+        break;
+    case 33:
+        index = 19;
+        break;
+    case 34:
+        index = 20;
+        break;
     case 42:
-        ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
+        index = 21;
         break;
     case 43:
-        ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y) with scaling"));
+        index = 22;
         break;
-    default:
-        ui->label_selex_size_pattern_info->setText(" ");
+    }
+    if (index != currIndex)
+        ui->comboBox_selex_size_pattern->setCurrentIndex(index);
+}
+
+void fleet_widget::changeSelexSizePattern(int value)
+{
+//    int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
+    int newNumParams = 0;
+    int oldPat = current_fleet->getSizeSelectivity()->getPattern();
+    int pat = 0;
+    bool changePat = false;
+    ui->spinBox_selex_size_special->setValue(0);
+    switch (value)
+    {
+    case 0:
+        pat = 0;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Selex = 1.0"));
+        break;
+    case 1:
+        pat = 1;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Logistic"));
+        break;
+    case 5:
+        pat = 5;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special) with limits"));
+        break;
+    case 6:
+        pat = 6;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y)"));
+        break;
+    case 8:
+        pat = 8;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Double logistic with smooth joins"));
+        break;
+    case 9:
+        pat = 9;
+        changePat = true;
+ //       ui->label_selex_size_pattern_info->setText(tr("Simple double logistic"));
+        break;
+    case 10:
+        pat = 15;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special)"));
+        break;
+    case 11:
+        pat = 22;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Double normal, similar to CASAL"));
+        break;
+    case 12:
+        pat = 23;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Similar to #24"));
+        break;
+    case 13:
+        pat = 24;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Double normal with start and end values"));
+        break;
+    case 14:
+        pat = 25;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Exponential - Logistic"));
+        break;
+    case 15:
+        pat = 27;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
+        break;
+    case 16:
+        pat = 30;
+        changePat = true;
+//        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is spawning biomass"));
+        break;
+    case 17:
+        pat = 31;
+        changePat = true;
+  //      ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev)"));
+        break;
+    case 18:
+        pat = 32;
+        changePat = true;
+    //    ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev) * spawn Biomass"));
+        break;
+    case 19:
+        pat = 33;
+        changePat = true;
+      //  ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is age 0 recr"));
+        break;
+    case 20:
+        pat = 34;
+        changePat = true;
+        //ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: spawning biomass depletion"));
+        break;
+    case 21:
+        pat = 42;
+        changePat = true;
+ //       ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
+        break;
+    case 22:
+        pat = 43;
+        changePat = true;
+   //     ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y) with scaling"));
+        break;
+//    default:
+     //   ui->label_selex_size_pattern_info->setText(" ");
     }
 
-    if (changePat)
+    if (pat != oldPat) //changePat)
         current_fleet->getSizeSelectivity()->setPattern(pat);
     newNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
-/*    for (int i = oldNumParams; i < newNumParams; i++)
-    {
-        QStringList prm;
-        prm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        current_fleet->getSizeSelectivity()->setParameter(i, prm);
-    }*/
 
-    if (ui->spinBox_selex_size_pattern->value() != pat)
-        ui->spinBox_selex_size_pattern->setValue (pat);
     ui->spinBox_selex_size_num_params->setValue (newNumParams);
     sizeSelexParamsView->setHeight (newNumParams);
 }
@@ -1070,7 +1144,8 @@ void fleet_widget::selexSizeDataChanged()
     int spc = current_fleet->getSizeSelectivity()->getSpecial();
     int mal = current_fleet->getSizeSelectivity()->getMale();
     int dis = current_fleet->getSizeSelectivity()->getDiscard();
-    ui->spinBox_selex_size_pattern->setValue(pat);
+    setSelexSizePattern(pat);
+//    ui->spinBox_selex_size_pattern->setValue(pat);
     ui->spinBox_selex_size_special->setValue(spc);
     ui->spinBox_selex_size_male->setValue(mal);
     ui->spinBox_selex_size_discard->setValue(dis);
@@ -1164,6 +1239,7 @@ void fleet_widget::selexSizeParamsChanged()
     sizeSelexParamsView->resizeColumnsToContents();
     sizeSelexParamsView->setVisible(ht);
     ui->label_sel_size_pattern_params->setVisible(ht);
+    ui->spinBox_selex_size_num_params->setVisible(ht);
     selexSizeTVParamsChanged();
 }
 
@@ -1210,98 +1286,148 @@ void fleet_widget::selexAgeTVParamsChanged()
     ui->spinBox_selex_age_numTVParams->setValue(ht);
 }
 
-void fleet_widget::changeSelexAgePattern(int pat)
+void fleet_widget::setSelexAgePattern(int pat)
 {
-    bool changePat = true;
-    ui->spinBox_selex_age_special->setValue(0);
-    switch (pat)
-    {
+    int index = 0;
+    int currIndex = ui->comboBox_selex_age_pattern->currentIndex();
+    switch (pat) {
     case 0:
-        ui->label_selex_age_pattern_info->setText(tr("Selex = 1, ages 1-n"));
+        index = 0;
         break;
     case 10:
-        ui->label_selex_age_pattern_info->setText(tr("Selex = 1, ages 2-n"));
+        index = 1;
         break;
     case 11:
-        ui->label_selex_age_pattern_info->setText(tr("Selex = 1 between ages"));
+        index = 2;
         break;
     case 12:
-        ui->label_selex_age_pattern_info->setText(tr("Logistic"));
+        index = 3;
         break;
     case 13:
-        ui->label_selex_age_pattern_info->setText(tr("Double Logistic with IF joins"));
+        index = 4;
         break;
     case 14:
-        ui->label_selex_age_pattern_info->setText(tr("Selex = 1/(1+exp(-param))"));
+        index = 5;
         break;
     case 15:
-        ui->label_selex_age_pattern_info->setText(tr("Mirror another selex (Special)"));
+        index = 6;
         break;
     case 16:
-        ui->label_selex_age_pattern_info->setText(tr("Coleraine single Gaussian"));
+        index = 7;
         break;
     case 17:
-        ui->label_selex_age_pattern_info->setText(tr("Random Walk"));
+        index = 8;
         break;
     case 18:
-        ui->label_selex_age_pattern_info->setText(tr("Double Logistic with smooth joins"));
+        index = 9;
         break;
     case 19:
-        ui->label_selex_age_pattern_info->setText(tr("Simple Double Logistic"));
+        index = 10;
         break;
     case 20:
-        ui->label_selex_age_pattern_info->setText(tr("Double Normal with start and end values"));
+        index = 11;
         break;
     case 26:
-        ui->label_selex_age_pattern_info->setText(tr("Exponential - Logistic"));
+        index = 12;
         break;
-    case 27:
-        ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
-        break;
-    case 21:
-    case 28:
-    case 29:
-    case 35:
-    case 36:
-    case 37:
-    case 38:
-    case 39:
-    case 40:
-        changePat = false;
-        ui->label_selex_age_pattern_info->setText(tr("Not used, select another pattern."));
-        return;
-    case 22:
-    case 23:
-    case 24:
-    case 25:
-    case 30:
-    case 31:
-    case 32:
-    case 33:
-    case 34:
-    case 43:
-        changePat = false;
-        ui->label_selex_age_pattern_info->setText(tr("Used for size selectivity only."));
-        return;
     case 41:
-        ui->label_selex_age_pattern_info->setText(tr("Random Walk with scaling"));
+        index = 13;
         break;
     case 42:
-        ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
+        index = 14;
         break;
     case 44:
-        ui->label_selex_size_pattern_info->setText(tr("Similar to random walk - separate params for male/female"));
+        index = 15;
         break;
     case 45:
-        ui->label_selex_size_pattern_info->setText(tr("Similar to 14 - separate params for male/female"));
+        index = 16;
         break;
-    default:
-        ui->label_selex_age_pattern_info->setText(tr(" "));
     }
-    if (changePat)
+    if (index != currIndex)
+        ui->comboBox_selex_age_pattern->setCurrentIndex(index);
+}
+
+void fleet_widget::changeSelexAgePattern(int value)
+{
+    bool changePat = true;
+    int pat = 0;
+    int currPat = current_fleet->getAgeSelectivity()->getPattern();
+    ui->spinBox_selex_age_special->setValue(0);
+    switch (value)
+    {
+    case 0:
+        pat = 0;
+//        ui->label_selex_age_pattern_info->setText(tr("Selex = 1, ages 1-n"));
+        break;
+    case 1:
+        pat = 10;
+//        ui->label_selex_age_pattern_info->setText(tr("Selex = 1, ages 2-n"));
+        break;
+    case 2:
+        pat = 11;
+//        ui->label_selex_age_pattern_info->setText(tr("Selex = 1 between ages"));
+        break;
+    case 3:
+        pat = 12;
+//        ui->label_selex_age_pattern_info->setText(tr("Logistic"));
+        break;
+    case 4:
+        pat = 13;
+//        ui->label_selex_age_pattern_info->setText(tr("Double Logistic with IF joins"));
+        break;
+    case 5:
+        pat = 14;
+//        ui->label_selex_age_pattern_info->setText(tr("Selex = 1/(1+exp(-param))"));
+        break;
+    case 6:
+        pat = 15;
+//        ui->label_selex_age_pattern_info->setText(tr("Mirror another selex (Special)"));
+        break;
+    case 7:
+        pat = 16;
+//        ui->label_selex_age_pattern_info->setText(tr("Coleraine single Gaussian"));
+        break;
+    case 8:
+        pat = 17;
+//        ui->label_selex_age_pattern_info->setText(tr("Random Walk"));
+        break;
+    case 9:
+        pat = 18;
+//        ui->label_selex_age_pattern_info->setText(tr("Double Logistic with smooth joins"));
+        break;
+    case 10:
+        pat = 19;
+//        ui->label_selex_age_pattern_info->setText(tr("Simple Double Logistic"));
+        break;
+    case 11:
+        pat = 20;
+//        ui->label_selex_age_pattern_info->setText(tr("Double Normal with start and end values"));
+        break;
+    case 12:
+        pat = 26;
+//        ui->label_selex_age_pattern_info->setText(tr("Exponential - Logistic"));
+        break;
+    case 13:
+        pat = 41;
+//        ui->label_selex_age_pattern_info->setText(tr("Cubic spline"));
+        break;
+    case 14:
+        pat = 42;
+//        ui->label_selex_age_pattern_info->setText(tr("Not used, select another pattern."));
+        break;
+    case 15:
+        pat = 44;
+//        ui->label_selex_age_pattern_info->setText(tr("Used for size selectivity only."));
+        break;
+    case 16:
+        pat = 45;
+//        ui->label_selex_age_pattern_info->setText(tr("Cubic spline with scaling"));
+        break;
+    }
+    if (pat != currPat)
         current_fleet->getAgeSelectivity()->setPattern(pat);
-    if (ui->spinBox_selex_age_pattern->value() != pat)
-        ui->spinBox_selex_age_pattern->setValue(pat);
+//    if (ui->spinBox_selex_age_pattern->value() != value)
+//        ui->spinBox_selex_age_pattern->setValue(value);
 //    ui->spinBox_selex_age_pattern->setValue
 //            (current_fleet->getAgeSelectivity()->getPattern());
     ui->spinBox_selex_age_num_params->setValue
@@ -1387,7 +1513,8 @@ void fleet_widget::selexAgeDataChanged()
     int pat = current_fleet->getAgeSelectivity()->getPattern();
     int spc = current_fleet->getAgeSelectivity()->getSpecial();
     int mal = current_fleet->getAgeSelectivity()->getMale();
-    ui->spinBox_selex_age_pattern->setValue(pat);
+    setSelexAgePattern(pat);
+//    ui->spinBox_selex_age_pattern->setValue(pat);
     ui->spinBox_selex_age_special->setValue(spc);
     ui->spinBox_selex_age_male->setValue(mal);
     selexAgeEqDialog->restoreAll();

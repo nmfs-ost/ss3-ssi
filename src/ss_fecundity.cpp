@@ -52,6 +52,12 @@ void ss_fecundity::setMethod(int value)
     method = value;
 }
 
+void ss_fecundity::setAutogenerate(int value)
+{
+    hermaphVarParams->setAutoGenerate(value);
+    femaleVarParams->setAutoGenerate(value);
+}
+
 void ss_fecundity::setHermParam(int index, QStringList data)
 {
     if (index >= hermaphParams->getNumParams())

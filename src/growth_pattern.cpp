@@ -7,21 +7,65 @@ growthPattern::growthPattern(ss_model *parent)
     morphs.append(new growth_morph());
     num_morphs = 1;
 
-    fracFmParams = new longParameterModel((QObject *)parnt);
+    fracFmParams = new longParameterModel();
     fracFmParams->setNumParams(1);
+    fracFmVarParams = new timeVaryParameterModel(parnt);
+    fracFmVarParams->setNumParams(1);
     fracFmParams->setParamHeader(0, QString("FracFemale"));
+    fracFmVarParams->setTableTitle(0, "FracFemale");
 
-    growthParams = new longParameterModel();
-    growthVarParams = new timeVaryParameterModel(parnt);
+    femGrowthParams = new longParameterModel();
+    femGrowthVarParams = new timeVaryParameterModel(parnt);
+    maleGrowthParams = new longParameterModel();
+    maleGrowthVarParams = new timeVaryParameterModel(parnt);
 
-    cvParams = new longParameterModel();
-    cvParams->setNumParams(2);
+    femCvParams = new longParameterModel();
+    femCvParams->setNumParams(2);
+    femCvVarParams = new timeVaryParameterModel(parnt);
+    femCvVarParams->setNumParams(2);
+    maleCvParams = new longParameterModel();
+    maleCvParams->setNumParams(2);
+    maleCvVarParams = new timeVaryParameterModel(parnt);
+    maleCvVarParams->setNumParams(2);
 
     natMAges = new tablemodel ();
     natMAges->setRowCount(2);
-    natMrtParams = new longParameterModel();
-    natMrtParams->setNumParams(1);
-    natMrtVarParams = new timeVaryParameterModel(parnt);
+    femNatMrtParams = new longParameterModel();
+    femNatMrtVarParams = new timeVaryParameterModel(parnt);
+    femNatMrtParams->setNumParams(1);
+    femNatMrtVarParams->setTotalNumVarTables(1);
+    maleNatMrtParams = new longParameterModel();
+    maleNatMrtVarParams = new timeVaryParameterModel(parnt);
+    maleNatMrtParams->setNumParams(1);
+    maleNatMrtVarParams->setTotalNumVarTables(1);
+
+    femWtLenParams = new longParameterModel((QObject *)parnt);
+    femWtLenVarParams = new timeVaryParameterModel(parnt);
+    femWtLenParams->setNumParams(2);
+    femWtLenVarParams->setTotalNumVarTables(2);
+    connect (femWtLenParams, SIGNAL(paramChanged(int,QStringList)),
+             femWtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
+
+    maleWtLenParams = new longParameterModel((QObject *)parnt);
+    maleWtLenVarParams = new timeVaryParameterModel(parnt);
+    maleWtLenParams->setNumParams(2);
+    maleWtLenVarParams->setTotalNumVarTables(2);
+    connect (maleWtLenParams, SIGNAL(paramChanged(int,QStringList)),
+             maleWtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
+
+    femMatureParams = new longParameterModel();
+    femMatureVarParams = new timeVaryParameterModel(parnt);
+    femMatureParams->setNumParams(4);
+    femMatureVarParams->setTotalNumVarTables(4);
+    connect (femMatureParams, SIGNAL(paramChanged(int,QStringList)),
+             femMatureVarParams, SLOT(changeVarParamData(int,QStringList)));
+
+    hermaphParams = new longParameterModel();
+    hermaphVarParams = new timeVaryParameterModel(parnt);
+    hermaphParams->setNumParams(1);
+    hermaphVarParams->setTotalNumVarTables(1);
+    connect (hermaphParams, SIGNAL(paramChanged(int,QStringList)),
+             hermaphVarParams, SLOT(changeVarParamData(int,QStringList)));
 
 }
 
@@ -29,12 +73,28 @@ growthPattern::~growthPattern()
 {
     clear();
     delete fracFmParams;
-    delete growthParams;
-    delete growthVarParams;
-    delete cvParams;
-    delete natMrtParams;
-    delete natMrtVarParams;
+    delete fracFmVarParams;
+    delete femGrowthParams;
+    delete femGrowthVarParams;
+    delete maleGrowthParams;
+    delete maleGrowthVarParams;
+    delete femCvParams;
+    delete femCvVarParams;
+    delete maleCvParams;
+    delete maleCvVarParams;
+    delete femNatMrtParams;
+    delete femNatMrtVarParams;
+    delete maleNatMrtParams;
+    delete maleNatMrtVarParams;
     delete natMAges;
+    delete femWtLenParams;
+    delete femWtLenVarParams;
+    delete maleWtLenParams;
+    delete maleWtLenVarParams;
+    delete femMatureParams;
+    delete femMatureVarParams;
+    delete hermaphParams;
+    delete hermaphVarParams;
 }
 
 growthPattern::growthPattern (const growthPattern &rhs)
@@ -92,8 +152,10 @@ void growthPattern::setMorph(int index, growth_morph * &value)
 
 void growthPattern::setNumNatMParams(int num)
 {
-    natMrtParams->setNumParams(num);
-    natMrtVarParams->setTotalNumVarTables(num);
+    femNatMrtParams->setNumParams(num);
+    femNatMrtVarParams->setTotalNumVarTables(num);
+    maleNatMrtParams->setNumParams(num);
+    maleNatMrtVarParams->setTotalNumVarTables(num);
 }
 
 void growthPattern::clear()
@@ -101,55 +163,248 @@ void growthPattern::clear()
     setNum_morphs(1);
 }
 
-void growthPattern::setNatMParam(int index, QStringList data)
+void growthPattern::setFemNatMParam(int index, QStringList data)
 {
-    if (index >= natMrtParams->getNumParams())
+    if (index >= femNatMrtParams->getNumParams())
         setNumNatMParams(index + 1);
-    natMrtParams->setParameter(index, data);
-    natMrtVarParams->setParameter(index, data);
+    femNatMrtParams->setParameter(index, data);
+    femNatMrtVarParams->setParameter(index, data);
 }
 
-void growthPattern::setNatMParamHeader(int index, QString hdr)
+void growthPattern::setFemNatMParamHeader(int index, QString hdr)
 {
-    natMrtParams->setParamHeader(index, hdr);
-    natMrtVarParams->setTableTitle(index, hdr);
+    femNatMrtParams->setParamHeader(index, hdr);
+    femNatMrtVarParams->setTableTitle(index, hdr);
 }
 
-void growthPattern::setNatMTVParam(int index, QStringList data)
+void growthPattern::setFemNatMTVParam(int index, QStringList data)
 {
-    natMrtVarParams->setVarParameter(index, data);
+    femNatMrtVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setMaleNatMParam(int index, QStringList data)
+{
+    if (index >= maleNatMrtParams->getNumParams())
+        setNumNatMParams(index + 1);
+    maleNatMrtParams->setParameter(index, data);
+    maleNatMrtVarParams->setParameter(index, data);
+}
+
+void growthPattern::setMaleNatMParamHeader(int index, QString hdr)
+{
+    maleNatMrtParams->setParamHeader(index, hdr);
+    maleNatMrtVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setMaleNatMTVParam(int index, QStringList data)
+{
+    maleNatMrtVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setFractionFemaleParam(QStringList data)
+{
+    fracFmParams->setNumParams(1);
+    fracFmParams->setParameter(0, data);
+    fracFmVarParams->setParameter(0, data);
+}
+
+void growthPattern::setFractionFemParamHeader(QString hdr)
+{
+    fracFmParams->setParamHeader(0, hdr);
+    fracFmVarParams->setTableTitle(0, hdr);
+}
+
+void growthPattern::setFracFmTVParam(int index, QStringList data)
+{
+    fracFmVarParams->setVarParameter(index, data);
 }
 
 void growthPattern::setNumGrowthParams(int num)
 {
-    growthParams->setNumParams(num);
-    growthVarParams->setTotalNumVarTables(num);
+    femGrowthParams->setNumParams(num);
+    femGrowthVarParams->setTotalNumVarTables(num);
+    maleGrowthParams->setNumParams(num);
+    maleGrowthVarParams->setTotalNumVarTables(num);
 }
 
-void growthPattern::setGrowthParam(int index, QStringList data)
+void growthPattern::setFemGrowthParam(int index, QStringList data)
 {
-    if (index >= growthParams->getNumParams())
+    if (index >= femGrowthParams->getNumParams())
         setNumGrowthParams(index + 1);
-    growthParams->setParameter(index, data);
-    growthVarParams->setParameter(index, data);
+    femGrowthParams->setParameter(index, data);
+    femGrowthVarParams->setParameter(index, data);
 }
 
-void growthPattern::setGrowthParamHeader(int index, QString hdr)
+void growthPattern::setFemGrowthParamHeader(int index, QString hdr)
 {
-    growthParams->setParamHeader(index, hdr);
-    growthVarParams->setTableTitle(index, hdr);
+    femGrowthParams->setParamHeader(index, hdr);
+    femGrowthVarParams->setTableTitle(index, hdr);
 }
 
-void growthPattern::setGrowthTVParam(int index, QStringList data)
+void growthPattern::setFemGrowthTVParam(int index, QStringList data)
 {
-    growthVarParams->setVarParameter(index, data);
+    femGrowthVarParams->setVarParameter(index, data);
 }
 
-void growthPattern::setCVParam(int index, QStringList data)
+void growthPattern::setMaleGrowthParam(int index, QStringList data)
 {
-    if (index >= cvParams->getNumParams())
-        cvParams->setNumParams(index + 1);
-    cvParams->setParameter(index, data);
+    if (index >= femGrowthParams->getNumParams())
+        setNumGrowthParams(index + 1);
+    maleGrowthParams->setParameter(index, data);
+    maleGrowthVarParams->setParameter(index, data);
+}
+
+void growthPattern::setMaleGrowthParamHeader(int index, QString hdr)
+{
+    maleGrowthParams->setParamHeader(index, hdr);
+    maleGrowthVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setMaleGrowthTVParam(int index, QStringList data)
+{
+    maleGrowthVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setNumCVParams(int num)
+{
+    femCvParams->setNumParams(num);
+    femCvVarParams->setTotalNumVarTables(num);
+    maleCvParams->setNumParams(num);
+    maleCvVarParams->setTotalNumVarTables(num);
+}
+
+void growthPattern::setFemCVParam(int index, QStringList data)
+{
+    if (index >= femCvParams->getNumParams())
+        femCvParams->setNumParams(index + 1);
+    femCvParams->setParameter(index, data);
+    femCvVarParams->setParameter(index, data);
+}
+
+void growthPattern::setFemCVParamHeader(int index, QString hdr)
+{
+    femCvParams->setParamHeader(index, hdr);
+    femCvVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setFemCVTVParam(int index, QStringList data)
+{
+    femCvVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setMaleCVParam(int index, QStringList data)
+{
+    if (index >= maleCvParams->getNumParams())
+        maleCvParams->setNumParams(index + 1);
+    maleCvParams->setParameter(index, data);
+    maleCvVarParams->setParameter(index, data);
+}
+
+void growthPattern::setMaleCVParamHeader(int index, QString hdr)
+{
+    maleCvParams->setParamHeader(index, hdr);
+    maleCvVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setMaleCVTVParam(int index, QStringList data)
+{
+    maleCvVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setNumWtLenParams(int num)
+{
+    femWtLenParams->setNumParams(num);
+    femWtLenVarParams->setTotalNumVarTables(num);
+    maleWtLenParams->setNumParams(num);
+    maleWtLenVarParams->setTotalNumVarTables(num);
+}
+
+void growthPattern::setFemWtLenParam(int index, QStringList data)
+{
+    if (index >= femWtLenParams->getNumParams())
+        femWtLenParams->setNumParams(index + 1);
+    femWtLenParams->setParameter(index, data);
+    femWtLenVarParams->setParameter(index, data);
+}
+
+void growthPattern::setFemWtLenParamHeader(int index, QString hdr)
+{
+    femWtLenParams->setParamHeader(index, hdr);
+    femWtLenVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setFemWtLenTVParam(int index, QStringList data)
+{
+    femWtLenVarParams->setParameter(index, data);
+}
+
+void growthPattern::setMaleWtLenParam(int index, QStringList data)
+{
+    if (index >= maleWtLenParams->getNumParams())
+        maleWtLenParams->setNumParams(index + 1);
+    maleWtLenParams->setParameter(index, data);
+    maleWtLenVarParams->setParameter(index, data);
+}
+
+void growthPattern::setMaleWtLenParamHeader(int index, QString hdr)
+{
+    maleWtLenParams->setParamHeader(index, hdr);
+    maleWtLenVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setMaleWtLenTVParam(int index, QStringList data)
+{
+    maleWtLenVarParams->setParameter(index, data);
+}
+
+void growthPattern::setNumFemMatrParams(int num)
+{
+    femMatureParams->setNumParams(num);
+    femMatureVarParams->setTotalNumVarTables(num);
+}
+
+void growthPattern::setFemMatureParam(int index, QStringList data)
+{
+    if (index >= femMatureParams->getNumParams())
+        femMatureParams->setNumParams(index + 1);
+    femMatureParams->setParameter(index, data);
+    femMatureVarParams->setParameter(index, data);
+}
+
+void growthPattern::setFemMatureParamHeader(int index, QString hdr)
+{
+    femMatureParams->setParamHeader(index, hdr);
+    femMatureVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setFemMatureTVParam(int index, QStringList data)
+{
+    femMatureVarParams->setVarParameter(index, data);
+}
+
+void growthPattern::setNumHermaphParams(int num)
+{
+    hermaphParams->setNumParams(num);
+    hermaphVarParams->setTotalNumVarTables(num);
+}
+
+void growthPattern::setHermaphParam(int index, QStringList data)
+{
+    if (index >= hermaphParams->getNumParams())
+        hermaphParams->setNumParams(index + 1);
+    hermaphParams->setParameter(index, data);
+    hermaphVarParams->setParameter(index, data);
+}
+
+void growthPattern::setHermaphParamHeader(int index, QString hdr)
+{
+    hermaphParams->setParamHeader(index, hdr);
+    hermaphVarParams->setTableTitle(index, hdr);
+}
+
+void growthPattern::setHermaphTVParam(int index, QStringList data)
+{
+    hermaphVarParams->setVarParameter(index, data);
 }
 
 

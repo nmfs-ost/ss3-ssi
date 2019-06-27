@@ -78,7 +78,8 @@ public slots:
     void setAr1SelexSmoother(int val);
 
     void setSelTimeVaryReadParams(int flag);
-    void changeSelexSizePattern(int pat);
+    void setSelexSizePattern (int pat);
+    void changeSelexSizePattern(int value);
     void selexSizeParamsChanged();
     void selexSizeTVParamsChanged();
     void setupSelexSizeInfo();
@@ -93,7 +94,8 @@ public slots:
     void showSelexSizeCurve(bool flag);
     void selexSizeCurveClosed ();
 
-    void changeSelexAgePattern(int pat);
+    void setSelexAgePattern (int pat);
+    void changeSelexAgePattern(int value);
     void selexAgeParamsChanged();
     void selexAgeTVParamsChanged();
     void changeSelexAgeMale (int mal);

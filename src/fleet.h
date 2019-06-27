@@ -96,6 +96,9 @@ public slots:
     void setCatchMultiplier (int mult) {i_catch_mult = mult > 0? 1: 0;}
     void setCatchMultiplier (bool flag) {i_catch_mult = flag? 1: 0;}
     int getCatchMultiplier () {return i_catch_mult;}
+    void setCatchMultParam (QStringList& data);
+    const QStringList& getCatchMultParam ();
+    tablemodel *getCatchMultParameters();
     float get_max_catch() const;
     void set_max_catch(float value);
 
@@ -370,6 +373,7 @@ protected:
     double d_catch_se_of_log;
     int i_catch_mult;
     float f_max_catch;
+    longParameterModel *catchMult;
 
     tablemodel *retainCatch;
     QStringList catchHeader;

@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.13.05
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.13.06
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application,
@@ -17,10 +17,9 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.3.13.05
-    2019-05-16
-1. Corrected all recruitment curves.
-2. Added selectable SPR value to survivorship equation.
+    3.3.13.06
+    2019-06-28
+1. Read/write/display of all parameters is fixed.
 ============================================================================
     3.3.13.04
     2019-04-26

@@ -42,7 +42,6 @@ public:
     ~MainWindow();
 
     void reset();
-    void refreshAll();
 
     void closeEvent(QCloseEvent *event);
     void setupMenus(QMenuBar *menu);
@@ -65,6 +64,7 @@ public:
 
 
 public slots:
+    void refreshAll();
     void openNewDirectory();
     void createNewDirectory();
     void openDirectory(QString fname = QString(""));
