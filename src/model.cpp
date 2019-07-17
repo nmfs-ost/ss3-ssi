@@ -72,7 +72,7 @@ ss_model::ss_model(QWidget *parent) :
     sdYearsModel = new tablemodel(this);
     sdYearsModel->setColumnCount(0);
     sdYearsModel->setRowCount(1);
-    sdYearsModel->setRowHeader(0,"");
+    sdYearsModel->setRowHeader(0, QString(""));
     additionalSdReporting = new sd_reporting();
 
     mbweightModel = new tablemodel(this);
@@ -748,7 +748,7 @@ void ss_model::set_num_genders(int genders)
 {
     int num = (genders == 1)? 1: 2;
     iNumGenders = genders;
-    getPopulation()->set_gender(genders);
+    getPopulation()->set_gender(num);
     for (int i = 0; i < get_num_fleets(); i++)
     {
         getFleet(i)->setNumGenders(num);

@@ -54,6 +54,10 @@ public slots:
     void setFeature (int value) {futureFeature = value;}
     int getFeature () {return futureFeature;}
 
+    QStringList getParameter (int num);
+    void setParameter (int num, QStringList data);
+    QString getParameterHeader (int num);
+    void setParameterHeader (int num, QString hdr);
     longParameterModel *getFullParameterModel () {return full_parameters;}
     tablemodel *getFullParameters() {return full_parameters->getParamTable();}
     int getNumFullParameters() {return getFullParameters()->rowCount();}

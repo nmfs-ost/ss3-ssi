@@ -1527,5 +1527,8 @@ int timeVaryParameterModel::getAutoGenerate() const
 
 void timeVaryParameterModel::setAutoGenerate(int value)
 {
-    autoGenerate = value;
+    if (value != autoGenerate) {
+        autoGenerate = value;
+        updateVarParams();
+    }
 }

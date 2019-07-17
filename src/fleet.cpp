@@ -1004,9 +1004,11 @@ void Fleet::setBycatchDead(int value)
 
 void Fleet::setSelTimeVaryReadParams(int flag)
 {
-    readSelTvParams = flag;
-    size_selex->setTVautogenerate(flag);
-    age_selex->setTVautogenerate(flag);
+    if (readSelTvParams != flag) {
+        readSelTvParams = flag;
+        size_selex->setTVautogenerate(flag);
+        age_selex->setTVautogenerate(flag);
+    }
 }
 
 int Fleet::getAr1SelSmoother()

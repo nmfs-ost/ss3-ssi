@@ -143,9 +143,13 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
     ui->spinBox_fecund_hermaph_season->setMinimum(-1);
 
+    // Hermaphroditism
     hermaphParamsView = new tableview();
     hermaphParamsView->setParent(this);
     ui->verticalLayout_hermaph_params->addWidget(hermaphParamsView);
+    hermaphTVParamsView = new tableview();
+    hermaphTVParamsView->setParent(this);
+    ui->verticalLayout_hermaph_tv_params->addWidget(hermaphTVParamsView);
 
 //    connect (ui->lineEdit_fraction_female, SIGNAL(editingFinished()), SLOT(changeFractionFemale()));
     connect (ui->comboBox_fecund_option, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityOption(int)));
@@ -321,16 +325,32 @@ void population_widget::changeGrowthPattern (int num)
                      this, SLOT(changeGrowthParams()));
             disconnect (currPattern->getFemGrowthTVParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeGrowthTVParams()));
+            disconnect (currPattern->getMaleGrowthParams(), SIGNAL(dataChanged()),
+                     this, SLOT(changeGrowthParams()));
+            disconnect (currPattern->getMaleGrowthTVParams(), SIGNAL(dataChanged()),
+                     this, SLOT(changeGrowthTVParams()));
+
             disconnect (currPattern->getFemCVParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeCVParams()));
+            disconnect (currPattern->getFemCVTVParams(), SIGNAL(dataChanged()),
+                     this, SLOT(changeCVTVParams()));
+            disconnect (currPattern->getMaleCVParams(), SIGNAL(dataChanged()),
+                     this, SLOT(changeCVParams()));
+            disconnect (currPattern->getMaleCVTVParams(), SIGNAL(dataChanged()),
+                     this, SLOT(changeCVParams()));
+
             disconnect (currPattern->getFractionFemaleParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeFracFemParams()));
             disconnect (currPattern->getFracFmTVParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeFracFemTVParams()));
+
+            disconnect (currPattern->getNatMAges(), SIGNAL(dataChanged()),
+                     this, SLOT(changeNatMAges()));
             disconnect (currPattern->getFemNatMParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeNatMParams()));
             disconnect (currPattern->getFemNatMTVParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeNatMTVParams()));
+
             disconnect (currPattern->getFemWtLenParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeWtLenParams()));
             disconnect (currPattern->getFemWtLenTVParams(), SIGNAL(dataChanged()),
@@ -339,90 +359,96 @@ void population_widget::changeGrowthPattern (int num)
                      this, SLOT(changeWtLenParams()));
             disconnect (currPattern->getMaleWtLenTVParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeWtLenTVParams()));
+
             disconnect (currPattern->getFemMatureParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeFecundityParams()));
             disconnect (currPattern->getFemMatureTVParams(), SIGNAL(dataChanged()),
                      this, SLOT(changeFecundityTVParams()));
         }
     currPattern = gp;
-//    int numparms;
 
     growthFemParamsView->setModel(currPattern->getFemGrowthParams());
+    growthFemTVParamsView->setModel(currPattern->getFemGrowthTVParams());
     connect (currPattern->getFemGrowthParams(), SIGNAL(dataChanged()),
              SLOT(changeGrowthParams()));
-    growthFemTVParamsView->setModel(currPattern->getFemGrowthTVParams());
     connect (currPattern->getFemGrowthTVParams(), SIGNAL(dataChanged()),
              SLOT(changeGrowthTVParams()));
+    growthMaleParamsView->setModel(currPattern->getMaleGrowthParams());
+    growthMaleTVParamsView->setModel(currPattern->getMaleGrowthTVParams());
+    connect (currPattern->getMaleGrowthParams(), SIGNAL(dataChanged()),
+             SLOT(changeGrowthParams()));
+    connect (currPattern->getMaleGrowthTVParams(), SIGNAL(dataChanged()),
+             SLOT(changeGrowthTVParams()));
     changeGrowthParams();
+
     cvFemParamsView->setModel(currPattern->getFemCVParams());
-    changeCVParams();
+    cvFemTVParamsView->setModel(currPattern->getFemCVTVParams());
     connect (currPattern->getFemCVParams(), SIGNAL(dataChanged()),
              SLOT(changeCVParams()));
-    cvFemTVParamsView->setModel(currPattern->getFemCVTVParams());
     connect (currPattern->getFemCVTVParams(), SIGNAL(dataChanged()),
              SLOT(changeCVTVParams()));
-//    cvParamsView->setHeight(currPattern->getCVParams());
-//    cvParamsView->resizeColumnsToContents();
+    cvMaleParamsView->setModel(currPattern->getMaleCVParams());
+    cvMaleTVParamsView->setModel(currPattern->getMaleCVTVParams());
+    connect (currPattern->getMaleCVParams(), SIGNAL(dataChanged()),
+             SLOT(changeCVParams()));
+    connect (currPattern->getMaleCVTVParams(), SIGNAL(dataChanged()),
+             SLOT(changeCVParams()));
+    changeCVParams();
 
     fecundParamsView->setModel(currPattern->getFemMatureParams());
+    fecundTVParamsView->setModel(currPattern->getFemMatureTVParams());
     connect (currPattern->getFemMatureParams(), SIGNAL(dataChanged()),
              SLOT(changeFecundityParams()));
-    fecundTVParamsView->setModel(currPattern->getFemMatureTVParams());
     connect (currPattern->getFemMatureTVParams(), SIGNAL(dataChanged()),
              SLOT(changeFecundityTVParams()));
     changeFecundityParams();
 
     fracFemParamsView->setModel(currPattern->getFractionFemaleParams());
-    fracFemParamsView->setHeight(1);
-    fracFemParamsView->resizeColumnsToContents();
+    fracFemTVParamsView->setModel(currPattern->getFracFmTVParams());
     connect (currPattern->getFractionFemaleParams(), SIGNAL(dataChanged()),
              SLOT(changeFracFemParams()));
-    fracFemTVParamsView->setModel(currPattern->getFracFmTVParams());
     connect (currPattern->getFracFmTVParams(), SIGNAL(dataChanged()),
              SLOT(changeFracFemTVParams()));
     changeFracFemParams();
 
     mortFemParamsView->setModel(currPattern->getFemNatMParams());
+    mortFemTVParamsView->setModel(currPattern->getFemNatMTVParams());
     connect (currPattern->getFemNatMParams(), SIGNAL(dataChanged()),
              SLOT(changeNatMParams()));
-    mortFemTVParamsView->setModel(currPattern->getFemNatMTVParams());
     connect (currPattern->getFemNatMTVParams(), SIGNAL(dataChanged()),
              SLOT(changeNatMTVParams()));
     mortMaleParamsView->setModel(currPattern->getMaleNatMParams());
+    mortMaleTVParamsView->setModel(currPattern->getMaleNatMTVParams());
     connect (currPattern->getMaleNatMParams(), SIGNAL(dataChanged()),
              SLOT(changeNatMParams()));
-    mortMaleTVParamsView->setModel(currPattern->getMaleNatMTVParams());
     connect (currPattern->getMaleNatMTVParams(), SIGNAL(dataChanged()),
              SLOT(changeNatMTVParams()));
     changeNatMParams();
-//    numparms = currPattern->getNatMTVParams()->rowCount();
-//    mortTVParamsView->setVisible(numparms);
-//    mortTVParamsView->setHeight(numparms);
-//    mortTVParamsView->resizeColumnsToContents();
-    connect (currPattern->getFemNatMTVParams(), SIGNAL(dataChanged()),
-             SLOT(changeNatMTVParams()));
+
     mortAgesView->setModel(currPattern->getNatMAges());
-    mortAgesView->setHeight(2);
-    mortAgesView->resizeColumnsToContents();
+    connect (currPattern->getNatMAges(), SIGNAL(dataChanged()),
+             SLOT(changeNatMAges()));
+    changeNatMAges();
 
     wtlenFemParamsView->setModel(gp->getFemWtLenParams());
+    wtlenFemTVParamsView->setModel(gp->getFemWtLenTVParams());
     connect (gp->getFemWtLenParams(), SIGNAL(dataChanged()),
              SLOT(changeWtLenParams()));
-    wtlenFemTVParamsView->setModel(gp->getFemWtLenTVParams());
     connect (gp->getFemWtLenTVParams(), SIGNAL(dataChanged()),
              SLOT(changeWtLenTVParams()));
     wtlenMaleParamsView->setModel(gp->getMaleWtLenParams());
+    wtlenMaleTVParamsView->setModel(gp->getMaleWtLenTVParams());
     connect (gp->getMaleWtLenParams(), SIGNAL(dataChanged()),
              SLOT(changeWtLenParams()));
-    wtlenMaleTVParamsView->setModel(gp->getMaleWtLenTVParams());
     connect (gp->getMaleWtLenTVParams(), SIGNAL(dataChanged()),
-             SLOT(changeWtLenTVParams()));//    timeVaryParamsView->setModel(currPattern->getTimeVaryParams());
-//    timeVaryParamsView->setHeight(currPattern->getTimeVaryParams());
-//    timeVaryParamsView->resizeColumnsToContents();
+             SLOT(changeWtLenTVParams()));
+    changeWtLenParams();
 
-//    maturityParamsView->setModel(currPattern->get);
+    hermaphParamsView->setModel(gp->getHermaphParams());
+    connect (gp->getHermaphParams(), SIGNAL(dataChanged()),
+             SLOT(changeHermaphParams()));
+    changeHermaphParams();
     }
-
 }
 
 void population_widget::refresh()
@@ -456,7 +482,6 @@ void population_widget::refresh()
 
     // recruitment
     changeRecrFullParams();
-    changeRecrTVParams();
     changeRecrAssignParams();
     changeRecrDistParams();
     changeRecrCycleParams();
@@ -497,15 +522,13 @@ void population_widget::refresh()
 
     maturityParamsView->setModel(pop->Grow()->getCohortParams());
     maturityTVParamsView->setModel(pop->Grow()->getCohortTVParams());
-    changeWtLenParams();
+    changeCohortParams();
 
     // fecundity
     setFecundityOption(pop->Fec()->getMethod());
     setFecundityOffsetOption(pop->Grow()->getParam_offset_method());
     setFecundityAdjustment(pop->Grow()->getAdjustment_method());
     setHermaphOptions(pop->Fec()->getHermaphroditism());
-    hermaphParamsView->setModel(pop->Fec()->getHermParams());
-    hermaphParamsView->setHeight(pop->Fec()->getHermParams());
     ui->spinBox_fecund_hermaph_season->setMaximum(model_data->get_num_seasons());
     ui->spinBox_fecund_hermaph_season->setValue(pop->Fec()->getHermSeason());
     ui->spinBox_fecund_hermaph_male->setValue(pop->Fec()->getHermIncludeMales());
@@ -525,8 +548,6 @@ void population_widget::refresh()
     // Mortality
     mortBreakPtsView->setModel(pop->Grow()->getNatMortValues());
     mortBreakPtsView->setHeight(pop->Grow()->getNatMortValues());
-//    mortAgesView->setModel(pop->Grow()->getNatMortAgeValues());
-//    mortAgesView->setHeight(pop->Grow()->getNatMortAgeValues());
 
     mortInputsView->setModel(pop->M()->getInputModel());
     mortInputsView->setHeight(pop->M()->getInputModel());
@@ -660,6 +681,8 @@ void population_widget::setMortOption(int opt)
         mortAgesView->setVisible(true);
         ui->label_mort_f_params->setVisible(false);
         mortFemParamsView->setVisible(false);
+        ui->label_mort_m_params->setVisible(false);
+        mortMaleParamsView->setVisible(false);
 
         break;
     }
@@ -917,6 +940,12 @@ void population_widget::changeCVTVParams()
     cvMaleTVParamsView->resizeColumnsToContents();
 }
 
+void population_widget::changeNatMAges()
+{
+    mortAgesView->setHeight(currPattern->getNatMAges());
+    mortAgesView->resizeColumnsToContents();
+}
+
 void population_widget::changeNatMParams()
 {
     mortFemParamsView->setHeight(currPattern->getFemNatMParams());
@@ -971,6 +1000,7 @@ void population_widget::changeCohortParams()
 {
     maturityParamsView->setHeight(pop->Grow()->getCohortParams());
     maturityParamsView->resizeColumnsToContents();
+    changeCohortTVParams();
 }
 
 void population_widget::changeCohortTVParams()
@@ -1000,6 +1030,7 @@ void population_widget::changeFecundityTVParams()
 
 void population_widget::changeFracFemParams()
 {
+    fracFemParamsView->setHeight(1);
     fracFemParamsView->resizeColumnsToContents();
     changeFracFemTVParams();
 }
@@ -1010,6 +1041,23 @@ void population_widget::changeFracFemTVParams()
     fracFemTVParamsView->resizeColumnsToContents();
     fracFemTVParamsView->setVisible(num);
     ui->label_frac_tfemale_tv_params->setVisible(num);
+}
+
+void population_widget::changeHermaphParams()
+{
+    int num = currPattern->getNumHermaphParams();
+    hermaphParamsView->setHeight(num);
+    hermaphParamsView->resizeColumnsToContents();
+    hermaphParamsView->setVisible(num);
+    changeHermaphTVParams();
+}
+void population_widget::changeHermaphTVParams()
+{
+    int num = currPattern->getNumHermaphTVParams();
+    hermaphTVParamsView->setHeight(num);
+    hermaphTVParamsView->resizeColumnsToContents();
+    hermaphTVParamsView->setVisible(num);
+    ui->label_hermaph_tv_params->setVisible(num);
 }
 
 void population_widget::setHermaphOptions(int herm)

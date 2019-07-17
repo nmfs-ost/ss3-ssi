@@ -29,7 +29,8 @@ growthPattern::growthPattern(ss_model *parent)
     maleCvVarParams->setNumParams(2);
 
     natMAges = new tablemodel ();
-    natMAges->setRowCount(2);
+    natMAges->setRowCount(3);
+    natMAges->removeHeader();
     femNatMrtParams = new longParameterModel();
     femNatMrtVarParams = new timeVaryParameterModel(parnt);
     femNatMrtParams->setNumParams(1);
@@ -148,6 +149,62 @@ void growthPattern::setMorph(int index, growth_morph * &value)
     growth_morph * gm = morphs.takeAt(index);
     morphs.insert(index, value);
     delete gm;
+}
+
+void growthPattern::setNumGenders(int num)
+{
+    if (num == 1)
+    {
+        maleGrowthParams->setNumParams(0);
+        maleCvParams->setNumParams(0);
+        maleWtLenParams->setNumParams(0);
+        maleNatMrtParams->setNumParams(0);
+    }
+    else {
+        maleGrowthParams->setNumParams(femGrowthParams->getNumParams());
+        maleCvParams->setNumParams(2);
+        maleWtLenParams->setNumParams(femWtLenParams->getNumParams());
+        maleNatMrtParams->setNumParams(femNatMrtParams->getNumParams());
+    }
+}
+
+void growthPattern::setTimeVaryReadParams(int value)
+{
+    int i;
+    femNatMrtVarParams->setAutoGenerate(value);
+    maleNatMrtVarParams->setAutoGenerate(value);
+    femGrowthVarParams->setAutoGenerate(value);
+    maleGrowthVarParams->setAutoGenerate(value);
+    femCvVarParams->setAutoGenerate(value);
+    maleCvVarParams->setAutoGenerate(value);
+    femWtLenVarParams->setAutoGenerate(value);
+    maleWtLenVarParams->setAutoGenerate(value);
+    fracFmVarParams->setAutoGenerate(value);
+    femMatureVarParams->setAutoGenerate(value);
+    hermaphVarParams->setAutoGenerate(value);
+    for (i = 0; i < getNumNatMParams(); i++) {
+        femNatMrtVarParams->changeVarParamData(i, femNatMrtParams->getParameter(i));
+        maleNatMrtVarParams->changeVarParamData(i, maleNatMrtParams->getParameter(i));
+    }
+    for (i = 0; i < getNumGrowthParams(); i++) {
+        femGrowthVarParams->changeVarParamData(i, femGrowthParams->getParameter(i));
+        maleGrowthVarParams->changeVarParamData(i, maleGrowthParams->getParameter(i));
+    }
+    for (i = 0; i < 2; i++) {
+        femCvVarParams->changeVarParamData(i, femCvParams->getParameter(i));
+        maleCvVarParams->changeVarParamData(i, maleCvParams->getParameter(i));
+    }
+    for (i = 0; i < 2; i++) {
+        femWtLenVarParams->changeVarParamData(i, femWtLenParams->getParameter(i));
+        maleWtLenVarParams->changeVarParamData(i, maleWtLenParams->getParameter(i));
+    }
+    for (i = 0; i < getNumFemMatrParams(); i++) {
+        femMatureVarParams->changeVarParamData(i, femMatureParams->getParameter(i));
+    }
+    for (i = 0; i< getNumHermaphParams(); i++) {
+        hermaphVarParams->changeVarParamData(i, hermaphParams->getParameter(i));
+    }
+    fracFmVarParams->changeVarParamData(0, fracFmParams->getParameter(0));
 }
 
 void growthPattern::setNumNatMParams(int num)

@@ -405,6 +405,7 @@ void data_widget::numSdYearsChanged()
 void data_widget::changeNumGenders(int val)
 {
     model_data->set_num_genders(val);
+
     for (int i = 0; i < model_data->get_num_fleets(); i++)
     {
         int bins = model_data->get_length_composition()->getNumberBins();

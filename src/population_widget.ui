@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -82,7 +82,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-181</y>
+            <y>0</y>
             <width>1068</width>
             <height>610</height>
            </rect>

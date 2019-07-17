@@ -52,6 +52,7 @@ public slots:
     void setNatMortAges (QStringList data);
 
     void setNumAges (int ages) {num_ages = ages;}
+    void setNumGenders (int num);
     int getModel() const;
     void setModel(int value);
     float getAge_for_l1() const;
@@ -153,6 +154,7 @@ private:
     float morph_within_ratio;
 //    float morph_dist[5];
     int num_ages;
+    int num_genders;
 
     float fraction_female;
     int natural_mortality_type;

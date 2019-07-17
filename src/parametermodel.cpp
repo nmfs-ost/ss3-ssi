@@ -210,6 +210,11 @@ int longParameterTable::useBlock(int index)
     return paramTable.getRowData(index).at(12).toInt();
 }
 
+void longParameterTable::setVarParamCount(int rows)
+{
+    varParamTable.setRowCount(rows);
+}
+
 void longParameterTable::checkParameters(QModelIndex tplt, QModelIndex btrt, QVector<int> ivect)
 {
     int startRow = tplt.row();

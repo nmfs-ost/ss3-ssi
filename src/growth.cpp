@@ -271,11 +271,15 @@ void ss_growth::setTimeVaryReadParams(int value)
     timeVaryReadParams = value;
     if (value == 0) // autogenerate
         autogenerateTimeVaryParams();
+    for (int i = 0; i < getNum_patterns(); i++) {
+        getPattern(i)->setTimeVaryReadParams (value);
+    }
 }
 
 void ss_growth::autogenerateTimeVaryParams()
 {
-
+    cohortVarParam->setAutoGenerate(timeVaryReadParams);
+    cohortVarParam->changeVarParamData(0, getCohortParam());
 }
 
 
@@ -327,7 +331,7 @@ void ss_growth::setNatural_mortality_type(int value)
     case 3:
     case 4:
         for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getNatMAges()->setColumnCount(num_ages);
+            getPattern(i)->getNatMAges()->setColumnCount(num_ages+1);
         break;
     }
 }
@@ -379,6 +383,13 @@ void ss_growth::setNatMortAges(QStringList data)
     setNatMortAgesHeader(data.count());
     for (int i = 0; i < data.count(); i++)
         natMortAges->setRowData(i, data.at(i));
+}
+
+void ss_growth::setNumGenders(int num)
+{
+    num_genders = num;
+    for (int i = 0; i < num_patterns; i++)
+        patterns.at(i)->setNumGenders(num);
 }
 
 int ss_growth::getModel() const

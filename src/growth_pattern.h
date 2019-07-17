@@ -37,6 +37,11 @@ public slots:
     QStringList getNatMFemAgeList () {return natMAges->getRowData(0);}
     tablemodel *getNatMAges () {return natMAges;}
 
+    void setNumGenders(int num);
+
+    int getTimeVaryReadParams () {return timeVaryReadParams;}
+    void setTimeVaryReadParams (int value);
+
     // Female
     void setNumNatMParams (int num);// {natMrtParams->setNumParams(num);}
     int getNumNatMParams () {return femNatMrtParams->getNumParams();}
@@ -65,7 +70,7 @@ public slots:
     tablemodel *getFracFmTVParams() {return fracFmVarParams->getVarParamTable();}
 
     void setNumGrowthParams (int num);
-    int getFemNumGrowthParams () {return femGrowthParams->getNumParams();}
+    int getNumGrowthParams () {return femGrowthParams->getNumParams();}
     void addFemGrowthParam (QStringList data) {setFemGrowthParam(femGrowthParams->getNumParams(), data);}
     void setFemGrowthParam (int index, QStringList data);
     QStringList getFemGrowthParam(int index) {return femGrowthParams->getParameter(index);}
@@ -176,9 +181,12 @@ public slots:
     void setHermaphParam (int index, QStringList data);
     void setHermaphParamHeader (int index, QString hdr);
     QStringList getHermaphParam(int index) {return hermaphParams->getParameter(index);}
+    QString getHermaphParamHeader (int index) {return hermaphParams->getParamHeader(index);}
     tablemodel *getHermaphParams() {return hermaphParams->getParamTable();}
+    int getNumHermaphTVParams() {return hermaphVarParams->getNumVarParams();}
     void setHermaphTVParam (int index, QStringList data);
     QStringList getHermaphTVParam(int index) {return hermaphVarParams->getVarParameter(index);}
+    QString getHermaphTVParamHeader (int index) {return hermaphVarParams->getVarParamHeader(index);}
     tablemodel *getHermaphTVParams() {return hermaphVarParams->getVarParamTable();}
 
 
@@ -192,6 +200,9 @@ private:
     growthPattern& copy (const growthPattern &rhs);
 
     tablemodel *natMAges;
+
+    int timeVaryReadParams;
+
     longParameterModel *femNatMrtParams;
     timeVaryParameterModel *femNatMrtVarParams;
     longParameterModel *maleNatMrtParams;

@@ -99,9 +99,17 @@ void selectivity::setSetup(QList<int> values)
 void selectivity::setTVautogenerate(int val)
 {
     varParameters->setAutoGenerate(val);
+    for (int i = 0; i < getNumParameters(); i++)
+        varParameters->changeVarParamData(i, getParameter(i));
     retainVarParameters->setAutoGenerate(val);
+    for (int i = 0; i < getNumRetainParameters(); i++)
+        retainVarParameters->changeVarParamData(i, getRetainParameter(i));
     discardVarParameters->setAutoGenerate(val);
+    for (int i = 0; i < getNumDiscardParameters(); i++)
+        discardVarParameters->changeVarParamData(i, getDiscardParameter(i));
     maleVarParameters->setAutoGenerate(val);
+    for (int i = 0; i < getNumMaleParameters(); i++)
+        maleVarParameters->changeVarParamData(i, getMaleParameter(i));
 }
 
 QString selectivity::getSetupText()

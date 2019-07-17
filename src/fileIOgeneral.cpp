@@ -14,6 +14,10 @@ int writeVersionComment(ss_file *file)
     chars = file->writeline (line);
     line = QString ("#_File written by GUI version %1").arg(getAppVersion());
     chars += file->writeline (line);
+    line = QString("#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.");
+    chars += file->writeline(line);
+    line = QString("#Foreign copyrights may apply. See copyright.txt for more information.");
+    chars += file->writeline(line);
     return chars;
 }
 

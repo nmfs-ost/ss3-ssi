@@ -92,6 +92,7 @@ public:
     int useDev(int index);
     int useBlock (int index);
 
+public slots:
     void setVarParamCount(int rows);
     int getVarParamCount() {return varParamTable.rowCount();}
     void setVarParameter (int row, QStringList param) {varParamTable.setRowData(row, param);}
@@ -100,9 +101,7 @@ public:
     QString getVarParamHeader (int row) {return varParamTable.getRowHeader(row);}
     tablemodel *getVarParameters () {return &varParamTable;}
 
-public slots:
     void checkParameters(QModelIndex, QModelIndex, QVector<int> = QVector<int>());
-//    void changeVarData (int startRow, int startCol, int endRow, int endCol);
 
 
 signals:

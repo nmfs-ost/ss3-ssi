@@ -35,7 +35,7 @@ public slots:
     void setStartYear (int yr);
     void setTotalYears (int yrs);
     void setNumAges (int ages);
-    void set_gender (int gender) {i_gender = gender;}
+    void set_gender (int gender) {i_gender = gender; Grow()->setNumGenders(gender);}
     int gender () {return i_gender;}
     void set_mean_bwt_df (int deg_free) {i_mean_bwt_deg_freedom = deg_free;}
     int mean_bwt_df () {return i_mean_bwt_deg_freedom;}

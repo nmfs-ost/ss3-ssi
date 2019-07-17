@@ -90,6 +90,9 @@ private slots:
     void changeHermaph(bool flag);
     void changeHermaphSeas(int seas);
     void changeHermaphMales(int opt);
+    void changeHermaphParams();
+    void changeHermaphTVParams();
+
     void changeMaturityOpt(int opt);
     void changeFecundityOption(int opt);
     void changeFecundityOffsetOption(int opt);
@@ -104,6 +107,7 @@ private slots:
     void changeGrowthTVParams();
     void changeCVParams();
     void changeCVTVParams();
+    void changeNatMAges();
     void changeNatMParams();
     void changeNatMTVParams();
     void changeWtLenParams();
@@ -191,6 +195,7 @@ private:
     tableview *fracFemParamsView;
     tableview *fracFemTVParamsView;
     tableview *hermaphParamsView;
+    tableview *hermaphTVParamsView;
 
     srEquationDialog *srOptionDialog;
     tableview *recruitParamsView;

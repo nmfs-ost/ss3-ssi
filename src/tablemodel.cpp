@@ -7,6 +7,7 @@
 tablemodel::tablemodel(QObject *parent)
   : QStandardItemModel(parent)
 {
+    setTitle(QString("None"));
     reset();
 }
 
@@ -63,6 +64,7 @@ void tablemodel::setRowData(int row, QStringList &rowstringlist)
     QList<QStandardItem *> px;
     if (row >= rowCount())
         setRowCount(row + 1);
+    setColumnCount(rowstringlist.count());
 
     for (int i = 0; i < rowstringlist.count(); i++)
     {
@@ -102,6 +104,15 @@ QString tablemodel::getRowText(int row)
     return text;
 }
 
+void tablemodel::removeHeader()
+{
+    int cols = columnCount();
+    QStringList heads;
+    for (int i = 0; i < cols; i++)
+        heads << QString("");
+    setHeader(heads);
+}
+
 void tablemodel::setHeader(QStringList &titles)
 {
     int cols = titles.count();
@@ -132,10 +143,10 @@ QString tablemodel::getRowHeader(int row)
 
 void tablemodel::setTitle(QString strtitle)
 {
-    title = strtitle;
+    title = QString(strtitle);
 }
 
-QString tablemodel::getTitle()
+QString &tablemodel::getTitle()
 {
     return title;
 }

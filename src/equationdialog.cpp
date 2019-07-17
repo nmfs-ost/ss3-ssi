@@ -291,7 +291,6 @@ void equationDialog::getParameterValues()
 
         switch (switchnum)
         {
-        default:
         case 9:
             values = parameters->getRowData(8);
             min9 = (values.at(0)).toDouble();
@@ -300,6 +299,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_9_input->setRange(val9 < min9? val9: min9, max9);
             ui->doubleSpinBox_9_input->setValue(val9);
             setSlider9(min9, max9, val9);
+            [[clang::fallthrough]];
         case 8:
             values = parameters->getRowData(7);
             min8 = (values.at(0)).toDouble();
@@ -309,6 +309,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_8_input->setMaximum(max8);
             ui->doubleSpinBox_8_input->setValue(val8);
             setSlider8(min8, max8, val8);
+            [[clang::fallthrough]];
         case 7:
             values = parameters->getRowData(6);
             min7 = (values.at(0)).toDouble();
@@ -318,6 +319,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_7_input->setMaximum(max7);
             ui->doubleSpinBox_7_input->setValue(val7);
             setSlider7(min7, max7, val7);
+            [[clang::fallthrough]];
         case 6:
             values = parameters->getRowData(5);
             min6 = (values.at(0)).toDouble();
@@ -327,6 +329,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_6_input->setMaximum(max6);
             ui->doubleSpinBox_6_input->setValue(val6);
             setSlider6(min6, max6, val6);
+            [[clang::fallthrough]];
         case 5:
             values = parameters->getRowData(4);
             min5 = (values.at(0)).toDouble();
@@ -336,6 +339,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_5_input->setMaximum(max5);
             ui->doubleSpinBox_5_input->setValue(val5);
             setSlider5(min5, max5, val5);
+            [[clang::fallthrough]];
         case 4:
             values = parameters->getRowData(3);
             min4 = (values.at(0)).toDouble();
@@ -345,6 +349,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_4_input->setMaximum(max4);
             ui->doubleSpinBox_4_input->setValue(val4);
             setSlider4(min4, max4, val4);
+            [[clang::fallthrough]];
         case 3:
             values = parameters->getRowData(2);
             min3 = (values.at(0)).toDouble();
@@ -354,6 +359,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_3_input->setMaximum(max3);
             ui->doubleSpinBox_3_input->setValue(val3);
             setSlider3(min3, max3, val3);
+            [[clang::fallthrough]];
         case 2:
             values = parameters->getRowData(1);
             min2 = (values.at(0)).toDouble();
@@ -363,6 +369,7 @@ void equationDialog::getParameterValues()
             ui->doubleSpinBox_2_input->setMaximum(max2);
             ui->doubleSpinBox_2_input->setValue(val2);
             setSlider2(min2, max2, val2);
+            [[clang::fallthrough]];
         case 1:
             values = parameters->getRowData(0);
             min1 = (values.at(0)).toDouble();
@@ -404,57 +411,62 @@ void equationDialog::setParameterValues()
         values[1] = QString::number(max9);
         values[2] = QString::number(val9);
         parameters->setRowData(8, values);
+        [[clang::fallthrough]];
     case 8:
         values = parameters->getRowData(7);
         values[0] = QString::number(min8);
         values[1] = QString::number(max8);
         values[2] = QString::number(val8);
         parameters->setRowData(7, values);
+        [[clang::fallthrough]];
     case 7:
         values = parameters->getRowData(6);
         values[0] = QString::number(min7);
         values[1] = QString::number(max7);
         values[2] = QString::number(val7);
         parameters->setRowData(6, values);
+        [[clang::fallthrough]];
     case 6:
        values = parameters->getRowData(5);
        values[0] = QString::number(min6);
        values[1] = QString::number(max6);
        values[2] = QString::number(val6);
        parameters->setRowData(5, values);
+       [[clang::fallthrough]];
     case 5:
         values = parameters->getRowData(4);
         values[0] = QString::number(min5);
         values[1] = QString::number(max5);
         values[2] = QString::number(val5);
         parameters->setRowData(4, values);
+        [[clang::fallthrough]];
     case 4:
         values = parameters->getRowData(3);
         values[0] = QString::number(min4);
         values[1] = QString::number(max4);
         values[2] = QString::number(val4);
         parameters->setRowData(3, values);
+        [[clang::fallthrough]];
     case 3:
         values = parameters->getRowData(2);
         values[0] = QString::number(min3);
         values[1] = QString::number(max3);
         values[2] = QString::number(val3);
         parameters->setRowData(2, values);
+        [[clang::fallthrough]];
     case 2:
         values = parameters->getRowData(1);
         values[0] = QString::number(min2);
         values[1] = QString::number(max2);
         values[2] = QString::number(val2);
         parameters->setRowData(1, values);
+        [[clang::fallthrough]];
     case 1:
         values = parameters->getRowData(0);
         values[0] = QString::number(min1);
         values[1] = QString::number(max1);
         values[2] = QString::number(val1);
         parameters->setRowData(0, values);
-    case 0:
-    default:
-        ;
     }
     connect (parameters, SIGNAL(dataChanged()), SLOT(parametersChanged()));
     }
@@ -1796,18 +1808,16 @@ void equationDialog::showJoins(int num)
     case 3:
         ui->label_steep_join3->setVisible(true);
         ui->spinBox_steep_join3->setVisible(true);
-
+        [[clang::fallthrough]];
     case 2:
         ui->label_steep_join2->setVisible(true);
         ui->spinBox_steep_join2->setVisible(true);
-
+        [[clang::fallthrough]];
     case 1:
         ui->label_steepness->setVisible(true);
         ui->label_steep_join1->setVisible(true);
         ui->spinBox_steep_join1->setVisible(true);
         break;
-//    case 0:        // done above, show none
-//    default:
     }
 }
 

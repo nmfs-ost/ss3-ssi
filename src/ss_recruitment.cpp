@@ -227,6 +227,22 @@ void spawn_recruit::setParamNums()
     }
 }
 
+QStringList spawn_recruit::getParameter (int num)
+{
+    return getFullParameters()->getRowData(num);
+}
+void spawn_recruit::setParameter (int num, QStringList data)
+{
+    getFullParameters()->setRowData(num, data);
+}
+QString spawn_recruit::getParameterHeader (int num)
+{
+    return getFullParameters()->getRowHeader(num);
+}
+void spawn_recruit::setParameterHeader (int num, QString hdr)
+{
+    getFullParameters()->setRowHeader(num, hdr);
+}
 
 void spawn_recruit::setFullParameter(int index, QStringList values)
 {
