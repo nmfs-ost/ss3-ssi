@@ -593,11 +593,6 @@ void ss_model::set_num_fleets(int n_fleets)
     {
         fleets.append(new Fleet(this));
     }
-    else
-    {
-        for (int i = 0; i < fleets.count(); i++)
-            fleets.at(i)->reset();
-    }
 
     while (fleets.count() > n_fleets)
     {

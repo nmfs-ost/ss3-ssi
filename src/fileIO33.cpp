@@ -2868,18 +2868,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             sizesel = data->getFleet(i)->getSizeSelectivity();
             sizesel->disconnectSigs();
             pat = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
+            sizesel->setPattern(pat);
             temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
             sizesel->setDiscard(temp_int);
             temp_int = c_file->getIntValue(QString("Size selex Male"), 0, 4, 0);
             sizesel->setMale(temp_int);
             temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
             sizesel->setSpecial(temp_int);
-            sizesel->setPattern(pat);
             sizesel->connectSigs();
-/*            datalist.clear();
-            for (int j = 0; j < 4; j++)
-                datalist.append(c_file->get_next_value(QString("size selex setup")));
-            sizesel->setSetup(datalist);*/
         }
         // Age selectivity setup
         for (int i = 0; i < num_fleets; i++)
@@ -2888,13 +2884,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
             pat = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
+            agesel->setPattern(pat);
             temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
             agesel->setDiscard(temp_int);
             temp_int = c_file->getIntValue(QString("Age selex Male"), 0, 4, 0);
             agesel->setMale(temp_int);
             temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
             agesel->setSpecial(temp_int);
-            agesel->setPattern(pat);
             agesel->connectSigs();
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
@@ -2954,7 +2950,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             // check special
             num = sizesel->getSpecial();
-            if (sizesel->getPattern() == 7)
+            if (sizesel->getPattern() == 7 && num != 1)
                 sizesel->setSpecial(1);
             sizesel->connectSigs();
         }
@@ -2992,7 +2988,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             // check special
             num = agesel->getSpecial();
-            if (num == 7)
+            if (agesel->getPattern() == 7 && num != 1)
                 agesel->setSpecial(1);
             agesel->connectSigs();
         }

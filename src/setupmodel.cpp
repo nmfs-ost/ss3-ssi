@@ -908,28 +908,32 @@ void timeVaryParameterModel::changeVarParamData(int parm, QStringList data)
     if (envVal[parm] != item)
     {
         envVal[parm] = item;
-        autoGenEnvVarParam(parm, item);
+        if (autogen)
+            autoGenEnvVarParam(parm, item);
         varsChanged = true;
     }
     item = QString(data.at(8)).toInt();
     if (devVal[parm] != item)
     {
         devVal[parm] = item;
-        autoGenDevVarParam(parm, item);
+        if (autogen)
+            autoGenDevVarParam(parm, item);
         varsChanged = true;
     }
     item = QString(data.at(12)).toInt();
     if (blkVal[parm] != item)
     {
         blkVal[parm] = item;
-        autoGenBlkVarParam(parm, item, QString(data.at(13)).toInt(), data);
+        if (autogen)
+            autoGenBlkVarParam(parm, item, QString(data.at(13)).toInt(), data);
         varsChanged = true;
     }
     item = QString(data.at(13)).toInt();
     if (blkFxn[parm] != item)
     {
         blkFxn[parm] = item;
-        autoGenBlkVarParam(parm, QString(data.at(12)).toInt(), item, data);
+        if (autogen)
+            autoGenBlkVarParam(parm, QString(data.at(12)).toInt(), item, data);
         varsChanged = true;
     }
     tableUsed[parm] = (envVal[parm] != 0) ||

@@ -1,13 +1,14 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.3.13.05
+        Stock Synthesis ver 3.30 GUI Interface ver 3.3.13.06
         ----------------------------------------------------
 
 This GUI is created to display input to the Stock Synthesis application,
-allow for changes to the data, run the executable, and display results.
+versions 3.30.13 and 3.30.14. It allows the user to change the data,
+run the executable, and display results.
 
-Currently, the only results displayed are the files warnings.sso and
-echoinput.sso and the TIME-SERIES charts from Report.sso.
+Currently, the only results displayed are the TIME-SERIES charts from
+Report.sso, files warnings.sso, and echoinput.sso.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
 
@@ -17,10 +18,19 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.3.13.05
-    2019-05-17
-1. Corrected all recruitment curves.
-2. Added selectable SPR value to survivorship equation.
+    3.30.14.01
+    2019-07-18
+1. Read/write/display of these parameters is fixed:
+    a. age Natural Mort values (last one was truncated)
+    b. recruitment parameters (the last three were set to defaults)
+    c. selectivity parameters (in some cases, age selex were set to defaults)
+2. Fixed problem reading some models and changing between models.
+3. Re-arranged growth parameters - split up female/male to separate tabs.
+4. Version number changed to mimic SS version.
+============================================================================
+    3.3.13.06
+    2019-06-28
+1. Read/write/display of all parameters is fixed.
 ============================================================================
     3.3.13.04
     2019-04-26

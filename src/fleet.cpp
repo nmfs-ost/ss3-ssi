@@ -341,10 +341,10 @@ void Fleet::reset()
     q_R->reset();
 
     //   size selex
-    size_selex->setPattern(0);
+    size_selex->reset();
 
     //   age selex
-    age_selex->setPattern(0);
+    age_selex->reset();
 
     // Variance
     add_to_survey_CV = 0;
@@ -948,7 +948,7 @@ int Fleet::getLambdaSizeFreq(int index)
 void Fleet::appendLambda(QStringList values)
 {
     int rows = lambdaModel->rowCount();
-    lambdaModel->setRowCount(rows + 1);
+//    lambdaModel->setRowCount(rows + 1);
     lambdaModel->setRowData(rows, values);
 }
 

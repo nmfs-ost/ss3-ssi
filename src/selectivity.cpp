@@ -32,10 +32,17 @@ selectivity::selectivity(ss_model *model, int method)
     setMethod(method);
 }
 
+void selectivity::reset()
+{
+    QStringList values;
+    values << "0" << "0" << "0" << "0";
+    setSetup(values);
+}
+
 void selectivity::connectSigs()
 {
-//    connect (setup, SIGNAL(dataChanged(QList<int>)),
-//             SLOT(setSetup(QList<int>)));
+    connect (setup, SIGNAL(dataChanged(QList<int>)),
+             SIGNAL(setupChanged(QStringList)));
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
     connect (discardParameters, SIGNAL(paramChanged(int,QStringList)),
@@ -48,8 +55,8 @@ void selectivity::connectSigs()
 
 void selectivity::disconnectSigs()
 {
-//    disconnect (setup, SIGNAL(dataChanged(QList<int>)),
-//             SLOT(setSetup(QList<int>)));
+    disconnect (setup, SIGNAL(dataChanged(QList<int>)),
+             this, SIGNAL(setupChanged(QStringList)));
     disconnect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
     disconnect (discardParameters, SIGNAL(paramChanged(int,QStringList)),
@@ -97,6 +104,22 @@ void selectivity::setSetup(QList<int> values)
 }
 
 void selectivity::setTVautogenerate(int val)
+{
+    varParameters->setAutoGenerate(val);
+//    for (int i = 0; i < getNumParameters(); i++)
+//        varParameters->changeVarParamData(i, getParameter(i));
+    retainVarParameters->setAutoGenerate(val);
+//    for (int i = 0; i < getNumRetainParameters(); i++)
+//        retainVarParameters->changeVarParamData(i, getRetainParameter(i));
+    discardVarParameters->setAutoGenerate(val);
+//    for (int i = 0; i < getNumDiscardParameters(); i++)
+//        discardVarParameters->changeVarParamData(i, getDiscardParameter(i));
+    maleVarParameters->setAutoGenerate(val);
+//    for (int i = 0; i < getNumMaleParameters(); i++)
+//        maleVarParameters->changeVarParamData(i, getMaleParameter(i));
+}
+
+void selectivity::changeTVautogenerate(int val)
 {
     varParameters->setAutoGenerate(val);
     for (int i = 0; i < getNumParameters(); i++)
@@ -1106,7 +1129,7 @@ int selectivity::getNumGenders() const
 void selectivity::setNumGenders(int value)
 {
     numGenders = value;
-    setDefaultParams(getPattern(), getSpecial());
+//    setDefaultParams(getPattern(), getSpecial());
 }
 
 int selectivity::getNumParameters()

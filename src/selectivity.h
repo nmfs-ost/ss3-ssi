@@ -31,6 +31,7 @@ public:
     void setAgeBins (const QStringList &value) {setXVals(value);}
     void setLenBins (const QStringList &value) {setXVals(value);}
 
+    void reset();
     void connectSigs ();
     void disconnectSigs ();
 
@@ -61,6 +62,7 @@ public slots:
     const QStringList getSetup () {return setup->getData();}
     void setSetup(QList<int> values);
     void setTVautogenerate (int val);
+    void changeTVautogenerate (int val);
 
     tablemodel *getSetupModel () {return setup->getTable();}
 
