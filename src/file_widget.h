@@ -118,13 +118,22 @@ public slots:
 
     bool read_starter_file(QString filename = QString(""));
     int read_run_num_file (QString filename = QString(""));
-//    int read_profile_file (QString filename = QString(""));
+
+/*    bool read33_dataFile(ss_file *d_file, ss_model *data);
+    bool read33_forecastFile(ss_file *f_file, ss_model *data);
+    bool read33_controlFile(ss_file *c_file, ss_model *data);
+    bool read33_parameterFile(ss_file *pr_file, ss_model *data);
+    bool read33_profileFile(ss_file *pf_file, ss_model *data);*/
 
     void write_files ();
 
     void write_starter_file (QString filename = QString(""));
     void write_run_num_file (QString filename = QString(""));
-//    void write_profile_file (QString filename = QString(""));
+/*    int write33_dataFile (ss_file *d_file, ss_model *data);
+    int write33_forecastFile (ss_file *f_file, ss_model *data);
+    int write33_controlFile (ss_file *c_file, ss_model *data);
+    int write33_parameterFile (ss_file *pr_file, ss_model *data);
+    int write33_profileFile(ss_file *pf_file, ss_model *data);*/
 
     void print_files ();
 
@@ -155,6 +164,7 @@ signals:
     void save_control_file();
     void choose_data_file();
     void save_data_file();
+    void read_all_files();
     void files_read();
 
 private slots:

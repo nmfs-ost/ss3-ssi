@@ -40,6 +40,11 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     parameterFile = new ss_file(PARAMETER_FILE, this);
     profileFile = new ss_file(PROFILE_VAL_FILE, this);
     userDataFile = nullptr;
+    connect (starterFile, SIGNAL(end_reading_file()), SLOT(reset()));
+    connect (forecastFile, SIGNAL(end_reading_file()), SLOT(reset()));
+    connect (dataFile, SIGNAL(end_reading_file()), SLOT(reset()));
+    connect (controlFile, SIGNAL(end_reading_file()), SLOT(reset()));
+    connect (parameterFile, SIGNAL(end_reading_file()), SLOT(reset()));
 
     model_info = mod;
 
@@ -48,7 +53,7 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     ui->label_check_value->setVisible(false);
     ui->label_check_value_info->setVisible(false);
 
-    connect (ui->toolButton_file_read, SIGNAL(clicked()), SLOT(read_files()));
+    connect (ui->toolButton_file_read, SIGNAL(clicked()), SIGNAL(read_all_files()));
     connect (ui->toolButton_control_file_new, SIGNAL(clicked()), SIGNAL(choose_control_file()));
     connect (ui->toolButton_control_file_save_as, SIGNAL(clicked()), SIGNAL(save_control_file()));
     connect (ui->toolButton_data_file_new, SIGNAL(clicked()), SIGNAL(choose_data_file()));

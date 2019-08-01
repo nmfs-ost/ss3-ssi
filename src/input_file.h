@@ -104,8 +104,10 @@ protected:
 
 
 signals:
-    
+    void end_reading_file();
+
 public slots:
+    bool reset ();
     int error (QString msg);
     int message (QString msg);
 

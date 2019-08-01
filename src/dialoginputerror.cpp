@@ -134,9 +134,14 @@ void DialogInputError::buttonClicked(QAbstractButton *btn)
         floatVal = intVal = -999999;
         hide();
     }
-    if      (btn->text().contains("Restore"))
+    if (btn->text().contains("Restore"))
     {
         ui->lineEdit_newValue->setText(QString::number(floatDefault));
+    }
+    else if (btn->text().contains("Retry"))
+    {
+        floatVal = intVal = 1000000;
+        hide();
     }
     else
     {

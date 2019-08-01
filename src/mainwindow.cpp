@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMessageBox::information(this, "Information - program flow", "Widget set up finished.");
 #endif
 
+    connect (files, SIGNAL(read_all_files()), SLOT(readFiles()));
     connect (files, SIGNAL(save_data_file()), SLOT(saveDataFile()));
     connect (files, SIGNAL(choose_data_file()),SLOT(openDataFile()));
     connect (files, SIGNAL(save_control_file()), SLOT(saveControlFile()));

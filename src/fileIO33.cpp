@@ -2027,7 +2027,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // recruitment distribution designs
-        index = c_file->getIntValue(QString("Recruitment distribution method"), 1, 3, 1);
+        index = c_file->getIntValue(QString("Recruitment distribution method"), 2, 4, 1);
         pop->SR()->setDistribMethod(index);
         temp_int = c_file->getIntValue(QString("Recruitment distribution area"), 1, 2, 1);
         pop->SR()->setDistribArea(temp_int);

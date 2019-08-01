@@ -6,14 +6,11 @@ ss_file::ss_file(QString name, QObject *parent) :
     QFile(parent)
 {
     setFileName(name);
-    line_num = 0;
-    wait = false;
-    current_line = new QString("");
-    current_tokens = new QStringList(*current_line);
-    current_tokens->clear();
+    reset();
 
     inputErrDialog = new DialogInputError();
     inputErrDialog->setFileName(fileName());
+    connect (this, SIGNAL(end_reading_file()), SLOT(reset()));
 }
 
 ss_file::~ss_file ()
@@ -23,10 +20,24 @@ ss_file::~ss_file ()
     delete current_tokens;
 }
 
+bool ss_file::reset()
+{
+    // reset and close
+    line_num = 0;
+    wait = false;
+    current_line = new QString("");
+    current_tokens = new QStringList(*current_line);
+    current_tokens->clear();
+    if (isOpen()) {
+        seek(0);
+        close();
+    }
+    return QFile::reset();
+}
 
 QString ss_file::read_line()
 {
-    if (atEnd())
+    if (atEnd() || !isOpen())
         return QString("EOF");
     else
     {
@@ -334,8 +345,10 @@ float ss_file::checkFloatValue(float val, QString desc, float min, float max, fl
         {
             QMessageBox::critical(0, QString("Exit on Reading Error"),
                   QString("User has aborted application while reading files"));
-            exit(-999999);
+            exit(val);
         }
+        if (val > 999999)
+            emit end_reading_file();
     }
     return val;
 }
@@ -358,8 +371,10 @@ int ss_file::checkIntValue(int val, QString desc, int min, int max, int dfault)
         {
             QMessageBox::critical(0, QString("Exit on Reading Error"),
                   QString("User has aborted application while reading files"));
-            exit(-999999);
+            exit(val);
         }
+        if (val > 999999)
+            emit end_reading_file();
     }
     return val;
 }

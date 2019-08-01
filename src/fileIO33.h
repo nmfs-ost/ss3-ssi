@@ -18,7 +18,6 @@ int write33_dataFile (ss_file *d_file, ss_model *data);
 bool read33_controlFile (ss_file *c_file, ss_model *data);
 int write33_controlFile (ss_file *c_file, ss_model *data);
 
-//void readTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *table, QStringList parmlist, QString header);
 void readTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *paramTable, int varRead, tablemodel *varParamTable);
 int readTimeVaryBlockParams(ss_file *infile, ss_model *data, int value, int fnx, QString hdr, int row, tablemodel *varParamTable);
 int readTimeVaryDevParams (ss_file *infile, ss_model *data, int value, QString hdr, int row, tablemodel *varParamTable);
