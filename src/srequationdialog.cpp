@@ -1502,7 +1502,7 @@ void srEquationDialog::updateShepherdReParm()
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(SRparm2);
     ui->doubleSpinBox_3_trans->setValue(SRparm3);
-    double Shep_top, penalty, SSB_virgin, Recr_virgin;
+    double Shep_top, penalty, SSB_virgin, Recr_virgin = 1;
     double Shep_bot;
     double Shep_top2;
     double Shepherd_c=exp(SRparm3);

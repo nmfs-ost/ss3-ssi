@@ -151,14 +151,14 @@ private:
     tableview *sizeSelexDiscardTVParamsView;
     tableview *sizeSelexMaleParamsView;
     tableview *sizeSelexMaleTVParamsView;
-    equationDialog *selexSizeEqDialog;
+    selexEquationDialog *selexSizeEqDialog;
     DialogInfo * selexSizeInfoDialog;
 
     tableview *ageSelexParamsView;
     tableview *ageSelexTimeVaryParamsView;
     tableview *ageSelexMaleParamsView;
     tableview *ageSelexMaleTVParamsView;
-    equationDialog *selexAgeEqDialog;
+    selexEquationDialog *selexAgeEqDialog;
     DialogInfo * selexAgeInfoDialog;
 
     tableview *lambdaView;

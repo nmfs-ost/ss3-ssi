@@ -27,13 +27,13 @@ namespace Ui {
 class equationDialog;
 }
 
-class equationDialog : public QDialog
+class selexEquationDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit equationDialog(QWidget *parent = 0, QString *typ = new QString(""));
-    ~equationDialog();
+    explicit selexEquationDialog(QWidget *parent = 0, QString *typ = new QString(""));
+    ~selexEquationDialog();
 
     int getSpecial() const;
     void setSpecial(int value);

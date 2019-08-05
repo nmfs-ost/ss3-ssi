@@ -26,7 +26,7 @@ using namespace tk;
 
 double neglog19 = -1.0 * log(19);
 
-equationDialog::equationDialog(QWidget *parent, QString *typ) :
+selexEquationDialog::selexEquationDialog(QWidget *parent, QString *typ) :
     QDialog(parent),
     ui(new Ui::equationDialog)
 {
@@ -148,12 +148,12 @@ equationDialog::equationDialog(QWidget *parent, QString *typ) :
     updating = false;
 }
 
-equationDialog::~equationDialog()
+selexEquationDialog::~selexEquationDialog()
 {
     delete ui;
 }
 
-void equationDialog::setSelex (selectivity *slx)
+void selexEquationDialog::setSelex (selectivity *slx)
 {
     if (selex != nullptr &&
             selex->getNumXvals() > 0)
@@ -171,18 +171,18 @@ void equationDialog::setSelex (selectivity *slx)
     changeSelex();
 }
 
-void equationDialog::changingSelex()
+void selexEquationDialog::changingSelex()
 {
     disconnect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 }
 
-void equationDialog::changedSelex(QStringList ql)
+void selexEquationDialog::changedSelex(QStringList ql)
 {
     connect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
     changeSelex();
 }
 
-void equationDialog::changeSelex()
+void selexEquationDialog::changeSelex()
 {
     restoreAll();
 }
@@ -192,7 +192,7 @@ void equationDialog::changeSelex()
     dataModel = data;
 }*/
 
-void equationDialog::setXvals(const QList<float> &vals)
+void selexEquationDialog::setXvals(const QList<float> &vals)
 {
     float val;
     if (!vals.isEmpty())
@@ -209,7 +209,7 @@ void equationDialog::setXvals(const QList<float> &vals)
     }
 }
 
-void equationDialog::setXvalStrings(const QStringList &vals)
+void selexEquationDialog::setXvalStrings(const QStringList &vals)
 {
     QList<float> f_vals;
 
@@ -235,7 +235,7 @@ void equationDialog::setXvalStrings(const QStringList &vals)
 //    update();
 //}
 
-void equationDialog::setMidBin(float val)
+void selexEquationDialog::setMidBin(float val)
 {
     binMidWidth = val;
     ui->doubleSpinBox_bins_midbin->setValue(val);
@@ -254,19 +254,19 @@ void equationDialog::setMidBin(float val)
         ageList.append(QString(ages.at(i)).toFloat());
 }*/
 
-void equationDialog::setEquationNumber(int num)
+void selexEquationDialog::setEquationNumber(int num)
 {
     equationNum = num;
 }
 
-void equationDialog::setParameters(tablemodel *params)
+void selexEquationDialog::setParameters(tablemodel *params)
 {
     disconnect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
     parameters = params;
     connect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 }
 
-void equationDialog::getParameterValues()
+void selexEquationDialog::getParameterValues()
 {
     QStringList values;
     int switchnum = numParams;
@@ -396,7 +396,7 @@ void equationDialog::getParameterValues()
 //    }
 }
 
-void equationDialog::setParameterValues()
+void selexEquationDialog::setParameterValues()
 {
     QStringList values;
     if (parameters != nullptr)
@@ -472,7 +472,7 @@ void equationDialog::setParameterValues()
     }
 }
 
-void equationDialog::setParameterHeaders()
+void selexEquationDialog::setParameterHeaders()
 {
     QString fltNum(QString::number(fleetNum));
     QString fltTyp;
@@ -490,13 +490,13 @@ void equationDialog::setParameterHeaders()
     }
 }
 
-void equationDialog::refresh()
+void selexEquationDialog::refresh()
 {
     ui->doubleSpinBox_bins_midbin->setValue(binMidWidth);
     restoreAll();
 }
 
-void equationDialog::update()
+void selexEquationDialog::update()
 {
     if (parameters == nullptr)
         return;
@@ -673,7 +673,7 @@ void equationDialog::update()
     QDialog::update();
 }
 
-void equationDialog::updateSel()
+void selexEquationDialog::updateSel()
 {
     if (parameters == nullptr)
         return;
@@ -802,7 +802,7 @@ void equationDialog::updateSel()
     }
 }
 
-void equationDialog::setSlider1(double min, double max, double value)
+void selexEquationDialog::setSlider1(double min, double max, double value)
 {
     min1 = min; max1 = max;
     ui->doubleSpinBox_1_max->setValue(max1);
@@ -815,13 +815,13 @@ void equationDialog::setSlider1(double min, double max, double value)
     ui->doubleSpinBox_1_value->setValue(value);
 }
 
-void equationDialog::slider1Changed(int value)
+void selexEquationDialog::slider1Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_1_value->setValue(val);
 }
 
-void equationDialog::value1Changed (double value)
+void selexEquationDialog::value1Changed (double value)
 {
     if (val1 != value)
     {
@@ -831,7 +831,7 @@ void equationDialog::value1Changed (double value)
     }
 }
 
-void equationDialog::min1Changed (double value)
+void selexEquationDialog::min1Changed (double value)
 {
     if (min1 != value)
     {
@@ -846,7 +846,7 @@ void equationDialog::min1Changed (double value)
     }
 }
 
-void equationDialog::max1Changed (double value)
+void selexEquationDialog::max1Changed (double value)
 {
     if (max1 != value)
     {
@@ -861,7 +861,7 @@ void equationDialog::max1Changed (double value)
     }
 }
 
-void equationDialog::setSlider2(float min, float max, float value)
+void selexEquationDialog::setSlider2(float min, float max, float value)
 {
     min2 = min; max2 = max;
     ui->doubleSpinBox_2_max->setValue(max2);
@@ -874,13 +874,13 @@ void equationDialog::setSlider2(float min, float max, float value)
     ui->doubleSpinBox_2_value->setValue(value);
 }
 
-void equationDialog::slider2Changed(int value)
+void selexEquationDialog::slider2Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_2_value->setValue(val);
 }
 
-void equationDialog::value2Changed (double value)
+void selexEquationDialog::value2Changed (double value)
 {
     if (val2 != value)
     {
@@ -890,7 +890,7 @@ void equationDialog::value2Changed (double value)
     }
 }
 
-void equationDialog::min2Changed (double value)
+void selexEquationDialog::min2Changed (double value)
 {
     if (min2 != value)
     {
@@ -905,7 +905,7 @@ void equationDialog::min2Changed (double value)
     }
 }
 
-void equationDialog::max2Changed (double value)
+void selexEquationDialog::max2Changed (double value)
 {
     if (max2 != value)
     {
@@ -920,7 +920,7 @@ void equationDialog::max2Changed (double value)
     }
 }
 
-void equationDialog::setSlider3(float min, float max, float value)
+void selexEquationDialog::setSlider3(float min, float max, float value)
 {
     min3 = min; max3 = max;
     ui->doubleSpinBox_3_max->setValue(max3);
@@ -933,13 +933,13 @@ void equationDialog::setSlider3(float min, float max, float value)
     ui->doubleSpinBox_3_value->setValue(value);
 }
 
-void equationDialog::slider3Changed(int value)
+void selexEquationDialog::slider3Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_3_value->setValue(val);
 }
 
-void equationDialog::value3Changed (double value)
+void selexEquationDialog::value3Changed (double value)
 {
     if (val3 != value)
     {
@@ -949,7 +949,7 @@ void equationDialog::value3Changed (double value)
     }
 }
 
-void equationDialog::min3Changed (double value)
+void selexEquationDialog::min3Changed (double value)
 {
     if (min3 != value)
     {
@@ -964,7 +964,7 @@ void equationDialog::min3Changed (double value)
     }
 }
 
-void equationDialog::max3Changed (double value)
+void selexEquationDialog::max3Changed (double value)
 {
     if (max3 != value)
     {
@@ -979,7 +979,7 @@ void equationDialog::max3Changed (double value)
     }
 }
 
-void equationDialog::setSlider4(float min, float max, float value)
+void selexEquationDialog::setSlider4(float min, float max, float value)
 {
     min4 = min; max4 = max;
     ui->doubleSpinBox_4_max->setValue(max4);
@@ -992,13 +992,13 @@ void equationDialog::setSlider4(float min, float max, float value)
     ui->doubleSpinBox_4_value->setValue(value);
 }
 
-void equationDialog::slider4Changed(int value)
+void selexEquationDialog::slider4Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_4_value->setValue(val);
 }
 
-void equationDialog::value4Changed (double value)
+void selexEquationDialog::value4Changed (double value)
 {
     if (val4 != value)
     {
@@ -1008,7 +1008,7 @@ void equationDialog::value4Changed (double value)
     }
 }
 
-void equationDialog::min4Changed (double value)
+void selexEquationDialog::min4Changed (double value)
 {
     if (min4 != value)
     {
@@ -1023,7 +1023,7 @@ void equationDialog::min4Changed (double value)
     }
 }
 
-void equationDialog::max4Changed (double value)
+void selexEquationDialog::max4Changed (double value)
 {
     if (max4 != value)
     {
@@ -1038,7 +1038,7 @@ void equationDialog::max4Changed (double value)
     }
 }
 
-void equationDialog::setSlider5(float min, float max, float value)
+void selexEquationDialog::setSlider5(float min, float max, float value)
 {
     min5 = min; max5 = max;
     ui->doubleSpinBox_5_max->setValue(max5);
@@ -1051,13 +1051,13 @@ void equationDialog::setSlider5(float min, float max, float value)
     ui->doubleSpinBox_5_value->setValue(value);
 }
 
-void equationDialog::slider5Changed(int value)
+void selexEquationDialog::slider5Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_5_value->setValue(val);
 }
 
-void equationDialog::value5Changed (double value)
+void selexEquationDialog::value5Changed (double value)
 {
     if (val5 != value)
     {
@@ -1067,7 +1067,7 @@ void equationDialog::value5Changed (double value)
     }
 }
 
-void equationDialog::min5Changed (double value)
+void selexEquationDialog::min5Changed (double value)
 {
     if (min5 != value)
     {
@@ -1082,7 +1082,7 @@ void equationDialog::min5Changed (double value)
     }
 }
 
-void equationDialog::max5Changed (double value)
+void selexEquationDialog::max5Changed (double value)
 {
     if (max5 != value)
     {
@@ -1097,7 +1097,7 @@ void equationDialog::max5Changed (double value)
     }
 }
 
-void equationDialog::setSlider6(float min, float max, float value)
+void selexEquationDialog::setSlider6(float min, float max, float value)
 {
     min6 = min; max6 = max;
     ui->doubleSpinBox_6_max->setValue(max6);
@@ -1110,13 +1110,13 @@ void equationDialog::setSlider6(float min, float max, float value)
     ui->doubleSpinBox_6_value->setValue(value);
 }
 
-void equationDialog::slider6Changed(int value)
+void selexEquationDialog::slider6Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_6_value->setValue(val);
 }
 
-void equationDialog::value6Changed (double value)
+void selexEquationDialog::value6Changed (double value)
 {
     if (val6 != value)
     {
@@ -1126,7 +1126,7 @@ void equationDialog::value6Changed (double value)
     }
 }
 
-void equationDialog::min6Changed (double value)
+void selexEquationDialog::min6Changed (double value)
 {
     if (min6 != value)
     {
@@ -1141,7 +1141,7 @@ void equationDialog::min6Changed (double value)
     }
 }
 
-void equationDialog::max6Changed (double value)
+void selexEquationDialog::max6Changed (double value)
 {
     if (max6 != value)
     {
@@ -1156,7 +1156,7 @@ void equationDialog::max6Changed (double value)
     }
 }
 
-void equationDialog::setSlider7(float min, float max, float value)
+void selexEquationDialog::setSlider7(float min, float max, float value)
 {
     min7 = min; max7 = max;
     ui->doubleSpinBox_7_max->setValue(max7);
@@ -1169,13 +1169,13 @@ void equationDialog::setSlider7(float min, float max, float value)
     ui->doubleSpinBox_7_value->setValue(value);
 }
 
-void equationDialog::slider7Changed(int value)
+void selexEquationDialog::slider7Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_7_value->setValue(val);
 }
 
-void equationDialog::value7Changed (double value)
+void selexEquationDialog::value7Changed (double value)
 {
     if (val7 != value)
     {
@@ -1185,7 +1185,7 @@ void equationDialog::value7Changed (double value)
     }
 }
 
-void equationDialog::min7Changed (double value)
+void selexEquationDialog::min7Changed (double value)
 {
     if (min7 != value)
     {
@@ -1200,7 +1200,7 @@ void equationDialog::min7Changed (double value)
     }
 }
 
-void equationDialog::max7Changed (double value)
+void selexEquationDialog::max7Changed (double value)
 {
     if (max7 != value)
     {
@@ -1215,7 +1215,7 @@ void equationDialog::max7Changed (double value)
     }
 }
 
-void equationDialog::setSlider8(float min, float max, float value)
+void selexEquationDialog::setSlider8(float min, float max, float value)
 {
     min8 = min; max8 = max;
     ui->doubleSpinBox_8_max->setValue(max8);
@@ -1228,13 +1228,13 @@ void equationDialog::setSlider8(float min, float max, float value)
     ui->doubleSpinBox_8_value->setValue(value);
 }
 
-void equationDialog::slider8Changed(int value)
+void selexEquationDialog::slider8Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_8_value->setValue(val);
 }
 
-void equationDialog::value8Changed (double value)
+void selexEquationDialog::value8Changed (double value)
 {
     if (val8 != value)
     {
@@ -1244,7 +1244,7 @@ void equationDialog::value8Changed (double value)
     }
 }
 
-void equationDialog::min8Changed (double value)
+void selexEquationDialog::min8Changed (double value)
 {
     if (min8 != value)
     {
@@ -1259,7 +1259,7 @@ void equationDialog::min8Changed (double value)
     }
 }
 
-void equationDialog::max8Changed (double value)
+void selexEquationDialog::max8Changed (double value)
 {
     if (max8 != value)
     {
@@ -1270,7 +1270,7 @@ void equationDialog::max8Changed (double value)
     }
 }
 
-void equationDialog::setSlider9(float min, float max, float value)
+void selexEquationDialog::setSlider9(float min, float max, float value)
 {
     min9 = min; max9 = max;
     ui->doubleSpinBox_9_max->setValue(max9);
@@ -1283,13 +1283,13 @@ void equationDialog::setSlider9(float min, float max, float value)
     ui->doubleSpinBox_9_value->setValue(value);
 }
 
-void equationDialog::slider9Changed(int value)
+void selexEquationDialog::slider9Changed(int value)
 {
     double val = (double)value * VALUE_SCALE;
     ui->doubleSpinBox_9_value->setValue(val);
 }
 
-void equationDialog::value9Changed (double value)
+void selexEquationDialog::value9Changed (double value)
 {
     if (val9 != value)
     {
@@ -1299,7 +1299,7 @@ void equationDialog::value9Changed (double value)
     }
 }
 
-void equationDialog::min9Changed (double value)
+void selexEquationDialog::min9Changed (double value)
 {
     if (min9 != value)
     {
@@ -1314,7 +1314,7 @@ void equationDialog::min9Changed (double value)
     }
 }
 
-void equationDialog::max9Changed (double value)
+void selexEquationDialog::max9Changed (double value)
 {
     if (max9 != value)
     {
@@ -1330,49 +1330,49 @@ void equationDialog::max9Changed (double value)
 }
 
 
-void equationDialog::binMinChanged (int value)
+void selexEquationDialog::binMinChanged (int value)
 {
     binMin = value;
     update();
 }
 
-void equationDialog::binMaxChanged (int value)
+void selexEquationDialog::binMaxChanged (int value)
 {
     binMax = value;
     update();
 }
 
-void equationDialog::binWidthChanged (int value)
+void selexEquationDialog::binWidthChanged (int value)
 {
     binWidth = value;
     update();
 }
 
-void equationDialog::binMidChanged (double value)
+void selexEquationDialog::binMidChanged (double value)
 {
     binMidWidth = value;
     update();
 }
 
-void equationDialog::join1Changed (int value)
+void selexEquationDialog::join1Changed (int value)
 {
     join1 = value;
     emit numbersUpdated();
 }
 
-void equationDialog::join2Changed (int value)
+void selexEquationDialog::join2Changed (int value)
 {
     join2 = value;
     emit numbersUpdated();
 }
 
-void equationDialog::join3Changed (int value)
+void selexEquationDialog::join3Changed (int value)
 {
     join3 = value;
     emit numbersUpdated();
 }
 
-void equationDialog::apply()
+void selexEquationDialog::apply()
 {
     // set input spinboxes
     ui->doubleSpinBox_1_input->setRange(min1, max1);
@@ -1398,13 +1398,13 @@ void equationDialog::apply()
 //    getParameterValues();
 }
 
-void equationDialog::reset()
+void selexEquationDialog::reset()
 {
     resetValues();
     emit numbersUpdated();
 }
 
-void equationDialog::resetValues()
+void selexEquationDialog::resetValues()
 {
 //    if (!building)
     {
@@ -1453,7 +1453,7 @@ void equationDialog::resetValues()
     }
 }
 
-void equationDialog::restoreAll()
+void selexEquationDialog::restoreAll()
 {
     setXvals(selex->getXVals());
     if (!xValList.isEmpty())
@@ -1477,13 +1477,13 @@ void equationDialog::restoreAll()
     update();
 }
 
-void equationDialog::close()
+void selexEquationDialog::close()
 {
     emit closed();
     hide();
 }
 
-void equationDialog::buttonClicked(QAbstractButton *btn)
+void selexEquationDialog::buttonClicked(QAbstractButton *btn)
 {
     if      (btn->text().contains("Apply")) {
         apply();
@@ -1500,76 +1500,76 @@ void equationDialog::buttonClicked(QAbstractButton *btn)
     }
 }
 
-void equationDialog::closeEvent(QCloseEvent *event)
+void selexEquationDialog::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     emit closed();
 }
 
-void equationDialog::resizeEvent(QResizeEvent *event)
+void selexEquationDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
     updateTicks(cht->rect());
 }
 
-void equationDialog::parametersChanged()
+void selexEquationDialog::parametersChanged()
 {
     getParameterValues();
 //    resetValues();
     emit numbersUpdated();
 }
 
-void equationDialog::setupChanged()
+void selexEquationDialog::setupChanged()
 {
     refresh();
 }
 
-QString equationDialog::getTitle() const
+QString selexEquationDialog::getTitle() const
 {
     return title;
 }
 
-void equationDialog::setTitle(const QString &value)
+void selexEquationDialog::setTitle(const QString &value)
 {
     title = value;
     setWindowTitle(QString("%1 -  %2").arg(name, title));
 }
 
-QString equationDialog::getName() const
+QString selexEquationDialog::getName() const
 {
     return name;
 }
 
-void equationDialog::setName(const QString &value)
+void selexEquationDialog::setName(const QString &value)
 {
     name = value;
     setWindowTitle(name);
 }
 
-Fleet *equationDialog::getFleet() const
+Fleet *selexEquationDialog::getFleet() const
 {
     return fleet;
 }
 
-void equationDialog::setFleet(Fleet *value)
+void selexEquationDialog::setFleet(Fleet *value)
 {
     fleet = value;
     fleetNum = fleet->getNumber();
 }
 
-int equationDialog::getSpecial() const
+int selexEquationDialog::getSpecial() const
 {
     return special;
 }
 
-void equationDialog::setSpecial(int value)
+void selexEquationDialog::setSpecial(int value)
 {
     special = value;
 //    emit numbersUpdated();
 }
 
 
-void equationDialog::showSliders(int num)
+void selexEquationDialog::showSliders(int num)
 {
     ui->label_name->setVisible(false);
     ui->label_value->setVisible(false);
@@ -1780,7 +1780,7 @@ void equationDialog::showSliders(int num)
     }
 }
 
-void equationDialog::showBins(bool flag)
+void selexEquationDialog::showBins(bool flag)
 {
     ui->label_bins->setVisible(flag);
     ui->label_bins_min->setVisible(flag);
@@ -1793,7 +1793,7 @@ void equationDialog::showBins(bool flag)
     ui->doubleSpinBox_bins_midbin->setVisible(flag);
 }
 
-void equationDialog::showJoins(int num)
+void selexEquationDialog::showJoins(int num)
 {
     ui->label_steepness->setVisible(false);
     ui->label_steep_join1->setVisible(false);
@@ -1822,7 +1822,7 @@ void equationDialog::showJoins(int num)
 }
 
 
-void equationDialog::updateTicks(QRectF rect)
+void selexEquationDialog::updateTicks(QRectF rect)
 {
     int xTicks = rect.width() / 100;
     int yTicks = rect.height() / 60;
@@ -1831,7 +1831,7 @@ void equationDialog::updateTicks(QRectF rect)
                 yTicks % 2? yTicks: yTicks + 1);
 }
 
-void equationDialog::updateTicks(int xT, int yT)
+void selexEquationDialog::updateTicks(int xT, int yT)
 {
     axisXsel->setRange((binMin), (binMax + binWidth));
     axisXsel->setTickCount(xT);
@@ -1841,7 +1841,7 @@ void equationDialog::updateTicks(int xT, int yT)
     axisYalt->setTickCount(yT);
 }
 
-void equationDialog::resetChart(bool create)
+void selexEquationDialog::resetChart(bool create)
 {
     ui->label_title->hide();
     if (chartview != nullptr)
@@ -1903,7 +1903,7 @@ void equationDialog::resetChart(bool create)
 }
 
 /* size selectivity 2, 3, 4, 7, */
-void equationDialog::blank (int num, int rep, QString msg)
+void selexEquationDialog::blank (int num, int rep, QString msg)
 {
 //    resetChart();
     // If discontinued
@@ -1934,7 +1934,7 @@ void equationDialog::blank (int num, int rep, QString msg)
 // case 0 constant size selectivity
 // 10 #Constant age-specific selex for ages 1 to nages
 // Size selectivity 0, age selectivity 10 */
-void equationDialog::constant (float val)
+void selexEquationDialog::constant (float val)
 {
     setTitle(QString("Pattern %1: Constant selectivity 1.0").arg(QString::number(equationNum)));
     parameters->setRowCount(0);
@@ -1954,7 +1954,7 @@ void equationDialog::constant (float val)
 }
 
 // Size selectivity 0, age selectivity 10
-void equationDialog::updateConstant (float val)
+void selexEquationDialog::updateConstant (float val)
 {
     float binMid = binWidth * binMidWidth;
     float start;
@@ -1972,7 +1972,7 @@ void equationDialog::updateConstant (float val)
 }
 
 // general constant graph
-void equationDialog::updateConstant (float val, float first, float last)
+void selexEquationDialog::updateConstant (float val, float first, float last)
 {
     float binMid = binWidth * binMidWidth;
     float start = binMin + binMid;
@@ -2002,7 +2002,7 @@ void equationDialog::updateConstant (float val, float first, float last)
 }
 
 // case 11: Constant age-specific selex for specified age range
-void equationDialog::constantRange ()
+void selexEquationDialog::constantRange ()
 {
     setTitle(QString("Pattern %1: Constant selectivity 1.0 within age range").arg(equationNum));
     parameters->setRowCount(2);
@@ -2031,7 +2031,7 @@ void equationDialog::constantRange ()
 }
 
 // 11 #Constant age-specific selex for specified age range
-void equationDialog::updateConstantRange (float val)
+void selexEquationDialog::updateConstantRange (float val)
 {
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
@@ -2057,7 +2057,7 @@ void equationDialog::updateConstantRange (float val)
 // case 1 logistic size selectivity
 // 12 #age selectivity - logistic
 // Size selectivity 1 and age selectivity 12
-void equationDialog::logistic ()
+void selexEquationDialog::logistic ()
 {
     setTitle(QString("Pattern %1: Logistic").arg(equationNum));
     disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
@@ -2088,7 +2088,7 @@ void equationDialog::logistic ()
 }
 
 // Size selectivity 1 and age selectivity 12
-void equationDialog::updateLogistic()
+void selexEquationDialog::updateLogistic()
 {
     float yVal = 0;
     float temp = 0;
@@ -2119,7 +2119,7 @@ void equationDialog::updateLogistic()
 //   parm1 = lo bin; parm2 = hi bin
 // case 15 mirror another fleets size selectivity for all size bins
 // 15 #age selectivity - mirror selex for lower numbered fleet
-void equationDialog::mirror (int sliders)
+void selexEquationDialog::mirror (int sliders)
 {
     int flt = special;
     QString msg (QString("Pattern %1: Mirror of Fleet (%2)").arg(
@@ -2159,7 +2159,7 @@ void equationDialog::mirror (int sliders)
 }
 
 // size selectivity 5 and size and age selectivity 15
-void equationDialog::updateMirror(int sliders)
+void selexEquationDialog::updateMirror(int sliders)
 {
     int flt = special < 1? 1: special;
     if (fleetNum <= flt)
@@ -2212,7 +2212,7 @@ void equationDialog::updateMirror(int sliders)
 
 // size selectivity 6 and age selectivity 43
 // case 21 non-parametric size selectivity
-void equationDialog::linear (float scale)
+void selexEquationDialog::linear (float scale)
 {
     int numNodes = getSpecial(), num = 0;
     QString msg(QString("Pattern %1: Non-parametric, %2 Linear segments").arg(
@@ -2352,7 +2352,7 @@ void equationDialog::linear (float scale)
  *    }
  * I've simplified it to just the points given */
 // case 21 non-parametric size selectivity
-void equationDialog::linearPlain()
+void selexEquationDialog::linearPlain()
 {
     int numNodes = getSpecial(), num = 0;
     float min, max;
@@ -2396,7 +2396,7 @@ void equationDialog::linearPlain()
 }
 
 // age selectivity 43
-void equationDialog::linearScaled ()
+void selexEquationDialog::linearScaled ()
 {
     int numNodes = getSpecial(), num = 0;
     QString msg(QString("Pattern %1: Non-parametric %2 Linear segments").arg(
@@ -2496,7 +2496,7 @@ void equationDialog::linearScaled ()
 }
 
 // size selectivity 6
-void equationDialog::updateLinear(float scale)
+void selexEquationDialog::updateLinear(float scale)
 {
     float y = 0;
     int axisYMax = 0;
@@ -2603,7 +2603,7 @@ void equationDialog::updateLinear(float scale)
 }
 
 // case 21 non-parametric size selectivity
-void equationDialog::updateLinearPlain()
+void selexEquationDialog::updateLinearPlain()
 {
     int i = 0;
     float xVal;
@@ -2625,7 +2625,7 @@ void equationDialog::updateLinearPlain()
 }
 
 // age selectivity 43
-void equationDialog::updateLinearScaled()
+void selexEquationDialog::updateLinearScaled()
 {
     float y = 0;
     int axisYMax = 0;
@@ -2760,7 +2760,7 @@ void equationDialog::updateLinearScaled()
     updateLinearExp(2);
 }
 
-void equationDialog::updateLinearExp(float scale)
+void selexEquationDialog::updateLinearExp(float scale)
 {
     float yVal;
     int first = ui->doubleSpinBox_1_trans->value();
@@ -2798,7 +2798,7 @@ void equationDialog::updateLinearExp(float scale)
     }
 }
 
-float equationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
+float selexEquationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
 {
     float slope = (pt2.y() - pt1.y()) / (pt2.x() - pt1.x());
     float y = slope * (x - pt2.x()) + pt2.y();
@@ -2816,7 +2816,7 @@ float equationDialog::evaluateLine(QPointF pt1, QPointF pt2, float x)
  */
 // case 9 old double logistic with 4 parameters
 // 19 #age selectivity: old double logistic
-void equationDialog::dblLogistic()
+void selexEquationDialog::dblLogistic()
 {
     setTitle(QString("Pattern %1: Simple Double Logistic").arg(
                      QString::number(equationNum)));
@@ -2878,7 +2878,7 @@ void equationDialog::dblLogistic()
         updateDblLogistic();
 }
 
-void equationDialog::updateDblLogistic()
+void selexEquationDialog::updateDblLogistic()
 {
     float maxSel = 0;
     float sel = 0;
@@ -2949,7 +2949,7 @@ void equationDialog::updateDblLogistic()
 // 18 #age selectivity: double logistic with smooth transition
 // 1=peak, 2=init,  3=infl,  4=slope, 5=final, 6=infl2, 7=slope2
 // 1=peak, 2=init,  3=infl,  4=slope, 5=final, 6=infl2, 7=slope2 8=binwidth
-void equationDialog::dblLogPeak()
+void selexEquationDialog::dblLogPeak()
 {
     setTitle(QString("Pattern %1: Double Logistic with IF joins ").arg(
                  QString::number(equationNum)));
@@ -3046,7 +3046,7 @@ void equationDialog::dblLogPeak()
 }
 
 // size selectivity 8
-void equationDialog::updateDblLogPeak()
+void selexEquationDialog::updateDblLogPeak()
 {
     float maxSelX = 0;
     float minVal = binMin + (binWidth * binMidWidth);
@@ -3168,7 +3168,7 @@ void equationDialog::updateDblLogPeak()
 }
 
 // 13 #age selectivity - double logistic
-void equationDialog::updateDblLogIf()
+void selexEquationDialog::updateDblLogIf()
 {
     float maxSelX = 0;
     float minX = xValList.first();
@@ -3224,7 +3224,7 @@ void equationDialog::updateDblLogIf()
 
 }
 
-void equationDialog::updateDblLogSmooth()
+void selexEquationDialog::updateDblLogSmooth()
 {
     float maxSelX = 0;
     float minX = xValList.first();
@@ -3363,7 +3363,7 @@ void equationDialog::updateDblLogSmooth()
  *     }
  * }
 */
-void equationDialog::dblNormCasal()
+void selexEquationDialog::dblNormCasal()
 {
     setTitle(QString("Pattern %1: Double Normal (like CASAL)").arg(
                  QString::number(equationNum)));
@@ -3419,7 +3419,7 @@ void equationDialog::dblNormCasal()
         updateDblNormCasal();
 }
 
-void equationDialog::updateDblNormCasal()
+void selexEquationDialog::updateDblNormCasal()
 {
     float xval, sel, peak2;
     float par1 = ui->doubleSpinBox_1_value->value();
@@ -3474,7 +3474,7 @@ void equationDialog::updateDblNormCasal()
     }
 }
 
-void equationDialog::dblNormal()
+void selexEquationDialog::dblNormal()
 {
     setTitle(QString("Pattern %1: Double Normal").arg(
                  QString::number(equationNum)));
@@ -3542,7 +3542,7 @@ void equationDialog::dblNormal()
         updateDblNormal();
 }
 
-void equationDialog::updateDblNormal()
+void selexEquationDialog::updateDblNormal()
 {
     float xval, sel, peak2;
     float par1 = ui->doubleSpinBox_1_value->value();
@@ -3559,7 +3559,7 @@ void equationDialog::updateDblNormal()
     float dnsel = exp(par4);
 }
 
-void equationDialog::dblNormPlateau()
+void selexEquationDialog::dblNormPlateau()
 {
     setTitle(QString("Pattern %1: Double Normal plateau").arg(
                  QString::number(equationNum)));
@@ -3602,7 +3602,7 @@ void equationDialog::dblNormPlateau()
     updateDblNormPlateau();
 }
 
-void equationDialog::updateDblNormPlateau()
+void selexEquationDialog::updateDblNormPlateau()
 {
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
@@ -3721,7 +3721,7 @@ void equationDialog::updateDblNormPlateau()
 // case 23 size selectivity double_normal_plateau where final value can be greater than 1.0
 // case 24 size selectivity using double_normal_plateau and lots of bells and whistles
 // selex 20, 23, 24
-void equationDialog::dblNormEndpts()
+void selexEquationDialog::dblNormEndpts()
 {
     disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     max1Changed(xValList.last()); min1Changed(xValList.first());
@@ -3813,7 +3813,7 @@ void equationDialog::dblNormEndpts()
     }
 }
 
-void equationDialog::updateDblNormEndpts()
+void selexEquationDialog::updateDblNormEndpts()
 {
     float par1 = ui->doubleSpinBox_1_value->value();
     float par2 = ui->doubleSpinBox_2_value->value();
@@ -3899,7 +3899,7 @@ void equationDialog::updateDblNormEndpts()
               (1.0-sp(3)*(1.0-mfexp(sp(1)*(peak-len_bins_m(j)))));
    }
 */
-void equationDialog::expLogistic()
+void selexEquationDialog::expLogistic()
 {
     setTitle(QString("Pattern %1: Exponential-Logistic").arg(
                  QString::number(equationNum)));
@@ -3930,7 +3930,7 @@ void equationDialog::expLogistic()
         updateExpLogistic();
 }
 
-void equationDialog::updateExpLogistic()
+void selexEquationDialog::updateExpLogistic()
 {
     int xRange = xValList.last() - xValList.first();
     float yVal = 0;
@@ -3962,14 +3962,14 @@ void equationDialog::updateExpLogistic()
 
 /** Returns the logistic of the requested value
  * 1/(1 + exp(-value)) */
-float equationDialog::logist(double value)
+float selexEquationDialog::logist(double value)
 {
     float temp = exp(-value);
     return (1./(1. + temp));
 }
 
 // 14 #age selectivity - separate parm for each age
-void equationDialog::eachAge ()
+void selexEquationDialog::eachAge ()
 {
     setTitle(QString("Pattern %1: Revise Age").arg(
                  QString::number(equationNum)));
@@ -4004,7 +4004,7 @@ void equationDialog::eachAge ()
         updateEachAge();
 }
 
-void equationDialog::updateEachAge ()
+void selexEquationDialog::updateEachAge ()
 {
     float parm = 0.;
     float asc = 0.;
@@ -4063,7 +4063,7 @@ void equationDialog::updateEachAge ()
 
 // 17 #age selectivity: each age has parameter as random walk
 //    transformation is selex=exp(parm); some special codes
-void equationDialog::randomWalk (float scale)
+void selexEquationDialog::randomWalk (float scale)
 {
     setTitle(QString("Pattern %1: Random Walk").arg(
                  QString::number(equationNum)));
@@ -4095,7 +4095,7 @@ void equationDialog::randomWalk (float scale)
         updateRandomWalk(scale);
 }
 
-void equationDialog::updateRandomWalk (float scale)
+void selexEquationDialog::updateRandomWalk (float scale)
 {
     float useparm = 0.;
     float sel = 0.;
@@ -4203,7 +4203,7 @@ void equationDialog::updateRandomWalk (float scale)
 }
 
 // case 16 Coleraine - Gaussian age selectivity
-void equationDialog::coleGauss ()
+void selexEquationDialog::coleGauss ()
 {
     setTitle(QString("Pattern %1: Coleraine single Gaussian").arg(
                  QString::number(equationNum)));
@@ -4246,7 +4246,7 @@ void equationDialog::coleGauss ()
       }
     }
  */
-void equationDialog::updateColeGauss()
+void selexEquationDialog::updateColeGauss()
 {
     int i;
     float temp = 0;
@@ -4278,7 +4278,7 @@ void equationDialog::updateColeGauss()
 //  scaled by max(raw vector) to achieve scale to 1.0
 // case 42 size and selectivity using cubic spline
 //  scaled by average of values at low bin through high bin
-void equationDialog::cubicSpline(float scale)
+void selexEquationDialog::cubicSpline(float scale)
 {
     int num = parameters->rowCount();
 
@@ -4354,7 +4354,7 @@ void equationDialog::cubicSpline(float scale)
     }
 }
 
-void equationDialog::updateCubicSpline(float scale)
+void selexEquationDialog::updateCubicSpline(float scale)
 {
     float xval = 0, yval = 0;
     int start = 3 + scale;
@@ -4515,7 +4515,7 @@ void equationDialog::updateCubicSpline(float scale)
 }
 
 // 44 like age selex 17 but with separate parameters for males and with revised controls
-void equationDialog::twoSexRandomWalk()
+void selexEquationDialog::twoSexRandomWalk()
 {
     setTitle(QString("Pattern %1: Random Walk - female/male").arg(
                  QString::number(equationNum)));
@@ -4561,7 +4561,7 @@ void equationDialog::twoSexRandomWalk()
     updateTwoSexRandom();
 }
 
-void equationDialog::updateTwoSexRandom()
+void selexEquationDialog::updateTwoSexRandom()
 {
     float useparm = 0.;
     float sel = 0.;
@@ -4666,7 +4666,7 @@ void equationDialog::updateTwoSexRandom()
 }
 
 // 45 similar to selex 14 but with separate parameters for males and with revised controls
-void equationDialog::twoSexEachAge()
+void selexEquationDialog::twoSexEachAge()
 {
     setTitle(QString("Pattern %1: Revise Age - female/male").arg(
                  QString::number(equationNum)));
@@ -4729,7 +4729,7 @@ void equationDialog::twoSexEachAge()
     updateTwoSexEachAge();
 }
 
-void equationDialog::updateTwoSexEachAge()
+void selexEquationDialog::updateTwoSexEachAge()
 {
     float parmfm = 0.;
     float parmml = 0.;
@@ -4845,7 +4845,7 @@ void equationDialog::updateTwoSexEachAge()
 }
 
 /** Returns the minimum x-value of a point list */
-float equationDialog::minXvalue(const QList<QPointF> &pointlist)
+float selexEquationDialog::minXvalue(const QList<QPointF> &pointlist)
 {
     float value = 1000;
     for (int i = 0; i < pointlist.count(); i++)
@@ -4857,7 +4857,7 @@ float equationDialog::minXvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the maximum x-value of a point list */
-float equationDialog::maxXvalue(const QList<QPointF> &pointlist)
+float selexEquationDialog::maxXvalue(const QList<QPointF> &pointlist)
 {
     float value = -1000;
     for (int i = 0; i < pointlist.count(); i++)
@@ -4869,7 +4869,7 @@ float equationDialog::maxXvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the minimum y-value of a point list */
-float equationDialog::minYvalue(const QList<QPointF> &pointlist)
+float selexEquationDialog::minYvalue(const QList<QPointF> &pointlist)
 {
     float value = 1000;
     for (int i = 0; i < pointlist.count(); i++)
@@ -4881,7 +4881,7 @@ float equationDialog::minYvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the maximum y-value of a point list */
-float equationDialog::maxYvalue(const QList<QPointF> &pointlist)
+float selexEquationDialog::maxYvalue(const QList<QPointF> &pointlist)
 {
     float value = -1000;
     for (int i = 0; i < pointlist.count(); i++)
@@ -4893,7 +4893,7 @@ float equationDialog::maxYvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the average of the values of a float list */
-float equationDialog::aveXvalue(const QList<float> &xvals)
+float selexEquationDialog::aveXvalue(const QList<float> &xvals)
 {
     float value = 0.;
     int i = 0;
@@ -4904,7 +4904,7 @@ float equationDialog::aveXvalue(const QList<float> &xvals)
 }
 
 /** Returns the average of the y-values of a point list */
-float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
+float selexEquationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
 {
     float value = 0.;
     float count = 0.0;
@@ -4930,7 +4930,7 @@ float equationDialog::aveYvalue(const QList<QPointF> &pointlist, int start, int 
     return (value / count);
 }
 
-void equationDialog::fillValues(const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints)
+void selexEquationDialog::fillValues(const QList<QPointF> fewpoints, QList<float> xvals, QList<QPointF> &fullpoints)
 {
     int i = 0, j =0;
     float yVal = 0;
