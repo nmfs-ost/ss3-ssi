@@ -1,30 +1,26 @@
-#include "parameterview.h"
-#include "ui_parameterview.h"
+#include "dialogparameterview.h"
+#include "ui_dialogparameterview.h"
 
 #include <cmath>
 
-parameterView::parameterView(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::parameterView)
+DialogParameterView::DialogParameterView(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::DialogParameterView)
 {
     ui->setupUi(this);
+    setTitle("");
+
 }
 
-parameterView::~parameterView()
-{
+DialogParameterView::~DialogParameterView() {
+    clearAll();
     delete ui;
 }
 
-void parameterView::setParameterTable(tablemodel *params)
-{
-    parameters = params;
-    connect (parameters, SIGNAL(dataChanged()), SLOT(paramsChanged()));
-    paramsChanged();
-}
+void DialogParameterView::clearAll() {
+    if (pLabel.isEmpty())
+        return;
 
-void parameterView::paramsChanged() {
-    int num = parameters->rowCount();
-    QStringList paramvalues;
     while (pLabel.count() > 0) {
         delete pLabel.takeLast();
         delete pMin.takeLast();
@@ -35,6 +31,27 @@ void parameterView::paramsChanged() {
         delete pType.takeLast();
         delete eInput.takeLast();
     }
+}
+
+void DialogParameterView::setTitle(QString title) {
+    QDialog::setWindowTitle(QString("%1 Parameters").arg(title));
+}
+
+void DialogParameterView::setParameterTable(tablemodel *params)
+{
+    parameters = params;
+    connect (parameters, SIGNAL(dataChanged()), SLOT(paramsChanged()));
+    paramsChanged();
+}
+
+int DialogParameterView::getNumParameters() {
+    return parameters->rowCount();
+}
+
+void DialogParameterView::paramsChanged() {
+    int num = parameters->rowCount();
+    QStringList paramvalues;
+    clearAll();
 
     for (int i = 0; i < num; i++) {
         int rownum = i + 1;
@@ -69,26 +86,26 @@ void parameterView::paramsChanged() {
     }
 }
 
-void parameterView::setSliderRange(int pnum, double min, double max) {
+void DialogParameterView::setSliderRange(int pnum, double min, double max) {
     int intmin = static_cast<int>(min * 1000.0);
     int intmax = static_cast<int>(max * 1000.0);
     pSlider.at(pnum)->setRange(intmin, intmax);
 }
 
-void parameterView::setName(int pnum, QString name) {
+void DialogParameterView::setName(int pnum, QString name) {
     if (pLabel.count() > pnum) {
         pLabel.at(pnum)->setText(name);
     }
 }
 
-void parameterView::setType(int pnum, QString type) {
+void DialogParameterView::setType(int pnum, QString type) {
     if (pType.count() > pnum) {
         pType.at(pnum)->setText(type);
         convertToInput (pnum);
     }
 }
 
-void parameterView::sliderChanged(int pnum, int value) {
+void DialogParameterView::sliderChanged(int pnum, int value) {
     int check = static_cast<int>(sValue.at(pnum)->value() * 1000.0);
     if (value != check)
     {
@@ -97,7 +114,7 @@ void parameterView::sliderChanged(int pnum, int value) {
     }
 }
 
-void parameterView::sValueChanged(int pnum, double value) {
+void DialogParameterView::sValueChanged(int pnum, double value) {
     int check = static_cast<int>(value * 1000.0);
     int svalue = pSlider.at(pnum)->value();
 
@@ -108,7 +125,7 @@ void parameterView::sValueChanged(int pnum, double value) {
     }
 }
 
-void parameterView::convertToInput(int pnum) {
+void DialogParameterView::convertToInput(int pnum) {
     double value = sValue.at(pnum)->value();
     QString txt = pType.at(pnum)->text();
     if (txt.contains("exp", Qt::CaseInsensitive)) {
@@ -120,18 +137,18 @@ void parameterView::convertToInput(int pnum) {
 
 }
 
-double parameterView::getInput(int pnum) {
+double DialogParameterView::getInput(int pnum) {
     double val = -1.0;
     if (eInput.count() > pnum)
         val = eInput.at(pnum)->value();
     return val;
 }
 
-void parameterView::cancel() {
+void DialogParameterView::cancel() {
     hide();
 }
 
-void parameterView::reset() {
+void DialogParameterView::reset() {
     for (int i = 0; i < parameters->rowCount(); i++) {
         QStringList paramvalues = parameters->getRowData(i);
         pMin.at(i)->setValue(paramvalues.at(0).toDouble());
@@ -142,7 +159,7 @@ void parameterView::reset() {
     }
 }
 
-void parameterView::apply() {
+void DialogParameterView::apply() {
     for (int i = 0; i < parameters->rowCount(); i++) {
         QStringList paramvalues = parameters->getRowData(i);
         paramvalues[0] = QString::number(pMin.at(i)->value());

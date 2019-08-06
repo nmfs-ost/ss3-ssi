@@ -831,7 +831,7 @@ void srEquationDialog::updateGrid(QRectF rect)
 //    selSeries->attachAxis(axisXsel);
     selSeries->attachAxis(axisY);
 
-    xTicks = xTicks < 5? 3: 5;
+    xTicks = xTicks < 5? 3: xTicks;
     updateTicks(xTicks, yTicks);
 }
 

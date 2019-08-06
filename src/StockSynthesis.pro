@@ -103,7 +103,9 @@ SOURCES += main.cpp\
     dialoginfo.cpp \
     dialoginputerror.cpp \
     srequationdialog.cpp \
-    parameterview.cpp
+    parameterview.cpp \
+    dialogequationview.cpp \
+    dialogparameterview.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -196,7 +198,9 @@ HEADERS  += mainwindow.h \
     dialoginfo.h \
     dialoginputerror.h \
     srequationdialog.h \
-    parameterview.h
+    parameterview.h \
+    dialogequationview.h \
+    dialogparameterview.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -234,7 +238,9 @@ FORMS    += mainwindow.ui \
     dialoginfo.ui \
     dialoginputerror.ui \
     srequationdialog.ui \
-    parameterview.ui
+    parameterview.ui \
+    dialogequationview.ui \
+    dialogparameterview.ui
 
 OTHER_FILES +=
 

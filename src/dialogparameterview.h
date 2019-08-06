@@ -1,7 +1,7 @@
-#ifndef PARAMETERVIEW_H
-#define PARAMETERVIEW_H
+#ifndef DIALOGPARAMETERVIEW_H
+#define DIALOGPARAMETERVIEW_H
 
-#include <QWidget>
+#include <QDialog>
 #include <QLabel>
 #include <QStringList>
 #include <QSlider>
@@ -11,21 +11,22 @@
 #include "tablemodel.h"
 
 namespace Ui {
-class parameterView;
+class DialogParameterView;
 }
 
-class parameterView : public QWidget
+class DialogParameterView : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit parameterView(QWidget *parent = nullptr);
-    ~parameterView();
+    explicit DialogParameterView(QWidget *parent = nullptr);
+    ~DialogParameterView();
 
+    int getNumParameters ();
     double getInput (int pnum);
 
-
 public slots:
+    void setTitle (QString title);
     void setParameterTable(tablemodel *params);
 //    void setNumParameters(int num);
 //    void setParameter(int pnum, QStringList param);
@@ -39,6 +40,7 @@ public slots:
     void apply();
 
 private slots:
+    void clearAll();
     void sliderChanged(int num, int value);
     void sValueChanged(int num, double value);
     void convertToInput(int num);
@@ -60,8 +62,9 @@ private:
     QList<QDoubleSpinBox *> sValue;
     QList<QLabel *> pType;
     QList<QDoubleSpinBox *> eInput;
+
 private:
-    Ui::parameterView *ui;
+    Ui::DialogParameterView *ui;
 };
 
-#endif // PARAMETERVIEW_H
+#endif // DIALOGPARAMETERVIEW_H

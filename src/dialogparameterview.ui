@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>parameterView</class>
- <widget class="QWidget" name="parameterView">
+ <class>DialogParameterView</class>
+ <widget class="QDialog" name="DialogParameterView">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>918</width>
-    <height>203</height>
+    <width>777</width>
+    <height>254</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -24,8 +24,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>890</width>
-        <height>175</height>
+        <width>749</width>
+        <height>226</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
