@@ -61,6 +61,7 @@ public slots:
     void setSetup(QStringList strList);
     const QStringList getSetup () {return setup->getData();}
     void setSetup(QList<int> values);
+    void changeSetup(QList<int> values);
     void setTVautogenerate (int val);
     void changeTVautogenerate (int val);
 

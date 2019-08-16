@@ -7,8 +7,11 @@
 #include <QSlider>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
+#include <QAbstractButton>
 
 #include "tablemodel.h"
+#include "doublelimitspinbox.h"
+
 
 namespace Ui {
 class DialogParameterView;
@@ -22,6 +25,7 @@ public:
     explicit DialogParameterView(QWidget *parent = nullptr);
     ~DialogParameterView();
 
+    void setNumParamsShown (int num);
     int getNumParameters ();
     double getInput (int pnum);
 
@@ -32,31 +36,44 @@ public slots:
 //    void setParameter(int pnum, QStringList param);
 //    void setParameterLabel(int pnum, QString name);
     void setSliderRange (int pnum, double min, double max);
+    void setSlider(int pnum, double value);
     void setName(int pnum, QString name);
     void setType(int pnum, QString type);
 //    void changeParameter(int num, QStringList param);
+    void closeEvent(QCloseEvent *evt);
     void cancel();
     void reset();
     void apply();
 
-private slots:
+public slots:
     void clearAll();
-    void sliderChanged(int num, int value);
-    void sValueChanged(int num, double value);
+    void disconnectAll();
+    void connectAll();
+    void minChanged (double);
+    void maxChanged (double value);
+    void sliderChanged(int value);
+    void sValueChanged(double value);
     void convertToInput(int num);
     void paramsChanged();
+    doubleLimitSpinBox *valueSpinBox(bool arrows = true, bool read = true);
+    QDoubleSpinBox *parameterSpinBox(bool arrows = true, bool read = true);
+    QSlider *parameterSlider();
+
+    void buttonClicked(QAbstractButton*btn);
 
 signals:
-    void inputChanged(int num, double value);
+    void dataChanged();
+    void closed();
 //    void parameterChanged (int num, double min, double max, double init);
 
 private:
 
     tablemodel *parameters;
+    int numParamsShown;
 
     QList<QLabel *> pLabel;
-    QList<QDoubleSpinBox *> pMin;
-    QList<QDoubleSpinBox *> pMax;
+    QList<doubleLimitSpinBox *> pMin;
+    QList<doubleLimitSpinBox *> pMax;
     QList<QDoubleSpinBox *> pInit;
     QList<QSlider *> pSlider;
     QList<QDoubleSpinBox *> sValue;

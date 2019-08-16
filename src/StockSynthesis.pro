@@ -105,7 +105,10 @@ SOURCES += main.cpp\
     srequationdialog.cpp \
     parameterview.cpp \
     dialogequationview.cpp \
-    dialogparameterview.cpp
+    dialogparameterview.cpp \
+    slxequationdialog.cpp \
+    dialogspwnrcrequationview.cpp \
+    doublelimitspinbox.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -200,7 +203,10 @@ HEADERS  += mainwindow.h \
     srequationdialog.h \
     parameterview.h \
     dialogequationview.h \
-    dialogparameterview.h
+    dialogparameterview.h \
+    slxequationdialog.h \
+    dialogspwnrcrequationview.h \
+    doublelimitspinbox.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -240,7 +246,8 @@ FORMS    += mainwindow.ui \
     srequationdialog.ui \
     parameterview.ui \
     dialogequationview.ui \
-    dialogparameterview.ui
+    dialogparameterview.ui \
+    doublelimitspinbox.ui
 
 OTHER_FILES +=
 

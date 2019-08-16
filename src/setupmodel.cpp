@@ -49,9 +49,13 @@ void setupModel::setNumValues(int cols)
 
 void setupModel::setData(QStringList data)
 {
+    disconnect (dataTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             this, SLOT (updateValues()));
     setNumValues(data.count());
     dataTable->setRowData(0, data);
     updateValues();
+    connect (dataTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT (updateValues()));
 }
 
 void setupModel::setHeader(QStringList hdr)
@@ -238,6 +242,10 @@ void shortParameterModel::setParamsUsed(QList<int> data)
     int index, params = data.count();
     bool changed = false;
     paramNum.clear();
+    disconnect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             this, SLOT(updateParamData(QModelIndex,QModelIndex,QVector<int>)));
+    disconnect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+               this, SLOT(updateParams()));
     if (paramUsed.count() != data.count())
     {
         setTotalNumParams(params);
@@ -254,6 +262,10 @@ void shortParameterModel::setParamsUsed(QList<int> data)
             changed = true;
         }
     }
+    connect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT(updateParamData(QModelIndex,QModelIndex,QVector<int>)));
+    connect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+               this, SLOT(updateParams()));
     if (changed)
         updateParams();
 }
@@ -326,6 +338,9 @@ void shortParameterModel::updateParams()
     int num = 0;
     paramNum.clear();
     paramTable->setRowCount(paramData->rowCount());
+    disconnect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             this, SLOT(updateParamData(QModelIndex,QModelIndex,QVector<int>)));
+
     for (num = 0; num < paramUsed.count(); num++)
     {
         if (paramUsed.at(num) != 0)
@@ -338,6 +353,8 @@ void shortParameterModel::updateParams()
             row++;
         }
     }
+    connect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT(updateParamData(QModelIndex,QModelIndex,QVector<int>)));
 /*    for (row = 0; row < paramNum.count(); row++)
     {
         num = paramNum.at(row);

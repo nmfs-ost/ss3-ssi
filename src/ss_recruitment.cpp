@@ -61,13 +61,15 @@ spawn_recruit::~spawn_recruit()
 
 void spawn_recruit::reset()
 {
+    disconnect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
+             varParameters, SLOT(changeVarParamData(int,QStringList)));
     parmsUsed << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
     full_parameters->setParamsUsed(parmsUsed);
     setDefaultParameters();
     setParameterHeaders();
     distrib_method = 1;
     distrib_area = 1;
-    setMethod(3);
+    setMethod(1);
     env_link = 0;
     env_target = 0;
     rec_dev_code = 1;
@@ -91,6 +93,8 @@ void spawn_recruit::reset()
     setNumRecDev(0);
 //    num_rec_dev = 0;
     use_steepness = 0;
+    connect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
+             varParameters, SLOT(changeVarParamData(int,QStringList)));
 }
 
 void spawn_recruit::setDefaultParameters()

@@ -42,7 +42,7 @@ void selectivity::reset()
 void selectivity::connectSigs()
 {
     connect (setup, SIGNAL(dataChanged(QList<int>)),
-             SIGNAL(setupChanged(QStringList)));
+             SLOT(changeSetup(QList<int>)));
     connect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
     connect (discardParameters, SIGNAL(paramChanged(int,QStringList)),
@@ -56,7 +56,7 @@ void selectivity::connectSigs()
 void selectivity::disconnectSigs()
 {
     disconnect (setup, SIGNAL(dataChanged(QList<int>)),
-             this, SIGNAL(setupChanged(QStringList)));
+             this, SLOT(changeSetup(QList<int>)));
     disconnect (parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
     disconnect (discardParameters, SIGNAL(paramChanged(int,QStringList)),
@@ -144,6 +144,11 @@ QString selectivity::getSetupText()
                 QString::number(setup->getValue(2)),
                 QString::number(setup->getValue(3))));
     return text;
+}
+
+void selectivity::changeSetup(QList<int> values)
+{
+    emit setupChanged(getSetup());
 }
 
 void selectivity::setMethod(int method)

@@ -1889,7 +1889,8 @@ void selexEquationDialog::resetChart(bool create)
     axisYalt = new QValueAxis();
 
     firstPoints.clear();
-    disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+    if (parameters != nullptr)
+        disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
     yMax = 1;
     ui->verticalLayout_graph->addWidget(chartview);
@@ -1898,6 +1899,9 @@ void selexEquationDialog::resetChart(bool create)
     cht->legend()->setVisible(false);
     int sizew = cht->size().width();
     int sizeh = cht->size().height();
+    if (parameters != nullptr)
+        connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
+
     resizeEvent(new QResizeEvent(QSize(sizew, sizeh), QSize(sizew, sizeh)));
     repaint();
 }
@@ -4526,7 +4530,6 @@ void selexEquationDialog::twoSexRandomWalk()
     setParameterHeaders();
 
     resetChart();
-    connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 
     // female ln(selex)
     ascendSeries = new QLineSeries(cht);

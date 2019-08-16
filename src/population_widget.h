@@ -14,6 +14,7 @@
 #include "growth.h"
 #include "ss_fecundity.h"
 #include "srequationdialog.h"
+#include "dialogspwnrcrequationview.h"
 
 
 namespace Ui {
@@ -197,7 +198,7 @@ private:
     tableview *hermaphParamsView;
     tableview *hermaphTVParamsView;
 
-    srEquationDialog *srOptionDialog;
+    DialogSpwnRcrEquationView *srEquationView; //srOptionDialog;
     tableview *recruitParamsView;
     tableview *recruitTVParamsView;
     tableview *recruitDistParamsView;

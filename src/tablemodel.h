@@ -19,7 +19,7 @@ public:
     tablemodel(QObject *parent = 0);
     ~tablemodel();
 
-    void reset() {setRowCount(0);}
+    void reset();
 
 public slots:
     void setRowCount(int rows);

@@ -43,8 +43,8 @@ public:
     void setLabel(const QString &value);
 
 public slots:
-    void setXvals();
-    void setXvalStrings(const QStringList &vals);
+    virtual void setXvals();
+    virtual void setXvalStrings(const QStringList &vals);
 
     void setEquationNumber (int num);
     void changeEquationNumber (int num);
@@ -58,16 +58,17 @@ public slots:
 
     void apply();
     void reset();
-    void resetValues();
-    void restoreAll();
+    virtual void resetValues();
+    virtual void restoreAll();
     void close();
 
-    void parametersChanged();
-    void setupChanged();
+    virtual void parametersChanged();
+    void parametersClosed();
+    virtual void setupChanged();
 
     void refresh ();  // update from population values
-    void setup(); // start new
-    void update ();   // update from dialog values
+    virtual void setup(); // start new
+    virtual void update ();   // update from dialog values
     void resizeEvent(QResizeEvent *event);
 
     void buttonClicked (QAbstractButton *btn);
@@ -79,7 +80,7 @@ signals:
     void applyingValues();
     void applyingComplete();
 
-private:
+protected:
     QString name;
     QString type;
     QString title;
@@ -111,10 +112,14 @@ private:
 
     int intvar1;
 
-private slots:
+protected slots:
     void updateGrid(QRectF rect);
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
+
+    void showSPR (bool flag);
+    void showJoins (int num);
+    void showBins (bool flag);
 
     void notYet (int eqn = 0, int num = 0);
     void blank (int eqn, int rep = 0, QString msg = QString(""));

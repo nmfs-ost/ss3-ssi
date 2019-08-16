@@ -16,6 +16,12 @@ tablemodel::~tablemodel()
 //    reset();
 }
 
+void tablemodel::reset()
+{
+    QStringList ql("no row string");
+    setRowData(0, ql);
+    clear();
+}
 
 void tablemodel::setRowCount(int rows)
 {
@@ -23,6 +29,7 @@ void tablemodel::setRowCount(int rows)
     if (rows != chk)
     {
         int cols = columnCount();
+        if (cols < 1) cols = 1;
         QStringList ql, row;
         QStandardItemModel::setRowCount(rows);
         for (int i = 0; i < cols; i++)

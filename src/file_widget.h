@@ -57,8 +57,6 @@ public:
     explicit file_widget (ss_model *mod = 0, QString dir = QString(""), QWidget *parent = 0);
     ~file_widget();
 
-    void reset();
-
 private:
     Ui::file_widget *ui;
 
@@ -88,6 +86,8 @@ private:
     Dialog_fileView *viewer;
 
 public slots:
+    void reset();
+
     void set_starter_file (QString fname, bool keep = false);
     QString get_starter_file();
     void set_forecast_file (QString fname, bool keep = false);

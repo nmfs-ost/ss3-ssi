@@ -32,13 +32,13 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
 
     current_dir = QDir(dir);
 
-    starterFile = new ss_file(STARTER_FILE, this);
-    forecastFile = new ss_file(FORECAST_FILE, this);
-    dataFile = new ss_file(DATA_FILE, this);
-    controlFile = new ss_file(CONTROL_FILE, this);
-    runNumberFile = new ss_file(RUN_NUMBER_FILE, this);
-    parameterFile = new ss_file(PARAMETER_FILE, this);
-    profileFile = new ss_file(PROFILE_VAL_FILE, this);
+    starterFile = new ss_file(QString(STARTER_FILE), this);
+    forecastFile = new ss_file(QString(FORECAST_FILE), this);
+    dataFile = new ss_file(QString(DATA_FILE), this);
+    controlFile = new ss_file(QString(CONTROL_FILE), this);
+    runNumberFile = new ss_file(QString(RUN_NUMBER_FILE), this);
+    parameterFile = new ss_file(QString(PARAMETER_FILE), this);
+    profileFile = new ss_file(QString(PROFILE_VAL_FILE), this);
     userDataFile = nullptr;
     connect (starterFile, SIGNAL(end_reading_file()), SLOT(reset()));
     connect (forecastFile, SIGNAL(end_reading_file()), SLOT(reset()));

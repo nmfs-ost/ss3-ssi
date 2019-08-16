@@ -23,16 +23,17 @@ ss_file::~ss_file ()
 bool ss_file::reset()
 {
     // reset and close
+    bool okay = false;
     line_num = 0;
     wait = false;
     current_line = new QString("");
     current_tokens = new QStringList(*current_line);
     current_tokens->clear();
     if (isOpen()) {
-        seek(0);
+        okay = QFile::reset(); //seek(0);
         close();
     }
-    return QFile::reset();
+    return okay; //QFile::reset();
 }
 
 QString ss_file::read_line()

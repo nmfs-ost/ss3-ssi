@@ -158,7 +158,7 @@ longParameterTable::longParameterTable(QObject *parent)
 //    disconnect (&paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
 //             SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     connect (&paramTable, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), this,
-             SLOT(checkParameters(QModelIndex, QModelInes, QVector<int>)));
+             SLOT(checkParameters(QModelIndex, QModelIndex, QVector<int>)));
 }
 
 longParameterTable::~longParameterTable()

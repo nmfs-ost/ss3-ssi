@@ -218,7 +218,7 @@
      <x>0</x>
      <y>0</y>
      <width>701</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -358,6 +358,12 @@
      </property>
      <item>
       <widget class="QLabel" name="label_banner">
+       <property name="minimumSize">
+        <size>
+         <width>269</width>
+         <height>194</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>NOAA Fisheries Toolbox</string>
        </property>
