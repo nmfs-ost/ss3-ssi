@@ -18,6 +18,10 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.14.03
+    2019-08-16
+1. Exploring separate parameter dialog for equations.
+============================================================================
     3.30.14.02
     2019-07-31
 1. Changed values allowed for recruitment distribution to 2-4.
