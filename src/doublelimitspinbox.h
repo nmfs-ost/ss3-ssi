@@ -4,9 +4,9 @@
 #include <QWidget>
 #include <QDoubleSpinBox>
 
-namespace Ui {
+/*namespace Ui {
 class doubleLimitSpinBox;
-}
+}*/
 
 class doubleLimitSpinBox : public QDoubleSpinBox
 {
@@ -19,8 +19,8 @@ public:
 public slots:
     void setRange(double value);
 
-private:
-    Ui::doubleLimitSpinBox *ui;
+/*private:
+    Ui::doubleLimitSpinBox *ui;*/
 };
 
 #endif // DOUBLELIMITSPINBOX_H

@@ -41,7 +41,7 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     yMax = -10;
     chartview = nullptr;
 
-    setXvals();
+    setXvals(1.0);
     setXvalStrings(QStringList());
     resetChart(true);
     selSeries->append(0, 0);
@@ -52,13 +52,10 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     parameterView = new DialogParameterView(this);
     parameterView->setTitle(name);
     parameterView->hide();
-    connect (parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
-    connect (parameterView, SIGNAL(closed()), this, SLOT(parametersClosed()));
+    connect (parameterView, SIGNAL(closed()), this, SLOT(parameterViewClosed()));
     connect (ui->pushButton_showParameters, SIGNAL(toggled(bool)), parameterView, SLOT(setVisible(bool)));
     ui->pushButton_showParameters->setChecked(false);
 
-    connect (this, SIGNAL(numbersUpdated()), SLOT(update()));
-//    connect (this, SIGNAL(linearUpdated(float)), SLOT(updateLinearExp(float)));
 
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
     building = false;
@@ -67,6 +64,8 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     showBins(false);
     showJoins(false);
     showSPR(false);
+    connect (ui->spinBox_SPR, SIGNAL(valueChanged(int)), this, SLOT(intVar1Changed(int)));
+    intvar1 = ui->spinBox_SPR->value();
 }
 
 DialogEquationView::~DialogEquationView()
@@ -76,12 +75,26 @@ DialogEquationView::~DialogEquationView()
     delete ui;
 }
 
+void DialogEquationView::connectAll()
+{
+    connect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+//    connect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
+//    connect (this, SIGNAL(linearUpdated(float)), this, SLOT(updateLinearExp(float)));
+}
 
-void DialogEquationView::setXvals()
+void DialogEquationView::disconnectAll()
+{
+    disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+//    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
+//    disconnect (this, SIGNAL(linearUpdated(float)), this, SLOT(updateLinearExp(float)));
+}
+
+void DialogEquationView::setXvals(double max)
 {
     double val;
+    int limit = static_cast<int>(max * 100.0);
     xValList.clear();
-    for (int i = 0; i <= 100; i+=2)
+    for (int i = 0; i <= limit; i+=2)
     {
         val = static_cast<double>(i / 100.0);
         xValList.append(val);
@@ -90,39 +103,45 @@ void DialogEquationView::setXvals()
 
 void DialogEquationView::setXvalStrings(const QStringList &vals)
 {
-    QList<float> f_vals;
+    if (!vals.isEmpty()) {
+        QList<float> f_vals;
 
-    for (int i = 0; i < vals.count(); i++)
-        f_vals.append(QString(vals.at(i)).toFloat());
+        for (int i = 0; i < vals.count(); i++)
+            f_vals.append(QString(vals.at(i)).toFloat());
 
-    setXvals();
+        setXvals(f_vals.last());
+    }
+    setXvals(1.0);
 }
 
+// This assumes that parameters are already set
+//
 void DialogEquationView::setEquationNumber(int num)
 {
     if (equationNum != num) {
         equationNum = num;
         setup();
-//        ui->pushButton_showParameters->setChecked(true);
     }
 }
 
 void DialogEquationView::changeEquationNumber(int num)
 {
     if (equationNum != num) {
-//        disconnect (parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
         equationNum = num;
-        restoreAll();
+        setup();
+    }
+    else {
+        update();
     }
 }
 
 void DialogEquationView::setParameters(tablemodel *params)
 {
-        disconnect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
-        parameters = params;
-        parameterView->setNumParamsShown(numParams);
-        parameterView->setParameterTable(params);
-        connect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+    parameters = params;
+    parameterView->setNumParamsShown(numParams);
+    parameterView->setParameterTable(params);
+    connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
 }
 
 
@@ -195,16 +214,27 @@ void DialogEquationView::update()
     QDialog::update();
 }
 
+void DialogEquationView::setIntVar1Range(int min, int max) {
+    ui->spinBox_SPR->setRange(min, max);
+}
+
+int DialogEquationView::getIntVar1() {
+    return intvar1;
+}
 
 void DialogEquationView::setIntVar1(int value)
 {
     intvar1 = value;
+    if (ui->spinBox_SPR->value() != value)
+        ui->spinBox_SPR->setValue(value);
 }
 
 void DialogEquationView::intVar1Changed(int value)
 {
-    setIntVar1 (value);
-    emit numbersUpdated();
+    if (intvar1 != value) {
+        setIntVar1 (value);
+        update();
+    }
 }
 
 void DialogEquationView::apply()
@@ -216,7 +246,7 @@ void DialogEquationView::reset()
 {
     parameterView->reset();
     resetValues();
-    emit numbersUpdated();
+    update();
 }
 
 void DialogEquationView::resetValues()
@@ -232,15 +262,33 @@ void DialogEquationView::resetValues()
 
 void DialogEquationView::restoreAll()
 {
-    disconnect (parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     // get values from parameters
     parameterView->reset();
-    connect (parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    connect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     setup();
+}
+
+void DialogEquationView::setVisible(bool visible) {
+    if (visible)
+    {
+        restoreAll();
+        connectAll();
+    }
+    else {
+        disconnectAll();
+    }
+    QDialog::setVisible(visible);
+}
+void DialogEquationView::show() {
+    restoreAll();
+    connectAll();
+    QDialog::show();
 }
 
 void DialogEquationView::close()
 {
+    disconnectAll();
     parameterView->cancel();
     hide();
     emit closed();
@@ -283,10 +331,10 @@ void DialogEquationView::resizeEvent(QResizeEvent *event)
 
 void DialogEquationView::parametersChanged()
 {
-    emit numbersUpdated();
+    update();
 }
 
-void DialogEquationView::parametersClosed()
+void DialogEquationView::parameterViewClosed()
 {
     ui->pushButton_showParameters->setChecked(false);
 }
@@ -462,6 +510,7 @@ void DialogEquationView::showJoins(int num) {
     }
 }
 
+// An additional spinBox for a value
 void DialogEquationView::showSPR(bool flag)
 {
     ui->spinBox_SPR->setVisible(flag);
@@ -476,7 +525,8 @@ void DialogEquationView::notYet(int eqn, int num)
         eqn = equationNum;
     if (num == 0)
         num = parameters->rowCount();
-    parameterView->setNumParamsShown(0);
+    numParams = num;
+    parameterView->setNumParamsShown(numParams);
 
     QString msg(QString("Option %1 is not yet implemented").arg(
                        QString::number(eqn)));
@@ -497,7 +547,8 @@ void DialogEquationView::blank (int eqn, int rep, QString msg)
     QString numstr(QString::number(eqn > 0? eqn: equationNum));
     QString repstr(QString::number(rep));
 
-    parameterView->setNumParamsShown(0);
+    numParams = 0;
+    parameterView->setNumParamsShown(numParams);
 
     // If replaced by another option
     if (rep > 0)

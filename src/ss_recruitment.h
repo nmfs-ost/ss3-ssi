@@ -179,6 +179,9 @@ public slots:
 /*    int getNumRecDev() const;
     void setNumRecDev(int value);*/
 
+signals:
+    void methodChanged();
+
 private:
     ss_model *parnt;
 

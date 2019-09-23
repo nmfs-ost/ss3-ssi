@@ -9,8 +9,8 @@ DialogParameterView::DialogParameterView(QWidget *parent) :
 {
     ui->setupUi(this);
     setTitle("");
-    parameters = new tablemodel();
-    numParamsShown = -1;
+    parameters = nullptr;
+    numParamsShown = 0;
     pLabel.append(nullptr); pLabel.clear();
     pMin.append(nullptr);   pMin.clear();
     pMax.append(nullptr);   pMax.clear();
@@ -23,6 +23,7 @@ DialogParameterView::DialogParameterView(QWidget *parent) :
     hide();
 
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
+    connectAll();
 }
 
 DialogParameterView::~DialogParameterView() {
@@ -34,14 +35,6 @@ void DialogParameterView::clearAll() {
     if (pLabel.isEmpty())
         return;
 
-    disconnectAll();
-/*    for (int i = 0; i < pLabel.count(); i++) {
-        disconnect (pMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
-        disconnect (pMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
-        disconnect (pSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-        disconnect (sValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
-    }
-*/
     while (pLabel.count() > 0) {
         delete pLabel.takeLast();
         delete pMin.takeLast();
@@ -55,23 +48,23 @@ void DialogParameterView::clearAll() {
 }
 
 void DialogParameterView::disconnectAll() {
-    if (pMin.count() < numParamsShown)
-        numParamsShown = pMin.count();
-    for (int i = 0; i < numParamsShown; i++) {
+    for (int i = 0; i < pMin.count(); i++) {
         disconnect (pMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
         disconnect (pMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
         disconnect (pSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
         disconnect (sValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
     }
+    disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(paramsChanged()));
 }
 
 void DialogParameterView::connectAll() {
-    for (int i = 0; i < numParamsShown; i++) {
+    for (int i = 0; i < pMin.count(); i++) {
         connect (pMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
         connect (pMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
         connect (pSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
         connect (sValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
     }
+    connect (parameters, SIGNAL(dataChanged()), SLOT(paramsChanged()));
 }
 
 void DialogParameterView::setTitle(QString title) {
@@ -81,33 +74,18 @@ void DialogParameterView::setTitle(QString title) {
 void DialogParameterView::setParameterTable(tablemodel *params)
 {
     if (params->rowCount() > 0) {
-        disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(paramsChanged()));
         parameters = params;
         paramsChanged();
-        connect (parameters, SIGNAL(dataChanged()), SLOT(paramsChanged()));
     }
 }
 
-void DialogParameterView::setNumParamsShown(int num) {
-    numParamsShown = num;
-    paramsChanged();
-}
-
-int DialogParameterView::getNumParameters() {
-    return parameters->rowCount();
-}
-
-void DialogParameterView::paramsChanged() {
-    int num = parameters->rowCount();
-    if (numParamsShown < 0)
-        numParamsShown = num;
-    QStringList paramvalues;
-    double min, max, init;
-
+void DialogParameterView::setupView(int num)
+{
+    int rownum = 0;
     clearAll();
-
+    disconnectAll();
     for (int i = 0; i < numParamsShown; i++) {
-        int rownum = i + 1;
+        rownum = i + 1;
         pLabel.append(new QLabel(parameters->getRowHeader(i), this));
         pMin.append(valueSpinBox());
         pMax.append(valueSpinBox());
@@ -125,12 +103,46 @@ void DialogParameterView::paramsChanged() {
         ui->gridLayout->addWidget(sValue.at(i), rownum, 5);
         ui->gridLayout->addWidget(pType.at(i), rownum, 6);
         ui->gridLayout->addWidget(eInput.at(i), rownum, 7);
+    }
+    if (numParamsShown > 0)
+        pType.at(0)->setText(QString("Exp"));
 
+    connectAll();
+}
+
+void DialogParameterView::setSliders()
+{
+    QStringList paramvalues;
+    double min, max, init;
+//    int rownum = 0;
+
+    for (int i = 0; i < numParamsShown; i++) {
+/*        rownum = i + 1;
+        pLabel.append(new QLabel(parameters->getRowHeader(i), this));
+        pMin.append(valueSpinBox());
+        pMax.append(valueSpinBox());
+        pInit.append(parameterSpinBox(false, false));
+        pSlider.append(parameterSlider());
+        sValue.append(parameterSpinBox());
+        pType.append(new QLabel("Value", this));
+        eInput.append(parameterSpinBox(false, false));
+
+        ui->gridLayout->addWidget(pLabel.at(i), rownum, 0);
+        ui->gridLayout->addWidget(pMin.at(i), rownum, 1);
+        ui->gridLayout->addWidget(pMax.at(i), rownum, 2);
+        ui->gridLayout->addWidget(pInit.at(i), rownum, 3);
+        ui->gridLayout->addWidget(pSlider.at(i), rownum, 4);
+        ui->gridLayout->addWidget(sValue.at(i), rownum, 5);
+        ui->gridLayout->addWidget(pType.at(i), rownum, 6);
+        ui->gridLayout->addWidget(eInput.at(i), rownum, 7);
+*/
         paramvalues = parameters->getRowData(i);
         min = paramvalues.at(0).toDouble();
         max = paramvalues.at(1).toDouble();
         init = paramvalues.at(2).toDouble();
+        pMin.at(i)->setRange(min);
         pMin.at(i)->setValue(min);
+        pMax.at(i)->setRange(max);
         pMax.at(i)->setValue(max);
         pInit.at(i)->setRange(min, max);
         pInit.at(i)->setValue(init);
@@ -138,15 +150,53 @@ void DialogParameterView::paramsChanged() {
         setSlider(i, init);
         sValue.at(i)->setRange(min, max);
         sValue.at(i)->setValue(init);
+        setInputValue(i);
+    }
+}
 
-/*        connect (pMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
-        connect (pMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
-        connect (pSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-        connect (sValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
-    */}
-    minChanged(1.0);
-    maxChanged(1.0);
+bool DialogParameterView::setInputValue(int pnum) {
+    bool changed = false;
+    if (pLabel.count() > pnum) {
+        double value = sValue.at(pnum)->value();
+        double oldValue = eInput.at(pnum)->value(), newValue = 0;
+        QString txt = pType.at(pnum)->text();
+
+        if (txt.contains("exp", Qt::CaseInsensitive)) {
+            newValue = exp(value);
+        }
+        else { //if (txt.contains("value", Qt::CaseInsensitive)) {
+            newValue = value;
+        }
+        if (newValue < oldValue || newValue > oldValue) {
+            changed = true;
+            if (eInput.at(pnum)->minimum() > newValue)
+                eInput.at(pnum)->setMinimum(newValue - 1.0);
+            if (eInput.at(pnum)->maximum() < newValue)
+                eInput.at(pnum)->setMaximum(newValue + 1.0);
+            eInput.at(pnum)->setValue(newValue);
+        }
+    }
+    return changed;
+}
+
+void DialogParameterView::setNumParamsShown(int num) {
+    numParamsShown = num;
+    setupView(num);
+    setSliders();
+}
+
+int DialogParameterView::getNumParameters() {
+    return numParamsShown;
+}
+
+void DialogParameterView::paramsChanged() {
+//    if (isVisible())
+    {
+    disconnectAll();
+    setSliders();
     connectAll();
+    sliderChanged(1);
+    }
 }
 
 void DialogParameterView::setSliderRange(int pnum, double min, double max) {
@@ -163,13 +213,14 @@ void DialogParameterView::setSlider(int pnum, double value) {
 void DialogParameterView::setName(int pnum, QString name) {
     if (pLabel.count() > pnum) {
         pLabel.at(pnum)->setText(name);
+        parameters->setRowHeader(pnum, name);
     }
 }
 
 void DialogParameterView::setType(int pnum, QString type) {
     if (pType.count() > pnum) {
         pType.at(pnum)->setText(type);
-        convertToInput (pnum);
+        setInputValue(pnum);
     }
 }
 
@@ -233,34 +284,37 @@ void DialogParameterView::sValueChanged(double value) {
         else if (sval < dMin) {
             sValue.at(i)->setValue(dMin);
         }
-        else
-        {
-            if (sliderval != check)
-                pSlider.at(i)->setValue(check);
+        else if (sliderval != check){
+            pSlider.at(i)->setValue(check);
         }
         convertToInput(i);
     }
-    emit dataChanged();
 }
 
 
 void DialogParameterView::convertToInput(int pnum) {
-    double value = sValue.at(pnum)->value();
-    double oldValue = eInput.at(pnum)->value(), newValue = 0;
-    QString txt = pType.at(pnum)->text();
-    if (txt.contains("exp", Qt::CaseInsensitive)) {
-        newValue = exp(value);
-    }
-    else { //if (txt.contains("value", Qt::CaseInsensitive)) {
-        newValue = value;
-    }
-    if (newValue < oldValue || newValue > oldValue) {
-        if (eInput.at(pnum)->minimum() > newValue)
-            eInput.at(pnum)->setMinimum(newValue - 1.0);
-        if (eInput.at(pnum)->maximum() < newValue)
-            eInput.at(pnum)->setMaximum(newValue + 1.0);
-        eInput.at(pnum)->setValue(newValue);
-    }
+    if (setInputValue(pnum))
+        emit inputChanged();
+/*    if (!pLabel.isEmpty()) {
+        double value = sValue.at(pnum)->value();
+        double oldValue = eInput.at(pnum)->value(), newValue = 0;
+        QString txt = pType.at(pnum)->text();
+
+        if (txt.contains("exp", Qt::CaseInsensitive)) {
+            newValue = exp(value);
+        }
+        else { //if (txt.contains("value", Qt::CaseInsensitive)) {
+            newValue = value;
+        }
+        if (newValue < oldValue || newValue > oldValue) {
+            if (eInput.at(pnum)->minimum() > newValue)
+                eInput.at(pnum)->setMinimum(newValue - 1.0);
+            if (eInput.at(pnum)->maximum() < newValue)
+                eInput.at(pnum)->setMaximum(newValue + 1.0);
+            eInput.at(pnum)->setValue(newValue);
+            emit dataChanged();
+        }
+    }*/
 }
 
 double DialogParameterView::getInput(int pnum) {
@@ -281,7 +335,8 @@ void DialogParameterView::cancel() {
 }
 
 void DialogParameterView::reset() {
-    disconnectAll();
+    setSliders();
+/*    disconnectAll();
     for (int i = 0; i < numParamsShown; i++) {
         QStringList paramvalues = parameters->getRowData(i);
         pMin.at(i)->setValue(paramvalues.at(0).toDouble());
@@ -290,18 +345,28 @@ void DialogParameterView::reset() {
         setSliderRange (i, pMin.at(i)->value(), pMax.at(i)->value());
         sValue.at(i)->setValue(pInit.at(i)->value());
     }
-    connectAll();
-    sValueChanged(1.0);
+    connectAll();*/
+    if (numParamsShown > 0)
+        convertToInput(0);
 }
 
 void DialogParameterView::apply() {
     disconnectAll();
+    QStringList paramvalues;
+    double val, min, max;
+    QString label;
     for (int i = 0; i < numParamsShown; i++) {
-        QStringList paramvalues = parameters->getRowData(i);
-        paramvalues[0] = QString::number(pMin.at(i)->value());
-        paramvalues[1] = QString::number(pMax.at(i)->value());
-        paramvalues[2] = QString::number(pInit.at(i)->value());
+        paramvalues = parameters->getRowData(i);
+        label = pLabel.at(i)->text();
+        min = pMin.at(i)->value();
+        max = pMax.at(i)->value();
+        val = sValue.at(i)->value();
+        paramvalues[0] = QString::number(min);
+        paramvalues[1] = QString::number(max);
+        paramvalues[2] = QString::number(val);
         parameters->setRowData(i, paramvalues);
+        parameters->setRowHeader(i, pLabel.at(i)->text());
+        pInit.at(i)->setValue(val);
     }
     connectAll();
 }

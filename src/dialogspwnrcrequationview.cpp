@@ -15,7 +15,8 @@ DialogSpwnRcrEquationView::DialogSpwnRcrEquationView(QWidget *parent) :
     setName(QString("Spawner-Recruitment Relationship"));
     parameterView->setTitle(name);
     equationNum = 1;
-
+    setIntVar1Range(2, 6);
+    setIntVar1(2);
 }
 
 
@@ -27,11 +28,12 @@ DialogSpwnRcrEquationView::~DialogSpwnRcrEquationView()
 
 
 
-void DialogSpwnRcrEquationView::setXvals()
+void DialogSpwnRcrEquationView::setXvals(double max)
 {
     double val;
+    int limit = static_cast<int>(max * 100.0);
     xValList.clear();
-    for (int i = 0; i <= 100; i+=2)
+    for (int i = 0; i <= limit; i+=2)
     {
         val = static_cast<double>(i / 100.0);
         xValList.append(val);
@@ -45,11 +47,12 @@ void DialogSpwnRcrEquationView::setXvalStrings(const QStringList &vals)
     for (int i = 0; i < vals.count(); i++)
         f_vals.append(QString(vals.at(i)).toFloat());
 
-    setXvals();
+    setXvals(1.0);
 }
 
 void DialogSpwnRcrEquationView::setOption(int value)
 {
+    parameterView->setParameterTable(pop->SR()->getFullParameters());
     setEquationNumber(value);
 }
 
@@ -90,11 +93,10 @@ void DialogSpwnRcrEquationView::refresh()
 
 void DialogSpwnRcrEquationView::setup()
 {
-    if (parameters == nullptr)
-        return;
     if (pop == nullptr)
         return;
 
+    parameterView->setParameterTable(pop->SR()->getFullParameters());
 //    while (updating)
 //        continue;
 
@@ -107,68 +109,47 @@ void DialogSpwnRcrEquationView::setup()
         switch (equationNum)
         {
         case 1: // case 1: null
-            numParams = 0;
-            parameterView->setNumParamsShown(numParams);
             blank (1, 6, QString("For B-H constrained curve"));
             break;
 
         case 2:  // case 2: Ricker - 2 parameters: log(R0) and steepness
-            numParams = 2;
-            parameterView->setNumParamsShown(numParams);
             ricker ();
             break;
 
         case 3:  // case 3: Standard Beverton-Holt - 2 parameters
-            numParams = 2;
-            parameterView->setNumParamsShown(numParams);
             bevertonHoltStandard ();
             break;
 
         case 4:  // case 4: Ignore Steepness and no bias adjustment, like CAGEAN - 2 parameters, uses only first one
-            numParams = 1;
-            parameterView->setNumParamsShown(numParams);
             constant ();
             break;
 
         case 5:  // case 5: Hockey stick - 3 prarmenters: log(R0), steepness and Rmin
-            numParams = 3;
-            parameterView->setNumParamsShown(numParams);
             hockeyStick ();
             break;
 
         case 6:  // case 6: Beverton-Holt with flat-top beyond Bzero - 2 parameters
-            numParams = 2;
-            parameterView->setNumParamsShown(numParams);
             bevertonHoltBzeroFlat ();
             break;
 
         case 7: // case 7: Survivorship function - 3 parameters: log(R0), Zfrac, and Beta
-            numParams = 3;
-            parameterView->setNumParamsShown(numParams);
             survivorship ();
             break;
 
         case 8:  // case 8: Shepherd - 3 parameters: log(R0), steepness, and shape C
-            numParams = 3;
-            parameterView->setNumParamsShown(numParams);
             shepherd ();
             break;
 
         case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-            numParams = 3;
-            parameterView->setNumParamsShown(numParams);
-            notYet();
+            notYet(9, 3);
 //            shepherdReParm ();
             break;
 
         case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
-            numParams = 3;
-            parameterView->setNumParamsShown(numParams);
             rickerReParm ();
             break;
 
         default:
-            numParams = 0;
             blank(0);
             break;
 
@@ -181,8 +162,6 @@ void DialogSpwnRcrEquationView::setup()
 
 void DialogSpwnRcrEquationView::update()
 {
-    if (parameters == nullptr)
-        return;
     if (pop == nullptr)
         return;
 
@@ -279,21 +258,25 @@ void DialogSpwnRcrEquationView::apply()
 
 void DialogSpwnRcrEquationView::reset()
 {
-    resetValues();
-    emit numbersUpdated();
+    disconnect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    parameterView->reset();
+    connect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    update();
 }*/
 
 void DialogSpwnRcrEquationView::resetValues()
 {
-    equationNum = pop->SR()->getOption();
-    numParams = pop->SR()->getNumFullParameters();
-    genders = pop->gender() > 1? 2: 1;
-
-    building = false;
-    waiting = false;
-    updating = false;
-    yMax = 1.0;
+    if (pop != nullptr)
     {
+        equationNum = pop->SR()->getOption();
+//        numParams = pop->SR()->getNumFullParameters() - 3;
+        genders = pop->gender() > 1? 2: 1;
+
+        building = false;
+        waiting = false;
+        updating = false;
+        yMax = 1.0;
+
 //        disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
 
         // get values from input spinboxes
@@ -317,13 +300,18 @@ void DialogSpwnRcrEquationView::resetValues()
 
 void DialogSpwnRcrEquationView::restoreAll()
 {
-    // get values from parameters
-    equationNum = pop->SR()->getMethod();
-    numParams = pop->SR()->getNumFullParameters();
-    genders = pop->gender();
-    setParameters(pop->SR()->getFullParameters());
-
-    setup();
+    if (pop != nullptr)
+    {
+        disconnect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+        // get all values from pop->SR()
+        resetValues();
+//        equationNum = pop->SR()->getMethod();
+//        genders = pop->gender();
+        setParameters(pop->SR()->getFullParameters());
+        parameterView->reset();
+        connect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+        setup();
+    }
 }
 
 
@@ -331,7 +319,7 @@ void DialogSpwnRcrEquationView::parametersChanged()
 {
 //    getParameterValues();
 //    resetValues();
-    emit numbersUpdated();
+    update();
 }
 
 void DialogSpwnRcrEquationView::setupChanged()
@@ -345,14 +333,27 @@ population *DialogSpwnRcrEquationView::getPopulation() const
     return pop;
 }
 
-void DialogSpwnRcrEquationView::setPopulation(population *value)
+void DialogSpwnRcrEquationView::setPopulation(population *popultn)
 {
-    pop = value;
-    setParameters(pop->SR()->getFullParameters());
-    setEquationNumber(pop->SR()->getMethod());
-//    refresh();
+    if (pop != nullptr)
+    {
+        pop = popultn;
+        restoreAll();
+//        setParameters(pop->SR()->getFullParameters());
+//        setEquationNumber(pop->SR()->getMethod());
+    //    refresh();
+    }
 }
 
+void DialogSpwnRcrEquationView::setParameters(tablemodel *params)
+{
+    disconnect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+//    if (pop != nullptr)
+//        numParams = pop->SR()->getNumFullParameters() - 3;
+    parameterView->setNumParamsShown(numParams);
+    parameterView->setParameterTable(params);
+    connect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+}
 
 
 //  SS_Label_43.3.2  Ricker
@@ -365,16 +366,18 @@ void DialogSpwnRcrEquationView::ricker()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(2);
+    numParams = 2;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_Ricker_beta");
+    parameterView->setType(1, "Value");
 
     updateRicker();
     chartview->setVisible(true);
 
-    cht->addAxis(axisXsel, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisXsel, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -398,10 +401,8 @@ void DialogSpwnRcrEquationView::updateRicker()
 //    double SB_virgin_adj = 1.0;
     int yMax = 1;
     double SSB_curr_adj, Recruits;
-    double logRecr_virgin_adj = parameterView->getInput(0);//ui->doubleSpinBox_1_value->value();
-    double steepness = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
-
-    double Recr_virgin_adj = exp(logRecr_virgin_adj);
+    double Recr_virgin_adj = parameterView->getInput(0);
+    double steepness = parameterView->getInput(1);
 
     cht->removeSeries(selSeries);
     cht->update();
@@ -432,12 +433,14 @@ void DialogSpwnRcrEquationView::bevertonHoltStandard()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(2);
+    numParams = 2;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_BH_steep");
-    parameterView->convertToInput(0);
-    parameterView->convertToInput(1);
+    parameterView->setType(1, "Value");
+//    parameterView->convertToInput(0);
+//    parameterView->convertToInput(1);
 
     updateBevertonHoltStandard();
     chartview->setVisible(true);
@@ -507,10 +510,12 @@ void DialogSpwnRcrEquationView::constant()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(1);
+    numParams = 1;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_steepness");
+    parameterView->setType(1, "Value");
 
     updateConstant();
     chartview->setVisible(true);
@@ -561,11 +566,14 @@ void DialogSpwnRcrEquationView::hockeyStick()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(3);
+    numParams = 3;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_hockey_infl");
+    parameterView->setType(1, "Value");
     parameterView->setName(2, "SR_hockey_min_R");
+    parameterView->setType(2, "Value");
 
     updateHockeyStick();
     chartview->setVisible(true);
@@ -627,10 +635,12 @@ void DialogSpwnRcrEquationView::bevertonHoltBzeroFlat()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(2);
+    numParams = 2;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_steepness");
+    parameterView->setType(1, "Value");
 
     updateBevertonHoltBzeroFlat();
     chartview->setVisible(true);
@@ -694,11 +704,14 @@ void DialogSpwnRcrEquationView::survivorship()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(3);
+    numParams = 3;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_surv_Zfrac");
+    parameterView->setType(1, "Value");
     parameterView->setName(2, "SR_surv_Beta");
+    parameterView->setType(2, "Value");
 
     updateSurvivorship();
     chartview->setVisible(true);
@@ -731,13 +744,13 @@ void DialogSpwnRcrEquationView::updateSurvivorship()
     int yMax = 1;
     double SPR = intvar1;
     double SSB_curr_adj, Recruits;
-    double Recr_virgin_adj = parameterView->getInput(0);//exp(ln_R0);
-    double Zfrac = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
-    double Beta = parameterView->getInput(2);//ui->doubleSpinBox_3_value->value();
+    double Recr_virgin_adj = parameterView->getInput(0);
+    double Zfrac = parameterView->getInput(1);
+    double Beta = parameterView->getInput(2);
 
     double SPB_virgin_adj = Recr_virgin_adj * SPR;
 
-    double SRZ_0 = log(1.0/SPR); // 1.0/(SB_virgin_adj/Recr_virgin_adj)
+    double SRZ_0 = log(1.0/SPR); // 1.0/(SPB_virgin_adj/Recr_virgin_adj)
     double SRZ_min = SRZ_0 * (1.0 - Zfrac);
     double SRZ_surv = 0;
 
@@ -752,7 +765,7 @@ void DialogSpwnRcrEquationView::updateSurvivorship()
         Recruits = SRZ_surv * SSB_curr_adj * SPB_virgin_adj;
         selSeries->append(SSB_curr_adj, Recruits);
     }
-    yMax = static_cast<int>(maxYvalue(selSeries->points()) + 1);
+    yMax = static_cast<int>((maxYvalue(selSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
     selSeries->attachAxis(axisY);
     cht->addSeries(selSeries);
@@ -768,11 +781,14 @@ void DialogSpwnRcrEquationView::shepherd()
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(3);
+    numParams = 3;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_steepness");
+    parameterView->setType(1, "Value");
     parameterView->setName(2, "SR_Shepherd_c");
+    parameterView->setType(2, "Value");
 
     updateShepherd();
     chartview->setVisible(true);
@@ -828,17 +844,19 @@ void DialogSpwnRcrEquationView::updateShepherd()
 //  3 parameters: log(R0), steepness, and shape parameter, c.
 void DialogSpwnRcrEquationView::shepherdReParm()
 {
-    QString msg (QString("Option 8: Shepherd"));
+    QString msg (QString("Option 9: Shepherd ReParm"));
     setTitle(msg);
     setLabel("Shepherd");
 
     chartview->setVisible(false);
 
-    parameterView->setNumParamsShown(3);
+    numParams = 3;
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_ShpReParm_steep");
+    parameterView->setType(1, "Value");
     parameterView->setName(2, "SR_ShpReParm_c");
+    parameterView->setType(2, "Value");
 
     updateShepherdReParm();
     chartview->setVisible(true);
@@ -909,10 +927,14 @@ void DialogSpwnRcrEquationView::rickerReParm()
 
     chartview->setVisible(false);
 
+    numParams = 3;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_RkrPwr_steep");
+    parameterView->setType(1, "Value");
     parameterView->setName(2, "SR_RkrPwr_gamma");
+    parameterView->setType(2, "Value");
 
     updateRickerReParm();
     chartview->setVisible(true);

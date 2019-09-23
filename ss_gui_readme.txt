@@ -3,9 +3,9 @@ ss_gui_readme.txt
         Stock Synthesis ver 3.30 GUI Interface ver 3.30.14.02
         ----------------------------------------------------
 
-This GUI is created to display input to the Stock Synthesis application,
+This GUI is created as a front-end to the Stock Synthesis application,
 versions 3.30.13 and 3.30.14. It allows the user to change the data,
-run the executable, and display results.
+run the executable, and display some results.
 
 Currently, the only results displayed are the TIME-SERIES charts from
 Report.sso, files warnings.sso, and echoinput.sso.

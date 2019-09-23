@@ -1,5 +1,6 @@
 #include "doublelimitspinbox.h"
-#include "ui_doublelimitspinbox.h"
+//#include "ui_doublelimitspinbox.h"
+#include <cmath>
 
 doubleLimitSpinBox::doubleLimitSpinBox(QWidget *parent) :
     QDoubleSpinBox (parent)//,
@@ -16,12 +17,9 @@ doubleLimitSpinBox::~doubleLimitSpinBox()
 
 void doubleLimitSpinBox::setRange(double value)
 {
-    double limitValue = value * 10;
+    double limitValue = fabs(value) + 10;
+    double min = value - limitValue;
+    double max = value + limitValue;
 
-    if (value > 0)
-        QDoubleSpinBox::setRange(0, (limitValue + 10));
-    else if (value < 0)
-        QDoubleSpinBox::setRange((limitValue - 10), 0);
-    else
-        QDoubleSpinBox::setRange(-11, 11);
+    QDoubleSpinBox::setRange(min, max);
 }

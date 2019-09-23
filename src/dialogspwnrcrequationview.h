@@ -16,15 +16,15 @@ public:
     void setOption(int value);
 
     population *getPopulation() const;
-    void setPopulation(population *value);
+    void setPopulation(population *popultn);
 
 public slots:
-    void setXvals();
+    void setXvals(double max);
     void setXvalStrings(const QStringList &vals);
 
 //    void setEquationNumber (int num);
 //    void updateGraph ();
-//    void setParameters (tablemodel *params);
+    void setParameters (tablemodel *params);
 
 //    void apply();
 //    void reset();

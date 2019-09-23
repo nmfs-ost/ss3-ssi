@@ -32,6 +32,8 @@ public:
 public slots:
     void setTitle (QString title);
     void setParameterTable(tablemodel *params);
+    void setupView(int num);
+    void setSliders();
 //    void setNumParameters(int num);
 //    void setParameter(int pnum, QStringList param);
 //    void setParameterLabel(int pnum, QString name);
@@ -39,6 +41,7 @@ public slots:
     void setSlider(int pnum, double value);
     void setName(int pnum, QString name);
     void setType(int pnum, QString type);
+    bool setInputValue(int pnum);
 //    void changeParameter(int num, QStringList param);
     void closeEvent(QCloseEvent *evt);
     void cancel();
@@ -62,7 +65,7 @@ public slots:
     void buttonClicked(QAbstractButton*btn);
 
 signals:
-    void dataChanged();
+    void inputChanged();
     void closed();
 //    void parameterChanged (int num, double min, double max, double init);
 

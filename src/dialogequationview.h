@@ -43,7 +43,7 @@ public:
     void setLabel(const QString &value);
 
 public slots:
-    virtual void setXvals();
+    virtual void setXvals(double max);
     virtual void setXvalStrings(const QStringList &vals);
 
     void setEquationNumber (int num);
@@ -53,6 +53,8 @@ public slots:
 
     void setParameterHeader(int pnum, QString hdr);
 
+    void setIntVar1Range (int min, int max);
+    int getIntVar1 ();
     void setIntVar1 (int value);
     void intVar1Changed (int value);
 
@@ -60,10 +62,12 @@ public slots:
     void reset();
     virtual void resetValues();
     virtual void restoreAll();
+    virtual void setVisible(bool visible);
+    void show ();
     void close();
 
     virtual void parametersChanged();
-    void parametersClosed();
+    void parameterViewClosed();
     virtual void setupChanged();
 
     void refresh ();  // update from population values
@@ -113,6 +117,9 @@ protected:
     int intvar1;
 
 protected slots:
+    void connectAll();
+    void disconnectAll();
+
     void updateGrid(QRectF rect);
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);

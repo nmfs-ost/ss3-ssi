@@ -1207,7 +1207,7 @@ void population_widget::changeRecrFullParams()
 {
     recruitParamsView->setHeight(pop->SR()->getNumFullParameters());
     recruitParamsView->resizeColumnsToContents();
-    srEquationView->setParameters(pop->SR()->getFullParameters());
+//    srEquationView->setParameters(pop->SR()->getFullParameters());
     changeRecrTVParams();
 //    srEquationView->update();
 }
@@ -1413,7 +1413,7 @@ void population_widget::setSpawnRecrSpec(int spec)
     if (spec < 1) spec = 1;
     if (spec > 10) spec = 10;
     ui->comboBox_recr_spec->setCurrentIndex(spec - 1);
-    srEquationView->setEquationNumber(spec);
+//    srEquationView->setEquationNumber(spec);
 }
 
 void population_widget::changeSpawnRecrSpec(int num)
@@ -1432,8 +1432,6 @@ void population_widget::setSRequationDialogVisible(bool checked)
 {
     srEquationView->setVisible(checked);
     ui->pushButton_equation->setChecked(checked);
-    if (checked)
-        srEquationView->refresh();
 }
 
 void population_widget::changeMoveNumDefs(int value)
