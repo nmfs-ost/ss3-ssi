@@ -122,6 +122,9 @@ void DialogEquationView::setEquationNumber(int num)
         equationNum = num;
         setup();
     }
+    else {
+        restoreAll();
+    }
 }
 
 void DialogEquationView::changeEquationNumber(int num)

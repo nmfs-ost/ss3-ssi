@@ -97,7 +97,7 @@ void DialogSpwnRcrEquationView::setup()
     if (pop == nullptr)
         return;
 
-    parameterView->setParameterTable(pop->SR()->getFullParameters());
+//    parameterView->setParameterTable(pop->SR()->getFullParameters());
 //    while (updating)
 //        continue;
 
@@ -169,8 +169,6 @@ void DialogSpwnRcrEquationView::update()
     if (pop == nullptr)
         return;
 
-//    while (updating)
-//        continue;
     if (!updating)
     {
         updating = true;
@@ -211,12 +209,10 @@ void DialogSpwnRcrEquationView::update()
             break;
 
         case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-//            notYet();
 //            updateShepherdReParm ();
             break;
 
         case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
-//            notYet();
             updateRickerReParm ();
             break;
 
@@ -273,32 +269,12 @@ void DialogSpwnRcrEquationView::resetValues()
     if (pop != nullptr)
     {
         equationNum = pop->SR()->getOption();
-//        numParams = pop->SR()->getNumFullParameters() - 3;
         genders = pop->gender() > 1? 2: 1;
 
         building = false;
         waiting = false;
         updating = false;
         yMax = 1.0;
-
-//        disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
-
-        // get values from input spinboxes
-/*        double min, max, val;
-        min = ui->doubleSpinBox_1_input->minimum();
-        max = ui->doubleSpinBox_1_input->maximum();
-        val = ui->doubleSpinBox_1_input->value();
-        setSlider1(min, max, val);
-        min = ui->doubleSpinBox_2_input->minimum();
-        max = ui->doubleSpinBox_2_input->maximum();
-        val = ui->doubleSpinBox_2_input->value();
-        setSlider2(min, max, val);
-        min = ui->doubleSpinBox_3_input->minimum();
-        max = ui->doubleSpinBox_3_input->maximum();
-        val = ui->doubleSpinBox_3_input->value();
-        setSlider3(min, max, val);*/
-
- //       connect (this, SIGNAL(numbersUpdated()), this, SLOT(updateSel()));
     }
 }
 
@@ -306,14 +282,14 @@ void DialogSpwnRcrEquationView::restoreAll()
 {
     if (pop != nullptr)
     {
-        disconnect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+        disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
         // get all values from pop->SR()
         resetValues();
 //        equationNum = pop->SR()->getMethod();
 //        genders = pop->gender();
         setParameters(pop->SR()->getFullParameters());
         parameterView->reset();
-        connect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+        connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
         setup();
     }
 }
@@ -351,12 +327,12 @@ void DialogSpwnRcrEquationView::setPopulation(population *popultn)
 
 void DialogSpwnRcrEquationView::setParameters(tablemodel *params)
 {
-    disconnect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
 //    if (pop != nullptr)
 //        numParams = pop->SR()->getNumFullParameters() - 3;
     parameterView->setNumParamsShown(numParams);
     parameterView->setParameterTable(params);
-    connect(parameterView, SIGNAL(dataChanged()), this, SLOT(update()));
+    connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
 }
 
 
@@ -422,8 +398,8 @@ void DialogSpwnRcrEquationView::updateRicker()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.3  Beverton-Holt
@@ -494,8 +470,8 @@ void DialogSpwnRcrEquationView::updateBevertonHoltStandard()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 
@@ -551,8 +527,8 @@ void DialogSpwnRcrEquationView::updateConstant()
     updateGrid(cht->rect());
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 200) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.5  Hockey stick
@@ -624,8 +600,8 @@ void DialogSpwnRcrEquationView::updateHockeyStick()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.6  Beverton-Holt, with constraint to have constant R about Bzero
@@ -690,8 +666,8 @@ void DialogSpwnRcrEquationView::updateBevertonHoltBzeroFlat()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 
@@ -771,8 +747,8 @@ void DialogSpwnRcrEquationView::updateSurvivorship()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.8  Shepherd
@@ -840,8 +816,8 @@ void DialogSpwnRcrEquationView::updateShepherd()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 // case 9: Shepherd re-parameterization (beta) - not yet implemented
@@ -917,8 +893,8 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 // 10: Ricker re-parameterization (beta) - power
@@ -984,8 +960,8 @@ void DialogSpwnRcrEquationView::updateRickerReParm()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    valSeries->attachAxis(axisY);
     cht->addSeries(valSeries);
+    valSeries->attachAxis(axisY);
 }
 
 
