@@ -52,6 +52,7 @@ public slots:
     void setParameters (tablemodel *params);
 
     void setParameterHeader(int pnum, QString hdr);
+    void setParametersVisible (bool vis = false);
 
     void setIntVar1Range (int min, int max);
     int getIntVar1 ();
@@ -62,8 +63,9 @@ public slots:
     void reset();
     virtual void resetValues();
     virtual void restoreAll();
-    virtual void setVisible(bool visible);
+//    virtual void setVisible(bool visible);
     void show ();
+    void hide ();
     void close();
 
     virtual void parametersChanged();
@@ -80,7 +82,7 @@ public slots:
 
 signals:
     void numbersUpdated();
-    void closed ();
+    void hidden ();
     void applyingValues();
     void applyingComplete();
 
@@ -88,6 +90,8 @@ protected:
     QString name;
     QString type;
     QString title;
+    QSize window;
+    QPoint position;
 
     int equationNum;
     int numParams;
@@ -102,13 +106,13 @@ protected:
     QChartView *chartview;
     QLineSeries *ascendSeries;
     QLineSeries *dscendSeries;
-    QLineSeries *selSeries;
+    QLineSeries *valSeries;
     QScatterSeries *ptSeries;
     QList<QPointF> firstPoints;
 
     float yMax;
 
-    QValueAxis *axisXsel;
+    QValueAxis *axisX;
     QValueAxis *axisY;
     QValueAxis *axisYalt;
 

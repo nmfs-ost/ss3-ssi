@@ -22,11 +22,17 @@ DialogParameterView::DialogParameterView(QWidget *parent) :
     clearAll();
     hide();
 
-    connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
+    ui->pushButton_apply->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_reset->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_close->setFocusPolicy(Qt::NoFocus);
+    connect (ui->pushButton_apply, SIGNAL(clicked()), SLOT(apply()));
+    connect (ui->pushButton_reset, SIGNAL(clicked()), SLOT(reset()));
+    connect (ui->pushButton_close, SIGNAL(clicked()), SLOT(close()));
     connectAll();
 }
 
 DialogParameterView::~DialogParameterView() {
+    ui->labelParamMin->releaseKeyboard();
     clearAll();
     delete ui;
 }
@@ -225,10 +231,11 @@ void DialogParameterView::setType(int pnum, QString type) {
 }
 
 void DialogParameterView::minChanged(double value) {
-    Q_UNUSED(value);
+    double dMin, dMax;
+
     for (int i = 0; i < pLabel.count(); i++) {
-        double dMin = pMin.at(i)->value();
-        double dMax = pMax.at(i)->value();
+        dMin = pMin.at(i)->value();
+        dMax = pMax.at(i)->value();
 
         sValue.at(i)->setRange(dMin, dMax);
         setSliderRange(i, dMin, dMax);
@@ -236,10 +243,11 @@ void DialogParameterView::minChanged(double value) {
 }
 
 void DialogParameterView::maxChanged(double value) {
-    Q_UNUSED(value);
+    double dMin, dMax;
+
     for (int i = 0; i < pLabel.count(); i++) {
-        double dMin = pMin.at(i)->value();
-        double dMax = pMax.at(i)->value();
+        dMin = pMin.at(i)->value();
+        dMax = pMax.at(i)->value();
 
         sValue.at(i)->setRange(dMin, dMax);
         setSliderRange(i, dMin, dMax);
@@ -324,10 +332,36 @@ double DialogParameterView::getInput(int pnum) {
     }
     return val;
 }
+
+//void DialogParameterView::setVisible(bool visible) {
+//    if (visible) {
+//        QDialog::show();
+//    } else {
+//        position = pos();
+//        window = size();
+//        QDialog::hide();
+//        emit hidden();
+//    }
+//    QDialog::setVisible(visible);
+//}
+
+void DialogParameterView::show() {
+    resize(window);
+    if (position != QPoint(0, 0))
+        move(position);
+    setVisible(true);
+}
+
+void DialogParameterView::hide() {
+    position = pos();
+    window = size();
+    setVisible(false);
+}
+
 void DialogParameterView::closeEvent(QCloseEvent *evt) {
     Q_UNUSED(evt);
-    hide();
-    emit closed();
+    QDialog::hide();
+    emit hidden();
 }
 
 void DialogParameterView::cancel() {
@@ -373,6 +407,7 @@ void DialogParameterView::apply() {
 
 doubleLimitSpinBox *DialogParameterView::valueSpinBox(bool arrows, bool read) {
     doubleLimitSpinBox *vsb = new doubleLimitSpinBox(this);
+    vsb->setFocusPolicy(Qt::StrongFocus);
     vsb->setValue(0);
     vsb->setDecimals(3);
     vsb->setSingleStep(.001);
@@ -385,6 +420,7 @@ doubleLimitSpinBox *DialogParameterView::valueSpinBox(bool arrows, bool read) {
 
 QDoubleSpinBox *DialogParameterView::parameterSpinBox(bool arrows, bool read) {
     QDoubleSpinBox *psb = new QDoubleSpinBox(this);
+    psb->setFocusPolicy(Qt::StrongFocus);
     psb->setRange(-200, 200);
     psb->setDecimals(3);
     psb->setSingleStep(.001);
@@ -398,6 +434,7 @@ QDoubleSpinBox *DialogParameterView::parameterSpinBox(bool arrows, bool read) {
 QSlider *DialogParameterView::parameterSlider() {
     QSlider *ps = new QSlider(Qt::Horizontal, this);
     ps->setRange(-20000, 20000);
+    ps->setFocusPolicy(Qt::StrongFocus);
     return ps;
 }
 

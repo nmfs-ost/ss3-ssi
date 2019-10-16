@@ -43,6 +43,9 @@ public slots:
     void setType(int pnum, QString type);
     bool setInputValue(int pnum);
 //    void changeParameter(int num, QStringList param);
+//    void setVisible (bool visible);
+    void hide();
+    void show();
     void closeEvent(QCloseEvent *evt);
     void cancel();
     void reset();
@@ -66,10 +69,12 @@ public slots:
 
 signals:
     void inputChanged();
-    void closed();
+    void hidden();
 //    void parameterChanged (int num, double min, double max, double init);
 
 private:
+    QSize window;
+    QPoint position;
 
     tablemodel *parameters;
     int numParamsShown;

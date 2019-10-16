@@ -44,17 +44,17 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     setXvals(1.0);
     setXvalStrings(QStringList());
     resetChart(true);
-    selSeries->append(0, 0);
-    selSeries->append(1, 0);
+    valSeries->append(0, 0);
+    valSeries->append(1, 0);
 //    cht->addSeries(selSeries);
     chartview->setChart(cht);
 
     parameterView = new DialogParameterView(this);
     parameterView->setTitle(name);
-    parameterView->hide();
-    connect (parameterView, SIGNAL(closed()), this, SLOT(parameterViewClosed()));
-    connect (ui->pushButton_showParameters, SIGNAL(toggled(bool)), parameterView, SLOT(setVisible(bool)));
-    ui->pushButton_showParameters->setChecked(false);
+    connect (parameterView, SIGNAL(hidden()), this, SLOT(setParametersVisible()));
+    connect (ui->pushButton_showParameters, SIGNAL(toggled(bool)), this, SLOT(setParametersVisible(bool)));
+    setParametersVisible();
+//    ui->pushButton_showParameters->setChecked(false);
 
 
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
@@ -148,6 +148,18 @@ void DialogEquationView::setParameters(tablemodel *params)
 void DialogEquationView::setParameterHeader(int pnum, QString hdr)
 {
     parameterView->setName(pnum, hdr);
+}
+
+void DialogEquationView::setParametersVisible(bool vis) {
+    ui->pushButton_showParameters->setChecked(vis);
+    if (vis) {
+        parameterView->show();
+        ui->pushButton_showParameters->setText("Hide Parameters");
+    }
+    else {
+        parameterView->hide();
+        ui->pushButton_showParameters->setText("Show Parameters");
+    }
 }
 
 void DialogEquationView::refresh()
@@ -269,29 +281,45 @@ void DialogEquationView::restoreAll()
     setup();
 }
 
-void DialogEquationView::setVisible(bool visible) {
-    if (visible)
-    {
-        restoreAll();
-        connectAll();
-    }
-    else {
-        disconnectAll();
-    }
-    QDialog::setVisible(visible);
-}
+//void DialogEquationView::setVisible(bool visible) {
+//    if (visible) {
+//        restoreAll();
+//        connectAll();
+//        if (position != QPoint(0, 0))
+//            move(position);
+//        resize(window);
+//    }
+//    else {
+//        disconnectAll();
+//        position = pos();
+//        window = size();
+//    }
+//    setParametersVisible(visible);
+//    QDialog::setVisible(visible);
+//}
 void DialogEquationView::show() {
     restoreAll();
     connectAll();
-    QDialog::show();
+    resize(window);
+    if (position != QPoint(0, 0))
+        move(position);
+    setVisible(true);
+    setParametersVisible(true);
+}
+
+void DialogEquationView::hide() {
+    setParametersVisible();
+    disconnectAll();
+    position = pos();
+    window = size();
+    setVisible(false);
+    emit hidden();
 }
 
 void DialogEquationView::close()
 {
-    disconnectAll();
-    parameterView->cancel();
+    parameterView->hide();
     hide();
-    emit closed();
 }
 
 void DialogEquationView::buttonClicked(QAbstractButton *btn)
@@ -315,12 +343,10 @@ void DialogEquationView::buttonClicked(QAbstractButton *btn)
     }
 }
 
-void DialogEquationView::closeEvent(QCloseEvent *event)
+void DialogEquationView::closeEvent(QCloseEvent *evt)
 {
-    Q_UNUSED(event);
-    parameterView->close();
-    hide();
-    emit closed();
+    Q_UNUSED(evt);
+    close();
 }
 
 void DialogEquationView::resizeEvent(QResizeEvent *event)
@@ -336,7 +362,7 @@ void DialogEquationView::parametersChanged()
 
 void DialogEquationView::parameterViewClosed()
 {
-    ui->pushButton_showParameters->setChecked(false);
+    setParametersVisible (false);
 }
 
 void DialogEquationView::setupChanged()
@@ -385,12 +411,12 @@ void DialogEquationView::updateGrid(QRectF rect)
     int xTicks = static_cast<int>(rect.width() / 100);
     int yTicks = static_cast<int>(rect.height() / 60);
 
-    selSeries->detachAxis(axisY);
-    int yMax = static_cast<int>((maxYvalue(selSeries->points()) + 100) / 100) * 100;
+    valSeries->detachAxis(axisY);
+    int yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
 //    axisXsel->setRange(0, 1);
     axisY->setRange(0, yMax);
 //    selSeries->attachAxis(axisXsel);
-    selSeries->attachAxis(axisY);
+    valSeries->attachAxis(axisY);
 
     xTicks = xTicks < 5? 3: xTicks;
     updateTicks(xTicks, yTicks);
@@ -400,7 +426,7 @@ void DialogEquationView::updateTicks(int xT, int yT)
 {
     int xticks = xT;// % 2? xT: (xT + 1);
     int yticks = yT % 2? yT: (yT + 1);
-    axisXsel->setTickCount(xticks);
+    axisX->setTickCount(xticks);
 
     axisY->setTickCount(yticks);
     axisYalt->setTickCount(yticks);
@@ -426,7 +452,7 @@ void DialogEquationView::resetChart(bool create)
     {
         chartview->hide();
         cht->hide();
-        delete axisXsel;
+        delete axisX;
         delete axisY;
         delete axisYalt;
         if (ascendSeries != nullptr)
@@ -435,7 +461,7 @@ void DialogEquationView::resetChart(bool create)
             delete dscendSeries;
         if (ptSeries != nullptr)
             delete ptSeries;
-        delete selSeries;
+        delete valSeries;
         delete cht;
         delete chartview;
     }
@@ -445,20 +471,20 @@ void DialogEquationView::resetChart(bool create)
     ascendSeries = nullptr;
     dscendSeries = nullptr;
     ptSeries = nullptr;
-    selSeries = new QLineSeries(cht);
-    selSeries->setName(QString("SB"));
-    cht->addSeries(selSeries);
-    axisXsel = new QValueAxis();
-    axisXsel->setTitleText(QString("R"));
-    axisXsel->setRange(0, 1);
-    cht->addAxis(axisXsel, Qt::AlignBottom);
+    valSeries = new QLineSeries(cht);
+    valSeries->setName(QString("Value"));
+    cht->addSeries(valSeries);
+    axisX = new QValueAxis();
+    axisX->setTitleText(QString("X"));
+    axisX->setRange(0, 1);
+    cht->addAxis(axisX, Qt::AlignBottom);
     axisY = new QValueAxis();
-    axisY->setTitleText(QString("SB"));
+    axisY->setTitleText(QString("Y"));
 //    axisY->setRange(0, 1);
     cht->addAxis(axisY, Qt::AlignLeft);
     axisYalt = new QValueAxis();
-    selSeries->attachAxis(axisXsel);
-    selSeries->attachAxis(axisY);
+    valSeries->attachAxis(axisX);
+    valSeries->attachAxis(axisY);
 
     firstPoints.clear();
 

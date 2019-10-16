@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.14.02
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.14.03
         ----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -20,7 +20,8 @@ History:
 ============================================================================
     3.30.14.03
     2019-08-16
-1. Exploring separate parameter dialog for equations.
+1. Changed equation dialog box for Spawn-Recruit.
+
 ============================================================================
     3.30.14.02
     2019-07-31

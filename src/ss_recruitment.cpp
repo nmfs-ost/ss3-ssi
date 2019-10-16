@@ -117,7 +117,7 @@ void spawn_recruit::setDefaultParameters()
     full_parameters->setParameter(3, parmvalues);
     parmvalues.clear();
 //    parmvalues = full_parameters->getParameter(4);  // SR_Beta (survival)
-    parmvalues << "0.0" << "1.0" << "0.8" << "1" << "0.5"  << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    parmvalues << "0.0" << "2.0" << "0.8" << "1" << "0.5"  << "6" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(4, parmvalues);
     parmvalues.clear();
  //   parmvalues = full_parameters->getParameter(5);  // SR_Shep_C (shepherd)
@@ -165,6 +165,9 @@ void spawn_recruit::setOption(int option)
 void spawn_recruit::setMethod(int value)
 {
     method = value;
+    QStringList param (full_parameters->getParameter(1));
+    param[0] = QString::number(.2, 'g', 3);
+    full_parameters->setParamData(1, param);
 
     switch (value)
     {
@@ -198,6 +201,9 @@ void spawn_recruit::setMethod(int value)
         parmsUsed << 1 << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
         setParamNums ();
+        param = full_parameters->getParameter(1);
+        param[0] = QString::number(.01, 'g', 3);
+        full_parameters->setParamData(1, param);
         break;
     case 7: // Survivorship
         parmsUsed.clear();

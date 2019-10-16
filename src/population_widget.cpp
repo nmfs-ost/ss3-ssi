@@ -79,7 +79,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 //    ui->checkBox_recr_interaction->setChecked(false);
     connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
     connect (ui->pushButton_equation, SIGNAL(toggled(bool)), SLOT(setSRequationDialogVisible(bool)));
-    connect (srEquationView, SIGNAL(closed()), SLOT(setSRequationDialogVisible()));
+    connect (srEquationView, SIGNAL(hidden()), SLOT(setSRequationDialogVisible()));
     connect (ui->spinBox_spwn_recr_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeSpwnRecReadTimeVary(int)));
     connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
     connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
@@ -1207,9 +1207,7 @@ void population_widget::changeRecrFullParams()
 {
     recruitParamsView->setHeight(pop->SR()->getNumFullParameters());
     recruitParamsView->resizeColumnsToContents();
-//    srEquationView->setParameters(pop->SR()->getFullParameters());
     changeRecrTVParams();
-//    srEquationView->update();
 }
 void population_widget::changeRecrTVParams()
 {
@@ -1413,7 +1411,7 @@ void population_widget::setSpawnRecrSpec(int spec)
     if (spec < 1) spec = 1;
     if (spec > 10) spec = 10;
     ui->comboBox_recr_spec->setCurrentIndex(spec - 1);
-//    srEquationView->setEquationNumber(spec);
+    srEquationView->setEquationNumber(spec);
 }
 
 void population_widget::changeSpawnRecrSpec(int num)
@@ -1424,14 +1422,20 @@ void population_widget::changeSpawnRecrSpec(int num)
     {
         pop->SR()->setMethod(mthd);
         srEquationView->changeEquationNumber(mthd);
-        recruitParamsView->setHeight(pop->SR()->getNumFullParameters());// getFullParameters());
+        recruitParamsView->setHeight(pop->SR()->getNumFullParameters());
     }
 }
 
 void population_widget::setSRequationDialogVisible(bool checked)
 {
-    srEquationView->setVisible(checked);
     ui->pushButton_equation->setChecked(checked);
+    if (checked) {
+        srEquationView->show();
+        ui->pushButton_equation->setText("Hide Curve");
+    }
+    else {
+        ui->pushButton_equation->setText("Show Curve");
+    }
 }
 
 void population_widget::changeMoveNumDefs(int value)

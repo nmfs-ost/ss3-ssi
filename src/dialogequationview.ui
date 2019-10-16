@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1168</width>
-    <height>712</height>
+    <width>858</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,6 +18,12 @@
     <layout class="QHBoxLayout" name="horizontalLayout_title">
      <item>
       <widget class="QLabel" name="label_title">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Title</string>
        </property>
@@ -205,8 +211,14 @@
      </item>
      <item row="0" column="9" rowspan="2">
       <widget class="QPushButton" name="pushButton_showParameters">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Parameters</string>
+        <string>Show Parameters</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
