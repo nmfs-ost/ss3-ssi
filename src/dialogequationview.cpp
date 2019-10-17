@@ -41,8 +41,7 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     yMax = -10;
     chartview = nullptr;
 
-    setXvals(1.0);
-    setXvalStrings(QStringList());
+    setXvals(0.0, 1.0, 0.02);
     resetChart(true);
     valSeries->append(0, 0);
     valSeries->append(1, 0);
@@ -64,8 +63,10 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     showBins(false);
     showJoins(false);
     showSPR(false);
+
     connect (ui->spinBox_SPR, SIGNAL(valueChanged(int)), this, SLOT(intVar1Changed(int)));
     intvar1 = ui->spinBox_SPR->value();
+    connectAll();
 }
 
 DialogEquationView::~DialogEquationView()
@@ -89,17 +90,70 @@ void DialogEquationView::disconnectAll()
 //    disconnect (this, SIGNAL(linearUpdated(float)), this, SLOT(updateLinearExp(float)));
 }
 
-void DialogEquationView::setXvals(double max)
+void DialogEquationView::setXvalsConst(const QList<float> &vals)
 {
-    double val;
-    int limit = static_cast<int>(max * 100.0);
-    xValList.clear();
-    for (int i = 0; i <= limit; i+=2)
+    double min, max, step;
+    int count;
+    if (vals.isEmpty() || vals.count() < 2)
     {
-        val = static_cast<double>(i / 100.0);
-        xValList.append(val);
+        min = getBinMin();
+        max = getBinMax();
+        step = getBinStep();
+    }
+    else {
+        min = vals.first();
+        max = vals.last();
+        step = vals.at(1) - vals.at(0);
+     }
+    setXvals(min, max, step);
+}
+
+void DialogEquationView::setXvalsConst(const QStringList &vals)
+{
+    double min, max, step;
+    int count;
+    if (vals.isEmpty())
+    {
+        min = getBinMin();
+        max = getBinMax();
+        step = getBinStep();
+    }
+    else {
+        count = vals.count();
+        if (count > 1) {
+            min = vals.first().toDouble();
+            max = vals.last().toDouble();
+            step = vals.at(1).toDouble() - vals.at(0).toDouble();
+        }
+        else {
+            min = 0.0; max = 1.0; step = 0.02;
+        }
+    }
+    setXvals(min, max, step);
+}
+
+void DialogEquationView::setXvals(const QList<float> &vals)
+{
+    if (!vals.isEmpty()) {
+        xValList.clear();
+        for (int i = 0; i < vals.count(); i++)
+            xValList.append(vals.at(i));
     }
 }
+
+void DialogEquationView::setXvals(double min, double max, double step)
+{
+    double val = min;
+    int limit = static_cast<int>((max - min) / step);// * 100.0);
+    xValList.clear();
+    for (int i = 0; i <= limit; i++)
+    {
+        xValList.append(val);
+        val += step;
+    }
+    setBinMin(static_cast<int>(min - .5));
+    setBinMax(static_cast<int>(max + .5));
+    setBinStep(static_cast<int>(step + .5));}
 
 void DialogEquationView::setXvalStrings(const QStringList &vals)
 {
@@ -108,10 +162,8 @@ void DialogEquationView::setXvalStrings(const QStringList &vals)
 
         for (int i = 0; i < vals.count(); i++)
             f_vals.append(QString(vals.at(i)).toFloat());
-
-        setXvals(f_vals.last());
-    }
-    setXvals(1.0);
+        setXvals(f_vals);
+     }
 }
 
 // This assumes that parameters are already set
@@ -514,6 +566,43 @@ void DialogEquationView::showBins(bool flag) {
     ui->doubleSpinBox_binsMidBin->setVisible(flag);
 }
 
+int DialogEquationView::getBinMin () {
+    return ui->spinBox_binsMin->value();
+}
+
+void DialogEquationView::setBinMin (int min) {
+    ui->spinBox_binsMin->setValue(min);
+}
+
+int DialogEquationView::getBinMax () {
+    return ui->spinBox_binsMax->value();
+}
+
+void DialogEquationView::setBinMax (int max) {
+    ui->spinBox_binsMax->setValue(max);
+}
+
+int DialogEquationView::getBinStep () {
+    return ui->spinBox_binsWidth->value();
+}
+
+void DialogEquationView::setBinStep (int step) {
+    ui->spinBox_binsWidth->setValue(step);
+}
+
+double DialogEquationView::getMidBin() {
+    return ui->doubleSpinBox_binsMidBin->value();
+}
+
+void DialogEquationView::setMidBin(double mid) {
+    ui->doubleSpinBox_binsMidBin->setValue(mid);
+}
+
+void DialogEquationView::binsChanged()
+{
+    // Do something
+}
+
 void DialogEquationView::showJoins(int num) {
     ui->label_steepness->hide();
     ui->label_steepJoin1->hide();
@@ -537,6 +626,18 @@ void DialogEquationView::showJoins(int num) {
         ui->label_steepJoin1->show();
         ui->spinBox_steepJoin1->show();
     }
+}
+
+void DialogEquationView::setJoinOne(int val) {
+    ui->spinBox_steepJoin1->setValue(val);
+}
+
+void DialogEquationView::setJoinTwo(int val) {
+    ui->spinBox_steepJoin2->setValue(val);
+}
+
+void DialogEquationView::setJoinThree(int val) {
+    ui->spinBox_steepJoin3->setValue(val);
 }
 
 // An additional spinBox for a value

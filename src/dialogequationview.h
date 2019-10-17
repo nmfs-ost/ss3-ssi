@@ -33,9 +33,6 @@ public:
     explicit DialogEquationView(QWidget *parent = nullptr);
     ~DialogEquationView();
 
-//    int getOption() const;
-//    void setOption(int value);
-
     QString getName() const;
     void setName(const QString &value);
     QString getTitle() const;
@@ -43,12 +40,15 @@ public:
     void setLabel(const QString &value);
 
 public slots:
-    virtual void setXvals(double max);
+    virtual void setXvalsConst(const QList<float> &vals);
+    virtual void setXvalsConst(const QStringList &vals);
+    virtual void setXvals(const QList<float> &vals);
+    virtual void setXvals(double min, double max, double step);
     virtual void setXvalStrings(const QStringList &vals);
+
 
     void setEquationNumber (int num);
     void changeEquationNumber (int num);
-//    void updateGraph ();
     void setParameters (tablemodel *params);
 
     void setParameterHeader(int pnum, QString hdr);
@@ -57,13 +57,12 @@ public slots:
     void setIntVar1Range (int min, int max);
     int getIntVar1 ();
     void setIntVar1 (int value);
-    void intVar1Changed (int value);
+    virtual void intVar1Changed (int value);
 
     void apply();
     void reset();
     virtual void resetValues();
     virtual void restoreAll();
-//    virtual void setVisible(bool visible);
     void show ();
     void hide ();
     void close();
@@ -79,6 +78,19 @@ public slots:
 
     void buttonClicked (QAbstractButton *btn);
     void closeEvent (QCloseEvent *event);
+
+    int getBinMin ();
+    void setBinMin (int min);
+    int getBinMax ();
+    void setBinMax (int max);
+    int getBinStep ();
+    void setBinStep (int step);
+    double getMidBin ();
+    void setMidBin (double mid);
+    virtual void binsChanged ();
+    void setJoinOne (int val);
+    void setJoinTwo (int val);
+    void setJoinThree (int val);
 
 signals:
     void numbersUpdated();

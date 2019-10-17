@@ -79,7 +79,7 @@ void DialogParameterView::setTitle(QString title) {
 
 void DialogParameterView::setParameterTable(tablemodel *params)
 {
-    if (params->rowCount() > 0) {
+    if (params != nullptr && params->rowCount() > 0) {
         parameters = params;
         paramsChanged();
     }
@@ -279,6 +279,7 @@ void DialogParameterView::sliderChanged(int value) {
 
 void DialogParameterView::sValueChanged(double value) {
     Q_UNUSED(value);
+    bool changed = false;
     int num = pLabel.count();
     for (int i = 0; i < num; i++) {
         double sval = sValue.at(i)->value();
@@ -292,17 +293,19 @@ void DialogParameterView::sValueChanged(double value) {
         else if (sval < dMin) {
             sValue.at(i)->setValue(dMin);
         }
-        else if (sliderval != check){
+        check = static_cast<int>(sValue.at(i)->value() * 1000);
+        if (sliderval != check){
             pSlider.at(i)->setValue(check);
         }
-        convertToInput(i);
+        changed = convertToInput(i);
     }
+    if (changed)
+        emit inputChanged();
 }
 
 
-void DialogParameterView::convertToInput(int pnum) {
-    if (setInputValue(pnum))
-        emit inputChanged();
+bool DialogParameterView::convertToInput(int pnum) {
+    return setInputValue(pnum);
 /*    if (!pLabel.isEmpty()) {
         double value = sValue.at(pnum)->value();
         double oldValue = eInput.at(pnum)->value(), newValue = 0;
@@ -380,8 +383,9 @@ void DialogParameterView::reset() {
         sValue.at(i)->setValue(pInit.at(i)->value());
     }
     connectAll();*/
-    if (numParamsShown > 0)
-        convertToInput(0);
+    sValueChanged(0);
+//    if (numParamsShown > 0)
+//        convertToInput(0);
 }
 
 void DialogParameterView::apply() {

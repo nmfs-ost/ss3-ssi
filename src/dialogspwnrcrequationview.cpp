@@ -25,7 +25,7 @@ DialogSpwnRcrEquationView::~DialogSpwnRcrEquationView()
 }
 
 
-void DialogSpwnRcrEquationView::setXvals(double max)
+/*void DialogSpwnRcrEquationView::setXvals(double min, double max, double step)
 {
     double val;
     int limit = static_cast<int>(max * 120.0);
@@ -35,21 +35,8 @@ void DialogSpwnRcrEquationView::setXvals(double max)
         val = static_cast<double>(i / 100.0);
         xValList.append(val);
     }
-}
+}*/
 
-void DialogSpwnRcrEquationView::setXvalStrings(const QStringList &vals)
-{
-    QList<double> f_vals;
-    double max = 0;
-
-    for (int i = 0; i < vals.count(); i++) {
-        f_vals.append(QString(vals.at(i)).toDouble());
-        if (f_vals.at(i) > max)
-            max = f_vals.at(i);
-    }
-
-    setXvals(max);
-}
 
 void DialogSpwnRcrEquationView::setOption(int value)
 {

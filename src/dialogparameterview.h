@@ -59,7 +59,7 @@ public slots:
     void maxChanged (double value);
     void sliderChanged(int value);
     void sValueChanged(double value);
-    void convertToInput(int num);
+    bool convertToInput(int num);
     void paramsChanged();
     doubleLimitSpinBox *valueSpinBox(bool arrows = true, bool read = true);
     QDoubleSpinBox *parameterSpinBox(bool arrows = true, bool read = true);

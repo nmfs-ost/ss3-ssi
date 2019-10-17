@@ -19,15 +19,11 @@ public:
     void setPopulation(population *popultn);
 
 public slots:
-    void setXvals(double max);
-    void setXvalStrings(const QStringList &vals);
+//    void setXvals(double min, double max, double step);
+//    void setXvalStrings(const QStringList &vals);
 
-//    void setEquationNumber (int num);
-//    void updateGraph ();
     void setParameters (tablemodel *params);
 
-//    void apply();
-//    void reset();
     void resetValues();
     void restoreAll();
 

@@ -16,6 +16,7 @@
 #include "abundancedelegate.h"
 #include "equationdialog.h"
 #include "dialoginfo.h"
+#include "dialogselectivityequationview.h"
 
 namespace Ui {
 class fleet_widget;
@@ -151,14 +152,14 @@ private:
     tableview *sizeSelexDiscardTVParamsView;
     tableview *sizeSelexMaleParamsView;
     tableview *sizeSelexMaleTVParamsView;
-    selexEquationDialog *selexSizeEqDialog;
+    DialogSelexEquationView *selexSizeEqDialog;
     DialogInfo * selexSizeInfoDialog;
 
     tableview *ageSelexParamsView;
     tableview *ageSelexTimeVaryParamsView;
     tableview *ageSelexMaleParamsView;
     tableview *ageSelexMaleTVParamsView;
-    selexEquationDialog *selexAgeEqDialog;
+    DialogSelexEquationView *selexAgeEqDialog;
     DialogInfo * selexAgeInfoDialog;
 
     tableview *lambdaView;

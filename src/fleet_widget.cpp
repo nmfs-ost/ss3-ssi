@@ -106,12 +106,12 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ageSelexMaleTVParamsView = new tableview();
     ageSelexMaleTVParamsView->setParent(this);
     ui->verticalLayout_selex_age_male_tv_parms->addWidget(ageSelexMaleTVParamsView);
-    selexSizeEqDialog = new selexEquationDialog(this, new QString("Size"));
+    selexSizeEqDialog = new DialogSelexEquationView(this, new QString("Size"));
     selexSizeEqDialog->hide();
     selexSizeInfoDialog = new DialogInfo (this);
     setupSelexSizeInfo();
     selexSizeInfoDialog->hide();
-    selexAgeEqDialog = new selexEquationDialog(this, new QString("Age"));
+    selexAgeEqDialog = new DialogSelexEquationView(this, new QString("Age"));
     selexAgeEqDialog->hide();
     selexAgeInfoDialog = new DialogInfo (this);
     setupSelexAgeInfo();
