@@ -613,6 +613,8 @@ void selectivity::setDefaultParams(int method, int special)
     float x1, x2;
     QString xMin, xMax, Peak;
     QString xLo, xHi;
+    QString totalbins(QString::number(xVals.count()));
+    QString midbin(QString::number(static_cast<int>(xVals.count()/2)));
     if (xVals.count() > 0)
     {
         xmin = xVals.first();
@@ -666,7 +668,8 @@ void selectivity::setDefaultParams(int method, int special)
     case 5:  // case 5 mirror another fleets size selectivity for specified bin range
     {
         setNumParameters(2);
-        parm << "-1" << "25" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+//        QString bin2(QString::number(xVals.count()));
+        parm << "1" << totalbins << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         setParameter(1, parm);
         break;
@@ -732,6 +735,16 @@ void selectivity::setDefaultParams(int method, int special)
         parm << xMin << xMax << Peak << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         setParameter(2, parm);
+/*        parm[0] = QString("1");
+        parm[1] = QString::number(xVals.count());
+        parm[2] = QString("1");*/
+        parm.clear();
+        if (method == 9) {
+            parm << "1" << totalbins << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        }
+        else {
+            parm << xMin << xMax << xMin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        }
         setParameter(4, parm);
         parm.clear();
         parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -955,9 +968,9 @@ void selectivity::setDefaultParams(int method, int special)
         {
             setNumParameters(numparam);
         }
-        parm << "1" << QString::number(numXvals) << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << totalbins << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = QString("10");
+        parm[2] = totalbins;
         setParameter(1, parm);
         parm.clear();
         parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -988,9 +1001,9 @@ void selectivity::setDefaultParams(int method, int special)
         }
         val = numXvals / 2;
         setNumParameters(numparam);
-        parm << "1" << QString::number((int)val) << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << totalbins  << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = QString::number((int)(val+1));
+        parm[2] = totalbins;
         setParameter(1, parm);
         parm.clear();
         parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -1027,9 +1040,9 @@ void selectivity::setDefaultParams(int method, int special)
         numparam = special + 2 + 2;
         setNumParameters(numparam);
 
-        parm << "1" << QString::number(numXvals) << QString::number((int)(numXvals/2)) << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << totalbins << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = QString::number((int)(numXvals/2) + 1);
+        parm[2] = totalbins;
         setParameter(1, parm);
         parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
@@ -1050,10 +1063,11 @@ void selectivity::setDefaultParams(int method, int special)
         }
         numparam = (special * numGenders) + 4;
         setNumParameters(numparam);
-        parm << "0" << QString::number(numXvals) << "1" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-1000" << totalbins << "-1000" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = QString("2");
+        parm[2] = midbin;
         setParameter(1, parm);
+        parm[2] = totalbins;
         setParameter(2, parm);
         parm.clear();
         parm << "-1" << "2" << "-.001" << "-.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -1083,7 +1097,7 @@ void selectivity::setDefaultParams(int method, int special)
         {
             setNumParameters(numparam);
         }
-        parm << "1" << QString::number(numXvals) << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << totalbins << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString("5");
         setParameter(1, parm);
@@ -1124,6 +1138,10 @@ void selectivity::setXVals(const QStringList &value)
     for (int i = 0; i < value.count(); i++)
         xVals.append(QString(value.at(i)).toFloat());
     setNumXvals(value.count());
+}
+
+float selectivity::getBinValue(int index) {
+    return xVals[index];
 }
 
 int selectivity::getNumGenders() const

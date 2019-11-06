@@ -11,9 +11,10 @@ DialogSpwnRcrEquationView::DialogSpwnRcrEquationView(QWidget *parent) :
 
     populationNum = 0;
 
-    setTitle(QString("Plotted Curve"));
+//    setTitle(QString("Plotted Curve"));
     setName(QString("Spawner-Recruitment Relationship"));
     parameterView->setTitle(name);
+    setXvals(0.0, 1.0, .02);
     equationNum = 1;
     setIntVar1Range(2, 6);
     setIntVar1(2);
@@ -23,19 +24,6 @@ DialogSpwnRcrEquationView::~DialogSpwnRcrEquationView()
 {
     close();
 }
-
-
-/*void DialogSpwnRcrEquationView::setXvals(double min, double max, double step)
-{
-    double val;
-    int limit = static_cast<int>(max * 120.0);
-    xValList.clear();
-    for (int i = 0; i <= limit; i+=2)
-    {
-        val = static_cast<double>(i / 100.0);
-        xValList.append(val);
-    }
-}*/
 
 
 void DialogSpwnRcrEquationView::setOption(int value)
@@ -83,10 +71,6 @@ void DialogSpwnRcrEquationView::setup()
 {
     if (pop == nullptr)
         return;
-
-//    parameterView->setParameterTable(pop->SR()->getFullParameters());
-//    while (updating)
-//        continue;
 
     if (!updating)
     {
@@ -159,6 +143,7 @@ void DialogSpwnRcrEquationView::update()
     if (!updating)
     {
         updating = true;
+        setMessageVisible(false);
 
         switch (equationNum)
         {
@@ -269,12 +254,10 @@ void DialogSpwnRcrEquationView::restoreAll()
 {
     if (pop != nullptr)
     {
-        disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
         // get all values from pop->SR()
         resetValues();
-//        equationNum = pop->SR()->getMethod();
-//        genders = pop->gender();
         setParameters(pop->SR()->getFullParameters());
+        disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
         parameterView->reset();
         connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
         setup();
@@ -306,19 +289,15 @@ void DialogSpwnRcrEquationView::setPopulation(population *popultn)
     {
         pop = popultn;
         restoreAll();
-//        setParameters(pop->SR()->getFullParameters());
-//        setEquationNumber(pop->SR()->getMethod());
-    //    refresh();
+        connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     }
 }
 
 void DialogSpwnRcrEquationView::setParameters(tablemodel *params)
 {
     disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
-//    if (pop != nullptr)
-//        numParams = pop->SR()->getNumFullParameters() - 3;
-    parameterView->setNumParamsShown(numParams);
     parameterView->setParameterTable(params);
+    parameterView->setNumParamsShown(numParams);
     connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
 }
 
@@ -505,12 +484,16 @@ void DialogSpwnRcrEquationView::updateConstant()
     cht->update();
     valSeries->clear();
 
-    for (int i = 0; i < xValList.count(); i++)
+/*    for (int i = 0; i < xValList.count(); i++)
     {
         SSB_curr_adj = xValList.at(i);
         Recruits = Recr_virgin_adj;
         valSeries->append(SSB_curr_adj, Recruits);
-    }
+    }*/
+    Recruits = Recr_virgin_adj;
+    valSeries->append(xValList.first(), Recruits);
+    valSeries->append(xValList.last(), Recruits);
+
     updateGrid(cht->rect());
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 200) / 100) * 100;
     axisY->setRange(0, yMax);
@@ -667,7 +650,7 @@ void DialogSpwnRcrEquationView::survivorship()
 {
     setTitle(QString("Option 7: Survivorship"));
     setLabel("Survivorship");
-    showSPR (true);
+    showInt1 (true);
 
     chartview->setVisible(false);
 

@@ -106,12 +106,12 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ageSelexMaleTVParamsView = new tableview();
     ageSelexMaleTVParamsView->setParent(this);
     ui->verticalLayout_selex_age_male_tv_parms->addWidget(ageSelexMaleTVParamsView);
-    selexSizeEqDialog = new DialogSelexEquationView(this, new QString("Size"));
+    selexSizeEqDialog = new DialogSelexEquationView(this, Size);
     selexSizeEqDialog->hide();
     selexSizeInfoDialog = new DialogInfo (this);
     setupSelexSizeInfo();
     selexSizeInfoDialog->hide();
-    selexAgeEqDialog = new DialogSelexEquationView(this, new QString("Age"));
+    selexAgeEqDialog = new DialogSelexEquationView(this, Age);
     selexAgeEqDialog->hide();
     selexAgeInfoDialog = new DialogInfo (this);
     setupSelexAgeInfo();
@@ -149,14 +149,14 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
     connect (ui->spinBox_selex_size_special, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeSpecial(int)));
     connect (ui->pushButton_selex_size_curve, SIGNAL(clicked(bool)), SLOT(showSelexSizeCurve(bool)));
-    connect (selexSizeEqDialog, SIGNAL(closed()), SLOT(selexSizeCurveClosed()));
+    connect (selexSizeEqDialog, SIGNAL(hidden()), SLOT(selexSizeCurveClosed()));
 
 //    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), selexAgeInfoDialog, SLOT(show()));
     connect (ui->comboBox_selex_age_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexAgePattern(int)));
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
     connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
-    connect (selexAgeEqDialog, SIGNAL(closed()), SLOT(selexAgeCurveClosed()));
+    connect (selexAgeEqDialog, SIGNAL(hidden()), SLOT(selexAgeCurveClosed()));
 
     connect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), SLOT(changeLengthMinTailComp()));
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
@@ -503,7 +503,7 @@ void fleet_widget::set_current_fleet(int index)
     int tabobs = ui->tabWidget_obs->currentIndex();
     int tabsel = ui->tabWidget_selex->currentIndex();
     Fleet *temp_flt = model_data->getFleet(index);
- //   if (temp_flt != current_fleet)
+    if (temp_flt != nullptr)
     {
         disconnectFleet ();
         current_fleet = temp_flt;
@@ -988,103 +988,83 @@ void fleet_widget::changeSelexSizePattern(int value)
     int newNumParams = 0;
     int oldPat = current_fleet->getSizeSelectivity()->getPattern();
     int pat = 0;
-    bool changePat = false;
     ui->spinBox_selex_size_special->setValue(0);
     switch (value)
     {
     case 0:
         pat = 0;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Selex = 1.0"));
         break;
     case 1:
         pat = 1;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Logistic"));
         break;
     case 5:
         pat = 5;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special) with limits"));
         break;
     case 6:
         pat = 6;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y)"));
         break;
     case 8:
         pat = 8;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Double logistic with smooth joins"));
         break;
     case 9:
         pat = 9;
-        changePat = true;
  //       ui->label_selex_size_pattern_info->setText(tr("Simple double logistic"));
         break;
     case 10:
         pat = 15;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Mirror another selex (Special)"));
         break;
     case 11:
         pat = 22;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Double normal, similar to CASAL"));
         break;
     case 12:
         pat = 23;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Similar to #24"));
         break;
     case 13:
         pat = 24;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Double normal with start and end values"));
         break;
     case 14:
         pat = 25;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Exponential - Logistic"));
         break;
     case 15:
         pat = 27;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Cubic spline"));
         break;
     case 16:
         pat = 30;
-        changePat = true;
 //        ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is spawning biomass"));
         break;
     case 17:
         pat = 31;
-        changePat = true;
   //      ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev)"));
         break;
     case 18:
         pat = 32;
-        changePat = true;
     //    ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is exp(recr dev) * spawn Biomass"));
         break;
     case 19:
         pat = 33;
-        changePat = true;
       //  ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: abundance is age 0 recr"));
         break;
     case 20:
         pat = 34;
-        changePat = true;
         //ui->label_selex_size_pattern_info->setText(tr("Set in Survey units: spawning biomass depletion"));
         break;
     case 21:
         pat = 42;
-        changePat = true;
  //       ui->label_selex_size_pattern_info->setText(tr("Cubic spline with scaling"));
         break;
     case 22:
         pat = 43;
-        changePat = true;
    //     ui->label_selex_size_pattern_info->setText(tr("Linear segments exp(y) with scaling"));
         break;
 //    default:

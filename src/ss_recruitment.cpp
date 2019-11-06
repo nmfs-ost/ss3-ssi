@@ -113,7 +113,7 @@ void spawn_recruit::setDefaultParameters()
     full_parameters->setParameter(2, parmvalues);
     parmvalues.clear();
 //    parmvalues = full_parameters->getParameter(3);  // SR_Zfrac (survival)
-    parmvalues << "0.0" << "1.0" << ".5" << "0.8" << "0.5" << "1"  << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    parmvalues << "0.0" << "3.0" << "1.0" << "0.8" << "0.5" << "1"  << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     full_parameters->setParameter(3, parmvalues);
     parmvalues.clear();
 //    parmvalues = full_parameters->getParameter(4);  // SR_Beta (survival)

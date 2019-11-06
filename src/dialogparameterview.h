@@ -22,12 +22,15 @@ class DialogParameterView : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogParameterView(QWidget *parent = nullptr);
+    explicit DialogParameterView(QWidget *parent = nullptr, bool showTrans = true);
     ~DialogParameterView();
 
     void setNumParamsShown (int num);
     int getNumParameters ();
     double getInput (int pnum);
+
+    bool getShowTrans() const;
+    void setShowTrans(bool value);
 
 public slots:
     void setTitle (QString title);
@@ -41,7 +44,8 @@ public slots:
     void setSlider(int pnum, double value);
     void setName(int pnum, QString name);
     void setType(int pnum, QString type);
-    bool setInputValue(int pnum);
+    bool setInput(int pnum);
+    void setInputValue(int pnum, double value);
 //    void changeParameter(int num, QStringList param);
 //    void setVisible (bool visible);
     void hide();
@@ -67,6 +71,10 @@ public slots:
 
     void buttonClicked(QAbstractButton*btn);
 
+protected:
+    template<typename T>
+    bool checkMinMax (T *min, T *max);
+
 signals:
     void inputChanged();
     void hidden();
@@ -75,6 +83,7 @@ signals:
 private:
     QSize window;
     QPoint position;
+    bool transVisible;
 
     tablemodel *parameters;
     int numParamsShown;

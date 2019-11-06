@@ -38,6 +38,9 @@ public:
     QString getTitle() const;
     void setTitle(const QString &value);
     void setLabel(const QString &value);
+    void setLabelVisible (bool flag);
+    void setMessage (const QString &value);
+    void setMessageVisible (bool flag);
 
 public slots:
     virtual void setXvalsConst(const QList<float> &vals);
@@ -57,6 +60,8 @@ public slots:
     void setIntVar1Range (int min, int max);
     int getIntVar1 ();
     void setIntVar1 (int value);
+    void setIntVar1Label (QString &txt);
+    void setIntVar1InfoLabel (QString &txt);
     virtual void intVar1Changed (int value);
 
     void apply();
@@ -88,8 +93,11 @@ public slots:
     double getMidBin ();
     void setMidBin (double mid);
     virtual void binsChanged ();
+    int getJoinOne ();
     void setJoinOne (int val);
+    int getJoinTwo ();
     void setJoinTwo (int val);
+    int getJoinThree ();
     void setJoinThree (int val);
 
 signals:
@@ -116,9 +124,15 @@ protected:
 
     QChart *cht;
     QChartView *chartview;
+
+    QLineSeries *join1Series;
+    QLineSeries *join2Series;
+    QLineSeries *join3Series;
+
     QLineSeries *ascendSeries;
     QLineSeries *dscendSeries;
     QLineSeries *valSeries;
+
     QScatterSeries *ptSeries;
     QList<QPointF> firstPoints;
 
@@ -136,11 +150,12 @@ protected slots:
     void connectAll();
     void disconnectAll();
 
+    void updateAxis(QValueAxis *axs, double min, double max);
     void updateGrid(QRectF rect);
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
 
-    void showSPR (bool flag);
+    void showInt1 (bool flag);
     void showJoins (int num);
     void showBins (bool flag);
 
@@ -154,7 +169,7 @@ protected slots:
     double maxXvalue (const QList<QPointF> &pointlist);
     double minYvalue (const QList<QPointF> &pointlist);
     double maxYvalue (const QList<QPointF> &pointlist);
-    double aveXvalue (const QList<float> &xvals);
+    double aveXvalue (const QList<double> &xvals);
     double aveYvalue(const QList<QPointF> &pointlist, int start = 0, int stop = 1000);
     void fillValues (const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints);
     double posfun(const double &x, const double eps, double& pen);

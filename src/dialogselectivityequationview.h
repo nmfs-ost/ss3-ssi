@@ -4,10 +4,15 @@
 #include "dialogequationview.h"
 #include "fleet.h"
 
+enum SelexType {
+    Age,
+    Size
+};
+
 class DialogSelexEquationView : public DialogEquationView
 {
 public:
-    DialogSelexEquationView(QWidget *parent = nullptr, QString *typ = new QString(""));
+    DialogSelexEquationView(QWidget *parent = nullptr, SelexType typ = Size);
     ~DialogSelexEquationView();
 
     Fleet *getFleet() const;
@@ -15,6 +20,9 @@ public:
 
     int getSpecial() const;
     void setSpecial(int value);
+
+    int getMale() const;
+    void setMale(int value);
 
     void setOption(int value);
 
@@ -31,8 +39,6 @@ public slots:
     void restoreAll();
 
     void setParameterHeaders ();
-    void parametersChanged();
-    void setupChanged();
 
     void setup(); // start new
     void refresh ();  // update from population values
@@ -45,6 +51,7 @@ private:
     Fleet *fleet;
     int fleetNum;
     selectivity * selex;
+    SelexType type;
     int genders;
     int special, male;
 
@@ -94,7 +101,6 @@ private slots:
     void twoSexEachAge ();
     void updateTwoSexEachAge ();
 
-    float logist (double value);
 };
 
 #endif // DIALOGSELECTIVITYEQUATIONVIEW_H

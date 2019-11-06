@@ -40,9 +40,17 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
 
     yMax = -10;
     chartview = nullptr;
-
-    setXvals(0.0, 1.0, 0.02);
+    join1Series = nullptr;
+    join2Series = nullptr;
+    join3Series = nullptr;
+    ascendSeries = nullptr;
+    dscendSeries = nullptr;
+    valSeries = nullptr;
+    ptSeries = nullptr;
     resetChart(true);
+
+    xValList.append(0);
+    setXvals(0, 10, 1);
     valSeries->append(0, 0);
     valSeries->append(1, 0);
 //    cht->addSeries(selSeries);
@@ -62,10 +70,14 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     updating = false;
     showBins(false);
     showJoins(false);
-    showSPR(false);
+    showInt1(false);
 
-    connect (ui->spinBox_SPR, SIGNAL(valueChanged(int)), this, SLOT(intVar1Changed(int)));
-    intvar1 = ui->spinBox_SPR->value();
+    setJoinOne(20);
+    setJoinTwo(20);
+    setJoinThree(20);
+
+    connect (ui->spinBox_int1, SIGNAL(valueChanged(int)), this, SLOT(intVar1Changed(int)));
+    intvar1 = ui->spinBox_int1->value();
     connectAll();
 }
 
@@ -139,6 +151,7 @@ void DialogEquationView::setXvals(const QList<float> &vals)
         for (int i = 0; i < vals.count(); i++)
             xValList.append(vals.at(i));
     }
+    axisX->setRange(vals.first(), vals.last());
 }
 
 void DialogEquationView::setXvals(double min, double max, double step)
@@ -153,7 +166,10 @@ void DialogEquationView::setXvals(double min, double max, double step)
     }
     setBinMin(static_cast<int>(min - .5));
     setBinMax(static_cast<int>(max + .5));
-    setBinStep(static_cast<int>(step + .5));}
+    setBinStep(static_cast<int>(step + .5));
+    axisX->setRange(min, max);
+}
+
 
 void DialogEquationView::setXvalStrings(const QStringList &vals)
 {
@@ -192,11 +208,14 @@ void DialogEquationView::changeEquationNumber(int num)
 
 void DialogEquationView::setParameters(tablemodel *params)
 {
-    disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     parameters = params;
-    parameterView->setNumParamsShown(numParams);
-    parameterView->setParameterTable(params);
-    connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+    if (params != nullptr)
+    {
+        disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+        parameterView->setParameterTable(params);
+        parameterView->setNumParamsShown(numParams);
+        connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+    }
 }
 
 
@@ -262,6 +281,7 @@ void DialogEquationView::update()
 
     {
         updating = true;
+        setMessageVisible(false);
 
         switch (equationNum)
         {
@@ -282,7 +302,7 @@ void DialogEquationView::update()
 }
 
 void DialogEquationView::setIntVar1Range(int min, int max) {
-    ui->spinBox_SPR->setRange(min, max);
+    ui->spinBox_int1->setRange(min, max);
 }
 
 int DialogEquationView::getIntVar1() {
@@ -292,8 +312,16 @@ int DialogEquationView::getIntVar1() {
 void DialogEquationView::setIntVar1(int value)
 {
     intvar1 = value;
-    if (ui->spinBox_SPR->value() != value)
-        ui->spinBox_SPR->setValue(value);
+    if (ui->spinBox_int1->value() != value)
+        ui->spinBox_int1->setValue(value);
+}
+
+void DialogEquationView::setIntVar1Label(QString &txt) {
+    ui->label_int1->setText(txt);
+}
+
+void DialogEquationView::setIntVar1InfoLabel(QString &txt) {
+    ui->label_int1_info->setText(txt);
 }
 
 void DialogEquationView::intVar1Changed(int value)
@@ -311,8 +339,10 @@ void DialogEquationView::apply()
 
 void DialogEquationView::reset()
 {
+    disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+    // reset parameters
     parameterView->reset();
-    resetValues();
+    connect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     update();
 }
 
@@ -330,8 +360,9 @@ void DialogEquationView::resetValues()
 void DialogEquationView::restoreAll()
 {
     disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
-    // get values from parameters
+    // reset parameters
     parameterView->reset();
+    resetValues();
     connect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     setup();
 }
@@ -442,7 +473,21 @@ void DialogEquationView::setTitle(const QString &value)
 void DialogEquationView::setLabel(const QString &value)
 {
     ui->label_title->setText(value);
-    ui->label_title->show();
+    setLabelVisible(true);
+}
+
+void DialogEquationView::setLabelVisible(bool flag) {
+    ui->label_title->setVisible(flag);
+}
+
+void DialogEquationView::setMessage(const QString &value)
+{
+    ui->label_msg->setText(value);
+    setMessageVisible(true);
+}
+
+void DialogEquationView::setMessageVisible(bool flag) {
+    ui->label_msg->setVisible(flag);
 }
 
 QString DialogEquationView::getName() const
@@ -459,19 +504,21 @@ void DialogEquationView::setName(const QString &value)
         setWindowTitle(QString("%1 -  %2").arg(name, title));
 }
 
-
+void DialogEquationView::updateAxis(QValueAxis *axs, double min, double max) {
+    axs->setRange(min, max);
+}
 
 void DialogEquationView::updateGrid(QRectF rect)
 {
     int xTicks = static_cast<int>(rect.width() / 100);
     int yTicks = static_cast<int>(rect.height() / 60);
 
-    valSeries->detachAxis(axisY);
+/*    valSeries->detachAxis(axisY);
     int yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
 //    axisXsel->setRange(0, 1);
     axisY->setRange(0, yMax);
 //    selSeries->attachAxis(axisXsel);
-    valSeries->attachAxis(axisY);
+    valSeries->attachAxis(axisY);*/
 
     xTicks = xTicks < 5? 3: xTicks;
     updateTicks(xTicks, yTicks);
@@ -489,8 +536,10 @@ void DialogEquationView::updateTicks(int xT, int yT)
 
 void DialogEquationView::resetChart(bool create)
 {
+    setLabelVisible(false);
+    setMessageVisible(false);
     showJoins(false);
-    showSPR(false);
+    showInt1(false);
     ui->label_title->hide();
     if (chartview != nullptr)
     {
@@ -510,6 +559,12 @@ void DialogEquationView::resetChart(bool create)
         delete axisX;
         delete axisY;
         delete axisYalt;
+        if (join1Series != nullptr)
+            delete join1Series;
+        if (join2Series != nullptr)
+            delete join2Series;
+        if (join3Series != nullptr)
+            delete join3Series;
         if (ascendSeries != nullptr)
             delete ascendSeries;
         if (dscendSeries != nullptr)
@@ -523,6 +578,9 @@ void DialogEquationView::resetChart(bool create)
     chartview = new QChartView(this);
     chartview->setChart(new QChart());
     cht = chartview->chart();
+    join1Series = nullptr;
+    join2Series = nullptr;
+    join3Series = nullptr;
     ascendSeries = nullptr;
     dscendSeries = nullptr;
     ptSeries = nullptr;
@@ -628,12 +686,24 @@ void DialogEquationView::showJoins(int num) {
     }
 }
 
+int DialogEquationView::getJoinOne() {
+    return ui->spinBox_steepJoin1->value();
+}
+
 void DialogEquationView::setJoinOne(int val) {
     ui->spinBox_steepJoin1->setValue(val);
 }
 
+int DialogEquationView::getJoinTwo() {
+    return ui->spinBox_steepJoin2->value();
+}
+
 void DialogEquationView::setJoinTwo(int val) {
     ui->spinBox_steepJoin2->setValue(val);
+}
+
+int DialogEquationView::getJoinThree() {
+    return ui->spinBox_steepJoin3->value();
 }
 
 void DialogEquationView::setJoinThree(int val) {
@@ -641,11 +711,11 @@ void DialogEquationView::setJoinThree(int val) {
 }
 
 // An additional spinBox for a value
-void DialogEquationView::showSPR(bool flag)
+void DialogEquationView::showInt1(bool flag)
 {
-    ui->spinBox_SPR->setVisible(flag);
-    ui->label_SPR->setVisible(flag);
-    ui->label_SPR_info->setVisible(flag);
+    ui->spinBox_int1->setVisible(flag);
+    ui->label_int1->setVisible(flag);
+    ui->label_int1_info->setVisible(flag);
 }
 
 // Not yet implemented
@@ -657,6 +727,8 @@ void DialogEquationView::notYet(int eqn, int num)
         num = parameters->rowCount();
     numParams = num;
     parameterView->setNumParamsShown(numParams);
+    showJoins(0);
+    showBins(false);
 
     QString msg(QString("Option %1 is not yet implemented").arg(
                        QString::number(eqn)));
@@ -679,6 +751,8 @@ void DialogEquationView::blank (int eqn, int rep, QString msg)
 
     numParams = 0;
     parameterView->setNumParamsShown(numParams);
+    showJoins(0);
+    showBins(false);
 
     // If replaced by another option
     if (rep > 0)
@@ -785,7 +859,7 @@ double DialogEquationView::maxYvalue(const QList<QPointF> &pointlist)
 }
 
 /** Returns the average of the values of a float list */
-double DialogEquationView::aveXvalue(const QList<float> &xvals)
+double DialogEquationView::aveXvalue(const QList<double> &xvals)
 {
     double value = 0.;
     int i = 0;

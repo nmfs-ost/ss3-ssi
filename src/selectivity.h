@@ -28,6 +28,7 @@ public:
 
     QList<float> getXVals() const;
     void setXVals(const QStringList &value);
+    float getBinValue (int index);
     void setAgeBins (const QStringList &value) {setXVals(value);}
     void setLenBins (const QStringList &value) {setXVals(value);}
 

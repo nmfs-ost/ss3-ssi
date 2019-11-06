@@ -46,114 +46,10 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="4">
-      <widget class="QLabel" name="label_binsMidBin">
-       <property name="minimumSize">
-        <size>
-         <width>50</width>
-         <height>18</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>MidBin</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="label_steepJoin1">
-       <property name="text">
-        <string>Join1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
+     <item row="2" column="3">
       <widget class="QLabel" name="label_steepJoin2">
        <property name="text">
         <string>Join2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_bins">
-       <property name="text">
-        <string>Bins</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBox_binsMin">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="value">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_binsMax">
-       <property name="minimumSize">
-        <size>
-         <width>50</width>
-         <height>18</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_binsWidth">
-       <property name="minimumSize">
-        <size>
-         <width>50</width>
-         <height>18</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>BinWidth</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QSpinBox" name="spinBox_steepJoin3">
-       <property name="value">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBox_binsMax">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="maximum">
-        <number>250</number>
-       </property>
-       <property name="value">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBox_steepJoin2">
-       <property name="value">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QSpinBox" name="spinBox_steepJoin1">
-       <property name="value">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="label_steepJoin3">
-       <property name="text">
-        <string>Join3</string>
        </property>
       </widget>
      </item>
@@ -170,23 +66,24 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="8">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="2" column="4">
+      <widget class="QSpinBox" name="spinBox_steepJoin2">
+       <property name="value">
+        <number>10</number>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
-     <item row="3" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label_steepness">
        <property name="text">
         <string>Join Steepness</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_bins">
+       <property name="text">
+        <string>Bins</string>
        </property>
       </widget>
      </item>
@@ -209,7 +106,70 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="7" rowspan="2">
+      <widget class="QLabel" name="label_int1">
+       <property name="text">
+        <string>Spawners per recruit on fish conditions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QLabel" name="label_steepJoin3">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Join3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_binsMidBin">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>MidBin</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="9" rowspan="2">
+      <widget class="QLabel" name="label_int1_info">
+       <property name="text">
+        <string>(this value will not be saved)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_binsWidth">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>BinWidth</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8" rowspan="2">
+      <widget class="QSpinBox" name="spinBox_int1">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="11" rowspan="2">
       <widget class="QPushButton" name="pushButton_showParameters">
        <property name="maximumSize">
         <size>
@@ -225,31 +185,93 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="5" rowspan="2">
-      <widget class="QLabel" name="label_SPR">
-       <property name="text">
-        <string>Spawners per recruit on fish conditions</string>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBox_binsMax">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximum">
+        <number>250</number>
+       </property>
+       <property name="value">
+        <number>50</number>
        </property>
       </widget>
      </item>
-     <item row="0" column="6" rowspan="2">
-      <widget class="QSpinBox" name="spinBox_SPR">
-       <property name="minimum">
-        <number>2</number>
+     <item row="0" column="10">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="maximum">
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spinBox_binsMin">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="value">
         <number>10</number>
        </property>
       </widget>
      </item>
-     <item row="0" column="7" rowspan="2">
-      <widget class="QLabel" name="label_SPR_info">
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="spinBox_steepJoin1">
+       <property name="value">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_binsMax">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>18</height>
+        </size>
+       </property>
        <property name="text">
-        <string>(this value will not be saved)</string>
+        <string>Max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_steepJoin1">
+       <property name="text">
+        <string>Join1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QSpinBox" name="spinBox_steepJoin3">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>10</number>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_msg">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_graph">

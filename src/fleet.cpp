@@ -33,7 +33,7 @@ Fleet::Fleet(ss_model *parent) :
     recapObs = new recapObservation();
 //    genObs.append(0);
 //    genObs.clear();
-    generalComps.append(0);
+    generalComps.append(nullptr);
     generalComps.clear();
     morphComp = new fleet_comp_morph(this);
 //    morphObs = new morphObservation();
@@ -51,6 +51,7 @@ Fleet::Fleet(ss_model *parent) :
     size_selex = new selectivity(parent);
     age_selex = new selectivity(parent);
     setName(QString("new_fleet"));
+    i_number = 0;
     size_selex->setFleetNum(i_number);
     age_selex->setFleetNum(i_number);
     reset();
@@ -249,8 +250,8 @@ void Fleet::setNumber (int n)
 
 void Fleet::reset()
 {
-    setName(QString("new_fleet"));
-    setNumber(1);
+//    setName(QString("new_fleet"));
+//    setNumber(1);
     setActive(true);
     setType(Fleet::Fishing);
     setArea(1);

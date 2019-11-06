@@ -36,11 +36,6 @@ public:
         None
     };
 
-private:
-    int readQTvParams;
-    bool q_read;
-    q_ratio *q_R;
-
 signals:
     void newDataRead();
 
@@ -348,6 +343,11 @@ public slots:
     QStringList getLambda(int row) {return lambdaModel->getRowData(row);}
     tablemodel *getLambdaModel() {return lambdaModel;}
 
+
+private:
+    int readQTvParams;
+    bool q_read;
+    q_ratio *q_R;
 
 protected:
     QString *s_name;

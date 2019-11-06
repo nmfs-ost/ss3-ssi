@@ -19,9 +19,6 @@ public:
     void setPopulation(population *popultn);
 
 public slots:
-//    void setXvals(double min, double max, double step);
-//    void setXvalStrings(const QStringList &vals);
-
     void setParameters (tablemodel *params);
 
     void resetValues();
@@ -33,16 +30,13 @@ public slots:
     void refresh ();  // update from population values
     void setup(); // start new
     void update ();   // update from dialog values
-//    void updateLinearExp(float);
 
 signals:
-//    void linearUpdated(float);
 
 private:
     population *pop;
     int populationNum;
     int genders;
-
 
 private slots:
     void ricker ();
