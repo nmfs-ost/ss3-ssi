@@ -28,12 +28,14 @@ public:
     void setNumParamsShown (int num);
     int getNumParameters ();
     double getInput (int pnum);
+    double getValue (int pnum);
 
     bool getShowTrans() const;
     void setShowTrans(bool value);
 
 public slots:
     void setTitle (QString title);
+    void setName (QString nm);
     void setParameterTable(tablemodel *params);
     void setupView(int num);
     void setSliders();
@@ -47,7 +49,7 @@ public slots:
     bool setInput(int pnum);
     void setInputValue(int pnum, double value);
 //    void changeParameter(int num, QStringList param);
-//    void setVisible (bool visible);
+    void setVisible (bool visible);
     void hide();
     void show();
     void closeEvent(QCloseEvent *evt);
@@ -81,6 +83,8 @@ signals:
 //    void parameterChanged (int num, double min, double max, double init);
 
 private:
+    QString title;
+    QString name;
     QSize window;
     QPoint position;
     bool transVisible;

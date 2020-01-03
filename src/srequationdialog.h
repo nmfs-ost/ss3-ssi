@@ -93,7 +93,6 @@ public slots:
 
 signals:
     void numbersUpdated();
-    void linearUpdated(float);
     void closed ();
     void applyingValues();
     void applyingComplete();

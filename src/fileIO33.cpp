@@ -382,7 +382,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             for (int j = 0; j <= data->get_num_ages(); j++)
                 str_lst.append(QString::number(j));
             data->getFleet(i)->getAgeSelectivity()->setNumXvals(str_lst.count());
-            data->getFleet(i)->getAgeSelectivity()->setXVals(str_lst);
+            data->getFleet(i)->getAgeSelectivity()->setXVals(a_data->getBins());
             data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value(QString("min tail comp")));
             data->getFleet(i)->setAgeAddToData(d_file->get_next_value(QString("add to data")));
             temp_int = d_file->get_next_value(QString("combine genders")).toInt();
@@ -1521,7 +1521,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         temp_int = f_file->getIntValue(QString("Benchmark Rel F basis"), 1, 2, 1);
         fcast->set_benchmark_rel_f(temp_int);
 
-        temp_int = f_file->getIntValue(QString("Forecast type"), 0, 5, 2);
+        temp_int = f_file->getIntValue(QString("Forecast type"), -1, 5, 2);
         fcast->set_forecast(temp_int);
         token = f_file->get_next_value(QString("number of forecast years"));
         temp_int = token.toInt();
@@ -2864,33 +2864,45 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Size selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
-            int pat = 0;
+            datalist.clear();
+            datalist.append(c_file->get_next_value("Size selex Pattern"));
+            datalist.append(c_file->get_next_value("Size selex Discard"));
+            datalist.append(c_file->get_next_value("Size selex Male"));
+            datalist.append(c_file->get_next_value("Size selex Special"));
+//            int pat = 0;
             sizesel = data->getFleet(i)->getSizeSelectivity();
             sizesel->disconnectSigs();
-            pat = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
-            sizesel->setPattern(pat);
-            temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
-            sizesel->setDiscard(temp_int);
-            temp_int = c_file->getIntValue(QString("Size selex Male"), 0, 4, 0);
-            sizesel->setMale(temp_int);
-            temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
-            sizesel->setSpecial(temp_int);
+            sizesel->setSetup(datalist);
+//            pat = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
+//            sizesel->setPattern(pat);
+//            temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
+//            sizesel->setDiscard(temp_int);
+//            temp_int = c_file->getIntValue(QString("Size selex Male"), 0, 4, 0);
+//            sizesel->setMale(temp_int);
+//            temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
+//            sizesel->setSpecial(temp_int);
             sizesel->connectSigs();
         }
         // Age selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
-            int pat = 0;
+            datalist.clear();
+            datalist.append(c_file->get_next_value("Size selex Pattern"));
+            datalist.append(c_file->get_next_value("Size selex Discard"));
+            datalist.append(c_file->get_next_value("Size selex Male"));
+            datalist.append(c_file->get_next_value("Size selex Special"));
+//            int pat = 0;
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
-            pat = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
-            agesel->setPattern(pat);
-            temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
-            agesel->setDiscard(temp_int);
-            temp_int = c_file->getIntValue(QString("Age selex Male"), 0, 4, 0);
-            agesel->setMale(temp_int);
-            temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
-            agesel->setSpecial(temp_int);
+            agesel->setSetup(datalist);
+//            pat = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
+//            agesel->setPattern(pat);
+//            temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
+//            agesel->setDiscard(temp_int);
+//            temp_int = c_file->getIntValue(QString("Age selex Male"), 0, 4, 0);
+//            agesel->setMale(temp_int);
+//            temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
+//            agesel->setSpecial(temp_int);
             agesel->connectSigs();
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)

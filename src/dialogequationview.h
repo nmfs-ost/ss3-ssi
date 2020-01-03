@@ -15,10 +15,15 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-#include "selectivity.h"
-#include "fleet.h"
-#include "model.h"
 #include "dialogparameterview.h"
+
+enum BlankType {
+    Discontinued,
+    Replaced,
+    NoEquation,
+    NotUsed,
+    NotYet
+};
 
 
 namespace Ui {
@@ -39,6 +44,7 @@ public:
     void setTitle(const QString &value);
     void setLabel(const QString &value);
     void setLabelVisible (bool flag);
+    QString getMessage ();
     void setMessage (const QString &value);
     void setMessageVisible (bool flag);
 
@@ -68,6 +74,7 @@ public slots:
     void reset();
     virtual void resetValues();
     virtual void restoreAll();
+    void setVisible(bool vis);
     void show ();
     void hide ();
     void close();
@@ -100,6 +107,8 @@ public slots:
     int getJoinThree ();
     void setJoinThree (int val);
 
+    QList<QPointF> getValuePoints();
+
 signals:
     void numbersUpdated();
     void hidden ();
@@ -108,7 +117,6 @@ signals:
 
 protected:
     QString name;
-    QString type;
     QString title;
     QSize window;
     QPoint position;
@@ -155,12 +163,13 @@ protected slots:
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
 
-    void showInt1 (bool flag);
+    void showInt1 (bool flag, QString label = QString(""), QString labelinfo = QString(""));
     void showJoins (int num);
     void showBins (bool flag);
 
-    void notYet (int eqn = 0, int num = 0);
-    void blank (int eqn, int rep = 0, QString msg = QString(""));
+    void blank (BlankType btype, int eqn, int rep = 0, QString msg = QString(""));
+    void linear (); // an example only
+    void updateLinear();
 
     double joinFunction (double minPoss, double maxPoss, double inflec, double xVar, double y1, double y2);
 

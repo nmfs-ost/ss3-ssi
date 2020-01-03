@@ -79,7 +79,6 @@ srEquationDialog::srEquationDialog(QWidget *parent) :
     connect (ui->spinBox_SPR, SIGNAL(valueChanged(int)), SLOT(intVar1Changed(int)));
 
     connect (this, SIGNAL(numbersUpdated()), SLOT(update()));
-//    connect (this, SIGNAL(linearUpdated(float)), SLOT(updateLinearExp(float)));
 
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
     building = false;

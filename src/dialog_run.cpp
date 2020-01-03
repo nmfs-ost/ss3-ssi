@@ -40,7 +40,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     echoview = new Dialog_fileView(this);
     echoview->hide();
 
-    charts = new chartDialog(this);
+    charts = new dialogSummaryOutput(this);
     charts->hide();
 
     nohess = false;

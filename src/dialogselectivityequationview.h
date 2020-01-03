@@ -2,7 +2,7 @@
 #define DIALOGSELECTIVITYEQUATIONVIEW_H
 
 #include "dialogequationview.h"
-#include "fleet.h"
+#include "model.h"
 
 enum SelexType {
     Age,
@@ -34,14 +34,15 @@ public slots:
 
     void setXvals(const QList<float> &vals);
     void setXvalStrings(const QStringList &vals);
+    void setBinVals(const QList<float> &vals);
+    void setBinValStrings(const QStringList &vals);
 
     void resetValues();
     void restoreAll();
 
     void setParameterHeaders ();
 
-    void setup(); // start new
-    void refresh ();  // update from population values
+    void setup();     // start new
     void update ();   // update from dialog values
 
 signals:
@@ -51,27 +52,29 @@ private:
     Fleet *fleet;
     int fleetNum;
     selectivity * selex;
-    SelexType type;
+    SelexType slxType;
     int genders;
-    int special, male;
+    int special;
+    int male;
+    QList<float> bins;
 
 private slots:
-    void constant (float val = 1.0);
-    void updateConstant(float val = 1.0);
-    void updateConstant (float val, float first, float last);
+    void constant (double val = 1.0);
+    void updateConstant(double val = 1.0);
+    void updateConstant (double val, double first, double last);
     void constantRange ();
-    void updateConstantRange (float val = 1.0);
+    void updateConstantRange (double val = 1.0);
     void logistic ();
     void updateLogistic ();
-    void mirror (int sliders = 0);
-    void updateMirror (int sliders = 0);
-    void linear (float scale);
+    void mirror (int num = 0);
+    void updateMirror (int flt = 0);
+    void linearSeg (int scale);
     void linearPlain();
     void linearScaled();
-    void updateLinear (float scale = 0.);
+    void updateLinear (int scale = 0);
     void updateLinearScaled();
     void updateLinearPlain();
-    void updateLinearExp (float scale = 0.);
+    void updateLinearExp (int scale = 0);
     void dblLogistic ();
     void updateDblLogistic ();
     void dblLogPeak ();

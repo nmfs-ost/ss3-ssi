@@ -2053,7 +2053,7 @@ then read num_of_seasons parameters below.</string>
                </item>
                <item>
                 <property name="text">
-                 <string>9=Shepherd re-param (3 parameters) - not implemented</string>
+                 <string>9=Shepherd re-param (3 parameters) - beta</string>
                 </property>
                </item>
                <item>

@@ -1421,8 +1421,8 @@ void population_widget::changeSpawnRecrSpec(int num)
     if (mthd != old_mthd)
     {
         pop->SR()->setMethod(mthd);
-        srEquationView->changeEquationNumber(mthd);
         recruitParamsView->setHeight(pop->SR()->getNumFullParameters());
+        srEquationView->changeEquationNumber(mthd);
     }
 }
 

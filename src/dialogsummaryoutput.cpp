@@ -14,10 +14,10 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-#include "chartdialog.h"
+#include "dialogsummaryoutput.h"
 #include "ui_chartdialog.h"
 
-chartDialog::chartDialog(QWidget *parent) :
+dialogSummaryOutput::dialogSummaryOutput(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::chartDialog)
 {
@@ -30,23 +30,67 @@ chartDialog::chartDialog(QWidget *parent) :
     connect (ui->pushButton_refresh, SIGNAL(released()), SLOT(refreshData()));
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));
 
-    axisX = new QValueAxis();
-    axisY = new QValueAxis();
-    axisYalt = new QValueAxis();
-    axisYalt->setRange(0, 4);
+    createChart();
+    axisYalt->setRange(0, 1);
     if (parent == nullptr)
         position = pos();
     else
-        position = parent->pos();
-    window = QSize(225, 140);
+        position = QPoint(1000, 300);
+    window = QSize(850, 450);
     reset();
 }
 
-void chartDialog::reset()
+void dialogSummaryOutput::createChart() {
+
+    axisX = new QValueAxis();
+    axisX->setTitleText("Year");
+    axisY = new QValueAxis();
+    axisY->setTitleText("Biomass");
+    axisYalt = new QValueAxis();
+    axisYalt->setTitleText("Catch Probability");
+
+    summaryChart = new QChart();
+    summaryChart->setTitle("Summary Chart");
+    summaryChart->addAxis(axisX, Qt::AlignBottom);
+    summaryChart->addAxis(axisY, Qt::AlignLeft);
+    summaryChart->addAxis(axisYalt, Qt::AlignRight);
+    summaryChart->legend()->setAlignment(Qt::AlignRight);
+    connectMarkers(summaryChart);
+    //summaryChart->legend()->show();
+    summaryView = new QChartView(summaryChart);
+    ui->verticalLayout_left->addWidget(summaryView);
+
+    Spawning = new QLineSeries();
+    Spawning->setName("SpwnStck");
+    summaryChart->addSeries(Spawning);
+    Spawning->attachAxis(axisX);
+    Spawning->attachAxis(axisY);
+    Recruits = new QLineSeries();
+    Recruits->setName("SpwnRcrt");
+    summaryChart->addSeries(Recruits);
+    Recruits->attachAxis(axisY);
+    Recruits->attachAxis(axisY);
+    Fishing = new QLineSeries();
+    Fishing->setName("CatchProb");
+    summaryChart->addSeries(Fishing);
+    Fishing->attachAxis(axisX);
+    Fishing->attachAxis(axisYalt);
+    TotalCatch = new QLineSeries();
+    TotalCatch->setName("TotCatch");
+    summaryChart->addSeries(TotalCatch);
+    TotalCatch->attachAxis(axisX);
+    TotalCatch->attachAxis(axisY);
+}
+
+void dialogSummaryOutput::reset()
 {
-    removeCharts();
-    seriesNames.clear();
-    seasons.clear();
+//    removeCharts();
+//    seriesNames.clear();
+//    seasons.clear();
+    Spawning->clear();
+    Recruits->clear();
+    Fishing->clear();
+    TotalCatch->clear();
 
     numBmassSeries = 0;
     numOtherSeries = 0;
@@ -56,48 +100,65 @@ void chartDialog::reset()
     firstForecastYear = 10000;
 
     maxBmass = 0.0;
-    maxOther = 4.0;
+    maxOther = 1.0;
     setGeometry(position.rx(), position.ry(), window.rwidth(), window.rheight());
 }
 
-chartDialog::~chartDialog()
+dialogSummaryOutput::~dialogSummaryOutput()
 {
-    delete axisX;
-    delete axisY;
-    delete axisYalt;
+    deleteChart();
+//    removeCharts();
+//    delete axisX;
+//    delete axisY;
+//    delete axisYalt;
     delete ui;
 }
 
-void chartDialog::refreshData()
+void dialogSummaryOutput::deleteChart() {
+    delete Spawning;
+    delete Recruits;
+    delete Fishing;
+    delete TotalCatch;
+
+    disconnectMarkers(summaryChart);
+    delete summaryChart;
+    delete summaryView;
+
+    delete axisX;
+    delete axisY;
+    delete axisYalt;
+}
+
+void dialogSummaryOutput::refreshData()
 {
 //    QRect qr (geometry());
 //    QRect tempqr (pos(), QSize(225, 140));
     reset();
 //    setGeometry(QRect(pos(), QSize(100, 50)));
     readData();
-    resetCharts();
+    refreshSeries();
 //    setGeometry(qr);
 }
 
-void chartDialog::readData()
+void dialogSummaryOutput::readData()
 {
     QString line;
     QStringList values;
     QStringList title;
-    float xvalue = 0.0;
+    int xvalue = 0.0;
     float yvalue = 0.0;
     bool okay = false;
-    int areaNum = 0;
-    float year;
-    int seas = 0;
-    int index = 0;
+//    int areaNum = 0;
+//    float year;
+//    int seas = 0;
+//    int index = 0;
 
     QFile report(QString("ss_summary.sso"));
     if (report.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&report);
 
-        seriesNames << "SpwnStck" << "SpwnRcrt" << "Fishing" << "TotCatch";
-        createCharts(1, seriesNames);
+//        seriesNames << "SpwnStck" << "SpwnRcrt" << "Fishing" << "TotCatch";
+//        createCharts(1, seriesNames);
 
         while (!stream.atEnd())
         {
@@ -107,7 +168,7 @@ void chartDialog::readData()
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');
-                xvalue = title.last().toFloat();
+                xvalue = title.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
@@ -119,7 +180,7 @@ void chartDialog::readData()
                         lastYear = xvalue;
                     if (yvalue > maxBmass)
                         maxBmass = yvalue;
-                    bmassSeries.at(0)->append(xvalue, yvalue);
+                    Spawning->append(xvalue, yvalue);
                 }
             }
             else if (line.contains("Recr_"))
@@ -135,20 +196,20 @@ void chartDialog::readData()
                 {
                     if (yvalue > maxBmass)
                         maxBmass = yvalue;
-                    bmassSeries.at(1)->append(xvalue, yvalue);
+                    Recruits->append(xvalue, yvalue);
                 }
             }
             else if (line.contains("F_"))
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');
-                xvalue = title.last().toFloat();
+                xvalue = title.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
                     if (yvalue > maxBmass)
                         maxBmass = yvalue;
-                    bmassSeries.at(2)->append(xvalue, yvalue);
+                    Fishing->append(xvalue, yvalue);
                 }
 
             }
@@ -156,13 +217,13 @@ void chartDialog::readData()
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');
-                xvalue = title.last().toFloat();
+                xvalue = title.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
                     if (yvalue > maxBmass)
                         maxBmass = yvalue;
-                    bmassSeries.at(3)->append(xvalue, yvalue);
+                    TotalCatch->append(xvalue, yvalue);
                 }
 
             }
@@ -172,7 +233,7 @@ void chartDialog::readData()
     }
 }
 
-void chartDialog::resetCharts()
+void dialogSummaryOutput::refreshSeries()
 {
     axisX->setRange(firstYear, lastYear);
     axisX->applyNiceNumbers();
@@ -180,35 +241,39 @@ void chartDialog::resetCharts()
     axisY->applyNiceNumbers();
     axisYalt->setRange(0, maxOther);
 
-    for (int i = 0; i < bmassCharts.count(); i++)
-    {
-        bmassCharts[i]->addAxis(axisX, Qt::AlignBottom);
-        bmassCharts[i]->addAxis(axisY, Qt::AlignLeft);
-        bmassCharts[i]->addAxis(axisYalt, Qt::AlignRight);
+//    for (int i = 0; i < bmassCharts.count(); i++)
+//    {
+//        bmassCharts[i]->addAxis(axisX, Qt::AlignBottom);
+//        bmassCharts[i]->addAxis(axisY, Qt::AlignLeft);
+//        bmassCharts[i]->addAxis(axisYalt, Qt::AlignRight);
 //        bmassCharts[i]->axisX()->setRange(firstYear, lastYear);
 //        bmassCharts[i]->axisY()->setRange(0, maxBmass);
 //        static_cast<QValueAxis *>(bmassCharts[i]->axisX())->applyNiceNumbers();
 //        static_cast<QValueAxis *>(bmassCharts[i]->axisY())->applyNiceNumbers();
-    }
-    for (int i = 0; i < otherCharts.count(); i++)
-    {
-        otherCharts[i]->addAxis(axisX, Qt::AlignBottom);
-        otherCharts[i]->addAxis(axisYalt, Qt::AlignLeft);
+//    }
+//    for (int i = 0; i < otherCharts.count(); i++)
+//    {
+//        otherCharts[i]->addAxis(axisX, Qt::AlignBottom);
+//        otherCharts[i]->addAxis(axisYalt, Qt::AlignLeft);
 //        otherCharts[i]->axisX()->setRange(firstYear, lastYear);
 //        otherCharts[i]->axisY()->setRange(0, maxOther);
 //        static_cast<QValueAxis *>(otherCharts[i]->axisX())->applyNiceNumbers();
 //        static_cast<QValueAxis *>(otherCharts[i]->axisY())->applyNiceNumbers();
-    }
+//    }
 
-    for (int i = 0; i < bmassSeries.count(); i++)
-        bmassSeries.at(i)->attachAxis(axisX);
-    bmassSeries.at(0)->attachAxis(axisY);
-    bmassSeries.at(1)->attachAxis(axisY);
-    bmassSeries.at(2)->attachAxis(axisYalt);
-    bmassSeries.at(3)->attachAxis(axisY);
+//    for (int i = 0; i < bmassSeries.count(); i++)
+//        bmassSeries.at(i)->attachAxis(axisX);
+    Spawning->attachAxis(axisX);
+    Spawning->attachAxis(axisY);
+    Recruits->attachAxis(axisX);
+    Recruits->attachAxis(axisY);
+    Fishing->attachAxis(axisX);
+    Fishing->attachAxis(axisYalt);
+    TotalCatch->attachAxis(axisX);
+    TotalCatch->attachAxis(axisY);
 }
 
-void chartDialog::createCharts(int areaNum, QStringList serNames)
+/*void dialogSummaryOutput::createCharts(int areaNum, QStringList serNames)
 {
     QChart *newcht = nullptr;
     QChartView *newview = nullptr;
@@ -234,7 +299,7 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
         newcht->createDefaultAxes();
 
         ui->verticalLayout_left->addWidget(newview, 1);
-
+*/
 /*        if (serNames.count() > 4)
         {
         newcht = new QChart ();
@@ -256,7 +321,7 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
 
         ui->verticalLayout_right->addWidget(newview, 1);
         }*/
-
+/*
         if (areaNum == 1)
         {
             numBmassSeries = bmassSeries.count();
@@ -265,7 +330,7 @@ void chartDialog::createCharts(int areaNum, QStringList serNames)
     }
 }
 
-void chartDialog::removeCharts()
+void dialogSummaryOutput::removeCharts()
 {
     QLineSeries *series;
     QList<QLineSeries *> seriesList;
@@ -319,7 +384,7 @@ void chartDialog::removeCharts()
 
 }
 
-void chartDialog::removeCharts(QChart *cht, QList<QLineSeries *>seriesList)
+void dialogSummaryOutput::removeCharts(QChart *cht, QList<QLineSeries *>seriesList)
 {
     // Remove last series from chart
     if (seriesList.count() > 0) {
@@ -328,9 +393,9 @@ void chartDialog::removeCharts(QChart *cht, QList<QLineSeries *>seriesList)
         seriesList.removeLast();
         delete series;
     }
-}
+}*/
 
-void chartDialog::connectMarkers(QChart *cht)
+void dialogSummaryOutput::connectMarkers(QChart *cht)
 {
 //![1]
     // Connect all markers to handler
@@ -342,7 +407,7 @@ void chartDialog::connectMarkers(QChart *cht)
 //![1]
 }
 
-void chartDialog::disconnectMarkers(QChart *cht)
+void dialogSummaryOutput::disconnectMarkers(QChart *cht)
 {
 //![2]
     foreach (QLegendMarker* marker, cht->legend()->markers()) {
@@ -351,7 +416,7 @@ void chartDialog::disconnectMarkers(QChart *cht)
 //![2]
 }
 
-void chartDialog::handleMarkerClicked()
+void dialogSummaryOutput::handleMarkerClicked()
 {
 //![3]
     QLegendMarker* marker = qobject_cast<QLegendMarker*> (sender());
@@ -411,13 +476,13 @@ void chartDialog::handleMarkerClicked()
     }
 }
 
-QLineSeries *chartDialog::division(int year, float val, QString name)
+QLineSeries *dialogSummaryOutput::division(int year, float val, QString name)
 {
     QLineSeries *qls = new QLineSeries(this);
 
-    float x1 = (float)(year);
-    float x2 = seasons.last() / 2.0;
-    float yr = x1 - x2;
+//    float x1 = static_cast<float>(year);
+//    float x2 = seasons.last() / 2.0;
+//    float yr = x1 - x2;
 
     qls->append(QPointF(year, 0.0));
     qls->append(QPointF(year, val));
@@ -427,13 +492,13 @@ QLineSeries *chartDialog::division(int year, float val, QString name)
     return qls;
 }
 
-void chartDialog::resizeEvent(QResizeEvent *evt) {
+void dialogSummaryOutput::resizeEvent(QResizeEvent *evt) {
     window = size();
     position = pos();
     QDialog::resizeEvent(evt);
 }
 
-void chartDialog::moveEvent(QMoveEvent *evt) {
+void dialogSummaryOutput::moveEvent(QMoveEvent *evt) {
     position = pos();
     QDialog::moveEvent(evt);
 }

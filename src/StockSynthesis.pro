@@ -110,7 +110,8 @@ SOURCES += main.cpp\
     dialogspwnrcrequationview.cpp \
     doublelimitspinbox.cpp \
     dialogselectivityequationview.cpp \
-    ss_math.cpp
+    ss_math.cpp \
+    dialogsummaryoutput.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -209,7 +210,8 @@ HEADERS  += mainwindow.h \
     slxequationdialog.h \
     dialogspwnrcrequationview.h \
     doublelimitspinbox.h \
-    dialogselectivityequationview.h
+    dialogselectivityequationview.h \
+    dialogsummaryoutput.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

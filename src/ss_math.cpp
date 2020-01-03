@@ -23,9 +23,9 @@ float normal_dist (int num, int place)
 
 /** Returns the logistic of the requested value
  * 1/(1 + exp(-value)) */
-float logist(double value)
+double logist(double value)
 {
-    float temp = exp(-value);
+    double temp = exp(-value);
     return (1./(1. + temp));
 }
 

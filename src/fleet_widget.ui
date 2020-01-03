@@ -1914,7 +1914,14 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_selex_size_special"/>
+                   <widget class="QSpinBox" name="spinBox_selex_size_special">
+                    <property name="minimum">
+                     <number>-50</number>
+                    </property>
+                    <property name="maximum">
+                     <number>50</number>
+                    </property>
+                   </widget>
                   </item>
                   <item>
                    <spacer name="horizontalSpacer_23">
@@ -1944,7 +1951,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>852</width>
-                   <height>388</height>
+                   <height>348</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2450,7 +2457,14 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_selex_age_special"/>
+                   <widget class="QSpinBox" name="spinBox_selex_age_special">
+                    <property name="minimum">
+                     <number>-50</number>
+                    </property>
+                    <property name="maximum">
+                     <number>50</number>
+                    </property>
+                   </widget>
                   </item>
                   <item>
                    <spacer name="horizontalSpacer_30">
@@ -2479,8 +2493,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>286</width>
-                   <height>208</height>
+                   <width>878</width>
+                   <height>341</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">

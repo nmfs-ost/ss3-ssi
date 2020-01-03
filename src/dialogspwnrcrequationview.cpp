@@ -13,7 +13,6 @@ DialogSpwnRcrEquationView::DialogSpwnRcrEquationView(QWidget *parent) :
 
 //    setTitle(QString("Plotted Curve"));
     setName(QString("Spawner-Recruitment Relationship"));
-    parameterView->setTitle(name);
     setXvals(0.0, 1.0, .02);
     equationNum = 1;
     setIntVar1Range(2, 6);
@@ -62,11 +61,6 @@ void DialogSpwnRcrEquationView::setParameterHeaders()
     }
 }*/
 
-void DialogSpwnRcrEquationView::refresh()
-{
-    restoreAll();
-}
-
 void DialogSpwnRcrEquationView::setup()
 {
     if (pop == nullptr)
@@ -84,7 +78,7 @@ void DialogSpwnRcrEquationView::setup()
         switch (equationNum)
         {
         case 1: // case 1: null
-            blank (1, 6, QString("For B-H constrained curve"));
+            blank (Replaced, 1, 6, QString("For Beverton-Holt constrained curve"));
             break;
 
         case 2:  // case 2: Ricker - 2 parameters: log(R0) and steepness
@@ -116,8 +110,7 @@ void DialogSpwnRcrEquationView::setup()
             break;
 
         case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-            notYet(9, 3);
-//            shepherdReParm ();
+            shepherdReParm ();
             break;
 
         case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
@@ -125,7 +118,7 @@ void DialogSpwnRcrEquationView::setup()
             break;
 
         default:
-            blank(0);
+            blank (NotUsed, equationNum);
             break;
 
         }
@@ -148,8 +141,7 @@ void DialogSpwnRcrEquationView::update()
         switch (equationNum)
         {
 //        case 1: // case 1: null
-//            numSliders = 0;
-//            blank (1, 6, QString("For B-H constrained curve"));
+//            blank (Replaced, 1, 6, QString("For Beverton-Holt constrained curve"));
 //            break;
 
         case 2:  // case 2: Ricker - 2 : log(R0) and steepness
@@ -181,15 +173,11 @@ void DialogSpwnRcrEquationView::update()
             break;
 
         case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-//            updateShepherdReParm ();
+            updateShepherdReParm ();
             break;
 
         case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
             updateRickerReParm ();
-            break;
-
-        default:
-            blank(0);
             break;
 
         }
@@ -240,7 +228,9 @@ void DialogSpwnRcrEquationView::resetValues()
 {
     if (pop != nullptr)
     {
-        equationNum = pop->SR()->getOption();
+        while (equationNum != pop->SR()->getOption())
+            continue;
+//        equationNum = pop->SR()->getOption();
         genders = pop->gender() > 1? 2: 1;
 
         building = false;
@@ -254,28 +244,16 @@ void DialogSpwnRcrEquationView::restoreAll()
 {
     if (pop != nullptr)
     {
+        disconnectAll();
         // get all values from pop->SR()
         resetValues();
+        // set parameters
         setParameters(pop->SR()->getFullParameters());
-        disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
-        parameterView->reset();
-        connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+        connectAll();
         setup();
     }
 }
 
-
-void DialogSpwnRcrEquationView::parametersChanged()
-{
-//    getParameterValues();
-//    resetValues();
-    update();
-}
-
-void DialogSpwnRcrEquationView::setupChanged()
-{
-    refresh();
-}
 
 
 population *DialogSpwnRcrEquationView::getPopulation() const
@@ -293,11 +271,22 @@ void DialogSpwnRcrEquationView::setPopulation(population *popultn)
     }
 }
 
+void DialogSpwnRcrEquationView::changeEquationNumber(int num)
+{
+    if (equationNum != num) {
+        equationNum = num;
+        restoreAll();
+    }
+    else {
+        reset();
+    }
+}
+
 void DialogSpwnRcrEquationView::setParameters(tablemodel *params)
 {
     disconnect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     parameterView->setParameterTable(params);
-    parameterView->setNumParamsShown(numParams);
+    parameterView->reset();
     connect(parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
 }
 
@@ -307,8 +296,7 @@ void DialogSpwnRcrEquationView::setParameters(tablemodel *params)
 //  2 parameters: log(R0) and steepness
 void DialogSpwnRcrEquationView::ricker()
 {
-    setTitle(QString("Option 2: Ricker"));
-    setLabel("Ricker");
+    setLabel(QString("Option 2: Ricker"));
 
     chartview->setVisible(false);
 
@@ -322,8 +310,6 @@ void DialogSpwnRcrEquationView::ricker()
     updateRicker();
     chartview->setVisible(true);
 
-//    cht->addAxis(axisXsel, Qt::AlignBottom);
-//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -344,17 +330,16 @@ void DialogSpwnRcrEquationView::updateRicker()
     plot(SB,R) */
 
 //    double SPRtemp =
-//    double SB_virgin_adj = 1.0;
     int yMax = 1;
     double SSB_curr_adj, Recruits;
     double Recr_virgin_adj = parameterView->getInput(0);
     double steepness = parameterView->getInput(1);
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
-    // SSB_virgin_adj = 1.0, so it factors out
+    // assuming SSB_virgin_adj = 1.0, so it factors out
     for (int i = 0; i < xValList.count(); i++)
     {
         SSB_curr_adj = xValList.at(i);
@@ -364,8 +349,8 @@ void DialogSpwnRcrEquationView::updateRicker()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.3  Beverton-Holt
@@ -373,9 +358,7 @@ void DialogSpwnRcrEquationView::updateRicker()
 //  2 parameters: log(R0) and steepness
 void DialogSpwnRcrEquationView::bevertonHoltStandard()
 {
-    QString msg (QString("Option 3: Standard Beverton-Holt"));
-    setTitle(msg);
-    setLabel("Standard Beverton-Holt");
+    setLabel(QString("Option 3: Standard Beverton-Holt"));
 
     chartview->setVisible(false);
 
@@ -422,8 +405,8 @@ void DialogSpwnRcrEquationView::updateBevertonHoltStandard()
 
     double Recr_virgin_adj = parameterView->getInput(0);//exp(logRecr_virgin_adj);
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
     // SSB_virgin_adj = 1.0
@@ -436,8 +419,8 @@ void DialogSpwnRcrEquationView::updateBevertonHoltStandard()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 
@@ -450,9 +433,7 @@ void DialogSpwnRcrEquationView::updateBevertonHoltStandard()
 //  to get CAGEAN-like unconstrained recruitment estimates,
 void DialogSpwnRcrEquationView::constant()
 {
-    QString msg(QString("Option 4: Ignore steepness and no bias adjustment"));
-    setTitle(msg);
-    setLabel("Ignore steepness and no bias adjustment - only first parameter used.");
+    setLabel(QString("Option 4: Ignore steepness and no bias adjustment"));
 
     chartview->setVisible(false);
 
@@ -466,8 +447,8 @@ void DialogSpwnRcrEquationView::constant()
     updateConstant();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisX, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    NewRecruits=Recr_virgin_adj;
@@ -480,8 +461,8 @@ void DialogSpwnRcrEquationView::updateConstant()
 
     double Recr_virgin_adj = parameterView->getInput(0);//exp(logRecr_virgin_adj);
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
 /*    for (int i = 0; i < xValList.count(); i++)
@@ -497,8 +478,8 @@ void DialogSpwnRcrEquationView::updateConstant()
     updateGrid(cht->rect());
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 200) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.5  Hockey stick
@@ -510,9 +491,7 @@ void DialogSpwnRcrEquationView::updateConstant()
 //  and the Recruits level at SSB=0.0.
 void DialogSpwnRcrEquationView::hockeyStick()
 {
-    QString msg (QString("Option 5: Hockey Stick"));
-    setTitle(msg);
-    setLabel("Hockey Stick");
+    setLabel(QString("Option 5: Hockey Stick"));
 
     chartview->setVisible(false);
 
@@ -528,8 +507,8 @@ void DialogSpwnRcrEquationView::hockeyStick()
     updateHockeyStick();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisX, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -551,8 +530,8 @@ void DialogSpwnRcrEquationView::updateHockeyStick()
     Rmin = Rmin < 0? 0: Rmin;
     Rmin = Rmin > 1? 1: Rmin;
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
     // SSB_virgin_adj = 1.0, so it factors out
@@ -570,8 +549,8 @@ void DialogSpwnRcrEquationView::updateHockeyStick()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.6  Beverton-Holt, with constraint to have constant R about Bzero
@@ -579,9 +558,7 @@ void DialogSpwnRcrEquationView::updateHockeyStick()
 //  2 parameters: log(R0) and steepness.
 void DialogSpwnRcrEquationView::bevertonHoltBzeroFlat()
 {
-    QString msg (QString("Option 6: Beverton-Holt with constraint"));
-    setTitle(msg);
-    setLabel("Beverton-Holt with constant around Bzero");
+    setLabel(QString("Option 6: Beverton-Holt with constraint"));
 
     chartview->setVisible(false);
 
@@ -595,8 +572,8 @@ void DialogSpwnRcrEquationView::bevertonHoltBzeroFlat()
     updateBevertonHoltBzeroFlat();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisX, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -616,8 +593,8 @@ void DialogSpwnRcrEquationView::updateBevertonHoltBzeroFlat()
     double steep = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
     double alpha, beta;
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
     // SSB_virgin_adj = 1.0, so it factors out
@@ -636,8 +613,8 @@ void DialogSpwnRcrEquationView::updateBevertonHoltBzeroFlat()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 
@@ -648,9 +625,9 @@ void DialogSpwnRcrEquationView::updateBevertonHoltBzeroFlat()
 //  recruits are <= population production.
 void DialogSpwnRcrEquationView::survivorship()
 {
-    setTitle(QString("Option 7: Survivorship"));
-    setLabel("Survivorship");
-    showInt1 (true);
+    setLabel(QString("Option 7: Survivorship"));
+    showInt1 (true, QString("Spawners per recruit on fish conditions"),
+              QString("(this value will not be saved)"));
 
     chartview->setVisible(false);
 
@@ -666,10 +643,10 @@ void DialogSpwnRcrEquationView::survivorship()
     updateSurvivorship();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisX, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
     cht->addAxis(axisYalt, Qt::AlignRight);
-    cht->addSeries(valSeries);
+//    cht->addSeries(valSeries);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -704,8 +681,8 @@ void DialogSpwnRcrEquationView::updateSurvivorship()
     double SRZ_min = SRZ_0 * (1.0 - Zfrac);
     double SRZ_surv = 0;
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
     for (int i = 0; i < xValList.count(); i++)
@@ -717,17 +694,15 @@ void DialogSpwnRcrEquationView::updateSurvivorship()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 //  SS_Label_43.3.8  Shepherd
 //      case 8:  // Shepherd 3-parameter SRR. per Punt & Cope 2017
 void DialogSpwnRcrEquationView::shepherd()
 {
-    QString msg (QString("Option 8: Shepherd"));
-    setTitle(msg);
-    setLabel("Shepherd");
+    setLabel(QString("Option 8: Shepherd"));
 
     chartview->setVisible(false);
 
@@ -743,8 +718,8 @@ void DialogSpwnRcrEquationView::shepherd()
     updateShepherd();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisX, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //    Recr_virgin_adj = exp(SR_parm_work(1));
@@ -771,8 +746,8 @@ void DialogSpwnRcrEquationView::updateShepherd()
     double steep = 0.2 + (SRparm2 - 0.2) / (0.8) * (Hupper - 0.2);
     double temp;
 
-    cht->removeSeries(valSeries);
-    cht->update();
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
     // SSB_virgin_adj = 1.0, so it factors out
@@ -786,21 +761,18 @@ void DialogSpwnRcrEquationView::updateShepherd()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 // case 9: Shepherd re-parameterization (beta) - not yet implemented
 //  3 parameters: log(R0), steepness, and shape parameter, c.
 void DialogSpwnRcrEquationView::shepherdReParm()
 {
-    QString msg (QString("Option 9: Shepherd ReParm"));
-    setTitle(msg);
-    setLabel("Shepherd");
-
-    chartview->setVisible(false);
+    setLabel(QString("Option 9: Shepherd ReParm"));
 
     numParams = 3;
+    parameterView->setNumParamsShown(numParams);
     parameterView->setName(0, "SR_LN(R0)");
     parameterView->setType(0, "Exp");
     parameterView->setName(1, "SR_ShpReParm_steep");
@@ -808,11 +780,10 @@ void DialogSpwnRcrEquationView::shepherdReParm()
     parameterView->setName(2, "SR_ShpReParm_c");
     parameterView->setType(2, "Value");
 
+//    blank(NotYet, equationNum, 3, QString("Shepherd re-parameterization"));
     updateShepherdReParm();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 //  Andre's FORTRAN
@@ -840,9 +811,9 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
 {
     int yMax = 1;
     double SPRtemp = pop->SR()->getSPR();
-    double Recr_virgin_adj = parameterView->getInput(0);//ui->doubleSpinBox_1_value->value();
-    double SRparm2 = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
-    double SRparm3 = parameterView->getInput(2);//ui->doubleSpinBox_3_value->value();
+    double Recr_virgin_adj = parameterView->getInput(0);
+    double SRparm2 = parameterView->getInput(1);
+    double SRparm3 = parameterView->getInput(2);
 
     double Shep_top, penalty, SSB_virgin, Recr_virgin = 1;
     double Shep_bot;
@@ -851,6 +822,13 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
     double Shepherd_c2=pow(0.2,Shepherd_c);
     double Hupper=1.0/(5.0*Shepherd_c2);
     double steepness=0.20001+((0.8)/(1.0+exp(-SRparm2))-0.2)/(0.8)*(Hupper-0.2);
+
+    QString msg("This is a work in progress - this is a beta version only.");
+    msg.append("\n   It is based on Andre's FORTRAN.");
+    setMessage(msg);
+
+    valSeries->clear();
+    valSeries->append(0, 0);
     for (int i = 0; i < xValList.count(); i++)
     {
         SSB_virgin = xValList.at(i);
@@ -859,21 +837,18 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
         Shep_top2=posfun(Shep_top,0.001,penalty);
         double R_equil=(SSB_virgin/SPRtemp) * pow((Shep_top2/Shep_bot),(1.0/Shepherd_c));
         double B_equil=R_equil*SPRtemp;
-        valSeries->append(SSB_virgin, B_equil);
+        valSeries->append(SSB_virgin, B_equil * Recr_virgin_adj);
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    valSeries->attachAxis(axisY);
 }
 
 // 10: Ricker re-parameterization (beta) - power
 //  3 Parameters: log(R0), steepness, and Ricker power, gamma.
 void DialogSpwnRcrEquationView::rickerReParm()
 {
-    QString msg (QString("Option 10: Ricker Power - Beta"));
-    setTitle(msg);
-    setLabel("Ricker Power");
+    setLabel(QString("Option 10: Ricker Power - Beta"));
 
     chartview->setVisible(false);
 
@@ -889,8 +864,8 @@ void DialogSpwnRcrEquationView::rickerReParm()
     updateRickerReParm();
     chartview->setVisible(true);
 
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+//    cht->addAxis(axisX, Qt::AlignBottom);
+//    cht->addAxis(axisY, Qt::AlignLeft);
 }
 
 // steepness = SR_parm_work(2);
@@ -906,14 +881,18 @@ void DialogSpwnRcrEquationView::updateRickerReParm()
     int yMax = 1;
 //    double SB_virgin_adj = 1.0;
     double SB_curr_adj, Recruits;
-    double Recr_virgin_adj = parameterView->getInput(0);//ui->doubleSpinBox_1_value->value();
-    double steepness = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
-    double rkrPower = parameterView->getInput(2);//ui->doubleSpinBox_3_value->value();
+    double Recr_virgin_adj = parameterView->getInput(0);
+    double steepness = parameterView->getInput(1);
+    double rkrPower = parameterView->getInput(2);
     double rkrTop = 1.0;
     double temp, temp2, penalty;
 
-    cht->removeSeries(valSeries);
-    cht->update();
+    QString msg("This is a beta version only.");
+
+    setMessage(msg);
+
+//    cht->removeSeries(valSeries);
+//    cht->update();
     valSeries->clear();
 
     // SSB_virgin_adj = 1.0, so it factors out
@@ -930,8 +909,8 @@ void DialogSpwnRcrEquationView::updateRickerReParm()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
 }
 
 

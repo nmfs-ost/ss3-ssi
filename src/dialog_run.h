@@ -21,7 +21,8 @@
 #include "dialog_fileview.h"
 #include "console_redir.h"
 #include "dialog_runoptions.h"
-#include "chartdialog.h"
+//#include "chartdialog.h"
+#include "dialogsummaryoutput.h"
 
 #define BUFFER_SIZE 256
 
@@ -88,7 +89,7 @@ private:
     Ui::Dialog_run *ui;
     Dialog_fileView *warnview;
     Dialog_fileView *echoview;
-    chartDialog *charts;
+    dialogSummaryOutput *charts;
 
     QVBoxLayout *layout;
     QPlainTextEdit *out;

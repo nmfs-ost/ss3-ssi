@@ -94,8 +94,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->actionAbout_SS_GUI, SIGNAL(triggered()), SLOT(helpGUI()));
     connect (ui->action_About, SIGNAL(triggered()), SLOT(helpSS()));
     connect (ui->action_About_NFT, SIGNAL(triggered()), SLOT(helpNFT()));
-    connect (ui->action_User_Manual, SIGNAL(triggered()), SLOT(show_manual()));
-    connect (ui->action_Using_SS, SIGNAL(triggered()), SLOT(show_using()));
+    connect (ui->action_User_Manual, SIGNAL(triggered()), SLOT(showUserManual()));
+    connect (ui->action_Using_SS, SIGNAL(triggered()), SLOT(showTechManual()));
     connect (ui->action_About_ADMB, SIGNAL(triggered()), SLOT(helpADMB()));
     connect (ui->action_About_Qt, SIGNAL(triggered()), SLOT(helpQt()));
 
@@ -105,8 +105,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->action_Fleets, SIGNAL(triggered()), SLOT(showFisheries()));
     connect (ui->action_Populations, SIGNAL(triggered()), SLOT(showPopulations()));
 
-    connect (ui->action_IncreaseFont, SIGNAL(triggered()), SLOT(increase_font()));
-    connect (ui->action_DecreaseFont, SIGNAL(triggered()), SLOT(decrease_font()));
+    connect (ui->action_IncreaseFont, SIGNAL(triggered()), SLOT(increaseFont()));
+    connect (ui->action_DecreaseFont, SIGNAL(triggered()), SLOT(decreaseFont()));
 
     connect (ui->action_Run_Stock_Synthesis, SIGNAL(triggered()), SLOT(run()));
 
@@ -468,7 +468,7 @@ void MainWindow::readFiles()
             choice = msgbx.exec();
                  if (choice == 0)
             {
-                run_trans();
+                runConversion();
             }
             else if (choice == 1)
             {
@@ -628,8 +628,8 @@ void MainWindow::helpSS()
     QString title(QString("%1 %2").arg(
                       tr("About"), tr("Stock Synthesis")));
     about->setWindowTitle(title);
-    connect (about, SIGNAL(show_manual()), SLOT(show_manual()));
-    connect (about, SIGNAL(show_webpage(QString)), SLOT(show_webpage(QString)));
+    connect (about, SIGNAL(show_manual()), SLOT(showUserManual()));
+    connect (about, SIGNAL(show_webpage(QString)), SLOT(showWebpage(QString)));
 
     about->exec();
     delete about;
@@ -640,7 +640,7 @@ void MainWindow::helpNFT()
     Dialog_About_NFT *about_NFT = new Dialog_About_NFT (this);
     QString title(tr("About NOAA Fisheries Toolbox"));
     about_NFT->setWindowTitle(title);
-    connect (about_NFT, SIGNAL(show_webpage(QString)), SLOT(show_webpage(QString)));
+    connect (about_NFT, SIGNAL(show_webpage(QString)), SLOT(showWebpage(QString)));
 
     about_NFT->exec();
     delete about_NFT;
@@ -651,7 +651,7 @@ void MainWindow::helpADMB()
     Dialog_About_ADMB *about_admb = new Dialog_About_ADMB (this);
     QString title (tr("About ADMB"));
     about_admb->setWindowTitle(title);
-    connect (about_admb, SIGNAL(show_webpage(QString)), SLOT(show_webpage(QString)));
+    connect (about_admb, SIGNAL(show_webpage(QString)), SLOT(showWebpage(QString)));
 
     about_admb->exec();
     delete about_admb;
@@ -698,7 +698,7 @@ void MainWindow::showRecapObs()
     fleets->showRecapObs();
 }
 
-void MainWindow::show_manual()
+void MainWindow::showUserManual()
 {
     QDir appdir (qApp->applicationDirPath());
     QStringList filter(QString("*.pdf"));
@@ -748,7 +748,7 @@ void MainWindow::show_manual()
     settings.endGroup();
 }
 
-void MainWindow::show_using()
+void MainWindow::showTechManual()
 {
     QDir appdir (qApp->applicationDirPath());
     QStringList filter(QString("*.pdf"));
@@ -798,7 +798,7 @@ void MainWindow::show_using()
     settings.endGroup();
 }
 
-void MainWindow::show_webpage(QString pg)
+void MainWindow::showWebpage(QString pg)
 {
     QDesktopServices web;
     web.openUrl(QUrl(pg));
@@ -816,7 +816,7 @@ void MainWindow::run()
     files->read_run_num_file();
 }
 
-void MainWindow::run_trans()
+void MainWindow::runConversion()
 {
     int lastEstPhase = modelData->get_last_estim_phase();
     QString notice ("If the model has complex features, it may not convert completely.\n");
@@ -932,7 +932,7 @@ QString MainWindow::findFile(QString title, QString filters)
 }
 
 
-void MainWindow::change_control_file(QString fname)
+void MainWindow::changeControlFile(QString fname)
 {
     if (control_file.compare(fname) != 0)
     {
@@ -940,7 +940,7 @@ void MainWindow::change_control_file(QString fname)
     }
 }
 
-void MainWindow::change_data_file(QString fname)
+void MainWindow::changeDataFile(QString fname)
 {
     if (data_file.compare(fname) != 0)
     {
@@ -948,33 +948,13 @@ void MainWindow::change_data_file(QString fname)
     }
 }
 
-void MainWindow::writeDataFile()
-{
-}
 
-void MainWindow::writeParamFile()
-{
 
-}
-
-void MainWindow::writeProfileFile()
-{
-
-}
-
-void MainWindow::set_start_age_rept()
-{
-}
-
-void MainWindow::set_start_use_values()
-{
-}
-
-int MainWindow::ask_missing_file()
+int MainWindow::askMissingFile(QString name)
 {
     QMessageBox mbox (this);
     int btn;
-    QString query("Starter.ss file is not found in this directory or is not readable. \n");
+    QString query(QString("%1 file is not found in this directory or is not readable. \n").arg(name));
     query.append("Do you wish to create a new one?");
     mbox.setWindowTitle("Missing File");
     mbox.setText(query);
@@ -985,32 +965,24 @@ int MainWindow::ask_missing_file()
     return btn;
 }
 
-void MainWindow::increase_font ()
+void MainWindow::increaseFont ()
 {
     int f_size = main_font.pointSize();
     if (f_size < 18)
     {
         f_size += 1;
+        setFontSize(f_size);
     }
-/*    else if (f_size < 20)
-    {
-        f_size += 2;
-    }*/
-    setFontSize(f_size);
 }
 
-void MainWindow::decrease_font()
+void MainWindow::decreaseFont()
 {
     int f_size = main_font.pointSize();
-/*    if (f_size > 12)
-    {
-        f_size -= 2;
-    }
-    else*/ if (f_size > 8)
+    if (f_size > 8)
     {
         f_size -= 1;
+        setFontSize(f_size);
     }
-    setFontSize(f_size);
 }
 
 void MainWindow::setFontSize(int fsize)
@@ -1019,12 +991,6 @@ void MainWindow::setFontSize(int fsize)
     setFont(main_font);
 }
 
-
-/*
-void MainWindow::read_runnumber()
-{
-    files->read_run_num_file();
-}*/
 
 void MainWindow::set_checks_false()
 {

@@ -19,16 +19,13 @@ public:
     void setPopulation(population *popultn);
 
 public slots:
+    void changeEquationNumber(int num);
     void setParameters (tablemodel *params);
 
     void resetValues();
     void restoreAll();
 
-    void parametersChanged();
-    void setupChanged();
-
-    void refresh ();  // update from population values
-    void setup(); // start new
+    void setup();     // start new
     void update ();   // update from dialog values
 
 signals:

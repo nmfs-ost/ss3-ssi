@@ -50,13 +50,13 @@ public slots:
     void setNumXvals(int num);
     int getNumXvals() {return numXvals;}
     void setPattern (int value);
-    int getPattern () {return setup->getValue(0);}// pattern;}
+    int getPattern () {return setup->getValue(0);}
     void setDiscard (int value);
-    int getDiscard () {return setup->getValue(1);}//discard;}
+    int getDiscard () {return setup->getValue(1);}
     void setMale (int value);
-    int getMale () {return setup->getValue(2);}// male;}
+    int getMale () {return setup->getValue(2);}
     void setSpecial (int value);
-    int getSpecial () {return setup->getValue(3);}// special;}
+    int getSpecial () {return setup->getValue(3);}
     void setSetup(QString text);
     QString getSetupText ();
     void setSetup(QStringList strList);

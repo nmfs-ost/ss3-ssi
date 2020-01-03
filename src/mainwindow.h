@@ -48,7 +48,7 @@ public:
     void readSettings();
     void writeSettings();
 
-    void read_starter_file(ss_file *ifile, ss_model *modl);
+ /*   void read_starter_file(ss_file *ifile, ss_model *modl);
     void read_forecast_file();
     void read_control_file();
     void read_data_file();
@@ -60,7 +60,7 @@ public:
     void writeControlFile();
     void writeDataFile();
     void writeParamFile();
-    void writeProfileFile();
+    void writeProfileFile();*/
 
 
 public slots:
@@ -88,10 +88,10 @@ public slots:
     void helpADMB();
     void helpQt();
     void run();
-    void run_trans();
+    void runConversion();
 
-    void change_data_file (QString fname);
-    void change_control_file (QString fname);
+    void changeDataFile (QString fname);
+    void changeControlFile (QString fname);
 
     void showLengthObs();
     void showAgeObs();
@@ -100,9 +100,9 @@ public slots:
     void showMorphObs();
     void showRecapObs();
 
-    void show_manual ();
-    void show_using ();
-    void show_webpage (QString pg);
+    void showUserManual ();
+    void showTechManual ();
+    void showWebpage (QString pg);
     void locateDirectory ();
     void locateDocuments ();
     void locateExecutable ();
@@ -165,14 +165,11 @@ private slots:
     void showSurveys();
 
     void copy_file(QString old_file, QString new_file);
-    int ask_missing_file();
-    void set_start_age_rept();
-    void set_start_use_values();
-    void increase_font();
-    void decrease_font();
+    int askMissingFile(QString name = QString("starter.ss"));
+    void increaseFont();
+    void decreaseFont();
     void setFontSize (int fsize);
 
-//    void read_runnumber();
 };
 
 #endif // MAINWINDOW_H
