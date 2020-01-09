@@ -1,11 +1,11 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.14.02
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.14.03
         ----------------------------------------------------
 
-This GUI is created to display input to the Stock Synthesis application,
+This GUI is created as a front-end to the Stock Synthesis application,
 versions 3.30.13 and 3.30.14. It allows the user to change the data,
-run the executable, and display results.
+run the executable, and display some results.
 
 Currently, the only results displayed are the TIME-SERIES charts from
 Report.sso, files warnings.sso, and echoinput.sso.
@@ -17,6 +17,19 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.14.04
+    2020-01-09
+1. Added equation dialog box for Selectivity.
+2. Changed equation dialog box for S-R: moved parameters to separate
+   window.
+3. Changed results graph dialog box.
+
+============================================================================
+    3.30.14.03
+    2019-08-16
+1. Changed equation dialog box for Spawn-Recruit.
+
 ============================================================================
     3.30.14.02
     2019-07-31

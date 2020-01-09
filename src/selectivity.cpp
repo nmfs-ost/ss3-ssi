@@ -394,7 +394,7 @@ void selectivity::setDefaultParams(int method, int special)
     }
     case 14:  // case 14 separate parm for each age
     {
-        numparam = numAges + 1;
+        numparam = count + 1;
         setNumParameters(numparam);
 
         parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -420,7 +420,7 @@ void selectivity::setDefaultParams(int method, int special)
     case 17:  // 17 #age selectivity: each age has parameter as random walk
         //    transformation as selex=exp(parm); some special codes
     {
-        numparam = numAges + 1;
+        numparam = count + 1;
         setNumParameters(numparam);
         parm << "-1000" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -634,17 +634,19 @@ void selectivity::setDefaultParams(int method, int special)
         numparam = special + 2 + 2;
         setNumParameters(numparam);
 
+        parm.clear();
         parm << "1" << Count << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = Count;
         setParameter(1, parm);
+        parm.clear();
         parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm[2] = xHi;
         setParameter(3, parm);
         parm.clear();
         parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (i = 4; i < getNumParameters(); i++)
+        for (i = 4; i < numparam; i++)
             setParameter(i, parm);
         break;
     }

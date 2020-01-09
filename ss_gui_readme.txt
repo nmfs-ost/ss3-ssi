@@ -18,6 +18,14 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.14.04
+    2020-01-09
+1. Added equation dialog box for Selectivity.
+2. Changed equation dialog box for S-R: moved parameters to separate
+   window.
+3. Changed results graph dialog box.
+
+============================================================================
     3.30.14.03
     2019-08-16
 1. Changed equation dialog box for Spawn-Recruit.
