@@ -769,7 +769,7 @@ void DialogSpwnRcrEquationView::updateShepherd()
 //  3 parameters: log(R0), steepness, and shape parameter, c.
 void DialogSpwnRcrEquationView::shepherdReParm()
 {
-    setLabel(QString("Option 9: Shepherd ReParm"));
+    setLabel(QString("Option 9: Shepherd Re-Parameterization"));
 
     numParams = 3;
     parameterView->setNumParamsShown(numParams);
@@ -780,7 +780,6 @@ void DialogSpwnRcrEquationView::shepherdReParm()
     parameterView->setName(2, "SR_ShpReParm_c");
     parameterView->setType(2, "Value");
 
-//    blank(NotYet, equationNum, 3, QString("Shepherd re-parameterization"));
     updateShepherdReParm();
     chartview->setVisible(true);
 
@@ -823,9 +822,9 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
     double Hupper=1.0/(5.0*Shepherd_c2);
     double steepness=0.20001+((0.8)/(1.0+exp(-SRparm2))-0.2)/(0.8)*(Hupper-0.2);
 
-    QString msg("This is a work in progress - this is a beta version only.");
-    msg.append("\n   It is based on Andre's FORTRAN.");
-    setMessage(msg);
+ //   QString msg("This is a work in progress - this is a beta version only.");
+//    msg.append("\n   It is based on Andre's FORTRAN.");
+//    setMessage(msg);
 
     valSeries->clear();
     valSeries->append(0, 0);
@@ -848,7 +847,7 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
 //  3 Parameters: log(R0), steepness, and Ricker power, gamma.
 void DialogSpwnRcrEquationView::rickerReParm()
 {
-    setLabel(QString("Option 10: Ricker Power - Beta"));
+    setLabel(QString("Option 10: Ricker Re-Parameterization"));
 
     chartview->setVisible(false);
 
@@ -887,12 +886,6 @@ void DialogSpwnRcrEquationView::updateRickerReParm()
     double rkrTop = 1.0;
     double temp, temp2, penalty;
 
-    QString msg("This is a beta version only.");
-
-    setMessage(msg);
-
-//    cht->removeSeries(valSeries);
-//    cht->update();
     valSeries->clear();
 
     // SSB_virgin_adj = 1.0, so it factors out

@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -464,7 +464,7 @@
             <x>0</x>
             <y>0</y>
             <width>929</width>
-            <height>682</height>
+            <height>591</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1747,7 +1747,7 @@
             <x>0</x>
             <y>0</y>
             <width>955</width>
-            <height>467</height>
+            <height>473</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -1850,7 +1850,7 @@
             <x>0</x>
             <y>0</y>
             <width>955</width>
-            <height>467</height>
+            <height>473</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -2131,62 +2131,114 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_add_sd_spec">
-              <property name="text">
-               <string>Specification</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_add_sd_bins">
-              <property name="text">
-               <string>Bin picks</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <spacer name="horizontalSpacer_add_sd">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="4" column="0" colspan="2">
-             <layout class="QVBoxLayout" name="verticalLayout_add_sd_bins"/>
-            </item>
-            <item row="1" column="0" colspan="2">
-             <layout class="QVBoxLayout" name="verticalLayout_add_sd_spec"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+           <widget class="QScrollArea" name="scrollArea_add_sd_reporting">
+            <property name="minimumSize">
              <size>
-              <width>20</width>
-              <height>40</height>
+              <width>500</width>
+              <height>250</height>
              </size>
             </property>
-           </spacer>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_add_sd">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>927</width>
+               <height>383</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_19">
+              <item>
+               <layout class="QGridLayout" name="gridLayout_add_sd">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_add_sd_growth">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Growth</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_selex"/>
+                </item>
+                <item row="0" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_selex_bins"/>
+                </item>
+                <item row="1" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_growth"/>
+                </item>
+                <item row="1" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_growth_bins"/>
+                </item>
+                <item row="2" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_NatAge"/>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_add_sd_selex">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Selectivity</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_add_sd_NatAge">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Num-at-Age</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_NatAge_ages"/>
+                </item>
+                <item row="1" column="3">
+                 <spacer name="horizontalSpacer_add_sd">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_add_rept">
+        <spacer name="verticalSpacer_add_sd">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Minimum</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>

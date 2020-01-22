@@ -125,12 +125,12 @@ void tablemodel::setHeader(QStringList &titles)
     int cols = titles.count();
     setColumnCount(cols);
     for (int i = 0; i < cols; i++)
-        setHeaderData(i, Qt::Horizontal, titles.at(i));
+        setHeaderData(i, Qt::Horizontal, QString(titles.at(i)));
 }
 
 void tablemodel::setColumnHeader(int column, QString title)
 {
-    setHeaderData(column, Qt::Horizontal, title);
+    setHeaderData(column, Qt::Horizontal, QString(title));
 }
 
 QString tablemodel::getColumnHeader(int column)
@@ -140,7 +140,7 @@ QString tablemodel::getColumnHeader(int column)
 
 void tablemodel::setRowHeader(int row, QString title)
 {
-    setHeaderData(row, Qt::Vertical, title);
+    setHeaderData(row, Qt::Vertical, QString(title));
 }
 
 QString tablemodel::getRowHeader(int row)

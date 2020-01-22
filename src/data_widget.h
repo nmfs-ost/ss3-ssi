@@ -22,15 +22,15 @@ class data_widget;
 class data_widget : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit data_widget(ss_model *model, QWidget *parent = 0);
     ~data_widget();
-    
+
     QStringList fleet_names;
     QStringList survey_names;
     QStringList area_names;
-    
+
 
 
 public slots:
@@ -139,8 +139,14 @@ private:
     tableview *timeBlocks;
     tableview *lambdaView;
 
-    tableview *addSdSpecification;
-    tableview *addSdBinList;
+    tableview *addSdSelexView;
+    tableview *addSelexBinsView;
+
+    tableview *addSdGrowthView;
+    tableview *addGrowthBinsView;
+
+    tableview *addSdNumAtAgeView;
+    tableview *addNumAtAgeBinsView;
 
     int StartYear;
     int EndYear;

@@ -1057,6 +1057,7 @@ void DialogSelexEquationView::updateLinearScaled() {
     float bMin = parameterView->getInput(0);
     float bMax = parameterView->getInput(1);
     int num = parameters->rowCount() - 4;
+    bool okay;
 
     if (num < 2 || numNodes != num)
     {
@@ -1064,34 +1065,8 @@ void DialogSelexEquationView::updateLinearScaled() {
         return;
     }
 
-    if (bMin < 1)
-    {
-        setMessage(tr("Minimum for param 1 is first bin. adjusting to first bin..."));
-        bMin = 1;
-        parameterView->setSlider(0, bMin);
-        return;
-    }
-    if (bMax < bMin)
-    {
-        setMessage(tr("Maximum is less than Minimum. adjusting to min + 1..."));
-        bMax = bMin + 1.0;
-        parameterView->setSlider(1, bMax);
-        return;
-    }
-    if (bMax > binCount)
-    {
-        setMessage(tr("Maximum for param 2 is last bin. adjusting to number of bins..."));
-        bMax = binCount;
-        parameterView->setSlider(1, bMax);
-        return;
-    }
-//    if (bMax < bMin)
-//    {
-//        setMessage(tr("Minimum is greater than Maximum. adjusting to max - 1..."));
-//        bMin = bMax - 1.0;
-//        parameterView->setSlider(0, bMin);
-//        return;
-//    }
+    okay = checkScaleSliders(bins, bMin, bMax);
+
 
     ascendSeries->clear();
     valSeries->clear();
@@ -2462,7 +2437,7 @@ void DialogSelexEquationView::randomWalk (float scale) {
 void DialogSelexEquationView::updateRandomWalk (float scale) {
     float parmval;
     float lastSel = 0.0;
-    float temp = -999;
+    double temp = -999;
     QList<float> parms;
     float binMax = getBinMax();
     int scaleOffset = static_cast<int>(scale);
@@ -2505,25 +2480,9 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
         temp = maxYvalue(firstPoints);
     }
     else {
-        int lowBin = parameterView->getInput(0);
-        int hiBin = parameterView->getInput(1);
-
-        if (lowBin < 0) {
-            lowBin = 0;
-            parameterView->setSlider(0, 0);
-        }
-        if (hiBin > bins.count()) {
-            hiBin = bins.count();
-            parameterView->setSlider(1, hiBin);
-        }
-        if (hiBin < lowBin) {
-            hiBin = lowBin;
-            parameterView->setSlider(1, lowBin);
-        }
-        if (lowBin > hiBin) {
-            lowBin = hiBin;
-            parameterView->setSlider(0, hiBin);
-        }
+        checkScaleSliders(bins, parameterView->getInput(0), parameterView->getInput(1));
+        int lowBin = static_cast<int>(parameterView->getInput(0));
+        int hiBin = static_cast<int>(parameterView->getInput(1));
 
         temp = aveYvalue(firstPoints, lowBin, hiBin);
     }
@@ -2816,18 +2775,19 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         {
             lobin = static_cast<int>(parameterView->getInput(i++));
             hibin = static_cast<int>(parameterView->getInput(i++));
-            if (lobin < 1)
-                lobin = 1;
-            if (hibin > bins.count())
-                hibin = bins.count();
-            if (hibin < lobin)
-                hibin = lobin;
-            if (lobin > hibin)
-                lobin = hibin;
-            parameterView->setInputValue(0, lobin);
-            parameterView->setInputValue(1, hibin);
-            scaleLo = bins.at(lobin-1);
-            scaleHi = bins.at(hibin-1);
+            checkScaleSliders(bins, lobin, hibin);
+//            if (lobin < 1)
+//                lobin = 1;
+//            if (hibin > bins.count())
+//                hibin = bins.count();
+//            if (hibin < lobin)
+//                hibin = lobin;
+//            if (lobin > hibin)
+//                lobin = hibin;
+//            parameterView->setInputValue(0, lobin);
+//            parameterView->setInputValue(1, hibin);
+            scaleLo = bins.at(static_cast<int>(parameterView->getInput(i++))-1);
+            scaleHi = bins.at(static_cast<int>(parameterView->getInput(i++))-1);
         }
         setup  = static_cast<int>(parameterView->getInput(i++));
         gradLo = parameterView->getInput(i++);
@@ -3287,5 +3247,46 @@ void DialogSelexEquationView::updateTwoSexEachAge() {
     }
 }
 
+bool DialogSelexEquationView::checkScaleSliders(QList<float> bins, float binLo, float binHi) {
+    bool okay = true;
+    int lo = static_cast<int>(binLo);
+    int hi = static_cast<int>(binHi);
+
+    if (lo < 1) {
+        setMessage(tr("Minimum for param 1 is first bin, adjusting to first bin..."));
+        parameterView->setSlider(0, 1);
+        okay = false;
+    }
+    if (hi < lo) {
+        setMessage(tr("Maximum is less than Minimum, adjusting to minimum..."));
+        parameterView->setSlider(1, lo);
+        okay = false;
+    }
+    if (hi > bins.count()) {
+        setMessage(tr("Maximum for param 2 is last bin, adjusting to number of bins..."));
+        parameterView->setSlider(1, bins.count());
+        okay = false;
+    }
+    if (lo > hi) {
+        setMessage(tr("Minimum is greater than Maximum, adjusting to maximum..."));
+        parameterView->setSlider(0, hi);
+        okay = false;
+    }
+
+    return okay;
+}
 
 
+double DialogSelexEquationView::aveYvalue(const QList<QPointF> &pointlist, int lowBin, int highBin)
+{
+    int start = 0, stop = pointlist.count() - 1;
+    double xval1 = bins.at(lowBin)-.000001;
+    double xval2 = bins.at(highBin)+.000001;
+
+    while (pointlist.at(start).x() < xval1)
+        start++;
+    while (pointlist.at(stop).x() > xval2)
+        stop--;
+
+    return DialogEquationView::aveYvalue(pointlist, start, stop);
+}

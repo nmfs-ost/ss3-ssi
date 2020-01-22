@@ -101,19 +101,41 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
 
     timeBlocks = new tableview();
     timeBlocks->setParent(this);
-    timeBlocks->setModel(0);
+    timeBlocks->setModel(nullptr);
     ui->verticalLayout_block_years->addWidget(timeBlocks);
 
-    addSdSpecification = new tableview();
-    addSdSpecification->setParent(this);
-    addSdSpecification->setModel(model_data->getAddSdReporting()->getSpecModel());
-    addSdSpecification->setHeight(model_data->getAddSdReporting()->getSpecModel());
-    ui->verticalLayout_8->addWidget(addSdSpecification);
-    addSdBinList = new tableview();
-    addSdBinList->setParent(this);
-    addSdBinList->setModel(model_data->getAddSdReporting()->getBinModel());
-    addSdBinList->setHeight(1);
-    ui->verticalLayout_14->addWidget(addSdBinList);
+    addSdSelexView = new tableview();
+    addSdSelexView->setParent(this);
+    addSdSelexView->setModel(model_data->getAddSdReporting()->getSelexModel());
+    addSdSelexView->setHeight(1);
+    ui->verticalLayout_add_sd_selex->addWidget(addSdSelexView);
+    addSelexBinsView = new tableview();
+    addSelexBinsView->setParent(this);
+    addSelexBinsView->setModel(model_data->getAddSdReporting()->getSelexBinModel());
+    addSelexBinsView->setHeight(1);
+    ui->verticalLayout_add_sd_selex_bins->addWidget(addSelexBinsView);
+
+    addSdGrowthView = new tableview();
+    addSdGrowthView->setParent(this);
+    addSdGrowthView->setModel(model_data->getAddSdReporting()->getGrowthModel());
+    addSdGrowthView->setHeight(1);
+    ui->verticalLayout_add_sd_growth->addWidget(addSdGrowthView);
+    addGrowthBinsView = new tableview();
+    addGrowthBinsView->setParent(this);
+    addGrowthBinsView->setModel(model_data->getAddSdReporting()->getGrowthBinModel());
+    addGrowthBinsView->setHeight(1);
+    ui->verticalLayout_add_sd_growth_bins->addWidget(addGrowthBinsView);
+
+    addSdNumAtAgeView = new tableview();
+    addSdNumAtAgeView->setParent(this);
+    addSdNumAtAgeView->setModel(model_data->getAddSdReporting()->getNumAtAgeModel());
+    addSdNumAtAgeView->setHeight(1);
+    ui->verticalLayout_add_sd_NatAge->addWidget(addSdNumAtAgeView);
+    addNumAtAgeBinsView = new tableview();
+    addNumAtAgeBinsView->setParent(this);
+    addNumAtAgeBinsView->setModel(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
+    addNumAtAgeBinsView->setHeight(1);
+    ui->verticalLayout_add_sd_NatAge_ages->addWidget(addNumAtAgeBinsView);
 
 
 
@@ -303,14 +325,20 @@ void data_widget::refresh()
         setBlockPattern(1);
 
         ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
-        addSdSpecification->setModel(model_data->getAddSdReporting()->getSpecModel());
-        addSdSpecification->setHeight(model_data->getAddSdReporting()->getSpecModel());
-        addSdSpecification->resizeColumnsToContents();
-        ui->verticalLayout_add_sd_spec->addWidget(addSdSpecification);
-        addSdBinList->setModel(model_data->getAddSdReporting()->getBinModel());
-        addSdBinList->setHeight(model_data->getAddSdReporting()->getBinModel());
-        addSdBinList->resizeColumnsToContents();
-        ui->verticalLayout_add_sd_bins->addWidget(addSdBinList);
+        addSdSelexView->resizeColumnsToContents();
+        addSelexBinsView->resizeColumnsToContents();
+        addSdGrowthView->resizeColumnsToContents();
+        addGrowthBinsView->resizeColumnsToContents();
+        addSdNumAtAgeView->resizeColumnsToContents();
+        addNumAtAgeBinsView->resizeColumnsToContents();
+/*        addSdSelexView->setModel(model_data->getAddSdReporting()->getSpecModel());
+        addSdSelexView->setHeight(model_data->getAddSdReporting()->getSpecModel());
+        addSdSelexView->resizeColumnsToContents();
+        ui->verticalLayout_add_sd_spec->addWidget(addSdSelexView);
+        addSelexBinsView->setModel(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
+        addSelexBinsView->setHeight(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
+        addSelexBinsView->resizeColumnsToContents();
+        ui->verticalLayout_add_sd_bins->addWidget(addSelexBinsView);*/
     }
 }
 

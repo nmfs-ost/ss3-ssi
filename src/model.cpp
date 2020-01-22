@@ -984,7 +984,7 @@ void ss_model::setAddVarSetupNaaBins(int val)
 QString ss_model::getAddVarSetupToText()
 {
     QString txt("");
-    QStringList specs(additionalSdReporting->getSpecs());
+    QStringList specs(additionalSdReporting->getSelex());//getSpecs());
     for (int i = 0; i < 9; i++)
     {
         txt.append(' ');

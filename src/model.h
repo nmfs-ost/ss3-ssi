@@ -318,10 +318,12 @@ public slots:
 
     sd_reporting *getAddSdReporting () {return additionalSdReporting;}
     int getAddSdReprtActive() {return additionalSdReporting->getActive();}
-    QStringList getAddSdReprtSetup () {return additionalSdReporting->getSpecs();}
-    QStringList getAddSdReprtSelex () {return additionalSdReporting->getSelexBins();}
-    QStringList getAddSdReprtGrwth () {return additionalSdReporting->getGrowthBins();}
-    QStringList getAddSdReprtAtAge () {return additionalSdReporting->getNatAgeBins();}
+    QStringList getAddSdReprtSelex () {return additionalSdReporting->getSelex();}
+    QStringList getAddSdReprtGrowth () {return additionalSdReporting->getGrowth();}
+    QStringList getAddSdReprtNumAtAge () {return additionalSdReporting->getNumAtAge();}
+    QStringList getAddSdReprtSelexBins () {return additionalSdReporting->getSelexBins();}
+    QStringList getAddSdReprtGrwthBins () {return additionalSdReporting->getGrowthBins();}
+    QStringList getAddSdReprtAtAgeBins () {return additionalSdReporting->getNumAtAgeBins();}
     void setAddVarSelexBins (int index, float val);
     float getAddVarSelexBins (int index) {return add_var_slx_bins[index];}
     void setAddVarGrwthBins (int index, float val);

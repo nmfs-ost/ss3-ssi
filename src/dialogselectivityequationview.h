@@ -104,6 +104,8 @@ private slots:
     void twoSexEachAge ();
     void updateTwoSexEachAge ();
 
+    bool checkScaleSliders(QList<float> bins, float binLo, float binHi);
+    double aveYvalue(const QList<QPointF> &pointlist, int lowBin = 1, int highBin = 100);
 };
 
 #endif // DIALOGSELECTIVITYEQUATIONVIEW_H

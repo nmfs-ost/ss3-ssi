@@ -315,6 +315,7 @@ int ss_file::write_vector(QStringList vect, int spcng, QString info)
 {
     QString line ("");
     QString item;
+
     int num = vect.count();
     for (int i = 0; i < num; i++)
     {

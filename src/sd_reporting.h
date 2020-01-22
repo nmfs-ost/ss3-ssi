@@ -20,27 +20,46 @@ public:
     void setActive (int value);
     bool getActive () {return reporting;}
 
-    void setSpecs (QStringList data);
+/*    void setSpecs (QStringList data);
     QStringList getSpecs ();
-    tablemodel *getSpecModel() {return specs;}
+    tablemodel *getSpecModel() {return specs;}*/
 
-    void setNumBins (int num);
+    void setSelex (QStringList data);
+    QStringList getSelex ();
+    tablemodel *getSelexModel () {return selex;}
     int getNumSelexBins();
-    void setSelexBins (QStringList data);
+    void setNumSelexBins (int num);
     QStringList getSelexBins ();
+    void setSelexBins (QStringList data);
+    tablemodel *getSelexBinModel () {return selexBins;}
+
+    void setGrowth (QStringList data);
+    QStringList getGrowth ();
+    tablemodel *getGrowthModel () {return growth;}
     int getNumGrowthBins();
-    void setGrowthBins (QStringList data);
+    void setNumGrowthBins (int num);
     QStringList getGrowthBins ();
-    int getNumNatAgeBins();
-    void setNatAgeBins (QStringList data);
-    QStringList getNatAgeBins ();
-    tablemodel *getBinModel() {return bins;}
+    void setGrowthBins (QStringList data);
+    tablemodel * getGrowthBinModel () {return growthBins;}
+
+    void setNumAtAge (QStringList data);
+    QStringList getNumAtAge ();
+    tablemodel *getNumAtAgeModel () {return numAtAge;}
+    int getNumNumAtAgeBins();
+    void setNumNumAtAgeBins (int num);
+    QStringList getNumAtAgeBins ();
+    void setNumAtAgeBins (QStringList data);
+    tablemodel *getNumAtAgeAgeModel() {return numAtAgeAges;}
 
 
 private:
     bool reporting;
-    tablemodel *specs;
-    tablemodel *bins;
+    tablemodel *selex;
+    tablemodel *growth;
+    tablemodel *numAtAge;
+    tablemodel *selexBins;
+    tablemodel *growthBins;
+    tablemodel *numAtAgeAges;
 
     QStringList specsHeader;
     longParameter vector_selex_bins;
