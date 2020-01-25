@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 
 #include <QMessageBox>
+#include <QTime>
 
 #include <cmath>
 
@@ -323,6 +324,15 @@ void ss_model::setALKTol (float val)
     fALKTol = val;
 }
 
+int ss_model::getRandSeed ()
+{
+    return rSeed;
+}
+
+void ss_model::setRandSeed(int seed)
+{
+    rSeed = seed;
+}
 
 Season *ss_model::getSeason (int index)
 {

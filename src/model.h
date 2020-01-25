@@ -154,6 +154,8 @@ public slots:
     int get_f_basis () {return iFBasis;}
     void setALKTol (float val);
     float getALKTol () {return fALKTol;}
+    void setRandSeed (int seed);
+    int getRandSeed ();
 
     void set_start_year (int year);
     int get_start_year () {return iStartYr;}
@@ -395,6 +397,8 @@ private:
     int iNumGenders;
 
     int iNumRuns;
+
+    int rSeed;
 
     bool useMeanBwtData;
     int i_mean_bwt_df;

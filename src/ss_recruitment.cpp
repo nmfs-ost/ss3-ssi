@@ -212,13 +212,12 @@ void spawn_recruit::setMethod(int value)
         setParamNums ();
         break;
     case 8: // Shepherd
-    case 9: // Shepherd re-param
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 0 << 0 << 0 << 1 << 0 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);
         setParamNums ();
         break;
-    case 10: // Ricker power
+    case 9: // Ricker power
         parmsUsed.clear();
         parmsUsed << 1 << 1 << 0 << 0 << 0 << 0 << 1 << 1 << 1 << 1;
         full_parameters->setParamsUsed(parmsUsed);

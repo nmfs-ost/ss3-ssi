@@ -3194,18 +3194,21 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setNumAtAge(datalist);
 
+            // bins for selectivity
             datalist.clear();
             temp_int = data->getAddSdReporting()->getNumSelexBins();
             for (i = 0; i < temp_int; i++)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setSelexBins(datalist);
 
+            // ages for growth
             datalist.clear();
             temp_int = data->getAddSdReporting()->getNumGrowthBins();
             for (i = 0; i < temp_int; i++)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setGrowthBins(datalist);
 
+            // ages for Num-at-Age
             datalist.clear();
             temp_int = data->getAddSdReporting()->getNumNumAtAgeBins();
             for (i = 0; i < temp_int; i++)
@@ -4746,9 +4749,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         temp_int = data->getAddSdReporting()->getActive();
         if (temp_int == 1)
         {
+            chars += c_file->writeline(QString("1 # (0/1) read specs for more stddev reporting "));
             chars += c_file->write_vector(data->getAddSdReprtSelex(), 2, QString("Selectivity: fleet, len/age, year, N bins (4 values)"));
-            chars += c_file->write_vector(data->getAddSdReprtGrowth(), 2, QString("Growth: pattern, N growth ages (2 values)"));
-            chars += c_file->write_vector(data->getAddSdReprtNumAtAge(), 2, QString("Numbers-at-Age: area(-1 for all), year, N ages (3 values)"));
+            chars += c_file->write_vector(data->getAddSdReprtGrowth(), 2, QString("      Growth: pattern, N growth ages (2 values)"));
+            chars += c_file->write_vector(data->getAddSdReprtNumAtAge(), 2, QString("   Numbers-at-Age: area(-1 for all), year, N ages (3 values)"));
             chars += c_file->write_vector(data->getAddSdReprtSelexBins(), 1, QString("vector with selex std bin picks (-1 in first bin to self-generate)"));
             chars += c_file->write_vector(data->getAddSdReprtGrwthBins(), 1, QString("vector with growth std bin picks (-1 in first bin to self-generate)"));
             chars += c_file->write_vector(data->getAddSdReprtAtAgeBins(), 1, QString("vector with NatAge std bin picks (-1 in first bin to self-generate)"));
@@ -4788,20 +4792,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         else
         {
-            line = QString("0 # (0/1) read specs for more stddev reporting ");
-            chars += c_file->writeline(line);
-            line = QString("#_Cond_0 # 0 1 -1 5 # placeholder for selex_fleet, 1=len/2=age/3=both, year, N selex bins");
-            chars += c_file->writeline(line);
-            line = QString("#_Cond_0 # 1 5   Growth pattern, N growth ages");
-            chars += c_file->writeline(line);
-            line = QString("#_Cond_0 # 1 -1 5 # placeholder for NatAge_area(-1 for all), NatAge_yr, N Natages");
-            chars += c_file->writeline(line);
-            line = QString("#_Cond_0 # placeholder for vector of selex bins to be reported");
-            chars += c_file->writeline(line);
-            line = QString("#_Cond_0 # placeholder for vector of growth ages to be reported");
-            chars += c_file->writeline(line);
-            line = QString("#_Cond_0 # placeholder for vector of NatAges ages to be reported");
-            chars += c_file->writeline(line);
+            chars += c_file->writeline(QString("0 # (0/1) read specs for more stddev reporting "));
+            chars += c_file->writeline(QString("#_Cond_0 # 0 1 -1 5 # placeholder for selex_fleet, 1=len/2=age/3=both, year, N selex bins"));
+            chars += c_file->writeline(QString("#_Cond_0 # 1 5 # placeholder for Growth pattern, N growth ages"));
+            chars += c_file->writeline(QString("#_Cond_0 # 1 -1 5 # placeholder for NatAge_area(-1 for all), NatAge_yr, N Natages"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector of selex bins to be reported"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector of growth ages to be reported"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector of NatAges ages to be reported"));
         }
 
         line = QString::number(END_OF_DATA);

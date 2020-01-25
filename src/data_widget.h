@@ -94,6 +94,8 @@ public slots:
     void changeAlkTol();
     void changeConvergence();
     void changeDepDenom();
+    void changeRandSeed();
+    void setRandSeed (int seed);
 
 signals:
     void showLengthObs();

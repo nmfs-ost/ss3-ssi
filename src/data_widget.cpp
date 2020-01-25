@@ -941,6 +941,17 @@ void data_widget::changeDepDenom()
     ui->lineEdit_dep_denom->setText(QString::number(db));
 }
 
+void data_widget::changeRandSeed()
+{
+    int seed = ui->spinBox_rseed->value();
+    model_data->setRandSeed(seed);
+}
+
+void data_widget::setRandSeed(int seed)
+{
+    ui->spinBox_rseed->setValue(seed);
+}
+
 void data_widget::addLengthDirichlet()
 {
     QStringList ql;

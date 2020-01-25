@@ -213,7 +213,7 @@ void sd_reporting::setNumNumAtAgeBins(int num)
 
 QStringList sd_reporting::getNumAtAgeBins ()
 {
-    return numAtAge->getRowData(0);
+    return numAtAgeAges->getRowData(0);
 }
 
 void sd_reporting::setNumAtAgeBins (QStringList data)

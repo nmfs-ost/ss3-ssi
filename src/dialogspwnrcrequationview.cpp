@@ -109,11 +109,7 @@ void DialogSpwnRcrEquationView::setup()
             shepherd ();
             break;
 
-        case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-            shepherdReParm ();
-            break;
-
-        case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
+        case 9: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
             rickerReParm ();
             break;
 
@@ -172,11 +168,7 @@ void DialogSpwnRcrEquationView::update()
             updateShepherd ();
             break;
 
-        case 9:  // case 9: Shepherd re-parameterization - 3 parameters: log(R0), steepness, and shape C
-            updateShepherdReParm ();
-            break;
-
-        case 10: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
+        case 9: // case 10: Ricker re-parameterization - 3 parameters: log(R0), steepness, and Ricker power Gamma
             updateRickerReParm ();
             break;
 
@@ -764,12 +756,12 @@ void DialogSpwnRcrEquationView::updateShepherd()
 //    cht->addSeries(valSeries);
 //    valSeries->attachAxis(axisY);
 }
-
+/*
 // case 9: Shepherd re-parameterization (beta) - not yet implemented
 //  3 parameters: log(R0), steepness, and shape parameter, c.
 void DialogSpwnRcrEquationView::shepherdReParm()
 {
-    setLabel(QString("Option 9: Shepherd Re-Parameterization"));
+    setLabel(QString("Option 19: Shepherd Re-Parameterization"));
 
     numParams = 3;
     parameterView->setNumParamsShown(numParams);
@@ -841,13 +833,13 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
 //    valSeries->attachAxis(axisY);
-}
+}*/
 
-// 10: Ricker re-parameterization (beta) - power
+//  9: Ricker re-parameterization (beta) - power
 //  3 Parameters: log(R0), steepness, and Ricker power, gamma.
 void DialogSpwnRcrEquationView::rickerReParm()
 {
-    setLabel(QString("Option 10: Ricker Re-Parameterization"));
+    setLabel(QString("Option 9: Ricker Re-Parameterization"));
 
     chartview->setVisible(false);
 

@@ -2013,7 +2013,7 @@ then read num_of_seasons parameters below.</string>
               <widget class="QComboBox" name="comboBox_recr_spec">
                <item>
                 <property name="text">
-                 <string>1=null</string>
+                 <string>1=discontinued</string>
                 </property>
                </item>
                <item>
@@ -2023,12 +2023,12 @@ then read num_of_seasons parameters below.</string>
                </item>
                <item>
                 <property name="text">
-                 <string>3=standard Beverton-Holt (2 parameters)</string>
+                 <string>3=Beverton-Holt standard (2 parameters)</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>4=ignore steepness and no bias adj (2 parameters)</string>
+                 <string>4=constant (2 parameters, 2nd is ignored)</string>
                 </property>
                </item>
                <item>
@@ -2048,17 +2048,12 @@ then read num_of_seasons parameters below.</string>
                </item>
                <item>
                 <property name="text">
-                 <string>8=Shepherd (3 parameters)</string>
+                 <string>8=Shepherd (3 parameters) - Punt&amp;Cope</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>9=Shepherd re-param (3 parameters) - beta</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>10=Ricker power (3 parameters) - beta</string>
+                 <string>9=Ricker power (3 parameters) - Punt&amp;Cope</string>
                 </property>
                </item>
               </widget>

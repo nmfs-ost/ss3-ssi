@@ -691,6 +691,7 @@ void file_widget::print_files()
 bool file_widget::read_starter_file (QString filename)
 {
     bool okay = true;
+    bool end = false;
     QString token;
     float temp_float;
     int temp_int = 0;
@@ -797,12 +798,14 @@ bool file_widget::read_starter_file (QString filename)
 
         token = starterFile->get_next_value("check value for end of file or something else");
         temp_int = token.toInt();
+        temp_float = token.toFloat();
         if (temp_int == END_OF_DATA)
         {
             datafile_version = 3.2;
             ui->comboBox_MCMC_output->setCurrentIndex(0);
             ui->lineEdit_mcmc_bump_val->setText(QString("0.01"));
             model_info->setALKTol(0.0);
+            end = true;
         }
         else
         {
@@ -810,22 +813,42 @@ bool file_widget::read_starter_file (QString filename)
             starterFile->checkIntValue(temp_int, QString("MCMC output detail"), 0, 3, 0);
             ui->comboBox_MCMC_output->setCurrentIndex(temp_int);
             // MCMC Bump value
-            temp_float = token.toFloat() - temp_int;
+            temp_float -= temp_int;
             ui->lineEdit_mcmc_bump_val->setText(QString::number(temp_float));
 
+            // ALK tolerance
             token = starterFile->get_next_value("ALK Tolerance");
             temp_float = token.toFloat();
-            if (temp_float < 0.0)
-                temp_float = 0.0;
-            if (temp_float > 0.1)
-                temp_float = 0.1;
-            model_info->setALKTol (temp_float);
+            if (token.compare("3.30"))
+            {
+                if (temp_float < 0.0)
+                    temp_float = 0.0;
+                if (temp_float > 0.1)
+                    temp_float = 0.1;
+                model_info->setALKTol (temp_float);
+            }
+            else {
+                model_info->setALKTol(0.0);
+                end = true;
+            }
 
-            token = starterFile->get_next_value("Version number");
+            // check for random number seed
+            token = starterFile->get_next_value();
+            temp_int = token.toInt();
+            if (!end && token.compare("3.30"))
+            {
+                model_info->setRandSeed(temp_int);
+            }
+            else
+            {
+                model_info->setRandSeed(0);
+                end = true;
+            }
+            // version number
             temp_float = get_version_number(token);
             datafile_version = temp_float;
+            ui->doubleSpinBox_version->setValue(datafile_version);
         }
-        ui->doubleSpinBox_version->setValue(datafile_version);
 
         starterFile->close();
         return okay;
