@@ -394,7 +394,7 @@ void selectivity::setDefaultParams(int method, int special)
     }
     case 14:  // case 14 separate parm for each age
     {
-        numparam = count + 1;
+        numparam = numAges + 1;
         setNumParameters(numparam);
 
         parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -420,7 +420,7 @@ void selectivity::setDefaultParams(int method, int special)
     case 17:  // 17 #age selectivity: each age has parameter as random walk
         //    transformation as selex=exp(parm); some special codes
     {
-        numparam = count + 1;
+        numparam = numAges + 1;
         setNumParameters(numparam);
         parm << "-1000" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -557,7 +557,7 @@ void selectivity::setDefaultParams(int method, int special)
     case 41: // case 41 each age has parameter as random walk scaled by average of values at low age through high age
         //    transformation as selex=exp(parm); some special codes
     {
-        numparam = numXvals + 1 + 2;
+        numparam = numAges + 1 + 2;
         if (parameters->getNumParams() != numparam)
         {
             setNumParameters(numparam);

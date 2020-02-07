@@ -103,10 +103,14 @@ public slots:
     void showUserManual ();
     void showTechManual ();
     void showWebpage (QString pg);
+    void setDefaultModel();
+    void returnToDefault();
     void locateDirectory ();
     void locateDocuments ();
-    void locateExecutable ();
-    void locateConverter ();
+    void locateExecutable(QString &savename, QString type, QString hint = QString(""));
+    void locateSSExecutable();
+    void locateSSConverter ();
+    void locateRExecutable ();
     QString findFile (QString title, QString filters);
 
 signals:
@@ -141,6 +145,7 @@ private:
 //    control_widget *control_info;
 //    data_widget *data_info;
 
+    QString app_dir;
     QString current_dir;
     QString starter_file;
     QString control_file;
@@ -152,7 +157,9 @@ private:
 
     QString ss_exe;
     QString ss_trans_exe;
+    QString R_exe;
     QString default_dir;
+    QString default_model;
 
 private slots:
     void mainTabChanged(int tab);

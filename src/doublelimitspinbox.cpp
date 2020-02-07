@@ -17,9 +17,9 @@ doubleLimitSpinBox::~doubleLimitSpinBox()
 
 void doubleLimitSpinBox::setRange(double value)
 {
-    double limitValue = fabs(value) + 10;
+    double limitValue = (fabs(value) + 1) * 10;
     double min = value - limitValue;
-    double max = value + limitValue;
+    double max = limitValue;
 
     QDoubleSpinBox::setRange(min, max);
 }

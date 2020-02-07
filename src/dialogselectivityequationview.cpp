@@ -87,9 +87,13 @@ void DialogSelexEquationView::setOption(int value) {
 
 void DialogSelexEquationView::setSelex(selectivity *slx) {
     disconnectAll();
+    disconnect (selex, SIGNAL(setupChanged(QStringList)), this,
+                SLOT(DialogSelexEquationView::changedSelex(QStringList)));
     selex = slx;
     setParameters(selex->getParameterModel());
     restoreAll();
+    connect (selex, SIGNAL(setupChanged(QStringList)), this,
+                 SLOT(DialogSelexEquationView::changedSelex(QStringList)));
     connectAll();
 }
 
@@ -98,6 +102,7 @@ void DialogSelexEquationView::changingSelex() {
 }
 
 void DialogSelexEquationView::changedSelex(QStringList ql) {
+    Q_UNUSED(ql);
 //    connect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
     changeSelex();
 }
@@ -368,11 +373,13 @@ void DialogSelexEquationView::setup() {
             break;
 
         case 42: // case 42: age selectivity - cubic spline scaled by average of values at low age through high age
-            cubicSpline(2.);
+            blank (NotYet, 42, 0, QString("This equation is in work."));
+            //cubicSpline(2.);
             break;
 
         case 43: // case 43: size selectivity - non-parametric scaled by average of values at low bin through high bin
-            linearScaled();
+            blank (NotYet, 43, 0, QString("This equation is in work."));
+            //linearScaled();
             break;
 
         case 44: // case 44: age selectivity - like age selex 17 but with separate parameters for males and with revised controls
@@ -501,11 +508,11 @@ void DialogSelexEquationView::update() {
             break;
 
         case 42: // 42 cubic spline scaled by average of values at low age through high age
-            updateCubicSpline(2.);
+//            updateCubicSpline(2.);
             break;
 
         case 43: // 43 non-parametric size selex scaled by average of values at low bin through high bin
-            updateLinear(2.);
+//            updateLinear(2.);
             break;
 
         case 44: // 44 like age selex 17 but with separate parameters for males and with revised controls
@@ -575,7 +582,7 @@ void DialogSelexEquationView::constantRange () {
         parameterView->setName(0, QString("Lo age"));
         parameterView->setType(0, QString("Integr"));
         parameterView->setName(1, QString("Hi age"));
-        parameterView->setName(1, QString("Integr"));
+        parameterView->setType(1, QString("Integr"));
 
         updateConstantRange();
     }
@@ -1365,9 +1372,9 @@ void DialogSelexEquationView::dblLogPeak() {
         parameterView->setName(7, QString("BinWidth"));
         parameterView->setType(7, QString("Value"));
 
-        showBins(true);
-        showJoins(3);
-        cht->removeSeries(valSeries);
+        showBins(false);
+        showJoins(0);
+//        cht->removeSeries(valSeries);
 
         join1Series = new QLineSeries(cht);
         join1Series->setPen(QPen(QBrush(Qt::darkGreen), 1));
@@ -1555,6 +1562,7 @@ void DialogSelexEquationView::updateDblLogIf() {
     QString msg(tr("This Pattern is not implemented. "));
     msg.append(tr("\n\nIts use is discouraged, use pattern #18\n"));
     setMessage(msg);
+    chartview->setVisible(false);
     return;
 
     float maxSelX = 0;
@@ -2249,6 +2257,8 @@ void DialogSelexEquationView::eachAge () {
 
         axisYalt->setTitleText(QString("Value at age (blue)"));
         cht->addAxis(axisYalt, Qt::AlignRight);
+        cht->legend()->show();
+        cht->legend()->setAlignment(Qt::AlignLeft);
 
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         cht->addSeries(ascendSeries);
@@ -2293,7 +2303,8 @@ void DialogSelexEquationView::updateEachAge () {
     float parm = 0., lastParm = 0.;
     float asc = 0.;
     float sel = 0.;
-    float temp, max = 0, min = 0;
+    float temp;
+    int  max = 0, min = 0;
     float binWidth = getBinStep();
     float age = getBinMin() + getMidBin() * binWidth;
     QString msg("");
@@ -2319,11 +2330,6 @@ void DialogSelexEquationView::updateEachAge () {
         firstPoints.append(QPointF(age, parm));
     }
     temp = 9. - maxYvalue(firstPoints);
-    min = minYvalue(firstPoints) + temp;
-    max = maxYvalue(firstPoints) + temp;
-    if (max <= min)
-        min = max - .01;
-    axisYalt->setRange(min, max);
 
     for (int a = 0; a < numParams; a++)
     {
@@ -2332,6 +2338,10 @@ void DialogSelexEquationView::updateEachAge () {
         ascendSeries->append(QPointF(firstPoints.at(a).x(), asc));
         valSeries->append(QPointF(firstPoints.at(a).x(), sel));
     }
+    min = static_cast<int> (minYvalue(ascendSeries->points()));
+    max = static_cast<int> (maxYvalue(ascendSeries->points())) + 1;
+
+    axisYalt->setRange(min, max);
 //    ascendSeries->append(QPointF(firstPoints.at(bins.count()).x(), asc));
 //    valSeries->append(QPointF(firstPoints.at(bins.count()).x(), sel));
 }
@@ -2752,6 +2762,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     double gradHi = 0;
     double temp = 1;
     int i;
+    bool okay = true;
     QString msg;
     // QMap automatically sorts on key.
 //    QMap<float, float> pts;
@@ -2793,8 +2804,16 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         gradLo = parameterView->getInput(i++);
         gradHi = parameterView->getInput(i++);
 
-//        start = i;
+        // check x-vals
+        for (int k = 0; k < size - 1; k++) {
+            if (parameterView->getInput(start + k) > parameterView->getInput(start + k + 1))
+            {
+                parameterView->setSliderValue(start + k, parameterView->getInput(start + k + 1) - .5);
+                okay = false;
+            }
+        }
 
+        if (okay) {
         switch (setup)
         {
         case 0:
@@ -2822,21 +2841,11 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         {
             Y[i] = parameterView->getInput(start++);
         }
-//        for (i = 0; i < size; i++)
-//            pts.insert(X[i], Y[i]);
 
         ptSeries->clear();
-//        QMapIterator<float, float> mi(pts);
-//        i = 0;
-//        while (mi.hasNext())
- //       {
- //           mi.next();
- //           X[i] = mi.key();
- //           Y[i] = mi.value();
+
         for (i = 0; i < size; i++)
             ptSeries->append(X[i], Y[i]);
- //           i++;
- //       }
 
 
         // currently it is required that X is already sorted
@@ -2844,7 +2853,6 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
                               tk::spline::first_deriv, gradHi);
         cubicspl.set_points(X, Y);
 
-//        cht->removeSeries(valSeries);
         firstPoints.clear();
         valSeries->clear();
         ascendSeries->clear();
@@ -2871,16 +2879,12 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         axisYalt->setRange(altMinVal, altMaxVal);
 
 
-/*        for (i = 0; i < firstPoints.count(); i++)
-        {
-            yval = firstPoints.at(i).y();
-            firstPoints[i].setY(yval - altMinVal);
-        }
-        maxVal = maxYvalue(firstPoints);*/
-
         if (scale > 0)
         {
             temp = aveYvalue(firstPoints, scaleLo, scaleHi);
+            yMax = maxYvalue(firstPoints);
+            if (yMax > 1.0)
+                axisY->setRange(0, yMax + 1.0);
         }
         else
         {
@@ -2889,20 +2893,9 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
 
         for (i = 0; i < firstPoints.count(); i++)
             firstPoints[i].setY(exp(firstPoints.at(i).y() - temp));
-/*        for (i = 0; i < firstPoints.count(); i++)
-        {
-            yval = firstPoints[i].y();
-            if (yval > 1.0)
-                firstPoints[i].setY(1.0);
-        }*/
-//        maxVal = maxYvalue (firstPoints);
-//        max = maxVal * 1.2;
-//        axisY->setRange(0.0, max);
+
         valSeries->append(firstPoints);
-//        cht->addSeries(valSeries);
-//        valSeries->attachAxis(axisY);
-//        if (scale > 1)
-//            axisYalt->setRange(altMinVal, (altMinVal + max));
+        }
     }
 }
 
@@ -3254,22 +3247,22 @@ bool DialogSelexEquationView::checkScaleSliders(QList<float> bins, float binLo, 
 
     if (lo < 1) {
         setMessage(tr("Minimum for param 1 is first bin, adjusting to first bin..."));
-        parameterView->setSlider(0, 1);
+        parameterView->setSliderValue(0, 1);
         okay = false;
     }
     if (hi < lo) {
         setMessage(tr("Maximum is less than Minimum, adjusting to minimum..."));
-        parameterView->setSlider(1, lo);
+        parameterView->setSliderValue(1, lo);
         okay = false;
     }
     if (hi > bins.count()) {
         setMessage(tr("Maximum for param 2 is last bin, adjusting to number of bins..."));
-        parameterView->setSlider(1, bins.count());
+        parameterView->setSliderValue(1, bins.count());
         okay = false;
     }
     if (lo > hi) {
         setMessage(tr("Minimum is greater than Maximum, adjusting to maximum..."));
-        parameterView->setSlider(0, hi);
+        parameterView->setSliderValue(0, hi);
         okay = false;
     }
 

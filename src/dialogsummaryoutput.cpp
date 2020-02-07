@@ -240,6 +240,7 @@ void dialogSummaryOutput::refreshSeries()
     axisY->setRange(0, maxBmass);
     axisY->applyNiceNumbers();
     axisYalt->setRange(0, maxOther);
+    axisYalt->setTickCount(axisY->tickCount());
 
 //    for (int i = 0; i < bmassCharts.count(); i++)
 //    {
@@ -495,12 +496,39 @@ QLineSeries *dialogSummaryOutput::division(int year, float val, QString name)
 void dialogSummaryOutput::resizeEvent(QResizeEvent *evt) {
     window = size();
     position = pos();
+    updateGrid(summaryChart->rect());
     QDialog::resizeEvent(evt);
 }
 
 void dialogSummaryOutput::moveEvent(QMoveEvent *evt) {
     position = pos();
     QDialog::moveEvent(evt);
+}
+
+void dialogSummaryOutput::updateGrid(QRectF rect)
+{
+    int xTicks = static_cast<int>(rect.width() / 100);
+    int yTicks = static_cast<int>(rect.height() / 60);
+
+/*    valSeries->detachAxis(axisY);
+    int yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
+//    axisXsel->setRange(0, 1);
+    axisY->setRange(0, yMax);
+//    selSeries->attachAxis(axisXsel);
+    valSeries->attachAxis(axisY);*/
+
+    xTicks = xTicks < 5? 3: xTicks;
+    updateTicks(xTicks, yTicks);
+}
+
+void dialogSummaryOutput::updateTicks(int xT, int yT)
+{
+    int xticks = xT;// % 2? xT: (xT + 1);
+    int yticks = yT % 2? yT: (yT + 1);
+    axisX->setTickCount(xticks);
+
+    axisY->setTickCount(yticks);
+    axisYalt->setTickCount(yticks);
 }
 
 

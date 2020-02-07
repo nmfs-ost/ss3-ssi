@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>784</width>
-    <height>527</height>
+    <height>558</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -216,7 +216,8 @@
           <string>Show time-series charts from Report.sso</string>
          </property>
          <property name="text">
-          <string>Results</string>
+          <string>Summary
+Results</string>
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
@@ -224,6 +225,20 @@
          </property>
          <property name="flat">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_RCharts">
+         <property name="toolTip">
+          <string>R must be installed</string>
+         </property>
+         <property name="whatsThis">
+          <string>Generates R charts and shows them in a browser </string>
+         </property>
+         <property name="text">
+          <string>Generate R
+Charts</string>
          </property>
         </widget>
        </item>

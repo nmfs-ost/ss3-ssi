@@ -29,6 +29,8 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
     connect (ui->pushButton_cancel, SIGNAL(clicked()), SLOT(rejected()));
     connect (ui->pushButton_rptCharts, SIGNAL(clicked()), SLOT(showRptCharts()));
+//    ui->pushButton_RCharts->setEnabled(false);
+    connect (ui->pushButton_RCharts, SIGNAL(clicked()), SLOT(generateRCharts()));
     connect (ui->pushButton_showWarn, SIGNAL(clicked()), SLOT(showWarnFile()));
     connect (ui->pushButton_showEcho, SIGNAL(clicked()), SLOT(showEchoFile()));
 
@@ -83,6 +85,29 @@ void Dialog_run::showRptCharts()
     charts->refreshData();
 }
 
+//PATH=%PATH%;R_exe
+//rscript -e "r4ss::SS_plots(r4ss::SS_output(getwd(),verbose=FALSE))"
+
+void Dialog_run::generateRCharts()
+{
+    QFile Rexe(R_exe);
+    QFileInfo Rinfo(R_exe);
+
+    if (R_exe.isEmpty()) {
+        QMessageBox::information(this,tr("Missing R executable"), tr("Use Main window - Options menu to find R executable"));
+    }
+    else {
+        QDir bindir(qApp->applicationDirPath());
+        QDir Rdir(Rinfo.dir());
+        QString line(QString("\"%1/").arg(Rdir.path()));
+        line.append("rscript\" -e \"r4ss::SS_plots(r4ss::SS_output(getwd(),verbose=FALSE))\"\n\n");
+        ui->plainTextEdit_output->clear();
+        ui->plainTextEdit_error->clear();
+        ui->plainTextEdit_output->appendPlainText(line);
+        stocksynth->start(line, QIODevice::ReadOnly);
+    }
+}
+
 void Dialog_run::showWarnFile()
 {
     QString dir (ui->label_directory->text());
@@ -102,7 +127,6 @@ void Dialog_run::runSS()
     QString ss(ui->label_executable->text());
     QString opts(ui->lineEdit_options->text());
     QString line;
-    QStringList arguments;
 
     QString cmd("cmd.exe /k");
 
@@ -111,7 +135,6 @@ void Dialog_run::runSS()
 
     line = QString (QString("%1 %2\n").arg(ss, opts));
     ui->plainTextEdit_output->appendPlainText(line);
-    arguments = opts.split(' ', QString::SkipEmptyParts);
     // run command in box
     stocksynth->start(line, QIODevice::ReadOnly);
 }
@@ -266,6 +289,11 @@ void Dialog_run::setExe(QString exe)
     ui->label_executable->setText(exe);
 }
 
+void Dialog_run::setRExe(QString exe)
+{
+    R_exe = exe;
+}
+
 void Dialog_run::setOptions(QString opt)
 {
     if (!opt.isEmpty())
@@ -296,6 +324,7 @@ void Dialog_run::setUiEnabled(bool flag)
     ui->lineEdit_options->setEnabled(flag);
     ui->pushButton_run->setEnabled(flag);
     ui->pushButton_rptCharts->setEnabled(flag);
+    ui->pushButton_RCharts->setEnabled(flag);
     ui->pushButton_cancel->setEnabled(flag);
     ui->pushButton_showWarn->setEnabled(flag);
     ui->pushButton_showEcho->setEnabled(flag);

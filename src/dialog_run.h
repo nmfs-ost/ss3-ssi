@@ -50,6 +50,7 @@ public slots:
 
     void setDir(QString dir);
     void setExe(QString exe);
+    void setRExe (QString exe);
     void setOptions (QString opt = QString(""));
     void changeExe ();
 
@@ -65,6 +66,7 @@ public slots:
     void outputLine();
 
     void showRptCharts();
+    void generateRCharts();
     void showWarnFile();
     void showEchoFile();
 
@@ -110,6 +112,8 @@ private:
     bool noest;
     bool lprof;
     bool mcdiag;
+
+    QString R_exe;
 
     void setUiEnabled(bool flag);
     void finishOutput();

@@ -1201,8 +1201,9 @@ void fleet_widget::selexSizeMaleTVParamsChanged()
 
 void fleet_widget::changeSelexSizeSpecial(int spc)
 {
-    current_fleet->getSizeSelectivity()->setSpecial(spc);
-    selexSizeParamsChanged();
+    if (current_fleet->getSizeSelectivity()->getSpecial() != spc)
+        current_fleet->getSizeSelectivity()->setSpecial(spc);
+//    selexSizeParamsChanged();
 }
 
 void fleet_widget::selexSizeParamsChanged()
@@ -1231,12 +1232,19 @@ void fleet_widget::selexSizeTVParamsChanged()
 
 void fleet_widget::showSelexSizeCurve(bool flag)
 {
+    if (flag) {
+        ui->pushButton_selex_size_curve->setText("Hide Curve");
+    }
+    else {
+        ui->pushButton_selex_size_curve->setText("Show Curve");
+    }
     selexSizeEqDialog->setVisible(flag);
     selexSizeEqDialog->restoreAll();
 }
 
 void fleet_widget::selexSizeCurveClosed()
 {
+    ui->pushButton_selex_size_curve->setText("Show Curve");
     ui->pushButton_selex_size_curve->setChecked(false);
 }
 
@@ -1394,6 +1402,12 @@ void fleet_widget::changeSelexAgePattern(int value)
 
 void fleet_widget::showSelexAgeCurve(bool flag)
 {
+    if (flag) {
+        ui->pushButton_selex_age_curve->setText("Hide Curve");
+    }
+    else {
+        ui->pushButton_selex_age_curve->setText("Show Curve");
+    }
     selexAgeEqDialog->setVisible(flag);
     selexAgeEqDialog->restoreAll();
 }
@@ -1401,6 +1415,7 @@ void fleet_widget::showSelexAgeCurve(bool flag)
 void fleet_widget::selexAgeCurveClosed()
 {
     ui->pushButton_selex_age_curve->setChecked(false);
+    ui->pushButton_selex_age_curve->setText("Show Curve");
 }
 
 void fleet_widget::changeSelexAgeMale(int mal)

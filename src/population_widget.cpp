@@ -1428,13 +1428,19 @@ void population_widget::changeSpawnRecrSpec(int num)
 
 void population_widget::setSRequationDialogVisible(bool checked)
 {
+    QString text(ui->pushButton_equation->text());
     ui->pushButton_equation->setChecked(checked);
     if (checked) {
-        srEquationView->show();
-        ui->pushButton_equation->setText("Hide Curve");
+        if (text.contains("Show Curve")) {
+            srEquationView->show();
+            ui->pushButton_equation->setText("Hide Curve");
+        }
     }
     else {
-        ui->pushButton_equation->setText("Show Curve");
+        if (text.contains("Hide Curve")) {
+            srEquationView->hide();
+            ui->pushButton_equation->setText("Show Curve");
+        }
     }
 }
 

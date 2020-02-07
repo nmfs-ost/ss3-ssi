@@ -63,6 +63,7 @@ public slots:
     void changeCVmethod (int num);
     void changeTimeVaryMethod (int num);
 
+    void setSRequationDialogVisible(bool checked = false);
     void setSpawnRecrSpec (int spec);
     void setRecrArea (int value);
     void changeRecrArea ();
@@ -146,7 +147,6 @@ private slots:
     void changeRecrDevMin (QString s_min);
     void changeRecrDevMax (QString s_max);
     void changeRecrNumDevs (int num);
-    void setSRequationDialogVisible(bool checked = false);
 
     void changeMoveNumDefs(int value);
     void moveDefsChanged(QModelIndex tl, QModelIndex br);

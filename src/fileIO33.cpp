@@ -2542,7 +2542,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Catch mult
         for (i = 0; i < data->get_num_fleets(); i++)
         {
-            Fleet *fleet = data->getFleet(0);
+            Fleet *fleet = data->getFleet(i);
             if (fleet->getCatchMultiplier() > 0)
             {
                 datalist = readParameter(c_file);

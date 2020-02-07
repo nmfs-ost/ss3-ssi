@@ -82,6 +82,8 @@ private:
 //    QList<QChart *> otherCharts;
 //    QList<QChartView *> otherChartViews;
 //    QList<QLineSeries *> otherSeries;
+    void updateGrid(QRectF rect);
+    void updateTicks(int xT, int yT);
 
 private slots:
     void resizeEvent(QResizeEvent *evt);

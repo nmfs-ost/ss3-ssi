@@ -275,9 +275,13 @@
     <property name="title">
      <string>&amp;Options</string>
     </property>
+    <addaction name="actionSet_default_model"/>
+    <addaction name="actionReturn_to_default_model"/>
     <addaction name="actionSelect_default_directory"/>
     <addaction name="separator"/>
     <addaction name="actionLocate_SS_executable"/>
+    <addaction name="actionLocate_R_executable"/>
+    <addaction name="separator"/>
     <addaction name="actionLocate_documents"/>
    </widget>
    <widget class="QMenu" name="menu_Windows">
@@ -969,7 +973,7 @@
   </action>
   <action name="actionLocate_documents">
    <property name="text">
-    <string>Locate documents</string>
+    <string>Locate user manual</string>
    </property>
   </action>
   <action name="actionToolbar">
@@ -978,6 +982,21 @@
    </property>
    <property name="text">
     <string>Toolbar</string>
+   </property>
+  </action>
+  <action name="actionLocate_R_executable">
+   <property name="text">
+    <string>Locate R executable</string>
+   </property>
+  </action>
+  <action name="actionSet_default_model">
+   <property name="text">
+    <string>Set current as default model</string>
+   </property>
+  </action>
+  <action name="actionReturn_to_default_model">
+   <property name="text">
+    <string>Return to default model</string>
    </property>
   </action>
  </widget>

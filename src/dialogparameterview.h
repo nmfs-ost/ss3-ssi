@@ -25,7 +25,7 @@ public:
     explicit DialogParameterView(QWidget *parent = nullptr, bool showTrans = true);
     ~DialogParameterView();
 
-    void setNumParamsShown (int num);
+    void setNumParamsShown (int num, int unsaved = 0);
     int getNumParameters ();
     double getInput (int pnum);
     double getValue (int pnum);
@@ -33,17 +33,21 @@ public:
     bool getShowTrans() const;
     void setShowTrans(bool value);
 
+    int getNumUnParameters () {return numUnParams;}
+    void setNumUnParameters (int num);
+
 public slots:
     void setTitle (QString title);
     void setName (QString nm);
     void setParameterTable(tablemodel *params);
-    void setupView(int num);
+    void setupView(int num, int unsaved = 0);
+//    void setupUnSavedView(int unsaved);
     void setSliders();
 //    void setNumParameters(int num);
 //    void setParameter(int pnum, QStringList param);
 //    void setParameterLabel(int pnum, QString name);
     void setSliderRange (int pnum, double min, double max);
-    void setSlider(int pnum, double value);
+    void setSliderValue(int pnum, double value);
     void setName(int pnum, QString name);
     void setType(int pnum, QString type);
     bool setInput(int pnum);
@@ -92,6 +96,9 @@ private:
     tablemodel *parameters;
     int numParamsShown;
 
+    int numUnParams;
+
+    // parameter sliders
     QList<QLabel *> pLabel;
     QList<doubleLimitSpinBox *> pMin;
     QList<doubleLimitSpinBox *> pMax;
@@ -100,6 +107,13 @@ private:
     QList<QDoubleSpinBox *> sValue;
     QList<QLabel *> pType;
     QList<QDoubleSpinBox *> eInput;
+
+    // unsaved values
+    QList<QLabel *> unLabel;
+    QList<doubleLimitSpinBox *> unMin;
+    QList<doubleLimitSpinBox *> unMax;
+    QList<QSlider *> unSlider;
+    QList<QDoubleSpinBox *> unValue;
 
 private:
     Ui::DialogParameterView *ui;

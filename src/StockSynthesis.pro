@@ -262,4 +262,5 @@ RESOURCES += \
 DISTFILES += \
     ../ss_gui_readme.txt \
     ../ss_gui_readme_archive.txt \
-    ../ss_gui_copyright.txt
+    ../ss_gui_copyright.txt \
+    ss_icon.ico

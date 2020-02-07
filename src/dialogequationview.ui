@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>858</width>
-    <height>583</height>
+    <width>922</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,6 +31,47 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_single_value">
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spinBox_int1">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_int1">
+       <property name="text">
+        <string>Spawners per recruit on fish conditions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_int1_info">
+       <property name="text">
+        <string>(this value will not be saved)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -106,13 +147,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="7" rowspan="2">
-      <widget class="QLabel" name="label_int1">
-       <property name="text">
-        <string>Spawners per recruit on fish conditions</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="5">
       <widget class="QLabel" name="label_steepJoin3">
        <property name="minimumSize">
@@ -139,13 +173,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="9" rowspan="2">
-      <widget class="QLabel" name="label_int1_info">
-       <property name="text">
-        <string>(this value will not be saved)</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="3">
       <widget class="QLabel" name="label_binsWidth">
        <property name="minimumSize">
@@ -156,32 +183,6 @@
        </property>
        <property name="text">
         <string>BinWidth</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="8" rowspan="2">
-      <widget class="QSpinBox" name="spinBox_int1">
-       <property name="minimum">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="11" rowspan="2">
-      <widget class="QPushButton" name="pushButton_showParameters">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Show Parameters</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -197,19 +198,6 @@
         <number>50</number>
        </property>
       </widget>
-     </item>
-     <item row="0" column="10">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="spinBox_binsMin">
@@ -258,6 +246,35 @@
        </property>
        <property name="value">
         <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="8" rowspan="2">
+      <widget class="QPushButton" name="pushButton_showParameters">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Show Parameters</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

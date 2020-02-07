@@ -389,31 +389,39 @@ void DialogEquationView::restoreAll()
 
 void DialogEquationView::setVisible(bool visible) {
     if (visible) {
-        restoreAll();
-        connectAll();
-        resize(window);
-        if (position != QPoint(0, 0))
-        {
-            move(position);
-            if (parameterView->pos().rx() == 0)
-                parameterView->pos().setX(position.rx());
+        if (!isVisible()) {
+            restoreAll();
+    //        connectAll();
+            resize(window);
+            if (position != QPoint(0, 0))
+            {
+                move(position);
+                if (parameterView->pos().rx() == 0)
+                    parameterView->pos().setX(position.rx());
+            }
+            QDialog::setVisible(visible);
+            setParametersVisible(visible);
         }
     }
     else {
-        disconnectAll();
-        position = pos();
-        window = size();
-        emit hidden();
+        if (isVisible()) {
+    //        disconnectAll();
+            position = pos();
+            window = size();
+            QDialog::setVisible(visible);
+            setParametersVisible(visible);
+            emit hidden();
+        }
     }
-    QDialog::setVisible(visible);
-    setParametersVisible(visible);
 }
 void DialogEquationView::show() {
-    setVisible(true);
+    if (!isVisible())
+        setVisible(true);
 }
 
 void DialogEquationView::hide() {
-    setVisible(false);
+    if (isVisible())
+        setVisible(false);
 }
 
 void DialogEquationView::close()
@@ -451,8 +459,8 @@ void DialogEquationView::closeEvent(QCloseEvent *evt)
 
 void DialogEquationView::resizeEvent(QResizeEvent *event)
 {
-    QDialog::resizeEvent(event);
     updateGrid(cht->rect());
+    QDialog::resizeEvent(event);
 }
 
 void DialogEquationView::parametersChanged()
@@ -574,36 +582,17 @@ void DialogEquationView::resetChart(bool create)
 
     if (!create)
     {
-        cht->removeAxis(axisYalt);
-        chartview->hide();
+//        cht->removeAxis(axisYalt);
         cht->hide();
         delete axisX;
         delete axisY;
         delete axisYalt;
-        if (join1Series != nullptr) {
-            cht->removeSeries(join1Series);
-            delete join1Series;
-        }
-        if (join2Series != nullptr) {
-            cht->removeSeries(join2Series);
-            delete join2Series;
-        }
-        if (join3Series != nullptr) {
-            cht->removeSeries(join3Series);
-            delete join3Series;
-        }
-        if (ascendSeries != nullptr) {
-            cht->removeSeries(ascendSeries);
-            delete ascendSeries;
-        }
-        if (dscendSeries != nullptr) {
-            cht->removeSeries(dscendSeries);
-            delete dscendSeries;
-        }
-        if (ptSeries != nullptr) {
-            cht->removeSeries(ptSeries);
-            delete ptSeries;
-        }
+        delete join1Series;
+        delete join2Series;
+        delete join3Series;
+        delete ascendSeries;
+        delete dscendSeries;
+        delete ptSeries;
         cht->removeSeries(valSeries);
         delete valSeries;
         delete cht;

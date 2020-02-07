@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr(app_name));
     setWindowIcon(QIcon(":icons/StockSynth_icon_128.png"));
 
+    app_dir = qApp->applicationDirPath();
     readSettings();
 
     // set up information dock widget
@@ -69,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     // furnish the ui with the default model
+    current_dir = QString(QString("%1/default/").arg(qApp->applicationDirPath()));
     files = new file_widget (modelData, current_dir, this);
     data = new data_widget(modelData, this);
     forecast = new forecast_widget(modelData, this);
@@ -111,9 +113,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->action_Run_Stock_Synthesis, SIGNAL(triggered()), SLOT(run()));
 
     connect (ui->action_Locate_SS, SIGNAL(triggered()), SLOT(locateDirectory()));
-    connect (ui->actionLocate_SS_executable, SIGNAL(triggered()), SLOT(locateExecutable()));
+    connect (ui->actionLocate_SS_executable, SIGNAL(triggered()), SLOT(locateSSExecutable()));
+    connect (ui->actionLocate_R_executable, SIGNAL(triggered()), SLOT(locateRExecutable()));
     connect (ui->actionLocate_documents, SIGNAL(triggered()), SLOT(locateDocuments()));
     connect (ui->actionSelect_default_directory, SIGNAL(triggered()), SLOT(locateDirectory()));
+    connect (ui->actionSet_default_model, SIGNAL(triggered()), SLOT(setDefaultModel()));
+    connect (ui->actionReturn_to_default_model, SIGNAL(triggered()), SLOT(returnToDefault()));
 
     connect (data, SIGNAL(showLengthObs()), SLOT(showLengthObs()));
     connect (data, SIGNAL(showAgeObs()), SLOT(showAgeObs()));
@@ -139,6 +144,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     main_font = QFont(fontInfo().family(), fontInfo().pointSize());//"Arial", 12);
     setFontSize(9);
+
+    readFiles();
 }
 
 MainWindow::~MainWindow()
@@ -205,8 +212,13 @@ void MainWindow::setupMenus (QMenuBar *main)
     QMenu *run_Menu = new QMenu(QString("&Run"), main); // run_Menu (ui->menu_Run);
     run_Menu->addAction (ui->action_Run_Stock_Synthesis);
     QMenu *optsMenu = new QMenu(QString("&Options"), main); // opt_Menu (ui->menu_Options);
+    optsMenu->addAction (ui->actionSet_default_model);
+    optsMenu->addAction (ui->actionReturn_to_default_model);
     optsMenu->addAction (ui->actionSelect_default_directory);
+    optsMenu->addSeparator();
     optsMenu->addAction (ui->actionLocate_SS_executable);
+    optsMenu->addAction(ui->actionLocate_R_executable);
+    optsMenu->addSeparator();
     optsMenu->addAction (ui->actionLocate_documents);
     QMenu *windMenu = new QMenu(QString("&Windows"), main); // windMenu (ui->menu_Windows);
     windMenu->addAction (ui->action_Files);
@@ -244,9 +256,11 @@ void MainWindow::writeSettings()
     settings.beginGroup("MainWindow");
     settings.setValue("size", size());
     settings.setValue("pos", pos());
+    settings.setValue("defaultModel", default_model);
     settings.setValue("defaultDir", default_dir);
     settings.setValue("executable", ss_exe);
     settings.setValue("converter", ss_trans_exe);
+    settings.setValue("Rexecutable", R_exe);
     settings.endGroup();
     settings.beginGroup ("HelpWindow");
     settings.setValue("size", ui->dockWidget_help->size());
@@ -262,16 +276,18 @@ void MainWindow::writeSettings()
 void MainWindow::readSettings()
 {
     QSettings settings(app_copyright_org, app_name);
-    QString dir (qApp->applicationDirPath());
-    QString exe (dir + "/ss.exe");
-    QString trans_exe ("");
+    QString model (app_dir + "/default");
+    QString exe (app_dir + "/ss.exe");
+    QString blank_exe ("");
     settings.beginGroup("MainWindow");
     resize(settings.value("size", QSize(700, 600)).toSize());
     move(settings.value("pos", QPoint(200, 200)).toPoint());
-    default_dir = settings.value("defaultDir", dir).toString();
-    current_dir = default_dir;
+    default_model = settings.value("defaultModel", model).toString();
+    default_dir = settings.value("defaultDir", app_dir).toString();
+    current_dir = default_model;
     ss_exe = settings.value("executable", exe).toString();
-    ss_trans_exe = settings.value("converter", trans_exe).toString();
+    ss_trans_exe = settings.value("converter", exe).toString();
+    R_exe = settings.value("Rexecutable", blank_exe).toString();
     settings.endGroup();
     settings.beginGroup("HelpWindow");
     ui->dockWidget_help->resize(settings.value("size").toSize());
@@ -286,10 +302,10 @@ void MainWindow::readSettings()
 
 void MainWindow::openNewDirectory()
 {
-    QString old_dir(default_dir);
+//    QString old_dir(default_dir);
     QString new_dir(QFileDialog::getExistingDirectory(this, tr("Select New Directory"),
-                                old_dir, QFileDialog::ShowDirsOnly));
-    if (!new_dir.isEmpty() && new_dir != old_dir)
+                                default_dir, QFileDialog::ShowDirsOnly));
+    if (!new_dir.isEmpty() && new_dir != default_dir)
     {
 /*        copyFile(old_dir + QString("/wtatage.ss"), new_dir);
         copyFile(old_dir + QString("/ss.par"), new_dir);
@@ -306,14 +322,14 @@ void MainWindow::openNewDirectory()
 
 void MainWindow::createNewDirectory()
 {
-    QString oldDir (default_dir);
+//    QString oldDir (default_dir);
     int btn =
     QMessageBox::question(this, tr("Create New Model"),
              tr("This will reset data to the default values and write the files to the selected directory.\nDo you wish to continue?"),
                           QMessageBox::Yes, QMessageBox::No);
     if (btn == QMessageBox::Yes)
     {
-        modelData->reset();
+        returnToDefault();
         openNewDirectory();
 //        copyFiles(oldDir, current_dir);
         refreshAll();
@@ -331,7 +347,7 @@ void MainWindow::openDirectory(QString fname)
     {
         if (fname.isEmpty())
             fname = QFileDialog::getOpenFileName (this, tr(title.toUtf8()),
-                               current_dir, tr("Starter files (starter.ss)"));
+                               default_dir, tr("Starter files (starter.ss)"));
 
         if (fname.isEmpty())
             break;
@@ -440,6 +456,7 @@ void MainWindow::readFiles()
     fleets->selexAgeCurveClosed();
     fleets->selexSizeCurveClosed();
     fleets->set_current_fleet(0);
+    population->setSRequationDialogVisible(false);
     modelData->reset();
     worked = files->read_files(modelData);
     if (worked)
@@ -457,7 +474,6 @@ void MainWindow::readFiles()
             QString normal ("This program does not support datafiles earlier than 3.30\nWhat do you wish to do?");
             QString detail ("You may proceed in one of three ways:\n 1) convert the model (the program will use ss_trans.exe)\n    (select Run, then Exit, then select a new directory),\n 2) choose another starter.ss (a different model), or\n 3) quit the program.");
             QMessageBox msgbx (this);
-            QRect rect(this->geometry());
             msgbx.setIcon(QMessageBox::Question);
             msgbx.setWindowTitle("Datafile version mis-match");
             msgbx.setText(normal);
@@ -482,7 +498,6 @@ void MainWindow::readFiles()
         else
         {
             showInputMessage("Problem reading files!");
-//            close();
         }
     }
 }
@@ -810,8 +825,9 @@ void MainWindow::run()
     Dialog_run drun(this);
     drun.setDir(current_dir);
     while (!QFileInfo(ss_exe).exists())
-        locateExecutable();
+        locateSSExecutable();
     drun.setExe(ss_exe);
+    drun.setRExe(R_exe);
     drun.exec();
     files->read_run_num_file();
 }
@@ -830,11 +846,11 @@ void MainWindow::runConversion()
     // use run dialog to run ss_trans
     drun.setDir(current_dir);
     if (ss_trans_exe.isEmpty())
-        locateConverter();
+        locateSSConverter();
     else
     {
         if (!QFileInfo(ss_trans_exe).exists())
-            locateConverter();
+            locateSSConverter();
     }
     drun.setExe(ss_trans_exe);
     drun.setOptions("-nohess");
@@ -877,6 +893,20 @@ void MainWindow::runConversion()
     }
 }
 
+void MainWindow::setDefaultModel()
+{
+    default_model = QString(current_dir);
+}
+
+void MainWindow::returnToDefault()
+{
+    openDirectory(default_model + "/starter.ss");
+//    QDir cDir(current_dir);
+//    cDir.cd(default_model);
+//    current_dir = default_model;
+//    readFiles();
+}
+
 void MainWindow::locateDirectory()
 {
     QSettings settings (app_copyright_org, app_name);
@@ -896,27 +926,42 @@ void MainWindow::locateDocuments()
     dd.exec();
 }
 
-void MainWindow::locateExecutable()
+void MainWindow::locateExecutable(QString &savename, QString type, QString hint)
+{
+    QString filename ("");
+    QString filter(QString("applications (%1*.exe)").arg(hint));
+    filename = (findFile (type, filter));
+    if (!filename.isEmpty())
+        savename = filename;
+}
+
+void MainWindow::locateSSExecutable()
 {
     // locate ss.exe
     QSettings settings (app_copyright_org, app_name);
-    QString filename (findFile ("Executable", "applications (*.exe)"));
+    locateExecutable(ss_exe, "SS Executable", "ss");
+    settings.beginGroup("MainWindow");
+    settings.setValue("executable", ss_exe);
+    settings.endGroup();
+}
+void MainWindow::locateSSConverter()
+{
+    // locate ss_trans.exe
+    QSettings settings (app_copyright_org, app_name);
+    QString filename (findFile ("SS Converter", "applications (*.exe)"));
     if (!filename.isEmpty())
-        ss_exe = filename;
+        ss_trans_exe = filename;
     settings.beginGroup("MainWindow");
     settings.setValue("executable", filename);
     settings.endGroup();
 }
 
-void MainWindow::locateConverter()
+void MainWindow::locateRExecutable()
 {
-    // locate ss_trans.exe
     QSettings settings (app_copyright_org, app_name);
-    QString filename (findFile ("Converter", "applications (*.exe)"));
-    if (!filename.isEmpty())
-        ss_trans_exe = filename;
+    locateExecutable(R_exe, "R Executable", "r");
     settings.beginGroup("MainWindow");
-    settings.setValue("executable", filename);
+    settings.setValue("Rexecutable", R_exe);
     settings.endGroup();
 }
 
