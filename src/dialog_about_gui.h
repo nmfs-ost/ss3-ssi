@@ -26,6 +26,7 @@ private:
 signals:
     void showGuide();
     void showAboutQt();
+    void showCopyright();
 };
 
 #endif // DIALOG_ABOUT_GUI_H

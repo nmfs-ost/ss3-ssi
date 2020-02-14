@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.02
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.03
         ----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -17,6 +17,13 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.15.03
+    2020-02-07
+1. Added default model capability: set and return to.
+2. Searches for models start in the default directory and searches for
+   executable files and manuals start in the application directory.
+3. Fixed several help windows and links.
 ============================================================================
     3.30.15.02
     2020-02-06

@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     title_font.setPointSize(11);
     ui->label_gui_ver->setFont(title_font);
     ui->label_gui_ver->setText(tr("For use with Stock Synthesis ") + getAppAppliesTo());
+    ui->pushButton_about_ftb->setVisible(false);
+    ui->pushButton_about_qt->setVisible(false);
 
 
 //    mainMenu = new QMenuBar(this);
@@ -95,11 +97,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect (ui->actionAbout_SS_GUI, SIGNAL(triggered()), SLOT(helpGUI()));
     connect (ui->action_About, SIGNAL(triggered()), SLOT(helpSS()));
-    connect (ui->action_About_NFT, SIGNAL(triggered()), SLOT(helpNFT()));
+//    connect (ui->action_About_NFT, SIGNAL(triggered()), SLOT(helpNFT()));
     connect (ui->action_User_Manual, SIGNAL(triggered()), SLOT(showUserManual()));
     connect (ui->action_Using_SS, SIGNAL(triggered()), SLOT(showTechManual()));
     connect (ui->action_About_ADMB, SIGNAL(triggered()), SLOT(helpADMB()));
     connect (ui->action_About_Qt, SIGNAL(triggered()), SLOT(helpQt()));
+    connect (ui->actionShow_copyright_info, SIGNAL(triggered()), SLOT(showCopyright()));
 
     connect (ui->action_Files, SIGNAL(triggered()), SLOT (showFiles()));
     connect (ui->action_Model_Data, SIGNAL(triggered()), SLOT(showModel()));
@@ -229,14 +232,15 @@ void MainWindow::setupMenus (QMenuBar *main)
     windMenu->addSeparator();
     windMenu->addAction (ui->actionTitle_Window);
     QMenu *helpMenu = new QMenu(QString("&Help"), main); // helpMenu (ui->menu_Help);
+    helpMenu->addAction (ui->action_User_Manual);
     helpMenu->addAction (ui->actionAbout_SS_GUI);
     helpMenu->addAction (ui->action_About);
-    helpMenu->addAction (ui->action_About_NFT);
+//    helpMenu->addAction (ui->action_About_NFT);
     helpMenu->addSeparator();
     helpMenu->addAction (ui->action_About_ADMB);
     helpMenu->addAction (ui->action_About_Qt);
     helpMenu->addSeparator();
-    helpMenu->addAction (ui->action_User_Manual);
+    helpMenu->addAction(ui->actionShow_copyright_info);
 //    helpMenu.addAction (ui->action_Using_SS);
     //    mainMenu.clear();
     main->addMenu(fileMenu);
@@ -630,8 +634,9 @@ void MainWindow::helpGUI()
     QString title(QString("%1 %2").arg(
                       tr("About"), getAppName()));
     about->setWindowTitle(title);
-    connect (about, SIGNAL(showAboutSS()), SLOT(helpSS()));
+    connect (about, SIGNAL(showGuide()), SLOT(showGUIGuide()));
     connect (about, SIGNAL(showAboutQt()), SLOT(helpQt()));
+    connect (about, SIGNAL(showCopyright()), this, SLOT(showCopyright()));
 
     about->exec();
     delete about;
@@ -645,6 +650,7 @@ void MainWindow::helpSS()
     about->setWindowTitle(title);
     connect (about, SIGNAL(show_manual()), SLOT(showUserManual()));
     connect (about, SIGNAL(show_webpage(QString)), SLOT(showWebpage(QString)));
+    connect (about, SIGNAL(show_copyright()), this, SLOT(showCopyright()));
 
     about->exec();
     delete about;
@@ -675,6 +681,15 @@ void MainWindow::helpADMB()
 void MainWindow::helpQt()
 {
     QMessageBox::aboutQt (this, tr("About the Qt toolkit"));
+}
+
+void MainWindow::showCopyright()
+{
+    Dialog_copyright *copyright = new Dialog_copyright(this);
+    QString title(tr("Copyright Notice"));
+    copyright->setWindowTitle(title);
+    copyright->exec();
+    delete copyright;
 }
 
 void MainWindow::showLengthObs()
@@ -713,9 +728,81 @@ void MainWindow::showRecapObs()
     fleets->showRecapObs();
 }
 
-void MainWindow::showUserManual()
+void MainWindow::showDocument(QString setting)
 {
     QDir appdir (qApp->applicationDirPath());
+    QString start ("");
+    QStringList filter(QString("*.*"));
+    QStringList files;
+    QProcess *process = new QProcess (this);
+    QString filename, fullname;
+    QString command;
+    QFileInfo qf;
+    QSettings settings (app_copyright_org, app_name);
+    settings.beginGroup("Documents");
+    fullname = settings.value(setting, QString("")).toString();
+
+    if (setting.compare("manual") == 0) {
+        start = QString("SS_User_Manual");
+        filter.clear();
+        filter.append(QString("*.pdf"));
+    }
+    else if (setting.compare("technical") == 0) {
+        start = QString("SS_Technical");
+        filter.clear();
+        filter.append(QString("*.pdf"));
+    }
+    else if (setting.compare("guiguide") == 0) {
+        start = QString("Stock Synthesis");
+        filter.clear();
+        filter.append(QString("*.doc, *.docx"));
+    }
+
+    if (fullname.isEmpty())
+    {
+        // search application dir
+        files.append(appdir.entryList(filter, QDir::Files, QDir::Name));
+        for (int i = 0; i < files.count(); i++)
+            if (files.at(i).startsWith(start))
+                filename = files[i];
+        fullname = QString(QString("%1/%2").arg(appdir.absolutePath(), filename));
+//        filename.prepend(QString("%1/").arg(appdir.absolutePath()));
+    }
+    else {
+        filename = fullname.section('/', -2, -1);
+    }
+    qf = QFileInfo(fullname);
+
+    if (!qf.exists() || qf.isDir())
+    {
+        // dialog asking to find
+        QString msg (tr(QString("The file %1 was not found.\n").arg(filename).toUtf8()));
+        msg.append  (tr("Would you like to search for it manually?"));
+        QMessageBox::StandardButton btn = QMessageBox::information(this,
+            tr("File Not Found"), msg, QMessageBox::Yes | QMessageBox::No);
+        // file open dialog
+        if (btn == QMessageBox::Yes)
+        {
+            fullname = (QFileDialog::getOpenFileName (this, tr("Select File"),
+                   qApp->applicationDirPath(), tr(QString("documentation files (%1)").arg(filter.at(0)).toUtf8())));
+        }
+        qf = QFileInfo(fullname);
+    }
+
+    // if okay file, show it in default application
+    if (qf.exists())
+    {
+        settings.setValue(setting, fullname);
+        command = QString("cmd /k \"%1\"").arg(fullname);
+        process->start(command);
+    }
+    settings.endGroup();
+}
+
+void MainWindow::showUserManual()
+{
+    showDocument("manual");
+/*    QDir appdir (qApp->applicationDirPath());
     QStringList filter(QString("*.pdf"));
     QStringList files;
     QProcess *process = new QProcess (this);
@@ -760,12 +847,13 @@ void MainWindow::showUserManual()
         command = QString("cmd /k %1").arg(filename);
         process->start(command);
     }
-    settings.endGroup();
+    settings.endGroup();*/
 }
 
 void MainWindow::showTechManual()
 {
-    QDir appdir (qApp->applicationDirPath());
+    showDocument("technical");
+/*    QDir appdir (qApp->applicationDirPath());
     QStringList filter(QString("*.pdf"));
     QStringList files;
     QProcess *process = new QProcess (this);
@@ -810,7 +898,12 @@ void MainWindow::showTechManual()
         command = QString("cmd /k %1").arg(filename);
         process->start(command);
     }
-    settings.endGroup();
+    settings.endGroup();*/
+}
+
+void MainWindow::showGUIGuide()
+{
+    showDocument("guiguide");
 }
 
 void MainWindow::showWebpage(QString pg)

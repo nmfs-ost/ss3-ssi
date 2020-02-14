@@ -87,6 +87,7 @@ public slots:
     void helpNFT();
     void helpADMB();
     void helpQt();
+    void showCopyright();
     void run();
     void runConversion();
 
@@ -100,8 +101,10 @@ public slots:
     void showMorphObs();
     void showRecapObs();
 
+    void showDocument (QString setting);
     void showUserManual ();
     void showTechManual ();
+    void showGUIGuide();
     void showWebpage (QString pg);
     void setDefaultModel();
     void returnToDefault();

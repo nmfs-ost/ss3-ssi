@@ -7,15 +7,16 @@
 #define METADATA_H
 
 #include <QString>
+#include "dialog_copyright.h"
 
 #define app_name          ("Stock Synthesis Interface")
 #define app_version_major  3
 #define app_version_minor  30
 #define app_version_sub    15
 #define app_version_bugfix 3
-#define app_release_level  "b"  // a - alpha, b - beta, blank - release candidate
+#define app_release_level  " "  // a - alpha, b - beta, blank - release candidate
 #define app_version_apply ("3.30.15")
-#define app_copyright_date  __DATE__
+#define app_build_date    ("2020-02-13")
 #define app_copyright_org ("NOAA")
 
 #define app_manual        ("SS330_User_Manual.pdf")
@@ -26,10 +27,13 @@
 QString getAppVersion ();
 QString getAppAppliesTo ();
 QString getAppName ();
+QString getAppBuildDate ();
 QString getAppCopyright ();
 QString getAppOrg ();
 QString getAppUserManual ();
 QString getAppTechDescription ();
+
+Dialog_copyright *copyrightNotice();
 
 QString getDatafileVersionString ();
 void setDatafileVersionString (float ver);

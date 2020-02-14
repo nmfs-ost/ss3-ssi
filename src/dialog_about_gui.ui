@@ -155,16 +155,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_copyright">
-       <property name="text">
-        <string>copyright</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QTextEdit" name="textEdit"/>
      </item>
      <item>
@@ -173,6 +163,13 @@
         <widget class="QPushButton" name="pushButton_userGuide">
          <property name="text">
           <string>Open Guide</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_copyright">
+         <property name="text">
+          <string>Copyright</string>
          </property>
         </widget>
        </item>

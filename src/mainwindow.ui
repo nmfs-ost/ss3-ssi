@@ -243,7 +243,6 @@
     </property>
     <addaction name="actionAbout_SS_GUI"/>
     <addaction name="action_About"/>
-    <addaction name="action_About_NFT"/>
     <addaction name="separator"/>
     <addaction name="action_User_Manual"/>
     <addaction name="separator"/>
@@ -251,6 +250,7 @@
     <addaction name="separator"/>
     <addaction name="action_About_Qt"/>
     <addaction name="separator"/>
+    <addaction name="actionShow_copyright_info"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -329,8 +329,8 @@
   <widget class="QDockWidget" name="dockWidget_help">
    <property name="minimumSize">
     <size>
-     <width>750</width>
-     <height>340</height>
+     <width>600</width>
+     <height>260</height>
     </size>
    </property>
    <property name="windowIcon">
@@ -370,8 +370,8 @@
       <widget class="QLabel" name="label_banner">
        <property name="minimumSize">
         <size>
-         <width>269</width>
-         <height>194</height>
+         <width>150</width>
+         <height>100</height>
         </size>
        </property>
        <property name="toolTip">
@@ -412,22 +412,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_ss_icon">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>:/images/images/image7_no_background.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_buttons">
        <item>
         <widget class="QPushButton" name="pushButton_about_gui">
+         <property name="toolTip">
+          <string>About this interface</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -997,6 +987,11 @@
   <action name="actionReturn_to_default_model">
    <property name="text">
     <string>Return to default model</string>
+   </property>
+  </action>
+  <action name="actionShow_copyright_info">
+   <property name="text">
+    <string>Show copyright info</string>
    </property>
   </action>
  </widget>

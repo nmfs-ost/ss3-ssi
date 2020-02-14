@@ -1,8 +1,9 @@
 
 #include "metadata.h"
 
-QString datafile_version_str;
+#include <QDate>
 
+static QString datafile_version_str;
 
 QString getAppVersion ()
 {
@@ -27,9 +28,15 @@ QString getAppName ()
     return str;
 }
 
+QString getAppBuildDate ()
+{
+    QString str(app_build_date);
+    return str;
+}
+
 QString getAppCopyright ()
 {
-    QString str(app_copyright_date);
+    QString str(app_build_date);
     return str;
 }
 
