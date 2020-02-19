@@ -267,9 +267,9 @@ void MainWindow::writeSettings()
     settings.setValue("pos", pos());
     settings.setValue("defaultModel", default_model);
     settings.setValue("defaultDir", default_dir);
-    settings.setValue("executable", ss_exe);
-    settings.setValue("converter", ss_trans_exe);
-    settings.setValue("Rexecutable", R_exe);
+    settings.setValue("ss_exe", ss_exe);
+    settings.setValue("trans_exe", ss_trans_exe);
+    settings.setValue("r_exe", R_exe);
     settings.endGroup();
     settings.beginGroup ("HelpWindow");
     settings.setValue("size", ui->dockWidget_help->size());
@@ -332,9 +332,9 @@ void MainWindow::readSettings()
     default_model = settings.value("defaultModel", model).toString();
     default_dir = settings.value("defaultDir", app_dir).toString();
     current_dir = default_model;
-    ss_exe = settings.value("executable", exe).toString();
-    ss_trans_exe = settings.value("converter", exe).toString();
-    R_exe = settings.value("Rexecutable", blank_exe).toString();
+    ss_exe = settings.value("ss_exe", exe).toString();
+    ss_trans_exe = settings.value("trans_exe", exe).toString();
+    R_exe = settings.value("r_exe", blank_exe).toString();
     settings.endGroup();
 
     settings.beginGroup("HelpWindow");
@@ -1067,8 +1067,9 @@ void MainWindow::locateDocuments()
 void MainWindow::locateExecutable(QString &savename, QString type, QString hint)
 {
     QString filename ("");
+    QString dir = savename.section('/', 0, -2);
     QString filter(QString("applications (%1*.exe)").arg(hint));
-    filename = (findFile (type, filter));
+    filename = (findFile (dir, type, filter));
     if (!filename.isEmpty())
         savename = filename;
 }
@@ -1076,40 +1077,56 @@ void MainWindow::locateExecutable(QString &savename, QString type, QString hint)
 void MainWindow::locateSSExecutable()
 {
     // locate ss.exe
-    QSettings settings (app_copyright_org, app_name);
+//    QSettings settings (app_copyright_org, app_name);
     locateExecutable(ss_exe, "SS Executable", "ss");
-    settings.beginGroup("MainWindow");
+    changeExecutable(QString("ss_exe"), ss_exe);
+/*    settings.beginGroup("MainWindow");
     settings.setValue("executable", ss_exe);
-    settings.endGroup();
+    settings.endGroup();*/
 }
 void MainWindow::locateSSConverter()
 {
     // locate ss_trans.exe
-    QSettings settings (app_copyright_org, app_name);
-    QString filename (findFile ("SS Converter", "applications (*.exe)"));
+    locateExecutable(ss_trans_exe, "SS Converter", "ss_tr");
+    changeExecutable(QString("trans_exe"), ss_trans_exe);
+/*    QString filename (findFile ("SS Converter", "applications (*.exe)"));
     if (!filename.isEmpty())
-        ss_trans_exe = filename;
+        changeExecutable(QString("trans_exe"), filename);*/
+}
+void MainWindow::changeSSExecutable(QString filename) {
+    changeExecutable(QString("ss_exe"), filename);
+/*    QSettings settings (app_copyright_org, app_name);
+    ss_trans_exe = filename;
     settings.beginGroup("MainWindow");
     settings.setValue("executable", filename);
+    settings.endGroup();*/
+}
+
+void MainWindow::changeExecutable(QString key, QString filename) {
+    QSettings settings (app_copyright_org, app_name);
+    ss_trans_exe = filename;
+    settings.beginGroup("MainWindow");
+    settings.setValue(key, filename);
     settings.endGroup();
 }
 
 void MainWindow::locateRExecutable()
 {
-    QSettings settings (app_copyright_org, app_name);
-    locateExecutable(R_exe, "R Executable", "r");
-    settings.beginGroup("MainWindow");
+//    QSettings settings (app_copyright_org, app_name);
+    locateExecutable(R_exe, "R Executable", "R");
+    changeExecutable(QString("r_exe"), R_exe);
+/*    settings.beginGroup("MainWindow");
     settings.setValue("Rexecutable", R_exe);
-    settings.endGroup();
+    settings.endGroup();*/
 }
 
-QString MainWindow::findFile(QString title, QString filters)
+QString MainWindow::findFile(QString dir, QString title, QString filters)
 {
     QString filename ("");
     QString str (QString ("Select %1 File").arg(title));
 
     filename = (QFileDialog::getOpenFileName (this, tr(str.toUtf8()),
-        current_dir, tr(filters.toUtf8())));
+        dir, tr(filters.toUtf8())));
 
     return filename;
 }

@@ -86,6 +86,7 @@ public slots:
 signals:
     void complete();
     void canceled();
+    void executableChanged(QString);
 
 private:
     Ui::Dialog_run *ui;

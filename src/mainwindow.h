@@ -112,9 +112,11 @@ public slots:
     void locateDocuments ();
     void locateExecutable(QString &savename, QString type, QString hint = QString(""));
     void locateSSExecutable();
+    void changeSSExecutable(QString filename);
     void locateSSConverter ();
     void locateRExecutable ();
-    QString findFile (QString title, QString filters);
+    void changeExecutable(QString key, QString filename);
+    QString findFile (QString dir, QString title, QString filters);
 
     void moveEvent(QMoveEvent *event);
 

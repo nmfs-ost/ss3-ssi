@@ -238,11 +238,12 @@ void Dialog_run::setDir(QString dir)
 void Dialog_run::changeExe()
 {
     QString filename;
-    QString dir = ui->label_executable->text();
-    dir = QApplication::applicationDirPath();
+    QString dir = ui->label_executable->text().section('/', 0, -2);
+ //   dir = QApplication::applicationDirPath();
     filename = (QFileDialog::getOpenFileName (this, tr("Executable"),
         dir, tr("applications (*.exe)")));
     setExe(filename);
+    emit executableChanged(filename);
 }
 
 void Dialog_run::showOptions()
