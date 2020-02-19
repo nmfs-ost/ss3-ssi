@@ -77,6 +77,11 @@ public slots:
 
     void buttonClicked(QAbstractButton*btn);
 
+    void resizeEvent(QResizeEvent *event);
+    void moveEvent(QMoveEvent *event);
+    void moveDelta(QPoint delta);
+    void setScreen(int scrNum);
+
 protected:
     template<typename T>
     bool checkMinMax (T *min, T *max);

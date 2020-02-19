@@ -87,6 +87,7 @@ public slots:
     virtual void setup(); // start new
     virtual void update ();   // update from dialog values
     void resizeEvent(QResizeEvent *event);
+    void moveEvent(QMoveEvent *event);
 
     void buttonClicked (QAbstractButton *btn);
     void closeEvent (QCloseEvent *event);

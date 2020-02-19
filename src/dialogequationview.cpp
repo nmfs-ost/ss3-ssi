@@ -9,6 +9,10 @@
 #include <QtCharts/QValueAxis>
 #include <QMessageBox>
 #include <QMap>
+#include <QDesktopWidget>
+#include <QScreen>
+#include <QMoveEvent>
+#include <QResizeEvent>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -76,7 +80,7 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     intvar1 = ui->spinBox_int1->value();
 
     parameterView = new DialogParameterView(this);
-    parameterView->setName(name);
+    parameterView->moveDelta(position);
     connect (parameterView, SIGNAL(hidden()), this, SLOT(setParametersVisible()));
     connect (ui->pushButton_showParameters, SIGNAL(toggled(bool)), this, SLOT(setParametersVisible(bool)));
     setParametersVisible();
@@ -459,8 +463,17 @@ void DialogEquationView::closeEvent(QCloseEvent *evt)
 
 void DialogEquationView::resizeEvent(QResizeEvent *event)
 {
+    window = size();
     updateGrid(cht->rect());
     QDialog::resizeEvent(event);
+}
+void DialogEquationView::moveEvent(QMoveEvent *event)
+{
+    position = pos();
+    QDialog::moveEvent(event);
+
+    int scr = QApplication::desktop()->screenNumber(position);
+    parameterView->setScreen(scr);
 }
 
 void DialogEquationView::parametersChanged()

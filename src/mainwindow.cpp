@@ -9,6 +9,9 @@
 #include "documentdialog.h"
 #include "message.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QScreen>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
@@ -30,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowIcon(QIcon(":icons/StockSynth_icon_128.png"));
 
     app_dir = qApp->applicationDirPath();
+    mainScrn = 0;
     readSettings();
 
     // set up information dock widget
@@ -258,6 +262,7 @@ void MainWindow::writeSettings()
     QSettings settings(app_copyright_org, app_name);
 
     settings.beginGroup("MainWindow");
+    settings.setValue("screenNum", QApplication::desktop()->screenNumber(this));
     settings.setValue("size", size());
     settings.setValue("pos", pos());
     settings.setValue("defaultModel", default_model);
@@ -279,13 +284,51 @@ void MainWindow::writeSettings()
 
 void MainWindow::readSettings()
 {
+    QDesktopWidget *desk = QApplication::desktop();
+    int numscrns = desk->numScreens();
+    QSize qsize;
+    QPoint qpos;
+    int xdelta = 0;
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect scrRect = screen->availableGeometry();
+    QRect deskRect = desk->screenGeometry();
     QSettings settings(app_copyright_org, app_name);
     QString model (app_dir + "/default");
     QString exe (app_dir + "/ss.exe");
     QString blank_exe ("");
+
     settings.beginGroup("MainWindow");
-    resize(settings.value("size", QSize(700, 600)).toSize());
-    move(settings.value("pos", QPoint(200, 200)).toPoint());
+    mainScrn = settings.value("screenNum", 0).toInt();
+    qsize = settings.value("size", QSize(700, 600)).toSize();
+    qpos = settings.value("pos", QPoint(200, 200)).toPoint();
+    if (mainScrn < numscrns) {
+        scrRect = desk->screenGeometry(mainScrn);
+    }
+    else {
+        mainScrn = numscrns - 1;
+        scrRect = desk->screenGeometry(mainScrn);
+        for (int i = 0; i < mainScrn; i++)
+            xdelta += desk->screenGeometry(i).width();
+
+        if (qsize.height() > scrRect.height())
+            qsize.setHeight(scrRect.height() - 100);
+        if (qsize.width() > scrRect.width())
+            qsize.setWidth(scrRect.width() - 100);
+
+        if (qpos.x() < xdelta)
+            qpos.setX(qpos.x() + xdelta);
+        if (qpos.x() > scrRect.topRight().x())
+            qpos.setX(scrRect.topLeft().x() + 20);
+        if (qpos.x() + qsize.width() < scrRect.topLeft().x())
+            qpos.setX(scrRect.topLeft().x() + 20);
+        if (qpos.y() > scrRect.bottomLeft().y())
+            qpos.setY(scrRect.topLeft().y() + 20);
+        if (qpos.y() < scrRect.topLeft().y())
+            qpos.setY(scrRect.topLeft().y() + 20);
+    }
+    resize(qsize);
+    move(qpos);
+
     default_model = settings.value("defaultModel", model).toString();
     default_dir = settings.value("defaultDir", app_dir).toString();
     current_dir = default_model;
@@ -293,11 +336,13 @@ void MainWindow::readSettings()
     ss_trans_exe = settings.value("converter", exe).toString();
     R_exe = settings.value("Rexecutable", blank_exe).toString();
     settings.endGroup();
+
     settings.beginGroup("HelpWindow");
     ui->dockWidget_help->resize(settings.value("size").toSize());
     ui->dockWidget_help->move(settings.value("pos", QPoint(300,300)).toPoint());
     ui->dockWidget_help->setVisible(settings.value("visible", true).toBool());
     settings.endGroup();
+
     settings.beginGroup("ToolBar");
     ui->mainToolBar->setGeometry(settings.value("rect", QRect(350,330, 500, 35)).toRect());
     ui->mainToolBar->setVisible(settings.value("visible", true).toBool());
@@ -1067,6 +1112,37 @@ QString MainWindow::findFile(QString title, QString filters)
         current_dir, tr(filters.toUtf8())));
 
     return filename;
+}
+
+void MainWindow::moveEvent(QMoveEvent *event) {
+    int x = 0, y = 0;
+    bool doMove = false;
+    int width = 0, height = 0;
+    int newScrn = QApplication::desktop()->screenNumber(this);
+    QRect thisRect = QApplication::desktop()->screenGeometry(this);
+    width = size().width();
+    height = size().height();
+    x = pos().x();
+    y = pos().y();
+    if (mainScrn != newScrn) {
+        if (width > thisRect.width()) {
+            width = thisRect.width();
+            x = 0;
+            doMove = true;
+        }
+        if (height > thisRect.height()) {
+            height = thisRect.height();
+            y = 0;
+            doMove = true;
+        }
+    }
+    if (doMove) {
+        resize(width, height);
+        move (x, y);
+    }
+    else {
+        QMainWindow::moveEvent(event);
+    }
 }
 
 

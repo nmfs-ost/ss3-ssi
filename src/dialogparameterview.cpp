@@ -1,6 +1,9 @@
 #include "dialogparameterview.h"
 #include "ui_dialogparameterview.h"
 
+#include <QDesktopWidget>
+#include <QScreen>
+
 //#include <cmath>
 #include "ss_math.h"
 
@@ -23,8 +26,6 @@ DialogParameterView::DialogParameterView(QWidget *parent, bool showTrans) :
     pType.append(nullptr);  pType.clear();
     eInput.append(nullptr); eInput.clear();
     clearAll();
-//    move(parent->pos());
-    resize(805, height());
 
     ui->pushButton_apply->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_reset->setFocusPolicy(Qt::NoFocus);
@@ -34,6 +35,13 @@ DialogParameterView::DialogParameterView(QWidget *parent, bool showTrans) :
     connect (ui->pushButton_close, SIGNAL(clicked()), SLOT(close()));
     connectAll();
     hide();
+    window = size();
+    position = pos();
+    int screen = QApplication::desktop()->screenNumber(parent);
+    int xdelta = 0;
+    if (screen > 0)
+        xdelta = QApplication::screens().at(screen)->size().width();
+    move(position.x()+xdelta, position.y());
 }
 
 DialogParameterView::~DialogParameterView() {
@@ -685,6 +693,47 @@ void DialogParameterView::buttonClicked(QAbstractButton* btn) {
     else {// if (btn->text().contains("Close")) {
         close();
     }
+}
+
+void DialogParameterView::resizeEvent(QResizeEvent *event)
+{
+    window = size();
+    QDialog::resizeEvent(event);
+}
+void DialogParameterView::moveEvent(QMoveEvent *event)
+{
+    position = pos();
+    QDialog::moveEvent(event);
+}
+void DialogParameterView::moveDelta(QPoint delta)
+{
+    QRect thisRect;
+    bool doMove = false;
+    int x = position.x() + delta.x();
+    int y = position.y() + delta.y();
+    move (x, y);
+    thisRect = QApplication::desktop()->screenGeometry(this);
+    if (window.width() > thisRect.width()) {
+        x = thisRect.width() - window.width();
+        doMove = true;
+    }
+    if (window.height() > thisRect.height()) {
+        y = thisRect.height() - window.height();
+        doMove = true;
+    }
+    if (doMove)
+       move (x, y);
+}
+
+void DialogParameterView::setScreen(int scrNum)
+{
+    int thisScrNum = QApplication::desktop()->screenNumber(position);
+    int deltaWidth = 0;
+    for (int i = thisScrNum; i < scrNum; i++)
+        deltaWidth += QApplication::desktop()->screenGeometry(i).width();
+    for (int i = scrNum; i < thisScrNum; i++)
+        deltaWidth -= QApplication::desktop()->screenGeometry(i).width();
+    moveDelta(QPoint(deltaWidth, 0));
 }
 
 bool DialogParameterView::getShowTrans() const

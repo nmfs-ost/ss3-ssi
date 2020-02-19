@@ -116,11 +116,14 @@ public slots:
     void locateRExecutable ();
     QString findFile (QString title, QString filters);
 
+    void moveEvent(QMoveEvent *event);
+
 signals:
 
 private:
     Ui::MainWindow *ui;
     QMenuBar *mainMenu;
+    int mainScrn;
 
     ss_model *modelData;
     file_widget *files;
