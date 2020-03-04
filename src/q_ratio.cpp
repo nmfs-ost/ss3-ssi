@@ -322,6 +322,10 @@ QString q_ratio::getMirOffset()
     }
     return txt;
 }
+QStringList q_ratio::getMirOffsetParam()
+{
+    return params->getParameter(1);
+}
 
 void q_ratio::setMirOffset(QStringList values)
 {
@@ -339,6 +343,11 @@ QString q_ratio::getPower()
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
     return txt;
+}
+
+QStringList q_ratio::getPowerParam()
+{
+    return params->getParameter(1);
 }
 
 void q_ratio::setPower(QStringList values)
@@ -366,6 +375,16 @@ QString q_ratio::getExtra()
     return txt;
 }
 
+QStringList q_ratio::getExtraParam()
+{
+    int index = 1;
+    if (getDoPower() || getDoMirOffset())
+    {
+        index = 2;
+    }
+    return params->getParameter(index);
+}
+
 void q_ratio::setExtra(QStringList values)
 {
     params->setParamData(2, values);
@@ -382,6 +401,11 @@ QString q_ratio::getLink()
             txt.append(QString("  %1 ").arg(values.at(j)));
     }
     return txt;
+}
+
+QStringList q_ratio::getLinkParam()
+{
+    return params->getParameter(0);
 }
 
 void q_ratio::setLink(QStringList values)

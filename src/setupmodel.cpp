@@ -178,16 +178,17 @@ void shortParameterModel::setNumParams(int rows)
         for (i = currows; i < rows; i++)
         {
             paramTable->setRowData(i, defaultParam);
-            paramUsed.append(1);
         }
-        // set rows in paramData
-        setTotalNumParams(rows);
-        // set to use all params - can be changed later
-        paramNum.clear();
-        for (i = 0; i < rows; i++)
-        {
-            paramNum.append(i);
-        }
+    }
+    // set rows in paramData
+    setTotalNumParams(rows);
+    // set to use all params - can be changed later
+    paramUsed.clear();
+    paramNum.clear();
+    for (i = 0; i < rows; i++)
+    {
+        paramUsed.append(1);
+        paramNum.append(i);
     }
 }
 
@@ -220,9 +221,9 @@ void shortParameterModel::setParamHeader(int row, QString title)
 
 void shortParameterModel::setParameter(int row, QStringList &rowstringlist)
 {
-    int datarow = paramNum.at(row);
     if (row >= paramTable->rowCount())
-        paramTable->setRowCount(row + 1);
+        setNumParams(row);
+    int datarow = paramNum.at(row);
     paramTable->setRowData(row, rowstringlist);
     paramData->setRowData(datarow, rowstringlist);
     paramTable->setRowHeader(row, paramData->getRowHeader(datarow));

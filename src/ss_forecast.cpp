@@ -36,6 +36,13 @@ ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
     header << "Year" << "Season" << "Fleet" << "Catch" << "Basis";
     fixedFcastCatch->setHeader(header);
 
+    ctl_rule_buffer_table = new tablemodel(this);
+    ctl_rule_buffer_table->setRowCount(0);
+    ctl_rule_buffer_table->setColumnCount(2);
+    header.clear();
+    header << "Year" << "Value";
+    ctl_rule_buffer_table->setHeader(header);
+
     // set defaults
     i_num_fleets = 0;
     i_num_seasons = 0;
@@ -124,6 +131,22 @@ void ss_forecast::set_num_forecast_years (int yrs)
     for (int i = 0; i < yrs; i++)
         allocGroupFrac->setRowHeader(i, QString("Year_%1").arg(QString::number(i+1)));
 }
+
+void ss_forecast::append_cr_buffer_list (QStringList rowdata)
+{
+    int num = ctl_rule_buffer_table->rowCount();
+    ctl_rule_buffer_table->setRowCount(num + 1);
+    ctl_rule_buffer_table->setRowData(num, rowdata);
+}
+int ss_forecast::get_num_cr_buffer_rows ()
+{
+    return ctl_rule_buffer_table->rowCount();
+}
+QStringList ss_forecast::get_cr_buffer_row (int row)
+{
+    return ctl_rule_buffer_table->getRowData(row);
+}
+
 
 void ss_forecast::set_combo_box_cr_method(int ctl)
 {
@@ -480,7 +503,8 @@ void ss_forecast::reset()
     i_ctl_rule_method = 1;// Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB) )
     f_ctl_rule_bmass_const_f = 0.40;// Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below)
     f_ctl_rule_bmass_no_f = 0.10;// Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10)
-    f_ctl_rule_tgt = 0.75;// Control rule target as fraction of Flimit (e.g. 0.75)
+    f_ctl_rule_buff = 0.75;// Control rule target as fraction of Flimit (e.g. 0.75)
+    ctl_rule_buffer_table->clear();
     i_num_fcast_loops = 3;// N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)
     i_fcast_loop_stch_recruit = 3;// First forecast loop with stochastic recruitment
     i_fcast_recr_adj = 0;// Forecast loop control #3 (reserved for future bells&whistles)
@@ -524,7 +548,8 @@ void ss_forecast::clear()
     i_ctl_rule_method = 1;
     f_ctl_rule_bmass_const_f = 0.0;
     f_ctl_rule_bmass_no_f = 0.0;
-    f_ctl_rule_tgt = 0.0;
+    f_ctl_rule_buff = 0.0;
+    ctl_rule_buffer_table->clear();
     i_num_fcast_loops = 1;
     i_fcast_loop_stch_recruit = 1;
     i_fcast_recr_adj = 0;

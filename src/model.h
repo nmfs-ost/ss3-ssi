@@ -284,6 +284,16 @@ public slots:
     void setTagLossParameter(longParameter *lp);
     void setTagLossParameter(QString text);
     longParameter *getTagLossParameter() {return tag_loss_param;}
+    longParameterModel *getTagLossInit() {return tagLossInit;}
+    longParameterModel *getTagLossChronic() {return tagLossChronic;}
+    longParameterModel *getTagOverdispersion() {return tagOverdispersion;}
+    longParameterModel *getTagReportFleet() {return tagReportFleet;}
+    longParameterModel *getTagReportDecay() {return tagReportDecay;}
+    timeVaryParameterModel *getTagLossInitTV() {return tagLossInitTV;}
+    timeVaryParameterModel *getTagLossChronicTV() {return tagLossChronicTV;}
+    timeVaryParameterModel *getTagOverdispersionTV() {return tagOverdispersionTV;}
+    timeVaryParameterModel *getTagReportFleetTV() {return tagReportFleetTV;}
+    timeVaryParameterModel *getTagReportDecayTV() {return tagReportDecayTV;}
 
     void setInputValueVariance (int flag) {i_input_variance = flag;}
     int getInputValueVariance () {return i_input_variance;}
@@ -294,6 +304,11 @@ public slots:
     int getLambdaSdOffset () {return lambdaSetup.getB();}
     void setLambdaNumChanges(int num) {lambdaSetup.setC(num);}
     int getLambdaNumChanges();
+    void setNumLambdaAdjustments(int num);
+    int getNumLambdaAdjustments() {return lambdas->rowCount();}
+    void addLambdaAdjustment(QStringList ladj);
+    QStringList getLambdaAdjustment (int row);
+    tablemodel *getLambdaAdjustmentModel() {return lambdas;}
 
     int getAddVariance() const;
     void setAddVariance(int value);
@@ -323,9 +338,11 @@ public slots:
     QStringList getAddSdReprtSelex () {return additionalSdReporting->getSelex();}
     QStringList getAddSdReprtGrowth () {return additionalSdReporting->getGrowth();}
     QStringList getAddSdReprtNumAtAge () {return additionalSdReporting->getNumAtAge();}
+    QStringList getAddSdReprtNatMort () {return additionalSdReporting->getNatMort();}
     QStringList getAddSdReprtSelexBins () {return additionalSdReporting->getSelexBins();}
     QStringList getAddSdReprtGrwthBins () {return additionalSdReporting->getGrowthBins();}
     QStringList getAddSdReprtAtAgeBins () {return additionalSdReporting->getNumAtAgeBins();}
+    QStringList getAddSdReprtNatMortBins () {return additionalSdReporting->getNatMortBins();}
     void setAddVarSelexBins (int index, float val);
     float getAddVarSelexBins (int index) {return add_var_slx_bins[index];}
     void setAddVarGrwthBins (int index, float val);
@@ -429,10 +446,21 @@ private:
     int tagTvParamsRead;
     int tag_loss;
     longParameter *tag_loss_param;
+    longParameterModel *tagLossInit;
+    longParameterModel *tagLossChronic;
+    longParameterModel *tagOverdispersion;
+    longParameterModel *tagReportFleet;
+    longParameterModel *tagReportDecay;
+    timeVaryParameterModel *tagLossInitTV;
+    timeVaryParameterModel *tagLossChronicTV;
+    timeVaryParameterModel *tagOverdispersionTV;
+    timeVaryParameterModel *tagReportFleetTV;
+    timeVaryParameterModel *tagReportDecayTV;
 
     int i_input_variance;
 
     method_setup lambdaSetup;
+    tablemodel *lambdas;
 
     int i_add_variance;
     QList<int> add_var_setup;

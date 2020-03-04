@@ -88,6 +88,66 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
     connect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
 
+    tagInit = new tableview();
+    tagInit->setParent(this);
+    tagInit->setModel(model_data->getTagLossInit()->getParamTable());
+    ui->verticalLayout_tagLossInit->addWidget(tagInit);
+    connect (model_data->getTagLossInit()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitChanged()));
+    tagInitTV = new tableview();
+    tagInitTV->setParent(this);
+    tagInitTV->setModel(model_data->getTagLossInitTV()->getVarParamTable());
+    ui->verticalLayout_tagInitTV->addWidget(tagInitTV);
+    connect (model_data->getTagLossInitTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitTVChanged()));
+    tagInitChanged();
+
+    tagChronic = new tableview();
+    tagChronic->setParent(this);
+    tagChronic->setModel(model_data->getTagLossChronic()->getParamTable());
+    ui->verticalLayout_tagLossChronic->addWidget(tagChronic);
+    connect (model_data->getTagLossChronic()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicChanged()));
+    tagChronicTV = new tableview();
+    tagChronicTV->setParent(this);
+    tagChronicTV->setModel(model_data->getTagLossChronicTV()->getVarParamTable());
+    ui->verticalLayout_tagChronicTV->addWidget(tagChronicTV);
+    connect (model_data->getTagLossChronicTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicTVChanged()));
+    tagChronicChanged();
+
+    tagOverdisp = new tableview();
+    tagOverdisp->setParent(this);
+    tagOverdisp->setModel(model_data->getTagOverdispersion()->getParamTable());
+    ui->verticalLayout_tagOverdisp->addWidget(tagOverdisp);
+    connect (model_data->getTagOverdispersion()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispChanged()));
+    tagOverdispTV = new tableview();
+    tagOverdispTV->setParent(this);
+    tagOverdispTV->setModel(model_data->getTagOverdispersionTV()->getVarParamTable());
+    ui->verticalLayout_tagOverdispTV->addWidget(tagOverdispTV);
+    connect (model_data->getTagOverdispersionTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispTVChanged()));
+    tagOverdispChanged();
+
+    tagReptFleet = new tableview();
+    tagReptFleet->setParent(this);
+    tagReptFleet->setModel(model_data->getTagReportFleet()->getParamTable());
+    ui->verticalLayout_tagReptFleet->addWidget(tagReptFleet);
+    connect (model_data->getTagReportFleet()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltChanged()));
+    tagReptFleetTV = new tableview();
+    tagReptFleetTV->setParent(this);
+    tagReptFleetTV->setModel(model_data->getTagReportFleetTV()->getVarParamTable());
+    ui->verticalLayout_tagReptFleetTV->addWidget(tagReptFleetTV);
+    connect (model_data->getTagReportFleetTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltTVChanged()));
+    tagRptFltChanged();
+
+    tagReptFltDecay = new tableview();
+    tagReptFltDecay->setParent(this);
+    tagReptFltDecay->setModel(model_data->getTagReportDecay()->getParamTable());
+    ui->verticalLayout_tagReptDecayFlt->addWidget(tagReptFltDecay);
+    connect (model_data->getTagReportDecay()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayChanged()));
+    tagReptDecayFltTV = new tableview();
+    tagReptDecayFltTV->setParent(this);
+    tagReptDecayFltTV->setModel(model_data->getTagReportDecayTV()->getVarParamTable());
+    ui->verticalLayout_tagReptDecayFltTV->addWidget(tagReptDecayFltTV);
+    connect (model_data->getTagReportDecayTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayTVChanged()));
+    tagRptDcayChanged();
+
 
     envVariables = new tableview();
     envVariables->setParent(this);
@@ -103,6 +163,16 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     timeBlocks->setParent(this);
     timeBlocks->setModel(nullptr);
     ui->verticalLayout_block_years->addWidget(timeBlocks);
+
+    lambdaView = new tableview();
+    lambdaView->setParent(this);
+    lambdaView->setModel(model_data->getLambdaAdjustmentModel());
+    ui->verticalLayout_lambdas->addWidget(lambdaView);
+    connect (model_data->getLambdaAdjustmentModel(), SIGNAL(dataChanged()), SLOT(changeLambdas()));
+    changeLambdas();
+    connect (ui->spinBox_lambda_max_phase, SIGNAL(valueChanged(int)), SLOT(changeLambdaMaxPhase(int)));
+    connect (ui->spinBox_lambda_sd_offset, SIGNAL(valueChanged(int)), SLOT(changeLambdaSdOffset(int)));
+    connect (ui->spinBox_lambda_count, SIGNAL(valueChanged(int)), SLOT(changeLambdaCount(int)));
 
     addSdSelexView = new tableview();
     addSdSelexView->setParent(this);
@@ -136,6 +206,17 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     addNumAtAgeBinsView->setModel(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
     addNumAtAgeBinsView->setHeight(1);
     ui->verticalLayout_add_sd_NatAge_ages->addWidget(addNumAtAgeBinsView);
+
+    addSdNatMortView = new tableview();
+    addSdNatMortView->setParent(this);
+    addSdNatMortView->setModel(model_data->getAddSdReporting()->getNatMortModel());
+    addSdNatMortView->setHeight(1);
+    ui->verticalLayout_add_sd_natMort->addWidget(addSdNatMortView);
+    addSdNatMortBinsView = new tableview();
+    addSdNatMortBinsView->setParent(this);
+    addSdNatMortBinsView->setModel(model_data->getAddSdReporting()->getNatMortAgeModel());
+    addSdNatMortBinsView->setHeight(1);
+    ui->verticalLayout_add_sd_natMort_ages->addWidget(addSdNatMortBinsView);
 
 
 
@@ -200,6 +281,8 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_block_patterns_total, SIGNAL(valueChanged(int)), SLOT(changeNumBlockPatterns(int)));
     connect (ui->spinBox_block_pattern_num, SIGNAL(valueChanged(int)), SLOT(changeBlockPattern(int)));
     connect (ui->spinBox_blocks_count, SIGNAL(valueChanged(int)), SLOT(changeNumBlocks(int)));
+
+    connect (ui->spinBox_add_sd_read, SIGNAL(valueChanged(int)), SLOT(changeAddSdRead(int)));
 
     ui->spinBox_num_std_yrs->setMaximum(20);
     setNumSdYears(0);
@@ -317,6 +400,9 @@ void data_widget::refresh()
         setDoTags(model_data->get_do_tags());
         ui->spinBox_tag_time_vary->setValue(model_data->getTagTimeVaryReadParams());
 
+        setLambdaMaxPhase(model_data->getLambdaMaxPhase());
+        setLambdaSdOffset(model_data->getLambdaSdOffset());
+        setLambdaCount(model_data->getNumLambdaAdjustments());
 
         ui->spinBox_env_var_obs->setValue(model_data->getNumEnvironVarObs());
         ui->spinBox_num_evn_var->setValue(model_data->getNumEnvironVars());
@@ -324,13 +410,10 @@ void data_widget::refresh()
         ui->spinBox_block_patterns_total->setValue(model_data->getNumBlockPatterns());
         setBlockPattern(1);
 
-        ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
-        addSdSelexView->resizeColumnsToContents();
-        addSelexBinsView->resizeColumnsToContents();
-        addSdGrowthView->resizeColumnsToContents();
-        addGrowthBinsView->resizeColumnsToContents();
-        addSdNumAtAgeView->resizeColumnsToContents();
-        addNumAtAgeBinsView->resizeColumnsToContents();
+//        ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
+        ui->spinBox_add_sd_read->setValue (model_data->getAddSdReporting()->getActive());
+        changeAddSdRead(model_data->getAddSdReporting()->getActive());
+
 /*        addSdSelexView->setModel(model_data->getAddSdReporting()->getSpecModel());
         addSdSelexView->setHeight(model_data->getAddSdReporting()->getSpecModel());
         addSdSelexView->resizeColumnsToContents();
@@ -339,6 +422,72 @@ void data_widget::refresh()
         addSelexBinsView->setHeight(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
         addSelexBinsView->resizeColumnsToContents();
         ui->verticalLayout_add_sd_bins->addWidget(addSelexBinsView);*/
+    }
+}
+
+void data_widget::changeAddSdRead(int value) {
+    model_data->getAddSdReporting()->setActive(value);
+    if (value == 0) {
+        ui->label_add_sd_selex->setEnabled(false);
+        addSdSelexView->setEnabled(false);
+        addSelexBinsView->setEnabled(false);
+
+        ui->label_add_sd_growth->setEnabled(false);
+        addSdGrowthView->setEnabled(false);
+        addGrowthBinsView->setEnabled(false);
+
+        ui->label_add_sd_NatAge->setEnabled(false);
+        addSdNumAtAgeView->setEnabled(false);
+        addNumAtAgeBinsView->setEnabled(false);
+
+        ui->label_add_sd_natMort->setEnabled(false);
+        addSdNatMortView->setEnabled(false);
+        addSdNatMortBinsView->setEnabled(false);
+    }
+    else {
+        ui->label_add_sd_selex->setEnabled(true);
+        addSdSelexView->setEnabled(true);
+        addSdSelexView->resizeColumnsToContents();
+        addSelexBinsView->setEnabled(true);
+        addSelexBinsView->resizeColumnsToContents();
+
+        if (model_data->getReadWtAtAge() == 0) {
+            ui->label_add_sd_growth->setEnabled(true);
+            ui->label_add_sd_growth->setVisible(true);
+            addSdGrowthView->setEnabled(true);
+            addSdGrowthView->setVisible(true);
+            addSdGrowthView->resizeColumnsToContents();
+            addGrowthBinsView->setEnabled(true);
+            addGrowthBinsView->setVisible(true);
+            addGrowthBinsView->resizeColumnsToContents();
+        }
+        else {
+            ui->label_add_sd_growth->setVisible(false);
+            addSdGrowthView->setVisible(false);
+            addGrowthBinsView->setVisible(false);
+        }
+
+        ui->label_add_sd_NatAge->setEnabled(true);
+        addSdNumAtAgeView->setEnabled(true);
+        addSdNumAtAgeView->resizeColumnsToContents();
+        addNumAtAgeBinsView->setEnabled(true);
+        addNumAtAgeBinsView->resizeColumnsToContents();
+
+        if (value > 1) {
+            ui->label_add_sd_natMort->setVisible(true);
+            ui->label_add_sd_natMort->setEnabled(true);
+            addSdNatMortView->setEnabled(true);
+            addSdNatMortView->setVisible(true);
+            addSdNatMortView->resizeColumnsToContents();
+            addSdNatMortBinsView->setEnabled(true);
+            addSdNatMortBinsView->setVisible(true);
+            addSdNatMortBinsView->resizeColumnsToContents();
+        }
+        else {
+            ui->label_add_sd_natMort->setVisible(false);
+            addSdNatMortView->setVisible(false);
+            addSdNatMortBinsView->setVisible(false);
+        }
     }
 }
 
@@ -807,6 +956,7 @@ void data_widget::setDoTags(bool flag)
 {
     ui->groupBox_tag->setChecked(flag);
     changeDoTags(flag);
+    ui->scrollArea_tagParams->setEnabled(flag);
 }
 
 void data_widget::changeDoTags(bool flag)
@@ -828,12 +978,47 @@ void data_widget::changeDoTags(bool flag)
         ui->spinBox_tag_max_per->setValue(0);
         tagGroups->setModel(nullptr);
     }
+    ui->scrollAreaWidgetContents_tagParams->setEnabled(flag);
 }
 
 void data_widget::changeNumTagGrps(int num)
 {
     model_data->set_num_tag_groups(num);
     tagGroups->setHeight(num);
+}
+
+void data_widget::changeLambdas()
+{
+    int count = model_data->getLambdaAdjustmentModel()->rowCount();
+    lambdaView->setHeight(model_data->getNumLambdaAdjustments());
+    lambdaView->resizeColumnsToContents();
+    setLambdaCount(count);
+}
+
+void data_widget::setLambdaMaxPhase(int value)
+{
+    ui->spinBox_lambda_max_phase->setValue(value);
+}
+void data_widget::changeLambdaMaxPhase(int value)
+{
+    model_data->setLambdaMaxPhase(value);
+}
+void data_widget::setLambdaSdOffset(int value)
+{
+    ui->spinBox_lambda_sd_offset->setValue(value);
+}
+void data_widget::changeLambdaSdOffset(int value)
+{
+    model_data->setLambdaSdOffset(value);
+}
+void data_widget::setLambdaCount(int value)
+{
+    ui->spinBox_lambda_count->setValue(value);
+}
+void data_widget::changeLambdaCount(int value)
+{
+    model_data->setNumLambdaAdjustments(value);
+    model_data->setLambdaNumChanges(value);
 }
 
 void data_widget::setBlockPattern(int num)
@@ -968,4 +1153,77 @@ void data_widget::addAgeDirichlet()
     int num = model_data->get_age_composition()->getNumDirichletParams();
     model_data->get_age_composition()->setDirichletParam(num, ql);
     ageDirichlet->setHeight(num+1);
+}
+
+void data_widget::tagInitChanged()
+{
+    tagInit->setHeight(model_data->getTagLossInit()->getParamTable());
+    tagInit->resizeColumnsToContents();
+    tagInitTVChanged();
+}
+void data_widget::tagInitTVChanged()
+{
+    int num = model_data->getTagLossInitTV()->getNumParams();
+    ui->label_tagInitTV->setVisible(num > 0);
+    tagInitTV->setVisible(num > 0);
+    tagInitTV->setHeight(num);
+    tagInitTV->resizeColumnsToContents();
+}
+
+void data_widget::tagChronicChanged()
+{
+    tagChronic->setHeight(model_data->getTagLossChronic()->getParamTable());
+    tagChronic->resizeColumnsToContents();
+    tagChronicTVChanged();
+}
+void data_widget::tagChronicTVChanged()
+{
+    int num = model_data->getTagLossChronicTV()->getNumParams();
+    ui->label_tagChronicTV->setVisible(num > 0);
+    tagChronicTV->setVisible(num > 0);
+    tagChronicTV->setHeight(num);
+    tagChronicTV->resizeColumnsToContents();
+}
+
+void data_widget::tagOverdispChanged()
+{
+    tagOverdisp->setHeight(model_data->getTagOverdispersion()->getParamTable());
+    tagOverdisp->resizeColumnsToContents();
+    tagOverdispTVChanged();
+}
+void data_widget::tagOverdispTVChanged()
+{
+    int num = model_data->getTagOverdispersionTV()->getNumParams();
+    ui->label_tagOverdispTV->setVisible(num > 0);
+    tagOverdispTV->setVisible(num > 0);
+    tagOverdispTV->setHeight(num);
+    tagOverdispTV->resizeColumnsToContents();
+}
+void data_widget::tagRptFltChanged()
+{
+    tagReptFleet->setHeight(model_data->getTagReportFleet()->getParamTable());
+    tagReptFleet->resizeColumnsToContents();
+    tagRptFltTVChanged();
+}
+void data_widget::tagRptFltTVChanged()
+{
+    int num = model_data->getTagReportFleetTV()->getNumParams();
+    ui->label_tagReptFleetTV->setVisible(num > 0);
+    tagReptFleetTV->setVisible(num > 0);
+    tagReptFleetTV->setHeight(num);
+    tagReptFleetTV->resizeColumnsToContents();
+}
+void data_widget::tagRptDcayChanged()
+{
+    tagReptFltDecay->setHeight(model_data->getTagReportDecay()->getParamTable());
+    tagReptFltDecay->resizeColumnsToContents();
+    tagRptDcayTVChanged();
+}
+void data_widget::tagRptDcayTVChanged()
+{
+    int num = model_data->getTagReportDecayTV()->getNumParams();
+    ui->label_tagReptDecayFltTV->setVisible(num > 0);
+    tagReptDecayFltTV->setVisible(num > 0);
+    tagReptDecayFltTV->setHeight(num);
+    tagReptDecayFltTV->resizeColumnsToContents();
 }

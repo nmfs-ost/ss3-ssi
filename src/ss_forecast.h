@@ -72,8 +72,12 @@ public slots:
     float get_cr_biomass_const_f () {return f_ctl_rule_bmass_const_f;}
     void set_cr_biomass_no_f (double cr) {f_ctl_rule_bmass_no_f = (float)cr;}
     float get_cr_biomass_no_f () {return f_ctl_rule_bmass_no_f;}
-    void set_cr_target (double targ) {f_ctl_rule_tgt = (float)targ;}
-    float get_cr_target () {return f_ctl_rule_tgt;}
+    void set_cr_buffer (double targ) {f_ctl_rule_buff = (float)targ;}
+    float get_cr_buffer () {return f_ctl_rule_buff;}
+    void append_cr_buffer_list (QStringList rowdata);
+    int get_num_cr_buffer_rows ();
+    QStringList get_cr_buffer_row (int row);
+    tablemodel *get_cr_buffer_table () {return ctl_rule_buffer_table;}
     void set_num_forecast_loops (int loops) {i_num_fcast_loops = loops;}
     int get_num_forecast_loops () {return i_num_fcast_loops;}
     void set_forecast_loop_recruitment (int loop) {i_fcast_loop_stch_recruit = loop;}
@@ -200,7 +204,8 @@ public slots:
     // Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10)
     float f_ctl_rule_bmass_no_f;
     // Control rule target as fraction of Flimit (e.g. 0.75)
-    float f_ctl_rule_tgt;
+    float f_ctl_rule_buff;
+    tablemodel * ctl_rule_buffer_table;
     // N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)
     int   i_num_fcast_loops;
     // First forecast loop with stochastic recruitment

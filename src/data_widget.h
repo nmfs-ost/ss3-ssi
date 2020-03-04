@@ -85,6 +85,13 @@ public slots:
     void setDoTags(bool flag);
     void changeDoTags(bool flag);
     void changeNumTagGrps (int num);
+    void changeLambdas();
+    void setLambdaMaxPhase(int value);
+    void changeLambdaMaxPhase(int value);
+    void setLambdaSdOffset(int value);
+    void changeLambdaSdOffset(int value);
+    void setLambdaCount(int value);
+    void changeLambdaCount(int value);
     void setBlockPattern (int num);
     void changeNumBlockPatterns (int num);
     void changeBlockPattern(int num);
@@ -111,6 +118,19 @@ private slots:
     void addLengthDirichlet();
     void addAgeDirichlet();
 
+    void tagInitChanged();
+    void tagInitTVChanged();
+    void tagChronicChanged();
+    void tagChronicTVChanged();
+    void tagOverdispChanged();
+    void tagOverdispTVChanged();
+    void tagRptFltChanged();
+    void tagRptFltTVChanged();
+    void tagRptDcayChanged();
+    void tagRptDcayTVChanged();
+
+    void changeAddSdRead(int value);
+
 private:
     Ui::data_widget *ui;
     tableview *sdYearsView;
@@ -136,9 +156,21 @@ private:
 
     tableview *tagGroups;
 
+    tableview *tagInit;
+    tableview *tagInitTV;
+    tableview *tagChronic;
+    tableview *tagChronicTV;
+    tableview *tagOverdisp;
+    tableview *tagOverdispTV;
+    tableview *tagReptFleet;
+    tableview *tagReptFleetTV;
+    tableview *tagReptFltDecay;
+    tableview *tagReptDecayFltTV;
+
     tableview *envVariables;
 
     tableview *timeBlocks;
+
     tableview *lambdaView;
 
     tableview *addSdSelexView;
@@ -149,6 +181,9 @@ private:
 
     tableview *addSdNumAtAgeView;
     tableview *addNumAtAgeBinsView;
+
+    tableview *addSdNatMortView;
+    tableview *addSdNatMortBinsView;
 
     int StartYear;
     int EndYear;

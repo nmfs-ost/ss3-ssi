@@ -42,15 +42,19 @@ public:
     bool getDoFloat();
 
     QString getMirOffset();
+    QStringList getMirOffsetParam ();
     void setMirOffset(QStringList values);
 
     QString getPower();
+    QStringList getPowerParam();
     void setPower(QStringList values);
 
     QString getExtra();
+    QStringList getExtraParam();
     void setExtra(QStringList values);
 
     QString getLink();
+    QStringList getLinkParam();
     void setLink(QStringList values);
 
     void setNumParams (int num) {params->setNumParams(num);}

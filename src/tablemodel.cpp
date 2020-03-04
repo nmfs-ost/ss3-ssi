@@ -111,6 +111,12 @@ QString tablemodel::getRowText(int row)
     return text;
 }
 
+void tablemodel::addRowData(QStringList &rowstringlist)
+{
+    int row = rowCount();
+    setRowData(row, rowstringlist);
+}
+
 void tablemodel::removeHeader()
 {
     int cols = columnCount();

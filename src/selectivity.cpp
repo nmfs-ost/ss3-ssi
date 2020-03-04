@@ -89,9 +89,9 @@ void selectivity::setSetup(QString text)
 void selectivity::setSetup(QStringList strList)
 {
     setSpecial(strList.at(3).toInt());
-    setMale(strList.at(2).toInt());
-    setDiscard(strList.at(1).toInt());
     setPattern(strList.at(0).toInt());
+    setDiscard(strList.at(1).toInt());
+    setMale(strList.at(2).toInt());
 /*    setup->setData(strList);*/
 //    emit dataChanged();
 }
@@ -148,6 +148,7 @@ QString selectivity::getSetupText()
 
 void selectivity::changeSetup(QList<int> values)
 {
+    Q_UNUSED(values);
     emit setupChanged(getSetup());
 }
 
@@ -168,6 +169,11 @@ void selectivity::setMethod(int method)
 void selectivity::setNumXvals(int num)
 {
     numXvals = num;
+    if (xVals.count() == 0) {
+        for (int i = 0; i < num; i++)
+            xVals.append(i);
+    }
+
 //    setDefaultParams(getPattern(), getSpecial());
 }
 
@@ -209,9 +215,9 @@ void selectivity::setDefaultParams(int method, int special)
     Count = QString::number(count);
     xMin = QString::number(xmin);
     xMax = QString::number(xmax);
-    Peak = QString::number(peak, 'g', 2);
-    xLo = QString::number(x1, 'g', 2);
-    xHi = QString::number(x2, 'g', 2);
+    Peak = QString::number(peak, 'f', 2);
+    xLo = QString::number(x1, 'f', 2);
+    xHi = QString::number(x2, 'f', 2);
 
     disconnectSigs();
     emit startingSetupChanges();
@@ -882,7 +888,9 @@ void selectivity::setDiscard(int value)
 
 void selectivity::setMale(int value)
 {
+    int num = 0;
     int male = setup->getValue(2);
+    QString gender("Male");
     if (male != value)
     {
 //        emit startingSetupChanges();
@@ -890,17 +898,28 @@ void selectivity::setMale(int value)
         switch (value)
         {
         case 1:
-            maleParameters->setNumParams(4);
-            for (int i = 0; i < 4; i++)
-            {
-                setMaleParameterLabel(i, QString("Male_P%1_%2(%3)").arg(
-                                               QString::number(i+1),
-                                               fisheryName,
-                                               QString::number(fisheryNum)));
-            }
+            num = 4;
+            break;
+        case 2:
+            num = 4;
+            gender = QString("Fem");
+            break;
+        case 3:
+        case 4:
+            if (getPattern() == 23 || getPattern() == 24)
+                num = 5;
             break;
         default:
-            maleParameters->setNumParams(0);
+            num = 0;
+        }
+        maleParameters->setNumParams(num);
+        for (int i = 0; i < num; i++)
+        {
+            setMaleParameterLabel(i, QString("%1_P%2_%3(%4)").arg(
+                                           gender,
+                                           QString::number(i+1),
+                                           fisheryName,
+                                           QString::number(fisheryNum)));
         }
 //        emit dataChanged();
     }

@@ -82,8 +82,8 @@ public slots:
     // catch
     void setCatchUnits(int c_units) {i_catch_units = c_units;}
     int getCatchUnits() {return i_catch_units;}
-    void set_catch_equil (double value) {d_catch_equil = value;}
-    double catch_equil () {return d_catch_equil;}
+    void set_catch_equil (int seas, double value) {d_catch_equil[seas-1] = value;}
+    double catch_equil (int seas) {return d_catch_equil[seas-1];}
     void set_catch_se (double c_se) {d_catch_se_of_log = c_se;}
     double catch_se () {return d_catch_se_of_log;}
     void set_equ_catch_se(double c_se_eq) {d_catch_se_eq = c_se_eq;}
@@ -400,7 +400,7 @@ protected:
     tablemodel *lambdaModel;
 
 //    QList<yearIndexMeasure*> d_catch;
-    double d_catch_equil;
+    QList<double> d_catch_equil;
 
     // surveys
     int i_abund_units;           // 0=numbers, 1=biomass, 2=F

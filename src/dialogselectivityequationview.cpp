@@ -88,12 +88,12 @@ void DialogSelexEquationView::setOption(int value) {
 void DialogSelexEquationView::setSelex(selectivity *slx) {
     disconnectAll();
     disconnect (selex, SIGNAL(setupChanged(QStringList)), this,
-                SLOT(DialogSelexEquationView::changedSelex(QStringList)));
+                SLOT(changedSelex(QStringList)));
     selex = slx;
     setParameters(selex->getParameterModel());
     restoreAll();
     connect (selex, SIGNAL(setupChanged(QStringList)), this,
-                 SLOT(DialogSelexEquationView::changedSelex(QStringList)));
+                 SLOT(changedSelex(QStringList)));
     connectAll();
 }
 

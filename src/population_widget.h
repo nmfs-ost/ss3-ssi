@@ -103,6 +103,12 @@ private slots:
     void changeGrowthMorphRatio(double ratio);
     void changeGrowthTimeVaryRead(int flag);
 
+    void changeGrowthBinMethod(int value);
+    void changeGrowthBinMin(float min);
+    void changeGrowthBinMax(float max);
+    void changeGrowthBinWidth(float wid);
+    void changeGrowthBinLength(int num);
+
     void changeSpwnRecReadTimeVary (int flag);
 
     void changeGrowthParams();
@@ -170,6 +176,8 @@ private:
 
     tableview *mortInputsView;
     tableview *mortInitialParamsView;
+
+    tableview *growthBinsView;
 
     growthPattern *currPattern;
 

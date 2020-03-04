@@ -75,10 +75,6 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             Fleet *flt = data->getFleet(i);
             flt->reset();
             flt->setActive(true);
-            flt->getSizeSelectivity()->setNumAges(data->get_num_ages());
-            flt->getSizeSelectivity()->setXVals(data->get_length_composition()->getBins());
-            flt->getAgeSelectivity()->setNumAges (data->get_num_ages());
-            flt->getAgeSelectivity()->setXVals(data->get_age_composition()->getBins());
             temp_int = d_file->getIntValue(QString("Fleet type"), 1, 3, 1);
             flt->setTypeInt(temp_int);
             if (temp_int == 2)
@@ -121,7 +117,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         // Catch
         num_vals = data->get_num_fleets();
         do {
-            float ctch, ctch_se;
+            int seas = 0;
+            float ctch = 0, ctch_se = 0;
             str_lst.clear();
             str_lst.append(d_file->get_next_value(QString("year")));
             str_lst.append(d_file->get_next_value(QString("season")));
@@ -133,9 +130,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 break;
             fleet  = abs(str_lst.at(2).toInt());
             fleet  = d_file->checkIntValue(fleet, QString("Fleet number"), 1, num_vals, 1);
+            seas   = str_lst.at(1).toInt();
             ctch   = str_lst.at(3).toFloat();
             if (year == -999)
-                data->getFleet(fleet - 1)->set_catch_equil(ctch);
+                data->getFleet(fleet - 1)->set_catch_equil(seas, ctch);
             data->getFleet(fleet - 1)->addCatchObservation(str_lst);
         } while (year != END_OF_LIST);
 
@@ -239,12 +237,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  SS_Label_Info_2.6 #Setup population Length bins
         {
-        compositionLength *l_data = data->get_length_composition();
-        if (l_data == nullptr)
-            l_data = new compositionLength();
-        data->set_length_composition(l_data);
+            ss_growth *grow = data->getPopulation()->Grow();
         temp_int = d_file->getIntValue(QString("Length comp alt bin method"), 1, 3, 1);
-        l_data->setAltBinMethod(temp_int);
+//        l_data->setAltBinMethod(temp_int);
+        grow->setGrowthBinMethod(temp_int);
         switch (temp_int)
         {
         case 1:  // same as data bins - set after data bins
@@ -253,25 +249,31 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             float min, max, width;
             token = d_file->get_next_value(QString("Length comp bin width"));
             width = token.toFloat();
-            l_data->setAltBinWidth(width);
+//            l_data->setAltBinWidth(width);
+            grow->setGrowthBinStep(width);
             token = d_file->get_next_value(QString("Length comp alt bin min"));
             min = token.toFloat();
-            l_data->setAltBinMin(min);
+//            l_data->setAltBinMin(min);
+            grow->setGrowthBinMin(min);
             token = d_file->get_next_value(QString("Length comp alt bin max"));
             max = token.toFloat();
-            l_data->setAltBinMax(max);
-            l_data->generateAltBins();
+//            l_data->setAltBinMax(max);
+//            l_data->generateAltBins();
+            grow->setGrowthBinMax(max);
+            grow->generateGrowthBins();
             break;
         case 3:  // read vector
             str_lst.clear();
             temp_int = d_file->get_next_value(QString("Length comp num alt bins")).toInt();
-            l_data->setNumberAltBins(temp_int);
+//            l_data->setNumberAltBins(temp_int);
+            grow->setNumGrowthBins(temp_int);
             for (int j = 0; j < temp_int; j++)
                 str_lst.append(d_file->get_next_value(QString("Length comp alt bin")));
-            l_data->setAltBins(str_lst);
-            l_data->setAltBinMin(str_lst.first().toInt());
-            l_data->setAltBinMax(str_lst.last().toInt());
-            l_data->setAltBinWidth(str_lst.at(1).toInt() - str_lst.at(0).toInt());
+            grow->setGrowthBins(str_lst);
+//            l_data->setAltBins(str_lst);
+//            l_data->setAltBinMin(str_lst.first().toInt());
+//            l_data->setAltBinMax(str_lst.last().toInt());
+//            l_data->setAltBinWidth(str_lst.at(1).toInt() - str_lst.at(0).toInt());
             break;
         }
         //  SS_Label_Info_2.7 #Start length data section
@@ -294,6 +296,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 temp_float = d_file->get_next_value(QString("min sample size")).toFloat();
                 data->getFleet(i)->setLengthMinSampleSize(temp_float);
             }
+            compositionLength *l_data = data->get_length_composition();
+            if (l_data == nullptr) {
+                l_data = new compositionLength();
+                data->set_length_composition(l_data);
+            }
             temp_int = d_file->get_next_value(QString("Length comp number bins")).toInt();//token.toInt();
             l_data->setNumberBins(temp_int);
             for (int j = 0; j < data->get_num_fleets(); j++)
@@ -304,18 +311,21 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.append(d_file->get_next_value(QString("Length comp bin")));
             }
             l_data->setBins(str_lst);
-            if (l_data->getAltBinMethod() == 1) // set alt bins if method = 1
+
+            if (grow->getGrowthBinMethod() == 1) // set pop bins if method = 1
             {
-                l_data->setNumberAltBins(l_data->getNumberBins());
-                l_data->setAltBins(l_data->getBins());
-                l_data->setAltBinMin(l_data->getBin(0));
-                l_data->setAltBinMax(l_data->getBin(l_data->getNumberBins()-1));
-                l_data->setAltBinWidth(l_data->getBin(1) - l_data->getBin(0));
+                grow->setNumGrowthBins(str_lst.count());
+                grow->setGrowthBins(str_lst);
+//                l_data->setNumberAltBins(l_data->getNumberBins());
+//                l_data->setAltBins(l_data->getBins());
+//                l_data->setAltBinMin(l_data->getBin(0));
+//                l_data->setAltBinMax(l_data->getBin(l_data->getNumberBins()-1));
+//                l_data->setAltBinWidth(l_data->getBin(1) - l_data->getBin(0));
             }
             for (i = 0; i < total_fleets; i++)
             {
-                data->getFleet(i)->getSizeSelectivity()->setNumXvals(l_data->getNumberBins());
-                data->getFleet(i)->getSizeSelectivity()->setXVals(l_data->getBins());
+                data->getFleet(i)->getSizeSelectivity()->setNumXvals(grow->getNumGrowthBins());
+                data->getFleet(i)->getSizeSelectivity()->setXVals(grow->getGrowthBins());
             }
 
             //  SS_Label_Info_2.7.4 #Read Length composition data
@@ -359,70 +369,72 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             str_lst.append(token);
         }
         a_data->setBins(str_lst);
-        token = d_file->get_next_value(QString("age comp num error defs"));
-        temp_int = token.toInt();
-        a_data->set_num_error_defs(temp_int);
-        for (i = 0; i < temp_int; i++)
-        {
-            int numAges = data->get_num_ages();
-            str_lst.clear();
-            for (int j = 0; j <= numAges; j++)
-                str_lst.append(d_file->get_next_value());
-            a_data->set_error_def_ages(i, str_lst);
-            str_lst.clear();
-            for (int j = 0; j <= numAges; j++)
-                str_lst.append(d_file->get_next_value());
-            a_data->set_error_def(i, str_lst);
-        }
-        for (i = 0; i < total_fleets; i++)
-        {
-            str_lst.clear();
-            data->getFleet(i)->getSizeSelectivity()->setNumAges(a_data->getNumberBins());
-            data->getFleet(i)->getAgeSelectivity()->setNumAges(data->get_num_ages());
-            for (int j = 0; j <= data->get_num_ages(); j++)
-                str_lst.append(QString::number(j));
-            data->getFleet(i)->getAgeSelectivity()->setNumXvals(str_lst.count());
-            data->getFleet(i)->getAgeSelectivity()->setXVals(a_data->getBins());
-            data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value(QString("min tail comp")));
-            data->getFleet(i)->setAgeAddToData(d_file->get_next_value(QString("add to data")));
-            temp_int = d_file->get_next_value(QString("combine genders")).toInt();
-            data->getFleet(i)->setAgeCombineGen(temp_int);
-            temp_int = d_file->get_next_value(QString("compress bins")).toInt();
-            data->getFleet(i)->setAgeCompressBins(temp_int);
-            temp_int = d_file->get_next_value(QString("error")).toInt();
-            data->getFleet(i)->setAgeCompError(temp_int);
-            temp_int = d_file->get_next_value(QString("error parm")).toInt();
-            data->getFleet(i)->setAgeCompErrorParm(temp_int);
-            temp_float = d_file->get_next_value(QString("min sample size")).toFloat();
-            data->getFleet(i)->setAgeCompMinSampleSize(temp_float);
-        }
-
-        temp_int = d_file->getIntValue(QString("Age comp alt bin method"), 1, 3, 1);
-        a_data->setAltBinMethod(temp_int);
-
-        //  SS_Label_Info_2.8.2 #Read Age data
-        obslength = data->getFleet(0)->getAgeObsLength();
-        do
-        {
-            str_lst.clear();
-            for (int j = 0; j < obslength; j++)
+        if (temp_int > 0) {
+            token = d_file->get_next_value(QString("age comp num error defs"));
+            temp_int = token.toInt();
+            a_data->set_num_error_defs(temp_int);
+            for (i = 0; i < temp_int; i++)
             {
-                token = d_file->get_next_value(QString("Age data"));
-                str_lst.append(token);
-                if (token.contains("END_OF_LIST"))
-                {
-                    d_file->skip_line();
-                    break;
-                }
+                int numAges = data->get_num_ages();
+                str_lst.clear();
+                for (int j = 0; j <= numAges; j++)
+                    str_lst.append(d_file->get_next_value());
+                a_data->set_error_def_ages(i, str_lst);
+                str_lst.clear();
+                for (int j = 0; j <= numAges; j++)
+                    str_lst.append(d_file->get_next_value());
+                a_data->set_error_def(i, str_lst);
             }
-            if (str_lst.at(0).toInt() == END_OF_LIST)
-                break;
-            if (str_lst.at(0).compare(QString("EOF")) == 0)
-                return false;
-            fleet = abs(str_lst.at(2).toInt());
-            fleet = d_file->checkIntValue(fleet, QString("Fleet Number"), 1, total_fleets, 1);
-            data->getFleet(fleet - 1)->addAgeObservation(str_lst);
-        } while (str_lst.at(0).toInt() != END_OF_LIST);
+            for (i = 0; i < total_fleets; i++)
+            {
+                str_lst.clear();
+                data->getFleet(i)->getSizeSelectivity()->setNumAges(a_data->getNumberBins());
+                data->getFleet(i)->getAgeSelectivity()->setNumAges(data->get_num_ages());
+                for (int j = 0; j <= data->get_num_ages(); j++)
+                    str_lst.append(QString::number(j));
+                data->getFleet(i)->getAgeSelectivity()->setNumXvals(str_lst.count());
+                data->getFleet(i)->getAgeSelectivity()->setXVals(str_lst);
+                data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value(QString("min tail comp")));
+                data->getFleet(i)->setAgeAddToData(d_file->get_next_value(QString("add to data")));
+                temp_int = d_file->get_next_value(QString("combine genders")).toInt();
+                data->getFleet(i)->setAgeCombineGen(temp_int);
+                temp_int = d_file->get_next_value(QString("compress bins")).toInt();
+                data->getFleet(i)->setAgeCompressBins(temp_int);
+                temp_int = d_file->get_next_value(QString("error")).toInt();
+                data->getFleet(i)->setAgeCompError(temp_int);
+                temp_int = d_file->get_next_value(QString("error parm")).toInt();
+                data->getFleet(i)->setAgeCompErrorParm(temp_int);
+                temp_float = d_file->get_next_value(QString("min sample size")).toFloat();
+                data->getFleet(i)->setAgeCompMinSampleSize(temp_float);
+            }
+
+            temp_int = d_file->getIntValue(QString("Age comp alt bin method"), 1, 3, 1);
+            a_data->setAltBinMethod(temp_int);
+
+            //  SS_Label_Info_2.8.2 #Read Age data
+            obslength = data->getFleet(0)->getAgeObsLength();
+            do
+            {
+                str_lst.clear();
+                for (int j = 0; j < obslength; j++)
+                {
+                    token = d_file->get_next_value(QString("Age data"));
+                    str_lst.append(token);
+                    if (token.contains("END_OF_LIST"))
+                    {
+                        d_file->skip_line();
+                        break;
+                    }
+                }
+                if (str_lst.at(0).toInt() == END_OF_LIST)
+                    break;
+                if (str_lst.at(0).compare(QString("EOF")) == 0)
+                    return false;
+                fleet = abs(str_lst.at(2).toInt());
+                fleet = d_file->checkIntValue(fleet, QString("Fleet Number"), 1, total_fleets, 1);
+                data->getFleet(fleet - 1)->addAgeObservation(str_lst);
+            } while (str_lst.at(0).toInt() != END_OF_LIST);
+        }
 
         //  SS_Label_Info_2.9 #Read mean Size_at_Age data
         temp_int = d_file->get_next_value().toInt();
@@ -934,10 +946,43 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline ("#");
 
 
+        // pop length bins
+        ss_growth *grow = data->getPopulation()->Grow();
+        line = QString ("# set up population length bin structure (note - irrelevant if not using size data and using empirical wtatage");
+        chars += d_file->writeline (line);
+        temp_int = grow->getGrowthBinMethod();
+        line = QString (QString("%1 # length bin method: 1=use databins; 2=generate from binwidth,min,max below; 3=read vector").arg(
+                            QString::number(temp_int)));
+        chars += d_file->writeline (line);
+        switch (temp_int)
+        {
+        case 1:
+            line = QString("# no additional input required.");
+            chars += d_file->writeline (line);
+            break;
+        case 2:
+            line = QString("%1 # binwidth for population size comp ").arg(QString::number(grow->getGrowthBinWidth()));
+            chars += d_file->writeline (line);
+            line = QString("%1 # minimum size in the population (lower edge of first bin and size at age 0.00) ").arg(
+                        QString::number(grow->getGrowthBinMin()));
+            chars += d_file->writeline (line);
+            line = QString("%1 # maximum size in the population (lower edge of last bin) ").arg(
+                        QString::number(grow->getGrowthBinMax()));
+            chars += d_file->writeline (line);
+            break;
+        case 3:
+            line = QString("%1 # number of population size bins ").arg(
+                        QString::number(grow->getNumGrowthBins()));
+            chars += d_file->writeline (line);
+            line.clear();
+            chars += d_file->write_vector(grow->getGrowthBins(), 2);
+            break;
+        }
+
         // length composition
         {
         compositionLength *l_data = data->get_length_composition();
-        line = QString ("# set up population length bin structure (note - irrelevant if not using size data and using empirical wtatage");
+/*        line = QString ("# set up population length bin structure (note - irrelevant if not using size data and using empirical wtatage");
         chars += d_file->writeline (line);
         line = QString (QString("%1 # length bin method: 1=use databins; 2=generate from binwidth,min,max below; 3=read vector").arg(
                             QString::number(l_data->getAltBinMethod())));
@@ -969,7 +1014,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 
             chars += d_file->writeline (line);
             break;
-        }
+        }*/
         line = QString(QString("%1 # use length composition data (0/1)").arg(QString::number(1)));
         chars += d_file->writeline(line);
 
@@ -1062,109 +1107,114 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         line = QString(QString("%1 #_N_age_bins").arg(QString::number(temp_int)));
         chars += d_file->writeline (line);
         line.clear();
-        str_lst = a_data->getBinsModel()->getRowData(0);
-        for (i = 0; i < str_lst.count(); i++)
-        {
-            line.append(QString(" %1").arg(str_lst.at(i)));
-        }
-
-        chars += d_file->writeline (line);
-        temp_int = a_data->number_error_defs();
-        line = QString(QString("%1 #_N_ageerror_definitions").arg(QString::number(temp_int)));
-        chars += d_file->writeline (line);
-        for (i = 0; i < temp_int; i++)
-        {
-            line.clear();
-            str_lst = a_data->get_error_ages(i);
-            for (int j = 0; j < str_lst.count(); j++)
-                line.append(QString(" %1").arg(str_lst.at(j)));
-
-            chars += d_file->writeline (line);
-            line.clear();
-            str_lst = a_data->get_error_def(i);
-            for (int j = 0; j < str_lst.count(); j++)
-                line.append(QString(" %1").arg(str_lst.at(j)));
-
-            chars += d_file->writeline (line);
-        }
-        line = QString("#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.");
-        chars += d_file->writeline (line);
-        line = QString("#_addtocomp:  after accumulation of tails; this value added to all bins");
-        chars += d_file->writeline (line);
-        line = QString("#_males and females treated as combined gender below this bin number ");
-        chars += d_file->writeline (line);
-        line = QString("#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation");
-        chars += d_file->writeline (line);
-        line = QString("#_Comp_Error:  0=multinomial, 1=dirichlet");
-        chars += d_file->writeline (line);
-        line = QString("#_Comp_Error2:  parm number  for dirichlet");
-        chars += d_file->writeline (line);
-        line = QString("#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001");
-        chars += d_file->writeline (line);
-        line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
-        chars += d_file->writeline (line);
-        for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
-        {
-            flt = data->getActiveFleet(i);
-            line = QString(QString("%1 %2 %3 %4 %5 %6 %7 #_fleet:%8_%9").arg (
-                               flt->getAgeMinTailComp(),
-                               flt->getAgeAddToData(),
-                               QString::number(flt->getAgeCombineGen()),
-                               QString::number(flt->getAgeCompressBins()),
-                               QString::number(flt->getAgeCompError()),
-                               QString::number(flt->getAgeCompErrorParm()),
-                               QString::number(flt->getAgeCompMinSampleSize()),
-                               QString::number(i),
-                               flt->getName()));
-            chars += d_file->writeline (line);
-        }
-        temp_int = a_data->getAltBinMethod();
-        line = QString(QString("%1 #_Lbin_method_for_Age_Data: 1=poplenbins; 2=datalenbins; 3=lengths").arg(
-                           QString::number(temp_int)));
-        chars += d_file->writeline (line);
-
-        temp_int = 0;
-        for (i = 1; i <= total_fleets; i++)
-        {
-            temp_int += data->getActiveFleet(i)->getAgeNumObs();
-        }
-
-        line = QString ("# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
-        chars += d_file->writeline (line);
-        line = QString ("# partition codes:  (0=combined; 1=discard; 2=retained");
-        chars += d_file->writeline (line);
-        line = QString ("#_yr month fleet sex part ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)");
-        chars += d_file->writeline (line);
-        for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
-        {
-            flt = data->getActiveFleet(i);
+        if (temp_int > 0) {
+            str_lst = a_data->getBinsModel()->getRowData(0);
+            for (i = 0; i < str_lst.count(); i++)
             {
-                temp_int = flt->getAgeNumObs();
-                for( int j = 0; j < temp_int; j++)
-                {
-                    str_lst = flt->getAgeObservation(j);
-                    chars += d_file->write_vector(str_lst, 4);
-/*                    str_lst.insert(2, QString::number(i));
-                    line.clear();
-                    for (int j = 0; j < str_lst.count(); j++)
-                        line.append(QString (" %1").arg(str_lst.at(j)));
+                line.append(QString(" %1").arg(str_lst.at(i)));
+            }
 
-                    chars += d_file->writeline (line);*/
+            chars += d_file->writeline (line);
+            temp_int = a_data->number_error_defs();
+            line = QString(QString("%1 #_N_ageerror_definitions").arg(QString::number(temp_int)));
+            chars += d_file->writeline (line);
+            for (i = 0; i < temp_int; i++)
+            {
+                line.clear();
+                str_lst = a_data->get_error_ages(i);
+                for (int j = 0; j < str_lst.count(); j++)
+                    line.append(QString(" %1").arg(str_lst.at(j)));
+
+                chars += d_file->writeline (line);
+                line.clear();
+                str_lst = a_data->get_error_def(i);
+                for (int j = 0; j < str_lst.count(); j++)
+                    line.append(QString(" %1").arg(str_lst.at(j)));
+
+                chars += d_file->writeline (line);
+            }
+            line = QString("#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.");
+            chars += d_file->writeline (line);
+            line = QString("#_addtocomp:  after accumulation of tails; this value added to all bins");
+            chars += d_file->writeline (line);
+            line = QString("#_males and females treated as combined gender below this bin number ");
+            chars += d_file->writeline (line);
+            line = QString("#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation");
+            chars += d_file->writeline (line);
+            line = QString("#_Comp_Error:  0=multinomial, 1=dirichlet");
+            chars += d_file->writeline (line);
+            line = QString("#_Comp_Error2:  parm number  for dirichlet");
+            chars += d_file->writeline (line);
+            line = QString("#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001");
+            chars += d_file->writeline (line);
+            line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
+            chars += d_file->writeline (line);
+            for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
+            {
+                flt = data->getActiveFleet(i);
+                line = QString(QString("%1 %2 %3 %4 %5 %6 %7 #_fleet:%8_%9").arg (
+                                   flt->getAgeMinTailComp(),
+                                   flt->getAgeAddToData(),
+                                   QString::number(flt->getAgeCombineGen()),
+                                   QString::number(flt->getAgeCompressBins()),
+                                   QString::number(flt->getAgeCompError()),
+                                   QString::number(flt->getAgeCompErrorParm()),
+                                   QString::number(flt->getAgeCompMinSampleSize()),
+                                   QString::number(i),
+                                   flt->getName()));
+                chars += d_file->writeline (line);
+            }
+            temp_int = a_data->getAltBinMethod();
+            line = QString(QString("%1 #_Lbin_method_for_Age_Data: 1=poplenbins; 2=datalenbins; 3=lengths").arg(
+                               QString::number(temp_int)));
+            chars += d_file->writeline (line);
+
+            temp_int = 0;
+            for (i = 1; i <= total_fleets; i++)
+            {
+                temp_int += data->getActiveFleet(i)->getAgeNumObs();
+            }
+
+            line = QString ("# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
+            chars += d_file->writeline (line);
+            line = QString ("# partition codes:  (0=combined; 1=discard; 2=retained");
+            chars += d_file->writeline (line);
+            line = QString ("#_yr month fleet sex part ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)");
+            chars += d_file->writeline (line);
+            for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
+            {
+                flt = data->getActiveFleet(i);
+                {
+                    temp_int = flt->getAgeNumObs();
+                    for( int j = 0; j < temp_int; j++)
+                    {
+                        str_lst = flt->getAgeObservation(j);
+                        chars += d_file->write_vector(str_lst, 4);
+    /*                    str_lst.insert(2, QString::number(i));
+                        line.clear();
+                        for (int j = 0; j < str_lst.count(); j++)
+                            line.append(QString (" %1").arg(str_lst.at(j)));
+
+                        chars += d_file->writeline (line);*/
+                    }
                 }
             }
-        }
-        line.clear();
-        temp_int = a_data->getNumberBins();
-        line.append("-9999 ");
-        for (i = 1; i < 9; i++)
-                line.append(" 0");
-        for (int j = 0; j < temp_int; j++)
-            line.append(QString(" 0"));
-        if (data->get_num_genders() > 1)
+            line.clear();
+            temp_int = a_data->getNumberBins();
+            line.append("-9999 ");
+            for (i = 1; i < 9; i++)
+                    line.append(" 0");
             for (int j = 0; j < temp_int; j++)
                 line.append(QString(" 0"));
-        chars += d_file->writeline(line);
-        chars += d_file->writeline ("#");
+            if (data->get_num_genders() > 1)
+                for (int j = 0; j < temp_int; j++)
+                    line.append(QString(" 0"));
+            chars += d_file->writeline(line);
+            chars += d_file->writeline ("#");
+        }
+        else {
+            chars += d_file->writeline("#");
+        }
         }
 
         // mean size at age
@@ -1338,10 +1388,8 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         if (temp_int == 1)
         {
-            line = QString (QString("%1 # Do_tags").arg(QString("1")));
-            chars += d_file->writeline (line);
             num = data->get_num_tag_groups();
-            line = QString (QString("%1 # N_tag_groups").arg(QString::number(num)));
+            line = QString (QString("%1 # N tag groups").arg(QString::number(num)));
             chars += d_file->writeline (line);
             temp_int = 0;
             for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
@@ -1349,32 +1397,29 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 //                if (data->getFleet(i)->isActive())
                     temp_int += data->getActiveFleet(i)->getRecapNumEvents();
             }
-            line = QString (QString("%1 # N_recapture_events").arg(QString::number(temp_int)));
+            line = QString (QString("%1 # N recap events").arg(QString::number(temp_int)));
             chars += d_file->writeline (line);
             temp_int = data->get_tag_latency();
-            line = QString (QString("%1 # Mixing_latency_period").arg(QString::number(temp_int)));
+            line = QString (QString("%1 # mixing latency period: N periods to delay before comparing observed to expected recoveries (0 = release period)").arg(QString::number(temp_int)));
             chars += d_file->writeline (line);
             temp_int = data->get_tag_max_periods();
-            line = QString (QString("%1 # Max_periods").arg(QString::number(temp_int)));
+            line = QString (QString("%1 # max periods (seasons) to track recoveries, after which tags enter accumulator").arg(QString::number(temp_int)));
             chars += d_file->writeline (line);
-            line = QString (QString("#Release_Data"));
+            line = QString (QString("# Release data for each tag group.  Tags are considered to be released at the beginning of a season (period)"));
             chars += d_file->writeline (line);
-            line = QString (QString("#TG area yr month <tfill> gender age Nrelease"));
+            line = QString (QString("#<TG> area yr season <tfill> gender age Nrelease  (note that the TG and tfill values are placeholders and are replaced by program generated values"));
             chars += d_file->writeline (line);
             for (i = 0; i < num; i++)
             {
                 line.clear();
                 str_lst = data->get_tag_observation(i);
                 chars += d_file->write_vector(str_lst, 4);
-/*                for (int j = 0; j < str_lst.count(); j++)
-                    line.append(QString(" %1").arg(str_lst.at(j)));
-                chars += d_file->writeline (line);*/
             }
-            line = QString("#Recapture_Data");
+            line = QString("#Recapture data");
             chars += d_file->writeline (line);
-            line = QString("#TG year month fleet Number");
+            line = QString("#_TAG  Yr Season Fleet Nrecap");
             chars += d_file->writeline (line);
-            for (i = 0; i < num; i++)
+            for (i = 1; i <= num; i++)
             {
                 for (j = 1; j <= total_fleets; j++) // for (int j = 0; j < data->num_fleets(); j++)
                 {
@@ -1548,8 +1593,21 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_cr_biomass_no_f(temp_float);
         token = f_file->get_next_value(QString("control rule buffer"));
         temp_float = token.toFloat();
-        fcast->set_cr_target(temp_float);
-
+        fcast->set_cr_buffer(temp_float);
+        temp_int = token.toInt();
+        if (temp_int == -1) {
+            do {
+                str_lst.clear();
+                token = f_file->get_next_value(QString("control rule buffer year"));
+                temp_int = token.toInt();
+                str_lst.append(token);
+                token = f_file->get_next_value(QString("control rule buffer value"));
+                str_lst.append(token);
+                if (temp_int == END_OF_LIST)
+                    break;
+                fcast->append_cr_buffer_list(str_lst);
+            } while (temp_int != END_OF_LIST);
+        }
         temp_int = f_file->getIntValue(QString("Number of forecast loops"), 1, 3, 3);
         fcast->set_num_forecast_loops(temp_int);
         temp_int = f_file->getIntValue(QString("First forecast loop with stochastic recruitment"), 1, 3, 3);
@@ -1775,7 +1833,15 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->write_val(fcast->get_cr_method(), 5, QString("Control rule method (1=catch=f(SSB) west coast; 2=F=f(SSB))"));
         chars += f_file->write_val(fcast->get_cr_biomass_const_f(), 5, QString("Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be > the no F level below)"));
         chars += f_file->write_val(fcast->get_cr_biomass_no_f(), 5, QString("Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10)"));
-        chars += f_file->write_val(fcast->get_cr_target(), 5, QString("Control rule target as fraction of Flimit (e.g. 0.75)"));
+        temp_float = fcast->get_cr_buffer();
+        chars += f_file->write_val(temp_float, 5, QString("Control rule target as fraction of Flimit (e.g. 0.75)"));
+        if (static_cast<int>(temp_float) == -1) {
+            for (i = 0; i < fcast->get_num_cr_buffer_rows(); i++) {
+                chars += f_file->writeline(QString("# annual control rule buffer"));
+                chars += f_file->writeline(QString("#_year    value"));
+                chars += f_file->write_vector(fcast->get_cr_buffer_row(i), 2);
+            }
+        }
 
         chars += f_file->write_val(fcast->get_num_forecast_loops(), 5, QString("N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)"));
         chars += f_file->write_val(fcast->get_forecast_loop_recruitment(), 5, QString("First forecast loop with stochastic recruitment"));
@@ -2214,18 +2280,18 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_int == 4)
         {
             datalist.clear();
-            num = data->get_age_composition()->getNumberBins(); // num_ages() + 1;
+            num = data->get_num_ages() + 1; // num_ages() + 1;
             for (i = 0; i < num; i++)
-                datalist.append(c_file->get_next_value(QString("age specific mat")));
+                datalist.append(c_file->get_next_value(QString("age specific maturity")));
             pop->Grow()->setNumMatAgeValues(datalist.count());
             pop->Grow()->setMatAgeVals(datalist);
         }
         else if (temp_int == 6)
         {
             datalist.clear();
-            num = data->get_length_composition()->getNumberBins();
+            num = data->getPopulation()->Grow()->getNumGrowthBins();
             for (i = 0; i < num; i++)
-                datalist.append(c_file->get_next_value());
+                datalist.append(c_file->get_next_value(QString("age specific maturity")));
             pop->Grow()->setNumMatAgeValues(datalist.count());
             pop->Grow()->setMatAgeVals(datalist);
         }
@@ -2264,12 +2330,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
             case 0:
             case 2:
+                gp->setNumNatMParams(1);
                 datalist = readParameter (c_file);
                 gp->setFemNatMParam(0, datalist);
                 gp->setFemNatMParamHeader(0, QString("NatM_p_1_Fem_%1").arg(gpstr));
                 break;
             case 1:
                 num_vals = pop->Grow()->getNatMortNumBreakPts();
+                gp->setNumNatMParams(num_vals);
                 for (int j = 0; j < num_vals; j++)
                 {
                     datalist = readParameter (c_file);
@@ -2717,11 +2785,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         // Fishing mortality
         num = 0;
+        int num_seas = data->get_num_seasons();
         pop->M()->setNumFisheries(data->get_num_fisheries());
         for (i = 0; i < num_fleets; i++)
         {
-            if (data->getFleet(i)->catch_equil() != 0)
-                num++;
+            for (int j = 1; j <= num_seas; j++)
+                if (data->getFleet(i)->catch_equil(j) > 0)
+                    num++;
         }
         pop->M()->setNumInitialParams(num);
         temp_float = c_file->get_next_value(QString("F Mort ballpark")).toFloat();
@@ -2894,6 +2964,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 //            int pat = 0;
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
+            if (agesel->getXVals().count() == 0)
+                data->getFleet(i)->getAgeSelectivity()->setNumXvals(data->get_num_ages() + 1);
             agesel->setSetup(datalist);
 //            pat = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
 //            agesel->setPattern(pat);
@@ -3090,14 +3162,61 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         data->setTagLoss(temp_int);
         if (temp_int == 1)
         {
+            num = data->get_num_tag_groups();
             // tag loss init
+            data->getTagLossInit()->setNumParams(num);
+            for (i = 0; i < num; i++) {
+                datalist = readParameter(c_file);
+                data->getTagLossInit()->setParameter(i, datalist);
+            }
             // tag loss chronic
+            data->getTagLossChronic()->setNumParams(num);
+            for (i = 0; i < num; i++) {
+                datalist = readParameter(c_file);
+                data->getTagLossChronic()->setParameter(i, datalist);
+            }
             // tag overdispersion
+            data->getTagOverdispersion()->setNumParams(num);
+            for (i = 0; i < num; i++) {
+                datalist = readParameter(c_file);
+                data->getTagOverdispersion()->setParameter(i, datalist);
+            }
             // tag report fleet
+            data->getTagReportFleet()->setNumParams(data->get_num_fleets());
+            for (i = 0; i < data->get_num_fleets(); i++) {
+                datalist = readParameter(c_file);
+                data->getTagReportFleet()->setParameter(i, datalist);
+            }
             // tag report decay
-            data->setTagLossParameter(c_file->read_line());
+            data->getTagReportDecay()->setNumParams(data->get_num_fleets());
+            for (i = 0; i < data->get_num_fleets(); i++) {
+                datalist = readParameter(c_file);
+                data->getTagReportDecay()->setParameter(i, datalist);
+            }
+
+//            data->setTagLossParameter(c_file->read_line());
+            // tag time varying
+            readTimeVaryParams(c_file, data,
+                               data->getTagLossInit()->getParamTable(),
+                               data->getTagTimeVaryReadParams(),
+                               data->getTagLossInitTV()->getVarParamTable());
+            readTimeVaryParams(c_file, data,
+                               data->getTagLossChronic()->getParamTable(),
+                               data->getTagTimeVaryReadParams(),
+                               data->getTagLossChronicTV()->getVarParamTable());
+            readTimeVaryParams(c_file, data,
+                               data->getTagOverdispersion()->getParamTable(),
+                               data->getTagTimeVaryReadParams(),
+                               data->getTagOverdispersionTV()->getVarParamTable());
+            readTimeVaryParams(c_file, data,
+                               data->getTagReportFleet()->getParamTable(),
+                               data->getTagTimeVaryReadParams(),
+                               data->getTagReportFleetTV()->getVarParamTable());
+            readTimeVaryParams(c_file, data,
+                               data->getTagReportDecay()->getParamTable(),
+                               data->getTagTimeVaryReadParams(),
+                               data->getTagReportDecayTV()->getVarParamTable());
         }
-        // tag time varying
 
         // #_Variance_adjustments_to_input_value
         data->setInputValueVariance(0);
@@ -3153,28 +3272,47 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             int flt = 1;
             datalist.clear();
             temp_string = c_file->get_next_value(QString("lambda component"));
+            if (temp_string.contains(QString("EOF")))
+                return false;
             temp_int = temp_string.toInt();
-            datalist.append(temp_string);
-            if (datalist.contains(QString("EOF")))
-                return false;
-            flt = abs(c_file->get_next_value(QString("Lambda fleet num")).toInt());
-            flt = c_file->checkIntValue(flt, QString("Lambda fleet num"), 1, data->get_num_fleets(), 1);
-            datalist.append(c_file->get_next_value(QString("lambda phase")));
-            datalist.append(c_file->get_next_value(QString("lambda value")));
-            datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
-            if (datalist.contains(QString("EOF")))
-                return false;
-            if (temp_int != END_OF_LIST)
-            {
-                temp_int = c_file->checkIntValue(temp_int, QString("lambda component"), 1, 18, 4);
-                datalist[0] = QString::number(temp_int);
+//            temp_int = c_file->checkIntValue(temp_int, QString("lambda component"), 1, 18, 4);
+            switch (temp_int) {
+            case 1:
+            case 2:
+                num_fleets = data->get_num_fleets();
+                datalist.append(temp_string);
+                temp_string = c_file->get_next_value(QString("Lambda fleet"));
+                flt = abs(temp_string.toInt());
+                flt = c_file->checkIntValue(flt, QString("Lambda fleet num"), 1, num_fleets, 1);
+                datalist.append(temp_string);
+                datalist.append(c_file->get_next_value(QString("lambda phase")));
+                datalist.append(c_file->get_next_value(QString("lambda value")));
+                datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
                 data->getFleet(flt-1)->appendLambda(datalist);
+                break;
+            case 15:
+                num = data->get_num_tag_groups();
+                datalist.append(temp_string);
+                datalist.append(c_file->get_next_value(QString("lambda fleet")));
+                datalist.append(c_file->get_next_value(QString("lambda phase")));
+                datalist.append(c_file->get_next_value(QString("lambda value")));
+                datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
+                break;
+            default:
+                datalist.append(temp_string);
+                datalist.append(c_file->get_next_value(QString("lambda fleet")));
+                datalist.append(c_file->get_next_value(QString("lambda phase")));
+                datalist.append(c_file->get_next_value(QString("lambda value")));
+                datalist.append(c_file->get_next_value(QString("lambda sizefq method")));
+            }
+            if (temp_int != END_OF_LIST) {
+                data->addLambdaAdjustment(datalist);
             }
         } while (temp_int != END_OF_LIST);
 
-        temp_int = c_file->getIntValue(QString("Additional Std dev reporting? 0/1"), 0, 1, 0);
+        temp_int = c_file->getIntValue(QString("Additional Std dev reporting? 0/1"), 0, 2, 0);
         data->getAddSdReporting()->setActive(temp_int);
-        if (temp_int == 1)
+        if (temp_int > 0)
         {
             // read 4 values for Selectivity
             datalist.clear();
@@ -3194,29 +3332,46 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setNumAtAge(datalist);
 
+            if (temp_int > 1) {
+                // read 2 values for nat Mort
+                datalist.clear();
+                for (i = 0; i < 2; i++)
+                    datalist.append(c_file->get_next_value());
+                data->getAddSdReporting()->setNatMort(datalist);
+            }
+
             // bins for selectivity
             datalist.clear();
-            temp_int = data->getAddSdReporting()->getNumSelexBins();
-            for (i = 0; i < temp_int; i++)
+            num = data->getAddSdReporting()->getNumSelexBins();
+            for (i = 0; i < num; i++)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setSelexBins(datalist);
 
             // ages for growth
             datalist.clear();
-            temp_int = data->getAddSdReporting()->getNumGrowthBins();
-            for (i = 0; i < temp_int; i++)
-                datalist.append(c_file->get_next_value());
-            data->getAddSdReporting()->setGrowthBins(datalist);
+            if (data->getReadWtAtAge() == 0) {
+                num = data->getAddSdReporting()->getNumGrowthBins();
+                for (i = 0; i < num; i++)
+                    datalist.append(c_file->get_next_value());
+                data->getAddSdReporting()->setGrowthBins(datalist);
+            }
 
             // ages for Num-at-Age
             datalist.clear();
-            temp_int = data->getAddSdReporting()->getNumNumAtAgeBins();
-            for (i = 0; i < temp_int; i++)
+            num = data->getAddSdReporting()->getNumNumAtAgeBins();
+            for (i = 0; i < num; i++)
                 datalist.append(c_file->get_next_value());
             data->getAddSdReporting()->setNumAtAgeBins(datalist);
+
+            if (temp_int > 1) {
+                // ages for nat Mort
+                datalist.clear();
+                num = data->getAddSdReporting()->getNumNatMortBins();
+                for (i = 0; i < num; i++)
+                    datalist.append(c_file->get_next_value());
+                data->getAddSdReporting()->setNatMortBins(datalist);
+            }
         }
-//        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-//            return false;
 
         temp_int = c_file->get_next_value().toInt();
         if (temp_int != 999)
@@ -3418,7 +3573,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line.clear();
         chars += c_file->writeline(QString("#"));
-        chars += c_file->writeline(QString("# AUTOGEN"));
+        chars += c_file->writeline(QString("# autogen"));
         temp_int = pop->Grow()->getTimeVaryReadParams();
         line.append(QString("%1 ").arg(QString::number(temp_int)));
         temp_int = pop->SR()->getTimeVaryReadParams();
@@ -3458,7 +3613,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             break;
         case 1:
             num_vals = pop->Grow()->getNatMortNumBreakPts();
-            line = QString("%1 #_N_breakpoints").arg(QString::number(num));
+            line = QString("%1 #_N_breakpoints").arg(QString::number(num_vals));
             chars += c_file->writeline(line);
             line.clear();
             str_list = pop->Grow()->getNatMortBreakPts();
@@ -4045,7 +4200,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline ("#");
 
         // Spawner-recruitment
-        line = QString("%1 #_Spawner-Recruitment; Options: 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm; 9=Shepard_3Parm_transformed; 10=RickerPower_3parm_transformed").arg(
+        line = QString("%1 #_SR_function: 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm").arg(
                     QString::number(pop->SR()->getMethod()));
         chars += c_file->writeline(line);
         line = QString(QString("%1 # 0/1 to use steepness in initial equ recruitment calculation").arg(
@@ -4117,7 +4272,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString("#Then short parm lines, if requested, for block/trend effects on R0, steepness, and annual dev");
         chars += c_file->writeline(line);*/
 
-        line = QString(QString ("%1 #do_recdev:  0=none; 1=devvector (R=F(SSB)+dev); 2=deviations (R=F(SSB)+dev); 3=deviations (R=R0*dev; dev2=R-f(SSB)); 4=like 3 with sum(dev2) adding penalty").arg(
+        line = QString(QString ("%1 #do_recdev:  0=none; 1=devvector; 2=simple deviations").arg(
                            QString::number(pop->SR()->getRecDevCode())));
         chars += c_file->writeline(line);
         line = QString(QString ("%1 # first year of main recr_devs; early devs can preceed this era").arg(
@@ -4327,7 +4482,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         // Q_parameters
         line = QString("#_Q_parms(if_any);Qunits_are_ln(q)");
         chars += c_file->writeline(line);
-        line = QString("# LO HI INIT PRIOR PR_SD PR_type PHASE env-var use_dev dev_mnyr dev_mxyr dev_PH Block Blk_Fxn # parm_name");
+        line = QString("# LO      HI      INIT    PRIOR   PR_SD   PR_type  PHASE   env-var  use_dev  dev_mnyr dev_mxyr dev_PH   Block   Blk_Fxn # parm_name");
         chars += c_file->writeline(line);
         num = data->get_num_fleets();
         for (int i = 0; i < num; i++)
@@ -4336,45 +4491,33 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             // Q Base
             if (fleet->getQSetupRead())
             {
-                line.clear();
-                temp_string = fleet->Q()->getLink();
-                line.append(QString("%1 #  LnQ_base_%2(%3)").arg(
-                                temp_string,
+                line = QString(QString("LnQ_base_%2(%3)").arg(
                                 fleet->getName(),
                                 QString::number(i+1)));
-                chars += c_file->writeline(line);
+                chars += c_file->write_vector(fleet->Q()->getLinkParam(), 8, line);
                 // Q Mirror Offset
                 if (fleet->Q()->getDoMirOffset())
                 {
-                    line.clear();
-                    temp_string = fleet->Q()->getMirOffset();
-                    line.append(QString("%1  #  Q_Mirror_Offset_%2(%3)").arg(
-                                    temp_string,
+                    line = QString(QString("Q_Mirror_Offset_%2(%3)").arg(
                                     fleet->getName(),
                                     QString::number(i+1)));
-                    chars += c_file->writeline(line);
+                    chars += c_file->write_vector(fleet->Q()->getMirOffsetParam(), 8, line);
                 }
                 // Q Power
                 if (fleet->Q()->getDoPower())
                 {
-                    line.clear();
-                    temp_string = fleet->Q()->getPower();
-                    line.append(QString("%1  #  Q_power_%2(%3)").arg(
-                                    temp_string,
+                    line = QString(QString("Q_power_%2(%3)").arg(
                                     fleet->getName(),
                                     QString::number(i+1)));
-                    chars += c_file->writeline(line);
+                    chars += c_file->write_vector(fleet->Q()->getPowerParam(), 8, line);
                 }
                 // Q Extra SD
                 if (fleet->Q()->getDoExtraSD())
                 {
-                    line.clear();
-                    temp_string = fleet->Q()->getExtra();
-                    line.append(QString("%1  #  Q_extraSD_%2(%3)").arg(
-                                    temp_string,
+                    line = QString(QString("Q_extraSD_%2(%3)").arg(
                                     fleet->getName(),
                                     QString::number(i+1)));
-                    chars += c_file->writeline(line);
+                    chars += c_file->write_vector(fleet->Q()->getExtraParam(), 8, line);
                 }
             }
         }
@@ -4392,7 +4535,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             int num = tvParams->rowCount();
             for (int j = 0; j < num; j++)
             {
-                chars += c_file->write_vector(tvParams->getRowData(j), 4, tvParams->getRowHeader(j));
+                chars += c_file->write_vector(tvParams->getRowData(j), 7, tvParams->getRowHeader(j));
             }
         }
         }
@@ -4614,19 +4757,76 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         temp_int = data->getTagLoss();
         line = QString(QString("# Tag loss and Tag reporting parameters go next"));
         chars += c_file->writeline(line);
-        line = QString(QString("%1 # TG_custom:  0=no read; 1=read if tags exist").arg(
+        line = QString(QString("%1 # TG_custom:  0=no read; 1=read ").arg(
                            QString::number(temp_int)));
         chars += c_file->writeline(line);
         if (temp_int == 1)
         {
-            line = QString(QString(" %1 # tag loss parameter").arg(
-                               data->getTagLossParameter()->toText()));
+            num = data->get_num_tag_groups();
+            // tag loss init
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagLossInit()->getParameter(i);
+                chars += c_file->write_vector(str_list, 3, QString("TG_loss_init_%1").arg(QString::number(i+1)));
+            }
+            // tag loss chronic
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagLossChronic()->getParameter(i);
+                chars += c_file->write_vector(str_list, 3, QString("TG_loss_chronic_%1").arg(QString::number(i+1)));
+            }
+            // tag overdispersion
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagOverdispersion()->getParameter(i);
+                chars += c_file->write_vector(str_list, 3, QString("TG_overdispersion_%1").arg(QString::number(i+1)));
+            }
+            // tag report fleet
+            for (i = 0; i < data->get_num_fleets(); i++) {
+                str_list = data->getTagReportFleet()->getParameter(i);
+                chars += c_file->write_vector(str_list, 3, QString("TG_report_fleet:_%1").arg(QString::number(i+1)));
+            }
+            // tag report decay
+            for (i = 0; i < data->get_num_fleets(); i++) {
+                str_list = data->getTagReportFleet()->getParameter(i);
+                chars += c_file->write_vector(str_list, 3, QString("TG_rpt_decay_fleet:_%1").arg(QString::number(i+1)));
+            }
+
+//            data->setTagLossParameter(c_file->read_line());
+            // tag time varying
+            num = data->getTagLossInitTV()->getNumVarParams();
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagLossInitTV()->getVarParameter(i);
+                temp_string = data->getTagLossInitTV()->getVarParamHeader(i);
+                chars += c_file->write_vector(str_list, 3, temp_string);
+            }
+            num = data->getTagLossChronicTV()->getNumVarParams();
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagLossChronicTV()->getVarParameter(i);
+                temp_string = data->getTagLossChronicTV()->getVarParamHeader(i);
+                chars += c_file->write_vector(str_list, 3, temp_string);
+            }
+            num = data->getTagOverdispersionTV()->getNumVarParams();
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagOverdispersionTV()->getVarParameter(i);
+                temp_string = data->getTagOverdispersionTV()->getVarParamHeader(i);
+                chars += c_file->write_vector(str_list, 3, temp_string);
+            }
+            num = data->getTagReportFleetTV()->getNumVarParams();
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagReportFleetTV()->getVarParameter(i);
+                temp_string = data->getTagReportFleetTV()->getVarParamHeader(i);
+                chars += c_file->write_vector(str_list, 3, temp_string);
+            }
+            num = data->getTagReportDecayTV()->getNumVarParams();
+            for (i = 0; i < num; i++) {
+                str_list = data->getTagReportDecayTV()->getVarParameter(i);
+                temp_string = data->getTagReportDecayTV()->getVarParamHeader(i);
+                chars += c_file->write_vector(str_list, 3, temp_string);
+            }
         }
         else
         {
             line = QString(QString("#_Cond -6 6 1 1 2 0.01 -4 0 0 0 0 0 0 0  #_placeholder if no parameters"));
+            chars += c_file->writeline(line);
         }
-        chars += c_file->writeline(line);
 
         chars += c_file->writeline("#");
         temp_int = data->getInputValueVariance();
@@ -4661,7 +4861,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         for (int i = 0; i < data->get_num_fleets(); i++)
         {
-            temp_float = data->getFleet(i)->getAddToSurveyCV();
+            temp_float = data->getFleet(i)->getAddToDiscardSD();
             if (!floatEquals(temp_float, 0.0))
             {
                 line = QString(QString("    2    %1    %2  #_add_to_discard_stddev").arg(
@@ -4713,7 +4913,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("%2 #_sd_offset; must be 1 if any growthCV, sigmaR, or survey extraSD is an estimated parameter").arg(
                            QString::number(data->getLambdaSdOffset())));
         chars += c_file->writeline(line);
-        line = QString(QString("# read %1 changes to default Lambdas (default value is 1.0)").arg(QString::number(data->getLambdaNumChanges())));
+        line = QString(QString("# read %1 changes to default Lambdas (default value is 1.0)").arg(QString::number(data->getNumLambdaAdjustments())));
         chars += c_file->writeline(line);
         line = QString(QString("# Like_comp codes:  1=surv; 2=disc; 3=mnwt; 4=length; 5=age; 6=SizeFreq; 7=sizeage; 8=catch; 9=init_equ_catch; "));
         chars += c_file->writeline(line);
@@ -4722,83 +4922,50 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("#like_comp  fleet  phase  value  sizefreq_method"));
         chars += c_file->writeline(line);
         num = 0;
-        for (int i = 0; i < data->get_num_fleets(); i++)
-        {
-            int j = 0;
-            for (j = 0; j < data->getFleet(i)->getNumLambdas(); j++)
-            {
-                line.clear();
-                str_list = data->getFleet(i)->getLambda(j);
-                line.append(QString(" %1 ").arg(str_list.at(0)));
-                line.append(QString::number(i + 1));
-                line.append(QString(" %1").arg(str_list.at(1)));
-                line.append(QString(" %1").arg(str_list.at(2)));
-                line.append(QString(" %1").arg(str_list.at(3)));
 
-                chars += c_file->writeline(line);
-            }
-            num += j;
-        }
-        if (num > data->getLambdaNumChanges())
+
+        for (i = 0; i < data->getNumLambdaAdjustments(); i++)
         {
-            c_file->error(QString("Problem writing control file. Lambda changes do not match."));
+            str_list = data->getLambdaAdjustment(i);
+            chars += c_file->write_vector(str_list, 3);
         }
         line = QString (" -9999  1  1  1  1  # terminator");
         chars += c_file->writeline(line);
 
+        // additional SD reporting
         temp_int = data->getAddSdReporting()->getActive();
-        if (temp_int == 1)
+        if (temp_int > 0)
         {
-            chars += c_file->writeline(QString("1 # (0/1) read specs for more stddev reporting "));
-            chars += c_file->write_vector(data->getAddSdReprtSelex(), 2, QString("Selectivity: fleet, len/age, year, N bins (4 values)"));
-            chars += c_file->write_vector(data->getAddSdReprtGrowth(), 2, QString("      Growth: pattern, N growth ages (2 values)"));
-            chars += c_file->write_vector(data->getAddSdReprtNumAtAge(), 2, QString("   Numbers-at-Age: area(-1 for all), year, N ages (3 values)"));
+            chars += c_file->writeline(QString("1 # (0/1/2) read specs for more stddev reporting "));
+            chars += c_file->write_vector(data->getAddSdReprtSelex(),     2, QString("Selectivity: fleet, len/age, year, N bins (4 values)"));
+            chars += c_file->write_vector(data->getAddSdReprtGrowth(),    2, QString("Growth: pattern, N growth ages (2 values)"));
+            chars += c_file->write_vector(data->getAddSdReprtNumAtAge(),  2, QString("Numbers-at-Age: area(-1 for all), year, N ages (3 values)"));
+            if (temp_int > 1) {
+                chars += c_file->write_vector(data->getAddSdReprtNatMort(), 2, QString("Nat Mort: growth pat, N ages (2 values)"));
+            }
             chars += c_file->write_vector(data->getAddSdReprtSelexBins(), 1, QString("vector with selex std bin picks (-1 in first bin to self-generate)"));
-            chars += c_file->write_vector(data->getAddSdReprtGrwthBins(), 1, QString("vector with growth std bin picks (-1 in first bin to self-generate)"));
+            if (data->getReadWtAtAge() == 0) {
+                chars += c_file->write_vector(data->getAddSdReprtGrwthBins(), 1, QString("vector with growth std bin picks (-1 in first bin to self-generate)"));
+            }
+            else {
+                chars += c_file->writeline(QString("# -1 # vector with growth std bin picks (-1 in first bin to self-generate)"));
+            }
             chars += c_file->write_vector(data->getAddSdReprtAtAgeBins(), 1, QString("vector with NatAge std bin picks (-1 in first bin to self-generate)"));
-
-/*            line = QString("1 # (0/1) read specs for more stddev reporting ");
-            chars += c_file->writeline(line);
-            line = QString (QString("%1 # selex_fleet, 1=len/2=age/3=both, year, N selex bins, 0 or Growth pattern, N growth ages, 0 or NatAge_area(-1 for sum), NatAge_yr, N Natages").arg(
-                                data->getAddVarSetupToText()));
-            chars += c_file->writeline(line);
-            line.clear();
-            str_list = data->getAddSdReprtSelexBins();
-            for (int i = 0; i < str_list.count(); i++)
-            {
-                if (!str_list.at(i).isEmpty())
-                    line.append(QString (" %1").arg(str_list.at(i)));
+            if (temp_int > 1) {
+                chars += c_file->write_vector(data->getAddSdReprtNatMortBins(), 1, QString("vector with natMort std bin picks (-1 in first bin to self-generate)"));
             }
-            line.append(" # vector with selex std bins (-1 in first bin to self-generate)");
-            chars += c_file->writeline(line);
-            line.clear();
-            str_list = data->getAddSdReprtGrwthBins();
-            for (int i = 0; i < str_list.count(); i++)
-            {
-                if (!str_list.at(i).isEmpty())
-                    line.append(QString(" %1").arg(str_list.at(i)));
-            }
-            line.append(" # vector with growth std ages picks (-1 in first bin to self-generate)");
-            chars += c_file->writeline(line);
-            line.clear();
-            str_list = data->getAddSdReprtAtAgeBins();
-            for (int i = 0; i < str_list.count(); i++)
-            {
-                if (!str_list.at(i).isEmpty())
-                    line.append(QString(" %1").arg(str_list.at(i)));
-            }
-            line.append(" # vector with NatAge std ages (-1 in first bin to self-generate)");
-            chars += c_file->writeline(line);*/
         }
         else
         {
-            chars += c_file->writeline(QString("0 # (0/1) read specs for more stddev reporting "));
+            chars += c_file->writeline(QString("0 # (0/1/2) read specs for more stddev reporting "));
             chars += c_file->writeline(QString("#_Cond_0 # 0 1 -1 5 # placeholder for selex_fleet, 1=len/2=age/3=both, year, N selex bins"));
             chars += c_file->writeline(QString("#_Cond_0 # 1 5 # placeholder for Growth pattern, N growth ages"));
             chars += c_file->writeline(QString("#_Cond_0 # 1 -1 5 # placeholder for NatAge_area(-1 for all), NatAge_yr, N Natages"));
-            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector of selex bins to be reported"));
-            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector of growth ages to be reported"));
-            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector of NatAges ages to be reported"));
+            chars += c_file->writeline(QString("#_Cond_0 # 1 1 # placeholder for natMort growth pattern, N ages"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector with selex std bin picks (-1 in first bin to self-generate)"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector with growth std bin picks (-1 in first bin to self-generate)"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector with NatAge std bin picks (-1 in first bin to self-generate)"));
+            chars += c_file->writeline(QString("#_Cond_0 # placeholder for vector with natMort std bin picks (-1 in first bin to self-generate)"));
         }
 
         line = QString::number(END_OF_DATA);
@@ -4941,26 +5108,22 @@ void readTimeVaryParams (ss_file *infile, ss_model *data, tablemodel *paramTable
         {
             param = paramTable->getRowData(i);
             header = paramTable->getRowHeader(i);
-            value = param.at(0).toInt();
 
-            if (varRead > 0)
-            {
-                // read time varying parameters
-                // blocks
-                value = param.at(12).toInt();
-                if (value != 0)
-                    row = readTimeVaryBlockParams (infile, data, value, param.at(13).toInt(), header, row, varParamTable);
+            // read time varying parameters
+            // blocks
+            value = param.at(12).toInt();
+            if (value != 0)
+                row = readTimeVaryBlockParams (infile, data, value, param.at(13).toInt(), header, row, varParamTable);
 
-                // devs
-                value = param.at(8).toInt();
-                if (value != 0)
-                    row = readTimeVaryDevParams (infile, data, value, header, row, varParamTable);
+            // devs
+            value = param.at(8).toInt();
+            if (value != 0)
+                row = readTimeVaryDevParams (infile, data, value, header, row, varParamTable);
 
-                // env link
-                value = param.at(7).toInt();
-                if (value != 0)
-                    row = readTimeVaryEnvParams (infile, data, value, header, row, varParamTable);
-            }
+            // env link
+            value = param.at(7).toInt();
+            if (value != 0)
+                row = readTimeVaryEnvParams (infile, data, value, header, row, varParamTable);
         }
         varParamTable->setRowCount(row);
     }

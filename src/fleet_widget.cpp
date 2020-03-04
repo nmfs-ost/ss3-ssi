@@ -117,10 +117,6 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     setupSelexAgeInfo();
     selexAgeInfoDialog->hide();
 
-    lambdaView = new tableview();
-    lambdaView->setParent(this);
-    ui->verticalLayout_lambda_changes->addWidget(lambdaView);
-
     set_model(m_data);
     totalFleets = m_data->get_num_fleets();
     refresh();
@@ -162,18 +158,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
     connect (ui->lineEdit_age_comp_tails, SIGNAL(editingFinished()), SLOT(changeAgeMinTailComp()));
     connect (ui->lineEdit_age_constant, SIGNAL(editingFinished()), SLOT(changeAgeAddToData()));
-    connect (ui->spinBox_lambda_max_phase, SIGNAL(valueChanged(int)),
-             SLOT(lambdaPhaseChanged(int)));
-    connect (ui->spinBox_lambda_sd_offset, SIGNAL(valueChanged(int)),
-             SLOT(lambdaOffsetChanged(int)));
-    connect (ui->spinBox_lambda_num_changes, SIGNAL(valueChanged(int)),
-                SLOT(lambdaNumChanged(int)));
 
-//    connectFleet();
-//    set_current_fleet(0);
-
-//    refresh();
-//    ui->comboBox_fleet_name->setCurrentIndex(0);
     ui->tabWidget_fleet->setCurrentIndex(0);
 }
 
@@ -469,22 +454,17 @@ void fleet_widget::set_model (ss_model *model)
 
 void fleet_widget::setAgeLengthBins()
 {
-    int ages = model_data->get_num_ages();
-    if (ages > 0)
-    {
-        QStringList agebinlist (model_data->get_age_composition()->getBins());
-        int firstage = QString(agebinlist.at(0)).toInt();
-        int age = firstage;
-        int interval = QString(agebinlist.at(2)).toInt() - QString(agebinlist.at(1)).toInt();
-        QStringList agelist;
-        agelist.append(QString::number(age));
-        for (int i = 1; i < ages; i++)
-        {
-            age += interval;
-            agelist.append(QString::number(age));
-        }
-        selexAgeEqDialog->setBinValStrings(agebinlist);
+    QStringList agebinlist;
+    int ages = model_data->get_age_composition()->getBins().count();
+    if (ages > 0) {
+        agebinlist = model_data->get_age_composition()->getBins();
     }
+    else {
+        int maxAge = model_data->get_num_ages();
+        for (int i = 1; i <= maxAge; i++)
+            agebinlist.append(QString::number(i));
+    }
+    selexAgeEqDialog->setBinValStrings(agebinlist);
     selexSizeEqDialog->setBinValStrings(model_data->get_length_composition()->getBins());
 }
 
@@ -629,12 +609,6 @@ void fleet_widget::set_current_fleet(int index)
         selexAgeEqDialog->setMidBin(0);
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
-
-        ui->spinBox_lambda_max_phase->setValue(model_data->getLambdaMaxPhase());
-        ui->spinBox_lambda_sd_offset->setValue(model_data->getLambdaSdOffset());
-        ui->spinBox_lambda_num_changes->setValue(current_fleet->getNumLambdas());
-        lambdaView->setModel(current_fleet->getLambdaModel());
-        lambdaParamsChanged();
 
         connectFleet ();
 
@@ -1559,27 +1533,6 @@ void fleet_widget::changeGenNumObs(int num)
     {
         current_fleet->setGenNumObs(cur_gen_obs, num);
     }
-}
-
-void fleet_widget::lambdaPhaseChanged(int phs)
-{
-    model_data->setLambdaMaxPhase(phs);
-}
-
-void fleet_widget::lambdaOffsetChanged(int val)
-{
-    model_data->setLambdaSdOffset(val);
-}
-
-void fleet_widget::lambdaNumChanged(int num)
-{
-    current_fleet->setNumLambdas(num);
-}
-
-void fleet_widget::lambdaParamsChanged()
-{
-    lambdaView->setHeight (current_fleet->getLambdaModel());
-    lambdaView->resizeColumnsToContents();
 }
 
 

@@ -2,6 +2,8 @@
 #include "parametermodel.h"
 #include "setupmodel.h"
 
+#include <QMessageBox>
+
 ss_growth::ss_growth(ss_model *parent)
     : QObject((QObject *)parent)
 {
@@ -9,11 +11,13 @@ ss_growth::ss_growth(ss_model *parent)
     num_patterns = 0;
     num_params = 0;
 
+    growthBins = new tablemodel((QObject *)parnt);
+    growthBins->setRowCount(1);
 
     morphdisttable = new tablemodel((QObject *)parnt);
     morphdisttable->setRowCount(1);
 
-    natMortNumBreakPoints = 0;
+    natMortNumBreakPoints = 1;
     natMortBreakPoints = new tablemodel((QObject *)parnt);
     natMortBreakPoints->setRowCount(1);
     natMortBreakPoints->setRowHeader(0, QString("Age(real) at M Breakpoints"));
@@ -46,6 +50,7 @@ ss_growth::~ss_growth()
     setNum_morphs(0);
     setNum_patterns(0);
 
+    delete growthBins;
     delete morphdisttable;
     delete natMortBreakPoints;
     delete natMortAges;
@@ -82,6 +87,10 @@ void ss_growth::reset()
     cohortParam->setNumParams(1);
 //    blockParams->setNumParams(0);
 //    environmentParams->setNumParams(0);
+    growthBinMethod = 1;
+    growthBinMin = 0;
+    growthBinMax = 0;
+    growthBinStep = 0;
 
     setNum_morphs(1);
     setMorph_within_ratio(1.0);
@@ -161,6 +170,30 @@ void ss_growth::setParam(int i, longParameter * &value)
     params.insert(i, lp);
     params.takeAt(i+1);
 }*/
+tablemodel *ss_growth::getGrowthBinTable()
+{
+    return growthBins;
+}
+QStringList ss_growth::getGrowthBins ()
+{
+    return growthBins->getRowData(0);
+}
+void ss_growth::setGrowthBins(QStringList data)
+{
+    if (data.count() > 1) {
+        growthBins->setRowData(0, data);
+        float min = data.first().toFloat();
+        float max = data.last().toFloat();
+        float wid = data.at(1).toFloat() - min;
+        if (growthBinMethod == 3) {
+            growthBinMin = min;
+            growthBinMax = max;
+            growthBinStep = wid;
+        }
+    }
+}
+
+
 float ss_growth::getMorph_within_ratio() const
 {
     return morph_within_ratio;
@@ -282,6 +315,64 @@ void ss_growth::autogenerateTimeVaryParams()
     cohortVarParam->changeVarParamData(0, getCohortParam());
 }
 
+void ss_growth::setGrowthBinStep(float value)
+{
+    growthBinStep = value;
+}
+
+float ss_growth::getGrowthBinWidth() const
+{
+    return growthBinStep;
+}
+
+float ss_growth::getGrowthBinMax() const
+{
+    return growthBinMax;
+}
+
+void ss_growth::setGrowthBinMax(float value)
+{
+    growthBinMax = value;
+}
+
+float ss_growth::getGrowthBinMin() const
+{
+    return growthBinMin;
+}
+
+void ss_growth::setGrowthBinMin(float value)
+{
+    growthBinMin = value;
+}
+
+void ss_growth::generateGrowthBins()
+{
+    QStringList data;
+    float length;
+    if (growthBinMax != 0 && growthBinStep != 0) {
+        for (length = growthBinMin; length <= growthBinMax;
+             length += growthBinStep) {
+            data.append(QString::number(length, 'g', 2));
+        }
+        setNumGrowthBins(data.count());
+        setGrowthBins(data);
+    }
+    else {
+        QString msg ("Could not generate population growth bins from values entered in data file.");
+        QMessageBox::information((QWidget *)this, tr("Input Error"), tr(msg.toUtf8()));
+    }
+}
+
+int ss_growth::getGrowthBinMethod() const
+{
+    return growthBinMethod;
+}
+
+void ss_growth::setGrowthBinMethod(int value)
+{
+    growthBinMethod = value;
+}
+
 
 QStringList ss_growth::getMorphDist_str()
 {
@@ -316,37 +407,46 @@ void ss_growth::setNatural_mortality_type(int value)
     switch (natural_mortality_type)
     {
     case 0:
-        for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getFemNatMParams()->setRowCount(2);
+        for (int i = 0; i < num_patterns; i++) {
+            getPattern(i)->getFemNatMParams()->setRowCount(1);
+            getPattern(i)->getMaleNatMParams()->setRowCount(1);
+        }
         break;
     case 1:
-        for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getFemNatMParams()->setRowCount(2 * natMortNumBreakPoints);
+        for (int i = 0; i < num_patterns; i++) {
+            getPattern(i)->getFemNatMParams()->setRowCount(natMortNumBreakPoints);
+            getPattern(i)->getMaleNatMParams()->setRowCount(natMortNumBreakPoints);
+        }
         natMortBreakPoints->setColumnCount(natMortNumBreakPoints);
         break;
     case 2:
-        for (int i = 0; i < num_patterns; i++)
-            getPattern(i)->getFemNatMParams()->setRowCount(2);
+        for (int i = 0; i < num_patterns; i++) {
+            getPattern(i)->getFemNatMParams()->setRowCount(1);
+            getPattern(i)->getMaleNatMParams()->setRowCount(1);
+        }
         break;
     case 3:
     case 4:
-        for (int i = 0; i < num_patterns; i++)
+        for (int i = 0; i < num_patterns; i++) {
             getPattern(i)->getNatMAges()->setColumnCount(num_ages+1);
+        }
         break;
     }
 }
 
 int ss_growth::getNatMortNumBreakPts() const
 {
-    return natMortBreakPoints->columnCount();
+    return natMortNumBreakPoints;
 }
 
 void ss_growth::setNatMortNumBreakPts(int num)
 {
     natMortNumBreakPoints = num;
     natMortBreakPoints->setColumnCount(num);
-    for (int i = 0; i < num_patterns; i++)
-        getPattern(i)->getFemNatMParams()->setRowCount(2 * natMortNumBreakPoints);
+    for (int i = 0; i < num_patterns; i++) {
+        getPattern(i)->getFemNatMParams()->setRowCount(natMortNumBreakPoints);
+        getPattern(i)->getMaleNatMParams()->setRowCount(natMortNumBreakPoints);
+    }
 }
 
 QStringList ss_growth::getNatMortBreakPts ()

@@ -47,7 +47,7 @@ void dialogSummaryOutput::createChart() {
     axisY = new QValueAxis();
     axisY->setTitleText("Biomass");
     axisYalt = new QValueAxis();
-    axisYalt->setTitleText("Catch Probability");
+    axisYalt->setTitleText("F_std");
 
     summaryChart = new QChart();
     summaryChart->setTitle("Summary Chart");
@@ -61,17 +61,17 @@ void dialogSummaryOutput::createChart() {
     ui->verticalLayout_left->addWidget(summaryView);
 
     Spawning = new QLineSeries();
-    Spawning->setName("SpwnStck");
+    Spawning->setName("SpawnBio");
     summaryChart->addSeries(Spawning);
     Spawning->attachAxis(axisX);
     Spawning->attachAxis(axisY);
     Recruits = new QLineSeries();
-    Recruits->setName("SpwnRcrt");
+    Recruits->setName("Recruits");
     summaryChart->addSeries(Recruits);
     Recruits->attachAxis(axisY);
     Recruits->attachAxis(axisY);
     Fishing = new QLineSeries();
-    Fishing->setName("CatchProb");
+    Fishing->setName("F_std");
     summaryChart->addSeries(Fishing);
     Fishing->attachAxis(axisX);
     Fishing->attachAxis(axisYalt);

@@ -25,7 +25,23 @@ public:
 
     void reset();
 
+
 public slots:
+    int getGrowthBinMethod() const;
+    void setGrowthBinMethod(int value);
+    float getGrowthBinMin() const;
+    void setGrowthBinMin(float value);
+    float getGrowthBinMax() const;
+    void setGrowthBinMax(float value);
+    float getGrowthBinWidth() const;
+    void setGrowthBinStep(float value);
+    void generateGrowthBins ();
+    int getNumGrowthBins () {return growthBins->columnCount();}
+    void setNumGrowthBins (int value) {growthBins->setColumnCount(value);}
+    tablemodel *getGrowthBinTable();
+    QStringList getGrowthBins ();
+    void setGrowthBins(QStringList data);
+
     int getNum_patterns() const;
     void setNum_patterns(int value);
     growthPattern *getPattern(int index) {return patterns[index];}
@@ -147,6 +163,13 @@ public slots:
 
 private:
     ss_model *parnt;
+
+    float growthBinMin;
+    float growthBinMax;
+    float growthBinStep;
+    int growthBinMethod;
+    tablemodel *growthBins;
+
     QList<growthPattern *> patterns;
     int num_patterns;
 

@@ -222,7 +222,7 @@ void forecast_widget::refresh()
     set_combo_box(ui->comboBox_control_rule, fcast->get_cr_method());
     ui->lineEdit_ctl_rule_const_F->setText(QString::number(fcast->get_cr_biomass_const_f()));
     ui->lineEdit_ctl_rule_no_F->setText(QString::number(fcast->get_cr_biomass_no_f()));
-    ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(fcast->get_cr_target()));
+    ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(fcast->get_cr_buffer()));
 
     ui->spinBox_num_forecast_loops->setValue(fcast->get_num_forecast_loops());
     ui->spinBox_first_loop->setValue(fcast->get_forecast_loop_recruitment());
@@ -348,7 +348,7 @@ void forecast_widget::set_cr_target()
 {
     QString value(ui->lineEdit_ctl_tgt_as_fraction->text());
     double val = checkdoublevalue(value);
-    model_data->forecast->set_cr_target(val);
+    model_data->forecast->set_cr_buffer(val);
     ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(val));
 
 }

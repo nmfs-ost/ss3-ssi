@@ -66,6 +66,7 @@ void Season::setDuration(float value)
 ss_model::ss_model(QWidget *parent) :
     QObject(parent)
 {
+    QStringList hdr;
     ageData = nullptr;
     lengthData = nullptr;
     morphData = nullptr;
@@ -82,19 +83,36 @@ ss_model::ss_model(QWidget *parent) :
     mbweightModel->setHeader(mbweightHeader);
 
     obsEnvironVars = new environmentalVars();
-    tagData = new tagObservation();
-
-    pPopulation = new population (this);
-    forecast = new ss_forecast(1, 1, (QObject *)this);
-    connect (forecast, SIGNAL(SPRchanged(float)), pPopulation, SLOT(changeSPR(float)));
 
     doTags = false;
+    tagData = new tagObservation();
+    tagLossInit = new longParameterModel(this);
+    tagLossChronic = new longParameterModel(this);
+    tagOverdispersion = new longParameterModel(this);
+    tagReportFleet = new longParameterModel(this);
+    tagReportDecay = new longParameterModel(this);
+
+    tagLossInitTV = new timeVaryParameterModel(this);
+    tagLossChronicTV = new timeVaryParameterModel(this);
+    tagOverdispersionTV = new timeVaryParameterModel(this);
+    tagReportFleetTV = new timeVaryParameterModel(this);
+    tagReportDecayTV = new timeVaryParameterModel(this);
+
+    pPopulation = new population (this);
+    forecast = new ss_forecast(1, 1, this);
+    connect (forecast, SIGNAL(SPRchanged(float)), pPopulation, SLOT(changeSPR(float)));
+
     doMorphComp = false;
     lengthData = new compositionLength(this);
 
     catchMult = new shortParameterModel(this);
 //    catchMult->setColumnCount(7);
     catchMult->setNumParams(1);
+
+    lambdas = new tablemodel(this);
+    hdr.clear();
+    hdr << "Component" << "fleet" << "phase" << "value" << "method";
+    lambdas->setHeader(hdr);
 
     selexAdjustMethod = 1;
 
@@ -229,6 +247,8 @@ void ss_model::reset()
     set_num_tag_groups(0);
     setTagLoss(0);
     set_num_fleets(1);
+
+    setNumLambdaAdjustments(0);
 }
 
 void ss_model::set_start_year(int year)
@@ -817,6 +837,16 @@ void ss_model::setTagLoss(int flag)
             delete tag_loss_param;
         tag_loss_param = nullptr;
     }
+    tagLossInit->setNumParams(0);
+    tagLossChronic->setNumParams(0);
+    tagOverdispersion->setNumParams(0);
+    tagReportFleet->setNumParams(0);
+    tagReportDecay->setNumParams(0);
+    tagLossInitTV->setTotalNumVarTables(0);
+    tagLossChronicTV->setTotalNumVarTables(0);
+    tagOverdispersionTV->setTotalNumVarTables(0);
+    tagReportFleetTV->setTotalNumVarTables(0);
+    tagReportDecayTV->setTotalNumVarTables(0);
 }
 
 void ss_model::set_num_ages(int ages)
@@ -900,6 +930,18 @@ int ss_model::getLambdaNumChanges()
         num += getFleet(i)->getNumLambdas();
     return num;
 }
+
+void ss_model::setNumLambdaAdjustments(int num) {
+    lambdas->setRowCount(num);
+}
+void ss_model::addLambdaAdjustment(QStringList ladj) {
+    lambdas->addRowData(ladj);
+}
+QStringList ss_model::getLambdaAdjustment (int row) {
+    return lambdas->getRowData(row);
+}
+
+
 
 int ss_model::getAddVariance() const
 {

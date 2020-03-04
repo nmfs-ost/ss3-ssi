@@ -26,6 +26,7 @@ public slots:
     void setRowData(int &row, QString rowstring);
     void setRowData(int row, QStringList &rowstringlist);
     void setRowData(int row, QVector<double> rowdata);
+    void addRowData(QStringList &rowstringlist);
 
     QStringList getRowData (int row);
     QString getRowText (int row);

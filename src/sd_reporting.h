@@ -18,7 +18,7 @@ public:
 
     void setActive (bool flag);
     void setActive (int value);
-    bool getActive () {return reporting;}
+    int getActive () {return reporting;}
 
 /*    void setSpecs (QStringList data);
     QStringList getSpecs ();
@@ -51,15 +51,26 @@ public:
     void setNumAtAgeBins (QStringList data);
     tablemodel *getNumAtAgeAgeModel() {return numAtAgeAges;}
 
+    void setNatMort (QStringList data);
+    QStringList getNatMort ();
+    tablemodel *getNatMortModel () {return numAtAge;}
+    int getNumNatMortBins();
+    void setNumNatMortBins (int num);
+    QStringList getNatMortBins ();
+    void setNatMortBins (QStringList data);
+    tablemodel *getNatMortAgeModel() {return numAtAgeAges;}
+
 
 private:
-    bool reporting;
+    int reporting;
     tablemodel *selex;
     tablemodel *growth;
     tablemodel *numAtAge;
+    tablemodel *natMort;
     tablemodel *selexBins;
     tablemodel *growthBins;
     tablemodel *numAtAgeAges;
+    tablemodel *natMortAges;
 
     QStringList specsHeader;
     longParameter vector_selex_bins;

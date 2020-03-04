@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>6</number>
+      <number>8</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -263,7 +263,7 @@
            </property>
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="4" column="6">
-             <spacer name="horizontalSpacer_4">
+             <spacer name="horizontalSpacer_dimensions">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -434,7 +434,7 @@
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_dimen">
+        <spacer name="verticalSpacer_dimensions">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -454,11 +454,11 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QScrollArea" name="scrollArea_3">
+        <widget class="QScrollArea" name="scrollArea_settings">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_3">
+         <widget class="QWidget" name="scrollAreaWidgetContents_settings">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -1018,17 +1018,7 @@
           <layout class="QVBoxLayout" name="verticalLayout_13">
            <item>
             <layout class="QGridLayout" name="gridLayout_comp_length">
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_length_pop_bins">
-               <property name="text">
-                <string>Population length bins</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="3">
+             <item row="1" column="1" colspan="2">
               <spacer name="horizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -1041,116 +1031,20 @@
                </property>
               </spacer>
              </item>
-             <item row="3" column="2">
-              <widget class="QLabel" name="label_length_pop_bin_method_info">
-               <property name="text">
-                <string>1 =  use databins; 2 = generate from binwidth, min, max; 3 = read vector</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0" colspan="4">
-              <widget class="QFrame" name="frame_length_bins_method2">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout">
-                <item>
-                 <spacer name="horizontalSpacer_length_1">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_length_pop_bin_width">
-                  <property name="text">
-                   <string>Bin width for population </string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="spinBox_length_pop_bin_width">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>2</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_length_pop_bin_min">
-                  <property name="text">
-                   <string>Minimum size in population</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="spinBox_length_pop_bin_min"/>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_length_pop_bin_max">
-                  <property name="text">
-                   <string>Maximum size in population</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="spinBox_length_pop_bin_max">
-                  <property name="minimum">
-                   <number>10</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_length_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="6" column="0" colspan="4">
-              <layout class="QVBoxLayout" name="verticalLayout_length_pop_bins"/>
-             </item>
-             <item row="2" column="0" colspan="4">
+             <item row="2" column="0" colspan="3">
               <layout class="QHBoxLayout" name="horizontalLayout_length_bins">
                <property name="sizeConstraint">
                 <enum>QLayout::SetMaximumSize</enum>
                </property>
               </layout>
              </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_length_bin_method">
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pushButton_length_obs">
                <property name="text">
-                <string>Population Length bin method</string>
+                <string>Observations</string>
                </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QSpinBox" name="spinBox_length_pop_bin_method">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>3</number>
+               <property name="flat">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -1161,15 +1055,8 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="0">
-              <widget class="QPushButton" name="pushButton_length_obs">
-               <property name="text">
-                <string>Observations</string>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
+             <item row="6" column="0" colspan="3">
+              <layout class="QVBoxLayout" name="verticalLayout_length_dirichlet_parms"/>
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_length_num_bins">
@@ -1181,6 +1068,19 @@
                </property>
               </widget>
              </item>
+             <item row="0" column="2">
+              <spacer name="horizontalSpacer_length_1">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_length_bins">
                <property name="text">
@@ -1191,10 +1091,7 @@
                </property>
               </widget>
              </item>
-             <item row="9" column="0" colspan="4">
-              <layout class="QVBoxLayout" name="verticalLayout_length_dirichlet_parms"/>
-             </item>
-             <item row="8" column="0" colspan="4">
+             <item row="5" column="0" colspan="3">
               <layout class="QHBoxLayout" name="horizontalLayout_length_dirichlet">
                <item>
                 <widget class="QLabel" name="label_length_dirichlet_parms">
@@ -1228,7 +1125,7 @@
             </layout>
            </item>
            <item>
-            <spacer name="verticalSpacer_4">
+            <spacer name="verticalSpacer_length">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -1357,7 +1254,7 @@
             </layout>
            </item>
            <item>
-            <spacer name="verticalSpacer_5">
+            <spacer name="verticalSpacer_age">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -1449,7 +1346,7 @@
            <item>
             <layout class="QGridLayout" name="gridLayout_comp_gen">
              <item row="0" column="4">
-              <spacer name="horizontalSpacer_2">
+              <spacer name="horizontalSpacer_gen1">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1577,7 +1474,7 @@
               </widget>
              </item>
              <item row="0" column="5">
-              <spacer name="horizontalSpacer_3">
+              <spacer name="horizontalSpacer_gen2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1616,7 +1513,7 @@
             </layout>
            </item>
            <item>
-            <spacer name="verticalSpacer_2">
+            <spacer name="verticalSpacer_genComp">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -1735,7 +1632,7 @@
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QLabel" name="label_2">
+                 <widget class="QLabel" name="label_morphMinComp">
                   <property name="text">
                    <string>Minimum compression</string>
                   </property>
@@ -1761,11 +1658,11 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QScrollArea" name="scrollArea_2">
+        <widget class="QScrollArea" name="scrollArea_environ">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+         <widget class="QWidget" name="scrollAreaWidgetContents_environ">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -1837,7 +1734,7 @@
             </layout>
            </item>
            <item>
-            <spacer name="verticalSpacer_3">
+            <spacer name="verticalSpacer_environ">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -1863,7 +1760,7 @@
        <item>
         <widget class="QScrollArea" name="scrollArea">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="widgetResizable">
           <bool>true</bool>
@@ -1881,7 +1778,7 @@
            <item>
             <widget class="QGroupBox" name="groupBox_tag">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="title">
               <string>Enable Tag-Recapture Data</string>
@@ -1890,27 +1787,20 @@
               <bool>true</bool>
              </property>
              <property name="checked">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="2">
-               <widget class="QSpinBox" name="spinBox_tag_num_groups"/>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_tag_release_data">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_tag_latency_period">
                 <property name="text">
-                 <string>Tag Groups</string>
+                 <string>Mixing latency period</string>
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
-               <widget class="QPushButton" name="pushButton_tag_rec_obs">
-                <property name="text">
-                 <string>Recapture Data</string>
-                </property>
-               </widget>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_latency"/>
               </item>
-              <item row="2" column="5">
+              <item row="0" column="3">
                <spacer name="horizontalSpacer_tag">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -1923,7 +1813,28 @@
                 </property>
                </spacer>
               </item>
-              <item row="0" column="4">
+              <item row="4" column="3">
+               <widget class="QPushButton" name="pushButton_tag_rec_obs">
+                <property name="text">
+                 <string>Recapture Data</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="label_tag_max_info">
+                <property name="text">
+                 <string>in which to track recoveries. After that, tags enter accumulator</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_tag_release_data">
+                <property name="text">
+                 <string>Tag Groups</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
                <spacer name="horizontalSpacer_tag_num_groups">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -1936,27 +1847,10 @@
                 </property>
                </spacer>
               </item>
-              <item row="4" column="0" colspan="5">
+              <item row="5" column="1" colspan="2">
                <layout class="QHBoxLayout" name="horizontalLayout_tag_reldata"/>
               </item>
-              <item row="1" column="4">
-               <widget class="QLabel" name="label_tag_latency_info">
-                <property name="text">
-                 <string>N periods to delay before comparing observed to expetec recoveries. (0=release period)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_tag_latency_period">
-                <property name="text">
-                 <string>Mixing latency period</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QSpinBox" name="spinBox_tag_latency"/>
-              </item>
-              <item row="0" column="0" colspan="2">
+              <item row="0" column="0">
                <widget class="QLabel" name="label_tag_num_groups">
                 <property name="text">
                  <string>Number of tag groups</string>
@@ -1970,48 +1864,222 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
+              <item row="2" column="1">
                <widget class="QSpinBox" name="spinBox_tag_max_per"/>
               </item>
-              <item row="2" column="4">
-               <widget class="QLabel" name="label_tag_max_info">
+              <item row="4" column="4">
+               <spacer name="horizontalSpacer_tag_recap">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_num_groups"/>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_tag_latency_info">
                 <property name="text">
-                 <string>in which to track recoveries. After that, tags enter accumulator</string>
+                 <string>N periods to delay before comparing observed to expected recoveries. (0=release period)</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="8" column="0">
+               <spacer name="verticalSpacer_tag_rec_obs">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="3" column="0">
                <widget class="QLabel" name="label_tag_time_vary">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>Time variance</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="4">
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_time_vary">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <number>2</number>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
                <widget class="QLabel" name="label_time_vary_info">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="2">
-               <widget class="QSpinBox" name="spinBox_tag_time_vary">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
            </item>
-           <item>
-            <spacer name="verticalSpacer_tag_rec_obs">
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_tagParams">
+      <attribute name="title">
+       <string>Tag Params</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_20">
+       <item>
+        <widget class="QScrollArea" name="scrollArea_tagParams">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_tagParams">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>955</width>
+            <height>473</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="1" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagLossInit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_tagInitTV">
+             <property name="text">
+              <string>Tag Loss Init Time Vary</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagLossChronic"/>
+           </item>
+           <item row="17" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagReptDecayFlt"/>
+           </item>
+           <item row="13" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagReptFleet"/>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_tagReptFleetTV">
+             <property name="text">
+              <string>Tag Report Fleet Time Vary</string>
+             </property>
+            </widget>
+           </item>
+           <item row="18" column="0">
+            <widget class="QLabel" name="label_tagReptDecayFltTV">
+             <property name="text">
+              <string>Tag Report Decay Fleet Time Vary</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagOverdispTV"/>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_tagOverdispTV">
+             <property name="text">
+              <string>Tag Overdispersion Time Vary</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_tagLossInit">
+             <property name="text">
+              <string>Tag Loss Init</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagChronicTV"/>
+           </item>
+           <item row="15" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagReptFleetTV"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_tagLossChronic">
+             <property name="text">
+              <string>Tag Loss Chronic</string>
+             </property>
+            </widget>
+           </item>
+           <item row="19" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagReptDecayFltTV"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_tagOverdisp">
+             <property name="text">
+              <string>Tag Overdispersion</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagOverdisp"/>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_tagInitTV"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_tagChronicTV">
+             <property name="text">
+              <string>Tag Loss Chronic Time Vary</string>
+             </property>
+            </widget>
+           </item>
+           <item row="16" column="0">
+            <widget class="QLabel" name="label_tagReptDecayFlt">
+             <property name="text">
+              <string>Tag Report Decay Fleet</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_tagParams">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_tagReptFleet">
+             <property name="text">
+              <string>Tag Report Fleet</string>
+             </property>
+            </widget>
+           </item>
+           <item row="20" column="1">
+            <spacer name="verticalSpacer_tagParams">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -2022,6 +2090,13 @@
               </size>
              </property>
             </spacer>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -2126,7 +2201,7 @@
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_6">
+        <spacer name="verticalSpacer_blocks">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -2140,137 +2215,279 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_lambdas">
+      <attribute name="title">
+       <string>Lambdas</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_23">
+       <item>
+        <widget class="QScrollArea" name="scrollArea_lambdas">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_lambdas">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>955</width>
+            <height>473</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="spinBox_lambda_max_phase">
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="spinBox_lambda_sd_offset">
+             <property name="maximum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spinBox_lambda_count">
+             <property name="value">
+              <number>4</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <spacer name="horizontalSpacer_lambdas1">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_lambda_sd_offset">
+             <property name="text">
+              <string>SD Offset</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_lambda_count">
+             <property name="text">
+              <string>Number Lambdas</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_lambda_max_phase">
+             <property name="text">
+              <string>Max Lambda Phase</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="3">
+            <layout class="QVBoxLayout" name="verticalLayout_lambdas"/>
+           </item>
+           <item row="3" column="3">
+            <spacer name="horizontalSpacer_lambdas2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="4" column="0">
+            <spacer name="verticalSpacer_lambdas">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_add_report">
       <attribute name="title">
-       <string>Additional Reporting</string>
+       <string>Add'l Reporting</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QGroupBox" name="groupBox_add_sd">
-         <property name="title">
-          <string>Additional Standard Deviation reporting</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
-          <item>
-           <widget class="QScrollArea" name="scrollArea_add_sd_reporting">
-            <property name="minimumSize">
-             <size>
-              <width>500</width>
-              <height>250</height>
-             </size>
-            </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_add_sd">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>927</width>
-               <height>248</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_19">
-              <item>
-               <layout class="QGridLayout" name="gridLayout_add_sd">
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_add_sd_growth">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Growth</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_selex"/>
-                </item>
-                <item row="0" column="2">
-                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_selex_bins"/>
-                </item>
-                <item row="1" column="1">
-                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_growth"/>
-                </item>
-                <item row="1" column="2">
-                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_growth_bins"/>
-                </item>
-                <item row="2" column="1">
-                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_NatAge"/>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_add_sd_selex">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Selectivity</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_add_sd_NatAge">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Num-at-Age</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <layout class="QVBoxLayout" name="verticalLayout_add_sd_NatAge_ages"/>
-                </item>
-                <item row="1" column="3">
-                 <spacer name="horizontalSpacer_add_sd">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_add_sd">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::MinimumExpanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
+        <widget class="QScrollArea" name="scrollArea_add_sd_reporting">
+         <property name="minimumSize">
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>500</width>
+           <height>250</height>
           </size>
          </property>
-        </spacer>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_add_sd">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>955</width>
+            <height>473</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_19">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label_add_sd_read">
+               <property name="text">
+                <string>Read Additional Standard Dev Reporting specification </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_add_sd_read">
+               <property name="maximum">
+                <number>2</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_add_sd_read">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_add_sd">
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_add_sd_NatAge">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Num-at-Age</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_NatAge_ages"/>
+             </item>
+             <item row="4" column="1">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_natMort"/>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_add_sd_natMort">
+               <property name="text">
+                <string>Nat Mort</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_add_sd_growth">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Growth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_growth_bins"/>
+             </item>
+             <item row="3" column="1">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_NatAge"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_add_sd_selex">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Selectivity</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_growth"/>
+             </item>
+             <item row="1" column="1">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_selex"/>
+             </item>
+             <item row="1" column="2">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_selex_bins"/>
+             </item>
+             <item row="2" column="3">
+              <spacer name="horizontalSpacer_add_sd">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="4" column="2">
+              <layout class="QVBoxLayout" name="verticalLayout_add_sd_natMort_ages"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_add_sd">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>

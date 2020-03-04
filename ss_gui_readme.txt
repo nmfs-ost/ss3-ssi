@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.04
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.05
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -17,6 +17,15 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.15.05
+    2020-03-02
+1. Implemented tags.
+2. Moved Lambdas to Configuration and added others besides fleet.
+3. Corrected reading age data when no age data.
+4. Corrected reading forecast annual control rule buffer.
+5. Forecast loop control #3 is implemented as forecast recruitment that
+   requires a value 0-3, which may be needed for some older models.
 ============================================================================
     3.30.15.04
     2020-02-19

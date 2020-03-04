@@ -52,6 +52,22 @@ sd_reporting::sd_reporting()
     numAtAgeAges->setRowHeader(0, header);
     header.clear();
 
+    natMort = new tablemodel();
+    natMort->setColumnCount(2);
+    natMort->setRowCount(1);
+    header = QString("Natural Mort");
+    natMort->setRowHeader(0, header);
+    header.clear();
+    headers << "pattern" << "num ages";
+    natMort->setHeader(headers);
+    headers.clear();
+    natMortAges = new tablemodel();
+    natMortAges->setColumnCount(1);
+    natMortAges->setRowCount(1);
+    header = QString("ages");
+    natMortAges->setRowHeader(0, header);
+    header.clear();
+
 /*    specsHeader << "sel type" << "len/age" << "year" << "N sel bins";
     specsHeader << "Gr Pat" << "N Gr ages";
     specsHeader << "NatAge_area" << "NatAge_yr" << "N Natages";
@@ -69,14 +85,22 @@ sd_reporting::~sd_reporting()
     delete selex;
     delete growth;
     delete numAtAge;
+    delete natMort;
     delete selexBins;
     delete growthBins;
     delete numAtAgeAges;
+    delete natMortAges;
 }
 
 void sd_reporting::setActive(bool flag)
 {
-    reporting = flag;
+    if (flag) {
+        reporting = 1;
+    }
+    else {
+        reporting = 0;
+    }
+//    reporting = flag;
 /*    if (reporting)
     {
         specs->setRowCount(1);
@@ -92,7 +116,7 @@ void sd_reporting::setActive(bool flag)
 
 void sd_reporting::setActive(int value)
 {
-    setActive((value != 0)? true: false);
+    reporting = value;
 }
 /*
 void sd_reporting::setSpecs (QStringList data)
@@ -118,6 +142,7 @@ void sd_reporting::setNumBins (int num)
     bins->setColumnCount(num);
 }*/
 
+// selex reporting
 void sd_reporting::setSelex (QStringList data)
 {
     int num = data.last().toInt();
@@ -152,7 +177,7 @@ void sd_reporting::setSelexBins (QStringList data)
     selexBins->setRowData(0, data);
 }
 
-
+// growth reporting
 void sd_reporting::setGrowth (QStringList data)
 {
     int num = data.last().toInt();
@@ -187,7 +212,7 @@ void sd_reporting::setGrowthBins (QStringList data)
     growthBins->setRowData(0, data);
 }
 
-
+// num at Age reporting
 void sd_reporting::setNumAtAge (QStringList data)
 {
     int num = data.last().toInt();
@@ -219,5 +244,39 @@ QStringList sd_reporting::getNumAtAgeBins ()
 void sd_reporting::setNumAtAgeBins (QStringList data)
 {
     numAtAgeAges->setRowData(0, data);
+}
+
+// natMort reporting
+void sd_reporting::setNatMort (QStringList data)
+{
+    int num = data.last().toInt();
+    natMort->setRowData(0, data);
+    setNumNatMortBins(num);
+}
+
+QStringList sd_reporting::getNatMort ()
+{
+    return natMort->getRowData(0);
+}
+
+int sd_reporting::getNumNatMortBins()
+{
+    int num = natMortAges->columnCount();
+    return num;
+}
+
+void sd_reporting::setNumNatMortBins(int num)
+{
+    natMortAges->setColumnCount(num);
+}
+
+QStringList sd_reporting::getNatMortBins ()
+{
+    return natMortAges->getRowData(0);
+}
+
+void sd_reporting::setNatMortBins (QStringList data)
+{
+    natMortAges->setRowData(0, data);
 }
 

@@ -15,6 +15,18 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     pop = model_data->pPopulation;
     currPattern = nullptr;
 
+    // Growth
+    growthBinsView = new tableview();
+    growthBinsView->setParent(this);
+    ui->horizontalLayout_growth_bins->addWidget(growthBinsView);
+    ui->frame_growth_bin_data->setVisible(false);
+    ui->frame_growth_bin_vector_length->setVisible(false);
+    connect (ui->comboBox_growth_bin_method, SIGNAL(currentIndexChanged(int)), this, SLOT(changeGrowthBinMethod(int)));
+    connect (ui->doubleSpinBox_growth_bin_min, SIGNAL(valueChanged(double)), SLOT(changeGrowthBinMin(double)));
+    connect (ui->doubleSpinBox_growth_bin_max, SIGNAL(valueChanged(double)), SLOT(changeGrowthBinMax(double)));
+    connect (ui->doubleSpinBox_growth_bin_width, SIGNAL(valueChanged(double)), SLOT(changeGrowthBinWidth(double)));
+    connect (ui->spinBox_growth_bin_vector_length, SIGNAL(valueChanged(int)), SLOT(changeGrowthBinLength(int)));
+
     // Growth - female
     growthMorphDistView = new tableview();
     growthMorphDistView->setParent(this);
@@ -257,17 +269,9 @@ void population_widget::set_model(ss_model *model)
 {
     if (model != nullptr)
     {
-        if (model_data != nullptr)
-        {
-/*            disconnect (pop->Move()->getMovementDefs(),
-                        SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                        SLOT(moveDefsChanged(QModelIndex,QModelIndex)));
-*/
-        }
         model_data = model;
         pop = model_data->pPopulation;
 
-        // Growth
         connect (pop->Grow()->getCohortParams(), SIGNAL(dataChanged()),
                  SLOT(changeCohortParams()));
         connect (pop->Grow()->getCohortTVParams(), SIGNAL(dataChanged()),
@@ -306,7 +310,6 @@ void population_widget::set_model(ss_model *model)
         changeRecrDevParams();
 
         reset();
-        refresh();
     }
 }
 
@@ -454,6 +457,17 @@ void population_widget::changeGrowthPattern (int num)
 
 void population_widget::refresh()
 {
+    // Growth
+    int value = pop->Grow()->getGrowthBinMethod() - 1;
+    ui->spinBox_growth_bin_vector_length->setValue(pop->Grow()->getNumGrowthBins());
+    ui->doubleSpinBox_growth_bin_max->setValue(pop->Grow()->getGrowthBinMax());
+    ui->doubleSpinBox_growth_bin_min->setValue(pop->Grow()->getGrowthBinMin());
+    ui->doubleSpinBox_growth_bin_width->setValue(pop->Grow()->getGrowthBinWidth());
+    ui->comboBox_growth_bin_method->setCurrentIndex(value);
+//    changeGrowthBinMethod(value);
+    growthBinsView->setModel(pop->Grow()->getGrowthBinTable());
+    growthBinsView->resizeColumnsToContents();
+
     // growth
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
     growthMorphDistView->setHeight(pop->Grow()->getMorphDistModel());
@@ -596,6 +610,7 @@ void population_widget::refresh()
 
 void population_widget::reset()
 {
+    refresh();
 }
 
 void population_widget::setFecundityOption(int opt)
@@ -664,7 +679,8 @@ void population_widget::setMortOption(int opt)
     switch (opt)
     {
     case 0:
-        mortFemParamsView->setHeight(numgen);
+        mortFemParamsView->setHeight(1);
+        mortMaleParamsView->setHeight(numgen - 1);
         break;
     case 1: // breakpoints
         ui->widget_mort_breakpoints->setVisible(true);
@@ -674,7 +690,8 @@ void population_widget::setMortOption(int opt)
     case 2: // lorenzen
         ui->widget_mort_lorenz->setVisible(true);
         ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
-        mortFemParamsView->setHeight(numgen);
+        mortFemParamsView->setHeight(1);
+        mortMaleParamsView->setHeight(numgen - 1);
         break;
     case 3: // specific age
     case 4:
@@ -852,6 +869,69 @@ void population_widget::changeCVmethod (int num)
 void population_widget::changeTimeVaryMethod(int num)
 {
     pop->Grow()->setTimeVaryMethod(num+1);
+}
+
+void population_widget::changeGrowthBinMethod(int value)
+{
+    int method = value + 1;
+    pop->Grow()->setGrowthBinMethod(method);
+    ui->spinBox_growth_bin_vector_length->setEnabled(false);
+    ui->frame_growth_bin_vector_length->setVisible(true);
+    growthBinsView->setEnabled(false);
+    switch (method) {
+    case 1:
+        ui->frame_growth_bin_data->setVisible(false);
+        pop->Grow()->setNumGrowthBins(model_data->get_length_composition()->getNumberBins());
+        ui->spinBox_growth_bin_vector_length->setValue(pop->Grow()->getNumGrowthBins());
+        pop->Grow()->setGrowthBins(model_data->get_length_composition()->getBins());
+        break;
+    case 2:
+        ui->frame_growth_bin_data->setVisible(true);
+        ui->doubleSpinBox_growth_bin_min->setValue(pop->Grow()->getGrowthBinMin());
+        ui->doubleSpinBox_growth_bin_max->setValue(pop->Grow()->getGrowthBinMax());
+        ui->doubleSpinBox_growth_bin_width->setValue(pop->Grow()->getGrowthBinWidth());
+        pop->Grow()->generateGrowthBins();
+        ui->spinBox_growth_bin_vector_length->setValue(pop->Grow()->getNumGrowthBins());
+        growthBinsView->resizeColumnsToContents();
+        break;
+    case 3:
+        ui->frame_growth_bin_data->setVisible(false);
+        ui->spinBox_growth_bin_vector_length->setEnabled(true);
+        growthBinsView->setEnabled(true);
+
+    }
+}
+void population_widget::changeGrowthBinMin(float min)
+{
+    pop->Grow()->setGrowthBinMin(min);
+    if (pop->Grow()->getGrowthBinMethod() == 2) {
+        pop->Grow()->generateGrowthBins();
+        ui->spinBox_growth_bin_vector_length->setValue(pop->Grow()->getNumGrowthBins());
+        growthBinsView->resizeColumnsToContents();
+    }
+}
+void population_widget::changeGrowthBinMax(float max)
+{
+    pop->Grow()->setGrowthBinMax(max);
+    if (pop->Grow()->getGrowthBinMethod() == 2) {
+        pop->Grow()->generateGrowthBins();
+        ui->spinBox_growth_bin_vector_length->setValue(pop->Grow()->getNumGrowthBins());
+        growthBinsView->resizeColumnsToContents();
+    }
+}
+void population_widget::changeGrowthBinWidth(float wid)
+{
+    pop->Grow()->setGrowthBinStep(wid);
+    if (pop->Grow()->getGrowthBinMethod() == 2) {
+        pop->Grow()->generateGrowthBins();
+        ui->spinBox_growth_bin_vector_length->setValue(pop->Grow()->getNumGrowthBins());
+        growthBinsView->resizeColumnsToContents();
+    }
+}
+void population_widget::changeGrowthBinLength(int num)
+{
+    pop->Grow()->setNumGrowthBins(num);
+    growthBinsView->resizeColumnsToContents();
 }
 
 void population_widget::changeGrowthMorphRatio(double ratio)

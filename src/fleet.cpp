@@ -271,7 +271,6 @@ void Fleet::reset()
     set_equ_catch_se(0.1);
     set_catch_se(0.1);
     setCatchMultiplier(0);
-    set_catch_equil(0.0);
     setNumCatchObs(0);
 
     // surveys
@@ -377,7 +376,8 @@ Fleet *Fleet::copy(Fleet *oldfl)
     setCatchUnits(oldfl->getCatchUnits());
     set_catch_se(oldfl->catch_se());
     set_equ_catch_se(oldfl->equ_catch_se());
-    set_catch_equil(oldfl->catch_equil());
+    for (int i = 1; i <= oldfl->getNumSeasons(); i++)
+        set_catch_equil(i, oldfl->catch_equil(i));
     setCatchMultiplier(oldfl->getCatchMultiplier());
     setNumCatchObs(oldfl->getNumCatchObs());
     for (int i = 0; i < retainCatch->rowCount(); i++)
@@ -648,6 +648,9 @@ void Fleet::setGenObservation(int index, int row, QStringList data)
 void Fleet::setNumSeasons(int n_seasons)
 {
     i_num_seasons = n_seasons;
+    d_catch_equil.clear();
+    for (int i = 0; i < n_seasons; i++)
+        d_catch_equil.append(0);
 }
 
 void Fleet::setNumGenders(int num)
