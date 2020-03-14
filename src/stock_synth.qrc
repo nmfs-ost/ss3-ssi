@@ -81,6 +81,7 @@
         <file>icons/admb_icon_128.png</file>
         <file>icons/chart.png</file>
         <file>icons/charts.png</file>
+        <file>icons/SSI_icon.ico</file>
     </qresource>
     <qresource prefix="/">
         <file>icons/ss_pop_icon.png</file>
@@ -96,5 +97,6 @@
         <file>icons/flat_go_button.png</file>
         <file>icons/flat_pause_button.png</file>
         <file>icons/flat_stop_button.png</file>
+        <file>icons/SSI_icon.ico</file>
     </qresource>
 </RCC>

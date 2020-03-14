@@ -263,7 +263,7 @@ RESOURCES += \
     stock_synth.qrc
 
 DISTFILES += \
-    ../ss_gui_readme.txt \
-    ../ss_gui_readme_archive.txt \
-    ../ss_gui_copyright.txt \
-    ss_icon.ico
+    ../SSI_readme.txt \
+    ../SSI_readme_archive.txt \
+    ../SSI_copyright.txt \
+    SSI_icon.ico

@@ -46,6 +46,8 @@ public slots:
 private:
     Ui::chartDialog *ui;
 
+    QFile reportFile;
+
     QSize window;
     QPoint position;
 

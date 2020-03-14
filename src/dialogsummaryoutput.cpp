@@ -25,6 +25,7 @@ dialogSummaryOutput::dialogSummaryOutput(QWidget *parent) :
 
     delete ui->verticalLayout_right;
 
+    reportFile.setFileName(QString("ss_summary.sso"));
     setWindowTitle(tr("ss_summary.sso  Plots"));
 
     connect (ui->pushButton_refresh, SIGNAL(released()), SLOT(refreshData()));
@@ -152,10 +153,13 @@ void dialogSummaryOutput::readData()
 //    float year;
 //    int seas = 0;
 //    int index = 0;
+//    QFile report(QString("ss_summary.sso"));
 
-    QFile report(QString("ss_summary.sso"));
-    if (report.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream stream(&report);
+    maxBmass = 0;
+    maxOther = 0;
+
+    if (reportFile.open(QIODevice::ReadOnly)){// | QIODevice::Text)) {
+        QTextStream stream(&reportFile);
 
 //        seriesNames << "SpwnStck" << "SpwnRcrt" << "Fishing" << "TotCatch";
 //        createCharts(1, seriesNames);
@@ -207,8 +211,8 @@ void dialogSummaryOutput::readData()
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
-                    if (yvalue > maxBmass)
-                        maxBmass = yvalue;
+                    if (yvalue > maxOther)
+                        maxOther = yvalue;
                     Fishing->append(xvalue, yvalue);
                 }
 
@@ -229,14 +233,14 @@ void dialogSummaryOutput::readData()
             }
         }
 
-        report.close();
+        reportFile.close();
     }
 }
 
 void dialogSummaryOutput::refreshSeries()
 {
     axisX->setRange(firstYear, lastYear);
-    axisX->applyNiceNumbers();
+//    axisX->applyNiceNumbers();
     axisY->setRange(0, maxBmass);
     axisY->applyNiceNumbers();
     axisYalt->setRange(0, maxOther);

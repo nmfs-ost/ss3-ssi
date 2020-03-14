@@ -9,7 +9,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setApplicationName(getAppName());
     a.setApplicationVersion(getAppVersion());
-    a.setWindowIcon (QIcon(":/ss_icon.ico"));
+    a.setApplicationDisplayName(QString("SSI"));
+    a.setOrganizationName(getAppOrg());
     a.setStyle("macintosh");
     MainWindow w;
     if (argc > 1)

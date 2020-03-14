@@ -1,5 +1,7 @@
-#V3.30.12;_Stock_Synthesis_by_Richard_Methot_(NOAA)
-#_File written by GUI version 3.3.12.4 
+#V3.30.15;_Stock_Synthesis_by_Richard_Methot_(NOAA)
+#_File written by GUI version 3.30.15.5 
+#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.
+#Foreign copyrights may apply. See copyright.txt for more information.
 #C data file for simple example
 #_observed data: 
 1971 #_StartYr

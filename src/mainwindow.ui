@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="stock_synth.qrc">
-    <normaloff>:/icons/StockSynth_icon_128.png</normaloff>:/icons/StockSynth_icon_128.png</iconset>
+    <normaloff>:/i/icons/SSI_icon.ico</normaloff>:/i/icons/SSI_icon.ico</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -218,7 +218,7 @@
      <x>0</x>
      <y>0</y>
      <width>847</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

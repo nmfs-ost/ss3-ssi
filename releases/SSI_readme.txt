@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.05
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.06
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -17,6 +17,10 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.15.06
+    2020-03-13
+1. Corrected gui to display recr_dist correctly.
 ============================================================================
     3.30.15.05
     2020-03-02

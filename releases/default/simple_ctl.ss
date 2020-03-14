@@ -1,5 +1,7 @@
-#V3.30.12;_Stock_Synthesis_by_Richard_Methot_(NOAA)
-#_File written by GUI version 3.3.12.4 
+#V3.30.15;_Stock_Synthesis_by_Richard_Methot_(NOAA)
+#_File written by GUI version 3.30.15.5 
+#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.
+#Foreign copyrights may apply. See copyright.txt for more information.
 #C growth parameters are estimated
 #C spawner-recruitment bias adjustment Not tuned For optimality
 #_data_and_control_files: simple_dat.ss // simple_ctl.ss
@@ -9,7 +11,7 @@
 #_Cond 1 #_Morph_between/within_stdev_ratio (no read if N_morphs=1)
 #_Cond 1 # vector_Morphdist_(-1_in_first_val_gives_normal_approx)
 #
-2 # recr_dist_method for parameters:  2=main effects for GP, Settle timing, Area; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1
+4 # recr_dist_method for parameters:  2=main effects for GP, Area, Settle timing; 3=each Settle entity; 4=none when N_GP*Nsettle*pop==1
 1 # not yet implemented; Future usage: Spawner-Recruitment: 1=global; 2=by area
 1 # number of recruitment settlement assignments 
 0 # unused option
@@ -21,22 +23,29 @@
 #_Cond 1 1 1 2 4 10 # example move definition for seas=1, morph=1, source=1 dest=2, age1=4, age2=10
 #
 1 #_Nblock_Patterns
-1 #_blocks_per_pattern 
+ 1 #_blocks_per_pattern 
 # begin and end years of blocks
  1970 1970 # pattern 1
 #
 # controls for all timevary parameters 
 1 #_env/block/dev_adjust_method for all time-vary parms (1=warn relative to base parm bounds; 3=no bound check)
+#
 # autogen
-0 0 0 0 0 # autogen 
+0 0 0 0 0 # autogen: 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex
 # where: 0 = autogen all time-varying parms; 1 = read each time-varying parm line; 2 = read then autogen if parm min==-12345
-# 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex
+#
+#_Available timevary codes
+#_Block types: 0: P_block=P_base*exp(TVP); 1: P_block=P_base+TVP; 2: P_block=TVP; 3: P_block=P_block(-1) + TVP
+#_Block_trends: -1: trend bounded by base parm min-max and parms in transformed units (beware); -2: endtrend and infl_year direct values; -3: end and infl as fraction of base range
+#_EnvLinks:  1: P(y)=P_base*exp(TVP*env(y));  2: P(y)=P_base+TVP*env(y);  3: null;  4: P(y)=2.0/(1.0+exp(-TVP1*env(y) - TVP2))
+#_DevLinks:  1: P(y)*=exp(dev(y)*dev_se;  2: P(y)+=dev(y)*dev_se;  3: random walk;  4: zero-reverting random walk with rho;  21-24 keep last dev for rest of years
 #
 # setup for M, growth, maturity, fecundity, recruitment distibution, movement 
 #
 0 #_natM_type:_0=1Parm; 1=N_breakpoints;_2=Lorenzen;_3=agespecific;_4=agespec_withseasinterpolate
   #_no additional input for selected M option; read 1P per morph
-1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_specific_K; 4=not implemented
+#
+1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_specific_K_incr; 4=age_specific_K_decr; 5=age_specific_K_each; 6=NA; 7=NA; 8=growth cessation
 0 #_Age(post-settlement)_for_L1;linear growth below this
 25 #_Growth_Age_for_L2 (999 to use as Linf)
 -999 #_exponential decay for growth above maxage (fixed at 0.2 in 3.24; value should approx initial Z; -999 replicates 3.24)
@@ -51,51 +60,64 @@
 #
 #_growth_parms
 #_ LO HI INIT PRIOR PR_SD PR_type PHASE env_var&link dev_link dev_minyr dev_maxyr dev_PH Block Block_Fxn
- 0.05 0.15 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # NatM_p_1_Fem_GP_1
- -10 45 21.6535 36 10 6 2 0 0 0 0 0 0 0 # L_at_Amin_Fem_GP_1
- 40 90 71.6493 70 10 6 4 0 0 0 0 0 0 0 # L_at_Amax_Fem_GP_1
- 0.05 0.25 0.147297 0.15 0.8 6 4 0 0 0 0 0 0 0 # VonBert_K_Fem_GP_1
- 0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_young_Fem_GP_1
- 0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_old_Fem_GP_1
- -3 3 2.44e-06 2.44e-06 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_1_Fem
- -3 4 3.34694 3.34694 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_2_Fem
- 50 60 55 55 0.8 0 -3 0 0 0 0 0 0 0 # Mat50%_Fem
- -3 3 -0.25 -0.25 0.8 0 -3 0 0 0 0 0 0 0 # Mat_slope_Fem
- -3 3 1 1 0.8 0 -3 0 0 0 0 0 0 0 # Eggs/kg_inter_Fem
- -3 3 0 0 0.8 0 -3 0 0 0 0 0 0 0 # Eggs/kg_slope_wt_Fem
- 0.05 0.15 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # NatM_p_1_Mal_GP_1
- 1 45 0 36 10 0 -3 0 0 0 0 0 0 0 # L_at_Amin_Mal_GP_1
- 40 90 69.5362 70 10 6 4 0 0 0 0 0 0 0 # L_at_Amax_Mal_GP_1
- 0.05 0.25 0.163533 0.15 0.8 6 4 0 0 0 0 0 0 0 # VonBert_K_Mal_GP_1
- 0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_young_Mal_GP_1
- 0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_old_Mal_GP_1
- -3 3 2.44e-06 2.44e-06 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_1_Mal
- -3 4 3.34694 3.34694 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_2_Mal
+# Sex: 1  BioPattern: 1  NatMort
+0.05 0.15 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # NatM_p_1_Fem_GP_1
+# Sex: 1  BioPattern: 1  Growth
+-10 45 21.6535 36 10 6 2 0 0 0 0 0 0 0 # L_at_Amin_Fem_GP_1
+40 90 71.6493 70 10 6 4 0 0 0 0 0 0 0 # L_at_Amax_Fem_GP_1
+0.05 0.25 0.147297 0.15 0.8 6 4 0 0 0 0 0 0 0 # VonBert_K_Fem_GP_1
+0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_young_Fem_GP_1
+0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_old_Fem_GP_1
+# Sex: 1  BioPattern: 1  WtLen
+-3 3 2.44e-06 2.44e-06 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_1_Fem_GP_1
+-3 4 3.34694 3.34694 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_2_Fem_GP_1
+# Sex: 1  BioPattern: 1  Maturity&Fecundity
+50 60 55 55 0.8 0 -3 0 0 0 0 0 0 0 # Mat50%_Fem_GP_1
+-3 3 -0.25 -0.25 0.8 0 -3 0 0 0 0 0 0 0 # Mat_slope_Fem_GP_1
+-3 3 1 1 0.8 0 -3 0 0 0 0 0 0 0 # Eggs/kg_inter_Fem_GP_1
+-3 3 0 0 0.8 0 -3 0 0 0 0 0 0 0 # Eggs/kg_slope_wt_Fem_GP_1
+# Sex: 2  BioPattern: 1  NatMort
+0.05 0.15 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # NatM_p_1_Mal_GP_1
+# Sex: 2  BioPattern: 1  Growth
+1 45 0 36 10 0 -3 0 0 0 0 0 0 0 # L_at_Amin_Mal_GP_1
+40 90 69.5362 70 10 6 4 0 0 0 0 0 0 0 # L_at_Amax_Mal_GP_1
+0.05 0.25 0.163533 0.15 0.8 6 4 0 0 0 0 0 0 0 # VonBert_K_Mal_GP_1
+0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_young_Mal_GP_1
+0.05 0.25 0.1 0.1 0.8 0 -3 0 0 0 0 0 0 0 # CV_old_Mal_GP_1
+# Sex: 2  BioPattern: 1  WtLen
+-3 3 2.44e-06 2.44e-06 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_1_Mal_GP_1
+-3 4 3.34694 3.34694 0.8 0 -3 0 0 0 0 0 0 0 # Wtlen_2_Mal_GP_1
+# Hermaphroditism 
+#  Recruitment Distribution  
  0  0  0  0  0  0 -4  0  0  0  0  0  0  0 # RecrDist_GP_1
  0  0  0  0  0  0 -4  0  0  0  0  0  0  0 # RecrDist_Area_1
  0  0  0  0  0  0 -4  0  0  0  0  0  0  0 # RecrDist_Timing_1
- 0.1 10 1 1 1 0 -1 0 0 0 0 0 0 0 # CohortGrowDev
- 1e-06 0.999999 0.5 0.5 0.5 0 -99 0 0 0 0 0 0 0 # FracFemale_GP_1
+#  Cohort growth dev base
+0.1 10  1  1  1  0 -1  0  0  0  0  0  0  0 # CohortGrowDev
+#  Movement
+#  Age Error from parameters
+#  catch multiplier
+#  fraction female, by GP
+1e-06 0.999999 0.5 0.5 0.5  0 -99  0  0  0  0  0  0  0 #  # FracFemale_GP_1
 #
 # timevary MG parameters 
 #_ LO HI INIT PRIOR PR_SD PR_type PHASE
 #_Cond -2 2 0 0 -1 99 -2 #_placeholder when no time-vary parameters
-# info on dev vectors created for MGparms are reported with other devs after tag parameter section 
 #
 #_seasonal_effects_on_biology_parms
   0  0  0  0  0  0  0  0  0  0 # femwtlen1,femwtlen2,mat1,mat2,fec1,fec2,Malewtlen1,malewtlen2,L1,K
 #_ LO HI INIT PRIOR PR_SD PR_type PHASE
 #_Cond -2 2 0 0 -1 99 -2 #_placeholder when no seasonal MG parameters
 #
-3 #_Spawner-Recruitment; Options: 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm; 9=Shepard_3Parm_transformed; 10=RickerPower_3parm_transformed
+3 #_SR_function: 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm
 0 # 0/1 to use steepness in initial equ recruitment calculation
 0 # future feature:  0/1 to make realized sigmaR a function of SR curvature
 #_ LO HI INIT PRIOR PR_SD PR_type PHASE env-var use_dev dev_mnyr dev_mxyr dev_PH Block Blk_Fxn  #  parm_name
-   3   31 8.81505 10.3   10    0    1    0    0    0    0    0    0    0 # 1
- 0.2    1 0.614248  0.7 0.05    1    4    0    0    0    0    0    0    0 # 2
-   0    2  0.6  0.8  0.8    0   -4    0    0    0    0    0    0    0 # 8
-  -5    5    0    0    1    0   -4    0    0    0    0    0    0    0 # 9
-   0    0    0    0    0    0  -99    0    0    0    0    0    0    0 # 10
+   3   31 8.81505 10.3   10    0    1    0    0    0    0    0    0    0 # SR_LN(R0)
+ 0.2    1 0.614248  0.7 0.05    1    4    0    0    0    0    0    0    0 # SR_BH_steep
+   0    2  0.6  0.8  0.8    0   -4    0    0    0    0    0    0    0 # SR_sigmaR
+  -5    5    0    0    1    0   -4    0    0    0    0    0    0    0 # SR_regime
+   0    0    0    0    0    0  -99    0    0    0    0    0    0    0 # SR_autocorr
 1 #do_recdev:  0=none; 1=devvector; 2=simple deviations
 1971 # first year of main recr_devs; early devs can preceed this era
 2001 # last year of main recr_devs; forecast devs start in following year
@@ -130,28 +152,31 @@
 # if Fmethod=2; read overall start F value; overall phase; N detailed inputs to read
 # if Fmethod=3; read N iterations for tuning for Fmethod 3
 4 # N iterations for tuning F in hybrid method (recommend 3 to 7)
-# Fleet Year Seas F_value se phase (for detailed setup of F_Method=2)
+# Fleet Yr Seas F_value se phase (for detailed setup of F_Method=2; -Yr to fill remaining years)
 #
 #_initial_F_parms; count = 0
 #_ LO HI INIT PRIOR PR_SD PR_type PHASE
 # 
 
 #_Q_setup for fleets with cpue or survey data
-#_1:  link type: (1=simple q, 1 parm; 2=mirror simple q, 1 mirrored parm; 3=q and power, 2 parm)
-#_2:  extra input for link, i.e. mirror fleet
-#_3:  0/1 to select extra sd parameter
-#_4:  0/1 for biasadj or not
-#_5:  0/1 to float
+#_1:  fleet number)
+#_2:  link type: (1=simple q, 1 parm; 2=mirror simple q, 1 mirrored parm; 3=q and power, 2 parm)
+#_3:  extra input for link, i.e. mirror fleet
+#_4:  0/1 to select extra sd parameter
+#_5:  0/1 for biasadj or not
+#_6:  0/1 to float
+#_survey: 7 Depletion is a depletion fleet
+#_Q_setup(f,2)=0; add 1 to phases of all parms; only R0 active in new phase 1
 #_fleet   link link_info extra_se biasadj float # fleetname
       2      1      0      1      0      0  #  SURVEY1
       3      1      0      0      0      0  #  SURVEY2
   -9999      0      0      0      0      0  #  terminator
 #
 #_Q_parms(if_any);Qunits_are_ln(q)
-# LO HI INIT PRIOR PR_SD PR_type PHASE env-var use_dev dev_mnyr dev_mxyr dev_PH Block Blk_Fxn # parm_name
-  -7   5   0.516018   0   1   0   1   0   0   0   0   0   0   0  #  LnQ_base_SURVEY1(2)
-  0   0.5   0   0.05   1   0   -4   0   0   0   0   0   0   0   #  Q_extraSD_SURVEY1(2)
-  -7   5   -6.6281   0   1   0   1   0   0   0   0   0   0   0  #  LnQ_base_SURVEY2(3)
+# LO      HI      INIT    PRIOR   PR_SD   PR_type  PHASE   env-var  use_dev  dev_mnyr dev_mxyr dev_PH   Block   Blk_Fxn # parm_name
+      -7        5 0.516018        0        1        0        1        0        0        0        0        0        0        0 # LnQ_base_SURVEY1(2)
+       0      0.5        0     0.05        1        0       -4        0        0        0        0        0        0        0 # Q_extraSD_SURVEY1(2)
+      -7        5  -6.6281        0        1        0        1        0        0        0        0        0        0        0 # LnQ_base_SURVEY2(3)
 # timevary Q parameters
 #_      LO        HI      INIT     PRIOR   PR_SD  PR_type      PHASE
 # info on dev vectors created for Q parms are reported with other devs after tag parameter section 
@@ -178,7 +203,7 @@
   1   0   0   0 # 2 SURVEY1
   0   0   0   0 # 3 SURVEY2
 #
-#_age_selex_types
+#_age_selex_patterns
 #Pattern:_0; parm=0; selex=1.0 for ages 0 to maxage
 #Pattern:_10; parm=0; selex=1.0 for ages 1 to maxage
 #Pattern:_11; parm=2; selex=1.0  for specified min-max age
@@ -195,20 +220,27 @@
 #Pattern:_26; parm=3; exponential-logistic in age
 #Pattern:_27; parm=3+special; cubic spline in age
 #Pattern:_42; parm=2+nages+1; // cubic spline; with 2 additional param for scaling (average over bin range)
+#_discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention
 #_Pattern Discard Male Special
  11   0   0   0 # 1 FISHERY
  11   0   0   0 # 2 SURVEY1
  11   0   0   0 # 3 SURVEY2
 #
 #_ LO   HI   INIT  PRIOR PR_SD PR_type PHASE env-var use_dev dev_mnyr dev_mxyr dev_PH Block Blk_Fxn # parm_name
+# 1   FISHERY LenSelex
     19     80 53.6411     50   0.01      1      2      0      0      0      0      0      0      0 # SizeSel_P1_FISHERY(1)
   0.01     60 18.9232     15   0.01      1      3      0      0      0      0      0      0      0 # SizeSel_P2_FISHERY(1)
+# 2   SURVEY1 LenSelex
     19     70 36.653     30   0.01      1      2      0      0      0      0      0      0      0 # SizeSel_P1_SURVEY1(2)
   0.01     60 6.59179     10   0.01      1      3      0      0      0      0      0      0      0 # SizeSel_P2_SURVEY1(2)
+# 3   SURVEY2 LenSelex
+# 1   FISHERY AgeSelex
      0     40      0      5     99      0     -1      0      0      0      0      0      0      0 # AgeSel_P1_FISHERY(1)
      0     40     40      6     99      0     -1      0      0      0      0      0      0      0 # AgeSel_P2_FISHERY(1)
+# 2   SURVEY1 AgeSelex
      0     40      0      5     99      0     -1      0      0      0      0      0      0      0 # AgeSel_P1_SURVEY1(2)
      0     40     40      6     99      0     -1      0      0      0      0      0      0      0 # AgeSel_P2_SURVEY1(2)
+# 3   SURVEY2 AgeSelex
      0     40      0      5     99      0     -1      0      0      0      0      0      0      0 # AgeSel_P1_SURVEY2(3)
      0     40      0      6     99      0     -1      0      0      0      0      0      0      0 # AgeSel_P2_SURVEY2(3)
 # timevary selex parameters
@@ -219,7 +251,7 @@
 #_no 2D_AR1 selex offset used
 #
 # Tag loss and Tag reporting parameters go next
-0 # TG_custom:  0=no read; 1=read if tags exist
+0 # TG_custom:  0=no read; 1=read 
 #_Cond -6 6 1 1 2 0.01 -4 0 0 0 0 0 0 0  #_placeholder if no parameters
 #
 # Input variance adjustments factors: 
@@ -234,19 +266,21 @@
  -9999    1     0  # terminator
 #
 4 #_maxlambdaphase
-1 #__sd_offset; must be 1 if any growthCV, sigmaR, or survey extraSD is an estimated parameter
+1 #_sd_offset; must be 1 if any growthCV, sigmaR, or survey extraSD is an estimated parameter
 # read 3 changes to default Lambdas (default value is 1.0)
 # Like_comp codes:  1=surv; 2=disc; 3=mnwt; 4=length; 5=age; 6=SizeFreq; 7=sizeage; 8=catch; 9=init_equ_catch; 
-# 10=recrdev; 11=parm_prior; 12=parm_dev; 13=CrashPen; 14=Morphcomp; 15=Tag-comp; 16=Tag-negbin; 17=F_ballpark
+# 10=recrdev; 11=parm_prior; 12=parm_dev; 13=CrashPen; 14=Morphcomp; 15=Tag-comp; 16=Tag-negbin; 17=F_ballpark; 18=initEQregime
 #like_comp  fleet  phase  value  sizefreq_method
- 1 2 2 1 1
- 4 2 2 1 1
- 4 2 3 1 1
+  1   2   2   1   1 
+  4   2   2   1   1 
+  4   2   3   1   1 
  -9999  1  1  1  1  # terminator
-1 # (0/1) read specs for more stddev reporting 
- 1 1 -1 5 1 5 1 -1 5 # selex type, len/age, year, N selex bins, Growth pattern, N growth ages, NatAge_area(-1 for all), NatAge_yr, N Natages
- 5 15 25 35 43 # vector with selex std bin picks (-1 in first bin to self-generate)
- 1 2 14 26 40 # vector with growth std bin picks (-1 in first bin to self-generate)
- 1 2 14 26 40 # vector with NatAge std bin picks (-1 in first bin to self-generate)
+1 # (0/1/2) read specs for more stddev reporting 
+ 1  1 -1  5 # Selectivity: fleet, len/age, year, N bins (4 values)
+ 1  5 # Growth: pattern, N growth ages (2 values)
+ 1 -1  5 # Numbers-at-Age: area(-1 for all), year, N ages (3 values)
+5 15 25 35 43 # vector with selex std bin picks (-1 in first bin to self-generate)
+1 2 14 26 40 # vector with growth std bin picks (-1 in first bin to self-generate)
+1 2 14 26 40 # vector with NatAge std bin picks (-1 in first bin to self-generate)
 999
 

@@ -1,4 +1,5 @@
 #include <QWidget>
+#include <QMessageBox>
 #include <cmath>
 
 #include "population_widget.h"
@@ -1373,6 +1374,14 @@ void population_widget::changeRecrDistAssignments(int method)
         pop->SR()->setNumDistParams(pop->SR()->getNumAssignments());
         for (i = 0; i < pop->SR()->getNumAssignments(); i++)
             pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Assignmnt_%1").arg(QString::number(i+1)));
+    }
+    else if (method == 4)
+    {
+        num = pop->Grow()->getNum_patterns() *
+                model_data->get_num_areas() *
+                pop->SR()->getNumAssignTimings();
+//        if (num == 1)
+            pop->SR()->setNumDistParams(0);
     }
 }
 

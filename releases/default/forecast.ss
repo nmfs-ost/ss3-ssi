@@ -1,5 +1,7 @@
-#V3.30.12;_Stock_Synthesis_by_Richard_Methot_(NOAA)
-#_File written by GUI version 3.3.12.4 
+#V3.30.15;_Stock_Synthesis_by_Richard_Methot_(NOAA)
+#_File written by GUI version 3.30.15.5 
+#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.
+#Foreign copyrights may apply. See copyright.txt for more information.
 #C generic forecast file
 # for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr
 1    #_Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F_0.1,F_msy 

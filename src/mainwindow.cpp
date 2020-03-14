@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // set up the ui
     ui->setupUi(this);
     setWindowTitle(tr(app_name));
-    setWindowIcon(QIcon(":icons/StockSynth_icon_128.png"));
+    setWindowIcon(QIcon(":icons/SSI_icon.ico"));
 
     app_dir = qApp->applicationDirPath();
     mainScrn = 0;
