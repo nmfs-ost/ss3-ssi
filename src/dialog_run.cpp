@@ -83,6 +83,7 @@ void Dialog_run::showRptCharts()
 {
     charts->show();
     charts->refreshData();
+
 }
 
 //PATH=%PATH%;R_exe
