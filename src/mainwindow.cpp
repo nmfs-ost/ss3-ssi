@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
+#include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QUrl>
 #include <QSettings>
@@ -30,6 +31,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowIcon(QIcon(":icons/StockSynth_icon_128.png"));
 
     readSettings();
+    int screen = qApp->desktop()->screenNumber(this);
+    if (screen < 0) {
+        resize(QSize(700, 600));
+        move(QPoint(10, 10));
+    }
 
     // set up information dock widget
 

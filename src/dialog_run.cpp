@@ -81,6 +81,7 @@ void Dialog_run::showRptCharts()
 {
     charts->show();
     charts->refreshData();
+
 }
 
 void Dialog_run::showWarnFile()
