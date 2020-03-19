@@ -24,14 +24,21 @@ public:
     tablemodel *getTable() const;
     void setTable(tablemodel *value);
 
+    void closeTable();
+
+public slots:
+    void moveEvent(QMoveEvent *event);
+    void resizeEvent(QResizeEvent *event);
+    void closeEvent(QCloseEvent *event);
+    void setVisible(bool flag);
+
 private:
     Ui::DialogTable *ui;
 
     tablemodel *table;
     tableview *view;
 
-    QSize size;
-    QRect rect;
+    QRect currRect;
 };
 
 #endif // DIALOGTABLE_H

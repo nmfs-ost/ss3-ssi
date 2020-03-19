@@ -12,6 +12,8 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 
+#include "dialogtable.h"
+
 QT_CHARTS_USE_NAMESPACE
 
 namespace Ui {
@@ -34,6 +36,8 @@ public slots:
     void refreshData();
     void readData();
     void refreshSeries();
+    void showTable(bool flag);
+    void tableClosed();
 //    void createCharts(int areaNum, QStringList serNames);
 //    void removeCharts();
 //    void removeCharts(QChart *cht, QList<QLineSeries *>seriesList);
@@ -45,6 +49,9 @@ public slots:
 
 private:
     Ui::chartDialog *ui;
+
+    tablemodel *table;
+    DialogTable *tabledialog;
 
     QFile reportFile;
 

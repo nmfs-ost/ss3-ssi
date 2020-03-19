@@ -36,11 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
     app_dir = qApp->applicationDirPath();
     mainScrn = 0;
     readSettings();
-    int screen = qApp->desktop()->screenNumber(this);
-    if (screen < 0) {
-        resize(QSize(700, 600));
-        move(QPoint(10, 10));
-    }
 
     // set up information dock widget
 

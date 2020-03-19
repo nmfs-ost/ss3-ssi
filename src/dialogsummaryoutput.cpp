@@ -23,13 +23,20 @@ dialogSummaryOutput::dialogSummaryOutput(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    table = new tablemodel();
+    tabledialog = new DialogTable(this);
+    tabledialog->setTable(table);
+
     delete ui->verticalLayout_right;
 
     reportFile.setFileName(QString("ss_summary.sso"));
     setWindowTitle(tr("ss_summary.sso  Plots"));
 
     connect (ui->pushButton_refresh, SIGNAL(released()), SLOT(refreshData()));
+    connect (ui->pushButton_showTable, SIGNAL(toggled(bool)), SLOT(showTable(bool)));
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));
+
+    connect (tabledialog, SIGNAL(close()), SLOT(tableClosed()));
 
     createChart();
     axisYalt->setRange(0, 1);
@@ -108,6 +115,7 @@ void dialogSummaryOutput::reset()
 dialogSummaryOutput::~dialogSummaryOutput()
 {
     deleteChart();
+    delete tabledialog;
 //    removeCharts();
 //    delete axisX;
 //    delete axisY;
@@ -167,8 +175,23 @@ void dialogSummaryOutput::readData()
         while (!stream.atEnd())
         {
             line = stream.readLine();
+            if      (line.contains("#_LIKELIHOOD", Qt::CaseInsensitive))
+            {
+                int row = 1;
+                line = stream.readLine();
+                values = line.split(" ", QString::SkipEmptyParts);
+                table->setHeader(values);
+                while (!line.contains("#_PARAMETERS")) {
+                    line = stream.readLine();
+                    values = line.split(" ", QString::SkipEmptyParts);
+                    table->setRowHeader(row, values.takeAt(0));
+                    table->setRowData(row, values);
+                    row++;
+                }
+                table->setRowCount(row-1);
+            }
 
-            if    (line.contains("SSB_"))
+            else if (line.contains("SSB_"))
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');
@@ -278,6 +301,13 @@ void dialogSummaryOutput::refreshSeries()
     TotalCatch->attachAxis(axisY);
 }
 
+void dialogSummaryOutput::showTable(bool flag) {
+    tabledialog->setVisible(flag);
+}
+
+void dialogSummaryOutput::tableClosed() {
+    ui->pushButton_showTable->setChecked(false);
+}
 /*void dialogSummaryOutput::createCharts(int areaNum, QStringList serNames)
 {
     QChart *newcht = nullptr;
