@@ -113,7 +113,8 @@ SOURCES += main.cpp\
     ss_math.cpp \
     dialogsummaryoutput.cpp \
     dialog_copyright.cpp \
-    dialogtable.cpp
+    dialogtable.cpp \
+    mainwindowrun.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -215,7 +216,8 @@ HEADERS  += mainwindow.h \
     dialogselectivityequationview.h \
     dialogsummaryoutput.h \
     dialog_copyright.h \
-    dialogtable.h
+    dialogtable.h \
+    mainwindowrun.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -258,7 +260,8 @@ FORMS    += mainwindow.ui \
     dialogparameterview.ui \
     doublelimitspinbox.ui \
     dialog_copyright.ui \
-    dialogtable.ui
+    dialogtable.ui \
+    mainwindowrun.ui
 
 OTHER_FILES +=
 

@@ -27,10 +27,17 @@ public:
     void closeTable();
 
 public slots:
+    void setHeaders(QStringList header);
+    void setRowHeader(int row, QString header);
+    void setRowData (int row, QStringList data);
+
     void moveEvent(QMoveEvent *event);
     void resizeEvent(QResizeEvent *event);
     void closeEvent(QCloseEvent *event);
     void setVisible(bool flag);
+
+signals:
+    void tableClosed();
 
 private:
     Ui::DialogTable *ui;

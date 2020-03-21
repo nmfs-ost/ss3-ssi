@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.06
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.07
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -17,6 +17,16 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.15.07
+    2020-03-20
+1. Changed Options menu to Links, moved default dir and model to File menu.
+2. Deleted Data menu.
+3. SS3.par label changed to SS.par
+4. Choose file for ctrl and dat file now work.
+5. Run window now is non-modal (can keep run window up while editing in
+   other windows.
+6. Added likelihood table to run summary charts.
 ============================================================================
     3.30.15.06
     2020-03-13

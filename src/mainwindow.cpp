@@ -8,6 +8,7 @@
 #include "dialog_run.h"
 #include "documentdialog.h"
 #include "message.h"
+#include "mainwindowrun.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -36,6 +37,11 @@ MainWindow::MainWindow(QWidget *parent) :
     app_dir = qApp->applicationDirPath();
     mainScrn = 0;
     readSettings();
+    dRun = new Dialog_run(this);
+    dRun->setExe(ss_exe);
+    dRun->setDir(current_dir);
+    dRun->setRExe(R_exe);
+    dRun->hide();
 
     // set up information dock widget
 
@@ -64,6 +70,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->dockWidget_help, SIGNAL(visibilityChanged(bool)), ui->actionTitle_Window, SLOT(setChecked(bool)));
     connect (ui->actionToolbar, SIGNAL(toggled(bool)), ui->mainToolBar, SLOT(setVisible(bool)));
     connect (ui->mainToolBar, SIGNAL(visibilityChanged(bool)), ui->actionToolbar, SLOT(setChecked(bool)));
+
+    connect (dRun, SIGNAL(runCompleted()), SLOT(runComplete()));
 
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Help window set up finished.");
@@ -195,6 +203,10 @@ void MainWindow::setupMenus (QMenuBar *main)
 {
     main->clear();
     QMenu *fileMenu = new QMenu(QString("&File"), main); // fileMenu () (ui->menu_File);
+    fileMenu->addAction (ui->actionReturn_to_default_model);
+    fileMenu->addAction (ui->actionSet_default_model);
+    fileMenu->addAction (ui->actionSelect_default_directory);
+    fileMenu->addSeparator();
     fileMenu->addAction (ui->action_New);
     fileMenu->addAction (ui->action_Open);
     fileMenu->addAction (ui->action_Save_data);
@@ -203,12 +215,7 @@ void MainWindow::setupMenus (QMenuBar *main)
 //    fileMenu.addAction (ui->action_Print);
 //    fileMenu.addSeparator();
     fileMenu->addAction (ui->action_Exit);
-    QMenu *dataMenu = new QMenu(QString("&Data"), main); // dataMenu (ui->menuData);
-//    dataMenu.addAction (ui->action_Import_Additional_Data_Observations);
-//    dataMenu.addAction (ui->action_Add_Rows_to_Data_Grids);
-    dataMenu->addAction (ui->action_Remove_blank_lines_from_data_grids);
-//    dataMenu.addAction (ui->action_Display_data_snapshot);
-//    dataMenu.addAction (ui->action_Display_selected_data_observations);
+
     QMenu *viewMenu = new QMenu(QString("&View"), main); // viewMenu (ui->menuView);
 //    viewMenu->addAction (ui->action_Report_File);
 //    viewMenu->addSeparator();
@@ -217,17 +224,16 @@ void MainWindow::setupMenus (QMenuBar *main)
     viewMenu->addSeparator();
     viewMenu->addAction (ui->actionTitle_Window);
     viewMenu->addAction (ui->actionToolbar);
+
     QMenu *run_Menu = new QMenu(QString("&Run"), main); // run_Menu (ui->menu_Run);
     run_Menu->addAction (ui->action_Run_Stock_Synthesis);
-    QMenu *optsMenu = new QMenu(QString("&Options"), main); // opt_Menu (ui->menu_Options);
-    optsMenu->addAction (ui->actionSet_default_model);
-    optsMenu->addAction (ui->actionReturn_to_default_model);
-    optsMenu->addAction (ui->actionSelect_default_directory);
-    optsMenu->addSeparator();
+
+    QMenu *optsMenu = new QMenu(QString("&Links"), main); // opt_Menu (ui->menu_Options);
     optsMenu->addAction (ui->actionLocate_SS_executable);
     optsMenu->addAction(ui->actionLocate_R_executable);
     optsMenu->addSeparator();
     optsMenu->addAction (ui->actionLocate_documents);
+
     QMenu *windMenu = new QMenu(QString("&Windows"), main); // windMenu (ui->menu_Windows);
     windMenu->addAction (ui->action_Files);
     windMenu->addAction (ui->action_Model_Data);
@@ -236,6 +242,7 @@ void MainWindow::setupMenus (QMenuBar *main)
     windMenu->addAction (ui->action_Forecast);
     windMenu->addSeparator();
     windMenu->addAction (ui->actionTitle_Window);
+
     QMenu *helpMenu = new QMenu(QString("&Help"), main); // helpMenu (ui->menu_Help);
     helpMenu->addAction (ui->action_User_Manual);
     helpMenu->addAction (ui->actionAbout_SS_GUI);
@@ -249,7 +256,7 @@ void MainWindow::setupMenus (QMenuBar *main)
 //    helpMenu.addAction (ui->action_Using_SS);
     //    mainMenu.clear();
     main->addMenu(fileMenu);
-    main->addMenu(dataMenu);
+//    main->addMenu(dataMenu);
     main->addMenu(viewMenu);
     main->addMenu(run_Menu);
     main->addMenu(optsMenu);
@@ -367,6 +374,7 @@ void MainWindow::openNewDirectory()
 
         current_dir = new_dir;
         files->new_directory(current_dir, true);
+        dRun->setDir(current_dir);
     }
 }
 
@@ -428,6 +436,7 @@ void MainWindow::openDirectory(QString fname)
         current_dir = start_file.absolutePath();
         QDir::setCurrent(current_dir);
         files->new_directory(current_dir);
+        dRun->setDir(current_dir);
         readFiles();
         files->setReadWtAtAge(modelData->getReadWtAtAge());
     }
@@ -460,6 +469,7 @@ void MainWindow::openControlFile()
     if (!fname.isEmpty())
     {
         files->set_control_file(fname);
+        files->write_starter_file();
         readFiles();
     }
 }
@@ -483,6 +493,7 @@ void MainWindow::openDataFile()
     if (!fname.isEmpty())
     {
         files->set_data_file(fname);
+        files->write_starter_file();
         readFiles();
     }
 }
@@ -961,14 +972,19 @@ void MainWindow::showWebpage(QString pg)
 void MainWindow::run()
 {
     saveFiles();
-    Dialog_run drun(this);
-    drun.setDir(current_dir);
+//    Dialog_run dRun(this);
+    dRun->setDir(current_dir);
     while (!QFileInfo(ss_exe).exists())
         locateSSExecutable();
-    drun.setExe(ss_exe);
-    drun.setRExe(R_exe);
-    drun.exec();
+    dRun->setExe(ss_exe);
+    dRun->setRExe(R_exe);
+    dRun->show();
+}
+
+void MainWindow::runComplete()
+{
     files->read_run_num_file();
+
 }
 
 void MainWindow::runConversion()
@@ -1081,6 +1097,7 @@ void MainWindow::locateSSExecutable()
 //    QSettings settings (app_copyright_org, app_name);
     locateExecutable(ss_exe, "SS Executable", "ss");
     changeExecutable(QString("ss_exe"), ss_exe);
+    dRun->setExe(ss_exe);
 /*    settings.beginGroup("MainWindow");
     settings.setValue("executable", ss_exe);
     settings.endGroup();*/
@@ -1094,18 +1111,10 @@ void MainWindow::locateSSConverter()
     if (!filename.isEmpty())
         changeExecutable(QString("trans_exe"), filename);*/
 }
-void MainWindow::changeSSExecutable(QString filename) {
-    changeExecutable(QString("ss_exe"), filename);
-/*    QSettings settings (app_copyright_org, app_name);
-    ss_trans_exe = filename;
-    settings.beginGroup("MainWindow");
-    settings.setValue("executable", filename);
-    settings.endGroup();*/
-}
 
 void MainWindow::changeExecutable(QString key, QString filename) {
     QSettings settings (app_copyright_org, app_name);
-    ss_trans_exe = filename;
+
     settings.beginGroup("MainWindow");
     settings.setValue(key, filename);
     settings.endGroup();
@@ -1116,6 +1125,7 @@ void MainWindow::locateRExecutable()
 //    QSettings settings (app_copyright_org, app_name);
     locateExecutable(R_exe, "R Executable", "R");
     changeExecutable(QString("r_exe"), R_exe);
+    dRun->setRExe(R_exe);
 /*    settings.beginGroup("MainWindow");
     settings.setValue("Rexecutable", R_exe);
     settings.endGroup();*/

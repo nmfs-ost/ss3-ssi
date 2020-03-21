@@ -12,6 +12,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui(new Ui::Dialog_run)
 {
     ui->setupUi(this);
+
     ui->pushButton_increase->setVisible(false);
     ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
@@ -29,7 +30,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
     connect (ui->pushButton_cancel, SIGNAL(clicked()), SLOT(rejected()));
     connect (ui->pushButton_rptCharts, SIGNAL(clicked()), SLOT(showRptCharts()));
-//    ui->pushButton_RCharts->setEnabled(false);
+
     connect (ui->pushButton_RCharts, SIGNAL(clicked()), SLOT(generateRCharts()));
     connect (ui->pushButton_showWarn, SIGNAL(clicked()), SLOT(showWarnFile()));
     connect (ui->pushButton_showEcho, SIGNAL(clicked()), SLOT(showEchoFile()));
@@ -234,6 +235,7 @@ void Dialog_run::setDir(QString dir)
     QString warnfile(dir + QChar('/') + QString("Warning.sso"));
     stocksynth->setWorkingDirectory(dir);
     ui->label_directory->setText(dir);
+    charts->setDirectory(dir);
 }
 
 void Dialog_run::changeExe()

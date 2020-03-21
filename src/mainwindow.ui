@@ -814,7 +814,10 @@
      <normaloff>:/icons/book_32.png</normaloff>:/icons/book_32.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;User Manual</string>
+    <string>SS &amp;User Manual</string>
+   </property>
+   <property name="iconText">
+    <string>SS User Manual</string>
    </property>
    <property name="toolTip">
     <string>Open the User Manual</string>
@@ -949,7 +952,7 @@
   </action>
   <action name="actionSelect_default_directory">
    <property name="text">
-    <string>Select default directory</string>
+    <string>Set default directory</string>
    </property>
   </action>
   <action name="actionAbout_SS_GUI">
@@ -981,12 +984,15 @@
   </action>
   <action name="actionSet_default_model">
    <property name="text">
-    <string>Set current as default model</string>
+    <string>Set current as default</string>
+   </property>
+   <property name="toolTip">
+    <string>Set current model as default</string>
    </property>
   </action>
   <action name="actionReturn_to_default_model">
    <property name="text">
-    <string>Return to default model</string>
+    <string>Default model</string>
    </property>
   </action>
   <action name="actionShow_copyright_info">

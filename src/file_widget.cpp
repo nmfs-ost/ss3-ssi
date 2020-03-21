@@ -218,13 +218,13 @@ void file_widget::set_control_file(QString fname, bool keep)
     else if (controlFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         controlFile->setFileName(fname);
-    }
 
-    if (fname.contains('/'))
-        control_file_name = fname.section('/', -1, -1);
-    else
-        control_file_name = fname.section('\\', -1, -1);
-    ui->label_control_file->setText(fname);
+        if (fname.contains('/'))
+            control_file_name = fname.section('/', -1, -1);
+        else
+            control_file_name = fname.section('\\', -1, -1);
+        ui->label_control_file->setText(fname);
+    }
 }
 
 QString file_widget::get_control_file()
@@ -236,17 +236,17 @@ void file_widget::set_data_file(QString fname, bool keep)
 {
     if (dataFile == nullptr)
     {
-        dataFile = new ss_file(fname);\
+        dataFile = new ss_file(fname);
     }
     else if (dataFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         dataFile->setFileName(fname);
-    }
-    data_file_name = fname.section('/', -1, -1);
-    data_file_name = data_file_name.section('\\', -1, -1);
+        data_file_name = fname.section('/', -1, -1);
+        data_file_name = data_file_name.section('\\', -1, -1);
 
-    ui->label_data_file->setText(dataFile->fileName());
-    ui->label_data_file->repaint();
+        ui->label_data_file->setText(dataFile->fileName());
+        ui->label_data_file->repaint();
+    }
 }
 
 QString file_widget::get_data_file()

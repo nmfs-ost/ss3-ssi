@@ -2051,7 +2051,7 @@ void DialogSelexEquationView::dblNormEndpts() {
         setJoinTwo(20);
 
         showBins(true);
-        showJoins(2);
+//        showJoins(2);
         cht->removeSeries(valSeries);
 
         join1Series = new QLineSeries(cht);

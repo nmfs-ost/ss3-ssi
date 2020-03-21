@@ -17,26 +17,34 @@ QT_CHARTS_USE_NAMESPACE
 #include "dialogsummaryoutput.h"
 #include "ui_chartdialog.h"
 
+#define REPORTFILE  "ss_summary.sso"
+
+
 dialogSummaryOutput::dialogSummaryOutput(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::chartDialog)
 {
     ui->setupUi(this);
 
+    ui->pushButton_showTable->setText("Show Likelihoods");
+
     table = new tablemodel();
     tabledialog = new DialogTable(this);
     tabledialog->setTable(table);
+    tabledialog->setTitle(QString("Likelihoods"));
 
     delete ui->verticalLayout_right;
 
-    reportFile.setFileName(QString("ss_summary.sso"));
-    setWindowTitle(tr("ss_summary.sso  Plots"));
+    reportFile.setFileName(QString(REPORTFILE));
+    setWindowTitle(tr("SS Summary Charts: ss_summary.sso"));
 
     connect (ui->pushButton_refresh, SIGNAL(released()), SLOT(refreshData()));
     connect (ui->pushButton_showTable, SIGNAL(toggled(bool)), SLOT(showTable(bool)));
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));
 
-    connect (tabledialog, SIGNAL(close()), SLOT(tableClosed()));
+    connect (tabledialog, SIGNAL(tableClosed()), SLOT(closeTable()));
+    connect (tabledialog, SIGNAL(hide()), SLOT(closeTable()));
+    connect (tabledialog, SIGNAL(close()), SLOT(closeTable()));
 
     createChart();
     axisYalt->setRange(0, 1);
@@ -109,6 +117,7 @@ void dialogSummaryOutput::reset()
 
     maxBmass = 0.0;
     maxOther = 1.0;
+
     setGeometry(position.rx(), position.ry(), window.rwidth(), window.rheight());
 }
 
@@ -138,6 +147,11 @@ void dialogSummaryOutput::deleteChart() {
     delete axisYalt;
 }
 
+void dialogSummaryOutput::setDirectory(QString &dir) {
+    currentDir = dir;
+    reportFile.setFileName(QString("%1/%2").arg(currentDir, REPORTFILE));
+}
+
 void dialogSummaryOutput::refreshData()
 {
 //    QRect qr (geometry());
@@ -157,11 +171,6 @@ void dialogSummaryOutput::readData()
     int xvalue = 0.0;
     float yvalue = 0.0;
     bool okay = false;
-//    int areaNum = 0;
-//    float year;
-//    int seas = 0;
-//    int index = 0;
-//    QFile report(QString("ss_summary.sso"));
 
     maxBmass = 0;
     maxOther = 0;
@@ -177,18 +186,23 @@ void dialogSummaryOutput::readData()
             line = stream.readLine();
             if      (line.contains("#_LIKELIHOOD", Qt::CaseInsensitive))
             {
-                int row = 1;
+                int row = 0;
                 line = stream.readLine();
                 values = line.split(" ", QString::SkipEmptyParts);
-                table->setHeader(values);
+                values.takeFirst();
+//                table->setHeader(values);
+                table->setColumnCount(1);
+                table->setColumnHeader(0, values.last());
                 while (!line.contains("#_PARAMETERS")) {
                     line = stream.readLine();
+                    if (line.contains("#_PARAMETERS"))
+                        break;
                     values = line.split(" ", QString::SkipEmptyParts);
-                    table->setRowHeader(row, values.takeAt(0));
-                    table->setRowData(row, values);
+                    table->setRowData(row, values.at(1));
+                    table->setRowHeader(row, values.at(0));
                     row++;
                 }
-                table->setRowCount(row-1);
+                tabledialog->setTable(table);
             }
 
             else if (line.contains("SSB_"))
@@ -258,6 +272,7 @@ void dialogSummaryOutput::readData()
 
         reportFile.close();
     }
+    updateGrid(this->rect());
 }
 
 void dialogSummaryOutput::refreshSeries()
@@ -303,10 +318,16 @@ void dialogSummaryOutput::refreshSeries()
 
 void dialogSummaryOutput::showTable(bool flag) {
     tabledialog->setVisible(flag);
+    if (flag) {
+        ui->pushButton_showTable->setText(QString("Hide Table"));
+    } else {
+        ui->pushButton_showTable->setText(QString("Show Table"));
+    }
 }
 
-void dialogSummaryOutput::tableClosed() {
+void dialogSummaryOutput::closeTable() {
     ui->pushButton_showTable->setChecked(false);
+    showTable(false);
 }
 /*void dialogSummaryOutput::createCharts(int areaNum, QStringList serNames)
 {
@@ -527,16 +548,21 @@ QLineSeries *dialogSummaryOutput::division(int year, float val, QString name)
     return qls;
 }
 
-void dialogSummaryOutput::resizeEvent(QResizeEvent *evt) {
+void dialogSummaryOutput::resizeEvent(QResizeEvent *event) {
     window = size();
     position = pos();
     updateGrid(summaryChart->rect());
-    QDialog::resizeEvent(evt);
+    QDialog::resizeEvent(event);
 }
 
-void dialogSummaryOutput::moveEvent(QMoveEvent *evt) {
+void dialogSummaryOutput::moveEvent(QMoveEvent *event) {
     position = pos();
-    QDialog::moveEvent(evt);
+    QDialog::moveEvent(event);
+}
+
+void dialogSummaryOutput::closeEvent(QCloseEvent *event) {
+    closeTable();
+    QDialog::closeEvent(event);
 }
 
 void dialogSummaryOutput::updateGrid(QRectF rect)

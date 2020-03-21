@@ -24,6 +24,8 @@
 #include "population_widget.h"
 #include "model.h"
 
+#include "dialog_run.h"
+
 #define DEBUG 1
 
 #undef DEBUG
@@ -89,6 +91,7 @@ public slots:
     void helpQt();
     void showCopyright();
     void run();
+    void runComplete();
     void runConversion();
 
     void changeDataFile (QString fname);
@@ -112,7 +115,6 @@ public slots:
     void locateDocuments ();
     void locateExecutable(QString &savename, QString type, QString hint = QString(""));
     void locateSSExecutable();
-    void changeSSExecutable(QString filename);
     void locateSSConverter ();
     void locateRExecutable ();
     void changeExecutable(QString key, QString filename);
@@ -133,6 +135,8 @@ private:
     forecast_widget *forecast;
     fleet_widget *fleets;
     population_widget *population;
+
+    Dialog_run *dRun;
 
     void set_checks_false();
 

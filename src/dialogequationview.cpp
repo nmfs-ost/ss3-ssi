@@ -403,6 +403,7 @@ void DialogEquationView::setVisible(bool visible) {
                 if (parameterView->pos().rx() == 0)
                     parameterView->pos().setX(position.rx());
             }
+            updateGrid(rect());
             QDialog::setVisible(visible);
             setParametersVisible(visible);
         }

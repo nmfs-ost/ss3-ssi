@@ -14,6 +14,7 @@
 
 #include "dialogtable.h"
 
+
 QT_CHARTS_USE_NAMESPACE
 
 namespace Ui {
@@ -33,11 +34,12 @@ public:
     void deleteChart();
 
 public slots:
+    void setDirectory(QString &dir);
     void refreshData();
     void readData();
     void refreshSeries();
     void showTable(bool flag);
-    void tableClosed();
+    void closeTable();
 //    void createCharts(int areaNum, QStringList serNames);
 //    void removeCharts();
 //    void removeCharts(QChart *cht, QList<QLineSeries *>seriesList);
@@ -53,6 +55,7 @@ private:
     tablemodel *table;
     DialogTable *tabledialog;
 
+    QString currentDir;
     QFile reportFile;
 
     QSize window;
@@ -95,8 +98,9 @@ private:
     void updateTicks(int xT, int yT);
 
 private slots:
-    void resizeEvent(QResizeEvent *evt);
-    void moveEvent(QMoveEvent *evt);
+    void resizeEvent(QResizeEvent *event);
+    void moveEvent(QMoveEvent *event);
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // DIALOGSUMMARYOUTPUT_H
