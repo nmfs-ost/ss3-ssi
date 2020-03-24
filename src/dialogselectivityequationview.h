@@ -40,7 +40,7 @@ public slots:
     void resetValues();
     void restoreAll();
 
-    void setParameterHeaders ();
+    void setParameterHeaders (int scale = 0);
 
     void setup();     // start new
     void update ();   // update from dialog values
@@ -104,7 +104,7 @@ private slots:
     void twoSexEachAge ();
     void updateTwoSexEachAge ();
 
-    bool checkScaleSliders(QList<float> bins, float binLo, float binHi);
+    bool checkScaleSliders(QList<float> bins, double binLo, double binHi);
     double aveYvalue(const QList<QPointF> &pointlist, int lowBin = 1, int highBin = 100);
 };
 

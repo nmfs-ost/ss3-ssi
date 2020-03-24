@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>998</width>
-    <height>709</height>
+    <height>755</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -94,7 +94,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>0</number>
+         <number>4</number>
         </property>
         <property name="movable">
          <bool>false</bool>
@@ -1571,19 +1571,6 @@
             </layout>
            </widget>
           </item>
-          <item>
-           <spacer name="verticalSpacer_q_parameters">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="tab_selex">
@@ -1662,7 +1649,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_selex">
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="tab_selex_size">
              <attribute name="title">
@@ -1963,7 +1950,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>852</width>
-                   <height>348</height>
+                   <height>388</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2505,8 +2492,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>259</width>
-                   <height>188</height>
+                   <width>878</width>
+                   <height>360</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -2694,6 +2681,61 @@
                   </item>
                  </layout>
                 </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_2DAR1">
+             <attribute name="title">
+              <string>2D_AR1</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_22">
+              <item>
+               <widget class="QGroupBox" name="groupBox_2DAR1">
+                <property name="title">
+                 <string>Deviation Smoother</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_23">
+                 <item>
+                  <widget class="QLabel" name="label_spec">
+                   <property name="text">
+                    <string>Speicification</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_2DAR_spec"/>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_params">
+                   <property name="text">
+                    <string>Parameters</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_2DAR_params"/>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_7">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>317</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>

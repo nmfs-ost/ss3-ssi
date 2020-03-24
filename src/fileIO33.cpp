@@ -326,6 +326,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             {
                 data->getFleet(i)->getSizeSelectivity()->setNumXvals(grow->getNumGrowthBins());
                 data->getFleet(i)->getSizeSelectivity()->setXVals(grow->getGrowthBins());
+                data->getFleet(i)->getSizeSelectivity()->setLenBins(l_data->getBins());
             }
 
             //  SS_Label_Info_2.7.4 #Read Length composition data
@@ -389,7 +390,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             {
                 str_lst.clear();
                 data->getFleet(i)->getSizeSelectivity()->setNumAges(a_data->getNumberBins());
+                data->getFleet(i)->getSizeSelectivity()->setAgeBins(a_data->getBins());
                 data->getFleet(i)->getAgeSelectivity()->setNumAges(data->get_num_ages());
+                data->getFleet(i)->getAgeSelectivity()->setAgeBins(a_data->getBins());
                 for (int j = 0; j <= data->get_num_ages(); j++)
                     str_lst.append(QString::number(j));
                 data->getFleet(i)->getAgeSelectivity()->setNumXvals(str_lst.count());
@@ -3573,7 +3576,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line.clear();
         chars += c_file->writeline(QString("#"));
-        chars += c_file->writeline(QString("# autogen"));
+        chars += c_file->writeline(QString("# AUTOGEN"));
         temp_int = pop->Grow()->getTimeVaryReadParams();
         line.append(QString("%1 ").arg(QString::number(temp_int)));
         temp_int = pop->SR()->getTimeVaryReadParams();
@@ -4578,7 +4581,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_42; parm=2+special+3; // like 27, with 2 additional param for scaling (average over bin range)");
         chars += c_file->writeline(line);
-        line = QString("#__options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
+        line = QString("#_discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
         chars += c_file->writeline(line);
         line = QString("#_Pattern Discard Male Special");
         chars += c_file->writeline(line);
@@ -4623,10 +4626,10 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_27; parm=3+special; cubic spline in age");
         chars += c_file->writeline(line);
-        line = QString("#Pattern:_42; parm=2+nages+1; // cubic spline; with 2 additional param for scaling (average over bin range)");
+        line = QString("#Pattern:_42; parm=2+special+1; // cubic spline; with 2 additional param for scaling (average over bin range)");
         chars += c_file->writeline(line);
-        line = QString("#_discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
-        chars += c_file->writeline(line);
+//        line = QString("#_discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
+//        chars += c_file->writeline(line);
         line = QString("#_Pattern Discard Male Special");
         chars += c_file->writeline(line);
         for (int i = 0; i < data->get_num_fleets(); i++)

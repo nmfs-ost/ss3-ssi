@@ -29,8 +29,10 @@ public:
     QList<float> getXVals() const;
     void setXVals(const QStringList &value);
     float getBinValue (int index);
-    void setAgeBins (const QStringList &value) {setXVals(value);}
-    void setLenBins (const QStringList &value) {setXVals(value);}
+    void setAgeBins (const QStringList &value);
+    void setLenBins (const QStringList &value);
+    int getNumAgeBins () {return abins.count();}
+    int getNumLenBins () {return lbins.count();}
 
     void reset();
     void connectSigs ();
@@ -156,6 +158,9 @@ protected:
 //    void setEquation (int method);
     QString fisheryName;
     int fisheryNum;
+
+    QStringList abins;
+    QStringList lbins;
 
     QList<float> xVals;
     int numXvals;

@@ -343,8 +343,8 @@ void fleet_widget::connectFleet()
     connect (current_fleet->getAgeSelectivity()->getMaleTimeVaryParameterModel(),
                 SIGNAL(dataChanged()), this, SLOT(selexAgeMaleTVParamsChanged()));
 
-    connect (current_fleet->getLambdaModel(), SIGNAL(dataChanged()),
-             SLOT(lambdaParamsChanged()));
+//    connect (current_fleet->getLambdaModel(), SIGNAL(dataChanged()),
+//             SLOT(lambdaParamsChanged()));
 
     selexSizeTVParamsChanged();
 }

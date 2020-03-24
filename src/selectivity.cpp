@@ -196,6 +196,7 @@ void selectivity::setDefaultParams(int method, int special)
     double xmin = 1, xmax = 50, peak = 25;
     double x1, x2;
     QString Count, xMin, xMax, Peak;
+    QString BinCount;
     QString xLo, xHi;
     QString midbin(QString::number(static_cast<int>(xVals.count()/2)));
 
@@ -747,6 +748,16 @@ float selectivity::getBinValue(int index) {
     return xVals[index];
 }
 
+void selectivity::setAgeBins (const QStringList &value)
+{
+    abins = QStringList(value);
+}
+
+void selectivity::setLenBins (const QStringList &value)
+{
+    lbins = QStringList(value);
+}
+
 int selectivity::getNumGenders() const
 {
     return numGenders;
@@ -765,16 +776,10 @@ int selectivity::getNumParameters()
 
 void selectivity::setNumParameters(int num)
 {
-    //    QStringList ql;
-//    ql << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     int curr = getNumParameters();
     if (curr != num)
     {
         parameters->setNumParams(num);
-//        for (int i = curr; i < num; i++)
-//        {
-//            setParameter(i, ql);
-//        }
     }
     varParameters->setTotalNumVarTables(num);
 }
@@ -943,7 +948,6 @@ void selectivity::setSpecial(int value)
                 value = 2;
             }
             setNumParameters(scale + 2 + value);
-            setDefaultParams(getPattern(), getSpecial());
             break;
 
         case 42:
@@ -955,10 +959,10 @@ void selectivity::setSpecial(int value)
                 value = 3;
             }
             setNumParameters(scale + 3 + value * 2);
-            setDefaultParams(getPattern(), getSpecial());
             break;
         }
         setup->setValue(3, value);
+        setDefaultParams(getPattern(), getSpecial());
     }
 }
 
