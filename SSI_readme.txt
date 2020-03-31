@@ -7,9 +7,6 @@ This GUI is created as a front-end to the Stock Synthesis application,
 versions 3.30.14 through 3.30.15. It allows the user to change the data,
 run the executable, and display some results.
 
-Currently, the only results displayed are the TIME-SERIES charts from
-Report.sso, files warnings.sso, and echoinput.sso.
-
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
 
 This is a work of the U.S. Government and is not subject to copyright
@@ -18,14 +15,20 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.15.09
+    2020-03-31
+1. Implemented selectivity curve 42.
+2. Included table for 2DAR1.
+============================================================================
     3.30.15.08
-    2020-03-23
+    2020-03-24
 1. Fixed selectivity curves
    5 - Two parameters are limited by bin number
    8 - Added bins to chart view
    14, 20, 24, 25, & 26 - React correctly to slider input - BUG #76456
    27 - Responds to change in special
    41 - Reworked
+2. Added capability for 2DAR1 specification and parameters.
 ============================================================================
     3.30.15.07
     2020-03-20

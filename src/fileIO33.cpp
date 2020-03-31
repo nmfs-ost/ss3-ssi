@@ -20,6 +20,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     int units, err_type, year, season, fleet, obslength;
     float obs, err;
 //    float month;
+    int startYear = 0, endYear = 0;
+    int numSeas = 1;
 
     if(d_file->open(QIODevice::ReadOnly))
     {
@@ -30,15 +32,15 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  SS_Label_Info_2.1.2 #Read model time dimensions
         token = d_file->get_next_value(QString("start year"));
-        temp_int = token.toInt();
-        data->set_start_year (temp_int);
+        startYear = token.toInt();
+        data->set_start_year (startYear);
         token = d_file->get_next_value(QString("end year"));
-        temp_int = token.toInt();
-        data->set_end_year(temp_int);
+        endYear = token.toInt();
+        data->set_end_year(endYear);
         token = d_file->get_next_value(QString("seasons per year"));
-        temp_int = token.toInt();
-        data->set_num_seasons(temp_int);
-        for (i = 1; i <= data->get_num_seasons(); i++)
+        numSeas = token.toInt();
+        data->set_num_seasons(numSeas);
+        for (i = 1; i <= numSeas; i++)
         {
             token = d_file->get_next_value(QString("months per season"));
             temp_float = token.toFloat();
@@ -90,8 +92,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             temp_str = d_file->get_next_value(QString("Fleet name"));
             flt->setName(temp_str);
             flt->setNumGenders(data->get_num_genders());
-            flt->setNumSeasons(data->get_num_seasons());
-            flt->setStartYear(data->get_start_year());
+            flt->setNumSeasons(numSeas);
+            flt->setStartYear(startYear);
             flt->setTotalYears(data->getTotalYears());
         }
         data->assignFleetNumbers();
@@ -99,7 +101,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         // Read bycatch data, if any
         for (i = 0; i < num_vals; i++)
         {
-            temp_int = d_file->getIntValue(QString("Fleet Index"), 1, data->get_num_fleets(), 1);
+            temp_int = d_file->getIntValue(QString("Fleet Index"), 1, total_fleets, 1);
             Fleet *flt = data->getFleet(temp_int - 1);
             temp_int = d_file->getIntValue(QString("Include in MSY"), 1, 2, 1);
             flt->setBycatchDead(temp_int);
@@ -115,10 +117,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  ProgLabel_2.2  Read CATCH amount by fleet
         // Catch
-        num_vals = data->get_num_fleets();
+        num_vals = total_fleets;
         do {
             int seas = 0;
-            float ctch = 0, ctch_se = 0;
+            float ctch = 0;
             str_lst.clear();
             str_lst.append(d_file->get_next_value(QString("year")));
             str_lst.append(d_file->get_next_value(QString("season")));
@@ -217,7 +219,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         if (temp_int > 0)
         {
             temp_int = d_file->get_next_value(QString("mean bwt df")).toInt();
-            for (i = 0; i < data->get_num_fleets(); i++)
+            for (i = 0; i < total_fleets; i++)
                 data->getFleet(i)->setMbwtDF(temp_int);
             do
             {    // year, month, fleet_number, partition, type, obs, stderr
@@ -303,7 +305,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
             temp_int = d_file->get_next_value(QString("Length comp number bins")).toInt();//token.toInt();
             l_data->setNumberBins(temp_int);
-            for (int j = 0; j < data->get_num_fleets(); j++)
+            for (int j = 0; j < total_fleets; j++)
                 data->getFleet(j)->setLengthNumBins(temp_int);
             str_lst.clear();
             for (i = 0; i < temp_int; i++)
@@ -358,7 +360,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         token = d_file->get_next_value(QString("age comp num bins"));
         temp_int = token.toInt();
         a_data->setNumberBins(temp_int);
-        for (i = 0; i < data->get_num_fleets(); i++)
+        for (i = 0; i < total_fleets; i++)
         {
             data->getFleet(i)->setAgeNumBins(temp_int);
             data->getFleet(i)->setSaaNumBins(temp_int);
@@ -599,10 +601,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             num_input_lines = d_file->get_next_value().toInt(); // num observations
             mcps->setNumberObs(num_input_lines);
             temp_int = d_file->get_next_value().toInt(); // number of platoons
-            for (int j = 0; j < data->get_num_fleets(); j++)
+            for (int j = 0; j < total_fleets; j++)
                 data->getFleet(j)->setMorphNumMorphs(temp_int);
             temp_str = d_file->get_next_value();         // min compression
-            for (int j = 0; j < data->get_num_fleets(); j++)
+            for (int j = 0; j < total_fleets; j++)
                 data->getFleet(j)->setMorphMinTailComp(temp_str);
 
             obslength = data->getFleet(0)->getMorphObsLength() + 1;
@@ -2041,6 +2043,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     int flt;
     int num_fleets = data->get_num_fleets();
     int timevaryread;
+    int startYear = data->get_start_year();
+    int endYear = data->get_end_year();
 
     if(c_file->open(QIODevice::ReadOnly))
     {
@@ -2942,18 +2946,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist.append(c_file->get_next_value("Size selex Discard"));
             datalist.append(c_file->get_next_value("Size selex Male"));
             datalist.append(c_file->get_next_value("Size selex Special"));
-//            int pat = 0;
+
             sizesel = data->getFleet(i)->getSizeSelectivity();
             sizesel->disconnectSigs();
             sizesel->setSetup(datalist);
-//            pat = c_file->getIntValue(QString("Size selex Pattern"), 0, 45, 0);
-//            sizesel->setPattern(pat);
-//            temp_int = c_file->getIntValue(QString("Size selex Discard"), 0, 4, 0);
-//            sizesel->setDiscard(temp_int);
-//            temp_int = c_file->getIntValue(QString("Size selex Male"), 0, 4, 0);
-//            sizesel->setMale(temp_int);
-//            temp_int = c_file->get_next_value(QString("Size selex Special")).toInt();
-//            sizesel->setSpecial(temp_int);
             sizesel->connectSigs();
         }
         // Age selectivity setup
@@ -2964,20 +2960,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             datalist.append(c_file->get_next_value("Size selex Discard"));
             datalist.append(c_file->get_next_value("Size selex Male"));
             datalist.append(c_file->get_next_value("Size selex Special"));
-//            int pat = 0;
+
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
             if (agesel->getXVals().count() == 0)
                 data->getFleet(i)->getAgeSelectivity()->setNumXvals(data->get_num_ages() + 1);
             agesel->setSetup(datalist);
-//            pat = c_file->getIntValue(QString("Age selex Pattern"), 0, 45, 0);
-//            agesel->setPattern(pat);
-//            temp_int = c_file->getIntValue(QString("Age selex Discard"), 0, 4, 0);
-//            agesel->setDiscard(temp_int);
-//            temp_int = c_file->getIntValue(QString("Age selex Male"), 0, 4, 0);
-//            agesel->setMale(temp_int);
-//            temp_int = c_file->get_next_value(QString("Age selex Special")).toInt();
-//            agesel->setSpecial(temp_int);
             agesel->connectSigs();
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
@@ -3041,6 +3029,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 sizesel->setSpecial(1);
             sizesel->connectSigs();
         }
+        // if autogenerate is active, generate parameters
+        sizesel->autogenParameters();
+
         // read age selectivity parameters
         for (int i = 0; i < num_fleets; i++)
         {
@@ -3079,6 +3070,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 agesel->setSpecial(1);
             agesel->connectSigs();
         }
+        // if autogenerate is active, generate parameters
+        sizesel->autogenParameters();
+
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;
 
@@ -3154,10 +3148,37 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         // 2D-AR1 smoother
         temp_int = c_file->getIntValue(QString("2D_AR1 selectivity? 0/1"), 0, 1, 0);
-        for (i = 0; i < data->get_num_fleets(); i++)
-        {
-            data->getFleet(i)->setAr1SelSmoother(temp_int);
-            emit data->getFleet(i)->newDataRead();
+        if (temp_int == 1) {
+            data->setUse2DAR1(temp_int == 1);
+            // fleet, ymin,   ymax,   amin,   amax,   sig_amax, use_rho, len1/age2, devphase, before_range, after_range
+            do {
+                datalist.clear();
+                flt = c_file->getIntValue(QString("Fleet number"), -9999, data->get_num_fleets(), 1);
+                datalist << c_file->get_next_value(QString("First year with deviations"));
+                datalist << c_file->get_next_value(QString("Last year with deviations"));
+                datalist << c_file->get_next_value(QString("Amin"));
+                datalist << c_file->get_next_value(QString("Amax"));
+                datalist << c_file->get_next_value(QString("Sigma maximum"));
+                datalist << c_file->get_next_value(QString("Use Rho"));
+                datalist << c_file->get_next_value(QString("Len/Age"));
+                datalist << c_file->get_next_value(QString("Dev phase"));
+                datalist << c_file->get_next_value(QString("Before range"));
+                datalist << c_file->get_next_value(QString("After range"));
+                if (datalist.first().compare("EOF") == 0)
+                    break;
+
+                if (flt != -9999) {
+                    data->getFleet(flt-1)->get2DAR1()->setSpec(datalist);
+                    // parameters
+                    data->getFleet(flt-1)->get2DAR1()->setParam(0, readShortParameter(c_file));
+                    data->getFleet(flt-1)->get2DAR1()->setParam(1, readShortParameter(c_file));
+                    data->getFleet(flt-1)->get2DAR1()->setParam(2, readShortParameter(c_file));
+                    emit data->getFleet(flt-1)->newDataRead();
+                }
+            } while (flt != -9999);
+        }
+        else {
+            data->setUse2DAR1(false);
         }
 
         // Tag loss and Tag reporting parameters go next
@@ -4750,10 +4771,33 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline("#");
 
         // 2D-AR1 smoother
-        temp_int = data->getFleet(0)->getAr1SelSmoother();
+        temp_int = data->getUse2DAR1()? 1: 0;
         chars += c_file->write_val(temp_int, 0, QString("use 2D_AR1 selectivity(0/1):  experimental feature"));
-        if (temp_int == 0)
+        if (temp_int == 0) {
             chars += c_file->writeline(QString("#_no 2D_AR1 selex offset used"));
+        }
+        else {
+            chars += c_file->writeline(QString("#_specifications for 2D_AR1 and associated parameters"));
+            for (i = 0; i < data->getNumActiveFleets(); i++) {
+                Fleet *fleet = data->getFleet(i);
+                QString fleetstr = QString::number(fleet->getNumber());
+                if (fleet->get2DAR1()->getUse()) {
+                    chars += c_file->writeline(QString("#_specs:"));
+                    chars += c_file->writeline(QString("#fleet, ymin,   ymax,   amin,   amax,   sig_amax, use_rho, len1/age2, devphase, before_range, after_range"));
+                    str_list = fleet->get2DAR1()->getSpec();
+                    str_list.prepend(fleetstr);
+                    chars += c_file->write_vector(str_list, 7, QString("2d_AR specs for fleet: %1").arg(fleet->getName()));
+                    chars += c_file->writeline(QString("#_  LO    HI      INIT    PRIOR   PR_SD   PR_type PHASE # parm_name"));
+                    str_list = fleet->get2DAR1()->getParam(0);
+                    chars += c_file->write_vector(str_list, 7, QString("sigma_sel for fleet:  %1, age").arg(fleetstr));
+                    str_list = fleet->get2DAR1()->getParam(1);
+                    chars += c_file->write_vector(str_list, 7, QString("rho_year for fleet:  %1").arg(fleetstr));
+                    str_list = fleet->get2DAR1()->getParam(2);
+                    chars += c_file->write_vector(str_list, 7, QString("rho_age for fleet:  %1").arg(fleetstr));
+                }
+            }
+            chars += c_file->writeline(QString("-9999  0 0 0 0 0 0 0 0 0 0 # terminator"));
+        }
         chars += c_file->writeline(QString("#"));
 
         // Tag Recapture Parameters

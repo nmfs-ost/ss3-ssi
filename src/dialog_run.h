@@ -46,7 +46,7 @@ public slots:
     void stopRun();
     void rejected();
     void runStarted();
-    void runCompleted(int code);
+    void endRun(int code);
 
     void setDir(QString dir);
     void setExe(QString exe);
@@ -84,8 +84,8 @@ public slots:
     void setFontSize (int fsize);
 
 signals:
-    void complete();
-    void canceled();
+    void runCompleted();
+    void runCanceled();
     void executableChanged(QString);
 
 private:

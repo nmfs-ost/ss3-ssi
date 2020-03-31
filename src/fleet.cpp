@@ -49,11 +49,18 @@ Fleet::Fleet(ss_model *parent) :
     q_R = new q_ratio(parent);
     s_name = new QString("");
     size_selex = new selectivity(parent);
+    size_selex->setType(Size);
+    size_selex->setFleet(this);
     age_selex = new selectivity(parent);
+    age_selex->setType(Age);
+    age_selex->setFleet(this);
     setName(QString("new_fleet"));
     i_number = 0;
     size_selex->setFleetNum(i_number);
     age_selex->setFleetNum(i_number);
+
+    dar1 = new DAR1();
+
     reset();
 }
 
@@ -345,6 +352,9 @@ void Fleet::reset()
 
     //   age selex
     age_selex->reset();
+
+    // 2DAR1
+    dar1->reset();
 
     // Variance
     add_to_survey_CV = 0;

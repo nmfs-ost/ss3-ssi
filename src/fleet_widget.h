@@ -108,6 +108,12 @@ public slots:
     void showSelexAgeCurve(bool flag);
     void selexAgeCurveClosed ();
 
+    void setUse2DAR1 (bool use);
+    void changeUse2DAR1 (bool use);
+    void adjust2DAR1View (bool use);
+    bool getUse2DAR1 ();
+    void set2DAR1 ();
+
 private:
 
     Ui::fleet_widget *ui;
@@ -156,6 +162,9 @@ private:
     tableview *ageSelexMaleTVParamsView;
     DialogSelexEquationView *selexAgeEqDialog;
     DialogInfo * selexAgeInfoDialog;
+
+    tableview *DAR1SpecView;
+    tableview *DAR1ParamView;
 
     void refreshFleetNames();
     void connectFleet ();

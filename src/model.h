@@ -82,6 +82,10 @@ public:
     int  iNumAreas;
     ss_forecast *forecast;
 
+    bool getUse2DAR1() const;
+    void setUse2DAR1(bool value);
+    void changeUse2DAR1(bool value);
+
 public slots:
     void reset();
 
@@ -375,7 +379,7 @@ public slots:
 signals:
     void data_file_changed (QString fname);
     void control_file_changed (QString fname);
-
+    void darChanged(bool value);
 
 private:
     bool readMonths;
@@ -474,6 +478,8 @@ private:
     int customSelParmDevAdjust;
 
     int selexAdjustMethod;
+
+    bool use2DAR1;
 };
 
 double checkdoublevalue(QString value);

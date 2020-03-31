@@ -1,14 +1,11 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.07
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.08
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
 versions 3.30.14 through 3.30.15. It allows the user to change the data,
 run the executable, and display some results.
-
-Currently, the only results displayed are the TIME-SERIES charts from
-Report.sso, files warnings.sso, and echoinput.sso.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
 
@@ -18,14 +15,30 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.15.09
+    2020-03-31
+1. Implemented selectivity curve 42.
+2. Included table for 2DAR1.
+============================================================================
+    3.30.15.08
+    2020-03-24
+1. Fixed selectivity curves
+   5 - Two parameters are limited by bin number
+   8 - Added bins to chart view
+   14, 20, 24, 25, & 26 - React correctly to slider input - BUG #76456
+   27 - Responds to change in special
+   41 - Reworked
+2. Added capability for 2DAR1 specification and parameters.
+============================================================================
     3.30.15.07
     2020-03-20
-1. Changed Options menu to Links, moved default dir and model to File menu.
+1. Changed Options menu name to Links, moved default dir and model choices
+   to File menu.
 2. Deleted Data menu.
 3. SS3.par label changed to SS.par
 4. Choose file for ctrl and dat file now work.
 5. Run window now is non-modal (can keep run window up while editing in
-   other windows.
+   other windows).
 6. Added likelihood table to run summary charts.
 ============================================================================
     3.30.15.06

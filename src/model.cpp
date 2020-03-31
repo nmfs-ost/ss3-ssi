@@ -1124,6 +1124,29 @@ QString ss_model::getControlFileName()
     return mw->getControlFile();
 }
 
+bool ss_model::getUse2DAR1() const
+{
+    return use2DAR1;
+}
+
+void ss_model::setUse2DAR1(bool value)
+{
+    use2DAR1 = value;
+}
+
+void ss_model::changeUse2DAR1(bool value)
+{
+    bool use = value;
+    if (!use) {
+        for (int i = 0; i < get_num_fleets(); i++) {
+            if (getFleet(i)->get2DAR1()->getUse())
+                use = true;
+        }
+    }
+    use2DAR1 = use;
+    emit darChanged(use);
+}
+
 bool ss_model::getReadWtAtAge() const
 {
     return readWtAtAge;

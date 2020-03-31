@@ -103,6 +103,8 @@ public slots:
     void changeDepDenom();
     void changeRandSeed();
     void setRandSeed (int seed);
+    void set2DAR1 (bool use);
+    bool get2DAR1 ();
 
 signals:
     void showLengthObs();
@@ -130,6 +132,7 @@ private slots:
     void tagRptDcayTVChanged();
 
     void changeAddSdRead(int value);
+    void change2DAR1 (bool use);
 
 private:
     Ui::data_widget *ui;

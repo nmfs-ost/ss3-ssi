@@ -1613,43 +1613,9 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QLabel" name="label_ar1">
-              <property name="text">
-               <string> 2D_AR1 selectivity deviation smoother </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="spinBox_ar1"/>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_ar1_info">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_21">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
            <widget class="QTabWidget" name="tabWidget_selex">
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab_selex_size">
              <attribute name="title">
@@ -1949,8 +1915,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>852</width>
-                   <height>388</height>
+                   <width>878</width>
+                   <height>396</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2194,10 +2160,23 @@
                       </property>
                      </widget>
                     </item>
+                    <item row="18" column="8">
+                     <spacer name="verticalSpacer_2">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
                    </layout>
                   </item>
                   <item>
-                   <spacer name="verticalSpacer_2">
+                   <spacer name="verticalSpacer_sizeSelex">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -2492,8 +2471,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>878</width>
-                   <height>360</height>
+                   <width>286</width>
+                   <height>208</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -2705,7 +2684,7 @@
                  <item>
                   <widget class="QLabel" name="label_spec">
                    <property name="text">
-                    <string>Speicification</string>
+                    <string>Specification</string>
                    </property>
                   </widget>
                  </item>

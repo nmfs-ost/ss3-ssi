@@ -43,8 +43,8 @@ dialogSummaryOutput::dialogSummaryOutput(QWidget *parent) :
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));
 
     connect (tabledialog, SIGNAL(tableClosed()), SLOT(closeTable()));
-    connect (tabledialog, SIGNAL(hide()), SLOT(closeTable()));
-    connect (tabledialog, SIGNAL(close()), SLOT(closeTable()));
+    connect (tabledialog, SIGNAL(tableHidden()), SLOT(closeTable()));
+//    connect (tabledialog, SIGNAL(close()), SLOT(closeTable()));
 
     createChart();
     axisYalt->setRange(0, 1);

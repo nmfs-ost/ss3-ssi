@@ -114,7 +114,8 @@ SOURCES += main.cpp\
     dialogsummaryoutput.cpp \
     dialog_copyright.cpp \
     dialogtable.cpp \
-    mainwindowrun.cpp
+    mainwindowrun.cpp \
+    dar1.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -217,7 +218,8 @@ HEADERS  += mainwindow.h \
     dialogsummaryoutput.h \
     dialog_copyright.h \
     dialogtable.h \
-    mainwindowrun.h
+    mainwindowrun.h \
+    dar1.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

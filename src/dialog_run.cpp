@@ -67,7 +67,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (stocksynth, SIGNAL(started()), SLOT(runStarted()));
     connect (stocksynth, SIGNAL(readyReadStandardOutput()), SLOT(stdOutput()));
     connect (stocksynth, SIGNAL(readyReadStandardError()), SLOT(stdError()));
-    connect (stocksynth, SIGNAL(finished(int)), SLOT(runCompleted(int)));
+    connect (stocksynth, SIGNAL(finished(int)), SLOT(endRun(int)));
 
     dfont = QFont(fontInfo().family(), fontInfo().pointSize());
     setFontSize(9);
@@ -154,7 +154,7 @@ void Dialog_run::finishOutput()
     running = false;
 }
 
-void Dialog_run::runCompleted(int code)
+void Dialog_run::endRun(int code)
 {
     QString message;
 
@@ -199,6 +199,7 @@ void Dialog_run::runCompleted(int code)
 
     ui->pushButton_pause->setEnabled(false);
     ui->pushButton_stop->setEnabled(false);
+    emit runCompleted();
 }
 
 void Dialog_run::startRun()

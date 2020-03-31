@@ -14,6 +14,7 @@
 #include "selectivity.h"
 #include "fleetlambda.h"
 #include "fleet_composition.h"
+#include "dar1.h"
 
 class q_ratio;
 class ss_model;
@@ -342,12 +343,13 @@ public slots:
     void appendLambda (QStringList values);
     QStringList getLambda(int row) {return lambdaModel->getRowData(row);}
     tablemodel *getLambdaModel() {return lambdaModel;}
-
+    DAR1 *get2DAR1() {return dar1;}
 
 private:
     int readQTvParams;
     bool q_read;
     q_ratio *q_R;
+    DAR1 *dar1;
 
 protected:
     QString *s_name;

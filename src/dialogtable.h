@@ -38,6 +38,7 @@ public slots:
 
 signals:
     void tableClosed();
+    void tableHidden();
 
 private:
     Ui::DialogTable *ui;

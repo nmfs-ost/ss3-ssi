@@ -1,5 +1,6 @@
 #include "selectivity.h"
 #include "selex_equation.h"
+#include "fleet.h"
 
 selectivity::selectivity(ss_model *model, int method)
     : QObject ((QObject*)model)
@@ -158,7 +159,10 @@ void selectivity::setMethod(int method)
     int special = setup->getValue(3);
     if (method == pattn)
     {
-        setDefaultParams(method, special);
+        if (method == 0 || method == 10)
+            setNumParameters(0);
+        else
+            setDefaultParams(method, special);
     }
     else
     {
@@ -200,6 +204,20 @@ void selectivity::setDefaultParams(int method, int special)
     QString xLo, xHi;
     QString midbin(QString::number(static_cast<int>(xVals.count()/2)));
 
+    if (type == Age) {
+        BinCount = QString::number(abins.count());
+        xmin = abins.first().toFloat();
+        xMin = abins.first();
+        xmax = abins.last().toFloat();
+        xMax = abins.last();
+    }
+    else {
+        BinCount = QString::number(lbins.count());
+        xmin = lbins.first().toFloat();
+        xMin = lbins.first();
+        xmax = lbins.last().toFloat();
+        xMax = lbins.last();
+    }
     if (parameters == nullptr)
         return;
 
@@ -207,15 +225,11 @@ void selectivity::setDefaultParams(int method, int special)
     if (count == 0)
         return;
 
-    xmin = xVals.first();
-    xmax = xVals.last();
     peak = (xmin + xmax) / 2.0;
 
     x1 = (xmin + peak) / 2.0;
     x2 = (peak + xmax) / 2.0;
-    Count = QString::number(count);
-    xMin = QString::number(xmin);
-    xMax = QString::number(xmax);
+    Count = QString::number(numAges);
     Peak = QString::number(peak, 'f', 2);
     xLo = QString::number(x1, 'f', 2);
     xHi = QString::number(x2, 'f', 2);
@@ -518,38 +532,18 @@ void selectivity::setDefaultParams(int method, int special)
     }
     case 27:  // case 27 size selectivity using cubic spline
     {
-        int index;
-        float val;
         if (special < 3)
         {
             special = 3;
+            fleet->getSizeSelectivity()->setSpecial(3);
+            fleet->getAgeSelectivity()->setSpecial(3);
         }
-        //setSpecial(special);
         numparam = special * 2 + 3;
-        setNumParameters(numparam);
-        val = (xmax - xmin) / (float)special;
         setNumParameters(numparam);
         parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm.clear();
-        parm << "-.001" << "1" << ".13" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(1, parm);
-        parm.clear();
-        parm << "-1" << ".001" << "-.03" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(2, parm);
-        parm.clear();
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        index = 3;
-        for (i = 0; i < special; i++)
-        {
-            parm[2] = QString::number(xmin + ((float)val * (i + 1)));
-            setParameter(index++, parm);
-        }
-        parm.clear();
-        parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (i = 0; i < special; i++)
-            setParameter(index++, parm);
-        setup->setValue(3, special);
+        autogenCubicSpline1();
+        autogenCubicSpline2();
         break;
     }
     case 30:  // equal to spawning biomass
@@ -584,51 +578,24 @@ void selectivity::setDefaultParams(int method, int special)
     }
     case 42: // case 42 size selectivity using cubic spline scaled by average of values at low bin through high bin
     {
-        int index = 0;
-        float xval1 = 1, xval20 = 20;
         if (special < 3)
         {
             special = 3;
+            fleet->getSizeSelectivity()->setSpecial(3);
+            fleet->getAgeSelectivity()->setSpecial(3);
         }
         numparam = special * 2 + 3 + 2;
-        if (xVals.isEmpty()) {
-            val = 21.0 / (float)special;
-        } else {
-            xval1 = xVals.first();
-            xval20 = xVals.last();
-            numXvals = xVals.count();
-            val = xVals.at(numXvals - 2) - xVals.at(1);
-            val /= (float)special; //(float)19 / special;
-        }
-        val = numXvals / 2;
+
         setNumParameters(numparam);
-        parm << "1" << Count  << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << BinCount  << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = Count;
+        parm[2] = BinCount;
         setParameter(1, parm);
         parm.clear();
         parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
-        parm.clear();
-        parm << "-.001" << "1" << ".13" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(3, parm);
-        parm.clear();
-        parm << "-1" << ".001" << "-.03" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(4, parm);
-        parm.clear();
-        val = (xmax-xmin) / (float)special;
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        index = 5;
-        for (i = 0; i < special; i++)
-        {
-            parm[2] = QString::number(xmin + ((float)val * (i + 1)), 'g', 2);
-            setParameter(index++, parm);
-        }
-        parm.clear();
-        parm << "-9" << "7" << "-3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (i = 0; i < special; i++)
-            setParameter(index++, parm);
-        setup->setValue(3, special);
+        autogenCubicSpline1(2);
+        autogenCubicSpline2(2);
         break;
     }
     case 43: // case 43 non-parametric size selex scaled by average of values from low bin through high bin
@@ -729,6 +696,16 @@ void selectivity::setDefaultParams(int method, int special)
     connectSigs();
     emit setupChanged(getSetup());
 
+}
+
+SelexType selectivity::getType() const
+{
+    return type;
+}
+
+void selectivity::setType(const SelexType &value)
+{
+    type = value;
 }
 
 QList<float> selectivity::getXVals() const
@@ -1145,4 +1122,132 @@ double selectivity::evaluate(int f, float m)
         val = equation->evaluate();
     return val;
 }*/
+
+// autogenerate Parameters if setup parameter = 1 or 2
+void selectivity::autogenParameters(int flag) {
+    int pat = getPattern();
+    int scale = 0;
+    int setup = 0;
+    switch (pat) {
+    case 42:
+        scale = 2;
+        [[clang::fallthrough]];
+    case 27:
+        QStringList parm1 = getParameter(scale);
+        setup = parm1.at(2).toInt();
+        break;
+    }
+    if (flag != 0) {
+        setup = flag;
+    }
+    switch (setup) {
+    case 1:
+        autogenCubicSpline1(scale);
+        break;
+    case 2:
+        autogenCubicSpline1(scale);
+        autogenCubicSpline2(scale);
+        break;
+    }
+}
+
+// autogenerate Cubic Spline nodes locations
+void selectivity::autogenCubicSpline1(int scale) {
+    int numNodes = getSpecial();
+    int bin = 0;
+    int numObs = 1;
+    QList<int> binTotals;
+    int total = 0;
+    int pctl025 = 0;
+    int pctl975 = 2;
+    float term = .5, interm = 1;
+    QList<float> nodes;
+    float nodeFirst = 1, nodeLast = 10, nodeRange = 9;
+    QStringList bins (type == Size? lbins: abins);
+    int numBins = bins.count();
+    QStringList data;
+
+    for (bin = 0; bin < numBins; bin++) {
+        binTotals.append(0.0);
+    }
+
+    for (int i = 0; i < numNodes; i++) {
+        nodes.append(0.0);
+    }
+
+    if (type == Size) {
+        numObs = fleet->getLengthNumObs();
+        for (int row = 0; row < numObs; row++) {
+            for (bin = 0; bin < numBins; bin++) {
+                binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
+            }
+        }
+    }
+    else { // type == Age
+        numObs = fleet->getAgeNumObs();
+        for (int row = 0; row < numObs; row++) {
+            for (bin = 0; bin < numBins; bin++) {
+                binTotals[bin] += fleet->getAgeObservation(row).at(bin+7).toInt();
+            }
+        }
+    }
+    for (bin = 0; bin < numBins; bin++) {
+        total += binTotals.at(bin);
+    }
+    pctl025 = static_cast<int>(total * 0.025 + .5);
+    pctl975 = static_cast<int>(total * 0.975 + .5);
+    total = 0;
+    for (bin = 0; bin < numBins; bin++) {
+        total += binTotals.at(bin);
+        if (total < pctl025)
+            nodeFirst = bins.at(bin+1).toFloat();
+        else if (total < pctl975)
+            nodeLast = bins.at(bin+1).toFloat();
+    }
+    nodeRange = nodeLast - nodeFirst;
+    interm = nodeRange / (numNodes - 1);
+    term = nodeFirst;
+    int index = scale + 3;
+    for (int i = 0; i < numNodes; i++) {
+        data  = getParameter(index + i);
+        data[0] = bins.first();
+        data[1] = bins.last();
+        data[2] = QString::number(term);
+        setParameter(index +i, data);
+        term += interm;
+    }
+}
+
+void selectivity::autogenCubicSpline2(int scale) {
+    int numNodes = getSpecial();
+    int index = scale + 3 + numNodes;
+
+    // grad lo and hi
+    QStringList data = parameters->getParameter(scale + 1);
+    data[0] = QString::number(-0.001);
+    data[1] = QString::number(1.0);
+    data[2] = QString::number(0.13);
+    parameters->setParameter(scale + 1, data);
+    data = parameters->getParameter(scale + 2);
+    data[0] = QString::number(-1);
+    data[1] = QString::number(0.001);
+    data[2] = QString::number(-0.03);
+    parameters->setParameter(scale + 2, data);
+
+    // min, max, init for node values
+    for (int i = 0; i < numNodes; i++) {
+        data = parameters->getParameter(index + i);
+        data[0] = QString::number(-9);
+        data[1] = QString::number(7);
+        data[2] = QString::number(-1);
+        parameters->setParameter(index + i, data);
+    }
+    data = parameters->getParameter(index);
+    data[2] = QString::number(-3);
+    parameters->setParameter(index, data);
+    data = parameters->getParameter(index+numNodes-1);
+    data[2] = QString::number(-0.78);
+    parameters->setParameter(index+numNodes-1, data);
+}
+
 

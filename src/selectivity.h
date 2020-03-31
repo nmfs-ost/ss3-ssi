@@ -16,6 +16,13 @@
 #include "parametermodelTV.h"
 #include "setupmodel.h"
 
+class Fleet;
+
+enum SelexType {
+    Age,
+    Size
+};
+
 class selectivity : public QObject
 {
     Q_OBJECT
@@ -38,6 +45,9 @@ public:
     void connectSigs ();
     void disconnectSigs ();
 
+    SelexType getType() const;
+    void setType(const SelexType &value);
+
 signals:
     void setupChanged(QStringList values);
     void dataChanged();
@@ -45,6 +55,7 @@ signals:
     void startingSetupChanges();
 
 public slots:
+    void setFleet (Fleet *flt) {fleet = flt;}
     void setFleetName (QString name) {fisheryName = name;}
     void setFleetNum (int num) {fisheryNum = num;}
     void setNumAges (int ages) {numAges = ages;}
@@ -148,16 +159,19 @@ public slots:
     QString getMaleTimeVaryParameterLabel (int index) {return maleVarParameters->getVarParamHeader(index);}
     tablemodel *getMaleTimeVaryParameterModel() {return maleVarParameters->getVarParamTable();}
 
-//    double operator()() {return evaluate();}
-//    double evaluate();
-
     void setMethod (int method);
     void setDefaultParams (int method, int special);
+    void autogenParameters(int flag = 0);
 
 protected:
+    ss_model *data_model;
+    Fleet *fleet;
+
 //    void setEquation (int method);
     QString fisheryName;
     int fisheryNum;
+
+    SelexType type;
 
     QStringList abins;
     QStringList lbins;
@@ -178,9 +192,9 @@ protected:
     longParameterModel *maleParameters;
     timeVaryParameterModel *maleVarParameters;
 
-    //    double evaluate(int f, float m);
+    void autogenCubicSpline1(int scale = 0);
+    void autogenCubicSpline2(int scale = 0);
 
-//    selex_equation *equation;
 
 };
 

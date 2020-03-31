@@ -4,11 +4,6 @@
 #include "dialogequationview.h"
 #include "model.h"
 
-enum SelexType {
-    Age,
-    Size
-};
-
 class DialogSelexEquationView : public DialogEquationView
 {
 public:
@@ -42,7 +37,7 @@ public slots:
 
     void setParameterHeaders (int scale = 0);
 
-    void setup();     // start new
+    void setup ();     // start new
     void update ();   // update from dialog values
 
 signals:
@@ -56,6 +51,7 @@ private:
     int genders;
     int special;
     int male;
+    int flag;
     QList<float> bins;
 
 private slots:

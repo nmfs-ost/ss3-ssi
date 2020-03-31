@@ -117,6 +117,15 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     setupSelexAgeInfo();
     selexAgeInfoDialog->hide();
 
+    DAR1SpecView = new tableview();
+    DAR1SpecView->setParent(this);
+    DAR1SpecView->setHeight(1);
+    ui->verticalLayout_2DAR_spec->addWidget(DAR1SpecView);
+    DAR1ParamView = new tableview();
+    DAR1ParamView->setParent(this);
+    DAR1ParamView->setHeight(3);
+    ui->verticalLayout_2DAR_params->addWidget(DAR1ParamView);
+
     set_model(m_data);
     totalFleets = m_data->get_num_fleets();
     refresh();
@@ -138,7 +147,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_q_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setQTimeVaryReadParams(int)));
 
     connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setSelTimeVaryReadParams(int)));// model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
-    connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
+//    connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
 //    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), selexSizeInfoDialog, SLOT(show()));
     connect (ui->comboBox_selex_size_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexSizePattern(int)));
     connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
@@ -158,6 +167,8 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), SLOT(changeLengthAddToData()));
     connect (ui->lineEdit_age_comp_tails, SIGNAL(editingFinished()), SLOT(changeAgeMinTailComp()));
     connect (ui->lineEdit_age_constant, SIGNAL(editingFinished()), SLOT(changeAgeAddToData()));
+
+    connect (ui->groupBox_2DAR1, SIGNAL(toggled(bool)), SLOT(changeUse2DAR1(bool)));
 
     ui->tabWidget_fleet->setCurrentIndex(0);
 }
@@ -600,7 +611,7 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexMaleTVParamsView->setModel(current_fleet->getAgeSelectivity()->getMaleTimeVaryParameterModel());
         selexAgeMaleParamsChanged();
 
-        ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
+//        ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
 
         setAgeLengthBins();
         selexSizeEqDialog->setFleet(current_fleet);
@@ -609,6 +620,8 @@ void fleet_widget::set_current_fleet(int index)
         selexAgeEqDialog->setMidBin(0);
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
+
+        set2DAR1();
 
         connectFleet ();
 
@@ -1227,7 +1240,7 @@ void fleet_widget::selexAgeParamsChanged()
     int ht = current_fleet->getAgeSelectivity()->getNumParameters();
     ageSelexParamsView->setHeight (ht);
     ageSelexParamsView->resizeColumnsToContents();
-    ageSelexParamsView->setVisible(ht);
+    ageSelexParamsView->setVisible(ht>0);
     selexAgeTVParamsChanged();
 }
 
@@ -1464,6 +1477,50 @@ void fleet_widget::selexAgeDataChanged()
     ui->spinBox_selex_age_special->setValue(spc);
     ui->spinBox_selex_age_male->setValue(mal);
     selexAgeEqDialog->restoreAll();
+}
+
+void fleet_widget::setUse2DAR1 (bool use)
+{
+    ui->groupBox_2DAR1->setChecked(use);
+    adjust2DAR1View(use);
+}
+void fleet_widget::changeUse2DAR1 (bool use)
+{
+    if (current_fleet != nullptr) {
+        adjust2DAR1View(use);
+        if (use)
+        {
+            current_fleet->get2DAR1()->setUse(true);
+            model_data->changeUse2DAR1(true);
+        }
+        else {
+            current_fleet->get2DAR1()->setUse(false);
+            model_data->changeUse2DAR1(false);
+        }
+    }
+}
+void fleet_widget::adjust2DAR1View (bool use)
+{
+    if (use) {
+        DAR1SpecView->setHeight(1);
+        DAR1ParamView->setHeight(3);
+    }
+    else {
+        DAR1SpecView->setHeight(0);
+        DAR1ParamView->setHeight(0);
+    }
+}
+bool fleet_widget::getUse2DAR1 ()
+{
+    return ui->groupBox_2DAR1->isChecked();
+}
+void fleet_widget::set2DAR1 ()
+{
+    setUse2DAR1(current_fleet->get2DAR1()->getUse());
+    DAR1SpecView->setModel(current_fleet->get2DAR1()->getSpecTable());
+    DAR1SpecView->resizeColumnsToContents();
+    DAR1ParamView->setModel(current_fleet->get2DAR1()->getParamTable());
+    DAR1ParamView->resizeColumnsToContents();
 }
 
 void fleet_widget::setGenMethodTotal(int num)

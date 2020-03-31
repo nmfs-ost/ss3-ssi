@@ -422,6 +422,7 @@ void data_widget::refresh()
         addSelexBinsView->setHeight(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
         addSelexBinsView->resizeColumnsToContents();
         ui->verticalLayout_add_sd_bins->addWidget(addSelexBinsView);*/
+        set2DAR1(model_data->getUse2DAR1());
     }
 }
 
@@ -1226,4 +1227,16 @@ void data_widget::tagRptDcayTVChanged()
     tagReptDecayFltTV->setVisible(num > 0);
     tagReptDecayFltTV->setHeight(num);
     tagReptDecayFltTV->resizeColumnsToContents();
+}
+
+bool data_widget::get2DAR1() {
+    return ui->checkBox_2DAR1->isChecked();
+}
+
+void data_widget::set2DAR1(bool use) {
+    ui->checkBox_2DAR1->setChecked(use);
+}
+
+void data_widget::change2DAR1(bool use) {
+    model_data->setUse2DAR1(use);
 }
