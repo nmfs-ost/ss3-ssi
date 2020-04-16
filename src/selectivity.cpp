@@ -177,8 +177,6 @@ void selectivity::setNumXvals(int num)
         for (int i = 0; i < num; i++)
             xVals.append(i);
     }
-
-//    setDefaultParams(getPattern(), getSpecial());
 }
 
 
@@ -195,24 +193,31 @@ void selectivity::setDefaultParams(int method, int special)
 {
     int numparam;
     QStringList parm;
-    int i, j;
+    int i, j, binmid = 1;
     double val;
     double xmin = 1, xmax = 50, peak = 25;
     double x1, x2;
     QString Count, xMin, xMax, Peak;
-    QString BinCount;
+    QString BinCount, BinMid;
     QString xLo, xHi;
-    QString midbin(QString::number(static_cast<int>(xVals.count()/2)));
+    QString midcount(QString::number(static_cast<int>(xVals.count()/2)));
+    QString Type;
 
     if (type == Age) {
+        Type = QString("Age");
         BinCount = QString::number(abins.count());
-        xmin = abins.first().toFloat();
+        binmid = static_cast<int>(abins.count()/2);
+        BinMid = QString::number(binmid);
+        xmin = abins.first().toDouble();
         xMin = abins.first();
-        xmax = abins.last().toFloat();
+        xmax = abins.last().toDouble();
         xMax = abins.last();
     }
     else {
+        Type = QString("Size");
         BinCount = QString::number(lbins.count());
+        binmid = static_cast<int>(lbins.count()/2);
+        BinMid = QString::number(binmid);
         xmin = lbins.first().toFloat();
         xMin = lbins.first();
         xmax = lbins.last().toFloat();
@@ -247,9 +252,9 @@ void selectivity::setDefaultParams(int method, int special)
     case 11:  // case 11 Constant age-specific selex for specified age range
     {
         setNumParameters(2);
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << BinCount << BinMid << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = xHi;
+        parm[2] = BinCount;
         setParameter(1, parm);
         break;
     }
@@ -257,7 +262,7 @@ void selectivity::setDefaultParams(int method, int special)
     case 12:
     {
         setNumParameters(2);
-        parm << xMin << xMax << Peak << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << Peak << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[0] = QString(".01");
         parm[1] = QString("60");
@@ -275,31 +280,33 @@ void selectivity::setDefaultParams(int method, int special)
     {
         setNumParameters(2);
 //        QString bin2(QString::number(xVals.count()));
-        parm << "1" << Count << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << BinCount << "1" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = Count;
+        setParameterLabel(0, QString("%1Selex p1 LoBin %2").arg(Type, fisheryName));
+        parm[2] = BinCount;
         setParameter(1, parm);
+        setParameterLabel(1, QString("%1Selex p2 HiBin %2").arg(Type, fisheryName));
         break;
     }
     case 6:  // case 6 non-parametric size selex pattern
     {
-        if (special < 3)
-        {
+        if (special < 3) {
             special = 3;
+        }
+        if (special != getSpecial()) {
             setup->setValue(3, special);
         }
         numparam = 2 + special;
         setNumParameters(numparam);
 
-        parm << xMin << xMax << Peak << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << Peak << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = QString::number(peak + 10.0);
         setParameter(1, parm);
         parm.clear();
-        parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 2; i < numparam; i++)
             setParameter(i, parm);
-        setSpecial(special);
         break;
     }
     case 2:  // case 2 discontinued; use pattern 8 for double logistic (size)
@@ -309,26 +316,26 @@ void selectivity::setDefaultParams(int method, int special)
         // 1=peak, 2=init, 3=infl, 4=slope, 5=final, 6=infl2, 7=slope2 8=binwidth;    Mirror=1===const_above_Linf
     {
         setNumParameters(8);
-        parm << xMin << xMax << Peak << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << Peak << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << "0" << "3" << "1.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "3" << "1.5" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm[2] = QString("2.3");
         setParameter(5, parm);
         parm.clear();
-        parm << "-5" << "3" << "-.6" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "3" << "-.6" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         parm[2] = QString("0.06");
         setParameter(6, parm);
         parm.clear();
-        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(4, parm);
         parm.clear();
-        parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << "20" << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
     }
@@ -336,25 +343,25 @@ void selectivity::setDefaultParams(int method, int special)
         // 1=peak, 2=init, 3=infl, 4=slope, 5=final, 6=infl2, 7=slope2 8=binwidth;    Mirror=1===const_above_Linf
     {
         setNumParameters(8);
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << xLo << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << "0" << "3" << "1.3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "3" << "1.3" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm[2] = QString("2.3");
         setParameter(5, parm);
         parm.clear();
-        parm << "-5" << "3" << "1.3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "3" << "1.3" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         setParameter(6, parm);
         parm.clear();
-        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(4, parm);
         parm.clear();
-        parm << "1" << "20" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << "20" << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
     }
@@ -362,54 +369,54 @@ void selectivity::setDefaultParams(int method, int special)
     case 19: // simple double logistic
     {
         setNumParameters(6);
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << xLo << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
 //        parm[0] = QString("0");
-        parm[2] = Peak;
+        parm[2] = xHi;
         setParameter(2, parm);
 /*        parm[0] = QString("1");
         parm[1] = QString::number(xVals.count());
         parm[2] = QString("1");*/
         parm.clear();
-        parm << "0" << "9" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "9" << "0.3" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << "-1" << "1" << "-.02" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-1" << "1" << "-0.2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         parm.clear();
         if (method == 9) {
-            parm << "1" << Count << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            parm << "1" << Count << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         }
         else {
-            parm << xMin << xMax << xMin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            parm << xMin << xMax << xMin << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         }
         setParameter(4, parm);
         parm.clear();
-        parm << "0" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "1" << "0" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(5, parm);
         break;
     }
     case 13:  // double logistic
     {
         setNumParameters(8);
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << xLo << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "1" << ".01" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << "-5" << "5" << "1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "5" << "1" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm.clear();
-        parm << "-5" << "3" << "-1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "3" << "-1" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         setParameter(6, parm);
         parm.clear();
-        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(4, parm);
         setParameter(5, parm);
         parm.clear();
-        parm << xMin << xMax << Peak << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << Peak << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(7, parm);
         break;
     }
@@ -418,8 +425,10 @@ void selectivity::setDefaultParams(int method, int special)
         numparam = numAges + 1;
         setNumParameters(numparam);
 
-        parm << "-5" << "9" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (int i = 0; i < numparam; i++)
+        parm << "-5" << "9" << "-5" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        setParameter(0, parm);
+        parm[2] = QString("2");
+        for (int i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
     }
@@ -431,10 +440,10 @@ void selectivity::setDefaultParams(int method, int special)
     case 16:  // case 16 Coleraine - Gaussian age selectivity
     {
         setNumParameters(2);
-        parm << "-20" << "20" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "5" << "0" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "-5" << "40" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "10" << "2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         break;
     }
@@ -443,10 +452,10 @@ void selectivity::setDefaultParams(int method, int special)
     {
         numparam = numAges + 1;
         setNumParameters(numparam);
-        parm << "-1000" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-10" << "5" << "-1000" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "-1000" << "10" << ".1" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-10" << "10" << ".1" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
@@ -464,14 +473,14 @@ void selectivity::setDefaultParams(int method, int special)
         setNumParameters(numparam);
         val = (float)numXvals / special;
         parm.clear();
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << xLo << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 0; i < special; i++)
         {
             parm[2] = QString::number(1.0 + i * val);
             setParameter(i, parm);
         }
         parm.clear();
-        parm << "0" << "1" << "1.0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "1" << "1.0" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (; i < numparam; i++)
         {
             setParameter(i, parm);
@@ -483,35 +492,35 @@ void selectivity::setDefaultParams(int method, int special)
     case 24: // double normal with plateau and defined ends
     {
         setNumParameters(6);
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << xLo << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "-5" << "3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "3" << "0" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << "-5" << "12" << "3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "12" << "3" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm.clear();
-        parm << "-2" << "10" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-2" << "10" << "5" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(3, parm);
         parm.clear();
-        parm << "-15" << "5" << "-2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-15" << "5" << "-2" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(4, parm);
         parm.clear();
-        parm << "-5" << "5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "5" << "0" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(5, parm);
         break;
     }
     case 22:  // case 22 size selectivity using double_normal_plateau (similar to CASAL)
     {
         setNumParameters(4);
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << xMin << xMax << xLo << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << "-5" << "10" << "1.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-5" << "10" << "1.5" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << "0" << "10" << "4" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "0" << "10" << "4" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         setParameter(3, parm);
         break;
@@ -520,13 +529,13 @@ void selectivity::setDefaultParams(int method, int special)
     case 26: // 26 #age selectivity: exponential logistic
     {
         setNumParameters(3);
-        parm << ".02" << "2" << ".5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << ".02" << "1" << ".5" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm.clear();
-        parm << ".001" << ".999" << ".3" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << ".001" << ".999" << ".5" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(1, parm);
         parm.clear();
-        parm << ".001" << ".5" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << ".001" << ".5" << ".01" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         break;
     }
@@ -535,15 +544,17 @@ void selectivity::setDefaultParams(int method, int special)
         if (special < 3)
         {
             special = 3;
-            fleet->getSizeSelectivity()->setSpecial(3);
-            fleet->getAgeSelectivity()->setSpecial(3);
+            setSpecial(3);
         }
-        numparam = special * 2 + 3;
-        setNumParameters(numparam);
-        parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(0, parm);
-        autogenCubicSpline1();
-        autogenCubicSpline2();
+        else
+        {
+            numparam = special * 2 + 3;
+            setNumParameters(numparam);
+            parm << "0" << "2" << "0" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            autogenCubicSpline1();
+            autogenCubicSpline2();
+        }
         break;
     }
     case 30:  // equal to spawning biomass
@@ -563,15 +574,15 @@ void selectivity::setDefaultParams(int method, int special)
         {
             setNumParameters(numparam);
         }
-        parm << "1" << Count << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << BinCount << BinMid << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        parm[2] = Count;
+        parm[2] = BinCount;
         setParameter(1, parm);
         parm.clear();
-        parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-.001" << "5" << "-1000" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(2, parm);
         parm.clear();
-        parm << "-10" << "10" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "-10" << "10" << "0" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         for (i = 1; i < numparam; i++)
             setParameter(i, parm);
         break;
@@ -581,47 +592,49 @@ void selectivity::setDefaultParams(int method, int special)
         if (special < 3)
         {
             special = 3;
-            fleet->getSizeSelectivity()->setSpecial(3);
-            fleet->getAgeSelectivity()->setSpecial(3);
+            setSpecial(3);
         }
-        numparam = special * 2 + 3 + 2;
-
-        setNumParameters(numparam);
-        parm << "1" << BinCount  << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(0, parm);
-        parm[2] = BinCount;
-        setParameter(1, parm);
-        parm.clear();
-        parm << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(2, parm);
-        autogenCubicSpline1(2);
-        autogenCubicSpline2(2);
+        else
+        {
+            numparam = special * 2 + 3 + 2;
+            setNumParameters(numparam);
+            parm << "1" << BinCount  << BinMid << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            parm[2] = BinCount;
+            setParameter(1, parm);
+            parm.clear();
+            parm << "0" << "2" << "0" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(2, parm);
+            autogenCubicSpline1(2);
+            autogenCubicSpline2(2);
+        }
         break;
     }
     case 43: // case 43 non-parametric size selex scaled by average of values from low bin through high bin
     {
-        if (special < 3)
-        {
+        if (special < 3) {
             special = 3;
-            setup->setValue(3, special);
+            setSpecial(special);
         }
-        numparam = special + 2 + 2;
-        setNumParameters(numparam);
+        else {
+            numparam = special + 2 + 2;
+            setNumParameters(numparam);
 
-        parm.clear();
-        parm << "1" << Count << midbin << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(0, parm);
-        parm[2] = Count;
-        setParameter(1, parm);
-        parm.clear();
-        parm << xMin << xMax << xLo << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(2, parm);
-        parm[2] = xHi;
-        setParameter(3, parm);
-        parm.clear();
-        parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (i = 4; i < numparam; i++)
-            setParameter(i, parm);
+            parm.clear();
+            parm << "1" << BinCount << BinMid << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            parm[2] = BinCount;
+            setParameter(1, parm);
+            parm.clear();
+            parm << xMin << xMax << xLo << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(2, parm);
+            parm[2] = xHi;
+            setParameter(3, parm);
+            parm.clear();
+            parm << "-5" << "9" << ".01" << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (i = 4; i < numparam; i++)
+                setParameter(i, parm);
+        }
         break;
     }
     case 44: // case 44 like age selex 17 but with separate parameters for males and with revised controls
@@ -629,29 +642,34 @@ void selectivity::setDefaultParams(int method, int special)
         if (special < 1)
         {
             special = 1;
-            setup->setValue(3, special);
+            setSpecial(special);
         }
-        numparam = (special * numGenders) + 4;
-        setNumParameters(numparam);
-        parm << "-1000" << Count << "-1000" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(0, parm);
-        parm[2] = midbin;
-        setParameter(1, parm);
-        parm[2] = Count;
-        setParameter(2, parm);
-        parm.clear();
-        parm << "-1" << "2" << "-.001" << "-.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(3, parm);
-        parm.clear();
-        parm << "-10" << "10" << "3" << "3" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (i = 4, j = 0; j < special; i++, j++)
-            setParameter(i, parm);
-        if (numGenders > 1)
-        {
+        else {
+            int index = 3 + (numGenders>1? 1:0);
+            numparam = (special * numGenders) + index;
+            setNumParameters(numparam);
+            parm << "1" << BinCount << "1" << "0" << "0.5" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            parm[2] = BinMid;
+            setParameter(1, parm);
+            parm[2] = QString::number(binmid + 1);
+            setParameter(2, parm);
+            if (numGenders > 1)  {
+                parm.clear();
+                parm << "-1" << ".01" << "-.001" << "-.001" << "0.5" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                setParameter(3, parm);
+            }
             parm.clear();
-            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (j = 0; j < special; i++, j++)
+            parm << "-10" << "10" << "3" << "3" << "0.5" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (i = index, j = 0; j < special; i++, j++)
                 setParameter(i, parm);
+            if (numGenders > 1)
+            {
+                parm.clear();
+                parm << "-1000" << "10" << "1" << "-0.9" << "0.5" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                for (j = 0; j < special; i++, j++)
+                    setParameter(i, parm);
+            }
         }
         break;
     }
@@ -660,31 +678,35 @@ void selectivity::setDefaultParams(int method, int special)
         if (special < 1)
         {
             special = 1;
+            setSpecial(special);
         }
-        setup->setValue(3, special);
-        numparam = (special * numGenders) + 4;
-        if (parameters->getNumParams() != numparam)
-        {
-            setNumParameters(numparam);
-        }
-        parm << "1" << Count << "2" << "0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(0, parm);
-        parm[2] = QString("5");
-        setParameter(1, parm);
-        setParameter(2, parm);
-        parm.clear();
-        parm << "-1" << "2" << "-0.001" << "-0.001" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        setParameter(3, parm);
-        parm.clear();
-        parm << "-10" << "10" << "-5.0" << "-5.0" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-        for (i = 4, j = 0; j < special; i++, j++)
-            setParameter(i, parm);
-        if (numGenders > 1)
-        {
+        else {
+            numparam = (special * numGenders) + 4;
+            if (parameters->getNumParams() != numparam)
+            {
+                setNumParameters(numparam);
+            }
+            parm << "1" << Count << "2" << "0" << "0.5" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            setParameter(0, parm);
+            parm[2] = QString("5");
+            setParameter(1, parm);
+            setParameter(2, parm);
+            if (numGenders > 1) {
+                parm.clear();
+                parm << "-1" << "2" << "-0.001" << "-0.001" << "0.5" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                setParameter(3, parm);
+            }
             parm.clear();
-            parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
-            for (j = 0; j < special; i++, j++)
+            parm << "-10" << "10" << "-5.0" << "-5.0" << "0.5" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+            for (i = 2+numGenders, j = 0; j < special; i++, j++)
                 setParameter(i, parm);
+            if (numGenders > 1)
+            {
+                parm.clear();
+                parm << "-1000" << "10" << "-1000" << "-0.9" << "0.5" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+                for (j = 0; j < special; i++, j++)
+                    setParameter(i, parm);
+            }
         }
         break;
     }
@@ -1213,6 +1235,7 @@ void selectivity::autogenCubicSpline1(int scale) {
         data[0] = bins.first();
         data[1] = bins.last();
         data[2] = QString::number(term);
+        data[6] = QString::number(-99);
         setParameter(index +i, data);
         term += interm;
     }
@@ -1227,11 +1250,13 @@ void selectivity::autogenCubicSpline2(int scale) {
     data[0] = QString::number(-0.001);
     data[1] = QString::number(1.0);
     data[2] = QString::number(0.13);
+    data[6] = QString::number(2);
     parameters->setParameter(scale + 1, data);
     data = parameters->getParameter(scale + 2);
     data[0] = QString::number(-1);
     data[1] = QString::number(0.001);
     data[2] = QString::number(-0.03);
+    data[6] = QString::number(2);
     parameters->setParameter(scale + 2, data);
 
     // min, max, init for node values
@@ -1240,6 +1265,7 @@ void selectivity::autogenCubicSpline2(int scale) {
         data[0] = QString::number(-9);
         data[1] = QString::number(7);
         data[2] = QString::number(-1);
+        data[6] = QString::number(2);
         parameters->setParameter(index + i, data);
     }
     data = parameters->getParameter(index);

@@ -100,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (files, SIGNAL(choose_data_file()),SLOT(openDataFile()));
     connect (files, SIGNAL(save_control_file()), SLOT(saveControlFile()));
     connect (files, SIGNAL(choose_control_file()), SLOT(openControlFile()));
-    connect (files, SIGNAL(files_read()), SLOT(refreshAll()));
+    connect (files, SIGNAL(files_read(bool)), SLOT(refreshAll()));
 
     connect (ui->action_New, SIGNAL(triggered()), SLOT(createNewDirectory()));
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
@@ -465,7 +465,7 @@ void MainWindow::copyDirectory()
 void MainWindow::openControlFile()
 {
     QString fname (QFileDialog::getOpenFileName (this, tr("Select Control File"),
-        current_dir, tr("ctl files (*.ctl);;SS files (*.ss);;all files (*.*)")));
+        current_dir, tr("Control Files (*.ctl; *.ss);;All Files (*.*)")));
     if (!fname.isEmpty())
     {
         files->set_control_file(fname);
@@ -478,7 +478,7 @@ void MainWindow::saveControlFile()
 {
     QString fname = files->get_control_file();
     fname = QFileDialog::getSaveFileName(this, tr("Select Control File"),
-            current_dir, tr("data files (*.ctl);;SS files (*.ss);;all files (*.*)"));
+            current_dir, tr("Control Files (*.ctl; *.ss);;All Files (*.*)"));
     if (!fname.isEmpty())
     {
         files->set_control_file(fname);
@@ -489,7 +489,7 @@ void MainWindow::saveControlFile()
 void MainWindow::openDataFile()
 {
     QString fname (QFileDialog::getOpenFileName (this, tr("Select Data File"),
-        current_dir, tr("data files (*.dat);;SS files (*.ss);;all files (*.*)")));
+        current_dir, tr("Data Files (*.ss; *.dat);;All Files (*.*)")));
     if (!fname.isEmpty())
     {
         files->set_data_file(fname);
@@ -502,7 +502,7 @@ void MainWindow::saveDataFile()
 {
     QString fname = files->get_data_file();
     fname = QFileDialog::getSaveFileName(this, tr("Select Data File"),
-            current_dir, tr("data files (*.dat);;SS files (*.ss);;all files (*.*)"));
+            current_dir, tr("Data Files (*.ss; *.dat);;All Files (*.*)"));
     if (!fname.isEmpty())
     {
         files->set_data_file(fname);
@@ -541,7 +541,7 @@ void MainWindow::readFiles()
             msgbx.setDetailedText(detail);
             msgbx.addButton("Convert Model", QMessageBox::AcceptRole);
             msgbx.addButton("Choose Another", QMessageBox::RejectRole);
-            msgbx.addButton("Quit GUI", QMessageBox::NoRole);
+            msgbx.addButton("Exit GUI", QMessageBox::NoRole);
             choice = msgbx.exec();
                  if (choice == 0)
             {
@@ -556,10 +556,10 @@ void MainWindow::readFiles()
                 close();
             }
         }
-        else
-        {
-            showInputMessage("Problem reading files!");
-        }
+//        else
+//        {
+//            showInputMessage("Problem reading files!");
+//        }
     }
 }
 

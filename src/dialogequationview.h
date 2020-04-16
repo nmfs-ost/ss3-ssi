@@ -9,6 +9,7 @@
 
 #include <qchart.h>
 #include <qlineseries.h>
+#include <qsplineseries.h>
 #include <QChartView>
 #include <QValueAxis>
 #include <qscatterseries.h>
@@ -16,6 +17,10 @@
 QT_CHARTS_USE_NAMESPACE
 
 #include "dialogparameterview.h"
+
+#define limit1 join1Series
+#define limit2 join2Series
+
 
 enum BlankType {
     Discontinued,
@@ -62,6 +67,9 @@ public slots:
 
     void setParameterHeader(int pnum, QString hdr);
     void setParametersVisible (bool vis = false);
+
+    void setupLimits();
+    void setLimits(float xval1, float xval2);
 
     void setIntVar1Range (int min, int max);
     int getIntVar1 ();
@@ -143,9 +151,10 @@ protected:
     QLineSeries *valSeries;
 
     QScatterSeries *ptSeries;
+    QSplineSeries *cubicSeries;
     QList<QPointF> firstPoints;
 
-    float yMax;
+    double yMax;
 
     QValueAxis *axisX;
     QValueAxis *axisY;
@@ -174,6 +183,7 @@ protected slots:
 
     double joinFunction (double minPoss, double maxPoss, double inflec, double xVar, double y1, double y2);
 
+    double evaluatePoints(QList<QPointF> &points, double xval);
     double evaluateLine (QPointF pt1, QPointF pt2, double x = 0);
     double minXvalue (const QList<QPointF> &pointlist);
     double maxXvalue (const QList<QPointF> &pointlist);

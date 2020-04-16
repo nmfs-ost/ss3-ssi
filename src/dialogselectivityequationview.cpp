@@ -1,6 +1,7 @@
 #include "dialogselectivityequationview.h"
 
 #include <QMessageBox>
+#include <QSplineSeries>
 
 using namespace tk;
 
@@ -43,9 +44,9 @@ DialogSelexEquationView::DialogSelexEquationView(QWidget *parent, SelexType typ)
     setIntVar1Range(1, 10);
     setIntVar1(2);
 
-    setJoinOne(10);
-    setJoinTwo(10);
-    setJoinThree(10);
+//    setJoinOne(10);
+//    setJoinTwo(10);
+//    setJoinThree(10);
 
     yMax = 1.0;
     axisY->setRange(0, 1.2);
@@ -86,22 +87,22 @@ void DialogSelexEquationView::setOption(int value) {
 }
 
 void DialogSelexEquationView::setSelex(selectivity *slx) {
-    disconnectAll();
-    disconnect (selex, SIGNAL(setupChanged(QStringList)), this,
-                SLOT(changedSelex(QStringList)));
+//    disconnectAll();
+//    disconnect (selex, SIGNAL(setupChanged(QStringList)), this,
+//                SLOT(changedSelex(QStringList)));
     selex = slx;
-    setParameters(selex->getParameterModel());
+//    setParameters(selex->getParameterModel());
     restoreAll();
-    connect (selex, SIGNAL(setupChanged(QStringList)), this,
-                 SLOT(changedSelex(QStringList)));
-    connectAll();
+//    connect (selex, SIGNAL(setupChanged(QStringList)), this,
+//                 SLOT(changedSelex(QStringList)));
+//    connectAll();
 }
 
 void DialogSelexEquationView::changingSelex() {
 //    disconnect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
 }
 
-void DialogSelexEquationView::changedSelex(QStringList ql) {
+void DialogSelexEquationView::changedSelex(QStringList &ql) {
     Q_UNUSED(ql);
 //    connect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
     changeSelex();
@@ -174,11 +175,11 @@ void DialogSelexEquationView::setParameterHeaders(int scale) {
         selexTyp = QString("Age");
     else selexTyp = QString("Size");
 
-    if (static_cast<int>(scale) == 2) {
+    if (i == 2) {
         parameterView->setSliderRange(0, 1, bins.count());
-        parameters->setRowHeader(0, QString("Scale Lo"));
+        parameters->setRowHeader(0, QString("%1Sel_Scale%1BinLo").arg(selexTyp));
         parameterView->setSliderRange(1, 1, bins.count());
-        parameters->setRowHeader(1, QString("Scale Hi"));
+        parameters->setRowHeader(1, QString("%1Sel_Scale%1BinHi").arg(selexTyp));
     }
     for (; i < parameters->rowCount(); i++)
     {
@@ -214,7 +215,7 @@ void DialogSelexEquationView::restoreAll() {
 }
 
 void DialogSelexEquationView::setup() {
-    if (fleet == nullptr || selex == nullptr)
+    if (fleet == nullptr || selex == nullptr || bins.isEmpty())
         return;
 
     if (!updating)
@@ -230,16 +231,14 @@ void DialogSelexEquationView::setup() {
             axisX->setTitleText(QString("Length"));
         axisX->setRange(xValList.first(), xValList.last());
 
-        axisY->setTitleText(QString("Selectivity"));
+        axisY->setTitleText(QString("Selectivity (red)"));
         axisY->setRange(0, 1.2);
 
         axisYalt->setRange(0, 1.2);
-        cht->addAxis(axisYalt, Qt::AlignRight);
 
         valSeries->setName("Selex (red)");
         valSeries->setPen(QPen(QBrush(Qt::red), 5));
-        valSeries->attachAxis(axisX);
-        valSeries->attachAxis(axisY);
+
 
         numParams = parameters->rowCount();
         disconnectAll();
@@ -348,9 +347,8 @@ void DialogSelexEquationView::setup() {
             break;
 
         case 27: // case 27: age selectivity - cubic spline
-            if (special < 3)
-                special = 3;
-            cubicSpline();
+            if (special >= 3)
+                cubicSpline();
             break;
 
         case 30: // case 30: No equation, Uses spawning biomass/output
@@ -388,18 +386,18 @@ void DialogSelexEquationView::setup() {
             break;
 
         case 43: // case 43: size selectivity - non-parametric scaled by average of values at low bin through high bin
-            blank (NotYet, 43, 0, QString("This equation is in work."));
-            //linearScaled();
+//            blank (NotYet, 43, 0, QString("This equation is in work."));
+            linearScaled();
             break;
 
         case 44: // case 44: age selectivity - like age selex 17 but with separate parameters for males and with revised controls
-            blank (NotYet, 44, 0, QString("IN WORK."));
-//            twoSexRandomWalk();
+//            blank (NotYet, 44, 0, QString("IN WORK."));
+            twoSexRandomWalk();
             break;
 
         case 45: // case 45: age selectivity - like age selex 14 but with separate parameters for males and with revised controls
-            blank (NotYet, 44, 0, QString("IN WORK."));
-//            twoSexEachAge();
+//            blank (NotYet, 44, 0, QString("IN WORK."));
+            twoSexEachAge();
             break;
 
         default:
@@ -409,8 +407,8 @@ void DialogSelexEquationView::setup() {
         }
         updating = false;
     }
-    cht->addSeries(valSeries);
-    valSeries->attachAxis(axisY);
+//    cht->addSeries(valSeries);
+//    valSeries->attachAxis(axisY);
     updateGrid(cht->rect());
     connectAll();
 }
@@ -439,7 +437,7 @@ void DialogSelexEquationView::update() {
             break;
 
         case 6:  // case 6 non-parametric size selex pattern
-            updateLinear(0);
+            updateLinearScaled(0);
             break;
 
         case 8:  // case 8 double logistic with eight parameters
@@ -522,15 +520,15 @@ void DialogSelexEquationView::update() {
             break;
 
         case 43: // 43 non-parametric size selex scaled by average of values at low bin through high bin
-//            updateLinear(2.);
+            updateLinearScaled(2.);
             break;
 
         case 44: // 44 like age selex 17 but with separate parameters for males and with revised controls
-//            updateTwoSexRandom();
+            updateTwoSexRandom();
             break;
 
         case 45: // 45 like age selex 14 but with separate parameters for males and with revised controls
-//            updateTwoSexEachAge();
+            updateTwoSexEachAge();
             break;
 
         default:
@@ -549,7 +547,7 @@ void DialogSelexEquationView::constant (double val) {
     setLabel(msg);
 
     showBins(true);
-    chartview->setVisible(false);
+//    chartview->setVisible(false);
 
     if (equationNum == 11) {
         constantRange();
@@ -559,25 +557,20 @@ void DialogSelexEquationView::constant (double val) {
         parameterView->setNumParamsShown(numParams);
         updateConstant(val);
     }
-    chartview->setVisible(true);
+//    chartview->setVisible(true);
 }
 
 // Size selectivity 0, age selectivity 10 - 0 parameters
 void DialogSelexEquationView::updateConstant (double val) {
-    double binMid = getBinStep() * getMidBin();
-    double start = 0;
-    double end = 1;
+    double start = 1; // equation 0
+    double end = 2;
 
-    if (!xValList.isEmpty())
+    if (!bins.isEmpty())
     {
         if (equationNum == 10) {
-            start = xValList.at(1);// + binMid;
+            start = bins.at(0);
         }
-        else { // equationNum == 0
-            start = xValList.at(0);// + binMid;
-        }
-
-        end = xValList.last() + binMid;
+        end = bins.last();
         updateConstant(val, start, end);
     }
 }
@@ -600,30 +593,29 @@ void DialogSelexEquationView::constantRange () {
 
 // 11 #Constant age-specific selex for specified age range
 void DialogSelexEquationView::updateConstantRange (double val) {
-    double par1 = parameterView->getInput(0);
-    double par2 = parameterView->getInput(1);
-//    double binMid = getBinStep() * getMidBin();
+    double loBin = parameterView->getInput(0);
+    double hiBin = parameterView->getInput(1);
+    int first, last;
+//    double start; = bins.at(first);
+//    double end; = bins.at(last);
+    int lastbin = bins.count();
+    if (lastbin > 1) {
+        checkScaleSliders(0, 1, bins, loBin, hiBin);
+        first = static_cast<int>(loBin);
+        last  = static_cast<int>(hiBin);
 
-    if (par1 < 0)
-        par1 = xValList.first();
-
-    if (par2 < 0)
-        par2 = xValList.last();
-    if (par2 <= par1)
-        par2 = par1 + 1;// + binMid;
-    double start = par1;// + binMid;
-    double end = par2;// + binMid;
-
-    updateConstant(val, start, end);
+        updateConstant(val, bins.at(first-1), bins.at(last-1));
+    }
 }
 
 // general constant graph
 void DialogSelexEquationView::updateConstant (double val, double first, double last) {
-    double start = xValList.first();// + binMid;
-    double end = xValList.last();// + binMid;
+    double start = 0;
+    double end = bins.isEmpty()? xValList.last(): bins.last();
+
 
     valSeries->clear();
-    if (start < (first - .001)) {
+    if (start < (first + .001)) {
         valSeries->append(QPointF(start, 0));
         valSeries->append(QPointF(first, 0));
     }
@@ -823,21 +815,26 @@ void DialogSelexEquationView::linearSeg (int scale) {
         parameterView->setType(index, QString("Value"));
 
         showBins(true);
-
-        ascendSeries = new QLineSeries(cht);
-        ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
-        ascendSeries->setName(QString("Ln of Selex"));
-        cht->addSeries(ascendSeries);
+        cht->removeSeries(valSeries);
 
         axisYalt->setTitleText("Ln of Selex");
         cht->addAxis(axisYalt, Qt::AlignRight);
+
+//        ascendSeries = new QLineSeries(cht);
+        ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
+        ascendSeries->setName(QString("Ln of Selex"));
+        cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisYalt);
+
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->show();
         cht->legend()->setAlignment(Qt::AlignLeft);
 
-        updateLinear(scale);
+        updateLinearScaled(scale);
     }
 }
 
@@ -872,6 +869,12 @@ void DialogSelexEquationView::linearPlain() {
             rowdata = parameters->getRowData(i);
             rowdata[0] = Min; rowdata[1] = Max;
             parameters->setRowData(i, rowdata);
+            parameterView->setSliderRange(i, bins.first(), bins.last());
+            parameterView->setName(i, QString("Node %1").arg(QString::number(i+1)));
+        }
+        for (int i = 0; i < special; i++) {
+            int row = special + i;
+            parameterView->setName(row, QString("Node Value %1").arg(QString::number(row+1)));
         }
         updateLinearPlain();
     }
@@ -886,18 +889,19 @@ void DialogSelexEquationView::linearScaled () {
                     QString::number(numNodes + 1)));
     setLabel(msg);
 
+    numParams = parameters->rowCount();
+    parameterView->setNumParamsShown(numParams);
+
     num = parameters->rowCount() - 4;
     if (num < 3 || numNodes != num)  {
         setMessage(tr("ERROR: Incorrect number of parameters. \nShould be Special +4"));
     }
     else {
-        numParams = parameters->rowCount();
-        parameterView->setNumParamsShown(numParams);
         setParameterHeaders();
-        parameterView->setName(0, QString("Scale bin Lo"));
-        parameterView->setType(0, QString("Value"));
-        parameterView->setName(1, QString("Scale bin Hi"));
-        parameterView->setType(1, QString("Value"));
+        parameterView->setName(0, QString("Scale Low Bin"));
+        parameterView->setType(0, QString("Integr"));
+        parameterView->setName(1, QString("Scale High Bin"));
+        parameterView->setType(1, QString("Integr"));
         parameterView->setName(2, QString("length for P1"));
         parameterView->setType(2, QString("Value"));
         parameterView->setName(3, QString("length for P2"));
@@ -916,20 +920,29 @@ void DialogSelexEquationView::linearScaled () {
         showBins(true);
         cht->removeSeries(valSeries);
 
-        ascendSeries = new QLineSeries(cht);
+        axisYalt->setTitleText("Ln of Selex");
+        cht->addAxis(axisYalt, Qt::AlignRight);
+
+        setupLimits();
+        limit1->setPen(QPen(QBrush(Qt::darkGreen), 2));
+        limit1->setName(QString("ScaleLoBin"));
+        limit2->setPen(QPen(QBrush(Qt::darkBlue), 2));
+        limit2->setName(QString("ScaleHiBin"));
+
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         ascendSeries->setName(QString("Ln of Selex"));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisYalt);
 
-        axisYalt->setTitleText("Ln of Selex");
-        cht->addAxis(axisYalt, Qt::AlignRight);
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->show();
         cht->legend()->setAlignment(Qt::AlignLeft);
 
-        updateLinearScaled();
+        updateLinearScaled(2);
     }
 }
 
@@ -950,24 +963,23 @@ void DialogSelexEquationView::updateLinear(int scale) {
     if (scale == 1)
         updateLinearPlain();
     else if (scale == 2)
-        updateLinearScaled();
+        updateLinearScaled(2);
     else
     {
         valSeries->clear();
         firstPoints.clear();
         ascendSeries->clear();
 
-        for (int i = 0; i <= num+1; i++)
-        {
+        for (int i = 0; i <= num+1; i++)  {
             xVal.append(0.0);
             yVal.append(0.0);
         }
+    // first point
         xVal[0] = xValList.first();
         yVal[0] = -10.0;
         xVal[1] = parameterView->getInput(0);
 
-        for (index = 1; index <= num; index++)
-        {
+        for (index = 1; index <= num; index++) {
             yVal[index] = parameterView->getInput(index+1);
         }
         xVal[num] = parameterView->getInput(1);
@@ -976,8 +988,7 @@ void DialogSelexEquationView::updateLinear(int scale) {
         yVal[num + 1] = yVal[num];
 
         temp = (xVal[num] - xVal[1]) / (num - 1);
-        for (index = 2; index < numNodes; index++)
-        {
+        for (index = 2; index < numNodes; index++) {
             xVal[index] = xVal[1] + (index - 1) * temp;
         }
 
@@ -988,11 +999,10 @@ void DialogSelexEquationView::updateLinear(int scale) {
         else
             temp = binMax;
         ascendSeries->append(QPointF(temp, yVal[numNodes]));
-        axisYMax = static_cast<int>(maxYvalue(ascendSeries->points()) + 1);
-        axisYMin = static_cast<int>(minYvalue(ascendSeries->points()) - 2);
+        axisYMax = static_cast<int>(maxYvalue(ascendSeries->points()));
+        axisYMin = static_cast<int>(minYvalue(ascendSeries->points()));
         axisYalt->setRange(axisYMin, axisYMax);
 
-//        yMax = yVal[0];
         for (int i = 0; i < xValList.count(); i++)
         {
             len = xValList.at(i);
@@ -1001,11 +1011,6 @@ void DialogSelexEquationView::updateLinear(int scale) {
                 if (len >= xVal[j -1] && len < xVal[j])
                 {
                     y = evaluateLine(QPointF(xVal[j-1], yVal[j-1]), QPointF(xVal[j], yVal[j]), len);
-//                    if (y > yMax)
-//                        yMax = y;
-//                    if (y < axisYMin)
-//                        axisYMin = static_cast<int>(y) - 2;
-//                    axisYMax = static_cast<int>(yMax) + 1;
                     firstPoints.append(QPointF(len, y));
                     break;
                 }
@@ -1044,121 +1049,192 @@ void DialogSelexEquationView::updateLinearPlain() {
     int i = 0;
     double xVal;
     double yVal = 1.0;
+    firstPoints.clear();
     valSeries->clear();
-    xVal = parameterView->getInput(0);
-    while (xVal > xValList.at(i)) {
-        valSeries->append(QPointF(xValList.at(i++), 0.0));
-    }
+//    xVal = parameterView->getInput(0);
+//    while (xVal > xValList.at(i)) {
+ //       valSeries->append(QPointF(xValList.at(i++), 0.0));
+//    }
+    xVal = 0;
+    firstPoints.append(QPointF(xVal, 0.0));
     for (i = 0; i < special; i++) {
         xVal = parameterView->getInput(i);
         yVal = parameterView->getInput(i+special);
-        valSeries->append(QPointF(xVal, yVal));
+        firstPoints.append(QPointF(xVal, yVal));
     }
     if (xVal < xValList.last()) {
-        valSeries->append(QPointF(xValList.last(), yVal));
+        firstPoints.append(QPointF(xValList.last(), yVal));
+    }
+    float temp = maxYvalue(firstPoints);
+    if (temp > 1) {
+        for (i = 0; i < firstPoints.count(); i++) {
+            valSeries->append(QPointF(firstPoints.at(i).x(), firstPoints.at(i).y()/temp));
+        }
     }
 }
 
 // size selectivity 43
-void DialogSelexEquationView::updateLinearScaled() {
-    float x = 0, y = 0;
+void DialogSelexEquationView::updateLinearScaled(int scale) {
+//    int scale = 2;
+    bool okay = true;
+    double loBin = 1, hiBin = 2;
+    double altYmin = 0, altYmax = 1;
+    double lastsel=-10.0;  // log(selex) for first bin;
+    double lastSelPoint=bins.first();    //  first size
+    double finalSelPoint=parameterView->getInput(scale + 1); // size beyond which selex is constant
+    double SelPoint=parameterView->getInput(scale);   //  first size that will get a parameter.  Value will get incremented by step interval (temp1)
+    int index=scale+2;  // next parameter
+    double temp1 = (finalSelPoint-SelPoint)/(special-1.0);  // step interval
+    QList<QPointF> secndPoints;
+
+    axisY->setRange(0.0, 1.2);
+
+    if (scale == 1)
+        updateLinearPlain();
+    else if (scale == 2) {
+        loBin = parameterView->getInput(0);
+        hiBin = parameterView->getInput(1);
+        okay = checkScaleSliders(0, 1, bins, loBin, hiBin);
+        setLimits(loBin, hiBin);
+    }
+
+    if (okay) {
+        firstPoints.clear();
+        ascendSeries->clear();
+        valSeries->clear();
+
+        firstPoints.append(QPointF(lastSelPoint, lastsel));
+        for (; index < parameters->rowCount(); index++)
+        {
+            lastsel = parameterView->getInput(index);
+            firstPoints.append(QPointF(SelPoint, lastsel));
+            SelPoint += temp1;
+        }
+        SelPoint = bins.last();
+        firstPoints.append(QPointF(SelPoint, lastsel));
+        altYmin = minYvalue(firstPoints);
+        altYmax = maxYvalue(firstPoints);
+        axisYalt->setRange(altYmin, altYmax);
+
+        ascendSeries->append(firstPoints);
+
+        if (scale == 2) {
+            temp1 = aveYvalue(firstPoints, loBin-1, hiBin-1);
+            setLimits(bins.at(loBin-1), bins.at(hiBin-1));
+        }
+        else {
+            temp1 = altYmax;
+        }
+
+        secndPoints.clear();
+        for (double a = bins.first(); a < bins.last(); a+=1.0) {
+            secndPoints.append(QPointF(a, evaluatePoints(firstPoints, a)));
+        }
+        secndPoints.append(firstPoints.last());
+
+        for (int i = 0; i < secndPoints.count(); i++)
+            valSeries->append(QPointF(secndPoints.at(i).x(), exp(secndPoints.at(i).y() - temp1)));
+
+        yMax = maxYvalue(valSeries->points());
+        if (yMax > 1.0)
+            axisY->setRange(0.0, yMax * 1.2);
+
+    }
+    /*   double x = 0, y = 0;
     float range, increment;
-    int axisYMax = 0;
-    int axisYMin = 0;
+    double altYMax = 0;
+    double altYMin = 0;
     QString msg;
     float temp = 0;
-    float len = 0;
+    double len = 0;
     int numNodes = getSpecial();
     int index = 0;
     int binCount = bins.count();
-    QVector<float> xVal;
-    QVector<float> yVal;
-    float bMin = parameterView->getInput(0);
-    float bMax = parameterView->getInput(1);
+    QVector<double> xVal;
+    QVector<double> yVal;
+    int lobin = static_cast<int>(parameterView->getInput(0));
+    int hibin = static_cast<int>(parameterView->getInput(1));
     int num = parameters->rowCount() - 4;
+    int numPoints = num + 1;
     bool okay;
 
-    if (num < 2 || numNodes != num)
+    if (num < 3 || numNodes != num)
     {
         setMessage(tr("ERROR: Incorrect number of parameters. \nShould be Special + 4"));
         return;
     }
 
-    okay = checkScaleSliders(bins, bMin, bMax);
-
-
-    ascendSeries->clear();
-    valSeries->clear();
-
-    for (int i = 0; i < num+1; i++)
-    {
-        xVal.append(0);
-        yVal.append(0);
-    }
-    xVal[0] = xValList.first();
-    yVal[0] = -10.0;
-    xVal[1] = parameterView->getInput(2);
-    xVal[num] = parameterView->getInput(3);
-    if (xVal[num] < (xVal[1] + num))
-        xVal[num] = xVal[1] + num;
-    range = xVal[num] - xVal[1];
-    increment = range / (num - 1);
-
-    yVal[1] = parameterView->getInput(4);
-    for (index = 2; index <= num; index++)
-    {
-        xVal[index] = xVal[index - 1] + increment;
-        yVal[index] = parameterView->getInput(index+3);
-    }
-
-//    xVal[numNodes] = parameterView->getInput(4);
-//    xVal[numNodes + 1] = xValList.last();
-//    yVal[numNodes + 1] = yVal[numNodes];
-
-//    temp = (xVal[numNodes] - xVal[1]) / (numNodes - 1);
-//    for (int i = 2; i < numNodes; i++)
+//    if (intScale == 2)
 //    {
-//        xVal[i] = xVal[i-1] + temp;
+        lobin = static_cast<int>(parameterView->getInput(0));
+        hibin = static_cast<int>(parameterView->getInput(1));
+        okay = checkScaleSliders(bins, lobin, hibin);
 //    }
 
-    for (index = 0; index <= numNodes; index++)
-        ascendSeries->append(QPointF(xVal[index], yVal[index]));
-    ascendSeries->append(xValList.last(), yVal[index-1]);
+    if (okay) {
+        valSeries->clear();
+        firstPoints.clear();
+        ascendSeries->clear();
 
-//    if (xVal[numNodes] > binMax)
-//        temp = xVal[numNodes] + 2;
-//    else
-//        temp = binMax;
-//    ascendSeries->append(QPointF(temp, yVal[numNodes]));
-
-    firstPoints.clear();
-    yMax = yVal[0];
-    for (int i = 0; i < xValList.count(); i++)
-    {
-        len = xValList.at(i);
-        for (int j = 1; j <= numNodes; j++)
+        for (int i = 0; i < numPoints; i++)
         {
-            if (len >= xVal[j -1] && len < xVal[j])
+            xVal.append(0);
+            yVal.append(0);
+        }
+        xVal[0] = bins.first();
+        yVal[0] = -10.0;
+        xVal[1] = parameterView->getInput(2);
+        xVal[num] = parameterView->getInput(3);
+        if (xVal[num] < (xVal[1] + num))
+            xVal[num] = xVal[1] + num;
+        range = xVal[num] - xVal[1];
+        increment = range / (num - 1);
+
+        yVal[1] = parameterView->getInput(4);
+        for (index = 2; index < numPoints; index++)
+        {
+            xVal[index] = xVal[index - 1] + increment;
+            yVal[index] = parameterView->getInput(index+3);
+        }
+
+
+        for (index = 0; index <= numNodes; index++)
+            ascendSeries->append(QPointF(xVal[index], yVal[index]));
+        if (xVal[numNodes] < bins.last()) {
+            ascendSeries->append(bins.last(), yVal[numNodes]);
+        }
+
+
+        for (int i = 0; i < xValList.count(); i++)
+        {
+            len = xValList.at(i);
+            for (int j = 1; j <= numNodes; j++)
             {
-                y = evaluateLine(QPointF(xVal[j-1], yVal[j-1]), QPointF(xVal[j], yVal[j]), len);
+                if (len >= xVal[j -1] && len < xVal[j])
+                {
+                    y = evaluateLine(QPointF(xVal[j-1], yVal[j-1]), QPointF(xVal[j], yVal[j]), len);
+                    firstPoints.append(QPointF(len, y));
+                    break;
+                }
+            }
+            if (len >= xVal[numNodes])
+            {
+                y = yVal[numNodes];
                 firstPoints.append(QPointF(len, y));
-                if (y > yMax)
-                    yMax = y;
-                if (y < axisYMin)
-                    axisYMin = (int)y - 2;
-                break;
             }
         }
-        if (len >= xVal[numNodes])
-        {
-            y = yVal[numNodes];
-            firstPoints.append(QPointF(len, y));
-        }
-    }
-    axisYMax = static_cast<int>(yMax + 1);
-    axisYMin = static_cast<int>(minYvalue(firstPoints) - 2);
-    axisYalt->setRange(axisYMin, axisYMax);
-    updateLinearExp(2);
+        altYMin = minYvalue(firstPoints);
+        altYMax = maxYvalue(firstPoints);
+        limit1->clear();
+        limit2->clear();
+        limit1->append(QPointF(bins.at(lobin-1)-.01, altYMin));
+        limit1->append(QPointF(bins.at(lobin-1), altYMax));
+        limit2->append(QPointF(bins.at(hibin-1), altYMin));
+        limit2->append(QPointF(bins.at(hibin-1)+.01, altYMax));
+
+        updateLinearExp(2);
+
+    }*/
 }
 
 // Use the list of points (firstPoints)
@@ -1166,47 +1242,39 @@ void DialogSelexEquationView::updateLinearScaled() {
 // finally, scale by selected bins (if eqn 43)
 void DialogSelexEquationView::updateLinearExp(int scale) {
     double yVal;
+    double altYmin, altYmax;
+
+    altYmin = minYvalue(firstPoints);
+    altYmax = maxYvalue(firstPoints);
+    axisYalt->setRange(altYmin, altYmax);
 
     valSeries->clear();
-    yMax = maxYvalue(firstPoints);
-
-    for (int i = 0; i < firstPoints.count(); i++)
-    {
-        yVal = exp(firstPoints.at(i).y() - yMax);
-        valSeries->append(firstPoints.at(i).x(), yVal);
-    }
     if (scale == 2)
     {
-        int firstBin = static_cast<int>(parameterView->getInput(0)) - 1;
-        int lastBin = static_cast<int>(parameterView->getInput(1)) - 1;
-        double firstVal;// = xValList.at(firstBin);
-        double lastVal;
-        double yTotal = 1;
-        double yAve = 1;
-        int i = 0, yNum = 0;
-        if (firstBin <= 0)
-            firstBin = 0;
-        if (lastBin >= bins.count())
-            lastBin = bins.count() - 1;
-        firstVal = bins.at(firstBin);
-        lastVal = bins.at(lastBin);
-        // reuse firstPoints for scaling
-        firstPoints = valSeries->points();
+        double lobin = parameterView->getInput(0);
+        double hibin = parameterView->getInput(1);
+        if (checkScaleSliders(0, 1, bins, lobin, hibin)) {
+            int firstBin = static_cast<int>(lobin) - 1;
+            int lastBin = static_cast<int>(hibin) - 1;
 
-        while (firstPoints.at(i++).x() < firstVal)
-            continue;
-        while (i < firstPoints.count() && firstPoints.at(i).x() <= lastVal) {
-            yNum++;
-            yTotal += firstPoints.at(i++).y();
+            double yAve = aveYvalue(firstPoints, firstBin, lastBin);
+
+            for (int i = 0; i < firstPoints.count(); i++)
+            {
+                yVal = exp(firstPoints.at(i).y() - yAve);
+                valSeries->append(firstPoints.at(i).x(), yVal);
+            }
         }
-
-        valSeries->clear();
-        yAve = yTotal / yNum;
-        for (int i = 0; i < firstPoints.count(); i++)
-        {
-            yVal = firstPoints.at(i).y() / yAve;
+    }
+    else {
+        for (int i = 0; i < firstPoints.count(); i++) {
+            yVal = exp(firstPoints.at(i).y() - yMax);
             valSeries->append(firstPoints.at(i).x(), yVal);
         }
+    }
+    yVal = maxYvalue(valSeries->points());
+    if (yVal > 1.0) {
+        axisY->setRange(0, yVal * 1.2);
     }
 }
 
@@ -1236,22 +1304,25 @@ void DialogSelexEquationView::dblLogistic() {
         setParameterHeaders();
         showBins(true);
         cht->removeSeries(valSeries);
+        cht->addAxis(axisYalt, Qt::AlignRight);
 
-        ascendSeries = new QLineSeries(cht);
+//        ascendSeries = new QLineSeries(cht);
         ascendSeries->setName(QString("Logistic1"));
         ascendSeries->setPen(QPen(QBrush(Qt::green), 2));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisYalt);
 
-        dscendSeries = new QLineSeries(cht);
+//        dscendSeries = new QLineSeries(cht);
         dscendSeries->setName(QString("Logistic2"));
         dscendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         cht->addSeries(dscendSeries);
         dscendSeries->attachAxis(axisX);
         dscendSeries->attachAxis(axisYalt);
 
-        cht->addAxis(axisYalt, Qt::AlignRight);
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->setVisible(true);
         cht->legend()->setAlignment(Qt::AlignLeft);
@@ -1372,60 +1443,56 @@ void DialogSelexEquationView::dblLogPeak() {
         parameterView->setName(1, QString("Init"));
         parameterView->setType(1, QString("Value"));
         parameterView->setName(2, QString("Infl-Up"));
-        parameterView->setType(2, QString("Logit"));
+        parameterView->setType(2, QString("Logist"));
         parameterView->setName(3, QString("Slope-Up"));
         parameterView->setType(3, QString("Value"));
         parameterView->setName(4, QString("Final"));
-        parameterView->setType(4, QString("Logit"));
+        parameterView->setType(4, QString("Logist"));
         parameterView->setName(5, QString("Infl-Dn"));
-        parameterView->setType(5, QString("Logit"));
+        parameterView->setType(5, QString("Logist"));
         parameterView->setName(6, QString("Slope-Dn"));
         parameterView->setType(6, QString("Value"));
         parameterView->setName(7, QString("BinWidth"));
         parameterView->setType(7, QString("Value"));
+        setParameterHeaders();
 
         showBins(true);
         showJoins(0);
-//        cht->removeSeries(valSeries);
+        cht->removeSeries(valSeries);
 
-        join1Series = new QLineSeries(cht);
         join1Series->setPen(QPen(QBrush(Qt::darkGreen), 1));
         join1Series->setName(QString("Join1"));
         cht->addSeries(join1Series);
+        join1Series->attachAxis(axisX);
+        join1Series->attachAxis(axisY);
 
-        join2Series = new QLineSeries(cht);
         join2Series->setPen(QPen(QBrush(Qt::darkCyan), 1));
         join2Series->setName(QString("Join2"));
         cht->addSeries(join2Series);
+        join2Series->attachAxis(axisX);
+        join2Series->attachAxis(axisY);
 
-        join3Series = new QLineSeries(cht);
         join3Series->setPen(QPen(QBrush(Qt::darkYellow), 1));
         join3Series->setName(QString("Join3"));
         cht->addSeries(join3Series);
+        join3Series->attachAxis(axisX);
+        join3Series->attachAxis(axisY);
 
-        ascendSeries = new QLineSeries(cht);
         ascendSeries->setPen(QPen(QBrush(Qt::green), 3));
         ascendSeries->setName(QString("Logist1"));
         cht->addSeries(ascendSeries);
+        ascendSeries->attachAxis(axisX);
+        ascendSeries->attachAxis(axisY);
 
-        dscendSeries = new QLineSeries(cht);
         dscendSeries->setPen(QPen(QBrush(Qt::blue), 3));
         dscendSeries->setName(QString("Logist2"));
         cht->addSeries(dscendSeries);
-
-        cht->addAxis(axisX, Qt::AlignBottom);
-        cht->addAxis(axisY, Qt::AlignLeft);
-
-        ascendSeries->attachAxis(axisX);
-        ascendSeries->attachAxis(axisY);
         dscendSeries->attachAxis(axisX);
         dscendSeries->attachAxis(axisY);
-        join1Series->attachAxis(axisX);
-        join1Series->attachAxis(axisY);
-        join2Series->attachAxis(axisX);
-        join2Series->attachAxis(axisY);
-        join3Series->attachAxis(axisX);
-        join3Series->attachAxis(axisY);
+
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->setVisible(true);
         cht->legend()->setAlignment(Qt::AlignLeft);
@@ -1442,10 +1509,10 @@ void DialogSelexEquationView::dblLogPeak() {
 // size selectivity 8
 void DialogSelexEquationView::updateDblLogPeak() {
     float maxSelX = 0;
-    float binMin = getBinMin();
-    float binMax = getBinMax();
-    float minVal = binMin + (getBinStep() * getMidBin());
-    float maxVal = binMax + (getBinStep() * getMidBin());
+//    float binMin = getBinMin();
+//    float binMax = getBinMax();
+    float minVal = xValList.first();// binMin + (getBinStep() * getMidBin());
+    float maxVal = xValList.last(); // binMax + (getBinStep() * getMidBin());
     float sel = 0;
     float t1 = 0, t1min, t1max, t1power;
     float t2 = 0, t2min, t2max, t2power;
@@ -1725,19 +1792,23 @@ void DialogSelexEquationView::dblNormCasal() {
         showBins(true);
         cht->removeSeries(valSeries);
 
-        ascendSeries = new QLineSeries(cht);
+//        ascendSeries = new QLineSeries(cht);
         ascendSeries->setPen(QPen(QBrush(Qt::green), 2));
         ascendSeries->setName(QString("Ascend"));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisY);
 
-        dscendSeries = new QLineSeries(cht);
+//        dscendSeries = new QLineSeries(cht);
         dscendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         dscendSeries->setName(QString("Descend"));
         cht->addSeries(dscendSeries);
         dscendSeries->attachAxis(axisX);
         dscendSeries->attachAxis(axisY);
+
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->setVisible(true);
         cht->legend()->setAlignment(Qt::AlignLeft);
@@ -1830,33 +1901,37 @@ void DialogSelexEquationView::dblNormal() {
         showBins(true);
         cht->removeSeries(valSeries);
 
-        join1Series = new QLineSeries(cht);
+//        join1Series = new QLineSeries(cht);
         join1Series->setPen(QPen(QBrush(Qt::darkYellow), 2));
         join1Series->setName(QString("Join1"));
         cht->addSeries(join1Series);
         join1Series->attachAxis(axisX);
         join1Series->attachAxis(axisY);
 
-        join2Series = new QLineSeries(cht);
+//        join2Series = new QLineSeries(cht);
         join2Series->setPen(QPen(QBrush(Qt::yellow), 2));
         join2Series->setName(QString("Join2"));
         cht->addSeries(join2Series);
         join2Series->attachAxis(axisX);
         join2Series->attachAxis(axisY);
 
-        ascendSeries = new QLineSeries(cht);
+//        ascendSeries = new QLineSeries(cht);
         ascendSeries->setPen(QPen(QBrush(Qt::green), 3));
         ascendSeries->setName(QString("Asc-Norm"));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisY);
 
-        dscendSeries = new QLineSeries(cht);
+//        dscendSeries = new QLineSeries(cht);
         dscendSeries->setPen(QPen(QBrush(Qt::blue), 3));
         dscendSeries->setName(QString("Desc-Norm"));
         cht->addSeries(dscendSeries);
         dscendSeries->attachAxis(axisX);
         dscendSeries->attachAxis(axisY);
+
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->setVisible(true);
         cht->legend()->setAlignment(Qt::AlignLeft);
@@ -2045,7 +2120,7 @@ void DialogSelexEquationView::dblNormEndpts() {
         parameterView->setType(4, QString("Logist"));
         parameterView->setName(5, QString("Final"));
         parameterView->setType(5, QString("Logist"));
-    //    setParameterHeaders();
+        setParameterHeaders();
     /*    if(equationNum == 23)
         {
             setTitle(QString("Pattern %1: Double Normal plateau").arg(
@@ -2063,42 +2138,39 @@ void DialogSelexEquationView::dblNormEndpts() {
         setJoinTwo(20);
 
         showBins(true);
-//        showJoins(2);
         cht->removeSeries(valSeries);
 
-        join1Series = new QLineSeries(cht);
+//        join1Series = new QLineSeries(cht);
         join1Series->setPen(QPen(QBrush(Qt::darkYellow), 2));
         join1Series->setName(QString("Join1"));
         cht->addSeries(join1Series);
         join1Series->attachAxis(axisX);
         join1Series->attachAxis(axisY);
 
-        join2Series = new QLineSeries(cht);
+//        join2Series = new QLineSeries(cht);
         join2Series->setPen(QPen(QBrush(Qt::yellow), 2));
         join2Series->setName(QString("Join2"));
         cht->addSeries(join2Series);
         join2Series->attachAxis(axisX);
         join2Series->attachAxis(axisY);
 
-        ascendSeries = new QLineSeries(cht);
+//        ascendSeries = new QLineSeries(cht);
         ascendSeries->setPen(QPen(QBrush(Qt::green), 3));
         ascendSeries->setName(QString("Asc-Norm"));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisY);
 
-        dscendSeries = new QLineSeries(cht);
+//        dscendSeries = new QLineSeries(cht);
         dscendSeries->setPen(QPen(QBrush(Qt::blue), 3));
         dscendSeries->setName(QString("Desc-Norm"));
         cht->addSeries(dscendSeries);
         dscendSeries->attachAxis(axisX);
         dscendSeries->attachAxis(axisY);
 
-//        valSeries->attachAxis(axisY);
-//        cht->addSeries(valSeries);
-
-//        cht->addAxis(axisX, Qt::AlignBottom);
-//        cht->addAxis(axisY, Qt::AlignLeft);
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         cht->legend()->setVisible(true);
         cht->legend()->setAlignment(Qt::AlignLeft);
@@ -2225,7 +2297,13 @@ void DialogSelexEquationView::updateExpLogistic() {
     double par2 = parameterView->getValue(1);
     double par3 = parameterView->getInput(2);
 
-    double peak = xValList.first() + par2 * (xRange);
+    double peak;
+    if (slxType == Size) {
+        peak = bins.first() + par2 * (bins.last() - bins.first());
+    }
+    else {
+        peak = par2 * bins.last();
+    }
     parameterView->setInputValue(1, peak);
 
     valSeries->clear();
@@ -2261,21 +2339,29 @@ void DialogSelexEquationView::eachAge () {
     if (parameters->rowCount() >= bins.count()) {
         numParams = bins.count() + 1;
         parameterView->setNumParamsShown(numParams);
+
+        for (int i = 0; i < numParams; i++)
+            parameterView->setName(i, QString("Value at age %1").arg(QString::number(i)));
+        setParameterHeaders();
+
         showBins(true);
         showJoins(0);
         cht->removeSeries(valSeries);
-
-        setParameterHeaders();
 
         axisYalt->setTitleText(QString("Value at age (blue)"));
         cht->addAxis(axisYalt, Qt::AlignRight);
         cht->legend()->show();
         cht->legend()->setAlignment(Qt::AlignLeft);
 
+        ascendSeries->setName(QString("Input value (blue)"));
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisYalt);
+
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         if (numParams < (bins.count() + 1))
         {
@@ -2343,15 +2429,15 @@ void DialogSelexEquationView::updateEachAge () {
     }
     temp = 9. - maxYvalue(firstPoints);
 
+    ascendSeries->append(firstPoints);
     for (int a = 0; a < numParams; a++)
     {
         asc = (firstPoints.at(a).y() + temp);
         sel = logist(asc);
-        ascendSeries->append(QPointF(firstPoints.at(a).x(), asc));
         valSeries->append(QPointF(firstPoints.at(a).x(), sel));
     }
     min = static_cast<int> (minYvalue(ascendSeries->points()));
-    max = static_cast<int> (maxYvalue(ascendSeries->points())) + 1;
+    max = static_cast<int> (maxYvalue(ascendSeries->points())) ;
 
     axisYalt->setRange(min, max);
 //    ascendSeries->append(QPointF(firstPoints.at(bins.count()).x(), asc));
@@ -2361,6 +2447,7 @@ void DialogSelexEquationView::updateEachAge () {
 // 17 #age selectivity: each age has parameter as random walk
 //    transformation is selex=exp(parm); some special codes
 void DialogSelexEquationView::randomWalk (float scale) {
+    int intScale = static_cast<int>(scale);
     setLabel(QString("Pattern %1: Random Walk").arg(
                  QString::number(equationNum)));
     if (parameters->rowCount() > bins.count()) {
@@ -2370,15 +2457,34 @@ void DialogSelexEquationView::randomWalk (float scale) {
         showJoins(0);
         cht->removeSeries(valSeries);
 
-        setParameterHeaders(static_cast<int>(scale));
+        if (intScale > 0) {
+            parameterView->setName(0, QString("Scale Low Bin"));
+            parameterView->setName(1, QString("Scale High Bin"));
+        }
+        for (int i = intScale; i < numParams; i++)
+            parameterView->setName(i, QString("Value at age %1").arg(QString::number(i-intScale)));
+        setParameterHeaders(intScale);
 
-        axisYalt->setTitleText("Use Parm (blue)");
+        axisYalt->setTitleText("Param value (blue)");
         cht->addAxis(axisYalt, Qt::AlignRight);
 
+        if (scale > 1) {
+            setupLimits();
+            limit1->setPen(QPen(QBrush(Qt::darkGreen), 2));
+            limit1->setName(QString("ScaleLoBin"));
+            limit2->setPen(QPen(QBrush(Qt::darkBlue), 2));
+            limit2->setName(QString("ScaleHiBin"));
+        }
+
+        ascendSeries->setName(QString("Param value (blue)"));
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
         ascendSeries->attachAxis(axisYalt);
+
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
         updateRandomWalk(scale);
     }
@@ -2457,6 +2563,7 @@ void DialogSelexEquationView::randomWalk (float scale) {
   }
 */
 void DialogSelexEquationView::updateRandomWalk (float scale) {
+    double firstBin, lastBin;
     double parmval;
     double lastSel = 0.0;
     double temp = -999;
@@ -2505,9 +2612,13 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
         temp = maxYvalue(firstPoints);
     }
     else {
-        checkScaleSliders(bins, parameterView->getInput(0), parameterView->getInput(1));
-        loBin = static_cast<int>(parameterView->getInput(0));
-        hiBin = static_cast<int>(parameterView->getInput(1));
+        firstBin = parameterView->getInput(0);
+        lastBin = parameterView->getInput(1);
+        checkScaleSliders(0, 1, bins, firstBin, lastBin);
+        loBin = static_cast<int>(firstBin);
+        hiBin = static_cast<int>(lastBin);
+
+        setLimits(bins.at(loBin-1), bins.at(hiBin-1));
 
         temp = aveYvalue(firstPoints, loBin - 1, hiBin - 1);
     }
@@ -2648,16 +2759,13 @@ void DialogSelexEquationView::coleGauss () {
     if (parameters->rowCount() == 2) {
     numParams = 2;
     parameterView->setNumParamsShown(numParams);
-//    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
-//    parameterView->setSliderRange(0, -5, 5);
-//    parameterView->setSliderRange(0, -5, 40);
-//    connect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
+    setParameterHeaders();
 
     parameterView->setName(0, QString("Age limit"));
     parameterView->setType(0, QString("Logist"));
     parameterView->setName(1, QString("Decline scaling"));
     parameterView->setType(1, QString("Value"));
-    setParameterHeaders();
+
     showBins(true);
 
     updateColeGauss();
@@ -2680,19 +2788,23 @@ void DialogSelexEquationView::coleGauss () {
  */
 void DialogSelexEquationView::updateColeGauss() {
     int i;
-    float temp = 0;
-    float sel = 0;
-    float par1 = parameterView->getInput(0);
-    float par2 = parameterView->getInput(1);
+    double temp = 0;
+    double sel = 0;
+    double par1 = parameterView->getInput(0);
+    double par2 = parameterView->getInput(1);
 
     valSeries->clear();
 
-    temp = static_cast<int>(par1 * xValList.count());
+    if (slxType == Size)
+        temp = xValList.first() + par1 * (xValList.last() - xValList.first());
+    else
+        temp = par1 * xValList.last();
 
-    for (i = 0; i < temp; i++)
+    for (i = 0; xValList.at(i) < temp; i++)
     {
         sel = exp(-1*pow(xValList.at(i) - temp, 2) / exp(par2));
         valSeries->append(QPointF(xValList.at(i), sel));
+//        sel = exp(-1*(pow(xValList.at(i) -temp, 2) / par2));
     }
     for (; i < xValList.count(); i++)
     {
@@ -2709,6 +2821,10 @@ void DialogSelexEquationView::cubicSpline(float scale) {
     int numNodes = getSpecial();
     int index = 0;
     int intScale = static_cast<int>(scale + .5);
+    int numParams = intScale + 3 + (numNodes * 2);
+    QString typestr (selex->getType() == Age? "Age": "Length");
+    parameterView->setNumParamsShown(numParams);
+    setParameterHeaders(intScale);
 
     if (numNodes >= 3) {
         flag = static_cast<int>(parameterView->getInput(intScale) + .5);
@@ -2721,7 +2837,7 @@ void DialogSelexEquationView::cubicSpline(float scale) {
         if (parameters->rowCount() == num) {
             numParams = parameters->rowCount();
             parameterView->setNumParamsShown(numParams);
-            if (scale > 0)
+            if (intScale == 2)
             {
                 parameterView->setName(index, QString("ScaleLo"));
                 parameterView->setType(index++, QString("Integr"));
@@ -2735,14 +2851,13 @@ void DialogSelexEquationView::cubicSpline(float scale) {
             parameterView->setName(index, QString("GradHi"));
             parameterView->setType(index++, QString("Value"));
 
-    //        index = static_cast<int>(scale+0.5) + 3;
             for (int i = 0; i < numNodes; i++) {
-                parameterView->setName(index + i, QString("Node %1").arg(QString::number(i+1)));
+                parameterView->setName(index + i, QString("Knot %1 %2").arg(QString::number(i+1), typestr));
                 parameterView->setType(index + i, QString("Value"));
             }
             index += numNodes; //= static_cast<int>(scale + .5) + 3 + numNodes;
             for (int i = 0; i < numNodes; i++) {
-                parameterView->setName(index + i, QString("Value %1").arg(QString::number(i+1)));
+                parameterView->setName(index + i, QString("Knot %1 Value").arg(QString::number(i+1)));
                 parameterView->setType(index + i, QString("Value"));
             }
 
@@ -2753,24 +2868,35 @@ void DialogSelexEquationView::cubicSpline(float scale) {
             showBins(true);
             cht->removeSeries(valSeries);
 
+            axisYalt->setTitleText("Cubic Nodes (blue)");
+            cht->addAxis(axisYalt, Qt::AlignRight);
+
+            if (scale > 0) {
+                setupLimits();
+                limit1->setPen(QPen(QBrush(Qt::darkGreen), 2));
+                limit1->setName(QString("ScaleLoBin"));
+                limit2->setPen(QPen(QBrush(Qt::darkBlue), 2));
+                limit2->setName(QString("ScaleHiBin"));
+            }
+
             ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
             cht->addSeries(ascendSeries);
+            ascendSeries->attachAxis(axisX);
+            ascendSeries->attachAxis(axisYalt);
 
             ptSeries->setPen(QPen(QBrush(Qt::blue), 3));
             cht->addSeries(ptSeries);
-
-            axisYalt->setTitleText("Cubic Nodes (blue)");
-            cht->addAxis(axisYalt, Qt::AlignRight);
             ptSeries->attachAxis(axisX);
             ptSeries->attachAxis(axisYalt);
-            ascendSeries->attachAxis(axisX);
-            ascendSeries->attachAxis(axisYalt);
+
+            cht->addSeries(valSeries);
+            valSeries->attachAxis(axisX);
+            valSeries->attachAxis(axisY);
 
             if (numNodes > 5 && (numNodes % 2) == 0)
             {
                 updateCubicSpline(scale);
             }
-            cht->addSeries(valSeries);
         }
     }
 }
@@ -2781,17 +2907,21 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     int start = intScale + 3;
     int num = parameters->rowCount() - start;
     int size, end = intScale;
-    int lobin = -1, hibin = -1;
+    double firstBin, lastBin;
+    int loBin = -1, hiBin = -1;
     int setup = 0;
     double gradLo = 0;
     double gradHi = 0;
-    double temp = 1;
+    double temp1 = 1;
+    double temp2 = 2;
     double min, max, val;
-    int i;
+    int i, one, two;
     bool okay = true;
     QString msg;
     QStringList data;
     double altMaxVal, altMinVal, altMax, altMin;
+    QList<QPointF> secndPoints;
+
 
     if ((num % 2) == 1 || num < 6)
     {
@@ -2808,11 +2938,11 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         i = 0;
         if (intScale == 2)
         {
-            lobin = static_cast<int>(parameterView->getInput(i++));
-            hibin = static_cast<int>(parameterView->getInput(i++));
-            checkScaleSliders(bins, lobin, hibin);
-//            scaleLo = bins.at(static_cast<int>(parameterView->getInput(i++)));
-//            scaleHi = bins.at(static_cast<int>(parameterView->getInput(i++)));
+            firstBin = parameterView->getInput(0);
+            lastBin = parameterView->getInput(1);
+            checkScaleSliders(0, 1, bins, firstBin, lastBin);
+            loBin = static_cast<int>(firstBin);
+            hiBin = static_cast<int>(lastBin);
         }
 
         setup = static_cast<int>(parameterView->getInput(intScale));
@@ -2845,11 +2975,15 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         gradHi = parameterView->getInput(start++);
 
         // check x-vals
+        if (parameterView->getInput(start) < bins.first()) {
+            parameterView->setSliderValue(start, bins.first());
+        }
         for (int k = 0; k < size - 1; k++) {
-            if (parameterView->getInput(start + k) > parameterView->getInput(start + k + 1))
-            {
-                parameterView->setSliderValue(start + k, parameterView->getInput(start + k + 1) - .5);
-                okay = false;
+            one = start + k; two = one + 1;
+            temp1 = parameterView->getInput(one);
+            temp2 = parameterView->getInput(two);
+            if (temp2 <= temp1) {
+                parameterView->setSliderValue(two, parameterView->getInput(one) + .5);
             }
         }
 
@@ -2892,58 +3026,86 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
 
         altMinVal = minYvalue (firstPoints);
         altMaxVal = maxYvalue (firstPoints);
-
         altMax = altMinVal + ((altMaxVal - altMinVal) * 1.2);
         axisYalt->setRange(altMinVal, altMaxVal);
 
-
+        secndPoints.clear();
         if (scale > 0)
         {
-            temp = aveYvalue(firstPoints, lobin-1, hibin-1);
-            for (i = 0; i < firstPoints.count(); i++)
-                firstPoints[i].setY(exp(firstPoints.at(i).y() - temp));
-            yMax = maxYvalue(firstPoints);
-            if (yMax > 1.0)
-                axisY->setRange(0, yMax + 1.0);
+            setLimits(bins.at(loBin-1), bins.at(hiBin-1));
+
+            temp1 = aveYvalue(firstPoints, loBin-1, hiBin-1);
+            for (i = 0; i < firstPoints.count(); i++) {
+                temp2 = firstPoints.at(i).y();
+                secndPoints.append(QPointF(firstPoints.at(i)));
+                secndPoints[i].setY(exp(temp2 - temp1));
+            }
         }
         else
         {
-            temp = maxYvalue(firstPoints);
-            for (i = 0; i < firstPoints.count(); i++)
-                firstPoints[i].setY(exp(firstPoints.at(i).y() - temp));
+            temp1 = maxYvalue(firstPoints);
+//            if (temp1 > 10) temp1 = 10;
+            for (i = 0; i < firstPoints.count(); i++) {
+                temp2 = firstPoints.at(i).y();
+//                if (temp2 > temp1) temp2 = temp1 - .0000001;
+                secndPoints.append(firstPoints.at(i));
+                secndPoints[i].setY(exp(temp2 - temp1));
+            }
         }
+        yMax = maxYvalue(secndPoints);
+        if (yMax > 1.0)
+            axisY->setRange(0, yMax * 1.2);
 
-        valSeries->append(firstPoints);
+        valSeries->append(secndPoints);
         }
     }
 }
 
 // 44 like age selex 17 but with separate parameters for males and with revised controls
+//  param(0) is first age with non-zero selectivity; can be age 0
+//  special is number of selectivity change parameters beginning at age=first_age+1
+//  param(1) is first age for which mean selex=1
+//  param(2) is last age  for which mean selex=1
+//  param(3) is male mean selex relative to female mean.
+//  -999 code means to keep the change unchanged from previous age (so keeps same rate of change)
+// -1000 code is only for males and sets the male change to be same as female change
+//  xxx is the index for sex, where 1=female, 2=male
 void DialogSelexEquationView::twoSexRandomWalk() {
     setLabel(QString("Pattern %1: Random Walk - female/male").arg(
                  QString::number(equationNum)));
-
-    int num = xValList.count() + genders + 2;
+    int index = 3 + (genders > 1? 1:0);
+    int numChanges = special;
+    int num = 2 * numChanges + index;
     if (parameters->rowCount() == num) {
         numParams = num;
         parameterView->setNumParamsShown(numParams);
         showBins(true);
-        cht->removeSeries(valSeries);
-
         setParameterHeaders();
 
-        resetChart();
-        axisY->setRange(0, 1.2);
+        parameterView->setName(0, QString("First Age Bin"));
+        parameterView->setType(0, QString("Integr"));
+        parameterView->setName(1, QString("Scale Low Bin"));
+        parameterView->setType(1, QString("Integr"));
+        parameterView->setName(2, QString("Scale High Bin"));
+        parameterView->setType(2, QString("Integr"));
+        parameterView->setName(3, QString("Male ln(ratio)"));
+        parameterView->setType(3, QString("Exp"));
 
-        cht->addAxis(axisX, Qt::AlignBottom);
-        cht->addAxis(axisY, Qt::AlignLeft);
+        for (int i = 0; i < numChanges; i++) {
+            parameterView->setName(index+i, QString("Fem ln(slx) change %1").arg(QString::number(i+1)));
+            parameterView->setType(index+i, QString("Value"));
+        }
+        cht->removeSeries(valSeries);
 
-        axisYalt->setTitleText("Use Parm (blue)");
+        axisYalt->setTitleText("Param Value(blue)");
         axisYalt->setRange(0, 1.0);
         cht->addAxis(axisYalt, Qt::AlignRight);
+        cht->legend()->show();
+        cht->legend()->setAlignment(Qt::AlignLeft);
+
+        setupLimits();
 
         // female ln(selex)
-        ascendSeries = new QLineSeries(cht);
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
         ascendSeries->setName(QString("Fem ln(slx)"));
         cht->addSeries(ascendSeries);
@@ -2951,338 +3113,450 @@ void DialogSelexEquationView::twoSexRandomWalk() {
         ascendSeries->attachAxis(axisYalt);
 
         // female selex
-        valSeries->setName(QString("Fem slx"));
+        valSeries->setName(QString("Fem slx (red)"));
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
-        // male ln(selex)
-        dscendSeries = new QLineSeries(cht);
-        dscendSeries->setPen(QPen(QBrush(Qt::green), 2));
-        dscendSeries->setName(QString("Mal ln(slx)"));
-        cht->addSeries(dscendSeries);
-        dscendSeries->attachAxis(axisX);
-        dscendSeries->attachAxis(axisYalt);
+        if (genders > 1) {
+            index = 4 + numChanges;
+            for (int i = 0; i < numChanges; i++) {
+                parameterView->setName(index+i, QString("Male ln(slx) change %1").arg(QString::number(i+1)));
+                parameterView->setType(index+i, QString("Value"));
+            }
 
-        // male selex
-        join3Series = new QLineSeries(cht);
-        join3Series->setPen(QPen(QBrush(Qt::magenta), 5));
-        join3Series->setName(QString("Mal slx"));
-        cht->addSeries(join3Series);
-        join3Series->attachAxis(axisX);
-        join3Series->attachAxis(axisY);
+            // male ln(selex)
+            dscendSeries->setPen(QPen(QBrush(Qt::green), 2));
+            dscendSeries->setName(QString("Mal ln(slx)"));
+            cht->addSeries(dscendSeries);
+            dscendSeries->attachAxis(axisX);
+            dscendSeries->attachAxis(axisYalt);
 
-        ascendSeries->attachAxis(axisX);
-        ascendSeries->attachAxis(axisYalt);
-
+            // male selex
+            join3Series->setPen(QPen(QBrush(Qt::magenta), 5));
+            join3Series->setName(QString("Mal slx (mag)"));
+            cht->addSeries(join3Series);
+            join3Series->attachAxis(axisX);
+            join3Series->attachAxis(axisY);
+        }
         updateTwoSexRandom();
     }
 }
 
+// code from SS_selex.tpl
+//	sel_a(y,fs,gg).initialize();
+//  dvariable seldelta=0.0;  //  value is the change in log(selex)
+//  tempvec_a.initialize(); //  null value for vector
+//
+//  int first_age=int(value(sp(1)));
+//  tempvec_a(first_age)=0.0;   //  start value for random walk across ages
+//  int last_age=first_age+seltype(f,4);  //  because seltype(f,4) contains the number of changes
+//  if(gg==1)
+//      {scaling_offset=2+gender;}
+//  else
+//      {scaling_offset=2+gender+seltype(f,4);}  // to get male vs female starting point for parameters
+//  j=scaling_offset;
+//
+//  for (a=first_age+1;a<=last_age;a++)
+//  {
+//      j++;
+//      //  with use of -999, lastsel stays constant until changed, so could create a linear change in ln(selex)
+//      if(sp(j)>-999.)
+//          {seldelta=sp(j);}  // so allows for seldelta to remain unchanged
+//      else if(gg==2 && sp(j)==-1000.)  //  more options for male selectivity
+//          {seldelta=sp(j-seltype(f,4));}  //  use female delta for the male delta at this age
+//      tempvec_a(a)=tempvec_a(a-1)+seldelta;   // cumulative log(selex)
+//  }
+//  int low_bin  = int(value(sp(2)));
+//  int high_bin = int(value(sp(3)));
+//
+//  temp=mean(tempvec_a(low_bin,high_bin));
+//
+//  sel_a(y,fs,gg)(first_age,last_age)=mfexp(tempvec_a(first_age,last_age)-temp);
+//
+//  if(gg==2)
+//      sel_a(y,fs,gg)(first_age,last_age)*=mfexp(sp(4)); //  apply male ratio
+//  if (last_age<nages)
+//      {sel_a(y,fs,gg)(last_age+1,nages)=sel_a(y,fs,gg,last_age);}
 void DialogSelexEquationView::updateTwoSexRandom() {
-    double useparm = 0.;
-    double sel = 0.;
+    int index = 0;
+    double altYmin = 0, altYmax = 1;
     double parm = 0.;
-    double cumparm = 0;
-    double temp = 0, mean = 0, max = 0;
-    QList<double> parms;
-//    int age = binMin;
-    int lastage = getBinMax();
-    int lastageIndex = xValList.count() - 1;
-    int minAge = static_cast<int>(parameterView->getInput(0));
-    int maxAge = static_cast<int>(parameterView->getInput(1));
-    ascendSeries->clear();
-    dscendSeries->clear();
-    valSeries->clear();
-    join3Series->clear();
+    double lastSel = 0;
+    double temp = 0;
+    double templimit = 0;
+    QList<QPointF> secndPoints;
+
+    int numChanges = special;
+    int firstAge = static_cast<int>(parameterView->getInput(0));
+    int lastAge = firstAge + numChanges;
+    double firstBin = parameterView->getInput(1);
+    double lastBin = parameterView->getInput(2);
+    double maleMeanRatio = parameterView->getInput(3);
+    checkScaleSliders(1, 2, bins, firstBin, lastBin);
+    int loBin = static_cast<int>(firstBin);
+    int hiBin = static_cast<int>(lastBin);
     firstPoints.clear();
+    ascendSeries->clear();
+    valSeries->clear();
+    secndPoints.clear();
+    dscendSeries->clear();
+    join3Series->clear();
 
-    if (special != 0)
-        lastage = abs(special);
+    if (lastAge > bins.count()) {
+        firstAge = bins.count() - numChanges;
+        parameterView->setSliderValue(0, firstAge);
+    }
+
+    // Female ln(selex)
+    // random walk - ascendSeries
+    firstPoints.append(QPointF(0, lastSel));
+    firstPoints.append(QPointF(bins.at(firstAge-1), lastSel));
+    index = 2 + (genders > 1? 2: 1);
+    for (int i = 0; i < numChanges; i++) {
+        parm = parameterView->getInput(index+i);
+        if (parm < -998) {
+            parm = parameterView->getInput(index+i-1);
+            parameterView->setSliderValue(index+i, parm);
+        }
+        lastSel += parm;
+        firstPoints.append(QPointF(bins.at(firstAge+i), lastSel));
+    }
+    firstPoints.append(QPointF(bins.last(), lastSel));
+    altYmin = minYvalue(firstPoints);
+    altYmax = maxYvalue(firstPoints);
+
+    for (int i = 0; i < bins.count(); i++) {
+        parm = evaluatePoints(firstPoints, bins.at(i));
+        ascendSeries->append(bins.at(i), parm);
+    }
+    temp = aveYvalue(ascendSeries->points(), (loBin-1), (hiBin-1));
+
+    // valSeries = exp(ascendSeries)
+    valSeries->append(0, 0);
     for (int i = 0; i < xValList.count(); i++) {
-        if (xValList.at(i) > lastage) {
-            lastageIndex = i - 1;
-            break;
+        parm = evaluatePoints(firstPoints, xValList.at(i));
+        valSeries->append(xValList.at(i), exp(parm - temp));
+    }
+
+    if (genders > 1) {
+        // Male ln(selex)
+        // random walk - dscendSeries
+        lastSel = 0.0;
+        secndPoints.append(QPointF(0, lastSel));
+        secndPoints.append(QPointF(bins.at(firstAge-1), lastSel));
+        index = 4 + numChanges;
+        for (int i = 0; i < numChanges; i++) {
+            parm = parameterView->getInput(index+i);
+            if (parm < -998) {
+                if (parm < -999.5)
+                    parm = parameterView->getInput(index+i-numChanges);
+                else
+                    parm = parameterView->getInput(index+i-1);
+                parameterView->setSliderValue(index+i, parm);
+            }
+            lastSel += parm;
+            secndPoints.append(QPointF(bins.at(firstAge+i), lastSel));
+        }
+        secndPoints.append(QPointF(bins.last(), lastSel));
+        templimit = minYvalue(secndPoints);
+        if (templimit < altYmin)
+            altYmin = templimit;
+        templimit = maxYvalue(secndPoints);
+        if (templimit > altYmax)
+            altYmax = templimit;
+
+        for (int i = 0; i < bins.count(); i++) {
+            parm = evaluatePoints(secndPoints, bins.at(i));
+            dscendSeries->append(bins.at(i), parm);
+        }
+        temp = aveYvalue(dscendSeries->points(), (loBin-1), (hiBin-1));
+
+        // join3Series = exp(dscendSeries-temp) * exp(maleMeanRatio)
+        join3Series->append(0, 0);
+        for (int i = 0; i < xValList.count(); i++) {
+            parm = evaluatePoints(secndPoints, xValList.at(i));
+            join3Series->append(xValList.at(i), exp((parm - temp))*(maleMeanRatio));
         }
     }
-
-    parm = parameterView->getInput(0);
-    if (static_cast<int>(parm) == -1000)
-    {
-        parm = 0.0;
-    }
-    cumparm = useparm = parm;
-    if (xValList.count() > 0)
-    {
-    valSeries->append(QPointF(xValList.at(0), parm));
-
-    parms.append(parm);
-    ascendSeries->append(QPointF(xValList.at(0), useparm));
-    firstPoints.append(QPointF(xValList.at(0), cumparm));
-
-    for (int i = 1; i <= lastageIndex; i++)
-    {
-        parm = parameterView->getInput(i);
-        parms.append(parm);
-        if (parms[i] > -999)
-            useparm = parms[i];
-        if (fabs(useparm) > max)
-            max = fabs(useparm);
-        ascendSeries->append(QPointF(xValList.at(i), useparm));
-        cumparm += useparm;
-        firstPoints.append(QPointF(xValList.at(i), cumparm));
-    }
-    axisYalt->setRange(-max, max);
-
-    {
-        int low_bin;
-        int high_bin;
-        double total = 0;
-        if (minAge < 0)
-        {
-            minAge = 0;
-        }
-        if (maxAge > getBinMax())
-        {
-            maxAge = getBinMax();
-        }
-        if (maxAge < minAge)
-            maxAge = minAge;
-        if (minAge > maxAge)
-            minAge = maxAge;
-
-        low_bin = xValList.indexOf(minAge);
-        high_bin = xValList.indexOf(maxAge);
-//        sp(1) = low_bin;
-//        sp(2) = high_bin;
-//        temp = mean(tempvec_a(low_bin,high_bin));
-
-        for (int i = low_bin; i <= high_bin; i++)
-            total += firstPoints.at(i).y();
-        temp = total / (high_bin - low_bin + 1);
-    }
-
-    for (int i = 1; i < firstPoints.count(); i++)
-    {
-        int next = i + 1;
-        if ((next < parms.count()) && (static_cast<int>(parms.at(next)) == -1000))
-            sel = 0.0;
-        else
-            sel = exp(firstPoints.at(i).y() - temp);
-        valSeries->append(QPointF(xValList.at(i), sel));
-    }
-
-    for (int i = firstPoints.count(); i < xValList.count(); i++)
-    {
-        if (special > 0)
-            valSeries->append(QPointF(xValList.at(i), valSeries->points().at(i-1).y()));
-        else
-            valSeries->append(QPointF(xValList.at(i), 0.0));
-    }
-    }
+    axisYalt->setRange(altYmin, altYmax);
+    setLimits(bins.at(loBin-1), bins.at(hiBin-1));
 }
 
-// 45 similar to selex 14 but with separate parameters for males and with revised controls
+// 45 //  like age selex 14 but with separate parameters for males and with revised controls
+  //  parameter value is logit(selectivity)
+  //  peak selex in logit space is penalized towards value of 8.0, which gives selex near 1.0
+  //  sp(1) is first age with non-zero selectivity; can be age 0
+  //  seltype(f,4) is number of selectivity parameters beginning at age=first_age
+  //  sp(2) is first age in mean for peak selex
+  //  sp(3) is last age  in mean for peak selex
+  //  sp(4) is male mean selex relative to female mean.
+  //  -999 code means to keep the selex same as previous age
+  // -1000 code is only for males and sets the male selex to be same as female selex
+  //  gg is the index for sex, where 1=female, 2=male
 void DialogSelexEquationView::twoSexEachAge() {
     setLabel(QString("Pattern %1: Revise Age - female/male").arg(
                  QString::number(equationNum)));
-    int num = bins.count() + genders + 2;
+    int index = 3 + (genders > 1? 1:0);
+    int numChanges = special;
+    int num = 2 * numChanges + index;
     if (parameters->rowCount() == num) {
+        numParams = num;
+        parameterView->setNumParamsShown(numParams);
+        showBins(true);
+        setParameterHeaders();
 
-    numParams = num;
-    parameterView->setNumParamsShown(numParams);
-//    disconnect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
-    parameterView->setSliderRange(0, xValList.first(), xValList.last());
-    parameterView->setSliderRange(1, xValList.first(), xValList.last());
-    parameterView->setSliderRange(2, xValList.first(), xValList.last());
-    parameterView->setSliderRange(3, -1.0, 2.0);
-//    connect (this, SIGNAL(numbersUpdated()), this, SLOT(update()));
-    parameterView->setName(0, QString("First age non-zero"));
-    parameterView->setType(0, QString("Value"));
-    parameterView->setName(1, QString("First age peak"));
-    parameterView->setType(1, QString("Value"));
-    parameterView->setName(2, QString("Last age peak"));
-    parameterView->setType(2, QString("Value"));
-    parameterView->setName(3, QString("Male ln(ratio)"));
-    parameterView->setType(3, QString("Value"));
+        parameterView->setName(0, QString("First Age Bin"));
+        parameterView->setType(0, QString("Integr"));
+        parameterView->setName(1, QString("Scale Low Bin"));
+        parameterView->setType(1, QString("Integr"));
+        parameterView->setName(2, QString("Scale High Bin"));
+        parameterView->setType(2, QString("Integr"));
+        parameterView->setName(3, QString("Male ln(ratio)"));
+        parameterView->setType(3, QString("Exp"));
 
-    showBins(true);
-    showJoins(0);
-    setParameterHeaders();
+        for (int i = 0; i < numChanges; i++) {
+            parameterView->setName(index+i, QString("Fem ln(slx) change %1").arg(QString::number(i+1)));
+            parameterView->setType(index+i, QString("Value"));
+        }
+        cht->removeSeries(valSeries);
 
-//    connect (parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
-    cht->removeSeries(valSeries);
+        axisYalt->setTitleText("Param Value(blue)");
+        axisYalt->setRange(0, 1.0);
+        cht->addAxis(axisYalt, Qt::AlignRight);
+        cht->legend()->show();
+        cht->legend()->setAlignment(Qt::AlignLeft);
 
-    // female ln(selex)
-    ascendSeries = new QLineSeries(cht);
-    ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
-    ascendSeries->attachAxis(axisX);
-    ascendSeries->attachAxis(axisYalt);
-    cht->addSeries(ascendSeries);
+        setupLimits();
 
-    // male ln(selex)
-    dscendSeries = new QLineSeries(cht);
-    dscendSeries->setPen(QPen(QBrush(Qt::green), 2));
-    cht->addSeries(dscendSeries);
+        // female ln(selex)
+        ascendSeries->setPen(QPen(QBrush(Qt::blue), 2));
+        ascendSeries->setName(QString("Fem ln(slx)"));
+        cht->addSeries(ascendSeries);
+        ascendSeries->attachAxis(axisX);
+        ascendSeries->attachAxis(axisYalt);
 
-    // male selex
-    join3Series = new QLineSeries(cht);
-    join3Series->setPen(QPen(QBrush(Qt::magenta), 3));
-    cht->addAxis(axisX, Qt::AlignBottom);
-    cht->addAxis(axisY, Qt::AlignLeft);
+        // female selex
+        valSeries->setName(QString("Fem slx (red)"));
+        cht->addSeries(valSeries);
+        valSeries->attachAxis(axisX);
+        valSeries->attachAxis(axisY);
 
+        if (genders > 1) {
+            index = 4 + numChanges;
+            for (int i = 0; i < numChanges; i++) {
+                parameterView->setName(index+i, QString("Male ln(slx) change %1").arg(QString::number(i+1)));
+                parameterView->setType(index+i, QString("Value"));
+            }
 
-    axisYalt->setTitleText("Parm val (blue)");
-    cht->addAxis(axisYalt, Qt::AlignRight);
+            // male ln(selex)
+            dscendSeries->setPen(QPen(QBrush(Qt::green), 2));
+            dscendSeries->setName(QString("Mal ln(slx)"));
+            cht->addSeries(dscendSeries);
+            dscendSeries->attachAxis(axisX);
+            dscendSeries->attachAxis(axisYalt);
 
-    updateTwoSexEachAge();
-
-    // female selex
-    cht->addSeries(valSeries);
-    // male selex
-    cht->addSeries(join3Series);
+            // male selex
+            join3Series->setPen(QPen(QBrush(Qt::magenta), 5));
+            join3Series->setName(QString("Mal slx (mag)"));
+            cht->addSeries(join3Series);
+            join3Series->attachAxis(axisX);
+            join3Series->attachAxis(axisY);
+        }
+        updateTwoSexEachAge();
     }
 }
 
+//	sel_a(y,fs,gg).initialize();
+//	tempvec_a.initialize(); //  null value for vector
+//	int first_age=int(value(sp(1)));
+//	int last_age=first_age+seltype(f,4)-1;  //  because seltype(f,4) contains the number of ages with selex parameter
+//	if(gg==1)
+//	{  // to get male vs female starting point for parameters
+//		scaling_offset=2+gender;
+//  } else {
+//      scaling_offset=2+gender+seltype(f,4);
+//	}
+//	j=scaling_offset;
+//	for (a=first_age;a<=last_age;a++)
+//	{
+//		j++;
+//		if(sp(j)>-999)
+//		{
+//			tempvec_a(a) = sp(j);
+//		}
+//		else if(gg==2 && sp(j)==-1000.)  //  set male selectivity raw value same as female
+//		{
+//			tempvec_a(a)=sp(j-seltype(f,4));  //  use female parameter for males
+//		}
+//		else  //  so value is -999 so set to next younger age
+//		{
+//			tempvec_a(a) = tempvec_a(a-1);
+//		}
+//	}
+//	int low_bin  = int(value(sp(2)));
+//	int high_bin = int(value(sp(3)));
+//	temp=8.-mean(tempvec_a(low_bin,high_bin));
+//	sel_a(y,fs,gg)(first_age,last_age) = 1./(1.+mfexp(-(tempvec_a(first_age,last_age)+temp)));
+//	if(gg==2)
+//	{ //  apply male ratio
+//		sel_a(y,fs,gg)(first_age,last_age)*=mfexp(sp(4));
+//	}
+//	if (last_age<nages)
+//	{
+//		sel_a(y,fs,gg)(last_age+1,nages)=sel_a(y,fs,gg,last_age);
+//	}
 void DialogSelexEquationView::updateTwoSexEachAge() {
-    double parmfm = 0.;
-    double parmml = 0.;
-    double temp = 0.;
-    double sel = 0.;
-    double max = 0, min = 0;
-    double binMin = getBinMin();
-    float binMax = getBinMax();
-    double binWidth = getBinStep();
-    double binMidWidth = getMidBin();
-    double age = binMin + binMidWidth * binWidth;
-    int firstage = 0, lastage = static_cast<int>(xValList.last());
-    int i, j, minbin, maxbin;
-    int offset = genders + 2;
-    int maleoffset = offset + special;
-    int endoffset = maleoffset + special;
-    double par;
-    int par1 = static_cast<int>(parameterView->getInput(0));
-    int par2 = static_cast<int>(parameterView->getInput(1));
-    int par3 = static_cast<int>(parameterView->getInput(2));
-    double mlratio = 0;
-    if (genders > 1)
-        mlratio = parameterView->getInput(3);
-    QString msg("");
-
+    int index = 0;
+    double altYmin = 0, altYmax = 1;
+    double parm = 0.;
+    double lastSel = 0;
+    double temp = 0;
+    double templimit = 0;
+    QList<QPointF> secndPoints;
+    double yVal;
+    int numChanges = special;
+    int firstAge = static_cast<int>(parameterView->getInput(0));
+    int lastAge = firstAge + numChanges;
+    double firstBin = parameterView->getInput(1);
+    double lastBin = parameterView->getInput(2);
+    double maleMeanRatio = parameterView->getInput(3);
+    checkScaleSliders(1, 2, bins, firstBin, lastBin);
+    int loBin = static_cast<int>(firstBin);
+    int hiBin = static_cast<int>(lastBin);
     firstPoints.clear();
     ascendSeries->clear();
     valSeries->clear();
+    secndPoints.clear();
     dscendSeries->clear();
     join3Series->clear();
 
-    firstage = par1;
-    if (par2 > par3)
-    {
-        minbin = par3;
-        maxbin = par2;
+    if (lastAge > bins.count()) {
+        firstAge = bins.count() - numChanges;
+        parameterView->setSliderValue(0, firstAge);
     }
-    else
-    {
-        minbin = par2;
-        maxbin = par3;
-    }
-    if (firstage > 0)
-    {
-        ascendSeries->append(QPointF(xValList.first(), 0.0));
-    }
-    if (firstage > 1)
-    {
-        ascendSeries->append(QPointF(xValList.at(firstage - 1), 0.0));
-    }
-    for (i = firstage, j = offset; j < maleoffset; i++, j++)
-    {
-        par = parameterView->getInput(j);
-        if (par > -999 || par < -999)
-            parmfm = par;
-        ascendSeries->append(QPointF(xValList.at(i), parmfm));
-    }
-    for (; i < xValList.count(); i++)
-    {
-        ascendSeries->append(QPointF(xValList.at(i), parmfm));
-    }
-    min = minYvalue(ascendSeries->points());
-    max = maxYvalue(ascendSeries->points());
-    axisYalt->setRange(min, max);
 
-    // female selex
-    firstPoints.clear();
-    fillValues(ascendSeries->points(), xValList, firstPoints);
-//    ascendSeries->append(firstPoints);
-
-    temp = 8. - aveYvalue(firstPoints, minbin, maxbin);
-    sel = 0.;
-
-    for (int i = 0; i < firstPoints.count(); i++)
-    {
-        sel = logist(firstPoints.at(i).y() + temp);
-        valSeries->append(QPointF(firstPoints.at(i).x(), sel));
-    }
-    if (genders > 1)
-    {
-        if (firstage > 0)
-        {
-            dscendSeries->append(QPointF(xValList.first(), 0.0));
+    // Female ln(selex)
+    // parameter values
+    firstPoints.append(QPointF(0, 0));
+    firstPoints.append(QPointF(bins.at(firstAge-1), 0));
+    index = 2 + (genders > 1? 2: 1);
+    for (int i = 0; i < numChanges; i++) {
+        parm = parameterView->getInput(index+i);
+        if (parm < -998) {
+            parm = parameterView->getInput(index+i-1);
+            parameterView->setSliderValue(index+i, parm);
         }
-        if (firstage > 1)
-        {
-            dscendSeries->append(QPointF(xValList.at(firstage - 1), 0.0));
-        }
-        for (i = firstage, j = offset; j < maleoffset; i++, j++)
-        {
-            par = QString(parameters->getRowData(j + special).at(2)).toDouble();
-            if (static_cast<int>(par) == -1000)
-                parmml = QPointF(ascendSeries->points().at(i)).x();
-            else if (static_cast<int>(par) != -999)
-                parmml = par;
-            dscendSeries->append(QPointF(xValList.at(i), parmml));
-        }
-        for (; i < xValList.count(); i++)
-        {
-            dscendSeries->append(QPointF(xValList.at(i), parmml));
-        }
+        firstPoints.append(QPointF(bins.at(firstAge+i), parm));
+    }
+    firstPoints.append(QPointF(bins.last(), parm));
+    altYmin = minYvalue(firstPoints);
+    altYmax = maxYvalue(firstPoints);
 
-        // male selex
-        firstPoints.clear();
-        fillValues(dscendSeries->points(), xValList, firstPoints);
-        valSeries->append(firstPoints);
+    for (int i = 0; i < bins.count(); i++) {
+        parm = evaluatePoints(firstPoints, bins.at(i));
+        ascendSeries->append(bins.at(i), parm);
+    }
+    temp = 8.0 - aveYvalue(ascendSeries->points(), (loBin-1), (hiBin-1));
 
-        temp = 8. - aveYvalue(firstPoints, minbin, maxbin);
-        sel = 0.;
+    // valSeries = exp(ascendSeries)
+    valSeries->append(0, 0);
+    for (int i = 0; i < xValList.count(); i++) {
+        if (xValList.at(i) < bins.at(firstAge)) {
+            yVal = 0.0;
+        }
+        else {
+            parm = evaluatePoints(firstPoints, xValList.at(i));
+            yVal = logist(parm + temp);
+        }
+        valSeries->append(xValList.at(i), yVal);
+    }
 
-        for (int i = 0; i < firstPoints.count(); i++)
-        {
-            sel = logist(firstPoints.at(i).y() + temp);
-            join3Series->append(QPointF(firstPoints.at(i).x(), sel));
+    if (genders > 1) {
+        // Male ln(selex)
+        // parameter values
+        lastSel = 0.0;
+        secndPoints.append(QPointF(0, 0));
+        secndPoints.append(QPointF(bins.at(firstAge-1), 0));
+        index = 4 + numChanges;
+        for (int i = 0; i < numChanges; i++) {
+            parm = parameterView->getInput(index+i);
+            if (parm < -998) {
+                if (parm < -999.5)
+                    parm = parameterView->getInput(index+i-numChanges);
+                else
+                    parm = parameterView->getInput(index+i-1);
+                parameterView->setSliderValue(index+i, parm);
+            }
+            secndPoints.append(QPointF(bins.at(firstAge+i), parm));
+        }
+        secndPoints.append(QPointF(bins.last(), parm));
+        templimit = minYvalue(secndPoints);
+        if (templimit < altYmin)
+            altYmin = templimit;
+        templimit = maxYvalue(secndPoints);
+        if (templimit > altYmax)
+            altYmax = templimit;
+
+        for (int i = 0; i < bins.count(); i++) {
+            parm = evaluatePoints(secndPoints, bins.at(i));
+            dscendSeries->append(bins.at(i), parm);
+        }
+        temp = 8.0 - aveYvalue(dscendSeries->points(), (loBin-1), (hiBin-1));
+
+        // join3Series = exp(dscendSeries-temp) * maleMeanRatio // already exp'd
+        join3Series->append(0, 0);
+        for (int i = 0; i < xValList.count(); i++) {
+            if (xValList.at(i) < bins.at(firstAge))  {
+                yVal = 0.0;
+            }
+            else {
+                parm = evaluatePoints(secndPoints, xValList.at(i));
+                yVal = logist(parm + temp)*(maleMeanRatio);
+            }
+            join3Series->append(xValList.at(i), yVal);
         }
     }
+    axisYalt->setRange(altYmin, altYmax);
+    setLimits(bins.at(loBin-1), bins.at(hiBin-1));
 }
 
-
-bool DialogSelexEquationView::checkScaleSliders(QList<float> bins, double binLo, double binHi) {
+// check scale bin limits and adjust as necessary
+bool DialogSelexEquationView::checkScaleSliders(int first, int secnd, QList<float> bins, double &binLo, double &binHi) {
     bool okay = true;
     int lo = static_cast<int>(binLo);
     int hi = static_cast<int>(binHi);
 
+    if (lo == -1) {
+        lo = 1;
+        binLo = 1;
+    }
+    if (hi == -1) {
+        hi = bins.count();
+        binHi = hi;
+    }
     if (lo < 1) {
         setMessage(tr("Minimum for param 1 is first bin, adjusting to first bin..."));
-        parameterView->setSliderValue(0, 1);
+        parameterView->setSliderValue(first, 1);
+        binLo = 1;
         okay = false;
     }
     if (hi < lo) {
         setMessage(tr("Maximum is less than Minimum, adjusting to minimum..."));
-        parameterView->setSliderValue(1, lo);
+        parameterView->setSliderValue(secnd, lo);
+        binHi = lo;
         okay = false;
     }
     if (hi > bins.count()) {
         setMessage(tr("Maximum for param 2 is last bin, adjusting to number of bins..."));
-        parameterView->setSliderValue(1, bins.count());
+        parameterView->setSliderValue(secnd, bins.count());
+        binHi = bins.count();
         okay = false;
     }
     if (lo > hi) {
         setMessage(tr("Minimum is greater than Maximum, adjusting to maximum..."));
-        parameterView->setSliderValue(0, hi);
+        parameterView->setSliderValue(first, hi);
+        binLo = hi;
         okay = false;
     }
 
@@ -3298,8 +3572,10 @@ double DialogSelexEquationView::aveYvalue(const QList<QPointF> &pointlist, int l
 
     while (pointlist.at(start).x() < xval1)
         start++;
+//    start -= 1;
     while (pointlist.at(stop).x() > xval2)
         stop--;
+//    stop += 1;
 
     return DialogEquationView::aveYvalue(pointlist, start, stop);
 }

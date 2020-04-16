@@ -4,6 +4,7 @@
 #include "dialogequationview.h"
 #include "model.h"
 
+
 class DialogSelexEquationView : public DialogEquationView
 {
 public:
@@ -24,7 +25,7 @@ public:
 public slots:
     void setSelex (selectivity *slx);
     void changingSelex ();
-    void changedSelex (QStringList ql);
+    void changedSelex (QStringList &ql);
     void changeSelex ();
 
     void setXvals(const QList<float> &vals);
@@ -68,7 +69,7 @@ private slots:
     void linearPlain();
     void linearScaled();
     void updateLinear (int scale = 0);
-    void updateLinearScaled();
+    void updateLinearScaled(int scale);
     void updateLinearPlain();
     void updateLinearExp (int scale = 0);
     void dblLogistic ();
@@ -100,7 +101,7 @@ private slots:
     void twoSexEachAge ();
     void updateTwoSexEachAge ();
 
-    bool checkScaleSliders(QList<float> bins, double binLo, double binHi);
+    bool checkScaleSliders(int first, int secnd, QList<float> bins, double &binLo, double &binHi);
     double aveYvalue(const QList<QPointF> &pointlist, int lowBin = 1, int highBin = 100);
 };
 

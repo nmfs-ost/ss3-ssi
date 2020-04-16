@@ -9,6 +9,9 @@ DialogInputError::DialogInputError(QWidget *parent) :
     ui->setupUi(this);
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)),
                  SLOT(buttonClicked(QAbstractButton*)));
+    connect (ui->pushButton_ok, SIGNAL(clicked()), SLOT(buttonOKClicked()));
+    connect (ui->pushButton_abortFile, SIGNAL(clicked()), SLOT(buttonAbortFileClicked()));
+    connect (ui->pushButton_abortSSI, SIGNAL(clicked()), SLOT(buttonAbortSSIClicked()));
 }
 
 DialogInputError::~DialogInputError()
@@ -131,8 +134,7 @@ void DialogInputError::buttonClicked(QAbstractButton *btn)
 {
     if (btn->text().contains("Abort"))
     {
-        floatVal = intVal = -999999;
-        hide();
+        buttonAbortSSIClicked();
     }
     if (btn->text().contains("Restore"))
     {
@@ -145,9 +147,25 @@ void DialogInputError::buttonClicked(QAbstractButton *btn)
     }
     else
     {
-        emit dataChanged();
-        hide();
+        buttonOKClicked();
     }
+}
+
+void DialogInputError::buttonOKClicked() {
+    emit dataChanged();
+    hide();
+}
+
+void DialogInputError::buttonAbortFileClicked() {
+    floatVal = intVal = 1000000;
+    emit error(intVal);
+    hide();
+}
+
+void DialogInputError::buttonAbortSSIClicked() {
+    floatVal = intVal = -999999;
+    emit error(intVal);
+    hide();
 }
 
 float DialogInputError::getFloatValue()

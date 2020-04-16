@@ -1,5 +1,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDateTime>
 
 #include <cmath>
 #include <cstdio>
@@ -273,14 +274,17 @@ void file_widget::changeReadParFile(bool flag)
         QString name(QString("%1/%2").arg(current_dir_name, QString(PARAMETER_FILE)));
         parameterFile->setFileName(name);
         int btn = 0;
-        if (!parameterFile->exists())
+        if (!parameterFile->exists()) {
             btn = QMessageBox::information(this,
                  tr("File information"),
                  tr(QString("File %1 does not exist, do still want to set read to true?").arg(name).toUtf8().data()),
                  QMessageBox::Yes, QMessageBox::No);
-        if (btn == QMessageBox::No)
+        }
+        if (btn == QMessageBox::No) {
             ui->checkBox_par_file->setChecked(false);
+        }
     }
+    ui->pushButton_viewParFile->setVisible(ui->checkBox_par_file->isChecked());
 }
 
 bool file_widget::getReadParFile()
@@ -592,23 +596,6 @@ bool file_widget::read_files(ss_model *model_inf)
         if (datafile_version < 3.30)
         {
             okay = false;
-/*            okay = read32_dataFile(dataFile, model_info);
-            if (!okay)
-                return okay;
-            okay = read32_forecastFile(forecastFile, model_info);
-            if (!okay)
-                return okay;
-            okay = read32_controlFile(controlFile, model_info);
-            if (!okay)
-                return okay;
-            if (ui->checkBox_par_file->isChecked())
-            {
-                read32_parameterFile(parameterFile, model_info);
-            }
-            if (ui->checkBox_pro_file->isChecked())
-            {
-                read32_profileFile(profileFile, model_info);
-            }*/
         }
         else if (datafile_version < 3.40)
         {
@@ -619,10 +606,10 @@ bool file_widget::read_files(ss_model *model_inf)
                 okay = read33_controlFile(controlFile, model_info);
             if (okay)
             {
-             /*   if (ui->checkBox_par_file->isChecked())
+                if (ui->checkBox_par_file->isChecked())
                 {
                     read33_parameterFile(parameterFile, model_info);
-                }*/
+                }
                 if (ui->checkBox_pro_file->isChecked())
                 {
                     read33_profileFile(profileFile, model_info);
@@ -635,7 +622,6 @@ bool file_widget::read_files(ss_model *model_inf)
                            (current_dir_name, QString(RUN_NUMBER_FILE)));
         }
     }
-    emit (files_read());
 
     return okay;
 }
@@ -647,22 +633,8 @@ void file_widget::write_files()
     setDatafileVersion(3.30, false);
 
     write_starter_file(ui->label_starter_file->text());
-/*    if (datafile_version < 3.30)
-    {
-        write32_dataFile(dataFile, model_info);
-        write32_forecastFile(forecastFile, model_info);
-        write32_controlFile(controlFile, model_info);
-        if (ui->checkBox_par_file->isChecked())
-        {
-            write32_parameterFile(parameterFile, model_info);
-        }
-        if (ui->checkBox_pro_file->isChecked())
-        {
-            reset_run_num();
-            write32_profileFile(profileFile, model_info);
-        }
-    }
-    else*/ if (datafile_version < 3.40)
+
+    if (datafile_version < 3.40)
     {
         write33_dataFile(dataFile, model_info);
         write33_forecastFile(forecastFile, model_info);
@@ -711,35 +683,56 @@ bool file_widget::read_starter_file (QString filename)
 
     if(okay)
     {
+        starterFile->setOkay(true);
         starterFile->seek(0);
         starterFile->resetLineNum();
         starterFile->read_comments();
 
+        if (starterFile->getOkay()) {
         token = starterFile->get_next_value("data file");
         data_file_name = token;
         set_data_file(QString("%1/%2").arg(current_dir_name, token));
         token = starterFile->get_next_value("control file");
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("Read ss.par choice"), 0, 1, 0);
         ui->checkBox_par_file->setChecked(temp_int != 0);
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("detailed age-structured reports in REPORT.SSO"), 0, 2, 1);
         ui->comboBox_report_level->setCurrentIndex(temp_int);
         temp_int = starterFile->getIntValue(QString("write EchoInput.sso choice"), 0, 1, 1);
+        }
+        if (starterFile->getOkay()) {
         ui->checkBox_checkup->setChecked(temp_int);
         temp_int = starterFile->getIntValue(QString("what to write to ParmTrace.sso"), 0, 4, 1);
         set_parmtr_write(temp_int);
+        }
 
+
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("what to write to CumReport.sso"), 0, 2, 1);
         ui->comboBox_cumreport->setCurrentIndex(temp_int);
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("calculate all prior likelihoods"), 0, 1, 1);
         model_info->set_prior_likelihood (temp_int);
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("use soft bounds"), 0, 1, 1);
         model_info->set_use_softbounds(temp_int);
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("number of datafiles"), 0, 100, 1);
         ui->spinBox_datafiles->setValue(temp_int);
+        }
+        if (starterFile->getOkay()) {
         temp_int = starterFile->getIntValue(QString("last estimation phase"), 0, 100, 8);
         model_info->set_last_estim_phase(temp_int);
         temp_int = starterFile->get_next_value("MCMC burn interval").toInt(); //getIntValue(QString("MC burn interval"), 0, 10000, 10);
@@ -748,6 +741,8 @@ bool file_widget::read_starter_file (QString filename)
         temp_int = starterFile->get_next_value("MCMC thin interval").toInt(); //getIntValue(QString("MC thin interval"), 1, 1000, 2);
         temp_int = temp_int < 1? 1: temp_int;
         model_info->set_mc_thin(temp_int);
+        }
+        if (starterFile->getOkay()) {
         temp_float = starterFile->getFloatValue(QString("jitter value"), 0.0, 11.0, 0.0);
         model_info->set_jitter_param(temp_float);
         token = starterFile->get_next_value("std dev report begin year");
@@ -766,7 +761,9 @@ bool file_widget::read_starter_file (QString filename)
         }
         starterFile->skip_line();
 
+        }
         temp_float = starterFile->getFloatValue(QString("convergence criteria"), 0.0, 0.1, 0.0001);
+        if (starterFile->getOkay()) {
         model_info->set_convergence_criteria(temp_float);
         token = starterFile->get_next_value("retrospective year");
         temp_int = token.toInt();
@@ -775,12 +772,18 @@ bool file_widget::read_starter_file (QString filename)
         temp_int = token.toInt();
         model_info->set_biomass_min_age(temp_int);
         temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 4, 1);
+        }
+        if (starterFile->getOkay()) {
         model_info->set_depletion_basis(temp_int);
         token = starterFile->get_next_value("depletion denominator");
         model_info->set_depletion_denom(token.toDouble());
         temp_int = starterFile->getIntValue(QString("SPR report basis"), 0, 4, 1);
+        }
+        if (starterFile->getOkay()) {
         model_info->set_spr_basis(temp_int);
         temp_int = starterFile->getIntValue(QString("F std report value"), 0, 5, 1);
+        }
+        if (starterFile->getOkay()) {
         model_info->set_f_units(temp_int);
         // min and max age over which average F will be calculated with F_reporting=4 or 5
         if (model_info->get_f_units() >= 4)
@@ -793,12 +796,14 @@ bool file_widget::read_starter_file (QString filename)
             model_info->set_f_max_age(temp_int);
         }
         temp_int = starterFile->getIntValue(QString("F std report basis"), 0, 4, 1);
+        }
+        if (starterFile->getOkay()) {
         model_info->set_f_basis(temp_int);
-
 
         token = starterFile->get_next_value("check value for end of file or something else");
         temp_int = token.toInt();
         temp_float = token.toFloat();
+        }
         if (temp_int == END_OF_DATA)
         {
             datafile_version = 3.2;
@@ -809,6 +814,7 @@ bool file_widget::read_starter_file (QString filename)
         }
         else
         {
+            if (starterFile->getOkay()) {
             // MCMC output format
             starterFile->checkIntValue(temp_int, QString("MCMC output detail"), 0, 3, 0);
             ui->comboBox_MCMC_output->setCurrentIndex(temp_int);
@@ -848,15 +854,17 @@ bool file_widget::read_starter_file (QString filename)
             temp_float = get_version_number(token);
             datafile_version = temp_float;
             ui->doubleSpinBox_version->setValue(datafile_version);
+            }
         }
 
         starterFile->close();
-        return okay;
+        return starterFile->getOkay();
     }
     else
     {
         error_unreadable(get_starter_file());
         okay = false;
+        starterFile->setOkay(false);
     }
     return okay;
 }
@@ -985,6 +993,9 @@ void file_widget::write_starter_file (QString filename)
                     QString("MCMC output detail (0=default; 1=obj func components; 2=expanded; 3=make output subdir for each MCMC vector)"));
             chars += starterFile->write_val(model_info->getALKTol(), 5,
                     QString ("ALK tolerance (example 0.0001)"));
+            if (model_info->getRandSeed() != 0)
+                chars += starterFile->write_val(model_info->getRandSeed(), 5,
+                        QString ("Rand seed"));
             chars += starterFile->write_val(QString::number(datafile_version, 'f', 2), 5,
                     QString("check value for end of file and for version control"));
         }

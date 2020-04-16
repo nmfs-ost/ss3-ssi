@@ -165,7 +165,7 @@ signals:
     void choose_data_file();
     void save_data_file();
     void read_all_files();
-    void files_read();
+    void files_read(bool okay);
 
 private slots:
 

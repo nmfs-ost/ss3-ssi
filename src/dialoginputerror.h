@@ -33,14 +33,18 @@ public slots:
 
 signals:
     void dataChanged();
+    void error(int code);
 
 private slots:
     void connectIntCheck();
     void connectFloatCheck();
     void disconnectCheck();
-    void buttonClicked(QAbstractButton *btn);
     void checkFloatString(QString text);
     void checkIntString(QString text);
+    void buttonClicked(QAbstractButton *btn);
+    void buttonOKClicked ();
+    void buttonAbortFileClicked();
+    void buttonAbortSSIClicked();
     void closeEvent(QCloseEvent *event);
 
 private:

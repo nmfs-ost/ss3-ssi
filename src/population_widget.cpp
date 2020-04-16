@@ -902,7 +902,7 @@ void population_widget::changeGrowthBinMethod(int value)
 
     }
 }
-void population_widget::changeGrowthBinMin(float min)
+void population_widget::changeGrowthBinMin(double min)
 {
     pop->Grow()->setGrowthBinMin(min);
     if (pop->Grow()->getGrowthBinMethod() == 2) {
@@ -911,7 +911,7 @@ void population_widget::changeGrowthBinMin(float min)
         growthBinsView->resizeColumnsToContents();
     }
 }
-void population_widget::changeGrowthBinMax(float max)
+void population_widget::changeGrowthBinMax(double max)
 {
     pop->Grow()->setGrowthBinMax(max);
     if (pop->Grow()->getGrowthBinMethod() == 2) {
@@ -920,7 +920,7 @@ void population_widget::changeGrowthBinMax(float max)
         growthBinsView->resizeColumnsToContents();
     }
 }
-void population_widget::changeGrowthBinWidth(float wid)
+void population_widget::changeGrowthBinWidth(double wid)
 {
     pop->Grow()->setGrowthBinStep(wid);
     if (pop->Grow()->getGrowthBinMethod() == 2) {

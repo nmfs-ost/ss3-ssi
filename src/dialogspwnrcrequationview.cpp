@@ -11,7 +11,6 @@ DialogSpwnRcrEquationView::DialogSpwnRcrEquationView(QWidget *parent) :
 
     populationNum = 0;
 
-//    setTitle(QString("Plotted Curve"));
     setName(QString("Spawner-Recruitment Relationship"));
     setXvals(0.0, 1.0, .02);
     equationNum = 1;

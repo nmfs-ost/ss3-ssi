@@ -339,6 +339,7 @@ void data_widget::refresh()
         ui->spinBox_last_phase->setValue(model_data->get_last_estim_phase());
         ui->spinBox_mc_burn->setValue(model_data->mc_burn());
         ui->spinBox_mc_thin->setValue(model_data->mc_thin());
+        setRandSeed(model_data->getRandSeed());
         ui->lineEdit_jitter->setText(QString::number(model_data->jitter_param()));
         ui->lineEdit_alktol->setText(QString::number(model_data->getALKTol()));
         ui->lineEdit_convergence->setText(QString::number(model_data->get_convergence_criteria()));
@@ -1127,9 +1128,9 @@ void data_widget::changeDepDenom()
     ui->lineEdit_dep_denom->setText(QString::number(db));
 }
 
-void data_widget::changeRandSeed()
+void data_widget::changeRandSeed(int seed)
 {
-    int seed = ui->spinBox_rseed->value();
+//    int seed = ui->spinBox_rseed->value();
     model_data->setRandSeed(seed);
 }
 

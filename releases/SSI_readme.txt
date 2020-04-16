@@ -15,10 +15,21 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.15.10
+    2020-04-10
+1. Implemented selectivity curve 43 - scaled linear segments, curve 44 -
+   two sex random walk, and curve 45 - two sex logist values.
+2. Changed reading function to allow breaking out of reading bad files. This
+   leaves SSI in an unstable state and must be followed by reading a good
+   model.
+3. Fixed curve 16 - Coleraine - Gaussian: limit for selex = 1.
+
+============================================================================
     3.30.15.09
-    2020-03-31
-1. Implemented selectivity curve 42.
-2. Included table for 2DAR1.
+    2020-04-03
+1. Implemented selectivity curve 42 - cubic spline.
+2. Changed defaults for cubic spline 27 (and 42) to be similar to auto-
+   generated parameters in SS.
 ============================================================================
     3.30.15.08
     2020-03-24

@@ -17,14 +17,20 @@ DialogParameterView::DialogParameterView(QWidget *parent, bool showTrans) :
     parameters = nullptr;
     numParamsShown = 0;
     numUnParams = 0;
-    pLabel.append(nullptr); pLabel.clear();
-    pMin.append(nullptr);   pMin.clear();
-    pMax.append(nullptr);   pMax.clear();
-    pInit.append(nullptr);  pInit.clear();
-    pSlider.append(nullptr); pSlider.clear();
-    sValue.append(nullptr);  sValue.clear();
-    pType.append(nullptr);  pType.clear();
-    eInput.append(nullptr); eInput.clear();
+    pLabel.append(nullptr);
+    pMin.append(nullptr);
+    pMax.append(nullptr);
+    pInit.append(nullptr);
+    pSlider.append(nullptr);
+    sValue.append(nullptr);
+    pType.append(nullptr);
+    eInput.append(nullptr);
+    unLabel.append(nullptr);
+    unMin.append(nullptr);
+    unMax.append(nullptr);
+    unSlider.append(nullptr);
+    unValue.append(nullptr);
+
     clearAll();
 
     ui->pushButton_apply->setFocusPolicy(Qt::NoFocus);
@@ -170,11 +176,11 @@ void DialogParameterView::setupView(int num, int unsaved)
         unValue.append(parameterSpinBox(false, false));
 
         rownum = i + 1;
-        static_cast<QGridLayout *>(ui->groupBoxUnsaved->layout())->addWidget(unLabel.at(i), rownum, 0);
-        static_cast<QGridLayout *>(ui->groupBoxUnsaved->layout())->addWidget(unMin.at(i), rownum, 1);
-        static_cast<QGridLayout *>(ui->groupBoxUnsaved->layout())->addWidget(unMax.at(i), rownum, 2);
-        static_cast<QGridLayout *>(ui->groupBoxUnsaved->layout())->addWidget(unSlider.at(i), rownum, 3);
-        static_cast<QGridLayout *>(ui->groupBoxUnsaved->layout())->addWidget(unValue.at(i), rownum, 4);
+        ui->gridLayoutUnsaved->addWidget(unLabel.at(i), rownum, 0);
+        ui->gridLayoutUnsaved->addWidget(unMin.at(i), rownum, 1);
+        ui->gridLayoutUnsaved->addWidget(unMax.at(i), rownum, 2);
+        ui->gridLayoutUnsaved->addWidget(unSlider.at(i), rownum, 3);
+        ui->gridLayoutUnsaved->addWidget(unValue.at(i), rownum, 4);
     }
     ui->groupBoxUnsaved->setVisible(numUnParams > 0);
 
@@ -279,13 +285,13 @@ void DialogParameterView::setNumParamsShown(int num, int unsaved) {
             numParamsShown = num;
             if (parameters->rowCount() < numParamsShown)
                 numParamsShown = parameters->rowCount();
-            setupView(num, unsaved);
+            setupView(numParamsShown, unsaved);
             setSliders();
         }
     }
     else {
         numParamsShown = 0;
-        setupView(num, unsaved);
+        setupView(numParamsShown, unsaved);
     }
     connectAll();
 }
@@ -296,7 +302,7 @@ int DialogParameterView::getNumParameters() {
 
 void DialogParameterView::setNumUnParameters(int num) {
     if (numUnParams != num) {
-        numUnParams = num;
+        setNumParamsShown(getNumParameters(), numUnParams);
     }
 }
 
@@ -342,9 +348,10 @@ void DialogParameterView::setSliderValue(int pnum, double value) {
         sValue.at(pnum)->setValue(value);
     }
     else {
-        if (unnum < numUnParams)
+        if (unnum < numUnParams) {
             unSlider.at(unnum)->setValue(intval);
             unValue.at(unnum)->setValue(value);
+        }
     }
 }
 
@@ -355,7 +362,7 @@ void DialogParameterView::setName(int pnum, QString name) {
         parameters->setRowHeader(pnum, name);
     }
     else {
-        if (unnum < numUnParams)
+        if (unnum < unLabel.count())
             unLabel.at(unnum)->setText(name);
     }
 }
@@ -392,6 +399,7 @@ void DialogParameterView::minChanged(double value) {
 }
 
 void DialogParameterView::maxChanged(double value) {
+    Q_UNUSED(value);
     double dMin = 0, dMax = 1;
 
     for (int i = 0; i < numParamsShown; i++) {
@@ -572,7 +580,8 @@ double DialogParameterView::getInput(int pnum) {
         val = eInput.at(pnum)->value();
     }
     else {
-        val = unValue.at(unnum)->value();
+        if (unValue.count() > unnum)
+            val = unValue.at(unnum)->value();
     }
     return val;
 }

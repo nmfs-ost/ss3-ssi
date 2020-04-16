@@ -104,9 +104,9 @@ private slots:
     void changeGrowthTimeVaryRead(int flag);
 
     void changeGrowthBinMethod(int value);
-    void changeGrowthBinMin(float min);
-    void changeGrowthBinMax(float max);
-    void changeGrowthBinWidth(float wid);
+    void changeGrowthBinMin(double min);
+    void changeGrowthBinMax(double max);
+    void changeGrowthBinWidth(double wid);
     void changeGrowthBinLength(int num);
 
     void changeSpwnRecReadTimeVary (int flag);

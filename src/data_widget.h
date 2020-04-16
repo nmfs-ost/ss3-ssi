@@ -101,7 +101,7 @@ public slots:
     void changeAlkTol();
     void changeConvergence();
     void changeDepDenom();
-    void changeRandSeed();
+    void changeRandSeed(int seed);
     void setRandSeed (int seed);
     void set2DAR1 (bool use);
     bool get2DAR1 ();

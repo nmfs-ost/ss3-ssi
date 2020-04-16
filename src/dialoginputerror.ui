@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
-    <height>153</height>
+    <width>603</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -178,6 +178,53 @@
       <set>QDialogButtonBox::Abort|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+     <item>
+      <spacer name="horizontalSpacer_buttons">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_ok">
+       <property name="toolTip">
+        <string>Accept the value and continue.</string>
+       </property>
+       <property name="text">
+        <string>OK</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_abortFile">
+       <property name="toolTip">
+        <string>Stop reading data from this file.</string>
+       </property>
+       <property name="text">
+        <string>Stop Read</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_abortSSI">
+       <property name="toolTip">
+        <string>Exit the gui with no further steps.</string>
+       </property>
+       <property name="text">
+        <string>Exit SSI</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

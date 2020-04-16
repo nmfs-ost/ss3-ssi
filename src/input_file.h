@@ -32,6 +32,7 @@ public:
     explicit ss_file(QString name, QObject *parent = 0);
     ~ss_file();
 
+    void setFileName (const QString &filename);
 //    QString get_next_value ();
     QString get_next_value (QString prompt = QString(""));
     QString get_next_token();
@@ -86,10 +87,16 @@ public:
     QString getStringValue (QString desc, QString dfault = QString(""));
 
     bool at_eol ();
+    void checkErrCode(float code);
+    void checkErrCode(int code);
+
+    bool getOkay() const;
+    void setOkay(bool value);
 
 private:
     int line_num;
     bool wait;
+    bool okay;
     QString *current_line;
     QStringList *current_tokens;
     int current_line_num_tokens;

@@ -23,6 +23,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     int startYear = 0, endYear = 0;
     int numSeas = 1;
 
+    d_file->setOkay(true);
     if(d_file->open(QIODevice::ReadOnly))
     {
         //  SS_Label_Info_2.1.1 #Read comments
@@ -31,22 +32,32 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         d_file->read_comments();
 
         //  SS_Label_Info_2.1.2 #Read model time dimensions
+
+        if (d_file->getOkay()) {
         token = d_file->get_next_value(QString("start year"));
         startYear = token.toInt();
         data->set_start_year (startYear);
         token = d_file->get_next_value(QString("end year"));
         endYear = token.toInt();
         data->set_end_year(endYear);
-        token = d_file->get_next_value(QString("seasons per year"));
-        numSeas = token.toInt();
+        }
+        if (d_file->getOkay()) {
+        numSeas = d_file->getIntValue(QString("seasons per year"), 1, 12, 1);
+        }
+        if (d_file->getOkay()) {
+//        token = d_file->get_next_value(QString("seasons per year"));
+//        numSeas = token.toInt();
         data->set_num_seasons(numSeas);
         for (i = 1; i <= numSeas; i++)
         {
-            token = d_file->get_next_value(QString("months per season"));
-            temp_float = token.toFloat();
+            temp_float = d_file->getFloatValue(QString("months per season"), 1, 12, 12);
+//            token = d_file->get_next_value(QString("months per season"));
+//            temp_float = token.toFloat();
             data->set_months_per_season(i, temp_float);
         }
         //  SS_Label_Info_2.1.3 #Set up seasons
+        }
+        if (d_file->getOkay()) {
         data->rescale_months_per_season();
         token = d_file->get_next_value(QString("subseasons"));
         temp_int = token.toInt();
@@ -55,6 +66,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         temp_float = token.toFloat();
         data->set_spawn_month(temp_float);
         temp_int = d_file->getIntValue(QString("Number of sexes"), 1, 2, 2);
+        }
+        if (d_file->getOkay()) {
         n_genders = temp_int;
         data->set_num_genders(n_genders);
         token = d_file->get_next_value(QString("number of ages"));
@@ -69,25 +82,34 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.1.5  #Define fleets, surveys and areas
         token = d_file->get_next_value(QString("number of fleets"));
         temp_int = token.toInt();
+        if (temp_int < 1) {temp_int = 1;}
         total_fleets = temp_int;
         data->set_num_fleets(total_fleets);
         num_vals = 0;
+        }
+        if (d_file->getOkay()) {
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
             flt->reset();
             flt->setActive(true);
             temp_int = d_file->getIntValue(QString("Fleet type"), 1, 3, 1);
+            if (d_file->getOkay()) {
             flt->setTypeInt(temp_int);
             if (temp_int == 2)
                 num_vals++;
             temp_float = d_file->get_next_value(QString("Fleet timing")).toFloat();
             flt->setSeasTiming(temp_float);
             temp_int = d_file->getIntValue(QString("Fleet area"), 1, n_areas, 1);
+            if (d_file->getOkay()) {
             flt->setArea(temp_int);
+            }
             temp_int = d_file->getIntValue(QString("Fleet catch units"), 1, 2, 1);
+            if (d_file->getOkay()) {
             flt->setCatchUnits(temp_int);
+            }
             temp_int = d_file->getIntValue(QString("Fleet catch multiplier"), 0, 1, 0);
+            if (d_file->getOkay()) {
             flt->setCatchMultiplier(temp_int);
             temp_str = d_file->get_next_value(QString("Fleet name"));
             flt->setName(temp_str);
@@ -95,13 +117,18 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->setNumSeasons(numSeas);
             flt->setStartYear(startYear);
             flt->setTotalYears(data->getTotalYears());
+            }
+            }
         }
         data->assignFleetNumbers();
 
         // Read bycatch data, if any
+        }
+        if (d_file->getOkay()) {
         for (i = 0; i < num_vals; i++)
         {
             temp_int = d_file->getIntValue(QString("Fleet Index"), 1, total_fleets, 1);
+            if (d_file->getOkay()) {
             Fleet *flt = data->getFleet(temp_int - 1);
             temp_int = d_file->getIntValue(QString("Include in MSY"), 1, 2, 1);
             flt->setBycatchDead(temp_int);
@@ -113,10 +140,12 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->setBycLastYr(temp_str);
             temp_str = d_file->get_next_value(QString("unused"));
             flt->setBycUnused(temp_str);
+            }
         }
-
+        }
         //  ProgLabel_2.2  Read CATCH amount by fleet
         // Catch
+        if (d_file->getOkay()) {
         num_vals = total_fleets;
         do {
             int seas = 0;
@@ -141,6 +170,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  SS_Label_Info_2.3 #Read fishery CPUE, effort, and Survey index or abundance
         // before we record abundance, get units and error type for all fleets
+        }
+        if (d_file->getOkay()) {
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
@@ -154,6 +185,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             temp_int = d_file->getIntValue(QString("Abund enable SD_Report"), 0, 1, 0);
             flt->setSDReport(temp_int);
         }
+        }
+        if (d_file->getOkay()) {
         // here are the abundance numbers
         do
         {    // year, month, fleet_number, observation, error
@@ -172,7 +205,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             data->getFleet(fleet - 1)->addAbundanceObs(str_lst);
 
         } while (year != END_OF_LIST);
-
+        }
+        if (d_file->getOkay()) {
         //  SS_Label_Info_2.4 #read Discard data
         token = d_file->get_next_value("num fleets with discard");
         num_vals = token.toInt();
@@ -212,6 +246,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             } while (year != END_OF_LIST);
         }
 
+        }
+        if (d_file->getOkay()) {
         //  SS_Label_Info_2.5 #Read Mean Body Weight data
         //  note that syntax for storing this info internal is done differently than for surveys and discard
         temp_int = d_file->getIntValue(QString("use mean bwt"), 0, 1, 0);
@@ -237,6 +273,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             } while (year != END_OF_LIST);
         }
 
+        }
+        if (d_file->getOkay()) {
         //  SS_Label_Info_2.6 #Setup population Length bins
         {
             ss_growth *grow = data->getPopulation()->Grow();
@@ -352,6 +390,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         }
 
+        }
+        if (d_file->getOkay()) {
         //  SS_Label_Info_2.8 #Start age composition data section
         {
         compositionAge *a_data = data->get_age_composition();
@@ -560,6 +600,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
         }
 
+        }
+        if (d_file->getOkay()) {
         //  SS_Label_Info_2.12 #Read tag release and recapture data
         temp_int = d_file->getIntValue(QString("Do tags"), 0, 1, 0);
         data->set_do_tags(temp_int == 1);
@@ -628,15 +670,15 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         {
             d_file->error(QString("Found incorrect end of data marker."));
         }
+        }
 
         d_file->close();
-        return true;
     }
     else
     {
         d_file->error(QString("Data file does not exist or is unreadable."));
     }
-    return false;
+    return d_file->getOkay();
 }
 
 int write33_dataFile(ss_file *d_file, ss_model *data)

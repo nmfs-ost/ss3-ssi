@@ -41,18 +41,15 @@ public slots:
     void setName (QString nm);
     void setParameterTable(tablemodel *params);
     void setupView(int num, int unsaved = 0);
-//    void setupUnSavedView(int unsaved);
+
     void setSliders();
-//    void setNumParameters(int num);
-//    void setParameter(int pnum, QStringList param);
-//    void setParameterLabel(int pnum, QString name);
     void setSliderRange (int pnum, double min, double max);
     void setSliderValue(int pnum, double value);
     void setName(int pnum, QString name);
     void setType(int pnum, QString type);
     bool setInput(int pnum);
     void setInputValue(int pnum, double value);
-//    void changeParameter(int num, QStringList param);
+
     void setVisible (bool visible);
     void hide();
     void show();
@@ -89,7 +86,6 @@ protected:
 signals:
     void inputChanged();
     void hidden();
-//    void parameterChanged (int num, double min, double max, double init);
 
 private:
     QString title;
@@ -113,7 +109,7 @@ private:
     QList<QLabel *> pType;
     QList<QDoubleSpinBox *> eInput;
 
-    // unsaved values
+    // unsaved value sliders
     QList<QLabel *> unLabel;
     QList<doubleLimitSpinBox *> unMin;
     QList<doubleLimitSpinBox *> unMax;

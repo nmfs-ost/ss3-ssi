@@ -4,6 +4,7 @@
 #include <QAbstractButton>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
+#include <QtCharts/QSplineSeries>
 #include <QtCharts/QScatterSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QValueAxis>
@@ -38,11 +39,22 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     name = QString("");
     setWindowTitle(title);
 
+    if (parent != nullptr)
+        position = parent->pos();
+    else
+        position = pos();
+    window = size();
+
     equationNum = 1;
-    parameters = nullptr;
     numParams = 0;
+    parameters = nullptr;
+
+    building = false;
+    waiting = false;
+    updating = false;
 
     yMax = -10;
+    cht = nullptr;
     chartview = nullptr;
     join1Series = nullptr;
     join2Series = nullptr;
@@ -58,16 +70,7 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     valSeries->append(0, 0);
     valSeries->append(1, 0);
 
-    if (parent != nullptr)
-        position = parent->pos();
-    else
-        position = pos();
-    window = size();
-
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
-    building = false;
-    waiting = false;
-    updating = false;
     showBins(false);
     showJoins(0);
     showInt1(false);
@@ -176,10 +179,11 @@ void DialogEquationView::setXvals(const QList<float> &vals)
 void DialogEquationView::setXvals(double min, double max, double step)
 {
     double val = min;
-//    int limit = static_cast<int>((max - min) / step);// * 100.0);
+    while ((max - min) / step < 100)
+        step /= 2.0;
+
     xValList.clear();
-    for (int i = 0; val < (max + step/2.0); i++)
-    {
+    for (int i = 0; val < (max + step/2.0); i++) {
         xValList.append(val);
         val += step;
     }
@@ -253,6 +257,31 @@ void DialogEquationView::setParametersVisible(bool vis) {
         parameterView->hide();
         ui->pushButton_showParameters->setText("Show Parameters");
     }
+}
+
+void DialogEquationView::setupLimits()
+{
+    limit1->setName(QString("Limit1"));
+    limit1->setPen(QPen(QBrush(Qt::darkGreen), 2));
+    cht->addSeries(limit1);
+    limit1->attachAxis(axisX);
+    limit1->attachAxis(axisYalt);
+    limit2->setName(QString("Limit2"));
+    limit2->setPen(QPen(QBrush(Qt::darkBlue), 2));
+    cht->addSeries(limit2);
+    limit2->attachAxis(axisX);
+    limit2->attachAxis(axisYalt);
+}
+void DialogEquationView::setLimits(float xval1, float xval2)
+{
+    float altYmin = axisYalt->min();
+    float altYmax = axisYalt->max();
+    limit1->clear();
+    limit2->clear();
+    limit1->append(QPointF(xval1-.01, altYmin));
+    limit1->append(QPointF(xval1, altYmax));
+    limit2->append(QPointF(xval2, altYmin));
+    limit2->append(QPointF(xval2+.01, altYmax));
 }
 
 void DialogEquationView::refresh()
@@ -596,8 +625,6 @@ void DialogEquationView::resetChart(bool create)
 
     if (!create)
     {
-//        cht->removeAxis(axisYalt);
-        cht->hide();
         delete axisX;
         delete axisY;
         delete axisYalt;
@@ -607,7 +634,7 @@ void DialogEquationView::resetChart(bool create)
         delete ascendSeries;
         delete dscendSeries;
         delete ptSeries;
-        cht->removeSeries(valSeries);
+        delete cubicSeries;
         delete valSeries;
         delete cht;
         delete chartview;
@@ -631,6 +658,7 @@ void DialogEquationView::resetChart(bool create)
     ascendSeries = new QLineSeries(cht);
     dscendSeries = new QLineSeries(cht);
     ptSeries = new QScatterSeries(cht);
+    cubicSeries = new QSplineSeries(cht);
 
     valSeries = new QLineSeries(cht);
     valSeries->setName(QString("Value"));
@@ -641,6 +669,8 @@ void DialogEquationView::resetChart(bool create)
     firstPoints.clear();
 
     yMax = 1;
+    intvar1 = 1;
+
     ui->verticalLayout_graph->addWidget(chartview);
     chartview->show();
     cht->show();
@@ -697,7 +727,7 @@ void DialogEquationView::setMidBin(double mid) {
 
 void DialogEquationView::binsChanged()
 {
-    // Do something
+    // Do something?
 }
 
 void DialogEquationView::showJoins(int num) {
@@ -886,12 +916,24 @@ double DialogEquationView::joinFunction(double minPoss, double maxPoss, double i
     return result;
 }
 
+// Evaluate a set of points for a specific x value
+double DialogEquationView::evaluatePoints(QList<QPointF> &points, double xval) {
+    double yval = 0;
+    int i = 1;
+    while (points.at(i).x() < xval) {
+        i++;
+    }
+    yval = evaluateLine(points.at(i-1), points.at(i), xval);
+    return yval;
+}
 // Evaluate a line between two points at a specific x value
 double DialogEquationView::evaluateLine(QPointF pt1, QPointF pt2, double x)
 {
-    double slope = (pt2.y() - pt1.y()) / (pt2.x() - pt1.x());
-    double y = slope * (x - pt2.x()) + pt2.y();
-    return y;
+    double xrange = pt2.x() - pt1.x();
+    double yrange = pt2.y() - pt1.y();
+    double x1 = x - pt1.x();
+    double y1 = yrange * x1/xrange;
+    return pt1.y() + y1;
 }
 
 
@@ -957,7 +999,7 @@ double DialogEquationView::aveXvalue(const QList<double> &xvals)
 /** Returns the average of the y-values of a point list */
 double DialogEquationView::aveYvalue(const QList<QPointF> &pointlist, int start, int stop)
 {
-    double value = 0.;
+    double value = 0., ave = 0.;
     double count = 0.0;
     int i = 0, end = 2;
     int listend = pointlist.count() - 1;
@@ -978,7 +1020,8 @@ double DialogEquationView::aveYvalue(const QList<QPointF> &pointlist, int start,
         value += pointlist.at(i).y();
         count += 1.0;
     }
-    return (value / count);
+    ave = count > 0? value / count: value;
+    return ave;
 }
 
 void DialogEquationView::fillValues(const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints)

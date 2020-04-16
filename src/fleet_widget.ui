@@ -2175,19 +2175,6 @@
                     </item>
                    </layout>
                   </item>
-                  <item>
-                   <spacer name="verticalSpacer_sizeSelex">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
                  </layout>
                 </widget>
                </widget>
@@ -2471,8 +2458,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>286</width>
-                   <height>208</height>
+                   <width>878</width>
+                   <height>396</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -2624,6 +2611,12 @@
                       </property>
                      </spacer>
                     </item>
+                    <item row="7" column="0" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_sel_age_male_params"/>
+                    </item>
+                    <item row="1" column="0" rowspan="3" colspan="8">
+                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_params"/>
+                    </item>
                     <item row="10" column="7">
                      <spacer name="verticalSpacer_4">
                       <property name="orientation">
@@ -2637,26 +2630,7 @@
                       </property>
                      </spacer>
                     </item>
-                    <item row="7" column="0" colspan="8">
-                     <layout class="QVBoxLayout" name="verticalLayout_sel_age_male_params"/>
-                    </item>
-                    <item row="1" column="0" rowspan="3" colspan="8">
-                     <layout class="QVBoxLayout" name="verticalLayout_selex_age_params"/>
-                    </item>
                    </layout>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_3">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>0</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                   </spacer>
                   </item>
                  </layout>
                 </widget>
