@@ -93,6 +93,7 @@ public slots:
     void selexSizeMaleTVParamsChanged();
     void changeSelexSizeSpecial (int spc);
     void showSelexSizeCurve(bool flag);
+    void showSelexSizeInfo();
     void selexSizeCurveClosed ();
 
     void setSelexAgePattern (int pat);
@@ -106,6 +107,7 @@ public slots:
     void setupSelexAgeInfo();
     void selexAgeDataChanged();
     void showSelexAgeCurve(bool flag);
+    void showSelexAgeInfo();
     void selexAgeCurveClosed ();
 
     void setUse2DAR1 (bool use);

@@ -33,6 +33,9 @@ public:
     void reset();
     void deleteChart();
 
+    QString getLabel() const;
+    void setLabel(const QString &value);
+
 public slots:
     void setDirectory(QString &dir);
     void refreshData();
@@ -52,6 +55,7 @@ public slots:
 private:
     Ui::chartDialog *ui;
 
+    QString label;
     tablemodel *table;
     DialogTable *tabledialog;
 

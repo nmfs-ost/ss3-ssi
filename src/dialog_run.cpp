@@ -44,6 +44,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
     echoview->hide();
 
     charts = new dialogSummaryOutput(this);
+    charts->setLabel("Likelihood");
     charts->hide();
 
     nohess = false;

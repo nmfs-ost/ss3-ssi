@@ -223,6 +223,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_readme">
+         <property name="text">
+          <string>Show readme</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_ok">
          <property name="maximumSize">
           <size>
@@ -231,7 +238,7 @@
           </size>
          </property>
          <property name="text">
-          <string>OK</string>
+          <string>Done</string>
          </property>
         </widget>
        </item>

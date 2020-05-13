@@ -319,15 +319,25 @@ void dialogSummaryOutput::refreshSeries()
 void dialogSummaryOutput::showTable(bool flag) {
     tabledialog->setVisible(flag);
     if (flag) {
-        ui->pushButton_showTable->setText(QString("Hide Table"));
+        ui->pushButton_showTable->setText(QString("Hide %1").arg(label));
     } else {
-        ui->pushButton_showTable->setText(QString("Show Table"));
+        ui->pushButton_showTable->setText(QString("Show %1").arg(label));
     }
 }
 
 void dialogSummaryOutput::closeTable() {
     ui->pushButton_showTable->setChecked(false);
     showTable(false);
+}
+
+QString dialogSummaryOutput::getLabel() const
+{
+    return label;
+}
+
+void dialogSummaryOutput::setLabel(const QString &value)
+{
+    label = value;
 }
 /*void dialogSummaryOutput::createCharts(int areaNum, QStringList serNames)
 {

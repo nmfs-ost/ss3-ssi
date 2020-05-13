@@ -154,6 +154,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
     connect (ui->spinBox_selex_size_special, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeSpecial(int)));
     connect (ui->pushButton_selex_size_curve, SIGNAL(clicked(bool)), SLOT(showSelexSizeCurve(bool)));
+    connect (ui->pushButton_selex_size_info, SIGNAL(clicked()), SLOT(showSelexSizeInfo()));
     connect (selexSizeEqDialog, SIGNAL(hidden()), SLOT(selexSizeCurveClosed()));
 
 //    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), selexAgeInfoDialog, SLOT(show()));
@@ -161,6 +162,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
     connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
+    connect (ui->pushButton_selex_age_info, SIGNAL(clicked()), SLOT(showSelexAgeInfo()));
     connect (selexAgeEqDialog, SIGNAL(hidden()), SLOT(selexAgeCurveClosed()));
 
     connect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), SLOT(changeLengthMinTailComp()));
@@ -1229,6 +1231,21 @@ void fleet_widget::showSelexSizeCurve(bool flag)
     selexSizeEqDialog->restoreAll();
 }
 
+void fleet_widget::showSelexSizeInfo() {
+    QString msg;
+    msg = QString(tr(" 0: 0 params; selex =1.0 for all sizes.\n"));
+    msg.append(tr(" 1: 2 params; logistic; with 95% width specification.\n"));
+    msg.append(tr("15: 0 params; mirror another age or length selex.\n"));
+    msg.append(tr("24: 6 params; double_normal with sel minL ) and sel maxL ), using joiners.\n"));
+    msg.append(tr("25: 3 params; exponential logistic in size.\n"));
+    msg.append(tr("27: 3+special params; cubic spline.\n"));
+    msg.append(tr("42: 2+3+special params; like 27, with 2 additional param for scaling (average over bin range).\n"));
+    selexSizeInfoDialog->setWindowTitle(tr("Size Selex Equation Information"));
+    selexSizeInfoDialog->setTitle(tr("Commonly used Size Selectivity curves"));
+    selexSizeInfoDialog->setText(msg);
+    selexSizeInfoDialog->show();
+}
+
 void fleet_widget::selexSizeCurveClosed()
 {
     ui->pushButton_selex_size_curve->setText("Show Curve");
@@ -1397,6 +1414,22 @@ void fleet_widget::showSelexAgeCurve(bool flag)
     }
     selexAgeEqDialog->setVisible(flag);
     selexAgeEqDialog->restoreAll();
+}
+
+void fleet_widget::showSelexAgeInfo() {
+    QString msg;
+    msg = QString(tr(" 0: 0 params; selex=1.0 for ages 0 to maxage.\n"));
+    msg.append(tr("12: 2 params; age logistic.\n"));
+    msg.append(tr("17: nages+1 params; empirical as random walk ; N parameters to read can be overridden by setting special to non zero.\n"));
+    msg.append(tr("41: 2+nages+1 params; like 17, with 2 additional param for scaling (average over bin.\n"));
+    msg.append(tr("20: 6 params; double_normal, using joiners.\n"));
+    msg.append(tr("26: 3 params; exponential logistic in age.\n"));
+    msg.append(tr("27: 3+special params; cubic spline in age.\n"));
+    msg.append(tr("42: 2+3+special params; cubic spline; with 2 additional param for scaling (average over bin range).\n"));
+    selexAgeInfoDialog->setWindowTitle(tr("Age Selex Equation Information"));
+    selexAgeInfoDialog->setTitle(tr("Commonly used Age Selectivity curves"));
+    selexAgeInfoDialog->setText(msg);
+    selexAgeInfoDialog->show();
 }
 
 void fleet_widget::selexAgeCurveClosed()

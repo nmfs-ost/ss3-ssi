@@ -562,13 +562,15 @@ void DialogSelexEquationView::constant (double val) {
 
 // Size selectivity 0, age selectivity 10 - 0 parameters
 void DialogSelexEquationView::updateConstant (double val) {
-    double start = 1; // equation 0
+    double start = 0; // equation 0
     double end = 2;
 
     if (!bins.isEmpty())
     {
         if (equationNum == 10) {
             start = bins.at(0);
+        }
+        else {
         }
         end = bins.last();
         updateConstant(val, start, end);
@@ -615,7 +617,7 @@ void DialogSelexEquationView::updateConstant (double val, double first, double l
 
 
     valSeries->clear();
-    if (start < (first + .001)) {
+    if (start < (first - .001)) {
         valSeries->append(QPointF(start, 0));
         valSeries->append(QPointF(first, 0));
     }
@@ -2653,103 +2655,13 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
         for (int i = lastage + 1; i < firstPoints.count(); i++)
             valSeries->append(firstPoints.at(i).x(), 0.0);
     }
+    yMax = maxYvalue(valSeries->points());
+    if (yMax > 1.0001)
+        axisY->setRange(0, yMax * 1.2);
+
 }
 
-/*
-    float useparm = 0.;
-    float sel = 0.;
-    float parm = 0.;
-    float cumparm = 0;
-    float rateofchange = 0;
-    int lastage = static_cast<int>(binMax + .5);
-    int lastageIndex = xValList.count() - 1;
 
-    for (int i = 0; i < xValList.count(); i++) {
-        if (xValList.at(i) > lastage) {
-            lastageIndex = i - 1;
-            break;
-        }
-    }
-
-    parm = parameterView->getInput(0);
-    if (parm == -1000)
-    {
-        parm = 0.0;
-    }
-    cumparm = useparm = parm;
-    if (xValList.count() > 0)
-    {
-    valSeries->append(QPointF(xValList.at(0), parm));
-
-    parms.append(parm);
-    ascendSeries->append(QPointF(xValList.at(0), useparm));
-    firstPoints.append(QPointF(xValList.at(0), cumparm));
-
-    for (int i = 1; i <= lastageIndex; i++)
-    {
-        parm = parameterView->getInput(i);
-        parms.append(parm);
-        if (parms[i] > -999)
-            useparm = parms[i];
-        if (fabs(useparm) > max)
-            max = fabs(useparm);
-        ascendSeries->append(QPointF(xValList.at(i), useparm));
-        cumparm += useparm;
-        firstPoints.append(QPointF(xValList.at(i), cumparm));
-    }
-    axisYalt->setRange(-max, max);
-
-    if (scale < 2)
-    {
-        temp = maxYvalue(firstPoints);
-    }
-    else
-    {
-        int low_bin;
-        int high_bin;
-        float total = 0;
-        if (minBin < 0)
-        {
-            minBin = 0;
-        }
-        if (maxBin > binMax)
-        {
-            maxBin = static_cast<int>(binMax);
-        }
-        if (maxBin < minBin)
-            maxBin = minBin;
-        if (minBin > maxBin)
-            minBin = maxBin;
-
-        low_bin = xValList.indexOf(minBin);
-        high_bin = xValList.indexOf(maxBin);
-//        sp(1) = low_bin;
-//        sp(2) = high_bin;
-//        temp = mean(tempvec_a(low_bin,high_bin));
-
-        temp = aveYvalue(firstPoints, 1, maxBin);
-    }
-
-    for (int i = 1; i < firstPoints.count(); i++)
-    {
-        int next = i + 1 + scale;
-        if ((next < parms.count()) && (parms.at(next) == -1000))
-            sel = 0.0;
-        else
-            sel = exp(firstPoints.at(i).y() - temp);
-        valSeries->append(QPointF(xValList.at(i), sel));
-    }
-
-    for (int i = firstPoints.count(); i < xValList.count(); i++)
-    {
-        if (special > 0)
-            valSeries->append(QPointF(xValList.at(i), valSeries->points().at(i-1).y()));
-        else
-            valSeries->append(QPointF(xValList.at(i), 0.0));
-    }
-//    updateLinearExp(scale);
-    }/
-}*/
 
 // case 16 Coleraine - Gaussian age selectivity
 void DialogSelexEquationView::coleGauss () {
@@ -3238,6 +3150,9 @@ void DialogSelexEquationView::updateTwoSexRandom() {
         parm = evaluatePoints(firstPoints, xValList.at(i));
         valSeries->append(xValList.at(i), exp(parm - temp));
     }
+    yMax = maxYvalue(valSeries->points());
+    if (yMax > 1.0001)
+        axisY->setRange(0, yMax * 1.2);
 
     if (genders > 1) {
         // Male ln(selex)
@@ -3471,6 +3386,9 @@ void DialogSelexEquationView::updateTwoSexEachAge() {
         }
         valSeries->append(xValList.at(i), yVal);
     }
+    yMax = maxYvalue(valSeries->points());
+    if (yMax > 1.0001)
+        axisY->setRange(0, yMax * 1.2);
 
     if (genders > 1) {
         // Male ln(selex)

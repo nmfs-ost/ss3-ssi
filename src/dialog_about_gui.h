@@ -8,6 +8,8 @@
 
 #include <QDialog>
 
+#include "dialog_fileview.h"
+
 namespace Ui {
 class Dialog_about_gui;
 }
@@ -20,8 +22,11 @@ public:
     explicit Dialog_about_gui(QWidget *parent = 0);
     ~Dialog_about_gui();
 
+public slots:
+    void showReadme();
 private:
     Ui::Dialog_about_gui *ui;
+    Dialog_fileView *readmeview;
 
 signals:
     void showGuide();

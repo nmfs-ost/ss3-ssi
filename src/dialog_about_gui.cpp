@@ -2,6 +2,7 @@
 #include "ui_dialog_about_gui.h"
 #include "metadata.h"
 #include "dialog_copyright.h"
+#include "dialog_fileview.h"
 
 Dialog_about_gui::Dialog_about_gui(QWidget *parent) :
     QDialog(parent),
@@ -31,13 +32,23 @@ Dialog_about_gui::Dialog_about_gui(QWidget *parent) :
     ui->textEdit->setText(txt);
     ui->textEdit->setFont(qf);
 
+    readmeview = new Dialog_fileView(this);
+    readmeview->hide();
+
     connect (ui->pushButton_userGuide, SIGNAL(clicked()), SIGNAL(showGuide()));
     connect (ui->pushButton_copyright, SIGNAL(clicked()), SIGNAL(showCopyright()));
     connect (ui->toolButton_aboutQt, SIGNAL(clicked()), SIGNAL(showAboutQt()));
+    connect (ui->pushButton_readme, SIGNAL(clicked()), SLOT(showReadme()));
     connect (ui->pushButton_ok, SIGNAL(clicked()), SLOT(close()));
 }
 
 Dialog_about_gui::~Dialog_about_gui()
 {
     delete ui;
+}
+
+void Dialog_about_gui::showReadme() {
+    QString dir (qApp->applicationDirPath());
+    readmeview->viewFile(dir + QString("/SSI_readme.txt"));
+    readmeview->show();
 }

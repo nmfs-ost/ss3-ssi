@@ -1,6 +1,6 @@
 ss_gui_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.08
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.12
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,6 +15,17 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.15.12
+    2020-05-13
+1. Added SSI_readme.txt to 'About' dialog
+2. Changed output charts table to likelihood.
+3. Added information windows for Age and Size selectivity.
+4. Selectivity graph axes now change for scaled curves.
+============================================================================
+    3.30.15.11
+    2020-04-17
+1. Added "Info" button for selectivity to showcase commonly used equations.
+============================================================================
     3.30.15.10
     2020-04-10
 1. Implemented selectivity curve 43 - scaled linear segments, curve 44 -
@@ -23,7 +34,6 @@ History:
    leaves SSI in an unstable state and must be followed by reading a good
    model.
 3. Fixed curve 16 - Coleraine - Gaussian: limit for selex = 1.
-
 ============================================================================
     3.30.15.09
     2020-04-03
