@@ -13,6 +13,7 @@ Dialog_run::Dialog_run(QWidget *parent) :
 {
     ui->setupUi(this);
 
+//    ui->pushButton_RCompare->setVisible(false);
     ui->pushButton_increase->setVisible(false);
     ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
@@ -29,9 +30,11 @@ Dialog_run::Dialog_run(QWidget *parent) :
     connect (ui->pushButton_pause, SIGNAL(clicked()), SLOT(pauseRun()));
     connect (ui->pushButton_stop, SIGNAL(clicked()), SLOT(stopRun()));
     connect (ui->pushButton_cancel, SIGNAL(clicked()), SLOT(rejected()));
-    connect (ui->pushButton_rptCharts, SIGNAL(clicked()), SLOT(showRptCharts()));
 
+    connect (ui->pushButton_rptCharts, SIGNAL(clicked()), SLOT(showRptCharts()));
     connect (ui->pushButton_RCharts, SIGNAL(clicked()), SLOT(generateRCharts()));
+    connect (ui->pushButton_RCompare, SIGNAL(clicked()), SLOT(compareRCharts()));
+
     connect (ui->pushButton_showWarn, SIGNAL(clicked()), SLOT(showWarnFile()));
     connect (ui->pushButton_showEcho, SIGNAL(clicked()), SLOT(showEchoFile()));
 
@@ -46,6 +49,10 @@ Dialog_run::Dialog_run(QWidget *parent) :
     charts = new dialogSummaryOutput(this);
     charts->setLabel("Likelihood");
     charts->hide();
+
+    dirsChoose = new DialogDirectories(this);
+    dirsChoose->setWindowTitle("Choose Directories");
+    connect (dirsChoose, SIGNAL(accepted()), SLOT(runCompareRCharts()));
 
     nohess = false;
     shess = false;
@@ -109,6 +116,44 @@ void Dialog_run::generateRCharts()
         ui->plainTextEdit_output->appendPlainText(line);
         stocksynth->start(line, QIODevice::ReadOnly);
     }
+}
+
+//PATH=%PATH%;R_exe
+//rscript -e "r4ss::SSplotComparisons(r4ss::SSsummarize(r4ss::SSgetoutput(dirvec = c(mod_1, mod_2))))"
+//rscript -e "r4ss::SSplotComparisons(r4ss::legendlabels = c("model 1", "model 2"))"
+
+void Dialog_run::compareRCharts()
+{
+    QFile Rexe(R_exe);
+    if (R_exe.isEmpty()) {
+        QMessageBox::information(this,tr("Missing R executable"), tr("Use Main window - Options menu to find R executable"));
+    }
+    else {
+        dirsChoose->show();
+    }
+}
+
+void Dialog_run::runCompareRCharts() {
+    QFile Rexe(R_exe);
+    QFileInfo Rinfo(R_exe);
+
+    QDir Rdir(Rinfo.dir());
+    QString preline(QString("\"%1/").arg(Rdir.path()));
+    QString line(preline);
+    QString mod_1(dirsChoose->getModel1());
+    QString mod_2(dirsChoose->getModel2());
+
+    if (!mod_2.isEmpty() && !mod_2.contains("choose")) {
+        line.append("rscript\" -e \"r4ss::SSplotComparisons(r4ss::legendlabels = c(\"model 1\", \"model 2\"))\"\n\n");
+        ui->plainTextEdit_output->clear();
+        ui->plainTextEdit_error->clear();
+        ui->plainTextEdit_output->appendPlainText(line);
+        stocksynth->start(line, QIODevice::ReadOnly);
+        line = QString("%1rscript\" -e \"r4ss::SSplotComparisons(r4ss::SSsummarize(r4ss::SSgetoutput(dirvec = c(%2, %3))))\"").arg(preline, mod_1, mod_2);
+        ui->plainTextEdit_output->appendPlainText(line);
+        stocksynth->start(line, QIODevice::ReadOnly);
+    }
+
 }
 
 void Dialog_run::showWarnFile()
@@ -238,6 +283,7 @@ void Dialog_run::setDir(QString dir)
     stocksynth->setWorkingDirectory(dir);
     ui->label_directory->setText(dir);
     charts->setDirectory(dir);
+    dirsChoose->setModel1(dir);
 }
 
 void Dialog_run::changeExe()

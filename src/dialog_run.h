@@ -23,6 +23,7 @@
 #include "dialog_runoptions.h"
 //#include "chartdialog.h"
 #include "dialogsummaryoutput.h"
+#include "dialogdirectories.h"
 
 #define BUFFER_SIZE 256
 
@@ -67,6 +68,8 @@ public slots:
 
     void showRptCharts();
     void generateRCharts();
+    void compareRCharts();
+    void runCompareRCharts();
     void showWarnFile();
     void showEchoFile();
 
@@ -115,6 +118,7 @@ private:
     bool mcdiag;
 
     QString R_exe;
+    DialogDirectories *dirsChoose;
 
     void setUiEnabled(bool flag);
     void finishOutput();

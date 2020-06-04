@@ -15,6 +15,12 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.15.13
+    2020-06-04
+1. Fixed a problem in reading starter file.
+2. Added r4ss comparison of two models.
+3. Fixed a bug with natMort 3 and 4 reading age specific values.
+============================================================================
     3.30.15.12
     2020-05-13
 1. Added SSI_readme.txt to 'About' dialog

@@ -844,6 +844,7 @@ bool file_widget::read_starter_file (QString filename)
             if (!end && token.compare("3.30"))
             {
                 model_info->setRandSeed(temp_int);
+                token = starterFile->get_next_value();  // for version number
             }
             else
             {
@@ -854,6 +855,7 @@ bool file_widget::read_starter_file (QString filename)
             temp_float = get_version_number(token);
             datafile_version = temp_float;
             ui->doubleSpinBox_version->setValue(datafile_version);
+            datafile_version = ui->doubleSpinBox_version->value();
             }
         }
 

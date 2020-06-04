@@ -2247,8 +2247,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             // age-specific M values by sex by growth pattern
             num = pop->Grow()->getNum_patterns();
             datalist = data->get_age_composition()->getBins();
-            num_vals = datalist.count();
-            for (int i = 0; i < num; i++) // first female M for each growth pattern
+            num_vals = datalist.count() + 1;
+            for (int i = 0; i < num; i++) // first, female M for each growth pattern
             {
                 pop->Grow()->getPattern(i)->getNatMAges()->setHeader(datalist);
                 pop->Grow()->getPattern(i)->getNatMAges()->setColumnCount(num_vals);
@@ -4477,13 +4477,14 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         temp_int = pop->M()->getNumInputs();
         for (i = 0; i < temp_int; i++)
         {
+            line.clear();
             str_list = pop->M()->getInputLine(i);
             for (int j = 0; j < str_list.count(); j++)
             {
-                line = QString(QString(" %1").arg(str_list.at(j)));
-                chars += c_file->writeline(line);
+                line.append(QString(QString(" %1").arg(str_list.at(j))));
+//                chars += c_file->writeline(line);
             }
-            line = QString(" # ");
+            line.append(QString(" # "));
             chars += c_file->writeline(line);
         }
         chars += c_file->writeline("#");

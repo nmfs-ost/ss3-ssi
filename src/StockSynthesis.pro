@@ -115,7 +115,8 @@ SOURCES += main.cpp\
     dialog_copyright.cpp \
     dialogtable.cpp \
     mainwindowrun.cpp \
-    dar1.cpp
+    dar1.cpp \
+    dialogdirectories.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -219,7 +220,8 @@ HEADERS  += mainwindow.h \
     dialog_copyright.h \
     dialogtable.h \
     mainwindowrun.h \
-    dar1.h
+    dar1.h \
+    dialogdirectories.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -263,7 +265,8 @@ FORMS    += mainwindow.ui \
     doublelimitspinbox.ui \
     dialog_copyright.ui \
     dialogtable.ui \
-    mainwindowrun.ui
+    mainwindowrun.ui \
+    dialogdirectories.ui
 
 OTHER_FILES +=
 
