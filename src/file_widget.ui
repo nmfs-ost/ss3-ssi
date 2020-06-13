@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>895</width>
-    <height>652</height>
+    <height>673</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_input">
       <attribute name="title">
@@ -622,17 +622,22 @@ It is undocumented and mostly used by the developer.</string>
           <widget class="QComboBox" name="comboBox_report_level">
            <item>
             <property name="text">
-             <string>0 - Omit catch-at-age</string>
+             <string>0 - Minimal for data-limited</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>1 - Complete output</string>
+             <string>1 - High (with wtatage.ss_new)</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>2 - Reduced output for data-limited models</string>
+             <string>2 - Brief</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3 - Custom</string>
             </property>
            </item>
           </widget>
@@ -753,7 +758,7 @@ It is undocumented and mostly used by the developer.</string>
          <item row="2" column="0" colspan="2">
           <widget class="QLabel" name="label_report_level">
            <property name="text">
-            <string>Report.sso include age-structured report</string>
+            <string>Report.sso report detail</string>
            </property>
           </widget>
          </item>
@@ -836,6 +841,19 @@ It is undocumented and mostly used by the developer.</string>
          </item>
          <item row="8" column="2" colspan="2">
           <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
+         </item>
+         <item row="2" column="6">
+          <widget class="QPushButton" name="pushButton_chooseRepDetail">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Choose</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

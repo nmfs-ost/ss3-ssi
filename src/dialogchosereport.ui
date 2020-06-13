@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogChoseReport</class>
+ <widget class="QDialog" name="DialogChoseReport">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>432</width>
+    <height>715</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label_select">
+     <property name="text">
+      <string>Select Reports</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_options">
+     <item row="0" column="1">
+      <widget class="QRadioButton" name="radioButton_Minimal">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Option 0 - Minimal</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QRadioButton" name="radioButton_Brief">
+       <property name="text">
+        <string>Option 2 - Brief</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QRadioButton" name="radioButton_All">
+       <property name="text">
+        <string>Option 1 - All</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButton_clear">
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QRadioButton" name="radioButton_Custom">
+       <property name="text">
+        <string>Option 3 - Custom</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>       </string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea_reports">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>401</width>
+        <height>1965</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="29" column="0">
+        <widget class="QLabel" name="label_fitSizeComps">
+         <property name="text">
+          <string>29</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="1">
+        <widget class="QCheckBox" name="checkBox_index3">
+         <property name="text">
+          <string>INDEX_3</string>
+         </property>
+        </widget>
+       </item>
+       <item row="36" column="1">
+        <widget class="QCheckBox" name="checkBox_biomAtAge">
+         <property name="text">
+          <string>BIOMASS_AT_AGE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="47" column="0">
+        <widget class="QLabel" name="label_bioAtAgeEndyr">
+         <property name="text">
+          <string>47</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0">
+        <widget class="QLabel" name="label_discardSpec">
+         <property name="text">
+          <string>24</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_parmDevsDetail">
+         <property name="text">
+          <string>4</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="0">
+        <widget class="QLabel" name="label_lenSelex">
+         <property name="text">
+          <string>31</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="1">
+        <widget class="QCheckBox" name="checkBox_index1">
+         <property name="text">
+          <string>INDEX_1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
+        <widget class="QLabel" name="label_discardOut">
+         <property name="text">
+          <string>25</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_morphIndex">
+         <property name="text">
+          <string>11</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="42" column="1">
+        <widget class="QCheckBox" name="checkBox_biology">
+         <property name="text">
+          <string>BIOLOGY</string>
+         </property>
+        </widget>
+       </item>
+       <item row="60" column="0">
+        <widget class="QLabel" name="label_wtatage">
+         <property name="text">
+          <string>60</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="55" column="0">
+        <widget class="QLabel" name="label_globalMSY">
+         <property name="text">
+          <string>55</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="59" column="1">
+        <widget class="QCheckBox" name="checkBox_dynamicBzero">
+         <property name="text">
+          <string>Dynamic_Bzero</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="checkBox_parameters">
+         <property name="text">
+          <string>PARAMETERS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="49" column="0">
+        <widget class="QLabel" name="label_meanTimeSeries">
+         <property name="text">
+          <string>49</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="55" column="1">
+        <widget class="QCheckBox" name="checkBox_globalMSY">
+         <property name="text">
+          <string>GLOBAL_MSY</string>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="0">
+        <widget class="QLabel" name="label_ageSelex">
+         <property name="text">
+          <string>32</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="45" column="0">
+        <widget class="QLabel" name="label_growthParams">
+         <property name="text">
+          <string>45</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="59" column="0">
+        <widget class="QLabel" name="label_dynamicBzero">
+         <property name="text">
+          <string>59</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="0">
+        <widget class="QLabel" name="label_timeSeries">
+         <property name="text">
+          <string>16</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="0">
+        <widget class="QLabel" name="label_spawnRecrCurve">
+         <property name="text">
+          <string>20</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="0">
+        <widget class="QLabel" name="label_index2">
+         <property name="text">
+          <string>22</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="0">
+        <widget class="QLabel" name="label_tagRecap">
+         <property name="text">
+          <string>34</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="41" column="0">
+        <widget class="QLabel" name="label_discardAtAge">
+         <property name="text">
+          <string>41</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="39" column="0">
+        <widget class="QLabel" name="label_fAtAge">
+         <property name="text">
+          <string>39</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1">
+        <widget class="QCheckBox" name="checkBox_discardOut">
+         <property name="text">
+          <string>DISCARD_SPECIFICATION</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QLabel" name="label_catch">
+         <property name="text">
+          <string>15</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_likelihood">
+         <property name="text">
+          <string>2</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_definitions">
+         <property name="text">
+          <string>1</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="label_ageSelAfterAdj">
+         <property name="text">
+          <string>9</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="53" column="0">
+        <widget class="QLabel" name="label_selexDbase">
+         <property name="text">
+          <string>53</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="56" column="0">
+        <widget class="QLabel" name="label_summary">
+         <property name="text">
+          <string>56</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QCheckBox" name="checkBox_sizeSelAfterAdj">
+         <property name="text">
+          <string>selparm(Size)_By_Year_after_adjustments</string>
+         </property>
+        </widget>
+       </item>
+       <item row="35" column="1">
+        <widget class="QCheckBox" name="checkBox_numAtAge">
+         <property name="text">
+          <string>NUMBERS_AT_AGE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="43" column="0">
+        <widget class="QLabel" name="label_natMort">
+         <property name="text">
+          <string>43</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="checkBox_inputVarAdj">
+         <property name="text">
+          <string>Input_Variance_Adjustment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="47" column="1">
+        <widget class="QCheckBox" name="checkBox_bioAtAgeEndyr">
+         <property name="text">
+          <string>Biology_at_age_in_endyr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="41" column="1">
+        <widget class="QCheckBox" name="checkBox_discardAtAge">
+         <property name="text">
+          <string>DISCARD_AT_AGE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
+        <widget class="QCheckBox" name="checkBox_timeSeries">
+         <property name="text">
+          <string>TIME_SERIES</string>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="1">
+        <widget class="QCheckBox" name="checkBox_lenSelex">
+         <property name="text">
+          <string>LEN_SELEX</string>
+         </property>
+        </widget>
+       </item>
+       <item row="43" column="1">
+        <widget class="QCheckBox" name="checkBox_natMort">
+         <property name="text">
+          <string>Natural_Mortality</string>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="0">
+        <widget class="QLabel" name="label_fitLenComps">
+         <property name="text">
+          <string>27</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="1">
+        <widget class="QCheckBox" name="checkBox_fitLenComps">
+         <property name="text">
+          <string>FIT_LEN_COMPS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="46" column="1">
+        <widget class="QCheckBox" name="checkBox_seasEffects">
+         <property name="text">
+          <string>Seas_Effects</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QCheckBox" name="checkBox_recruitDist">
+         <property name="text">
+          <string>RECRUITMENT_DIST</string>
+         </property>
+        </widget>
+       </item>
+       <item row="54" column="1">
+        <widget class="QCheckBox" name="checkBox_sprYprProfile">
+         <property name="text">
+          <string>SPR/YPR_Profile</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="label_sizeFreqTrans">
+         <property name="text">
+          <string>12</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="0">
+        <widget class="QLabel" name="label_kobePlot">
+         <property name="text">
+          <string>18</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="48" column="0">
+        <widget class="QLabel" name="label_meanBwtBegin">
+         <property name="text">
+          <string>48</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_mgParmAfterAdj">
+         <property name="text">
+          <string>7</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="37" column="1">
+        <widget class="QCheckBox" name="checkBox_numAtLen">
+         <property name="text">
+          <string>NUMBERS_AT_LENGTH</string>
+         </property>
+        </widget>
+       </item>
+       <item row="38" column="1">
+        <widget class="QCheckBox" name="checkBox_biomAtLen">
+         <property name="text">
+          <string>BIOMASS_AT_LENGTH</string>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="1">
+        <widget class="QCheckBox" name="checkBox_ageSelex">
+         <property name="text">
+          <string>AGE_SELEX</string>
+         </property>
+        </widget>
+       </item>
+       <item row="57" column="1">
+        <widget class="QCheckBox" name="checkBox_rebuilder">
+         <property name="text">
+          <string>rebuilder.sso</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="1">
+        <widget class="QCheckBox" name="checkBox_kobePlot">
+         <property name="text">
+          <string>Kobe_Plot</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QCheckBox" name="checkBox_catch">
+         <property name="text">
+          <string>CATCH</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="checkBox_sizeFreqTrans">
+         <property name="text">
+          <string>SIZEFREQ_TRANSLATION</string>
+         </property>
+        </widget>
+       </item>
+       <item row="28" column="0">
+        <widget class="QLabel" name="label_fitAgeComps">
+         <property name="text">
+          <string>28</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="40" column="1">
+        <widget class="QCheckBox" name="checkBox_catchAtAge">
+         <property name="text">
+          <string>CATCH_AT_AGE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="30" column="0">
+        <widget class="QLabel" name="label_overallComps">
+         <property name="text">
+          <string>30</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="checkBox_definitions">
+         <property name="text">
+          <string>DEFINITIONS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QLabel" name="label_movement">
+         <property name="text">
+          <string>13</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="53" column="1">
+        <widget class="QCheckBox" name="checkBox_selexDbase">
+         <property name="text">
+          <string>SELEX_database</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QLabel" name="label_exploit">
+         <property name="text">
+          <string>14</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_reportName">
+         <property name="text">
+          <string>Report</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="checkBox_mgParmAfterAdj">
+         <property name="text">
+          <string>MGparm_By_Year_after_adjustments</string>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="1">
+        <widget class="QCheckBox" name="checkBox_index2">
+         <property name="text">
+          <string>INDEX_2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="45" column="1">
+        <widget class="QCheckBox" name="checkBox_growthParams">
+         <property name="text">
+          <string>Growth_Parameters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="42" column="0">
+        <widget class="QLabel" name="label_biology">
+         <property name="text">
+          <string>42</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="30" column="1">
+        <widget class="QCheckBox" name="checkBox_overallComps">
+         <property name="text">
+          <string>OVERALL_COMPS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_sizeSelAfterAdj">
+         <property name="text">
+          <string>8</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="51" column="0">
+        <widget class="QLabel" name="label_ageAgeKey">
+         <property name="text">
+          <string>51</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="54" column="0">
+        <widget class="QLabel" name="label_sprYprProfile">
+         <property name="text">
+          <string>54</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="58" column="0">
+        <widget class="QLabel" name="label_sisTable">
+         <property name="text">
+          <string>58</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="1">
+        <widget class="QCheckBox" name="checkBox_tagRecap">
+         <property name="text">
+          <string>TAG_Recapture</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="checkBox_ageSelAfterAdj">
+         <property name="text">
+          <string>selparm(Age)_By_Year_after_adjustments</string>
+         </property>
+        </widget>
+       </item>
+       <item row="38" column="0">
+        <widget class="QLabel" name="label_biomAtLen">
+         <property name="text">
+          <string>38</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="1">
+        <widget class="QCheckBox" name="checkBox_envData">
+         <property name="text">
+          <string>ENVIRONMENTAL_DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item row="58" column="1">
+        <widget class="QCheckBox" name="checkBox_sisTable">
+         <property name="text">
+          <string>SIStable.sso</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="0">
+        <widget class="QLabel" name="label_spawnRecruit">
+         <property name="text">
+          <string>19</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1">
+        <widget class="QCheckBox" name="checkBox_discardSpec">
+         <property name="text">
+          <string>DISCARD_SPECIFICATION</string>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="0">
+        <widget class="QLabel" name="label_envData">
+         <property name="text">
+          <string>33</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="36" column="0">
+        <widget class="QLabel" name="label_biomAtAge">
+         <property name="text">
+          <string>36</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_derivedQuants">
+         <property name="text">
+          <string>6</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="39" column="1">
+        <widget class="QCheckBox" name="checkBox_fAtAge">
+         <property name="text">
+          <string>F_AT_AGE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="1">
+        <widget class="QCheckBox" name="checkBox_meanBwtOut">
+         <property name="text">
+          <string>MEAN_BODY_WT_OUTPUT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="1">
+        <widget class="QCheckBox" name="checkBox_spawnRecruit">
+         <property name="text">
+          <string>SPAWN_RECRUIT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="checkBox_movement">
+         <property name="text">
+          <string>MOVEMENT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QCheckBox" name="checkBox_exploit">
+         <property name="text">
+          <string>EXPLOITATION</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="0">
+        <widget class="QLabel" name="label_index1">
+         <property name="text">
+          <string>21</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_parameters">
+         <property name="text">
+          <string>5</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="44" column="0">
+        <widget class="QLabel" name="label_ageSpecK">
+         <property name="text">
+          <string>44</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="checkBox_derivedQuants">
+         <property name="text">
+          <string>DERIVED_QUANTITIES</string>
+         </property>
+        </widget>
+       </item>
+       <item row="48" column="1">
+        <widget class="QCheckBox" name="checkBox_meanBwtBegin">
+         <property name="text">
+          <string>MEAN_BODY_WT(Begin)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="29" column="1">
+        <widget class="QCheckBox" name="checkBox_fitSizeComps">
+         <property name="text">
+          <string>FIT_SIZE_COMPS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="52" column="0">
+        <widget class="QLabel" name="label_CompDbase">
+         <property name="text">
+          <string>52</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="1">
+        <widget class="QCheckBox" name="checkBox_sprSeries">
+         <property name="text">
+          <string>SPR_SERIES</string>
+         </property>
+        </widget>
+       </item>
+       <item row="56" column="1">
+        <widget class="QCheckBox" name="checkBox_summary">
+         <property name="text">
+          <string>SS_summary.sso</string>
+         </property>
+        </widget>
+       </item>
+       <item row="50" column="0">
+        <widget class="QLabel" name="label_ageLenKey">
+         <property name="text">
+          <string>50</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="44" column="1">
+        <widget class="QCheckBox" name="checkBox_ageSpecK">
+         <property name="text">
+          <string>AGE_SPECIFIC_K</string>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="0">
+        <widget class="QLabel" name="label_meanBwtOut">
+         <property name="text">
+          <string>26</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="37" column="0">
+        <widget class="QLabel" name="label_numAtLen">
+         <property name="text">
+          <string>37</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="51" column="1">
+        <widget class="QCheckBox" name="checkBox_ageAgeKey">
+         <property name="text">
+          <string>AGE_AGE_KEY</string>
+         </property>
+        </widget>
+       </item>
+       <item row="57" column="0">
+        <widget class="QLabel" name="label_rebuilder">
+         <property name="text">
+          <string>57</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0">
+        <widget class="QLabel" name="label_sprSeries">
+         <property name="text">
+          <string>17</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="35" column="0">
+        <widget class="QLabel" name="label_numAtAge">
+         <property name="text">
+          <string>35</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_inputVarAdj">
+         <property name="text">
+          <string>3</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="checkBox_parmDevsDetail">
+         <property name="text">
+          <string>Parm_devs_detail</string>
+         </property>
+        </widget>
+       </item>
+       <item row="40" column="0">
+        <widget class="QLabel" name="label_catchAtAge">
+         <property name="text">
+          <string>40</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="0">
+        <widget class="QLabel" name="label_index3">
+         <property name="text">
+          <string>23</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_reportNum">
+         <property name="text">
+          <string>No.</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="checkBox_likelihood">
+         <property name="text">
+          <string>LIKELIHOOD</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="checkBox_morphIndex">
+         <property name="text">
+          <string>MORPH_INDEXING</string>
+         </property>
+        </widget>
+       </item>
+       <item row="50" column="1">
+        <widget class="QCheckBox" name="checkBox_ageLenKey">
+         <property name="text">
+          <string>AGE_LENGTH_KEY</string>
+         </property>
+        </widget>
+       </item>
+       <item row="60" column="1">
+        <widget class="QCheckBox" name="checkBox_wtatage">
+         <property name="text">
+          <string>wtatage.ss_new</string>
+         </property>
+        </widget>
+       </item>
+       <item row="52" column="1">
+        <widget class="QCheckBox" name="checkBox_compDbase">
+         <property name="text">
+          <string>COMPOSITION_DATABASE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="label_recruitDist">
+         <property name="text">
+          <string>10</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="1">
+        <widget class="QCheckBox" name="checkBox_spawnRecrCurve">
+         <property name="text">
+          <string>SPAWN_RECR_CURVE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="49" column="1">
+        <widget class="QCheckBox" name="checkBox_meanTimeSeries">
+         <property name="text">
+          <string>MEAN_SIZE_TIMESERIES</string>
+         </property>
+        </widget>
+       </item>
+       <item row="28" column="1">
+        <widget class="QCheckBox" name="checkBox_fitAgeComps">
+         <property name="text">
+          <string>FIT_AGE_COMPS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="46" column="0">
+        <widget class="QLabel" name="label_seasEffects">
+         <property name="text">
+          <string>46</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DialogChoseReport</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DialogChoseReport</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

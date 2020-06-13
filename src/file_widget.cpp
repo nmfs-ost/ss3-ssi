@@ -41,6 +41,9 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     parameterFile = new ss_file(QString(PARAMETER_FILE), this);
     profileFile = new ss_file(QString(PROFILE_VAL_FILE), this);
     userDataFile = nullptr;
+    chooseRepDetail = new DialogChoseReport(this);
+    connect (chooseRepDetail, SIGNAL(detailChanged(int)), SLOT(changeReportDetail(int)));
+    chooseRepDetail->hide();
     connect (starterFile, SIGNAL(end_reading_file()), SLOT(reset()));
     connect (forecastFile, SIGNAL(end_reading_file()), SLOT(reset()));
     connect (dataFile, SIGNAL(end_reading_file()), SLOT(reset()));
@@ -85,6 +88,9 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     connect (ui->doubleSpinBox_version, SIGNAL(valueChanged(double)), SLOT(setDatafileVersion(double)));
     ui->label_version->setVisible(false);
     ui->doubleSpinBox_version->setVisible(false);
+
+    connect (ui->comboBox_report_level, SIGNAL(currentIndexChanged(int)), SLOT(reportDetailChanged(int)));
+    connect (ui->pushButton_chooseRepDetail, SIGNAL(clicked()), SLOT(chooseReportDetail()));
 
     setReadParFile(false);
     setReadProFile(false);
@@ -705,8 +711,12 @@ bool file_widget::read_starter_file (QString filename)
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
         }
         if (starterFile->getOkay()) {
-        temp_int = starterFile->getIntValue(QString("detailed age-structured reports in REPORT.SSO"), 0, 2, 1);
+        temp_int = starterFile->getIntValue(QString("detailed age-structured reports in REPORT.SSO"), 0, 3, 1);
         ui->comboBox_report_level->setCurrentIndex(temp_int);
+        if (temp_int == 3) {
+            // read custom reports
+            while (temp_int != )
+        }
         temp_int = starterFile->getIntValue(QString("write EchoInput.sso choice"), 0, 1, 1);
         }
         if (starterFile->getOkay()) {
@@ -906,7 +916,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("run display detail (0,1,2)"));
 
         chars += starterFile->write_val(ui->comboBox_report_level->currentIndex(), 5,
-                    QString("detailed age-structured reports in REPORT.SSO (0,1,2) "));
+                    QString("detailed age-structured reports in REPORT.SSO (0-3) "));
 
         chars += starterFile->write_val(QString(ui->checkBox_checkup->isChecked()?"1":"0"), 5,
                     QString("write detailed checkup.sso file (0,1) "));
@@ -1130,4 +1140,20 @@ void file_widget::error_problem(ss_file *file)
     QMessageBox::warning((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
 }
 
+void file_widget::reportDetailChanged(int value)
+{
+    chooseRepDetail->setRepDetail(value);
+    if (value == 3)
+        chooseReportDetail();
+}
+
+void file_widget::chooseReportDetail()
+{
+    chooseRepDetail->show();
+}
+
+void file_widget::changeReportDetail(int value)
+{
+    ui->comboBox_report_level->setCurrentIndex(value);
+}
 

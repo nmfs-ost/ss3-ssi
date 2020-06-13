@@ -116,7 +116,8 @@ SOURCES += main.cpp\
     dialogtable.cpp \
     mainwindowrun.cpp \
     dar1.cpp \
-    dialogdirectories.cpp
+    dialogdirectories.cpp \
+    dialogchosereport.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -221,7 +222,8 @@ HEADERS  += mainwindow.h \
     dialogtable.h \
     mainwindowrun.h \
     dar1.h \
-    dialogdirectories.h
+    dialogdirectories.h \
+    dialogchosereport.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -266,7 +268,8 @@ FORMS    += mainwindow.ui \
     dialog_copyright.ui \
     dialogtable.ui \
     mainwindowrun.ui \
-    dialogdirectories.ui
+    dialogdirectories.ui \
+    dialogchosereport.ui
 
 OTHER_FILES +=
 

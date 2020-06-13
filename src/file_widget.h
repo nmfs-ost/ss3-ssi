@@ -15,6 +15,7 @@
 #include "tableview.h"
 #include "catchdelegate.h"
 #include "dialog_fileview.h"
+#include "dialogchosereport.h"
 
 // standard input file names
 #define STARTER_FILE      "starter.ss"
@@ -154,6 +155,10 @@ public slots:
     void show_output_files ();
     void view_wtatage();
 
+    void reportDetailChanged(int value);
+    void chooseReportDetail();
+    void changeReportDetail(int value);
+
 signals:
     void directory_changed (QString dirname);
     void starter_file_changed (QString fname);
@@ -188,6 +193,10 @@ private slots:
     bool error_no_file (ss_file *file);
     void error_unreadable (QString fname);
     void error_problem (ss_file *file);
+
+private:
+    DialogChoseReport *chooseRepDetail;
+
 };
 
 #endif // FILE_WIDGET_H
