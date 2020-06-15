@@ -51,6 +51,7 @@ public slots:
     void changeMinimReps(bool value);
     void changeAllReps(bool value);
     void changeBriefReps(bool value);
+    void changeCustomReps(bool value);
     void changeCheckbox(bool value = true);
 
 signals:

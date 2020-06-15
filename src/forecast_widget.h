@@ -18,7 +18,7 @@ class forecast_widget;
 class forecast_widget : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit forecast_widget(ss_model *m_data, QWidget *parent = 0);
     ~forecast_widget();
@@ -71,7 +71,9 @@ public slots:
     void alloc_group_fract_changed ();
     void set_rebuilder (bool flag);
     void set_rebuilder_first_year(int yr);
+    void change_rebuilder_first_yr(int yr);
     void set_rebuilder_curr_year(int yr);
+    void change_rebuilder_curr_yr(int yr);
 
     void set_max_catch_fleet ();
     void change_max_catch_fleet ();
@@ -82,7 +84,7 @@ public slots:
     void change_num_input_obs (int num);
 
 signals:
-    
+
 private:
     Ui::forecast_widget *ui;
 

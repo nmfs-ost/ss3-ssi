@@ -730,7 +730,11 @@ It is undocumented and mostly used by the developer.</string>
          <item row="6" column="2" colspan="6">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QSpinBox" name="spinBox_datafiles"/>
+            <widget class="QSpinBox" name="spinBox_datafiles">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_datafiles_info">
@@ -851,7 +855,7 @@ It is undocumented and mostly used by the developer.</string>
             </size>
            </property>
            <property name="text">
-            <string>Choose</string>
+            <string>View</string>
            </property>
           </widget>
          </item>

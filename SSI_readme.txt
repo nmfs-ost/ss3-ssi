@@ -18,6 +18,8 @@ History:
     3.30.15.14
     2020-06-13
 1. Added report detail chooser dialog.
+2. Corrected allowed length to be greater than 100, now limit is 399.
+3. Fixed WC Rebuilder year display.
 ============================================================================
     3.30.15.13
     2020-06-04

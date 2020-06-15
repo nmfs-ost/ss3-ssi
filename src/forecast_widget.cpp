@@ -885,18 +885,32 @@ void forecast_widget::set_rebuilder_first_year(int yr)
     }
     else if (yr < model_data->get_start_year())
     {
+        year = model_data->get_start_year();
+//        yr = year;
+//        model_data->forecast->set_rebuilder_first_year(year);
+    }
+    else if (yr > model_data->get_end_year())
+    {
+        year = model_data->get_end_year();
+//        yr = year;
+//        model_data->forecast->set_rebuilder_first_year(year);
+    }
+    ui->spinBox_rebuilder_ydecl->setValue(year);
+    ui->label_rebuilder_yeardecl->setText(QString::number(yr));
+}
+
+void forecast_widget::change_rebuilder_first_yr(int yr)
+{
+    if (yr < model_data->get_start_year())
+    {
         yr = model_data->get_start_year();
-        ui->spinBox_rebuilder_ydecl->setValue(yr);
-        return;
     }
     else if (yr > model_data->get_end_year())
     {
         yr = model_data->get_end_year();
-        ui->spinBox_rebuilder_ydecl->setValue(yr);
-        return;
     }
     model_data->forecast->set_rebuilder_first_year(yr);
-    ui->label_rebuilder_ydecl->setText(QString::number(year));
+    ui->label_rebuilder_yeardecl->setText(QString::number(yr));
 }
 
 void forecast_widget::set_rebuilder_curr_year(int yr)
@@ -908,17 +922,30 @@ void forecast_widget::set_rebuilder_curr_year(int yr)
     }
     else if (yr < model_data->get_start_year())
     {
-        yr = model_data->get_start_year();
-        ui->spinBox_rebuilder_yinit->setValue(yr);
-        return;
+        year = model_data->get_start_year();
+//        yr = year;
+//        model_data->forecast->set_rebuilder_curr_year(year);
     }
     else if (yr > (model_data->get_end_year() + 1))
     {
-        yr = model_data->get_end_year() + 1;
-        ui->spinBox_rebuilder_yinit->setValue(yr);
-        return;
+        year = model_data->get_end_year() + 1;
+//        yr = year;
+//        model_data->forecast->set_rebuilder_curr_year(year);
     }
-    model_data->forecast->set_rebuilder_curr_year(yr);
-    ui->label_rebuilder_yinit->setText(QString::number(year));
+    ui->spinBox_rebuilder_yinit->setValue(year);
+    ui->label_rebuilder_yearinit->setText(QString::number(yr));
 }
 
+void forecast_widget::change_rebuilder_curr_yr(int yr)
+{
+    if (yr < model_data->get_start_year())
+    {
+        yr = model_data->get_start_year() + 1;
+    }
+    else if (yr > model_data->get_end_year())
+    {
+        yr = model_data->get_end_year() + 1;
+    }
+    model_data->forecast->set_rebuilder_curr_year(yr);
+    ui->label_rebuilder_yearinit->setText(QString::number(yr));
+}

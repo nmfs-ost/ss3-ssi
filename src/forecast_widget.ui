@@ -57,7 +57,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_specification">
       <attribute name="title">
@@ -74,8 +74,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>825</width>
-            <height>644</height>
+            <width>950</width>
+            <height>669</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1290,8 +1290,8 @@ e.g. 0, -1, -2, ...</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>839</width>
-            <height>618</height>
+            <width>1119</width>
+            <height>612</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1766,7 +1766,7 @@ e.g. 0, -1, -2, ...</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="2">
+                <item row="3" column="3">
                  <spacer name="horizontalSpacer_10">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -1779,29 +1779,7 @@ e.g. 0, -1, -2, ...</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QSpinBox" name="spinBox_rebuilder_yinit">
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>80</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="minimum">
-                   <number>-20</number>
-                  </property>
-                  <property name="maximum">
-                   <number>3000</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
+                <item row="1" column="2">
                  <widget class="QSpinBox" name="spinBox_rebuilder_ydecl">
                   <property name="minimumSize">
                    <size>
@@ -1826,7 +1804,29 @@ e.g. 0, -1, -2, ...</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
+                <item row="3" column="2">
+                 <widget class="QSpinBox" name="spinBox_rebuilder_yinit">
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="minimum">
+                   <number>-20</number>
+                  </property>
+                  <property name="maximum">
+                   <number>3000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
                  <spacer name="horizontalSpacer_8">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -1838,6 +1838,34 @@ e.g. 0, -1, -2, ...</string>
                    </size>
                   </property>
                  </spacer>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLabel" name="label_rebuilder_yeardecl">
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_rebuilder_fromfile">
+                  <property name="text">
+                   <string>From File</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="label_rebuilder_yearinit">
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_8">
+                  <property name="text">
+                   <string>Year Used</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -1905,7 +1933,7 @@ e.g. 0, -1, -2, ...</string>
             <x>0</x>
             <y>0</y>
             <width>825</width>
-            <height>644</height>
+            <height>638</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">

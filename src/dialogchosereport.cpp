@@ -18,7 +18,7 @@ DialogChoseReport::DialogChoseReport(QWidget *parent) :
     connect (ui->radioButton_Minimal, SIGNAL(toggled(bool)), this, SLOT(changeMinimReps(bool)));
     connect (ui->radioButton_All, SIGNAL(toggled(bool)), this, SLOT(changeAllReps(bool)));
     connect (ui->radioButton_Brief, SIGNAL(toggled(bool)), this, SLOT(changeBriefReps(bool)));
-//    connect (ui->radioButton_Custom, SIGNAL(toggled(bool)), this, SLOT(changeCustomReps(bool)));
+    connect (ui->radioButton_Custom, SIGNAL(toggled(bool)), this, SLOT(changeCustomReps(bool)));
     connect (ui->pushButton_clear, SIGNAL(clicked()), this, SLOT(clearReports()));
 
     connectCheckBoxes();
@@ -377,17 +377,23 @@ void DialogChoseReport::setCustmReps(bool value)
 
 void DialogChoseReport::setCustomReport(int value)
 {
-    if (value == 100) {
+    int posValue = abs(value);
+    if (value == -100) {
         changeMinimReps(true);
     }
-    else if (value == 101) {
+    else if (value == -101) {
         changeAllReps(true);
     }
-    else if (value == 102) {
+    else if (value == -102) {
         changeBriefReps(true);
     }
     else {
-        reports[value] = true;
+        if (value > 0) {
+            reports[posValue] = true;
+        }
+        else {
+            reports[posValue] = false;
+        }
         setCheckboxes();
     }
 }
@@ -544,6 +550,14 @@ void DialogChoseReport::changeBriefReps(bool value)
             setCheckboxes();
         }
     }
+}
+
+void DialogChoseReport::changeCustomReps(bool value)
+{
+    if (custmReps != value) {
+        custmReps = value;
+    }
+    setCheckboxes();
 }
 
 

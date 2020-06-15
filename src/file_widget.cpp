@@ -78,7 +78,7 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
 //    connect (ui->checkBox_cumrpt_fits, SIGNAL(toggled(bool)), SLOT(cumrpt_fits_changed(bool)));
 //    connect (ui->checkBox_cumrpt_like, SIGNAL(toggled(bool)), SLOT(cumrpt_like_changed(bool)));
 
-    ui->spinBox_datafiles->setMinimum(1);
+    ui->spinBox_datafiles->setMinimum(0);
     ui->spinBox_datafiles->setMaximum(10);
 
     connect (ui->checkBox_pro_file, SIGNAL(toggled(bool)), SLOT(changeReadProFile(bool)));
@@ -715,8 +715,14 @@ bool file_widget::read_starter_file (QString filename)
         ui->comboBox_report_level->setCurrentIndex(temp_int);
         if (temp_int == 3) {
             // read custom reports
-            while (temp_int != )
+            temp_int = starterFile->get_next_value().toInt();
+            while (temp_int != -999) {
+                starterFile->checkIntValue(temp_int, QString("Custom report value"), -102, 60, 1);
+                chooseRepDetail->setCustomReport(temp_int);
+                temp_int = starterFile->get_next_value().toInt();
+            }
         }
+        chooseRepDetail->hide();
         temp_int = starterFile->getIntValue(QString("write EchoInput.sso choice"), 0, 1, 1);
         }
         if (starterFile->getOkay()) {
@@ -739,7 +745,7 @@ bool file_widget::read_starter_file (QString filename)
         model_info->set_use_softbounds(temp_int);
         }
         if (starterFile->getOkay()) {
-        temp_int = starterFile->getIntValue(QString("number of datafiles"), 0, 100, 1);
+        temp_int = starterFile->getIntValue(QString("number of datafiles"), 0, 100, 0);
         ui->spinBox_datafiles->setValue(temp_int);
         }
         if (starterFile->getOkay()) {
@@ -915,8 +921,18 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->write_val(ui->comboBox_detail_level->currentIndex(), 5,
                     QString("run display detail (0,1,2)"));
 
-        chars += starterFile->write_val(ui->comboBox_report_level->currentIndex(), 5,
+        temp_int = ui->comboBox_report_level->currentIndex();
+        chars += starterFile->write_val(temp_int, 5,
                     QString("detailed age-structured reports in REPORT.SSO (0-3) "));
+        if (temp_int == 3) {
+            QList<bool> list = chooseRepDetail->getReports();
+            for (int i = 1; i < list.count(); i++) {
+                if (list.at(i)) {
+                    chars += starterFile->write_val(i, 5, QString("Report_%1").arg(QString::number(i)));
+                }
+            }
+            starterFile->write_val(-999, 5, QString("terminator"));
+        }
 
         chars += starterFile->write_val(QString(ui->checkBox_checkup->isChecked()?"1":"0"), 5,
                     QString("write detailed checkup.sso file (0,1) "));
@@ -1142,9 +1158,11 @@ void file_widget::error_problem(ss_file *file)
 
 void file_widget::reportDetailChanged(int value)
 {
-    chooseRepDetail->setRepDetail(value);
-    if (value == 3)
-        chooseReportDetail();
+    if (chooseRepDetail->getRepDetail() != value) {
+        chooseRepDetail->setRepDetail(value);
+        if (value == 3)
+            chooseReportDetail();
+    }
 }
 
 void file_widget::chooseReportDetail()

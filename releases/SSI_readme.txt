@@ -1,6 +1,6 @@
-ss_gui_readme.txt
+ssi_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.12
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.14
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,12 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.15.14
+    2020-06-13
+1. Added report detail chooser dialog.
+2. Corrected allowed length to be greater than 100, now limit is 399.
+3. Fixed WC Rebuilder year display.
 ============================================================================
     3.30.15.13
     2020-06-04
