@@ -11,7 +11,7 @@
 
 #include "input_file.h"
 #include "model.h"
-#include "composition.h"
+#include "ssComposition.h"
 #include "tableview.h"
 #include "catchdelegate.h"
 #include "dialog_fileview.h"

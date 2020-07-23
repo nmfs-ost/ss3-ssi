@@ -1,12 +1,8 @@
-/* This is a work of the U.S. Government and is not subject to copyright
- * protection in the United States. Foreign copyrights may apply.
- * See copyright.txt for more information.
- */
-
-#ifndef COMPOSITION_H
-#define COMPOSITION_H
+#ifndef SSCOMPOSITION_H
+#define SSCOMPOSITION_H
 
 #include <QObject>
+
 #include <QStringList>
 
 //#include "ss_observation.h"
@@ -21,11 +17,15 @@
  * It includes a description of the data bins and observations.
  */
 
-class composition : public QObject
+class ssComposition : public QObject
 {
+    Q_OBJECT
 public:
-    composition(QObject *parent = 0);
-    ~composition();
+    explicit ssComposition(QObject *parent = nullptr);
+    ~ssComposition();
+
+signals:
+    void dataChanged();
 
 public slots:
     void reset ();
@@ -68,9 +68,6 @@ public slots:
     int getNumDirichletParams () {return dirichletParams->getParamCount();}
     tablemodel *getDirichletParamTable () {return dirichletParams->getParameters();}
 
-signals:
-    void dataChanged();
-
 protected:
     tablemodel *binsModel;
     tablemodel *altBinsModel;
@@ -87,22 +84,26 @@ protected:
 
 /** The length composition extends the basic one by adding two
  * float variables: compress_tails and add_to_compression. */
-class compositionLength : public composition
+class compositionLength : public ssComposition
 {
+    Q_OBJECT
 public:
     compositionLength (QObject *parent = nullptr);
 
+public slots:
     void setNumberBins(int num);
 
 };
 
 /** The age composition adds size-at-age observations and an error vector. */
-class compositionAge : public composition
+class compositionAge : public ssComposition
 {
+    Q_OBJECT
 public:
     compositionAge (QObject *parent = nullptr);
     ~compositionAge ();
 
+public slots:
     void reset();
 
     tablemodel *getErrorModel() {return errorModel;}
@@ -135,7 +136,6 @@ public:
     QStringList getErrorTVParameter(int index) {return errorTVParams->getVarParameter(index);}
     tablemodel *getErrorTVParameters() {return errorTVParams->getVarParamTable();}
 
-public slots:
     void checkUseParams();
     void checkParams();
 
@@ -158,23 +158,27 @@ private:
 
 };
 
-class compositionMorph : public composition
+class compositionMorph : public ssComposition
 {
+    Q_OBJECT
 public:
     compositionMorph (QObject *parent = 0);
     ~compositionMorph () {}
 
+public slots:
     void setNumberMorphs (int num);
     int getNumberMorphs () {return getNumberBins();}
 
 };
 
-class compositionGeneral : public composition
+class compositionGeneral : public ssComposition
 {
+    Q_OBJECT
 public:
     compositionGeneral (QObject * parent = 0);
     ~compositionGeneral ();
 
+public slots:
     void reset();
 
     void setNumberBins(int num);
@@ -192,4 +196,4 @@ private:
     float min_comp;
 };
 
-#endif // COMPOSITION_H
+#endif // SSCOMPOSITION_H

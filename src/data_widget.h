@@ -13,7 +13,7 @@
 #include "tablemodel.h"
 #include "tableview.h"
 #include "mbweightdelegate.h"
-#include "composition.h"
+#include "ssComposition.h"
 
 namespace Ui {
 class data_widget;
@@ -64,6 +64,7 @@ public slots:
     void changeAgeBins(int numBins);
     void setAgeError (int numDefs);
     void changeAgeError(int numDefs);
+    void ageErrorChanged();
     void changeAgeCombine ();
     void changeNumEnvVarObs (int num);
     void changeEnvVarData (QModelIndex tl, QModelIndex br, QVector<int> data);
@@ -153,6 +154,8 @@ private:
     tableview *ageDirichlet;
 
     tableview *ageError;
+    tableview *ageKeyParams;
+    tableview *ageKeyTVParams;
 
     compositionGeneral *current_gen_comp;
     tableview *genBins;

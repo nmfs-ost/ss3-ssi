@@ -1,7 +1,7 @@
 #include "model.h"
 #include "tablemodel.h"
 #include "tableview.h"
-#include "composition.h"
+#include "ssComposition.h"
 #include "mainwindow.h"
 
 #include <QMessageBox>

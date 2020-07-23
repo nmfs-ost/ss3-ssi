@@ -4749,7 +4749,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         // Dirichlet Mult parameter
-        composition *comp = data->get_length_composition();
+        ssComposition *comp = data->get_length_composition();
         num_vals = comp->getNumDirichletParams();
         for (i = 0; i < num_vals; i++)
         {

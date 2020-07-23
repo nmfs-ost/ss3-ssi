@@ -11,7 +11,7 @@
 //#include "area.h"
 #include "parametermodel.h"
 #include "ss_observation.h"
-#include "composition.h"
+#include "ssComposition.h"
 #include "growth.h"
 #include "ss_recruitment.h"
 #include "ss_mortality.h"

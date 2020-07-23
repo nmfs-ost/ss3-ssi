@@ -256,6 +256,8 @@ void selectivity::setDefaultParams(int method, int special)
         setParameter(0, parm);
         parm[2] = BinCount;
         setParameter(1, parm);
+        setParameterLabel(0, QString("%1Selex LoBin").arg(Type));
+        setParameterLabel(1, QString("%1Selex HiBin").arg(Type));
         break;
     }
     case 1:  // case 1 logistic size selectivity
@@ -268,6 +270,8 @@ void selectivity::setDefaultParams(int method, int special)
         parm[1] = QString("60");
         parm[2] = QString("18.9");
         setParameter(1, parm);
+        setParameterLabel(0, QString("%1Selex Inflection").arg(Type));
+        setParameterLabel(1, QString("%1Selex 95%width").arg(Type));
         break;
     }
     case 3:  // case 3 discontinued
@@ -282,10 +286,10 @@ void selectivity::setDefaultParams(int method, int special)
 //        QString bin2(QString::number(xVals.count()));
         parm << "1" << BinCount << "1" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
-        setParameterLabel(0, QString("%1Selex p1 LoBin %2").arg(Type, fisheryName));
+        setParameterLabel(0, QString("%1Selex LoBin %2").arg(Type, fisheryName));
         parm[2] = BinCount;
         setParameter(1, parm);
-        setParameterLabel(1, QString("%1Selex p2 HiBin %2").arg(Type, fisheryName));
+        setParameterLabel(1, QString("%1Selex HiBin %2").arg(Type, fisheryName));
         break;
     }
     case 6:  // case 6 non-parametric size selex pattern

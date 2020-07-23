@@ -60,7 +60,17 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ageError->setParent(this);
     ageError->setModel(model_data->get_age_composition()->getErrorModel());
     ageError->setHeight(model_data->get_age_composition()->getErrorModel());
-    ui->horizontalLayout_age_error->addWidget(ageError);
+    ui->verticalLayout_age_err_matrices->addWidget(ageError);
+    ageKeyParams = new tableview();
+    ageKeyParams->setParent(this);
+    ageKeyParams->setModel(model_data->get_age_composition()->getErrorParameters());
+    ageKeyParams->setHeight(model_data->get_age_composition()->getErrorParameters());
+    ui->verticalLayout_age_err_params->addWidget(ageKeyParams);
+    ageKeyTVParams = new tableview();
+    ageKeyTVParams->setParent(this);
+    ageKeyTVParams->setModel(model_data->get_age_composition()->getErrorTVParameters());
+    ageKeyTVParams->setHeight(model_data->get_age_composition()->getErrorTVParameters());
+    ui->verticalLayout_age_err_tv_params->addWidget(ageKeyTVParams);
 
     genBins = new tableview();
     genBins->setParent(this);
@@ -270,6 +280,9 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->pushButton_age_obs, SIGNAL(clicked()), SIGNAL(showAgeObs()));
     connect (ui->pushButton_saa_obs, SIGNAL(clicked()), SIGNAL(showSAAObs()));
     connect (ui->pushButton_age_dirichlet_add, SIGNAL(clicked()), SLOT(addAgeDirichlet()));
+
+    connect (model_data->get_age_composition()->getErrorModel(), SIGNAL(dataChanged()),
+             SLOT(ageErrorChanged()));
 
     connect (ui->pushButton_gen_obs, SIGNAL(clicked()), SLOT(showGenObs()));
 
@@ -694,10 +707,15 @@ void data_widget::setAgeBins(int numBins)
     if (numBins > 0)
     {
         ageBins->show();
+        ageErrorChanged();
     }
     else
     {
         ageBins->hide();
+        ui->label_agekey_params->setVisible(false);
+        ui->label_agekey_tv_params->setVisible(false);
+        ageKeyParams->setVisible(false);
+        ageKeyTVParams->setVisible(false);
     }
 }
 
@@ -728,6 +746,29 @@ void data_widget::setAgeError(int numDefs)
 void data_widget::changeAgeError(int numDefs)
 {
     model_data->get_age_composition()->set_num_error_defs(numDefs);
+}
+
+void data_widget::ageErrorChanged()
+{
+    bool usingParams = false;
+    QStringList ql;
+    int index = 1;
+    for (int i = 0; i < ui->spinBox_age_error_num->value(); i++)
+    {
+        index = i * 2 + 1;
+        ql = model_data->get_age_composition()->getErrorParam(index);
+        if (ql.at(0).toFloat() < 0)
+        {
+            usingParams = true;
+            break;
+        }
+    }
+    ui->label_agekey_params->setVisible(usingParams);
+    ui->label_agekey_tv_params->setVisible(usingParams);
+    ageKeyParams->setVisible(usingParams);
+    ageKeyTVParams->setVisible(usingParams);
+    if (usingParams)
+        ui->label_agekey_tv_params->setVisible(model_data->get_age_composition()->getErrorTVParameters()->rowCount()>0);
 }
 
 void data_widget::changeAgeCombine()

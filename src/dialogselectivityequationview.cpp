@@ -579,14 +579,20 @@ void DialogSelexEquationView::updateConstant (double val) {
 
 // case 11: Constant age-specific selex for specified age range - 2 parameters
 void DialogSelexEquationView::constantRange () {
-    setLabel(QString("Pattern %1: Constant selectivity 1.0 within age range").arg(equationNum));
+    QString type;
+    if (selex->getType() == Age)
+        type = QString("age");
+    else
+        type = QString("size");
+
+    setLabel(QString("Pattern %1: Constant selectivity 1.0 within range").arg(equationNum));
 
     if (parameters->rowCount() == 2) {
         numParams = 2;
         parameterView->setNumParamsShown(numParams);
-        parameterView->setName(0, QString("Lo age"));
+        parameterView->setName(0, QString("Lo %1").arg(type));
         parameterView->setType(0, QString("Integr"));
-        parameterView->setName(1, QString("Hi age"));
+        parameterView->setName(1, QString("Hi %1").arg(type));
         parameterView->setType(1, QString("Integr"));
 
         updateConstantRange();
@@ -602,11 +608,12 @@ void DialogSelexEquationView::updateConstantRange (double val) {
 //    double end; = bins.at(last);
     int lastbin = bins.count();
     if (lastbin > 1) {
-        checkScaleSliders(0, 1, bins, loBin, hiBin);
-        first = static_cast<int>(loBin);
-        last  = static_cast<int>(hiBin);
+        if(checkScaleSliders(0, 1, bins, loBin, hiBin)) {
+            first = static_cast<int>(loBin);
+            last  = static_cast<int>(hiBin);
 
-        updateConstant(val, bins.at(first-1), bins.at(last-1));
+            updateConstant(val, bins.at(first-1), bins.at(last-1));
+        }
     }
 }
 
@@ -701,6 +708,7 @@ void DialogSelexEquationView::updateLogistic() {
 //   no parameters
 void DialogSelexEquationView::mirror (int num) {
     int flt = special < 1? 1: special;
+    bool okay = true;
     // show equation num and fleet mirrored
     QString msg (QString("Pattern %1: Mirror of Fleet (%2)").arg(
                  QString::number(equationNum),
@@ -714,6 +722,10 @@ void DialogSelexEquationView::mirror (int num) {
         chartview->setVisible(false);
         if (num == 2)
         {
+            double lo = parameterView->getInput(0);
+            double hi = parameterView->getInput(1);
+            okay = checkScaleSliders(0, 1, bins, lo, hi);
+
             parameterView->setSliderRange(0, 1, bins.count());
             parameterView->setSliderRange(1, 1, bins.count());
             msg.append(QString(" between Lo and Hi bins"));
@@ -723,8 +735,9 @@ void DialogSelexEquationView::mirror (int num) {
             parameterView->setName(1, QString("Hi bin"));
             parameterView->setType(1, QString("Integr"));
         }
-        // update values (and check fleet number)
-        updateMirror(flt);
+        if (okay)
+            // update values (and check fleet number)
+            updateMirror(flt);
     }
 }
 
@@ -3445,37 +3458,37 @@ bool DialogSelexEquationView::checkScaleSliders(int first, int secnd, QList<floa
     int lo = static_cast<int>(binLo);
     int hi = static_cast<int>(binHi);
 
-    if (lo == -1) {
+    if (lo <= -1) {  // legitimate input
         lo = 1;
         binLo = 1;
     }
-    if (hi == -1) {
+    if (hi <= -1) {  // legitimate input
         hi = bins.count();
         binHi = hi;
     }
     if (lo < 1) {
+        okay = false;
         setMessage(tr("Minimum for param 1 is first bin, adjusting to first bin..."));
-        parameterView->setSliderValue(first, 1);
         binLo = 1;
-        okay = false;
+        parameterView->setSliderValue(first, 1);
     }
-    if (hi < lo) {
+    else if (hi < lo) {
+        okay = false;
         setMessage(tr("Maximum is less than Minimum, adjusting to minimum..."));
-        parameterView->setSliderValue(secnd, lo);
         binHi = lo;
-        okay = false;
+        parameterView->setSliderValue(secnd, lo);
     }
-    if (hi > bins.count()) {
+    else if (hi > bins.count()) {
+        okay = false;
         setMessage(tr("Maximum for param 2 is last bin, adjusting to number of bins..."));
-        parameterView->setSliderValue(secnd, bins.count());
         binHi = bins.count();
-        okay = false;
+        parameterView->setSliderValue(secnd, bins.count());
     }
-    if (lo > hi) {
-        setMessage(tr("Minimum is greater than Maximum, adjusting to maximum..."));
-        parameterView->setSliderValue(first, hi);
-        binLo = hi;
+    else if (lo > hi) {
         okay = false;
+        setMessage(tr("Minimum is greater than Maximum, adjusting to maximum..."));
+        binLo = hi;
+        parameterView->setSliderValue(first, hi);
     }
 
     return okay;

@@ -189,7 +189,8 @@ void longParameterTable::setParamCount(int rows)
 
 void longParameterTable::setParameter(int row, QStringList param)
 {
-    setParamCount(row + 1);
+    if (getParamCount() <= row)
+        setParamCount(row + 1);
     paramTable.setRowData(row, param);
     parEnvLink[row] = envLink(row);
     parUseDev[row] = useDev(row);

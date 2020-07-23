@@ -329,11 +329,11 @@ void tableview::setHeight(tablemodel *tm, int rd)
 
 void tableview::setHeight(int rows)
 {
-    int display = rows > 15? 15: rows;
+    int display = rows > 14? 14: rows;
     if (rows == 0)
         setFixedHeight(0);
     else
-        setFixedHeight(55 + display * 36);
+        setFixedHeight(75 + display * 38);
 }
 
 void tableview::createActions()

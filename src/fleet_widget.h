@@ -81,6 +81,7 @@ public slots:
     void setSelTimeVaryReadParams(int flag);
     void setSelexSizePattern (int pat);
     void changeSelexSizePattern(int value);
+    void changeSelexSizePattern(QString text);
     void selexSizeParamsChanged();
     void selexSizeTVParamsChanged();
     void setupSelexSizeInfo();

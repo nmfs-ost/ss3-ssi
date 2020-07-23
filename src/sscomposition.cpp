@@ -1,7 +1,6 @@
-#include "composition.h"
+#include "sscomposition.h"
 
-composition::composition(QObject *parent)
- : QObject (parent)
+ssComposition::ssComposition(QObject *parent) : QObject(parent)
 {
     binsModel = new tablemodel(this);
     binsModel->setColumnCount(0);
@@ -15,14 +14,14 @@ composition::composition(QObject *parent)
     reset();
 }
 
-composition::~composition()
+ssComposition::~ssComposition()
 {
     delete binsModel;
     delete altBinsModel;
     delete dirichletParams;
 }
 
-void composition::reset()
+void ssComposition::reset()
 {
     altBinsModel->setRowCount(0);
     altBinsModel->setColumnCount(0);
@@ -36,7 +35,7 @@ void composition::reset()
     i_num_obs = 0;
 }
 
-void composition::setAltBinMethod (int method)
+void ssComposition::setAltBinMethod (int method)
 {
     i_method = method;
     switch (method)
@@ -55,7 +54,7 @@ void composition::setAltBinMethod (int method)
     }
 }
 
-int composition::generateAltBins ()
+int ssComposition::generateAltBins ()
 {
     QStringList bins;
     int num = 0, bin;
@@ -74,7 +73,7 @@ int composition::generateAltBins ()
 
 
 compositionLength::compositionLength(QObject *parent)
-    : composition(parent)
+    : ssComposition(parent)
 {
     binsModel->setColumnCount(0);
     binsModel->setRowCount(1);
@@ -87,7 +86,7 @@ void compositionLength::setNumberBins(int num)
 }
 
 compositionAge::compositionAge(QObject *parent)
-    : composition(parent)
+    : ssComposition(parent)
 {
     i_num_error_defs = 0;
     i_num_saa_obs = 0;
@@ -107,7 +106,7 @@ compositionAge::compositionAge(QObject *parent)
     errorParams = new longParameterModel(this);
     errorParams->setNumParams(7);
     errorTVParams = new timeVaryParameterModel();
-    connect (errorParams, SIGNAL(dataChanged()), SLOT(checkParams()));
+    connect (errorParams, SIGNAL(paramsChanged()), SLOT(checkParams()));
 }
 
 compositionAge::~compositionAge()
@@ -122,7 +121,7 @@ compositionAge::~compositionAge()
 
 void compositionAge::reset()
 {
-    composition::reset();
+    ssComposition::reset();
 
     saaModel->reset();
     errorModel->reset();
@@ -218,13 +217,13 @@ bool compositionAge::getUseParameters()
 
 void compositionAge::setErrorParam (int index, QStringList data)// {errorParam->setParameter(index, data);}
 {
-    errorTVParams->setVarParameter(index, data);
+    errorParams->setParamData(index, data);
+    errorTVParams->setParameter(index, data);
 }
 
 void compositionAge::setErrorTVParam (int index, QStringList data)
 {
-    errorParams->setParamData(index, data);
-    errorTVParams->setParameter(index, data);
+    errorTVParams->setVarParameter(index, data);
 }
 
 void compositionAge::checkUseParams()
@@ -252,7 +251,7 @@ void compositionAge::checkParams()
 
 
 compositionMorph::compositionMorph(QObject *parent)
- : composition(parent)
+ : ssComposition(parent)
 {
 }
 
@@ -263,7 +262,7 @@ void compositionMorph::setNumberMorphs(int num)
 
 
 compositionGeneral::compositionGeneral(QObject *parent)
-  : composition(parent)
+  : ssComposition(parent)
 {
     reset();
 }
@@ -275,7 +274,7 @@ compositionGeneral::~compositionGeneral()
 
 void compositionGeneral::reset()
 {
-    composition::reset();
+    ssComposition::reset();
     i_scale = 0;
     i_units = 0;
     min_comp = 0.000000001;

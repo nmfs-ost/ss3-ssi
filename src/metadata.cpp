@@ -58,6 +58,12 @@ QString getAppTechDescription ()
     return str;
 }
 
+QString getAppGuiManual ()
+{
+    QString str(app_gui_manual);
+    return str;
+}
+
 QString getDatafileVersionString()
 {
     return datafile_version_str;

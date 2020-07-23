@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -462,7 +462,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-307</y>
+            <y>0</y>
             <width>1023</width>
             <height>748</height>
            </rect>
@@ -1040,47 +1040,10 @@
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>40</width>
-                 <height>20</height>
+                 <height>10</height>
                 </size>
                </property>
               </spacer>
-             </item>
-             <item row="2" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_length_bins">
-               <property name="sizeConstraint">
-                <enum>QLayout::SetMaximumSize</enum>
-               </property>
-              </layout>
-             </item>
-             <item row="4" column="0">
-              <widget class="QPushButton" name="pushButton_length_obs">
-               <property name="text">
-                <string>Observations</string>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QSpinBox" name="spinBox_length_num_bins">
-               <property name="maximum">
-                <number>200</number>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="0" colspan="3">
-              <layout class="QVBoxLayout" name="verticalLayout_length_dirichlet_parms"/>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_length_num_bins">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="text">
-                <string>Number of bins</string>
-               </property>
-              </widget>
              </item>
              <item row="0" column="2">
               <spacer name="horizontalSpacer_length_1">
@@ -1095,6 +1058,40 @@
                </property>
               </spacer>
              </item>
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="spinBox_length_num_bins">
+               <property name="maximum">
+                <number>200</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_length_obs">
+               <property name="text">
+                <string>Observations</string>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" rowspan="2" colspan="3">
+              <layout class="QVBoxLayout" name="verticalLayout_length_dirichlet_parms"/>
+             </item>
+             <item row="2" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_length_bins">
+               <property name="sizeConstraint">
+                <enum>QLayout::SetMaximumSize</enum>
+               </property>
+              </layout>
+             </item>
+             <item row="5" column="0" colspan="2">
+              <widget class="QLabel" name="label_length_dirichlet_parms">
+               <property name="text">
+                <string>Dirichlet Multinomial Parameters</string>
+               </property>
+              </widget>
+             </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_length_bins">
                <property name="text">
@@ -1105,36 +1102,25 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_length_dirichlet">
-               <item>
-                <widget class="QLabel" name="label_length_dirichlet_parms">
-                 <property name="text">
-                  <string>Dirichlet Multinomial Parameters</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_length_dirichlet">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_length_dirichlet_add">
-                 <property name="text">
-                  <string>Add Dirchlet Parameter</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pushButton_length_dirichlet_add">
+               <property name="text">
+                <string>Add Dirichlet Parameter</string>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_length_num_bins">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="text">
+                <string>Number of bins</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -1160,22 +1146,42 @@
           <layout class="QVBoxLayout" name="verticalLayout_14">
            <item>
             <layout class="QGridLayout" name="gridLayout_comp_age">
-             <item row="5" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_age_bins">
-               <property name="sizeConstraint">
-                <enum>QLayout::SetMaximumSize</enum>
-               </property>
-              </layout>
+             <item row="6" column="1">
+              <widget class="QSpinBox" name="spinBox_age_bin_method"/>
              </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="label_age_bin_method">
+             <item row="8" column="0">
+              <widget class="QPushButton" name="pushButton_age_obs">
                <property name="text">
-                <string>Length bin method</string>
+                <string>Age Observations</string>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
-              <widget class="QSpinBox" name="spinBox_age_bin_method"/>
+             <item row="10" column="0">
+              <widget class="QPushButton" name="pushButton_age_dirichlet_add">
+               <property name="text">
+                <string>Add Dirichlet Parameter</string>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0" colspan="2">
+              <widget class="QLabel" name="label_age_dirichlet_parms">
+               <property name="text">
+                <string>Dirichlet Multinomial Parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="spinBox_age_num_bins">
+               <property name="maximum">
+                <number>200</number>
+               </property>
+              </widget>
              </item>
              <item row="2" column="2">
               <spacer name="horizontalSpacer_age">
@@ -1190,6 +1196,23 @@
                </property>
               </spacer>
              </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_age_num_bins">
+               <property name="text">
+                <string>Number of bins</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0" colspan="3">
+              <layout class="QVBoxLayout" name="verticalLayout_age_dirichlet_parms"/>
+             </item>
+             <item row="5" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_age_bins">
+               <property name="sizeConstraint">
+                <enum>QLayout::SetMaximumSize</enum>
+               </property>
+              </layout>
+             </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_age_bins">
                <property name="text">
@@ -1200,27 +1223,10 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
-              <widget class="QSpinBox" name="spinBox_age_num_bins">
-               <property name="maximum">
-                <number>200</number>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_age_num_bins">
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_age_bin_method">
                <property name="text">
-                <string>Number of bins</string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="0">
-              <widget class="QPushButton" name="pushButton_age_obs">
-               <property name="text">
-                <string>Age Observations</string>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
+                <string>Length bin method</string>
                </property>
               </widget>
              </item>
@@ -1230,40 +1236,6 @@
                 <string>Size at Age Observations</string>
                </property>
               </widget>
-             </item>
-             <item row="11" column="0" colspan="3">
-              <layout class="QVBoxLayout" name="verticalLayout_age_dirichlet_parms"/>
-             </item>
-             <item row="10" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_age_dirichlet">
-               <item>
-                <widget class="QLabel" name="label_age_dirichlet_parms">
-                 <property name="text">
-                  <string>Dirichlet Multinomial Parameters</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_age_dirichlet">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_age_dirichlet_add">
-                 <property name="text">
-                  <string>Add Dirichlet Parameter</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
              </item>
             </layout>
            </item>
@@ -1288,38 +1260,18 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <layout class="QGridLayout" name="gridLayout_comp_age_err">
-             <item row="3" column="1">
-              <spacer name="verticalSpacer_comp_age_error_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_age_err_num">
+             <item>
               <widget class="QLabel" name="label_age_error_num">
                <property name="text">
                 <string>Number of ageing error matrices</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QLabel" name="label_age_error_matrices">
-               <property name="text">
-                <string>Age error matrices </string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
+             <item>
               <widget class="QSpinBox" name="spinBox_age_error_num"/>
              </item>
-             <item row="1" column="3">
+             <item>
               <spacer name="horizontalSpacer_comp_age_err">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -1332,8 +1284,45 @@
                </property>
               </spacer>
              </item>
-             <item row="2" column="1" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_age_error"/>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_age_err_tables">
+             <property name="leftMargin">
+              <number>2</number>
+             </property>
+             <property name="rightMargin">
+              <number>2</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_age_error_matrices">
+               <property name="text">
+                <string>Age error matrices </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_age_err_matrices"/>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_agekey_params">
+               <property name="text">
+                <string>Age key parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_age_err_params"/>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_agekey_tv_params">
+               <property name="text">
+                <string>Age key time-varying parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_age_err_tv_params"/>
              </item>
             </layout>
            </item>

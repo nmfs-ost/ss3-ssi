@@ -37,7 +37,6 @@ SOURCES += main.cpp\
     forecast_widget.cpp \
     dialog_about_admb.cpp \
     fleet.cpp \
-    composition.cpp \
     error_vector.cpp \
     ss_forecast.cpp \
     fleet_widget.cpp \
@@ -117,7 +116,8 @@ SOURCES += main.cpp\
     mainwindowrun.cpp \
     dar1.cpp \
     dialogdirectories.cpp \
-    dialogchosereport.cpp
+    dialogchosereport.cpp \
+    sscomposition.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -142,7 +142,6 @@ HEADERS  += mainwindow.h \
     forecast_widget.h \
     dialog_about_admb.h \
     fleet.h \
-    composition.h \
     error_vector.h \
     ss_forecast.h \
     fleet_widget.h \
@@ -223,7 +222,8 @@ HEADERS  += mainwindow.h \
     mainwindowrun.h \
     dar1.h \
     dialogdirectories.h \
-    dialogchosereport.h
+    dialogchosereport.h \
+    sscomposition.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \

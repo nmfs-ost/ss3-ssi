@@ -27,7 +27,7 @@
 #include "tablemodel.h"
 #include "tableview.h"
 #include "spinboxdelegate.h"
-#include "composition.h"
+#include "ssComposition.h"
 
 class Fleet;
 

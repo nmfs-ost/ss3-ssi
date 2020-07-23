@@ -1,6 +1,6 @@
 ssi_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.14
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.15
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,11 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.15.15
+    2020-07-23
+1. Added age error parameters for a single error definition.
+2. Added size selectivity pattern 11.
 ============================================================================
     3.30.15.14
     2020-06-13

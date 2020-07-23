@@ -13,7 +13,6 @@ Dialog_run::Dialog_run(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    ui->pushButton_RCompare->setVisible(false);
     ui->pushButton_increase->setVisible(false);
     ui->pushButton_decrease->setVisible(false);
     ui->pushButton_pause->setVisible(false);
@@ -23,6 +22,8 @@ Dialog_run::Dialog_run(QWidget *parent) :
     ui->pushButton_run->setEnabled(true);
     ui->pushButton_pause->setEnabled(false);
     ui->pushButton_stop->setEnabled(false);
+
+    ui->pushButton_RCompare->setVisible(false);
 
     connect (ui->pushButton_changeExe, SIGNAL(clicked()), SLOT(changeExe()));
     connect (ui->pushButton_options, SIGNAL(clicked()), SLOT(showOptions()));

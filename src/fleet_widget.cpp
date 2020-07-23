@@ -150,6 +150,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
 //    connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
 //    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), selexSizeInfoDialog, SLOT(show()));
     connect (ui->comboBox_selex_size_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexSizePattern(int)));
+//    connect (ui->comboBox_selex_size_pattern, SIGNAL(currentTextChanged(QString)), SLOT(changeSelexSizePattern(QString)));
     connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
     connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
     connect (ui->spinBox_selex_size_special, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeSpecial(int)));
@@ -927,44 +928,47 @@ void fleet_widget::setSelexSizePattern(int pat)
     case 9:
         index = 9;
         break;
-    case 15:
+    case 11:
         index = 10;
         break;
-    case 22:
+    case 15:
         index = 11;
         break;
-    case 23:
+    case 22:
         index = 12;
         break;
-    case 24:
+    case 23:
         index = 13;
         break;
-    case 25:
+    case 24:
         index = 14;
         break;
-    case 27:
+    case 25:
         index = 15;
         break;
-    case 30:
+    case 27:
         index = 16;
         break;
-    case 31:
+    case 30:
         index = 17;
         break;
-    case 32:
+    case 31:
         index = 18;
         break;
-    case 33:
+    case 32:
         index = 19;
         break;
-    case 34:
+    case 33:
         index = 20;
         break;
-    case 42:
+    case 34:
         index = 21;
         break;
-    case 43:
+    case 42:
         index = 22;
+        break;
+    case 43:
+        index = 23;
         break;
     }
     if (index != currIndex)
@@ -974,7 +978,7 @@ void fleet_widget::setSelexSizePattern(int pat)
 void fleet_widget::changeSelexSizePattern(int value)
 {
 //    int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
-    int newNumParams = 0;
+//    int newNumParams = 0;
     int oldPat = current_fleet->getSizeSelectivity()->getPattern();
     int pat = 0;
     ui->spinBox_selex_size_special->setRange(0, 99);
@@ -1013,46 +1017,90 @@ void fleet_widget::changeSelexSizePattern(int value)
         pat = 9; // simple double logistic
         break;
     case 10:
+        pat = 11; // sel = 1 between bins
+        break;
+    case 11:
         ui->spinBox_selex_size_special->setRange(1, model_data->get_num_fleets());
         pat = 15; // mirror
         break;
-    case 11:
+    case 12:
         pat = 22; // CASAL
         break;
-    case 12:
+    case 13:
         pat = 23; // similar to 24
         break;
-    case 13:
+    case 14:
         pat = 24; // double normal with start and end values
         break;
-    case 14:
+    case 15:
         pat = 25; // exponential - logistic
         break;
-    case 15:
+    case 16:
         pat = 27; // cubic spline
         break;
-    case 16:
+    case 17:
         pat = 30; // spawning biomass
         break;
-    case 17:
+    case 18:
         pat = 31; // exp(recr dev)
         break;
-    case 18:
+    case 19:
         pat = 32; // exp(recr dev) * spawning biomass
         break;
-    case 19:
+    case 20:
         pat = 33; // age 0 recruits
         break;
-    case 20:
+    case 21:
         pat = 34; // depletion
         break;
-    case 21:
+    case 22:
         pat = 42; // cubic spline with scaling
         break;
-    case 22:
+    case 23:
         pat = 43; // linear segs with scaling
         break;
     }
+
+    if (pat != oldPat)
+        current_fleet->getSizeSelectivity()->setPattern(pat);
+/*    newNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
+
+    ui->spinBox_selex_size_num_params->setValue (newNumParams);
+    sizeSelexParamsView->setHeight (newNumParams);*/
+}
+
+void fleet_widget::changeSelexSizePattern(QString text)
+{
+//    int oldNumParams = current_fleet->getSizeSelectivity()->getNumParameters();
+    int newNumParams = 0;
+    int oldPat = current_fleet->getSizeSelectivity()->getPattern();
+    int pat = 0;
+    ui->spinBox_selex_size_special->setRange(0, 99);
+    ui->spinBox_selex_size_special->setValue(0);
+
+    if (text.contains("43 :")) pat = 43;
+    else if (text.contains("42 :")) pat = 42;
+    else if (text.contains("34 :")) pat = 34;
+    else if (text.contains("33 :")) pat = 33;
+    else if (text.contains("32 :")) pat = 32;
+    else if (text.contains("31 :")) pat = 31;
+    else if (text.contains("30 :")) pat = 30;
+    else if (text.contains("27 :")) pat = 27;
+    else if (text.contains("25 :")) pat = 25;
+    else if (text.contains("24 :")) pat = 24;
+    else if (text.contains("22 :")) pat = 22;
+    else if (text.contains("15 :")) pat = 15;
+    else if (text.contains("11 :")) pat = 11;
+    else if (text.contains("9 :")) pat = 9;
+    else if (text.contains("8 :")) pat = 8;
+    else if (text.contains("7 :")) pat = 7;
+    else if (text.contains("6 :")) pat = 6;
+    else if (text.contains("5 :")) pat = 5;
+    else if (text.contains("4 :")) pat = 4;
+    else if (text.contains("3 :")) pat = 3;
+    else if (text.contains("2 :")) pat = 2;
+    else if (text.contains("1 :")) pat = 1;
+    else if (text.contains("0 :")) pat = 0;
 
     if (pat != oldPat)
         current_fleet->getSizeSelectivity()->setPattern(pat);
