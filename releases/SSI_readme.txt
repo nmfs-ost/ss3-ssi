@@ -15,6 +15,10 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.16.1
+    2020-08-26
+1. Added check for selex parameters that are not estimated.
+============================================================================
     3.30.15.15
     2020-07-23
 1. Added age error parameters for a single error definition.

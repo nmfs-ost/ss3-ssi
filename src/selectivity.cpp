@@ -252,7 +252,7 @@ void selectivity::setDefaultParams(int method, int special)
     case 11:  // case 11 Constant age-specific selex for specified age range
     {
         setNumParameters(2);
-        parm << "1" << BinCount << BinMid << "0" << "0" << "0" << "2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+        parm << "1" << BinCount << BinMid << "0" << "0" << "0" << "-2" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
         parm[2] = BinCount;
         setParameter(1, parm);

@@ -34,5 +34,7 @@ int write33_parameterFile (ss_file *pr_file, ss_model *data);
 bool read33_profileFile(ss_file *pf_file, ss_model *data);
 int write33_profileFile(ss_file *pf_file, ss_model *data);
 
+bool negateParameterPhase(QStringList &datalist);
+
 #endif // FILEIO33_H
 

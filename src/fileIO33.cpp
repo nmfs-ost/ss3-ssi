@@ -2978,8 +2978,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
 
         {
-        selectivity *sizesel;
-        selectivity *agesel;
+        selectivity *sizesel = nullptr;
+        selectivity *agesel = nullptr;
         // Size selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
@@ -3019,10 +3019,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             sizesel = data->getFleet(i)->getSizeSelectivity();
             sizesel->disconnectSigs();
             int num = sizesel->getNumParameters();
+            int selOption = sizesel->getPattern();
             //read num_params parameters
             for (int j = 0; j < num; j++)
             {
                 datalist = readParameter (c_file);
+                if (j < 2 && (selOption == 5 || selOption == 11 || selOption > 40))
+                    negateParameterPhase(datalist);
                 sizesel->setParameter(j, datalist);
                 sizesel->setParameterLabel(j,
                            QString("SizeSel_P%1_%2(%3)").arg(
@@ -3079,11 +3082,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
+            int selOption = sizesel->getPattern();
             int num = agesel->getNumParameters();
             //read num_params parameters
             for (int j = 0; j < num; j++)
             {
                 datalist = readParameter(c_file);
+                if (j < 2 && (selOption == 11 || selOption > 40))
+                    negateParameterPhase(datalist);
                 agesel->setParameter(j, datalist);
                 agesel->setParameterLabel(j,
                            QString("AgeSel_P%1_%2(%3)").arg(
@@ -5413,4 +5419,13 @@ int writeTimeVaryParams(ss_file *outfile, ss_model *data, tablemodel *table, QSt
         chars += outfile->write_vector(p_list, 2, rheader);
     }
     return chars;
+}
+
+bool negateParameterPhase(QStringList &datalist)
+{
+    bool okay = true;
+    float phase = datalist.at(6).toFloat();
+    if (phase > 0)
+        datalist[6] = QString::number(-phase);
+    return okay;
 }
