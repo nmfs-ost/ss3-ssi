@@ -279,7 +279,6 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         {
             ss_growth *grow = data->getPopulation()->Grow();
         temp_int = d_file->getIntValue(QString("Length comp alt bin method"), 1, 3, 1);
-//        l_data->setAltBinMethod(temp_int);
         grow->setGrowthBinMethod(temp_int);
         switch (temp_int)
         {
@@ -289,34 +288,32 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             float min, max, width;
             token = d_file->get_next_value(QString("Length comp bin width"));
             width = token.toFloat();
-//            l_data->setAltBinWidth(width);
             grow->setGrowthBinStep(width);
             token = d_file->get_next_value(QString("Length comp alt bin min"));
             min = token.toFloat();
-//            l_data->setAltBinMin(min);
             grow->setGrowthBinMin(min);
             token = d_file->get_next_value(QString("Length comp alt bin max"));
             max = token.toFloat();
-//            l_data->setAltBinMax(max);
-//            l_data->generateAltBins();
             grow->setGrowthBinMax(max);
             grow->generateGrowthBins();
             break;
         case 3:  // read vector
             str_lst.clear();
             temp_int = d_file->get_next_value(QString("Length comp num alt bins")).toInt();
-//            l_data->setNumberAltBins(temp_int);
             grow->setNumGrowthBins(temp_int);
             for (int j = 0; j < temp_int; j++)
                 str_lst.append(d_file->get_next_value(QString("Length comp alt bin")));
             grow->setGrowthBins(str_lst);
-//            l_data->setAltBins(str_lst);
-//            l_data->setAltBinMin(str_lst.first().toInt());
-//            l_data->setAltBinMax(str_lst.last().toInt());
-//            l_data->setAltBinWidth(str_lst.at(1).toInt() - str_lst.at(0).toInt());
             break;
         }
+
         //  SS_Label_Info_2.7 #Start length data section
+        compositionLength *l_data = data->get_length_composition();
+        if (l_data == nullptr) {
+            l_data = new compositionLength();
+            data->set_length_composition(l_data);
+        }
+        int num_len_bins = 2;
         temp_int = d_file->getIntValue(QString("Use length comp data?"), 0, 1, 1);
         data->setUseLengthComp(temp_int);
         if (temp_int == 1)
@@ -336,58 +333,50 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 temp_float = d_file->get_next_value(QString("min sample size")).toFloat();
                 data->getFleet(i)->setLengthMinSampleSize(temp_float);
             }
-            compositionLength *l_data = data->get_length_composition();
-            if (l_data == nullptr) {
-                l_data = new compositionLength();
-                data->set_length_composition(l_data);
-            }
-            temp_int = d_file->get_next_value(QString("Length comp number bins")).toInt();//token.toInt();
-            l_data->setNumberBins(temp_int);
-            for (int j = 0; j < total_fleets; j++)
-                data->getFleet(j)->setLengthNumBins(temp_int);
-            str_lst.clear();
-            for (i = 0; i < temp_int; i++)
-            {
-                str_lst.append(d_file->get_next_value(QString("Length comp bin")));
-            }
-            l_data->setBins(str_lst);
-
-            if (grow->getGrowthBinMethod() == 1) // set pop bins if method = 1
-            {
-                grow->setNumGrowthBins(str_lst.count());
-                grow->setGrowthBins(str_lst);
-//                l_data->setNumberAltBins(l_data->getNumberBins());
-//                l_data->setAltBins(l_data->getBins());
-//                l_data->setAltBinMin(l_data->getBin(0));
-//                l_data->setAltBinMax(l_data->getBin(l_data->getNumberBins()-1));
-//                l_data->setAltBinWidth(l_data->getBin(1) - l_data->getBin(0));
-            }
-            for (i = 0; i < total_fleets; i++)
-            {
-                data->getFleet(i)->getSizeSelectivity()->setNumXvals(grow->getNumGrowthBins());
-                data->getFleet(i)->getSizeSelectivity()->setXVals(grow->getGrowthBins());
-                data->getFleet(i)->getSizeSelectivity()->setLenBins(l_data->getBins());
-            }
-
-            //  SS_Label_Info_2.7.4 #Read Length composition data
-            obslength = data->getFleet(0)->getLengthObsLength();
-            do
-            {
-                str_lst.clear();
-                for (int j = 0; j < obslength; j++)
-                {
-                    token = d_file->get_next_value(QString("Length comp data"));
-                    str_lst.append(token);
-                }
-                if (str_lst.at(0).toInt() == END_OF_LIST)
-                    break;
-                if (str_lst.at(0).compare("EOF") == 0)
-                    return false;
-                temp_int = abs(str_lst.at(2).toInt());
-                data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
-            } while (str_lst.at(0).toInt() != END_OF_LIST);
-            data->set_length_composition(l_data);
+            num_len_bins = d_file->get_next_value(QString("Length comp number bins")).toInt();
         }
+        else {
+            num_len_bins = 2;
+        }
+        l_data->setNumberBins(num_len_bins);
+        for (int j = 0; j < total_fleets; j++)
+            data->getFleet(j)->setLengthNumBins(num_len_bins);
+        str_lst.clear();
+        for (i = 0; i < num_len_bins; i++)
+        {
+            str_lst.append(d_file->get_next_value(QString("Length comp bin")));
+        }
+        l_data->setBins(str_lst);
+
+        // set pop bins if method = 1
+        if (grow->getGrowthBinMethod() == 1)
+        {
+            grow->setNumGrowthBins(str_lst.count());
+            grow->setGrowthBins(str_lst);
+        }
+//        for (i = 0; i < total_fleets; i++)
+//        {
+//            data->getFleet(i)->getSizeSelectivity()->setBins(str_lst);
+//        }
+
+        //  SS_Label_Info_2.7.4 #Read Length composition data
+        obslength = data->getFleet(0)->getLengthObsLength();
+        do
+        {
+            str_lst.clear();
+            for (int j = 0; j < obslength; j++)
+            {
+                token = d_file->get_next_value(QString("Length comp data"));
+                str_lst.append(token);
+            }
+            if (str_lst.at(0).toInt() == END_OF_LIST)
+                break;
+            if (str_lst.at(0).compare("EOF") == 0)
+                return false;
+            temp_int = abs(str_lst.at(2).toInt());
+            data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
+        } while (str_lst.at(0).toInt() != END_OF_LIST);
+        data->set_length_composition(l_data);
         }
 
         }
@@ -431,14 +420,6 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < total_fleets; i++)
             {
                 str_lst.clear();
-                data->getFleet(i)->getSizeSelectivity()->setNumAges(a_data->getNumberBins());
-                data->getFleet(i)->getSizeSelectivity()->setAgeBins(a_data->getBins());
-                data->getFleet(i)->getAgeSelectivity()->setNumAges(data->get_num_ages());
-                data->getFleet(i)->getAgeSelectivity()->setAgeBins(a_data->getBins());
-                for (int j = 0; j <= data->get_num_ages(); j++)
-                    str_lst.append(QString::number(j));
-                data->getFleet(i)->getAgeSelectivity()->setNumXvals(str_lst.count());
-                data->getFleet(i)->getAgeSelectivity()->setXVals(str_lst);
                 data->getFleet(i)->setAgeMinTailComp(d_file->get_next_value(QString("min tail comp")));
                 data->getFleet(i)->setAgeAddToData(d_file->get_next_value(QString("add to data")));
                 temp_int = d_file->get_next_value(QString("combine genders")).toInt();
@@ -636,10 +617,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.13 #Morph composition data
         temp_int = d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
         data->setDoMorphComp(temp_int == 1);
-        compositionMorph *mcps = new compositionMorph();
-        data->set_morph_composition (mcps);
         if (data->getDoMorphComp())
         {
+            compositionMorph *mcps = new compositionMorph();
+            data->set_morph_composition (mcps);
             num_input_lines = d_file->get_next_value().toInt(); // num observations
             mcps->setNumberObs(num_input_lines);
             temp_int = d_file->get_next_value().toInt(); // number of platoons
@@ -2991,6 +2972,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
             sizesel = data->getFleet(i)->getSizeSelectivity();
             sizesel->disconnectSigs();
+            sizesel->setNumAges(data->get_num_ages());
+            sizesel->setBins(data->getPopulation()->Grow()->getGrowthBins());
             sizesel->setSetup(datalist);
             sizesel->connectSigs();
         }
@@ -3005,8 +2988,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
             agesel = data->getFleet(i)->getAgeSelectivity();
             agesel->disconnectSigs();
-            if (agesel->getXVals().count() == 0)
-                data->getFleet(i)->getAgeSelectivity()->setNumXvals(data->get_num_ages() + 1);
+            agesel->setNumAges(data->get_num_ages());
+            agesel->setNumBinVals(data->get_num_ages());
             agesel->setSetup(datalist);
             agesel->connectSigs();
         }

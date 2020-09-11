@@ -1,10 +1,10 @@
-ssi_readme.txt
+SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.15.15
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.2
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-versions 3.30.14 through 3.30.15. It allows the user to change the data,
+versions 3.30.14 through 3.30.16. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
@@ -14,6 +14,10 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.16.2
+    2020-09-10
+1. Reconfigured age and length bins for selectivity curves. (corrected)
 ============================================================================
     3.30.16.1
     2020-08-26

@@ -28,18 +28,21 @@ class selectivity : public QObject
     Q_OBJECT
 public:
     explicit selectivity (ss_model *model, int method = 0);
+    selectivity(ss_model *model, SelexType sType, int method = 0);
     ~selectivity();
 
     int getNumGenders() const;
     void setNumGenders(int value);
 
-    QList<float> getXVals() const;
-    void setXVals(const QStringList &value);
+    QList<float> getBinVals() const;
+    void setBinVals(const QStringList &value);
     float getBinValue (int index);
-    void setAgeBins (const QStringList &value);
-    void setLenBins (const QStringList &value);
-    int getNumAgeBins () {return abins.count();}
-    int getNumLenBins () {return lbins.count();}
+    void setBins (const QStringList &value);
+    void setAltBins (const QStringList &value);
+    int getNumBins () {return bins.count();}
+    int getNumAltBins () {return altbins.count();}
+    QStringList &getBins() {return bins;}
+    QStringList &getAltBins() {return altbins;}
 
     void reset();
     void connectSigs ();
@@ -59,8 +62,8 @@ public slots:
     void setFleetName (QString name) {fisheryName = name;}
     void setFleetNum (int num) {fisheryNum = num;}
     void setNumAges (int ages) {numAges = ages;}
-    void setNumLens (int lens) {setNumXvals(lens);}
-    void setNumXvals(int num);
+    void setNumLens (int lens) {setNumBinVals(lens);}
+    void setNumBinVals(int num);
     int getNumXvals() {return numXvals;}
     void setPattern (int value);
     int getPattern () {return setup->getValue(0);}
@@ -160,7 +163,7 @@ public slots:
     tablemodel *getMaleTimeVaryParameterModel() {return maleVarParameters->getVarParamTable();}
 
     void setMethod (int method);
-    void setDefaultParams (int method, int special);
+    void setDefaultParams (int method = -1, int special = -1);
     void autogenParameters(int flag = 0);
 
 protected:
@@ -173,10 +176,11 @@ protected:
 
     SelexType type;
 
-    QStringList abins;
-    QStringList lbins;
+    QStringList bins;
+    QStringList altbins;
 
     QList<float> xVals;
+    QList<float> binVals;
     int numXvals;
     int numAges;
     int numGenders;

@@ -1455,7 +1455,7 @@ void selexEquationDialog::resetValues()
 
 void selexEquationDialog::restoreAll()
 {
-    setXvals(selex->getXVals());
+    setXvals(selex->getBinVals());
     if (!xValList.isEmpty())
     {
         // get bin values

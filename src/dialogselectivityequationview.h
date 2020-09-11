@@ -30,6 +30,7 @@ public slots:
 
     void setXvals(const QList<float> &vals);
     void setXvalStrings(const QStringList &vals);
+    void setBinVals(float start, float end, int step);
     void setBinVals(const QList<float> &vals);
     void setBinValStrings(const QStringList &vals);
 

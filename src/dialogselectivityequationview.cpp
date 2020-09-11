@@ -131,17 +131,21 @@ void DialogSelexEquationView::setXvalStrings(const QStringList &vals) {
 
 void DialogSelexEquationView::setBinValStrings(const QStringList &vals) {
     if (!vals.isEmpty()) {
-        int binStep = 2;
-        bins.clear();
+        QList<float> binVals;
         for (int i = 0; i < vals.count(); i++)
-            bins.append(vals.at(i).toFloat());
-        if (bins.count() > 2)
-            binStep = static_cast<int> (bins.at(2) - bins.at(1));
-        setBinMin(static_cast<int> (bins.first()));
-        setBinMax(static_cast<int> (bins.last()));
-        setBinStep(binStep);
-        setMidBin(binStep/2);
-        setXvals(bins);
+            binVals.append(vals.at(i).toFloat());
+        setBinVals(binVals);
+    }
+}
+
+void DialogSelexEquationView::setBinVals(float start, float end, int step) {
+    if (end > start) {
+        QList<float> binVals;
+        float bin;
+        for (bin = start; bin < end; bin += step) {
+            binVals.append(bin);
+        }
+        setBinVals(binVals);
     }
 }
 
@@ -152,9 +156,9 @@ void DialogSelexEquationView::setBinVals(const QList<float> &vals) {
         for (int i = 0; i < vals.count(); i++)
             bins.append(vals.at(i));
         if (bins.count() > 2)
-            binStep = static_cast<int> (bins.at(2) - bins.at(1));
-        setBinMin(static_cast<int> (bins.first()));
-        setBinMax(static_cast<int> (bins.last()));
+            binStep = static_cast<int> (bins.at(2) - bins.at(1) + .5);
+        setBinMin(static_cast<int> (bins.first() + .5));
+        setBinMax(static_cast<int> (bins.last() + .5));
         setBinStep(binStep);
         setMidBin(binStep/2);
         setXvals(bins);
@@ -192,6 +196,7 @@ void DialogSelexEquationView::resetValues() {
     if (selex != nullptr && fleet != nullptr)
     {
         fleetNum = fleet->getNumber();
+        setBinValStrings(selex->getBins());
         equationNum = selex->getPattern();
         special = selex->getSpecial();
         male = selex->getMale();

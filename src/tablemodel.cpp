@@ -10,7 +10,7 @@ tablemodel::tablemodel(QObject *parent)
     setTitle(QString("None"));
     reset();
 
-    connect (parent, SIGNAL(paramsChanged()), SIGNAL(dataChanged()));
+//    connect (parent, SIGNAL(paramsChanged()), SIGNAL(dataChanged()));
 }
 
 tablemodel::~tablemodel()

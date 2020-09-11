@@ -5,14 +5,7 @@
 selectivity::selectivity(ss_model *model, int method)
     : QObject ((QObject*)model)
 {
-//    pattern = 0;
-//    discard = 0;
-//    male = 0;
-//    special = 0;
-
-    numXvals = 0;
-    numAges = 0;
-//    equation = nullptr;
+    data_model = model;
     setup = new setupModel();
     QStringList hdr;
     hdr << tr("Pattern") << tr("Discard") << tr("Male") << tr("Special");
@@ -20,7 +13,6 @@ selectivity::selectivity(ss_model *model, int method)
 
     parameters = new longParameterModel();
     varParameters = new timeVaryParameterModel(model);
-
 
     discardParameters = new longParameterModel();
     discardVarParameters = new timeVaryParameterModel(model);
@@ -30,6 +22,32 @@ selectivity::selectivity(ss_model *model, int method)
     maleVarParameters = new timeVaryParameterModel(model);
     connectSigs();
 
+    reset();
+    setMethod(method);
+}
+
+selectivity::selectivity(ss_model *model, SelexType stype, int method)
+    : QObject ((QObject *)model)
+{
+    data_model = model;
+    type = stype;
+    setup = new setupModel();
+    QStringList hdr;
+    hdr << tr("Pattern") << tr("Discard") << tr("Male") << tr("Special");
+    setup->setHeader(hdr);
+
+    parameters = new longParameterModel();
+    varParameters = new timeVaryParameterModel(model);
+
+    discardParameters = new longParameterModel();
+    discardVarParameters = new timeVaryParameterModel(model);
+    retainParameters = new longParameterModel();
+    retainVarParameters = new timeVaryParameterModel(model);
+    maleParameters = new longParameterModel();
+    maleVarParameters = new timeVaryParameterModel(model);
+    connectSigs();
+
+    reset();
     setMethod(method);
 }
 
@@ -38,6 +56,8 @@ void selectivity::reset()
     QStringList values;
     values << "0" << "0" << "0" << "0";
     setSetup(values);
+    numXvals = 0;
+    numAges = 0;
 }
 
 void selectivity::connectSigs()
@@ -70,7 +90,6 @@ void selectivity::disconnectSigs()
 
 selectivity::~selectivity()
 {
-//    delete equation;
     delete maleVarParameters;
     delete maleParameters;
     delete retainVarParameters;
@@ -93,8 +112,8 @@ void selectivity::setSetup(QStringList strList)
     setPattern(strList.at(0).toInt());
     setDiscard(strList.at(1).toInt());
     setMale(strList.at(2).toInt());
-/*    setup->setData(strList);*/
-//    emit dataChanged();
+    if (getNumBins() > 0)
+        setDefaultParams();
 }
 void selectivity::setSetup(QList<int> values)
 {
@@ -102,22 +121,16 @@ void selectivity::setSetup(QList<int> values)
     setMale   (values.at(2));
     setDiscard(values.at(1));
     setMethod (values.at(0));
+    if (getNumBins() > 0)
+        setDefaultParams();
 }
 
 void selectivity::setTVautogenerate(int val)
 {
     varParameters->setAutoGenerate(val);
-//    for (int i = 0; i < getNumParameters(); i++)
-//        varParameters->changeVarParamData(i, getParameter(i));
     retainVarParameters->setAutoGenerate(val);
-//    for (int i = 0; i < getNumRetainParameters(); i++)
-//        retainVarParameters->changeVarParamData(i, getRetainParameter(i));
     discardVarParameters->setAutoGenerate(val);
-//    for (int i = 0; i < getNumDiscardParameters(); i++)
-//        discardVarParameters->changeVarParamData(i, getDiscardParameter(i));
     maleVarParameters->setAutoGenerate(val);
-//    for (int i = 0; i < getNumMaleParameters(); i++)
-//        maleVarParameters->changeVarParamData(i, getMaleParameter(i));
 }
 
 void selectivity::changeTVautogenerate(int val)
@@ -170,12 +183,18 @@ void selectivity::setMethod(int method)
     }
 }
 
-void selectivity::setNumXvals(int num)
+void selectivity::setNumBinVals(int num)
 {
-    numXvals = num;
-    if (xVals.count() == 0) {
-        for (int i = 0; i < num; i++)
-            xVals.append(i);
+    if (numXvals != num)
+    {
+        numXvals = num;
+        if (type == Age)
+        {
+            bins.clear();
+            for (int i = 0; i <= numXvals; i++)
+                bins.append(QString::number(i));
+            setBinVals(bins);
+        }
     }
 }
 
@@ -200,34 +219,39 @@ void selectivity::setDefaultParams(int method, int special)
     QString Count, xMin, xMax, Peak;
     QString BinCount, BinMid;
     QString xLo, xHi;
-    QString midcount(QString::number(static_cast<int>(xVals.count()/2)));
+    QString midcount(QString::number(static_cast<int>(binVals.count()/2)));
     QString Type;
+
+    int count = bins.count();
+    if (count == 0)
+        return;
+
+    if (method < 0)
+        method = getPattern();
+    if (special < 0)
+        special = getSpecial();
 
     if (type == Age) {
         Type = QString("Age");
-        BinCount = QString::number(abins.count());
-        binmid = static_cast<int>(abins.count()/2);
+        BinCount = QString::number(count);
+        binmid = static_cast<int>(count/2);
         BinMid = QString::number(binmid);
-        xmin = abins.first().toDouble();
-        xMin = abins.first();
-        xmax = abins.last().toDouble();
-        xMax = abins.last();
+        xmin = bins.first().toDouble();
+        xMin = bins.first();
+        xmax = bins.last().toDouble();
+        xMax = bins.last();
     }
     else {
         Type = QString("Size");
-        BinCount = QString::number(lbins.count());
-        binmid = static_cast<int>(lbins.count()/2);
+        BinCount = QString::number(count);
+        binmid = static_cast<int>(count/2);
         BinMid = QString::number(binmid);
-        xmin = lbins.first().toFloat();
-        xMin = lbins.first();
-        xmax = lbins.last().toFloat();
-        xMax = lbins.last();
+        xmin = bins.first().toDouble();
+        xMin = bins.first();
+        xmax = bins.last().toDouble();
+        xMax = bins.last();
     }
     if (parameters == nullptr)
-        return;
-
-    int count = xVals.count();
-    if (count == 0)
         return;
 
     peak = (xmin + xmax) / 2.0;
@@ -734,31 +758,31 @@ void selectivity::setType(const SelexType &value)
     type = value;
 }
 
-QList<float> selectivity::getXVals() const
+QList<float> selectivity::getBinVals() const
 {
-    return xVals;
+    return binVals;
 }
 
-void selectivity::setXVals(const QStringList &value)
+void selectivity::setBinVals(const QStringList &value)
 {
-    xVals.clear();
+    binVals.clear();
     for (int i = 0; i < value.count(); i++)
-        xVals.append(QString(value.at(i)).toFloat());
-    setNumXvals(value.count());
+        binVals.append(QString(value.at(i)).toFloat());
 }
 
 float selectivity::getBinValue(int index) {
-    return xVals[index];
+    return binVals[index];
 }
 
-void selectivity::setAgeBins (const QStringList &value)
+void selectivity::setBins (const QStringList &value)
 {
-    abins = QStringList(value);
+    bins = QStringList(value);
+    setBinVals(value);
 }
 
-void selectivity::setLenBins (const QStringList &value)
+void selectivity::setAltBins (const QStringList &value)
 {
-    lbins = QStringList(value);
+    altbins = QStringList(value);
 }
 
 int selectivity::getNumGenders() const
@@ -1189,7 +1213,7 @@ void selectivity::autogenCubicSpline1(int scale) {
     float term = .5, interm = 1;
     QList<float> nodes;
     float nodeFirst = 1, nodeLast = 10, nodeRange = 9;
-    QStringList bins (type == Size? lbins: abins);
+//    QStringList bins (type == Size? altbins: bins);
     int numBins = bins.count();
     QStringList data;
 

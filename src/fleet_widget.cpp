@@ -619,8 +619,8 @@ void fleet_widget::set_current_fleet(int index)
         setAgeLengthBins();
         selexSizeEqDialog->setFleet(current_fleet);
         selexAgeEqDialog->setFleet(current_fleet);
-        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
-        selexAgeEqDialog->setMidBin(0);
+//        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
+//        selexAgeEqDialog->setMidBin(0);
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
 

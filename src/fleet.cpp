@@ -48,11 +48,9 @@ Fleet::Fleet(ss_model *parent) :
     q_read = false;
     q_R = new q_ratio(parent);
     s_name = new QString("");
-    size_selex = new selectivity(parent);
-    size_selex->setType(Size);
+    size_selex = new selectivity(parent, SelexType::Size);
     size_selex->setFleet(this);
-    age_selex = new selectivity(parent);
-    age_selex->setType(Age);
+    age_selex = new selectivity(parent, SelexType::Age);
     age_selex->setFleet(this);
     setName(QString("new_fleet"));
     i_number = 0;
@@ -496,7 +494,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     }
 
     //   size selex
-    size_selex->setLenBins(model->get_length_composition()->getBins());
+    size_selex->setAltBins(model->get_length_composition()->getBins());
     size_selex->setNumAges(model->get_age_composition()->getNumberBins());
     for (i = 0; i < oldfl->getSizeSelectivity()->getNumParameters(); i++)
         size_selex->setParameter(i, oldfl->getSizeSelectivity()->getParameter(i));
@@ -506,7 +504,7 @@ Fleet *Fleet::copy(Fleet *oldfl)
     set_size_selex_pattern(oldfl->size_selex_pattern());
 
     //   age selex
-    age_selex->setAgeBins(model->get_age_composition()->getBins());
+    age_selex->setBins(model->get_age_composition()->getBins());
     age_selex->setNumAges(model->get_age_composition()->getNumberBins());
     for (i = 0; i < oldfl->getAgeSelectivity()->getNumParameters(); i++)
         age_selex->setParameter(i, oldfl->getAgeSelectivity()->getParameter(i));
