@@ -191,6 +191,7 @@ void parameterModelTV::changeData(QModelIndex tplt, QModelIndex btrt, QVector<in
     int startCol = tplt.column();
     int endRow = btrt.row();
     int endCol = btrt.column();
+    Q_UNUSED(ivect);
     changeData (startRow, startCol, endRow, endCol);
 }
 
@@ -271,6 +272,7 @@ void parameterModelTV::insertData(QModelIndex index, int first, int last)
 {
     shortParameterTable *sm;
     QStringList ql;
+    Q_UNUSED(index);
     for (int i = first; i <= last; i++)
     {
         sm = new shortParameterTable(this);
@@ -292,6 +294,7 @@ void parameterModelTV::insertData(QModelIndex index, int first, int last)
 void parameterModelTV::removeData(QModelIndex index, int first, int last)
 {
     shortParameterTable *sm;
+    Q_UNUSED(index);
     for (int i = last; i >= first; i--)
     {
         useEnv.removeAt(i);
@@ -322,6 +325,7 @@ void parameterModelTV::changeTimeVaryData(QModelIndex tplt, QModelIndex btrt, QV
 {
     int start = tplt.row();
     int end = btrt.row();
+    Q_UNUSED(ivect);
     changeTimeVaryData(start, end);
 }
 
@@ -381,6 +385,7 @@ QString parameterModelTV::getTimeVaryParamHdr (int row)
 
 void parameterModelTV::setTimeVaryHeaders(int param, QString label)
 {
+    Q_UNUSED(label);
     if (param == -1)
     {
         for (param = 0; param < getNumParams(); param++)
@@ -440,6 +445,7 @@ void parameterModelTV::setDevTimeVaryHeader(int param, int flag, QString label)
 //    QString hdr (getRowHeader(param));
     QString tvHdr;
     shortParameterTable *sm = timeVaryParamData.at(param);
+    Q_UNUSED(flag);
 
     if (label.isEmpty())
         label = getParamHeader(param);
@@ -501,7 +507,7 @@ void parameterModelTV::setBlkTimeVaryHeader(int param, int block, QString label)
     {
         beg = parentModel->get_start_year();
         end = parentModel->get_end_year();
-        int infl = (beg + end) / 2;
+//        int infl = (beg + end) / 2;
         sm->setParamHeader(k++, label + QString("_TrendFinal_direct"));
         sm->setParamHeader(k++, label + QString("_TrendInfl_yr"));
         sm->setParamHeader(k++, label + QString("_TrendWidth_yr"));
@@ -526,7 +532,8 @@ QStringList parameterModelTV::autoGenEnvParam(int param, int envVal, QString lab
 {
     QStringList ql;
     int link = envVal / 100;
-    int var = envVal - (link * 100);
+//    int var = envVal - (link * 100);
+    Q_UNUSED(label);
 
     switch (link)
     {
@@ -550,6 +557,7 @@ QStringList parameterModelTV::autoGenDevParam(int param, int devVal, QString lab
 {
     QStringList ql;
     int k = 1;
+    Q_UNUSED(label);
     switch (devVal)
     {
     case 1:

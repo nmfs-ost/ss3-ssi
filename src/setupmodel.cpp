@@ -242,6 +242,7 @@ void shortParameterModel::setParamsUsed(QList<int> data)
 {
     int index, params = data.count();
     bool changed = false;
+    Q_UNUSED(index);
     paramNum.clear();
     disconnect (paramTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
              this, SLOT(updateParamData(QModelIndex,QModelIndex,QVector<int>)));
@@ -275,12 +276,12 @@ void shortParameterModel::setParamsUsed(QList<int> data)
 //
 void shortParameterModel::setParamHeaders(QStringList hdr)
 {
-    int i, j, total;
+    int i;//, total;
     int row = 0;
     int numparams = hdr.count();
     QString ColHdr;
 
-    total = numparams;
+//    total = numparams;
     for (i = 0; i < numparams; i++)
     {
         ColHdr = QString(hdr.at(i));
@@ -390,6 +391,7 @@ void shortParameterModel::updateParamData(QModelIndex tl, QModelIndex br, QVecto
     int first = tl.row();
     int last = br.row();
     bool changed = false;
+    Q_UNUSED(data);
 
     for (row = first; row <= last; row++)
     {
@@ -535,8 +537,9 @@ void shortParamMultModel::setParamHeader(int row, QString title)
 //
 void shortParamMultModel::setParamsUsed(QList<int> data)
 {
-    int index, totalparams = data.count() * mult;
+    int index;//, totalparams = data.count() * mult;
     bool changed = false;
+    Q_UNUSED(index);
 //    paramNum.clear();
 //    paramUsed = data;
     if (paramUsed.count() != data.count())
@@ -681,6 +684,7 @@ void shortParamMultModel::updateParamData(QModelIndex tl, QModelIndex br, QVecto
     int first = tl.row();
     int last = br.row();
     bool changed = false;
+    Q_UNUSED(data);
 
     for (row = first; row <= last; row++)
     {
@@ -737,13 +741,14 @@ void longParameterModel::updateParams()
 //
 void longParameterModel::updateParamData(QModelIndex tl, QModelIndex br, QVector<int> data)
 {
-    int row = 0;
+//    int row = 0;
     QStringList parm;
     QStringList parmdat;
     int first = tl.row();
     int last = br.row();
     int parmIndex = 0;
     bool changed = false;
+    Q_UNUSED(data);
 
     for (int i = first; i <= last; i++)
     {
@@ -872,13 +877,13 @@ void timeVaryParameterModel::setVarParamsUsed(QList<int> data)
 
 void timeVaryParameterModel::setVarParamHeader(int row, QString title)
 {
-    int num = tableNum.at(row);
+//    int num = tableNum.at(row);
     varyParamTable->setRowHeader(row, title);
 }
 
 void timeVaryParameterModel::setVarParameter(int row, QStringList &rowstringlist)
 {
-    int num = tableNum.at(row);
+//    int num = tableNum.at(row);
     varyParamTable->setRowData(row, rowstringlist);
 }
 
@@ -1023,6 +1028,7 @@ void timeVaryParameterModel::updateVarParamData(QModelIndex tl, QModelIndex br, 
     tablemodel *parmvartable;
     int parm, parmvar;
     bool changed = false;
+    Q_UNUSED(data);
 
     for (int i = first; i <= last; i++)
     {

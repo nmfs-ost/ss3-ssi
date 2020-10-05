@@ -97,7 +97,6 @@ SOURCES += main.cpp\
     dialog_runoptions.cpp \
     conversions.cpp \
     chartdialog.cpp \
-    equationdialog.cpp \
     ttk_spline.cpp \
     dialoginfo.cpp \
     dialoginputerror.cpp \
@@ -204,7 +203,6 @@ HEADERS  += mainwindow.h \
     dialog_runoptions.h \
     conversions.h \
     chartdialog.h \
-    equationdialog.h \
     ttk_spline.h \
     dialoginfo.h \
     dialoginputerror.h \

@@ -790,6 +790,7 @@ void data_widget::changeEnvVarData(QModelIndex tl, QModelIndex br, QVector<int> 
     int firstrow = tl.row();
     int lastrow = br.row();
     QStringList rowdata;
+    Q_UNUSED(data);
 
     for (int i = firstrow; i <= lastrow; i++)
     {

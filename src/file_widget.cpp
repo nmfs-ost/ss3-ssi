@@ -19,11 +19,11 @@ using namespace std;
 
 file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     QWidget(parent),
-    current_dir_name(dir),
     ui(new Ui::file_widget)
 {
     ui->setupUi(this);
 
+    current_dir_name = QString(dir);
 //    TODO: This is for debugging only, make sure to set them to false before building release.
     {
     bool check = false;
@@ -152,6 +152,7 @@ QString file_widget::getDatafileVersion()
 void file_widget::setDatafileVersion(double ver, bool flag)
 {
     QString msg;
+    Q_UNUSED(flag);
     datafile_version = ver + .000001;
     if (datafile_version < 3.30)
     {
@@ -176,6 +177,7 @@ void file_widget::show_output_files()
 
 void file_widget::set_starter_file(QString fname, bool keep)
 {
+    Q_UNUSED(keep);
     ui->label_starter_file->setText(fname);
     current_dir_name = current_dir.absoluteFilePath(fname);
     current_dir.cd(current_dir_name);
@@ -199,6 +201,7 @@ QString file_widget::get_starter_file()
 
 void file_widget::set_forecast_file(QString fname, bool keep)
 {
+    Q_UNUSED(keep);
     ui->label_fcast_file->setText(fname);
 
     if (forecastFile == nullptr)
@@ -218,6 +221,7 @@ QString file_widget::get_forecast_file ()
 
 void file_widget::set_control_file(QString fname, bool keep)
 {
+    Q_UNUSED(keep);
     if (controlFile == nullptr)
     {
         controlFile = new ss_file(fname);
@@ -241,6 +245,7 @@ QString file_widget::get_control_file()
 
 void file_widget::set_data_file(QString fname, bool keep)
 {
+    Q_UNUSED(keep);
     if (dataFile == nullptr)
     {
         dataFile = new ss_file(fname);
@@ -348,6 +353,7 @@ void file_widget::changeReadProFile(bool flag)
 void file_widget::setReadProFile(QString fname, bool keep)
 {
     QStringList commnts;
+    Q_UNUSED(keep);
     if (fname.isEmpty())
     {
         setReadProFile(false);
@@ -593,9 +599,12 @@ bool file_widget::read_files()
 bool file_widget::read_files(ss_model *model_inf)
 {
     bool okay = true;
-
-
-    okay = read_starter_file();
+    if (model_info == nullptr)
+        model_info = model_inf;
+    if (model_info == nullptr)
+        okay = false;
+    if (okay)
+        okay = read_starter_file();
     if (okay)
     {
         setDatafileVersion (datafile_version);

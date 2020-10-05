@@ -71,9 +71,10 @@ void tablemodel::setRowData(int row, QVector<double> rowdata)
 void tablemodel::setRowData(int row, QStringList &rowstringlist)
 {
     QList<QStandardItem *> px;
+    if (columnCount() < rowstringlist.count())
+        setColumnCount(rowstringlist.count());
     if (row >= rowCount())
         setRowCount(row + 1);
-    setColumnCount(rowstringlist.count());
 
     for (int i = 0; i < rowstringlist.count(); i++)
     {

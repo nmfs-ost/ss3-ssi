@@ -43,6 +43,7 @@ bool ss_file::reset()
 
 QString ss_file::read_line()
 {
+    QString line("");
     if (atEnd() || !isOpen())
         return QString("EOF");
     else
@@ -52,6 +53,7 @@ QString ss_file::read_line()
         inputErrDialog->setLineNum(line_num);
         return QString (qba);
     }
+    return line;
 }
 
 void ss_file::skip_line()
@@ -234,13 +236,14 @@ QString ss_file::get_next_value(QString prompt)
 
 QString ss_file::get_next_token()
 {
-    QString tk;
-    while (current_tokens->count() == 0)
-    {
-        get_line_tokens();
+    QString tk("");
+    if (okay) {
+        while (current_tokens->count() == 0)
+        {
+            get_line_tokens();
+        }
+        tk = current_tokens->takeFirst();
     }
-    tk = current_tokens->takeFirst();
-
     return tk;
 }
 
@@ -337,8 +340,13 @@ int ss_file::write_vector(QStringList vect, int spcng, QString info)
 
 float ss_file::getFloatValue(QString desc, float min, float max, float dfault)
 {
-    float value = get_next_value(desc).toFloat();
-    return checkFloatValue(value, desc, min, max, dfault);
+    float value;
+    float result = -1;
+    if (okay) {
+        value = get_next_value(desc).toFloat();
+        result = checkFloatValue(value, desc, min, max, dfault);
+    }
+    return result;
 }
 
 float ss_file::checkFloatValue(float val, QString desc, float min, float max, float dfault)
@@ -358,21 +366,29 @@ float ss_file::checkFloatValue(float val, QString desc, float min, float max, fl
 
 int ss_file::getIntValue(QString desc, int min, int max, int dfault)
 {
-    int value = get_next_value(desc).toInt();
-    return checkIntValue(value, desc, min, max, dfault);
+    int value;
+    int result = -1000000;
+    if (okay) {
+        value = get_next_value(desc).toInt();
+        result = checkIntValue(value, desc, min, max, dfault);
+    }
+    return result;
 }
 
 int ss_file::checkIntValue(int val, QString desc, int min, int max, int dfault)
 {
-    while (val < min ||
-            val > max)
-    {
-        inputErrDialog->getNewIntValue(val, desc, min, max, dfault);
-        inputErrDialog->exec();
-        val = inputErrDialog->getIntValue();
-        if (val < -999990 || val > 999999)
-            break;    }
-    checkErrCode(val);
+    if (okay) {
+        while (val < min ||
+                val > max)
+        {
+            inputErrDialog->getNewIntValue(val, desc, min, max, dfault);
+            inputErrDialog->exec();
+            val = inputErrDialog->getIntValue();
+            if (val < -999990 || val < -999999)
+                break;
+        }
+        checkErrCode(val);
+    }
     return val;
 }
 
@@ -383,9 +399,10 @@ void ss_file::checkErrCode(float code) {
 
 void ss_file::checkErrCode(int code) {
     switch (code) {
-    case 1000000:
-        QMessageBox::warning(0, tr("Exit on User Input"),
+    case -1000000:
+        QMessageBox::warning(nullptr, tr("Stop Reading on User Input"),
                      tr(QString("Reading file %1 has stopped.").arg(fileName()).toUtf8()));
+        reset();
         okay = false;
         emit end_reading_file();
         break;
@@ -393,6 +410,7 @@ void ss_file::checkErrCode(int code) {
     case -999999:
         QMessageBox::critical(0, tr("Exit on Reading Error"),
                     tr("Leaving the application while reading files."));
+        reset();
         okay = false;
         exit(code);
     }

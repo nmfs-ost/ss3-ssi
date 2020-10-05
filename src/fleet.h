@@ -120,14 +120,10 @@ public slots:
     int getYearMonthRow (tablemodel *tm, QString year, QString month);
     void setNumAbundObs (int num);
     int getNumAbundObs () {return abundModel->rowCount();}
-    void set_abundance(int year, int season, float obs);
     void setAbundMonth(int year, float month, float obs, float err);
     void addAbundByMonth(int year, float month, float obs, float err);
     float getAbundanceAmt(int year, float month);
     float getAbundanceErr(int year, float month);
-    float abundance(int year, int month);
-    void set_abundance_error(int year, int month, float err);
-    float abundance_error(int year, int month);
     int abundance_count ();
     QStringList getAbundanceObs(int row);
     int getAbundanceCount();
@@ -375,7 +371,7 @@ protected:
     double d_catch_se_of_log;
     int i_catch_mult;
     float f_max_catch;
-    longParameterModel *catchMult;
+    longParameterModel *catchMultiplierParam;
 
     tablemodel *retainCatch;
     QStringList catchHeader;

@@ -1214,12 +1214,8 @@ void selectivity::autogenCubicSpline1(int scale) {
     QList<float> nodes;
     float nodeFirst = 1, nodeLast = 10, nodeRange = 9;
 //    QStringList bins (type == Size? altbins: bins);
-    int numBins = bins.count();
+    int numBins = 0;
     QStringList data;
-
-    for (bin = 0; bin < numBins; bin++) {
-        binTotals.append(0.0);
-    }
 
     for (int i = 0; i < numNodes; i++) {
         nodes.append(0.0);
@@ -1227,6 +1223,11 @@ void selectivity::autogenCubicSpline1(int scale) {
 
     if (type == Size) {
         numObs = fleet->getLengthNumObs();
+        numBins = fleet->getLengthObservation(0).count() - 7;
+        for (bin = 0; bin < numBins; bin++) {
+            binTotals.append(0.0);
+        }
+
         for (int row = 0; row < numObs; row++) {
             for (bin = 0; bin < numBins; bin++) {
                 binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
@@ -1235,6 +1236,11 @@ void selectivity::autogenCubicSpline1(int scale) {
     }
     else { // type == Age
         numObs = fleet->getAgeNumObs();
+        numBins = fleet->getAgeObservation(0).count() - 7;
+        for (bin = 0; bin < numBins; bin++) {
+            binTotals.append(0.0);
+        }
+
         for (int row = 0; row < numObs; row++) {
             for (bin = 0; bin < numBins; bin++) {
                 binTotals[bin] += fleet->getAgeObservation(row).at(bin+7).toInt();
@@ -1260,8 +1266,8 @@ void selectivity::autogenCubicSpline1(int scale) {
     int index = scale + 3;
     for (int i = 0; i < numNodes; i++) {
         data  = getParameter(index + i);
-        data[0] = bins.first();
-        data[1] = bins.last();
+        data[0] = QString::number(nodeFirst);
+        data[1] = QString::number(nodeLast);
         data[2] = QString::number(term);
         data[6] = QString::number(-99);
         setParameter(index +i, data);

@@ -685,68 +685,6 @@ void ss_model::set_fleet_units_err_type(int fleet, int units, int err_type)
     }
 }
 
-int ss_model::fleet_units(int fleet)
-{
-    int units = 0;
-    if (fleet < get_num_fleets())
-    {
-        units = getFleet(fleet)->getAbundUnits();
-    }
-    return units;
-}
-
-int ss_model::fleet_err_type(int fleet)
-{
-    int err = 0;
-    if (fleet < get_num_fleets())
-    {
-        err = getFleet(fleet)->getAbundErrType();
-    }
-    return err;
-}
-
-void ss_model::set_fleet_abundance(int fleet, int year, int month, float obs, float err)
-{
-    getFleet(fleet)->set_abundance(year, month, obs);
-    getFleet(fleet)->set_abundance_error(year, month, err);
-}
-
-float ss_model::fleet_abundance(int fleet, int year, int month)
-{
-    return getFleet(fleet)->abundance(year, month);
-}
-
-float ss_model::fleet_abund_err(int fleet, int year, int month)
-{
-    return getFleet(fleet)->abundance_error(year, month);
-}
-
-void ss_model::set_fleet_discard_units_err_type(int fleet, int units, int err_type)
-{
-    //int i_fleet = fleet - 1;
-    fleets.at(fleet)->setDiscardUnits(units);
-    fleets.at(fleet)->setDiscardErrType(err_type);
-}
-
-int ss_model::fleet_discard_units(int fleet)
-{
-    int units = 0, i_fleet = fleet - 1;
-    if (i_fleet < get_num_fleets())
-    {
-        units = getFleet(fleet)->getDiscardUnits();
-    }
-    return units;
-}
-
-int ss_model::fleet_discard_err_type(int fleet)
-{
-    int err = 0, i_fleet = fleet - 1;
-    if (i_fleet < get_num_fleets())
-    {
-        err = getFleet(fleet)->getDiscardErrType();
-    }
-    return err;
-}
 
 int ss_model::fleet_discard_count()
 {

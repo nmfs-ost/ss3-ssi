@@ -15,10 +15,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     QStringList str_lst;
     float temp_float;
     int temp_int = 0, num_input_lines = 0;
-    int i, num_vals, total_fleets;
+    int i = 0, num_vals = 0, total_fleets = 0;
     int n_areas = 0, n_ages = 0, n_genders = 0;
-    int units, err_type, year, season, fleet, obslength;
-    float obs, err;
+    int units, err_type, year, fleet, obslength;//, season;
+//    float obs, err;
 //    float month;
     int startYear = 0, endYear = 0;
     int numSeas = 1;
@@ -617,6 +617,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.13 #Morph composition data
         temp_int = d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
         data->setDoMorphComp(temp_int == 1);
+        total_fleets = data->get_num_fleets();
         if (data->getDoMorphComp())
         {
             compositionMorph *mcps = new compositionMorph();
@@ -1611,7 +1612,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
         temp_int = f_file->getIntValue(QString("Forecast selectivity"), 0, 1, 0);
         fcast->setSelectivity (temp_int);
-        temp_int = f_file->getIntValue(QString("Control Rule"), 1, 4, 1);
+        temp_int = f_file->getIntValue(QString("Control Rule"), 0, 4, 1);
         fcast->set_cr_method(temp_int);
         token = f_file->get_next_value(QString("control rule upper limit"));
         temp_float = token.toFloat();
@@ -1905,7 +1906,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
                 for (i = 0; i < data->get_num_fleets(); i++)
                 {
                     temp_float = QString(str_lst.at(i)).toFloat();
-                    if (temp_float != 0.0)
+                    if (temp_float > 0 || temp_float < 0)
                     {
                         tmp_lst.clear();
                         tmp_lst.append(QString::number(seas + 1));
@@ -1952,7 +1953,8 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         {
             line.clear();
             value = str_lst.at(i);
-            if (value.toFloat() != 0)
+            temp_float = value.toFloat();
+            if (temp_float > 0 || temp_float < 0)
             {
                 line.append(QString("%1 %2").arg(QString::number(i+1), value));
                 chars += f_file->writeline(line);
@@ -2066,8 +2068,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     int flt;
     int num_fleets = data->get_num_fleets();
     int timevaryread;
-    int startYear = data->get_start_year();
-    int endYear = data->get_end_year();
+//    int startYear = data->get_start_year();
+//    int endYear = data->get_end_year();
 
     if(c_file->open(QIODevice::ReadOnly))
     {
@@ -2568,7 +2570,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             pop->SR()->setNumDistParams(i);
         }
-        else if (index == 3 || (index == 4 && (num_vals * pop->Grow()->getNum_patterns() > 1)))
+        else if (index == 3)
         {
             num_vals = pop->SR()->getNumAssignments();
             for (i = 0; i < num_vals; i++)
@@ -2847,7 +2849,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->M()->setNumInputs(temp_int); // numInputs
             break;
         case 3:
-            temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 2, 8, 4);
+            temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 1, 10, 4);
             pop->M()->setNumTuningIters(temp_int); // numTuningIters
             break;
         }
@@ -3179,8 +3181,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         // 2D-AR1 smoother
         temp_int = c_file->getIntValue(QString("2D_AR1 selectivity? 0/1"), 0, 1, 0);
+        data->setUse2DAR1(temp_int == 1);
         if (temp_int == 1) {
-            data->setUse2DAR1(temp_int == 1);
             // fleet, ymin,   ymax,   amin,   amax,   sig_amax, use_rho, len1/age2, devphase, before_range, after_range
             do {
                 datalist.clear();
@@ -3208,15 +3210,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             } while (flt != -9999);
         }
-        else {
-            data->setUse2DAR1(false);
-        }
 
         // Tag loss and Tag reporting parameters go next
         temp_int = c_file->getIntValue(QString("Read Tag parameters? 0/1"), 0, 1, 0);
         data->setTagLoss(temp_int);
         if (temp_int == 1)
         {
+            int numCfleets = 0;
+            for (int i = 0; i < num_fleets; i++)
+                if (data->getFleet(i)->getType() == 1 ||
+                        data->getFleet(i)->getType() == 2)
+                    numCfleets++;
             num = data->get_num_tag_groups();
             // tag loss init
             data->getTagLossInit()->setNumParams(num);
@@ -3238,39 +3242,16 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             // tag report fleet
             data->getTagReportFleet()->setNumParams(data->get_num_fleets());
-            for (i = 0; i < data->get_num_fleets(); i++) {
+            for (i = 0; i < numCfleets; i++) {
                 datalist = readParameter(c_file);
                 data->getTagReportFleet()->setParameter(i, datalist);
             }
             // tag report decay
             data->getTagReportDecay()->setNumParams(data->get_num_fleets());
-            for (i = 0; i < data->get_num_fleets(); i++) {
+            for (i = 0; i < numCfleets; i++) {
                 datalist = readParameter(c_file);
                 data->getTagReportDecay()->setParameter(i, datalist);
             }
-
-//            data->setTagLossParameter(c_file->read_line());
-            // tag time varying
-            readTimeVaryParams(c_file, data,
-                               data->getTagLossInit()->getParamTable(),
-                               data->getTagTimeVaryReadParams(),
-                               data->getTagLossInitTV()->getVarParamTable());
-            readTimeVaryParams(c_file, data,
-                               data->getTagLossChronic()->getParamTable(),
-                               data->getTagTimeVaryReadParams(),
-                               data->getTagLossChronicTV()->getVarParamTable());
-            readTimeVaryParams(c_file, data,
-                               data->getTagOverdispersion()->getParamTable(),
-                               data->getTagTimeVaryReadParams(),
-                               data->getTagOverdispersionTV()->getVarParamTable());
-            readTimeVaryParams(c_file, data,
-                               data->getTagReportFleet()->getParamTable(),
-                               data->getTagTimeVaryReadParams(),
-                               data->getTagReportFleetTV()->getVarParamTable());
-            readTimeVaryParams(c_file, data,
-                               data->getTagReportDecay()->getParamTable(),
-                               data->getTagTimeVaryReadParams(),
-                               data->getTagReportDecayTV()->getVarParamTable());
         }
 
         // #_Variance_adjustments_to_input_value
@@ -3448,7 +3429,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 int write33_controlFile(ss_file *c_file, ss_model *data)
 {
     int temp_int, num, num_vals, chars = 0;
-    int i, j, index;
+    int i, j;
     float temp_float;
     QString line, temp_string;
     QStringList str_list;
@@ -4034,6 +4015,16 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
 
         line = QString("#  catch multiplier");
         chars += c_file->writeline(line);
+        for (i = 0; i < data->get_num_fleets(); i++)
+        {
+            Fleet *fleet = data->getFleet(i);
+            line.clear();
+            if (fleet->getCatchMultiplier() > 0)
+            {
+                line = QString(QString("%1(%2)").arg(fleet->getName(), fleet->getNumber()));
+                c_file->write_vector(fleet->getCatchMultParam(), 6, line);
+            }
+        }
 
         // Fraction Female
         line = QString("#  fraction female, by GP");
@@ -4841,6 +4832,11 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         if (temp_int == 1)
         {
+            int numCfleets = 0;
+            for (int i = 0; i < data->get_num_fleets(); i++)
+                if (data->getFleet(i)->getType() == 1 ||
+                        data->getFleet(i)->getType() == 2)
+                    numCfleets++;
             num = data->get_num_tag_groups();
             // tag loss init
             for (i = 0; i < num; i++) {
@@ -4858,13 +4854,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->write_vector(str_list, 3, QString("TG_overdispersion_%1").arg(QString::number(i+1)));
             }
             // tag report fleet
-            for (i = 0; i < data->get_num_fleets(); i++) {
+            for (i = 0; i < numCfleets; i++) {
                 str_list = data->getTagReportFleet()->getParameter(i);
                 chars += c_file->write_vector(str_list, 3, QString("TG_report_fleet:_%1").arg(QString::number(i+1)));
             }
             // tag report decay
-            for (i = 0; i < data->get_num_fleets(); i++) {
-                str_list = data->getTagReportFleet()->getParameter(i);
+            for (i = 0; i < numCfleets; i++) {
+                str_list = data->getTagReportDecay()->getParameter(i);
                 chars += c_file->write_vector(str_list, 3, QString("TG_rpt_decay_fleet:_%1").arg(QString::number(i+1)));
             }
 
@@ -5296,7 +5292,7 @@ int readTimeVaryDevParams(ss_file *infile, ss_model *data, int value, QString hd
 {
     QStringList varParam;
     QString varHeader(hdr);
-
+    Q_UNUSED(data);
     switch (value)
     {
     case 1:
@@ -5319,6 +5315,7 @@ int readTimeVaryEnvParams(ss_file *infile, ss_model *data, int value, QString hd
     int var = value - (fnx * 100);
     QStringList varParam;
     QString varHeader(hdr);
+    Q_UNUSED(data);
 
     if (var > 0)
     {
@@ -5348,7 +5345,7 @@ int readTimeVaryEnvParams(ss_file *infile, ss_model *data, int value, QString hd
     return (row + 1);
 }
 
-int writeTimeVaryParams(ss_file *outfile, ss_model *data, tablemodel *table, QStringList parmlist, QString header)
+int writeTimeVaryParams(ss_file *outfile, ss_model *data, tablemodel *table, QStringList parmlist)
 {
     QStringList p_list;
     QString rheader;

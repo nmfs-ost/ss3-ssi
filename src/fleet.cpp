@@ -10,6 +10,7 @@ Fleet::Fleet(ss_model *parent) :
     f_timing = .5;
 
     set_max_catch(-1);
+    catchMultiplierParam = new longParameterModel(this);
     retainCatch = new tablemodel(this);
     retainCatch->setColumnCount(5);
     catchHeader << "Year" << "Season" << "Fleet" << "Catch" << "Catch SE";
@@ -670,17 +671,17 @@ void Fleet::setNumGenders(int num)
 
 void Fleet::setCatchMultParam(QStringList& data)
 {
-    catchMult->setParameter(0, data);
+    catchMultiplierParam->setParameter(0, data);
 }
 
 const QStringList& Fleet::getCatchMultParam()
 {
-    return catchMult->getParameter(0);
+    return catchMultiplierParam->getParameter(0);
 }
 
 tablemodel *Fleet::getCatchMultParameters()
 {
-    return catchMult->getParamTable();
+    return catchMultiplierParam->getParamTable();
 }
 
 int Fleet::getNumSeasons()
@@ -750,38 +751,6 @@ void Fleet::setAbundMonth(int year, float month, float obs, float err)
     setAbundanceObs(row, values);
 }
 
-void Fleet::set_abundance(int year, int season, float obs)
-{
-//    yearIndexMeasure *yim = getYearIndexMeasure(f_abundance, year, season);
-//    yim->setValue(obs);
-}
-
-float Fleet::abundance(int year, int month)
-{
-    double val = 0.0;
- //   yearIndexMeasure *yim = nullptr;
- //   yim = getYearIndexMeasure(f_abundance, year, month);
- //   if (yim)
- //       val = yim->getValue();
-    return val;
-}
-
-void Fleet::set_abundance_error(int i_year, int month, float err)
-{
- //   yearIndexMeasure *yim = getYearIndexMeasure(f_abundance_error, i_year, month);
-
- //   yim->setValue(err);
-}
-
-float Fleet::abundance_error(int year, int month)
-{
-    double val = 0.0;
-//    yearIndexMeasure *yim = nullptr;
-//    yim = getYearIndexMeasure(f_abundance_error, year, month);
- //   if (yim)
- //       val = yim->getValue();
-    return val;
-}
 
 int Fleet::getAbundanceCount()
 {

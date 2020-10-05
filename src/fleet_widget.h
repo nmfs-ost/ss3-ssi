@@ -14,7 +14,7 @@
 #include "tableview.h"
 #include "catchdelegate.h"
 #include "abundancedelegate.h"
-#include "equationdialog.h"
+//#include "equationdialog.h"
 #include "dialoginfo.h"
 #include "dialogselectivityequationview.h"
 

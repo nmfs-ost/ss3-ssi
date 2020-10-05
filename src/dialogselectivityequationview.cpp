@@ -2037,7 +2037,7 @@ void DialogSelexEquationView::updateDblNormPlateau() {
     float t1, t1min, t1term;
     float t2, t2min, t2term;
     float apical_selex = 1.0;
-    int first, last;
+    int first = 0, last = xValList.count()-1;
     float jn1, jn2;
     int i;
     float xval = 0, asc = 0, des = 0, sel = 0;
@@ -2309,7 +2309,7 @@ void DialogSelexEquationView::expLogistic() {
     {sel_a(y,fs,1,a) = mfexp(sp(3)*sp(1)*(peak-r_ages(a)))/(1.0-sp(3)*(1.0-mfexp(sp(1)*(peak-r_ages(a)))));}
 */
 void DialogSelexEquationView::updateExpLogistic() {
-    int xRange = static_cast<int>(xValList.last() - xValList.first());
+//    int xRange = static_cast<int>(xValList.last() - xValList.first());
     double yVal = 0;
     double temp = 0;
     double xVal = 0;
@@ -2588,7 +2588,7 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
     double lastSel = 0.0;
     double temp = -999;
     QList<float> parms;
-    float binMax = getBinMax();
+//    float binMax = getBinMax();
     int scaleOffset = static_cast<int>(scale);
     int firstage = 0;
     int lastage = bins.count();
@@ -2646,9 +2646,9 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
     // find first age bin
     i = 0;
     firstage = 1;
-    if (firstPoints.at(i).y() == -1000)
+    if (static_cast<int>(firstPoints.at(i).y()) == -1000)
     {
-        while (parameterView->getInput(i) == -1000)
+        while (static_cast<int>(parameterView->getInput(i)) == -1000)
         {
             firstage = i;
             i++;
@@ -2849,7 +2849,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     bool okay = true;
     QString msg;
     QStringList data;
-    double altMaxVal, altMinVal, altMax, altMin;
+    double altMaxVal, altMinVal, altMax;//, altMin;
     QList<QPointF> secndPoints;
 
 

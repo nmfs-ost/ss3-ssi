@@ -20,7 +20,7 @@ class forecast_widget : public QWidget
     Q_OBJECT
 
 public:
-    explicit forecast_widget(ss_model *m_data, QWidget *parent = 0);
+    explicit forecast_widget(ss_model *m_data, QWidget *parent = nullptr);
     ~forecast_widget();
 
 public slots:

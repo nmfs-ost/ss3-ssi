@@ -10,10 +10,13 @@
 #include <QStringList>
 #include "dialoginputerror.h"
 
-#define MAX_LINE_LENGTH 2056
+#define MAX_LINE_LENGTH 4096
 
-#define END_OF_DATA   999  // signifies end of data in files
-#define END_OF_LIST -9999  // signifies end of data values
+#define END_OF_DATA       999  // signifies end of data in files
+#define END_OF_LIST     -9999  // signifies end of data values
+
+#define EXIT_SSI      -999999  // exit the program
+#define STOP_READING -1000000  // stop reading files
 
 #ifdef WIN32
  #define ENDLINE ("\r\n")

@@ -157,7 +157,7 @@ void DialogInputError::buttonOKClicked() {
 }
 
 void DialogInputError::buttonAbortFileClicked() {
-    floatVal = intVal = 1000000;
+    floatVal = intVal = -1000000;
     emit error(intVal);
     hide();
 }

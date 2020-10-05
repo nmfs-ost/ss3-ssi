@@ -1383,7 +1383,7 @@ void fleet_widget::setSelexAgePattern(int pat)
 
 void fleet_widget::changeSelexAgePattern(int value)
 {
-    bool changePat = true;
+//    bool changePat = true;
     int pat = 0;
     int currPat = current_fleet->getAgeSelectivity()->getPattern();
     ui->spinBox_selex_age_special->setRange(0, 99);

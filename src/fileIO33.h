@@ -23,7 +23,7 @@ int readTimeVaryBlockParams(ss_file *infile, ss_model *data, int value, int fnx,
 int readTimeVaryDevParams (ss_file *infile, ss_model *data, int value, QString hdr, int row, tablemodel *varParamTable);
 int readTimeVaryEnvParams(ss_file *infile, ss_model *data, int value, QString hdr, int row, tablemodel *varParamTable);
 
-int writeTimeVaryParams (ss_file *outfile, ss_model *data, tablemodel *table, QStringList parmlist, QString header);
+int writeTimeVaryParams (ss_file *outfile, ss_model *data, tablemodel *table, QStringList parmlist);
 
 bool read33_forecastFile (ss_file *f_file, ss_model *data);
 int write33_forecastFile (ss_file *f_file, ss_model *data);

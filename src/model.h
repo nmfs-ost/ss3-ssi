@@ -202,14 +202,6 @@ public slots:
     QStringList getCatchMult () {return catchMult->getParameter(0);}
     tablemodel *getCatchMultParam () {return catchMult->getParamTable();}
     void set_fleet_units_err_type (int fleet, int units, int err_type);
-    int fleet_units (int fleet);
-    int fleet_err_type (int fleet);
-    void set_fleet_abundance (int fleet, int year, int month, float obs, float err);
-    float fleet_abundance (int fleet, int year, int month);
-    float fleet_abund_err (int fleet, int year, int month);
-    void set_fleet_discard_units_err_type (int fleet, int units, int err_type);
-    int fleet_discard_units (int fleet);
-    int fleet_discard_err_type (int fleet);
     int fleet_discard_count();
     int fleet_discard_obs_count();
     void setUseMeanBwt (int flag) {useMeanBwtData = flag == 1? true: false;}

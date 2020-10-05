@@ -85,8 +85,8 @@ Dialog_run::Dialog_run(QWidget *parent) :
 
 Dialog_run::~Dialog_run()
 {
-    delete ui;
-    delete stocksynth;
+//    delete ui;
+//    delete stocksynth;
 }
 
 void Dialog_run::showRptCharts()
