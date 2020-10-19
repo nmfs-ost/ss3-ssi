@@ -150,72 +150,72 @@ void Fleet::setNumber (int n)
     for (i = 0; i < getNumCatchObs(); i++)
     {
         datalist = getCatchObservation(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setCatchObservation(i, datalist);
     }
     for (i = 0; i < getNumAbundObs(); i++)
     {
         datalist = getAbundanceObs(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setAbundanceObs(i, datalist);
     }
     for (i = 0; i < getDiscardCount(); i++)
     {
         datalist = getDiscard(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setDiscard(i, datalist);
     }
 
     for (i = 0; i < getMbwtNumObs(); i++)
     {
         datalist = getMbwtObservation(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setMbwtObservation(i, datalist);
     }
     for (i = 0; i < getLengthNumObs(); i++)
     {
         datalist = getLengthObservation(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setLengthObservation(i, datalist);
     }
     for (i = 0; i < getAgeNumObs(); i++)
     {
         datalist = getAgeObservation(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setAgeObservation(i, datalist);
     }
     for (i = 0; i < getSaaNumObs(); i++)
     {
         datalist = getSaaObservation(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setSaaObservation(i, datalist);
     }
     for (i = 0; i < getGenModelTotal(); i++)
@@ -223,11 +223,11 @@ void Fleet::setNumber (int n)
         for (int j = 0; j < getGenNumObs(i); j++)
         {
             datalist = getGenObservation(i, j);
-            datum = datalist.takeAt(3);
+            datum = datalist.at(2);
             if (datum.contains("-"))
-                datalist.insert(3, negFltNo);
+                datalist[2] = negFltNo;
             else
-                datalist.insert(3, posFltNo);
+                datalist[2] = posFltNo;
             setGenObservation(i, j, datalist);
         }
     }
@@ -244,11 +244,11 @@ void Fleet::setNumber (int n)
     for (i = 0; i < getMorphNumObs(); i++)
     {
         datalist = getMorphObservation(i);
-        datum = datalist.takeAt(2);
+        datum = datalist.at(2);
         if (datum.contains("-"))
-            datalist.insert(2, negFltNo);
+            datalist[2] = negFltNo;
         else
-            datalist.insert(2, posFltNo);
+            datalist[2] = posFltNo;
         setMorphObservation(i, datalist);
     }
 
@@ -671,12 +671,14 @@ void Fleet::setNumGenders(int num)
 
 void Fleet::setCatchMultParam(QStringList& data)
 {
+    catchMultiplier = QStringList(data);
     catchMultiplierParam->setParameter(0, data);
 }
 
 const QStringList& Fleet::getCatchMultParam()
 {
-    return catchMultiplierParam->getParameter(0);
+    catchMultiplier = catchMultiplierParam->getParameter(0);
+    return catchMultiplier;
 }
 
 tablemodel *Fleet::getCatchMultParameters()
@@ -818,118 +820,11 @@ void Fleet::qSetupChanged()
 }
 
 
-/*
-void Fleet::resetLambdas()
-{
-    if (!lambdas.isEmpty())
-        lambdas.clear();
-    numLambdas = 0;
-}
 
-void Fleet::setLambda (int cmp, int phs, float lmb, int szfq)
-{
-    bool append = true;
-
-    fleetLambda lamb (cmp, phs, lmb, szfq);
-    fleetLambda cur;
-
-    if (numLambdas > 0)
-    {
-        for (int i = 0; i < numLambdas; i++)
-        {
-            cur = lambdas.at(i);
-            if (cur == lamb)
-            {
-                append = false;
-                break;
-            }
-        }
-    }
-    if (append)
-    {
-        lambdas.append(lamb);
-        numLambdas = lambdas.count();
-    }
-
-}
-
-void Fleet::setLambdaComponent (int index, int cmp)
-{
-    if (index >= 0 && index < numLambdas)
-    {
-        lambdas[index].setComponent(cmp);
-    }
-}
-
-int Fleet::getLambdaComponent (int index)
-{
-    int cmp = 0;
-    if (index >= 0 && index < numLambdas)
-    {
-        cmp = lambdas[index].getComponent();
-    }
-    return cmp;
-}
-
-void Fleet::setLambdaPhase (int index, int phs)
-{
-    if (index >= 0 && index < numLambdas)
-    {
-        lambdas[index].setPhase(phs);
-    }
-}
-
-int Fleet::getLambdaPhase (int index)
-{
-    int phs = -1;
-    if (index >= 0 && index < numLambdas)
-    {
-        phs = lambdas[index].getPhase();
-    }
-    return phs;
-}
-
-void Fleet::setLambdaValue (int index, float lmb)
-{
-    if (index >= 0 && index < numLambdas)
-    {
-        lambdas[index].setLambda(lmb);
-    }
-}
-
-float Fleet::getLambdaValue (int index)
-{
-    float val = 1.0;
-    if (index >= 0 && index < numLambdas)
-    {
-        val = lambdas[index].getLambda();
-    }
-    return val;
-}
-
-void Fleet::setLambdaSizeFreq(int index, int szfq)
-{
-    if (index >= 0 && index < numLambdas)
-    {
-        lambdas[index].setSizeFreq(szfq);
-    }
-}
-
-int Fleet::getLambdaSizeFreq(int index)
-{
-    int val = 0;
-    if (index >= 0 && index < numLambdas)
-    {
-        val = lambdas[index].getSizeFreq();
-    }
-    return val;
-}
-*/
 
 void Fleet::appendLambda(QStringList values)
 {
     int rows = lambdaModel->rowCount();
-//    lambdaModel->setRowCount(rows + 1);
     lambdaModel->setRowData(rows, values);
 }
 

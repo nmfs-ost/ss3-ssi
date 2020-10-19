@@ -27,7 +27,7 @@ void ss_file::setFileName(const QString &filename) {
 bool ss_file::reset()
 {
     // reset and close
-    bool okay = false;
+    bool okay = true;
     line_num = 0;
     wait = false;
     okay = true;
@@ -35,7 +35,7 @@ bool ss_file::reset()
     current_tokens = new QStringList(*current_line);
     current_tokens->clear();
     if (isOpen()) {
-        okay = QFile::reset(); //seek(0);
+        QFile::reset(); //seek(0);
         close();
     }
     return okay; //QFile::reset();
@@ -43,15 +43,14 @@ bool ss_file::reset()
 
 QString ss_file::read_line()
 {
-    QString line("");
-    if (atEnd() || !isOpen())
-        return QString("EOF");
-    else
+    QString line("EOF");
+
+    if (isOpen() && !atEnd())
     {
         QByteArray qba = readLine(MAX_LINE_LENGTH);
         line_num++;
         inputErrDialog->setLineNum(line_num);
-        return QString (qba);
+        line = QString (qba);
     }
     return line;
 }
@@ -166,23 +165,25 @@ QStringList *ss_file::get_line_tokens(QString *line)
     for (int i = 0; i < cl.count(); i++)
         current_tokens->append(cl.at(i).split (' ', QString::SkipEmptyParts));
 
-    last = current_tokens->takeLast();
-    if (last.compare("\n") != 0)
-    {
-        last = last.split ('\n', QString::SkipEmptyParts).takeFirst();
-        if (last.compare("\r") != 0)
-            last = last.split ('\r', QString::SkipEmptyParts).takeFirst();
+    if (!current_tokens->isEmpty()) {
+        last = current_tokens->takeLast();
+        if (last.compare("\n") != 0)
+        {
+            last = last.split ('\n', QString::SkipEmptyParts).takeFirst();
+            if (last.compare("\r") != 0)
+                last = last.split ('\r', QString::SkipEmptyParts).takeFirst();
+            else
+                last.clear();
+        }
         else
             last.clear();
+        if (!last.isEmpty())
+           current_tokens->append(last);
+        if (current_tokens->count() == 0)
+            get_line_tokens();
     }
-    else
-        last.clear();
-    if (!last.isEmpty())
-       current_tokens->append(last);
-    if (current_tokens->count() == 0)
-        get_line_tokens();
-
     setNumTokens();
+
     return current_tokens;
 }
 
@@ -194,11 +195,13 @@ int ss_file::getNumTokens()
 void ss_file::setNumTokens()
 {
     current_line_num_tokens = 0;
+    if (!current_tokens->isEmpty()) {
     for (int i = 0; i < current_tokens->count(); i++)
     {
         if (QString(current_tokens->at(i)).startsWith('#'))
             break;
         current_line_num_tokens++;
+    }
     }
 }
 
@@ -236,8 +239,8 @@ QString ss_file::get_next_value(QString prompt)
 
 QString ss_file::get_next_token()
 {
-    QString tk("");
-    if (okay) {
+    QString tk("EOF");
+    /*if (okay)*/ {
         while (current_tokens->count() == 0)
         {
             get_line_tokens();
@@ -342,7 +345,7 @@ float ss_file::getFloatValue(QString desc, float min, float max, float dfault)
 {
     float value;
     float result = -1;
-    if (okay) {
+    /*if (okay)*/ {
         value = get_next_value(desc).toFloat();
         result = checkFloatValue(value, desc, min, max, dfault);
     }
@@ -368,7 +371,7 @@ int ss_file::getIntValue(QString desc, int min, int max, int dfault)
 {
     int value;
     int result = -1000000;
-    if (okay) {
+    /*if (okay)*/ {
         value = get_next_value(desc).toInt();
         result = checkIntValue(value, desc, min, max, dfault);
     }
@@ -377,7 +380,7 @@ int ss_file::getIntValue(QString desc, int min, int max, int dfault)
 
 int ss_file::checkIntValue(int val, QString desc, int min, int max, int dfault)
 {
-    if (okay) {
+    /*if (okay)*/ {
         while (val < min ||
                 val > max)
         {

@@ -33,8 +33,8 @@ public:
     bool getShowTrans() const;
     void setShowTrans(bool value);
 
-    int getNumUnParameters () {return numUnParams;}
-    void setNumUnParameters (int num);
+    int getNumUnSavedParameters () {return numUnSavedParams;}
+    void setNumUnSavedParameters (int num);
 
 public slots:
     void setTitle (QString title);
@@ -97,7 +97,7 @@ private:
     tablemodel *parameters;
     int numParamsShown;
 
-    int numUnParams;
+    int numUnSavedParams;
 
     // parameter sliders
     QList<QLabel *> pLabel;

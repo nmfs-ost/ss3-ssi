@@ -1,6 +1,8 @@
 #ifndef DIALOGEQUATIONVIEW_H
 #define DIALOGEQUATIONVIEW_H
 
+#include <QObject>
+#include <QStringList>
 #include <QDialog>
 #include <QLabel>
 #include <QAbstractButton>
@@ -54,9 +56,9 @@ public:
     void setMessageVisible (bool flag);
 
 public slots:
-    virtual void setXvalsConst(const QList<float> &vals);
+    virtual void setXvalsConst(const QList<double> &vals);
     virtual void setXvalsConst(const QStringList &vals);
-    virtual void setXvals(const QList<float> &vals);
+    virtual void setXvals(const QList<double> &vals);
     virtual void setXvals(double min, double max, double step);
     virtual void setXvalStrings(const QStringList &vals);
 
@@ -69,7 +71,7 @@ public slots:
     void setParametersVisible (bool vis = false);
 
     void setupLimits();
-    void setLimits(float xval1, float xval2);
+    void setLimits(double xval1, double xval2);
 
     void setIntVar1Range (int min, int max);
     int getIntVar1 ();
@@ -173,7 +175,7 @@ protected slots:
     void updateTicks(int xT = 11, int yT = 9);
     void resetChart(bool create = false);
 
-    void showInt1 (bool flag, QString label = QString(""), QString labelinfo = QString(""));
+    void showInt1 (bool flag, QString label = QString("Int 1"), QString labelinfo = QString("No info"));
     void showJoins (int num);
     void showBins (bool flag);
 
@@ -194,7 +196,7 @@ protected slots:
     void fillValues (const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints);
     double posfun(const double &x, const double eps, double& pen);
 
-private:
+protected:
     Ui::DialogEquationView *ui;
 };
 

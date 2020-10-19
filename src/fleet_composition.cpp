@@ -50,14 +50,14 @@ fleet_comp_length::fleet_comp_length(QObject *parent)
 
 void fleet_comp_length::setNumberBins(int num, int gen)
 {
-    int obsCount;
+//    int obsCount;
     QStringList header(obsHeader);
     for (int i = 0; i < num; i++)
         header.append(QString("F%1").arg(i+1));
     if (gen == 2)
     for (int i = 0; i < num; i++)
         header.append(QString("M%1").arg(i+1));
-    obsCount = 5 + (gen * num);
+//    obsCount = 5 + (gen * num);
     obsModel->setColumnCount(header.count());
     obsModel->setHeader(header);
 }
@@ -96,7 +96,7 @@ fleet_comp_age::~fleet_comp_age()
 
 void fleet_comp_age::setNumberBins(int num, int gen)
 {
-    int obsCount, saaCount;
+//    int obsCount, saaCount;
     QStringList header(obsHeader);
     QStringList saaHeader;
     for (int i = 0; i < num; i++)
@@ -104,7 +104,7 @@ void fleet_comp_age::setNumberBins(int num, int gen)
     if (gen == 2)
     for (int i = 0; i < num; i++)
         header.append(QString("M%1").arg(i+1));
-    obsCount = header.count() + (gen * num);
+//    obsCount = header.count() + (gen * num);
     obsModel->setColumnCount(header.count());
     obsModel->setHeader(header);
 
@@ -119,7 +119,7 @@ void fleet_comp_age::setNumberBins(int num, int gen)
     if (gen == 2)
     for (int i = 0; i < num; i++)
         saaHeader.append(QString("MS%1").arg(i+1));
-    saaCount = 6 + (gen * 2 * num);
+//    saaCount = 6 + (gen * 2 * num);
     saaModel->setColumnCount(saaHeader.count());
     saaModel->setHeader(saaHeader);
 }

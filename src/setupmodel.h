@@ -177,7 +177,7 @@ class timeVaryParameterModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit timeVaryParameterModel(ss_model *parent = nullptr);
+    explicit timeVaryParameterModel(QObject *parent = nullptr);
     ~timeVaryParameterModel();
 
 signals:

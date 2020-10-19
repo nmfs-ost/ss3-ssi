@@ -3,12 +3,19 @@
 
 #include "dialogequationview.h"
 #include "model.h"
+#include "selectivity.h"
+
+#include <QObject>
+#include <QStringList>
+#include <QWidget>
 
 
 class DialogSelexEquationView : public DialogEquationView
 {
+    Q_OBJECT
+
 public:
-    DialogSelexEquationView(QWidget *parent = nullptr, SelexType typ = Size);
+    explicit DialogSelexEquationView(QWidget *parent, SelexType typ = Size);
     ~DialogSelexEquationView();
 
     Fleet *getFleet() const;
@@ -28,7 +35,7 @@ public slots:
     void changedSelex (QStringList &ql);
     void changeSelex ();
 
-    void setXvals(const QList<float> &vals);
+    void setXvals(const QList<double> &vals);
     void setXvalStrings(const QStringList &vals);
     void setBinVals(float start, float end, int step);
     void setBinVals(const QList<float> &vals);
@@ -54,7 +61,7 @@ private:
     int special;
     int male;
     int flag;
-    QList<float> bins;
+    QList<double> bins;
 
 private slots:
     void constant (double val = 1.0);
@@ -102,7 +109,7 @@ private slots:
     void twoSexEachAge ();
     void updateTwoSexEachAge ();
 
-    bool checkScaleSliders(int first, int secnd, QList<float> bins, double &binLo, double &binHi);
+    bool checkScaleSliders(int first, int secnd, QList<double> bins, double &binLo, double &binHi);
     double aveYvalue(const QList<QPointF> &pointlist, int lowBin = 1, int highBin = 100);
 };
 

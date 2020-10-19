@@ -1,7 +1,7 @@
 #include "model.h"
 #include "tablemodel.h"
 #include "tableview.h"
-#include "ssComposition.h"
+#include "sscomposition.h"
 #include "mainwindow.h"
 
 #include <QMessageBox>
@@ -388,7 +388,7 @@ float ss_model::getMonthBySeasonFleet(int seas, int fleet)
     }
     seasn = getSeason(seas);
     flt = getFleet(fleet);
-    month += ((float)seasn->getNumMonths() * flt->getSeasTiming()) + 1;
+    month += (seasn->getNumMonths() * flt->getSeasTiming()) + 1;
     return month;
 }
 
@@ -757,8 +757,7 @@ void ss_model::setNumBlockPatterns(int num)
 
 void ss_model::setBlockPattern(int index, BlockPattern *bp)
 {
-    blockPatterns.takeAt(index);
-    blockPatterns.insert(index, bp);
+    blockPatterns[index] = bp;
 }
 
 void ss_model::setTagLoss(int flag)
@@ -1052,13 +1051,13 @@ void ss_model::setCustomSelParmDevAdjust(int value)
 
 QString ss_model::getDataFileName()
 {
-    MainWindow *mw = (MainWindow *)parent();
+    MainWindow *mw = static_cast<MainWindow *>(parent());
     return mw->getDataFile();
 }
 
 QString ss_model::getControlFileName()
 {
-    MainWindow *mw = (MainWindow *)parent();
+    MainWindow *mw = static_cast<MainWindow *>(parent());
     return mw->getControlFile();
 }
 

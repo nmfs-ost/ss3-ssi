@@ -18,7 +18,7 @@ class growthPattern : public QObject
     Q_OBJECT
 
 public:
-    growthPattern(ss_model *parent);
+    growthPattern(QObject *parent);
     growthPattern(const growthPattern &rhs);
     ~growthPattern();
 
@@ -29,7 +29,7 @@ public slots:
     void setNum_morphs(int value);
 
     growth_morph * getMorph(int index) const;
-    void setMorph(int index, growth_morph *&value);
+    void setMorph(int index, growth_morph *value);
 
     void setNatMMaleAgeList (QStringList data) {natMAges->setRowData(1, data);}
     QStringList getNatMMaleAgeList () {return natMAges->getRowData(1);}
@@ -191,7 +191,7 @@ public slots:
 
 
 private:
-    ss_model *parnt;
+    ss_model *ssModel;
 
     int num_morphs;
     QList<growth_morph *> morphs;

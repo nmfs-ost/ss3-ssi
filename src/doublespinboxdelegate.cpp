@@ -13,6 +13,7 @@ QWidget *doubleSpinBoxDelegate::createEditor(QWidget *parent,
     const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QDoubleSpinBox *editor = new QDoubleSpinBox(parent);
+    Q_UNUSED(option); Q_UNUSED(index);
     editor->setRange(minimum, maximum);
 
     return editor;
@@ -32,7 +33,7 @@ void doubleSpinBoxDelegate::setModelData(QWidget *editor,
 {
     QDoubleSpinBox *spinBox = static_cast<QDoubleSpinBox*>(editor);
     spinBox->interpretText();
-    int value = spinBox->value();
+    double value = spinBox->value();
 
     model->setData(index, value, Qt::EditRole);
 }
@@ -40,6 +41,7 @@ void doubleSpinBoxDelegate::setModelData(QWidget *editor,
 void doubleSpinBoxDelegate::updateEditorGeometry(QWidget *editor,
     const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 

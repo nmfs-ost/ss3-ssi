@@ -27,8 +27,8 @@ class selectivity : public QObject
 {
     Q_OBJECT
 public:
-    explicit selectivity (ss_model *model, int method = 0);
-    selectivity(ss_model *model, SelexType sType, int method = 0);
+    explicit selectivity (QObject *model, int method = 0);
+    selectivity(QObject *model, SelexType sType, int method = 0);
     ~selectivity();
 
     int getNumGenders() const;

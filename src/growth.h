@@ -20,7 +20,7 @@ class ss_growth : public QObject
     Q_OBJECT
 
 public:
-    ss_growth(ss_model *parent = 0);
+    ss_growth(QObject *parent = 0);
     ~ss_growth();
 
     void reset();
@@ -44,7 +44,7 @@ public slots:
 
     int getNum_patterns() const;
     void setNum_patterns(int value);
-    growthPattern *getPattern(int index) {return patterns[index];}
+    growthPattern *getPattern(int index);
     int getParam_dev_phase() const;
     void setParam_dev_phase(int value);
     int getAdjustment_method() const;
@@ -162,7 +162,7 @@ public slots:
     void autogenerateTimeVaryParams ();
 
 private:
-    ss_model *parnt;
+    ss_model *ssModel;
 
     float growthBinMin;
     float growthBinMax;

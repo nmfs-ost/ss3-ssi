@@ -12,6 +12,7 @@ QWidget *spinBoxDelegate::createEditor(QWidget *parent,
     const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSpinBox *editor = new QSpinBox(parent);
+    Q_UNUSED(option); Q_UNUSED(index);
     editor->setMinimum(minimum);
     editor->setMaximum(maximum);
 
@@ -40,6 +41,7 @@ void spinBoxDelegate::setModelData(QWidget *editor,
 void spinBoxDelegate::updateEditorGeometry(QWidget *editor,
     const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 

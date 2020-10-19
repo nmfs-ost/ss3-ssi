@@ -1,12 +1,13 @@
 #include "ss_recruitment.h"
+#include "model.h"
 
-spawn_recruit::spawn_recruit(ss_model *parent)
-    : QObject ((QObject*)parent)
+spawn_recruit::spawn_recruit(QObject *parent)
+    : QObject (parent)
 {
-     parnt = parent;
+    ssModel = static_cast<ss_model *>(parent);
 
-    full_parameters = new longParameterModel();
-    varParameters = new timeVaryParameterModel (parnt);
+    full_parameters = new longParameterModel(parent);
+    varParameters = new timeVaryParameterModel (parent);
 
     full_parameters->setNumParams(10);
 /*    parmsUsed << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
@@ -18,29 +19,29 @@ spawn_recruit::spawn_recruit(ss_model *parent)
     connect (full_parameters, SIGNAL(paramChanged(int,QStringList)),
              varParameters, SLOT(changeVarParamData(int,QStringList)));
 
-    assignments = new tablemodel();
+    assignments = new tablemodel(parent);
     assignments->setColumnCount(4);
     assignments->setRowCount(0);
     header << "GP" << "Month" << "Area" << "Settle Age";
     assignments->setHeader(header);
-    assignTimings = new tablemodel();
+    assignTimings = new tablemodel(parent);
     assignTimings->setRowCount(1);
     assignTimings->setColumnCount(1);
     assignTimings->setRowHeader(0, QString("Settle Timings"));
 
-    interactParams = new longParameterModel();
-    interVarParams = new timeVaryParameterModel();
-    distParams = new longParameterModel();
+    interactParams = new longParameterModel(parent);
+    interVarParams = new timeVaryParameterModel(parent);
+    distParams = new longParameterModel(parent);
     distParams->setNumParams(2);
-    distVarParams = new timeVaryParameterModel();
+    distVarParams = new timeVaryParameterModel(parent);
     distVarParams->setNumParams(2);
 
-    cycleParams = new longParameterModel();
-    cycleVarParams = new timeVaryParameterModel();
+    cycleParams = new longParameterModel(parent);
+    cycleVarParams = new timeVaryParameterModel(parent);
 
     header.clear();
     header << "Year" << "Input_value";
-    recruitDevs = new tablemodel();
+    recruitDevs = new tablemodel(parent);
     recruitDevs->setHeader(header);
 
     reset();

@@ -598,43 +598,7 @@ void shortParamMultModel::setParamHeaders(QStringList hdr)
     }
 }
 
-// change background data, then update gui table
-//
-/*void shortParamMultModel::checkParamData()
-{
-    QStringList param;
-    int rows = paramData->rowCount();
-    int setupcols = rows/mult;
 
-//    paramData->setRowCount(rows);
-    for (int i = 0; i < rows; i++)
-    {
-        param = paramData->getRowData(i);
-        for (int j = 0; j < param.count(); j++)
-        {
-            if (QString(param.at(j)).isEmpty())
-            {
-                param.removeAt(j);
-                param.insert(j, QString("0"));
-            }
-            paramData->setRowData(i, param);
-        }
-    }
-    updateParams();
-}*/
-
-// Kludge for output routine
-// output whole parameter as one string
-//
-/*QString shortParamMultModel::getParamText (int row)
-{
-    QString txt;
-    QStringList slist (paramTable->getRowData(row));
-    for (int i = 0; i < slist.count(); i++)
-        txt.append(QString(" %1").arg(slist.at(i)));
-
-    return txt;
-}*/
 
 // the background data has changed
 // copy the data to the gui table
@@ -770,9 +734,9 @@ void longParameterModel::updateParamData(QModelIndex tl, QModelIndex br, QVector
 // Create the setup model that includes parameters
 // and associated time-varying parameters
 //
-timeVaryParameterModel::timeVaryParameterModel(ss_model *parent) : QObject((QObject*)parent)
+timeVaryParameterModel::timeVaryParameterModel(QObject *parent) : QObject(parent)
 {
-    model_data = parent;
+    model_data = static_cast<ss_model *>(parent);
     header << "Lo" << "Hi" << "Init" << "Prior" << "P_sd" << "P_type" << "Phase";
     defaultParam << "0" << "0" << "0" << "0" << "0" << "0" << "0";
     varyParamTable = new tablemodel(this);
@@ -921,48 +885,49 @@ void timeVaryParameterModel::generateVarParamData(int parmNum, QStringList data)
 void timeVaryParameterModel::changeVarParamData(int parm, QStringList data)
 {
     bool varsChanged = false;
-    int item = QString(data.at(0)).toInt();
-    bool autogen = (autoGenerate == 0) || (autoGenerate == 2 && item == -12345);
+    if (data.count() > parm) {
+        int item = QString(data.at(0)).toInt();
+        bool autogen = (autoGenerate == 0) || (autoGenerate == 2 && item == -12345);
 
-    if (getNumParams() <= parm)
-        setNumParams(parm + 1);
+        if (getNumParams() <= parm)
+            setNumParams(parm + 1);
 
-    item = QString(data.at(7)).toInt();
-    if (envVal[parm] != item)
-    {
-        envVal[parm] = item;
-        if (autogen)
-            autoGenEnvVarParam(parm, item);
-        varsChanged = true;
+        item = QString(data.at(7)).toInt();
+        if (envVal[parm] != item)
+        {
+            envVal[parm] = item;
+            if (autogen)
+                autoGenEnvVarParam(parm, item);
+            varsChanged = true;
+        }
+        item = QString(data.at(8)).toInt();
+        if (devVal[parm] != item)
+        {
+            devVal[parm] = item;
+            if (autogen)
+                autoGenDevVarParam(parm, item);
+            varsChanged = true;
+        }
+        item = QString(data.at(12)).toInt();
+        if (blkVal[parm] != item)
+        {
+            blkVal[parm] = item;
+            if (autogen)
+                autoGenBlkVarParam(parm, item, QString(data.at(13)).toInt(), data);
+            varsChanged = true;
+        }
+        item = QString(data.at(13)).toInt();
+        if (blkFxn[parm] != item)
+        {
+            blkFxn[parm] = item;
+            if (autogen)
+                autoGenBlkVarParam(parm, QString(data.at(12)).toInt(), item, data);
+            varsChanged = true;
+        }
+        tableUsed[parm] = (envVal[parm] != 0) ||
+                (devVal[parm] != 0) ||
+                (blkVal[parm] != 0);
     }
-    item = QString(data.at(8)).toInt();
-    if (devVal[parm] != item)
-    {
-        devVal[parm] = item;
-        if (autogen)
-            autoGenDevVarParam(parm, item);
-        varsChanged = true;
-    }
-    item = QString(data.at(12)).toInt();
-    if (blkVal[parm] != item)
-    {
-        blkVal[parm] = item;
-        if (autogen)
-            autoGenBlkVarParam(parm, item, QString(data.at(13)).toInt(), data);
-        varsChanged = true;
-    }
-    item = QString(data.at(13)).toInt();
-    if (blkFxn[parm] != item)
-    {
-        blkFxn[parm] = item;
-        if (autogen)
-            autoGenBlkVarParam(parm, QString(data.at(12)).toInt(), item, data);
-        varsChanged = true;
-    }
-    tableUsed[parm] = (envVal[parm] != 0) ||
-            (devVal[parm] != 0) ||
-            (blkVal[parm] != 0);
-
     if (varsChanged)
     {
 //        item = QString(data.at(0)).toInt();

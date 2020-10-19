@@ -13,7 +13,7 @@ class seasonalEffectsModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit seasonalEffectsModel(QObject *parent = 0);
+    explicit seasonalEffectsModel(QObject *parent = nullptr);
     ~seasonalEffectsModel();
 
 signals:

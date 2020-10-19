@@ -14,7 +14,6 @@
 #include <QLineEdit>
 
 
-
 #include "fleet.h"
 #include "population.h"
 #include "ss_observation.h"
@@ -27,9 +26,8 @@
 #include "tablemodel.h"
 #include "tableview.h"
 #include "spinboxdelegate.h"
-#include "ssComposition.h"
+#include "sscomposition.h"
 
-class Fleet;
 
 /** a class to keep data about seasons */
 class Season : public QObject

@@ -14,7 +14,8 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     titleFont.setPointSize(16);
     titleFont.setBold(true);
 
-    current_fleet = nullptr;
+    model_data = m_data;
+    current_fleet = model_data->getFleet(0);
     ui->comboBox_fleet_name->setFont(titleFont);
 
     ui->label_selex_age_discard->setVisible(false);
@@ -28,13 +29,13 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
 
     abundview = new tableview();
     abundview->setParent(this);
-    abundedit = new abundancedelegate(this);
+//    abundedit = new abundancedelegate(this);
 //    abundview->setItemDelegate(abundedit);
     ui->verticalLayout_abund->addWidget(abundview);
 
     discardview = new tableview();
     discardview->setParent(this);
-    discardedit = new abundancedelegate(this);
+//    discardedit = new abundancedelegate(this);
 //    discardview->setItemDelegate(discardedit);
     ui->verticalLayout_discard->addWidget(discardview);
 
@@ -431,10 +432,10 @@ void fleet_widget::refresh()
     catchedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
     catchedit->setNumSeasons(model_data->get_num_seasons());
     catchedit->setMaxCatch(1999999.0);
-    abundedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
-    abundedit->setValueRange(0, 1999999.0);
-    discardedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
-    discardedit->setValueRange(0, 1999999.0);
+//    abundedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
+//    abundedit->setValueRange(0, 1999999.0);
+//    discardedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
+//    discardedit->setValueRange(0, 1999999.0);
 
     totalFleets = model_data->get_num_fleets();
     ui->spinBox_selex_size_discard->setMinimum(-totalFleets);

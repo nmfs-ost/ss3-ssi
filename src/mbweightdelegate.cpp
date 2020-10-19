@@ -14,6 +14,7 @@ QWidget *mbweightdelegate::createEditor(QWidget *parent,
            const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QWidget *editor;
+    Q_UNUSED(option);
     switch (index.column())
     {
     case 0:
@@ -116,6 +117,7 @@ void mbweightdelegate::setModelData(QWidget *editor,
 void mbweightdelegate::updateEditorGeometry(QWidget *editor,
          const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 

@@ -9,6 +9,7 @@ QWidget *lineEditDelegate::createEditor(QWidget *parent,
            const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QLineEdit *editor = new QLineEdit(parent);
+    Q_UNUSED(option); Q_UNUSED(index);
     return editor;
 }
 
@@ -33,6 +34,7 @@ void lineEditDelegate::setModelData(QWidget *editor,
 void lineEditDelegate::updateEditorGeometry(QWidget *editor,
          const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 

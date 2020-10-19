@@ -1,41 +1,42 @@
 #include "growth.h"
 #include "parametermodel.h"
 #include "setupmodel.h"
+#include "model.h"
 
 #include <QMessageBox>
 
-ss_growth::ss_growth(ss_model *parent)
-    : QObject((QObject *)parent)
+ss_growth::ss_growth(QObject *parent)
+    : QObject(parent)
 {
-    parnt = parent;
+    ssModel = static_cast<ss_model *>(parent);
     num_patterns = 0;
     num_params = 0;
 
-    growthBins = new tablemodel((QObject *)parnt);
+    growthBins = new tablemodel(parent);
     growthBins->setRowCount(1);
 
-    morphdisttable = new tablemodel((QObject *)parnt);
+    morphdisttable = new tablemodel(parent);
     morphdisttable->setRowCount(1);
 
     natMortNumBreakPoints = 1;
-    natMortBreakPoints = new tablemodel((QObject *)parnt);
+    natMortBreakPoints = new tablemodel(parent);
     natMortBreakPoints->setRowCount(1);
     natMortBreakPoints->setRowHeader(0, QString("Age(real) at M Breakpoints"));
-    natMortAges = new tablemodel((QObject *)parnt);
+    natMortAges = new tablemodel(parent);
     natMortAges->setRowCount(0);
     natMortAges->setColumnCount(1);
     natMort_lorenzen_ref_age = 0;
 
-    matAgeValues = new tablemodel((QObject *)parnt);
+    matAgeValues = new tablemodel(parent);
     matAgeValues->setRowCount(1);
 
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new longParameterModel((QObject *)parnt);
+    cohortParam = new longParameterModel(parent);
     cohortParam->setNumParams(1);
     cohortParam->setParamHeader(0, QString("CohortGrowDev"));
-    cohortVarParam = new timeVaryParameterModel(parnt);
+    cohortVarParam = new timeVaryParameterModel(parent);
     cohortVarParam->setTotalNumVarTables(1);
     cohortVarParam->setTableTitle(0, QString("CohortGrowDev"));
     connect (cohortParam, SIGNAL(paramChanged(int,QStringList)),
@@ -619,12 +620,12 @@ void ss_growth::setNum_patterns(int value)
     int i;
     if (patterns.isEmpty())
     {
-        patterns.append(new growthPattern(parnt));
+        patterns.append(new growthPattern(ssModel));
     }
     i = patterns.count();
     for (; i < value; i++)
     {
-        growthPattern *new_gp = new growthPattern(parnt);
+        growthPattern *new_gp = new growthPattern(ssModel);
         patterns.append(new_gp);
     }
     while (value < patterns.count())
@@ -633,6 +634,15 @@ void ss_growth::setNum_patterns(int value)
         delete old;
     }
     num_patterns = patterns.count();
+}
+
+growthPattern *ss_growth::getPattern(int index)
+{
+    growthPattern *gp = nullptr;
+    if (index < 0) index = 0;
+    if (patterns.count() > index)
+        gp = patterns[index];
+    return gp;
 }
 /*
 int ss_growth::getNumDevParams()

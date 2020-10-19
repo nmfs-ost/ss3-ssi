@@ -17,6 +17,8 @@ using namespace std;
 #include "ui_file_widget.h"
 #include "dialog_view.h"
 
+//#define DEBUG_FILES
+
 file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::file_widget)
@@ -44,11 +46,11 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     chooseRepDetail = new DialogChoseReport(this);
     connect (chooseRepDetail, SIGNAL(detailChanged(int)), SLOT(changeReportDetail(int)));
     chooseRepDetail->hide();
-    connect (starterFile, SIGNAL(end_reading_file()), SLOT(reset()));
-    connect (forecastFile, SIGNAL(end_reading_file()), SLOT(reset()));
-    connect (dataFile, SIGNAL(end_reading_file()), SLOT(reset()));
-    connect (controlFile, SIGNAL(end_reading_file()), SLOT(reset()));
-    connect (parameterFile, SIGNAL(end_reading_file()), SLOT(reset()));
+//    connect (starterFile, SIGNAL(end_reading_file()), SLOT(reset()));
+//    connect (forecastFile, SIGNAL(end_reading_file()), SLOT(reset()));
+//    connect (dataFile, SIGNAL(end_reading_file()), SLOT(reset()));
+//    connect (controlFile, SIGNAL(end_reading_file()), SLOT(reset()));
+//    connect (parameterFile, SIGNAL(end_reading_file()), SLOT(reset()));
 
     model_info = mod;
 
@@ -96,9 +98,6 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     setReadProFile(false);
 
     show_input_files();
-#ifdef DEBUG
-    error = new QFile(this);
-#endif
     if (current_dir_name.isEmpty())
         current_dir = QDir (qApp->applicationDirPath());
     current_dir_name = current_dir.absolutePath();
@@ -119,16 +118,12 @@ void file_widget::reset()
     ui->comboBox_cumreport->setCurrentIndex(1);
     setReadProFile(false);
     ui->spinBox_datafiles->setValue(0);
-    viewer->viewFile(QString(""));
+//    viewer->viewFile(QString(""));
     setReadWtAtAge(model_info->getReadWtAtAge());
 }
 
 file_widget::~file_widget()
 {
-#ifdef DEBUG
-    error->close();
-    delete error;
-#endif
     delete viewer;
     delete starterFile;
     delete dataFile;
@@ -599,6 +594,9 @@ bool file_widget::read_files()
 bool file_widget::read_files(ss_model *model_inf)
 {
     bool okay = true;
+#ifdef DEBUG
+    QMessageBox::information(this, "Information - program flow", "Begin reading files.");
+#endif
     if (model_info == nullptr)
         model_info = model_inf;
     if (model_info == nullptr)
@@ -607,6 +605,9 @@ bool file_widget::read_files(ss_model *model_inf)
         okay = read_starter_file();
     if (okay)
     {
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - program flow", "Starter file read okay.");
+#endif
         setDatafileVersion (datafile_version);
         if (datafile_version < 3.30)
         {
@@ -615,12 +616,23 @@ bool file_widget::read_files(ss_model *model_inf)
         else if (datafile_version < 3.40)
         {
             okay = read33_dataFile(dataFile, model_info);
-            if (okay)
+            if (okay) {
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - program flow", "Data file read okay.");
+#endif
                 okay = read33_forecastFile(forecastFile, model_info);
-            if (okay)
+            }
+            if (okay) {
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - program flow", "Forecast file read okay.");
+#endif
                 okay = read33_controlFile(controlFile, model_info);
+            }
             if (okay)
             {
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - program flow", "Control file read okay.");
+#endif
                 if (ui->checkBox_par_file->isChecked())
                 {
                     read33_parameterFile(parameterFile, model_info);
@@ -683,6 +695,9 @@ bool file_widget::read_starter_file (QString filename)
     float temp_float;
     int temp_int = 0;
 
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - Reading Starter", "Start.");
+#endif
     if (filename.isEmpty())
     {
         filename = ui->label_starter_file->text();
@@ -716,6 +731,9 @@ bool file_widget::read_starter_file (QString filename)
         ui->checkBox_par_file->setChecked(temp_int != 0);
         }
         if (starterFile->getOkay()) {
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - Read Starter", "File names read.");
+#endif
         temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
         }
@@ -746,6 +764,9 @@ bool file_widget::read_starter_file (QString filename)
         ui->comboBox_cumreport->setCurrentIndex(temp_int);
         }
         if (starterFile->getOkay()) {
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - Read Starter", "Reports set.");
+#endif
         temp_int = starterFile->getIntValue(QString("calculate all prior likelihoods"), 0, 1, 1);
         model_info->set_prior_likelihood (temp_int);
         }

@@ -142,31 +142,7 @@ void seasonalEffectsModel::setNumSeasons(int seas)
     }
 }
 
-// Data has been changed programmatically
-// Make sure background data is correct
-// then update gui
-//
-/*void seasonalEffectsModel::changeParamData()
-{
-    QStringList param;
-    int rows = params->getNumParams();
-    int setupcols = setup->getNumSetupVals();
 
-    rows = setupcols * mult;
-    paramData->setParamCount(rows);
-    for (int i = 0; i < rows; i++)
-    {
-        param = paramData->getParameter(i);
-        for (int j = 0; j < param.count(); j++)
-            if (QString(param.at(j)).isEmpty())
-            {
-                param.removeAt(j);
-                param.insert(j, QString("0"));
-            }
-    }
-//    setParamHeaders();
-//    updateParams();
-}*/
 
 bool seasonalEffectsModel::getFemwtlen1() const
 {

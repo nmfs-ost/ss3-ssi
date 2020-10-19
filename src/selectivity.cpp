@@ -1,11 +1,12 @@
 #include "selectivity.h"
 #include "selex_equation.h"
 #include "fleet.h"
+#include "model.h"
 
-selectivity::selectivity(ss_model *model, int method)
-    : QObject ((QObject*)model)
+selectivity::selectivity(QObject *model, int method)
+    : QObject (model)
 {
-    data_model = model;
+    data_model = static_cast<ss_model *>(model);
     setup = new setupModel();
     QStringList hdr;
     hdr << tr("Pattern") << tr("Discard") << tr("Male") << tr("Special");
@@ -26,10 +27,10 @@ selectivity::selectivity(ss_model *model, int method)
     setMethod(method);
 }
 
-selectivity::selectivity(ss_model *model, SelexType stype, int method)
-    : QObject ((QObject *)model)
+selectivity::selectivity(QObject *model, SelexType stype, int method)
+    : QObject (model)
 {
-    data_model = model;
+    data_model = static_cast<ss_model *>(model);
     type = stype;
     setup = new setupModel();
     QStringList hdr;

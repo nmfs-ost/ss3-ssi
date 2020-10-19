@@ -8,10 +8,9 @@
 
 #include <QWidget>
 
-//#include "area.h"
 #include "parametermodel.h"
 #include "ss_observation.h"
-#include "ssComposition.h"
+#include "sscomposition.h"
 #include "growth.h"
 #include "ss_recruitment.h"
 #include "ss_mortality.h"
@@ -23,7 +22,7 @@ class population : public QObject
 {
     Q_OBJECT
 public:
-    population(ss_model *parent = 0);
+    population(QObject *parent = nullptr);
     ~population ();
 
     void reset();
@@ -97,6 +96,7 @@ public slots:
 signals:
 
 private:
+//    ss_model ssModel;
     spawn_recruit *pop_recruitment;
     ss_movement *pop_movement;
     ss_fecundity *pop_fecundity;

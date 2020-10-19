@@ -252,8 +252,7 @@ void ss_forecast::set_max_catch_fleet(int flt, float ctch)
     if (maxCatchFleet->columnCount() < flt+1)
         set_num_fleets(flt+1);
     data = maxCatchFleet->getRowData(0);
-    data.takeAt(flt);
-    data.insert(flt, QString::number(ctch));
+    data[flt] = QString::number(ctch);
     maxCatchFleet->setRowData(0, data);
 }
 
@@ -285,8 +284,9 @@ void ss_forecast::set_max_catch_area(int ar, float ctch)
     if (maxCatchArea->columnCount() < ar+1)
         set_num_areas(ar+1);
     data = maxCatchArea->getRowData(0);
-    data.takeAt(ar);
-    data.insert(ar, QString::number(ctch));
+    data[ar] = QString::number(ctch);
+//    data.takeAt(ar);
+//    data.insert(ar, QString::number(ctch));
     maxCatchArea->setRowData(0, data);
 }
 
@@ -310,8 +310,9 @@ void ss_forecast::setAllocGrp (int flt, int grp)
     if (grp > i_num_alloc_groups)
         set_num_alloc_groups(grp);
     QStringList data = getAllocGrpList();
-    data.takeAt(flt);
-    data.insert(flt, QString::number(grp));
+    data[flt] = QString::number(grp);
+//    data.takeAt(flt);
+//    data.insert(flt, QString::number(grp));
     setAllocGrpList(data);
 }
 
@@ -329,6 +330,7 @@ void ss_forecast::changeAllocGrps (QModelIndex tl, QModelIndex br)
 {
     QStringList data = getAllocGrpList();
     QString group;
+    Q_UNUSED(tl); Q_UNUSED(br);
     int col, cols = allocGrpList->columnCount();
 
     int grp = 0, grps = 0;
@@ -337,8 +339,8 @@ void ss_forecast::changeAllocGrps (QModelIndex tl, QModelIndex br)
         group = data.at(col);
         if (group.isEmpty())
         {
-            data.takeAt(col);
-            data.insert(col, QString("0"));
+            data[col] = QString("0");
+//            data.insert(col, QString("0"));
             grp = 0;
         }
         else
@@ -395,8 +397,7 @@ void ss_forecast::set_seas_fleet_rel_f(int seas, int flt, float f)
         add_seas_fleet_rel_f(seas, flt, 0.0);
 
     data = seasFleetRelF_table->getRowData(seas);
-    data.takeAt(flt);
-    data.insert(flt, QString::number(f));
+    data[flt] = QString::number(f);
     seasFleetRelF_table->setRowData(seas, data);
 /*    {
         f_seas_fleet_rel_f_list[seas][flt] = f;

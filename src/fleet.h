@@ -23,7 +23,7 @@ class Fleet : public QObject
 {
     Q_OBJECT
 public:
-    explicit Fleet(ss_model *parent = 0);
+    explicit Fleet(ss_model *parent = nullptr);
     ~Fleet();
 
     void reset();
@@ -49,13 +49,13 @@ public slots:
     bool getActive() const;
     bool isActive() const {return getActive();}
     void setActive(bool value);
-    void setTypeInt (int type) {f_type = (FleetType)type;}
-    int getTypeInt () {return (int)f_type;}
+    void setTypeInt (int type) {f_type = static_cast<FleetType>(type);}
+    int getTypeInt () {return f_type;}
     void setType(FleetType ftype) {f_type = ftype;}
     FleetType getType() {return f_type;}
     void setArea(int farea) {i_area = farea;}
     int getArea() {return i_area;}
-    void setSeasTiming(double ftiming) {f_timing = (float)ftiming;}
+    void setSeasTiming(double ftiming) {f_timing = ftiming;}
     float getSeasTiming() {return f_timing;}
     // Bycatch
     int getBycatchDead() const;
@@ -372,6 +372,7 @@ protected:
     int i_catch_mult;
     float f_max_catch;
     longParameterModel *catchMultiplierParam;
+    QStringList catchMultiplier;
 
     tablemodel *retainCatch;
     QStringList catchHeader;

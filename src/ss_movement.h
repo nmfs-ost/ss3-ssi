@@ -13,7 +13,7 @@
 class ss_movement
 {
 public:
-    ss_movement(ss_model *parent = 0, int n_fleets = 1);
+    ss_movement(QObject *parent = nullptr, int n_fleets = 1);
     ~ss_movement ();
 
     void reset();
@@ -59,7 +59,7 @@ public:
     void setFirstAge(float value);
 
 private:
-    ss_model *parnt;
+    ss_model *ssModel;
     int method;
     int numAreas;
     float firstAge;

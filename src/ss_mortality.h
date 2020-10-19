@@ -14,7 +14,7 @@
 class ss_mortality
 {
 public:
-    ss_mortality(ss_model *parent = 0, int n_fisheries = 1, int n_surveys = 0);
+    ss_mortality(QObject *parent = nullptr, int n_fisheries = 1, int n_surveys = 0);
 
     void reset();
     void setYears (int f_year, int num); // num may be number of years or last year
@@ -61,7 +61,7 @@ public:
     tablemodel *getInitialParams () {return initialParams->getParameters();}
 
 private:
-    ss_model *parnt;
+    ss_model *ssModel;
     int firstYear;
     int numYears;
     int numFisheries;

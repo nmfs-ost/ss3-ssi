@@ -9,6 +9,7 @@ QWidget *lambdaDelegate::createEditor(QWidget *parent,
            const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QWidget *editor;
+    Q_UNUSED(option);
     switch (index.column())
     {
     case 0:
@@ -92,6 +93,7 @@ void lambdaDelegate::setModelData(QWidget *editor,
 void lambdaDelegate::updateEditorGeometry(QWidget *editor,
          const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 

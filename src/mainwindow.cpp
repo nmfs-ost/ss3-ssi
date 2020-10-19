@@ -36,12 +36,31 @@ MainWindow::MainWindow(QWidget *parent) :
 
     app_dir = qApp->applicationDirPath();
     mainScrn = 0;
-    readSettings();
+    // set up the default model
+    modelData = new ss_model(this);
+//    modelData->setVisible(false);
+#ifdef DEBUG
+    QMessageBox::information(this, "Information - program flow", "Model data set up finished.");
+#endif
+
+    // run dialog
     dRun = new Dialog_run(this);
     dRun->setExe(ss_exe);
     dRun->setDir(current_dir);
     dRun->setRExe(R_exe);
     dRun->hide();
+    // furnish the ui with the default model
+    current_dir = QString(QString("%1/default/").arg(qApp->applicationDirPath()));
+    files = new file_widget (modelData, current_dir, this);
+    data = new data_widget(modelData, this);
+    forecast = new forecast_widget(modelData, this);
+    fleets = new fleet_widget(modelData, this);
+    population = new population_widget(modelData, this);
+#ifdef DEBUG
+    QMessageBox::information(this, "Information - program flow", "Widget set up finished.");
+#endif
+
+    readSettings();
 
     // set up information dock widget
 
@@ -72,28 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->mainToolBar, SIGNAL(visibilityChanged(bool)), ui->actionToolbar, SLOT(setChecked(bool)));
 
     connect (dRun, SIGNAL(runCompleted()), SLOT(runComplete()));
-
-#ifdef DEBUG
-    QMessageBox::information(this, "Information - program flow", "Help window set up finished.");
-#endif
-
-    // set up the default model
-    modelData = new ss_model(this);
-//    modelData->setVisible(false);
-#ifdef DEBUG
-    QMessageBox::information(this, "Information - program flow", "Model data set up finished.");
-#endif
-
-    // furnish the ui with the default model
-    current_dir = QString(QString("%1/default/").arg(qApp->applicationDirPath()));
-    files = new file_widget (modelData, current_dir, this);
-    data = new data_widget(modelData, this);
-    forecast = new forecast_widget(modelData, this);
-    fleets = new fleet_widget(modelData, this);
-    population = new population_widget(modelData, this);
-#ifdef DEBUG
-    QMessageBox::information(this, "Information - program flow", "Widget set up finished.");
-#endif
 
     connect (files, SIGNAL(read_all_files()), SLOT(readFiles()));
     connect (files, SIGNAL(save_data_file()), SLOT(saveDataFile()));
@@ -519,6 +516,9 @@ void MainWindow::readFiles()
     fleets->set_current_fleet(0);
     population->setSRequationDialogVisible(false);
     modelData->reset();
+#ifdef DEBUG
+    QMessageBox::information(this, "Information - program flow", "Ready to read files.");
+#endif
     worked = files->read_files(modelData);
     if (worked)
     {
@@ -1108,9 +1108,6 @@ void MainWindow::locateSSConverter()
     // locate ss_trans.exe
     locateExecutable(ss_trans_exe, "SS Converter", "ss_tr");
     changeExecutable(QString("trans_exe"), ss_trans_exe);
-/*    QString filename (findFile ("SS Converter", "applications (*.exe)"));
-    if (!filename.isEmpty())
-        changeExecutable(QString("trans_exe"), filename);*/
 }
 
 void MainWindow::changeExecutable(QString key, QString filename) {

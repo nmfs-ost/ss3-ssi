@@ -87,10 +87,10 @@ void chartDialog::readData()
     float xvalue = 0.0;
     float yvalue = 0.0;
     bool okay = false;
-    int areaNum = 0;
-    float year;
-    int seas = 0;
-    int index = 0;
+//    int areaNum = 0;
+//    float year;
+//    int seas = 0;
+//    int index = 0;
 
     QFile report(QString("ss_summary.sso"));
     if (report.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -305,13 +305,13 @@ void chartDialog::removeCharts()
     {
         for (int i = 0; i < bmassChartViews.count(); i++)
         {
-            ui->verticalLayout_left->removeWidget((QWidget*)bmassChartViews.at(i));
+            ui->verticalLayout_left->removeWidget(static_cast<QWidget*>(bmassChartViews.at(i)));
             delete bmassChartViews.at(i);
         }
         bmassChartViews.clear();
         for (int i = 0; i < otherChartViews.count(); i++)
         {
-            ui->verticalLayout_right->removeWidget((QWidget*)otherChartViews.at(i));
+            ui->verticalLayout_right->removeWidget(static_cast<QWidget*>(otherChartViews.at(i)));
             delete otherChartViews.at(i);
         }
         otherChartViews.clear();
@@ -415,9 +415,9 @@ QLineSeries *chartDialog::division(int year, float val, QString name)
 {
     QLineSeries *qls = new QLineSeries(this);
 
-    float x1 = (float)(year);
-    float x2 = seasons.last() / 2.0;
-    float yr = x1 - x2;
+//    float x1 = static_cast<float>(year);
+//    float x2 = seasons.last() / 2.0;
+//    float yr = x1 - x2;
 
     qls->append(QPointF(year, 0.0));
     qls->append(QPointF(year, val));

@@ -104,7 +104,6 @@ SOURCES += main.cpp\
     parameterview.cpp \
     dialogequationview.cpp \
     dialogparameterview.cpp \
-    slxequationdialog.cpp \
     dialogspwnrcrequationview.cpp \
     doublelimitspinbox.cpp \
     dialogselectivityequationview.cpp \
@@ -210,7 +209,6 @@ HEADERS  += mainwindow.h \
     parameterview.h \
     dialogequationview.h \
     dialogparameterview.h \
-    slxequationdialog.h \
     dialogspwnrcrequationview.h \
     doublelimitspinbox.h \
     dialogselectivityequationview.h \

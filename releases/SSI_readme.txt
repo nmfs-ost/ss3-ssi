@@ -15,9 +15,14 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.16.3
+    2020-10-05
+1. Corrected reading tag groups.
+2. Cleaned up some unused files and commented out code.
+============================================================================
     3.30.16.2
     2020-09-10
-1. Reconfigured age and length bins for selectivity curves. (corrected)
+1. Corrected age and length bins for selectivity curves.
 ============================================================================
     3.30.16.1
     2020-08-26

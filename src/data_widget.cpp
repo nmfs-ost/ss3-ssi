@@ -302,7 +302,7 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
 
     refresh();
 
-    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget_data->setCurrentIndex(0);
 }
 
 data_widget::~data_widget()
@@ -392,11 +392,11 @@ void data_widget::refresh()
         setAgeBins(model_data->get_age_composition()->getNumberBins());
         setAgeError(model_data->get_age_composition()->number_error_defs());
         ageBins->setModel(model_data->get_age_composition()->getBinsModel());
-        ageBins->setHeight(1);
+        ageBins->setHeight(40);
         ageBins->resizeColumnsToContents();
-        QSize size (ageBins->size());
-        size.setHeight(40);
-        ageBins->resize(size);
+//        QSize size (ageBins->size());
+//        size.setHeight(40);
+//        ageBins->resize(size);
         ageError->setModel(model_data->get_age_composition()->getErrorModel());
         ageError->setHeight(model_data->get_age_composition()->getErrorModel());
         ageError->resizeColumnsToContents();

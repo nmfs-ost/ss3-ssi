@@ -36,7 +36,7 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
 {
     ui->setupUi(this);
     title = QString("Equation");
-    name = QString("");
+    name = QString("Equation View");
     setWindowTitle(title);
 
     if (parent != nullptr)
@@ -83,6 +83,7 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     intvar1 = ui->spinBox_int1->value();
 
     parameterView = new DialogParameterView(this);
+    parameterView->setName("Parameters");
     parameterView->moveDelta(position);
     connect (parameterView, SIGNAL(hidden()), this, SLOT(setParametersVisible()));
     connect (ui->pushButton_showParameters, SIGNAL(toggled(bool)), this, SLOT(setParametersVisible(bool)));
@@ -124,7 +125,7 @@ void DialogEquationView::disconnectAll()
     disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
 }
 
-void DialogEquationView::setXvalsConst(const QList<float> &vals)
+void DialogEquationView::setXvalsConst(const QList<double> &vals)
 {
     double min, max, step;
 
@@ -166,7 +167,7 @@ void DialogEquationView::setXvalsConst(const QStringList &vals)
     setXvals(min, max, step);
 }
 
-void DialogEquationView::setXvals(const QList<float> &vals)
+void DialogEquationView::setXvals(const QList<double> &vals)
 {
     if (!vals.isEmpty()) {
         xValList.clear();
@@ -194,10 +195,10 @@ void DialogEquationView::setXvals(double min, double max, double step)
 void DialogEquationView::setXvalStrings(const QStringList &vals)
 {
     if (!vals.isEmpty()) {
-        QList<float> f_vals;
+        QList<double> f_vals;
 
         for (int i = 0; i < vals.count(); i++)
-            f_vals.append(QString(vals.at(i)).toFloat());
+            f_vals.append(QString(vals.at(i)).toDouble());
         setXvals(f_vals);
      }
 }
@@ -272,10 +273,10 @@ void DialogEquationView::setupLimits()
     limit2->attachAxis(axisX);
     limit2->attachAxis(axisYalt);
 }
-void DialogEquationView::setLimits(float xval1, float xval2)
+void DialogEquationView::setLimits(double xval1, double xval2)
 {
-    float altYmin = axisYalt->min();
-    float altYmax = axisYalt->max();
+    double altYmin = axisYalt->min();
+    double altYmax = axisYalt->max();
     limit1->clear();
     limit2->clear();
     limit1->append(QPointF(xval1-.01, altYmin));
@@ -786,10 +787,8 @@ QList<QPointF> DialogEquationView::getValuePoints() {
 // An additional spinBox for a value
 void DialogEquationView::showInt1(bool flag, QString label, QString labelinfo)
 {
-    if (!label.isEmpty())
-        ui->label_int1->setText(label);
-    if (!labelinfo.isEmpty())
-        ui->label_int1_info->setText(labelinfo);
+    ui->label_int1->setText(label);
+    ui->label_int1_info->setText(labelinfo);
     ui->spinBox_int1->setVisible(flag);
     ui->label_int1->setVisible(flag);
     ui->label_int1_info->setVisible(flag);

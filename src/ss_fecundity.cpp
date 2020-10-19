@@ -1,9 +1,10 @@
 #include "ss_fecundity.h"
+#include "model.h"
 
-ss_fecundity::ss_fecundity(ss_model *parent)
-    : QObject((QObject *)parent)
+ss_fecundity::ss_fecundity(QObject *parent)
+    : QObject(parent)
 {
-    parnt = parent;
+    ssModel = static_cast<ss_model *>(parent);
     method = 0;
     hermSeason = 1;
     hermIncludeMales = 0;

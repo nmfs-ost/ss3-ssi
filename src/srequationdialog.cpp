@@ -1188,7 +1188,7 @@ void srEquationDialog::hockeyStick()
 void srEquationDialog::updateHockeyStick()
 {
     double SSB_virgin_adj = 1.0;
-    double temp, join, SSB_curr_adj, Recruits;
+    double temp, SSB_curr_adj, Recruits;//, join
     double Recr_virgin_adj = exp(ui->doubleSpinBox_1_value->value());
     double inflection = ui->doubleSpinBox_2_value->value();
     double Rmin = ui->doubleSpinBox_3_value->value();
@@ -1260,7 +1260,7 @@ void srEquationDialog::updateBevertonHoltBzeroFlat()
     double logRecr_virgin_adj = ui->doubleSpinBox_1_value->value();
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     double steep = ui->doubleSpinBox_2_value->value();
-    double alpha, beta;
+//    double alpha, beta;
 
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
     ui->doubleSpinBox_2_trans->setValue(steep);
@@ -1420,7 +1420,7 @@ void srEquationDialog::updateShepherd()
     double shepherd_c2 = pow(.2, shepherd_c);
     double Hupper = 1.0 / (5.0 * shepherd_c2);
     double steep = 0.2 + (SRparm2 - 0.2) / (0.8) * (Hupper - 0.2);
-    double temp;
+//    double temp;
 
     double Recr_virgin_adj = exp(logRecr_virgin_adj);
     ui->doubleSpinBox_1_trans->setValue(Recr_virgin_adj);
@@ -1516,7 +1516,9 @@ void srEquationDialog::updateShepherdReParm()
         Shep_top2=posfun(Shep_top,0.001,penalty);
         double R_equil=(SSB_virgin/SPRtemp) * pow((Shep_top2/Shep_bot),(1.0/Shepherd_c));
         double B_equil=R_equil*SPRtemp;
+        selSeries->append(SSB_virgin, B_equil);
     }
+    cht->addSeries(selSeries);
 }
 
 // 10: Ricker re-parameterization (beta) - power

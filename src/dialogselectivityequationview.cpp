@@ -19,16 +19,17 @@ static double neglog19 = -1.0 * log(19);
 
 
 DialogSelexEquationView::DialogSelexEquationView(QWidget *parent, SelexType typ)
- : DialogEquationView (parent), slxType(typ)
+ : DialogEquationView (parent)
 {
+    slxType = typ;
     if (slxType == Age)
         name = QString ("Age Selectivity");
     else // (slxType == Size)
         name = QString ("Size Selectivity");
     title = name;
 
-    selex = nullptr;
     fleet = nullptr;
+    selex = nullptr;
     genders = 2;
 
     fleetNum = -1;
@@ -112,7 +113,7 @@ void DialogSelexEquationView::changeSelex() {
     restoreAll();
 }
 
-void DialogSelexEquationView::setXvals(const QList<float> &vals) {
+void DialogSelexEquationView::setXvals(const QList<double> &vals) {
     if (!vals.isEmpty()) {
         double first = vals.first();
         double last = vals.last();
@@ -1664,7 +1665,7 @@ void DialogSelexEquationView::updateDblLogIf() {
     chartview->setVisible(false);
     return;
 
-    float maxSelX = 0;
+/*    float maxSelX = 0;
     float minX = xValList.first();
     float maxX = xValList.last();
     float sel = 0;
@@ -1691,31 +1692,32 @@ void DialogSelexEquationView::updateDblLogIf() {
     join2Series->clear();
     join3Series->clear();
 
-    float peakBwd = peak + binwid;
+    float peakBwd = peak + binwid;*/
 
 }
 
 void DialogSelexEquationView::updateDblLogSmooth() {
-    float minX = xValList.first();
-    float maxX = xValList.last();
-    float sel = 0;
-    float t1 = 0, t1min, t1max, t1power;
-    float t2 = 0, t2min, t2max, t2power;
-    float jn1, jn2;
-    float upsel, dnsel;
-    int binM, i;
-    float binMax = getBinMax();
-    float join1 = getJoinOne();
-    float join2 = getJoinTwo();
+//    double minX = xValList.first();
+//    double maxX = xValList.last();
+    double sel = 0;
+    double t1 = 0, t1min, t1max, t1power;
+    double t2 = 0, t2min, t2max, t2power;
+    double jn1, jn2;
+    double upsel, dnsel;
+    int i;//binM,
+    double xVal = 0;
+    double binMax = getBinMax();
+    double join1 = getJoinOne();
+    double join2 = getJoinTwo();
 
-    float peak = parameterView->getInput(0);
-    float init = parameterView->getInput(1);
-    float infl_up = parameterView->getInput(2);//logist(par3);
-    float slope_up = parameterView->getInput(3);
-    float final = parameterView->getInput(4);//logist(par5);
-    float infl_dn = parameterView->getInput(5);//logist(par6);
-    float slope_dn = parameterView->getInput(6);
-    float binwid = parameterView->getInput(7);
+    double peak = parameterView->getInput(0);
+    double init = parameterView->getInput(1);
+    double infl_up = parameterView->getInput(2);//logist(par3);
+    double slope_up = parameterView->getInput(3);
+    double final = parameterView->getInput(4);//logist(par5);
+    double infl_dn = parameterView->getInput(5);//logist(par6);
+    double slope_dn = parameterView->getInput(6);
+    double binwid = parameterView->getInput(7);
 
     valSeries->clear();
     firstPoints.clear();
@@ -1725,7 +1727,7 @@ void DialogSelexEquationView::updateDblLogSmooth() {
     join2Series->clear();
     join3Series->clear();
 
-    float peakBwd = peak + binwid;
+    double peakBwd = peak + binwid;
 //    t1=0.+(1./(1.+mfexp(-sp(3))))*(sp(1)-0.);    // INFL
 //    t1min=1./(1.+mfexp(-sp(4)*(0.-t1)))*0.9999;  // asc value at minsize
 //    t1max=1./(1.+mfexp(-sp(4)*(sp(1)-t1)))*1.00001;  // asc value at peak
@@ -1771,21 +1773,21 @@ void DialogSelexEquationView::updateDblLogSmooth() {
     }   // end age loop */
     for (i = 0; i < xValList.count(); i++)
     {
-        binM = xValList.at(i);
-        jn1 = logist (-join1 * (binM - peak));
-        jn2 = logist (-join2 * (binM - peakBwd));
+        xVal = xValList.at(i);
+        jn1 = logist (-join1 * (xVal - peak));
+        jn2 = logist (-join2 * (xVal - peakBwd));
 //        jn1 = 1.0 / (1.0 + exp(30.0 * (binM - peak)));
   //      jn2 = 1.0 / (1.0 + exp(30.0 * (binM - peakBwd)));
-        upsel = init + (1.0 - init) * pow((( 1.0 / (1.0 + exp(-slope_up * (binM - t1))) - t1min) / (t1max - t1min)), t1power);
-        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-slope_dn * (binM - t2))) -t2min) / (t2max - t2min)))), t2power));
-        join1Series->append(QPoint(binM, jn1));
-        join2Series->append(QPointF(binM, jn2));
+        upsel = init + (1.0 - init) * pow((( 1.0 / (1.0 + exp(-slope_up * (xVal - t1))) - t1min) / (t1max - t1min)), t1power);
+        dnsel = (1.0 + (final - 1.0) * pow(abs((((1.0 / (1.0 + exp(-slope_dn * (xVal - t2))) -t2min) / (t2max - t2min)))), t2power));
+        join1Series->append(QPointF(xVal, jn1));
+        join2Series->append(QPointF(xVal, jn2));
 //        join3Series->append(QPointF(binM, jn3));
-        ascendSeries->append(QPointF(binM, upsel));
-        dscendSeries->append(QPointF(binM, dnsel));
+        ascendSeries->append(QPointF(xVal, upsel));
+        dscendSeries->append(QPointF(xVal, dnsel));
         sel = ((((upsel * jn1) + jn1) * jn2) + dnsel * jn2);
         sel = (upsel * jn1) + (jn2 - jn1) + (dnsel * (1.0 - jn2));
-        valSeries->append(QPointF(binM, sel));
+        valSeries->append(QPointF(xVal, sel));
     }
 }
 
@@ -1962,11 +1964,11 @@ void DialogSelexEquationView::dblNormal() {
 
 void DialogSelexEquationView::updateDblNormal() {
 //    float xval, sel, peak2;
-    float peak = parameterView->getInput(0);
+/*    float peak = parameterView->getInput(0);
     float top  = parameterView->getInput(1);
     float upsel = parameterView->getInput(2);
     float dnsel = parameterView->getInput(3);
-    float peak2 = peak + (xValList.last() - peak) * top;
+    float peak2 = peak + (xValList.last() - peak) * top;*/
 }
 
 void DialogSelexEquationView::dblNormPlateau() {
@@ -2849,7 +2851,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     bool okay = true;
     QString msg;
     QStringList data;
-    double altMaxVal, altMinVal, altMax;//, altMin;
+    double altMaxVal, altMinVal;//, altMax, altMin;
     QList<QPointF> secndPoints;
 
 
@@ -2956,7 +2958,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
 
         altMinVal = minYvalue (firstPoints);
         altMaxVal = maxYvalue (firstPoints);
-        altMax = altMinVal + ((altMaxVal - altMinVal) * 1.2);
+//        altMax = altMinVal + ((altMaxVal - altMinVal) * 1.2);
         axisYalt->setRange(altMinVal, altMaxVal);
 
         secndPoints.clear();
@@ -3343,7 +3345,7 @@ void DialogSelexEquationView::updateTwoSexEachAge() {
     int index = 0;
     double altYmin = 0, altYmax = 1;
     double parm = 0.;
-    double lastSel = 0;
+//    double lastSel = 0;
     double temp = 0;
     double templimit = 0;
     QList<QPointF> secndPoints;
@@ -3411,7 +3413,7 @@ void DialogSelexEquationView::updateTwoSexEachAge() {
     if (genders > 1) {
         // Male ln(selex)
         // parameter values
-        lastSel = 0.0;
+//        lastSel = 0.0;
         secndPoints.append(QPointF(0, 0));
         secndPoints.append(QPointF(bins.at(firstAge-1), 0));
         index = 4 + numChanges;
@@ -3458,7 +3460,7 @@ void DialogSelexEquationView::updateTwoSexEachAge() {
 }
 
 // check scale bin limits and adjust as necessary
-bool DialogSelexEquationView::checkScaleSliders(int first, int secnd, QList<float> bins, double &binLo, double &binHi) {
+bool DialogSelexEquationView::checkScaleSliders(int first, int secnd, QList<double> bins, double &binLo, double &binHi) {
     bool okay = true;
     int lo = static_cast<int>(binLo);
     int hi = static_cast<int>(binHi);

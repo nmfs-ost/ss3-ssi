@@ -1,19 +1,21 @@
 #include "population.h"
+//#include "model.h"
 
-population::population(ss_model *parent) :
-    QObject((QObject *)parent)
+population::population(QObject *parent) :
+    QObject(parent)
 {
     QStringList header;
+//    ssModel = static_cast<ss_model *>(parent);
     pop_growth = new ss_growth(parent);
     pop_fecundity = new ss_fecundity(parent);
     pop_recruitment = new spawn_recruit(parent);
     pop_mortality = new ss_mortality(parent);
     pop_movement = new ss_movement(parent);
-    meanBwtModel = new tablemodel(this);
+    meanBwtModel = new tablemodel(parent);
     meanBwtModel->setColumnCount(20);
     header << "Year" << "Seas" << "Type" << "Part" << "Value" << "CV";
     meanBwtModel->setHeader(header);
-    seasparamtable = new seasonalEffectsModel();// shortParameterModel(this);
+    seasparamtable = new seasonalEffectsModel(parent);
     header.clear();
 //    header << "FWtLn1" << "FWtLn2" << "Mat1" << "Mat2" << "Fec1" << "Fec2" << "MWtLn1" << "MWtLn2" << "L1" << "K";
 //    seasparamtable->setSetupHeader(header);
@@ -271,7 +273,7 @@ bool population::getFemWtLen1() const
 }
 
 void population::setFemWtLen1(bool value)
-{  
+{
     seasparamtable->setFemwtlen1(value);
 /*    if (seasparamtable->getFemwtlen1() != value)
     {

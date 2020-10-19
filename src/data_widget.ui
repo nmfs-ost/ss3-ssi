@@ -61,12 +61,12 @@
     </layout>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="tabWidget_data">
      <property name="toolTip">
       <string/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -425,7 +425,7 @@
           </widget>
          </item>
          <item row="8" column="5" rowspan="2" colspan="3">
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="label_fleetinfo">
            <property name="text">
             <string>See Fleet section for more info or to make changes.</string>
            </property>
@@ -463,15 +463,15 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1023</width>
-            <height>748</height>
+            <width>954</width>
+            <height>568</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
            <item>
             <layout class="QGridLayout" name="gridLayout_settings">
              <item row="7" column="2" colspan="2">
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="label_retrospect_info">
                <property name="text">
                 <string>(A negative value relative to end year)</string>
                </property>
@@ -492,7 +492,7 @@
               </widget>
              </item>
              <item row="2" column="0" colspan="5">
-              <widget class="QGroupBox" name="groupBox">
+              <widget class="QGroupBox" name="groupBox_mc">
                <property name="title">
                 <string>MC intervals</string>
                </property>
@@ -526,7 +526,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_6">
+                 <spacer name="horizontalSpacer_mc1">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -552,7 +552,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_7">
+                 <spacer name="horizontalSpacer_mc2">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -932,7 +932,7 @@
                  </widget>
                 </item>
                 <item row="0" column="4">
-                 <spacer name="horizontalSpacer_5">
+                 <spacer name="horizontalSpacer_sd">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -951,7 +951,7 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <spacer name="horizontalSpacer_setings">
+              <spacer name="horizontalSpacer_bounds">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -974,7 +974,7 @@
               <widget class="QLineEdit" name="lineEdit_jitter"/>
              </item>
              <item row="11" column="5">
-              <spacer name="horizontalSpacer_mc">
+              <spacer name="horizontalSpacer_spr">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1023,7 +1023,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_comp">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_length">
           <attribute name="title">
@@ -1033,7 +1033,7 @@
            <item>
             <layout class="QGridLayout" name="gridLayout_comp_length">
              <item row="1" column="1" colspan="2">
-              <spacer name="horizontalSpacer">
+              <spacer name="horizontalSpacer_lenBins">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1046,7 +1046,7 @@
               </spacer>
              </item>
              <item row="0" column="2">
-              <spacer name="horizontalSpacer_length_1">
+              <spacer name="horizontalSpacer_numBins">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1670,8 +1670,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>955</width>
-            <height>467</height>
+            <width>971</width>
+            <height>489</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -1773,8 +1773,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1042</width>
-            <height>441</height>
+            <width>971</width>
+            <height>489</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1963,8 +1963,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>955</width>
-            <height>467</height>
+            <width>971</width>
+            <height>489</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
@@ -2095,7 +2095,7 @@
             </spacer>
            </item>
            <item row="0" column="2">
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="label_spacer">
              <property name="text">
               <string/>
              </property>
@@ -2233,8 +2233,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>955</width>
-            <height>467</height>
+            <width>971</width>
+            <height>489</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_5">
@@ -2349,8 +2349,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>955</width>
-            <height>467</height>
+            <width>971</width>
+            <height>489</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_19">

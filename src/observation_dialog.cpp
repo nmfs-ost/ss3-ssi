@@ -19,17 +19,17 @@ observation_dialog::~observation_dialog()
 
 void observation_dialog::setTitle(QString title)
 {
-
+    ui->label->setText(title);
 }
 
 void observation_dialog::addItem(QString item)
 {
-
+    ui->listWidget->addItem(item);
 }
 
 void observation_dialog::setItem(int index, QString item)
 {
-
+    ui->listWidget->item(index)->setText(item);
 }
 
 QString observation_dialog::getItem(int index)

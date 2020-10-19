@@ -25,7 +25,7 @@ class spawn_recruit : public QObject
     Q_OBJECT
 
 public:
-    explicit spawn_recruit(ss_model *parent = 0);
+    explicit spawn_recruit(QObject *parent = nullptr);
     ~spawn_recruit();
 
     QString toText();
@@ -183,7 +183,7 @@ signals:
     void methodChanged();
 
 private:
-    ss_model *parnt;
+    ss_model *ssModel;
 
     float tempSPR;
     int   method; // 2=Ricker; 3=std_B-H; 4=SCAA; 5=Hockey; 6=B-H_flattop; 7=survival_3Parm; 8=Shepard_3Parm

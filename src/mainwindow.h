@@ -26,9 +26,9 @@
 
 #include "dialog_run.h"
 
-#define DEBUG 1
+//#define DEBUG 1
 
-#undef DEBUG
+//#undef DEBUG
 
 namespace Ui {
 class MainWindow;

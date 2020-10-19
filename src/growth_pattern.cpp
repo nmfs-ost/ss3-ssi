@@ -1,68 +1,69 @@
 #include "growth_pattern.h"
+#include "model.h"
 
-growthPattern::growthPattern(ss_model *parent)
-    : QObject((QObject *)parent)
+growthPattern::growthPattern(QObject *parent)
+    : QObject((parent))
 {
-    parnt = parent;
+    ssModel = static_cast<ss_model *>(parent);
     morphs.append(new growth_morph());
     num_morphs = 1;
 
-    fracFmParams = new longParameterModel();
+    fracFmParams = new longParameterModel(parent);
     fracFmParams->setNumParams(1);
-    fracFmVarParams = new timeVaryParameterModel(parnt);
+    fracFmVarParams = new timeVaryParameterModel(parent);
     fracFmVarParams->setNumParams(1);
     fracFmParams->setParamHeader(0, QString("FracFemale"));
     fracFmVarParams->setTableTitle(0, "FracFemale");
 
-    femGrowthParams = new longParameterModel();
-    femGrowthVarParams = new timeVaryParameterModel(parnt);
-    maleGrowthParams = new longParameterModel();
-    maleGrowthVarParams = new timeVaryParameterModel(parnt);
+    femGrowthParams = new longParameterModel(parent);
+    femGrowthVarParams = new timeVaryParameterModel(parent);
+    maleGrowthParams = new longParameterModel(parent);
+    maleGrowthVarParams = new timeVaryParameterModel(parent);
 
-    femCvParams = new longParameterModel();
+    femCvParams = new longParameterModel(parent);
     femCvParams->setNumParams(2);
-    femCvVarParams = new timeVaryParameterModel(parnt);
+    femCvVarParams = new timeVaryParameterModel(parent);
     femCvVarParams->setNumParams(2);
-    maleCvParams = new longParameterModel();
+    maleCvParams = new longParameterModel(parent);
     maleCvParams->setNumParams(2);
-    maleCvVarParams = new timeVaryParameterModel(parnt);
+    maleCvVarParams = new timeVaryParameterModel(parent);
     maleCvVarParams->setNumParams(2);
 
     natMAges = new tablemodel ();
     natMAges->setRowCount(3);
     natMAges->removeHeader();
-    femNatMrtParams = new longParameterModel();
-    femNatMrtVarParams = new timeVaryParameterModel(parnt);
+    femNatMrtParams = new longParameterModel(parent);
+    femNatMrtVarParams = new timeVaryParameterModel(parent);
     femNatMrtParams->setNumParams(1);
     femNatMrtVarParams->setTotalNumVarTables(1);
-    maleNatMrtParams = new longParameterModel();
-    maleNatMrtVarParams = new timeVaryParameterModel(parnt);
+    maleNatMrtParams = new longParameterModel(parent);
+    maleNatMrtVarParams = new timeVaryParameterModel(parent);
     maleNatMrtParams->setNumParams(1);
     maleNatMrtVarParams->setTotalNumVarTables(1);
 
-    femWtLenParams = new longParameterModel((QObject *)parnt);
-    femWtLenVarParams = new timeVaryParameterModel(parnt);
+    femWtLenParams = new longParameterModel(parent);
+    femWtLenVarParams = new timeVaryParameterModel(parent);
     femWtLenParams->setNumParams(2);
     femWtLenVarParams->setTotalNumVarTables(2);
     connect (femWtLenParams, SIGNAL(paramChanged(int,QStringList)),
              femWtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
 
-    maleWtLenParams = new longParameterModel((QObject *)parnt);
-    maleWtLenVarParams = new timeVaryParameterModel(parnt);
+    maleWtLenParams = new longParameterModel(parent);
+    maleWtLenVarParams = new timeVaryParameterModel(parent);
     maleWtLenParams->setNumParams(2);
     maleWtLenVarParams->setTotalNumVarTables(2);
     connect (maleWtLenParams, SIGNAL(paramChanged(int,QStringList)),
              maleWtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
 
-    femMatureParams = new longParameterModel();
-    femMatureVarParams = new timeVaryParameterModel(parnt);
+    femMatureParams = new longParameterModel(parent);
+    femMatureVarParams = new timeVaryParameterModel(parent);
     femMatureParams->setNumParams(4);
     femMatureVarParams->setTotalNumVarTables(4);
     connect (femMatureParams, SIGNAL(paramChanged(int,QStringList)),
              femMatureVarParams, SLOT(changeVarParamData(int,QStringList)));
 
-    hermaphParams = new longParameterModel();
-    hermaphVarParams = new timeVaryParameterModel(parnt);
+    hermaphParams = new longParameterModel(parent);
+    hermaphVarParams = new timeVaryParameterModel(parent);
     hermaphParams->setNumParams(1);
     hermaphVarParams->setTotalNumVarTables(1);
     connect (hermaphParams, SIGNAL(paramChanged(int,QStringList)),
@@ -99,6 +100,7 @@ growthPattern::~growthPattern()
 }
 
 growthPattern::growthPattern (const growthPattern &rhs)
+  :  QObject (rhs.parent())
 {
     copy (rhs);
 }
@@ -144,11 +146,11 @@ growth_morph * growthPattern::getMorph(int index) const
     return morphs[index];
 }
 
-void growthPattern::setMorph(int index, growth_morph * &value)
+void growthPattern::setMorph(int index, growth_morph * value)
 {
-    growth_morph * gm = morphs.takeAt(index);
-    morphs.insert(index, value);
+    growth_morph * gm = morphs.at(index);
     delete gm;
+    morphs[index] = value;
 }
 
 void growthPattern::setNumGenders(int num)

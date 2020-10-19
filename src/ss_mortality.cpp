@@ -1,17 +1,18 @@
 #include "ss_mortality.h"
 #include "parametermodel.h"
 #include "fileIOgeneral.h"
+#include "model.h"
 
-ss_mortality::ss_mortality(ss_model *parent, int n_fisheries, int n_surveys)
+ss_mortality::ss_mortality(QObject *parent, int n_fisheries, int n_surveys)
 {
-    parnt = parent;
+    ssModel = static_cast<ss_model *>(parent);
     QStringList pheader;
     pheader << "fleet" << "year" << "seas" << "F" << "se" << "phase" ;
-    parameterTable = new shortParameterTable((QObject *)parnt);
+    parameterTable = new shortParameterTable(parent);
 //    parameterTable->setColumnCount(6);
     parameterTable->setHeader(pheader);
     parameterTable->setParamCount(0);
-    initialParams = new shortParameterTable((QObject *)parnt);
+    initialParams = new shortParameterTable(parent);
 //    initialParams->setColumnCount(7);
     initialParams->setParamCount(0);
 //    numFisheries = 0;

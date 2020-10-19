@@ -1,17 +1,18 @@
 #include "ss_movement.h"
 #include "parametermodel.h"
+#include "model.h"
 
-ss_movement::ss_movement(ss_model *parent, int n_fleets)
+ss_movement::ss_movement(QObject *parent, int n_fleets)
 {
-    parnt = parent;
-    movement_defs = new tablemodel();
+    ssModel = static_cast<ss_model *>(parent);
+    movement_defs = new tablemodel(parent);
     defHeader << "seas" << "GP" << "source_area" << "dest_area" << "minage" << "maxage";
     movement_defs->setColumnCount(defHeader.count());
     movement_defs->setHeader(defHeader);
     movement_defs->setRowCount(0);
-    movement_parms = new longParameterModel((QObject*)parnt);// parameterModelTV(parnt);
+    movement_parms = new longParameterModel(parent);
     movement_parms->setNumParams(0);
-    moveTVParams = new timeVaryParameterModel(parnt);
+    moveTVParams = new timeVaryParameterModel(parent);
     moveTVParams->setNumParams(0);
     num_fleets = n_fleets;
     first_year = 0;

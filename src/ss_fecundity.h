@@ -18,7 +18,7 @@ class ss_fecundity : public QObject
     Q_OBJECT
 
 public:
-    ss_fecundity(ss_model *parent = 0);
+    ss_fecundity(QObject *parent = nullptr);
     ~ss_fecundity();
 
     void reset();
@@ -37,7 +37,7 @@ public:
     void setHermaphroditism(int value);
 
 private:
-    ss_model *parnt;
+    ss_model *ssModel;
     int method;
     int hermaphroditism;
     int hermSeason;

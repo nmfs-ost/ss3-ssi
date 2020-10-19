@@ -2,14 +2,18 @@
 #define DIALOGSPWNRCREQUATIONVIEW_H
 
 #include <QObject>
+#include <QWidget>
+#include <QStringList>
 
 #include "dialogequationview.h"
 #include "population.h"
 
 class DialogSpwnRcrEquationView : public DialogEquationView
 {
+    Q_OBJECT
+
 public:
-    DialogSpwnRcrEquationView(QWidget *parent = nullptr);
+    explicit DialogSpwnRcrEquationView(QWidget *parent = nullptr);
     ~DialogSpwnRcrEquationView();
 
     int getOption() const;

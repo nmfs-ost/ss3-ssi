@@ -13,6 +13,7 @@ QWidget *abundancedelegate::createEditor(QWidget *parent,
            const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QWidget *editor;
+    Q_UNUSED(option);
     switch (index.column())
     {
     case 0:
@@ -103,6 +104,7 @@ void abundancedelegate::setModelData(QWidget *editor,
 void abundancedelegate::updateEditorGeometry(QWidget *editor,
          const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 

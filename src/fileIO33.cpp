@@ -4,8 +4,10 @@
 #include "fleet.h"
 #include "fileIOgeneral.h"
 #include "message.h"
-//#include "ss_math.h"
+#include "ss_math.h"
 #include "block_pattern.h"
+
+//#define DEBUG_CONTROL
 
 bool read33_dataFile(ss_file *d_file, ss_model *data)
 {
@@ -13,7 +15,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     QString token;
     QString temp_str;
     QStringList str_lst;
-    float temp_float;
+    float temp_float = 0;
     int temp_int = 0, num_input_lines = 0;
     int i = 0, num_vals = 0, total_fleets = 0;
     int n_areas = 0, n_ages = 0, n_genders = 0;
@@ -2060,14 +2062,14 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
 
 bool read33_controlFile(ss_file *c_file, ss_model *data)
 {
-    int i, temp_int, index, num, num_vals;
-    float temp_float;
+    int i = 0, temp_int = 0, index = 0, num = 0, num_vals = 0;
+    float temp_float = 0;
     QString temp_string;
     QStringList datalist;
     population * pop = data->pPopulation;
-    int flt;
+    int flt = 0;
     int num_fleets = data->get_num_fleets();
-    int timevaryread;
+    int timevaryread = 0;
 //    int startYear = data->get_start_year();
 //    int endYear = data->get_end_year();
 
@@ -2077,6 +2079,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         c_file->resetLineNum();
         c_file->read_comments();
 
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Control file start.");
+#endif
         // read wtatage.ss
         temp_int = c_file->getIntValue(QString("Read wtatage.ss?"), 0, 2, 0);
         data->setReadWtAtAge(temp_int);
@@ -2123,6 +2128,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->Grow()->setMorphDist();
             }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Morphs/platoons read.");
+#endif
 
         // recruitment distribution designs
         index = c_file->getIntValue(QString("Recruitment distribution method"), 2, 4, 1);
@@ -2142,6 +2150,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setAssignment(i, datalist);
         }
         datalist.clear();
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Recruitment read.");
+#endif
 
         // movement definitions
         pop->Move()->setNumDefs(0);
@@ -2163,6 +2174,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Movement read.");
+#endif
 
         // time block definitions
         num = c_file->get_next_value(QString("Num block patterns")).toInt();
@@ -2185,6 +2199,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Time blocks read.");
+#endif
         // controls for time-varying params
         temp_int = c_file->getIntValue(QString("Adjustment method for time varying params"), 1, 3, 1);
         pop->Grow()->setTimeVaryMethod(temp_int);
@@ -2610,6 +2627,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->getCohortParams()->setRowHeader(0, QString("CohortGrowDev"));
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Growth params read.");
+#endif
 
 
         // movement parameters (2 per definition)
@@ -2701,8 +2721,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 readTimeVaryParams(c_file, data, gp->getFractionFemaleParams(), timevaryread, gp->getFracFmTVParams());
             }
         }
-
-
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Time vary params read.");
+#endif
 
         // seasonal_effects_on_biology_parms
         datalist.clear();
@@ -2725,6 +2746,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->setSeasonalParam(i, parm);
             }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Seasonal effects read.");
+#endif
 
         // Spawner-recruitment
         temp_int = c_file->getIntValue(QString("Spawner-Recruit Relationship"), 1, 10, 3);
@@ -2814,6 +2838,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->SR()->setRecruitDev(i, datalist);
             }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Spawn-Recruit read.");
+#endif
 
         // Fishing mortality
         num = 0;
@@ -2872,6 +2899,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
         if (QString(datalist.last()).compare("EOF") == 0)
             return false;
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "F Mort read.");
+#endif
 
 
         // Q setup
@@ -2959,6 +2989,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             data->getFleet(i)->setName(data->getFleet(i)->getName());
         }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Fishery Q read.");
+#endif
 
         {
         selectivity *sizesel = nullptr;
@@ -3178,6 +3211,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
         }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Selectivity read.");
+#endif
 
         // 2D-AR1 smoother
         temp_int = c_file->getIntValue(QString("2D_AR1 selectivity? 0/1"), 0, 1, 0);
@@ -3253,6 +3289,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getTagReportDecay()->setParameter(i, datalist);
             }
         }
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Tag Params read.");
+#endif
 
         // #_Variance_adjustments_to_input_value
         data->setInputValueVariance(0);
@@ -3345,6 +3384,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->addLambdaAdjustment(datalist);
             }
         } while (temp_int != END_OF_LIST);
+#ifdef DEBUG_CONTROL
+    QMessageBox::information(nullptr, "Information - reading contol file", "Lambdas read.");
+#endif
 
         temp_int = c_file->getIntValue(QString("Additional Std dev reporting? 0/1"), 0, 2, 0);
         data->getAddSdReporting()->setActive(temp_int);
@@ -5404,8 +5446,10 @@ int writeTimeVaryParams(ss_file *outfile, ss_model *data, tablemodel *table, QSt
 bool negateParameterPhase(QStringList &datalist)
 {
     bool okay = true;
-    float phase = datalist.at(6).toFloat();
-    if (phase > 0)
-        datalist[6] = QString::number(-phase);
+    if (datalist.count() > 5) {
+        float phase = datalist.at(6).toFloat();
+        if (phase > 0)
+            datalist[6] = QString::number(-phase);
+    }
     return okay;
 }

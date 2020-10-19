@@ -91,7 +91,7 @@ void tableview::copy()
 
 void tableview::paste()
 {
-    tablemodel *abmodel = (tablemodel *)model();
+    tablemodel *abmodel = static_cast<tablemodel *>(model());
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
@@ -207,7 +207,7 @@ void tableview::copyRows()
 
 void tableview::pasteRows()
 {
-    tablemodel *abmodel = (tablemodel *)model();
+    tablemodel *abmodel = static_cast<tablemodel *>(model());
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
@@ -215,7 +215,7 @@ void tableview::pasteRows()
     if (text.isEmpty())
         return;
     QStringList rowTextList (text.split('\n', QString::SkipEmptyParts));
-    int row, col, curr_row, curr_col;
+    int row, col;//, curr_row, curr_col;
 
     if(rowTextList.count() < 1)
         return;
@@ -234,7 +234,7 @@ void tableview::pasteRows()
 
 void tableview::insertCopiedRows()
 {
-    tablemodel *abmodel = (tablemodel *)model();
+    tablemodel *abmodel = static_cast<tablemodel *>(model());
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
     QClipboard *clipboard = QApplication::clipboard();
@@ -268,7 +268,7 @@ void tableview::insertCopiedRows()
 
 void tableview::appendRow()
 {
-    tablemodel *abmodel = (tablemodel *)model();
+    tablemodel *abmodel = static_cast<tablemodel *>(model());
     QList<QStandardItem *> data = blankRow();
 //    for (int i = 0; i < abmodel->columnCount(); i++)
 //        data.append(new QStandardItem(QString("")));
@@ -278,7 +278,7 @@ void tableview::appendRow()
 
 void tableview::deleteRows()
 {
-    tablemodel *abmodel = (tablemodel *)model();
+    tablemodel *abmodel = static_cast<tablemodel *>(model());
     QItemSelectionModel *selmodel = selectionModel();
     QModelIndexList list = selmodel->selectedIndexes();
 
@@ -298,7 +298,7 @@ void tableview::deleteRows()
 
 QList<QStandardItem *> tableview::blankRow()
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    QStandardItemModel *abmodel = static_cast<QStandardItemModel *>(model());
     QList<QStandardItem *> data;
 
     for (int i = 0; i < abmodel->columnCount(); i++)
@@ -308,7 +308,7 @@ QList<QStandardItem *> tableview::blankRow()
 
 QList<QStandardItem *> tableview::createRow(QStringList strs)
 {
-    QStandardItemModel *abmodel = (QStandardItemModel *)model();
+    QStandardItemModel *abmodel = static_cast<QStandardItemModel *>(model());
     QList<QStandardItem *> data;
 
     for (int i = 0; i < abmodel->columnCount(); i++)

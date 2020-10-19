@@ -67,6 +67,7 @@ void DialogTable::resizeEvent(QResizeEvent *event) {
 }
 
 void DialogTable::closeEvent(QCloseEvent *event) {
+    Q_UNUSED(event);
     closeTable();
 //    QDialog::closeEvent(event);
 }

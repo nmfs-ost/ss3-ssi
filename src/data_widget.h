@@ -13,7 +13,7 @@
 #include "tablemodel.h"
 #include "tableview.h"
 #include "mbweightdelegate.h"
-#include "ssComposition.h"
+#include "sscomposition.h"
 
 namespace Ui {
 class data_widget;

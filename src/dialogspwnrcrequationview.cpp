@@ -64,7 +64,7 @@ void DialogSpwnRcrEquationView::setup()
 {
     if (pop == nullptr)
         return;
-    parameterView->setNumUnParameters(0);
+    parameterView->setNumUnSavedParameters(0);
 
     if (!updating)
     {
@@ -487,7 +487,7 @@ void DialogSpwnRcrEquationView::updateHockeyStick()
 {
     int yMax = 1;
     double SSB_virgin_adj = 1.0;
-    double temp, join, SSB_curr_adj, Recruits;
+    double temp, SSB_curr_adj, Recruits;
     double Recr_virgin_adj = parameterView->getInput(0);//exp(ui->doubleSpinBox_1_value->value());
     double inflection = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
     double Rmin = parameterView->getInput(2);//ui->doubleSpinBox_3_value->value();
@@ -548,7 +548,7 @@ void DialogSpwnRcrEquationView::updateBevertonHoltBzeroFlat()
     double SSB_curr_adj, Recruits, SSB_BH1;
     double Recr_virgin_adj = parameterView->getInput(0);//exp(logRecr_virgin_adj);
     double steep = parameterView->getInput(1);//ui->doubleSpinBox_2_value->value();
-    double alpha, beta;
+//    double alpha, beta;
 
     valSeries->clear();
 
@@ -697,7 +697,7 @@ void DialogSpwnRcrEquationView::updateShepherd()
     double shepherd_c2 = pow(.2, shepherd_c);
     double Hupper = 1.0 / (5.0 * shepherd_c2);
     double steep = 0.2 + (SRparm2 - 0.2) / (0.8) * (Hupper - 0.2);
-    double temp;
+//    double temp;
 
     valSeries->clear();
 
@@ -712,7 +712,7 @@ void DialogSpwnRcrEquationView::updateShepherd()
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
 }
-/*
+
 // case 9: Shepherd re-parameterization (beta) - not yet implemented
 //  3 parameters: log(R0), steepness, and shape parameter, c.
 void DialogSpwnRcrEquationView::shepherdReParm()
@@ -756,7 +756,7 @@ void DialogSpwnRcrEquationView::shepherdReParm()
 
 void DialogSpwnRcrEquationView::updateShepherdReParm()
 {
-    int yMax = 1;
+/*    int yMax = 1;
     double SPRtemp = pop->SR()->getSPR();
     double Recr_virgin_adj = parameterView->getInput(0);
     double SRparm2 = parameterView->getInput(1);
@@ -788,8 +788,8 @@ void DialogSpwnRcrEquationView::updateShepherdReParm()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
-//    valSeries->attachAxis(axisY);
-}*/
+//    valSeries->attachAxis(axisY);*/
+}
 
 //  9: Ricker re-parameterization (beta) - power
 //  3 Parameters: log(R0), steepness, and Ricker power, gamma.

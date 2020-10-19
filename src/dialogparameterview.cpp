@@ -13,10 +13,11 @@ DialogParameterView::DialogParameterView(QWidget *parent, bool showTrans) :
 {
     ui->setupUi(this);
     setShowTrans(showTrans);
-    setName("");
-    parameters = nullptr;
+    setName("New");
+    setTitle(QString("Parameter View"));
+    parameters = new tablemodel(this);
     numParamsShown = 0;
-    numUnParams = 0;
+    numUnSavedParams = 0;
     pLabel.append(nullptr);
     pMin.append(nullptr);
     pMax.append(nullptr);
@@ -57,26 +58,27 @@ DialogParameterView::~DialogParameterView() {
 }
 
 void DialogParameterView::clearAll() {
-    if (pLabel.isEmpty())
-        return;
-
-    while (pLabel.count() > 0) {
-        delete pLabel.takeLast();
-        delete pMin.takeLast();
-        delete pMax.takeLast();
-        delete pInit.takeLast();
-        delete pSlider.takeLast();
-        delete sValue.takeLast();
-        delete pType.takeLast();
-        delete eInput.takeLast();
+    if (!pLabel.isEmpty()) {
+        while (pLabel.count() > 0) {
+            delete pLabel.takeLast();
+            delete pMin.takeLast();
+            delete pMax.takeLast();
+            delete pInit.takeLast();
+            delete pSlider.takeLast();
+            delete sValue.takeLast();
+            delete pType.takeLast();
+            delete eInput.takeLast();
+        }
+        while (unLabel.count() > 0) {
+            delete unLabel.takeLast();
+            delete unMin.takeLast();
+            delete unMax.takeLast();
+            delete unSlider.takeLast();
+            delete unValue.takeLast();
+        }
     }
-    while (unLabel.count() > 0) {
-        delete unLabel.takeLast();
-        delete unMin.takeLast();
-        delete unMax.takeLast();
-        delete unSlider.takeLast();
-        delete unValue.takeLast();
-    }
+    numParamsShown = 0;
+    numUnSavedParams = 0;
 }
 
 
@@ -146,6 +148,8 @@ void DialogParameterView::setupView(int num, int unsaved)
     position = pos();
     window = size();
     clearAll();
+    numParamsShown = num;
+    numUnSavedParams = unsaved;
     for (int i = 0; i < num; i++) {
         rownum = i + 1;
         pLabel.append(new QLabel(parameters->getRowHeader(i), this));
@@ -182,15 +186,15 @@ void DialogParameterView::setupView(int num, int unsaved)
         ui->gridLayoutUnsaved->addWidget(unSlider.at(i), rownum, 3);
         ui->gridLayoutUnsaved->addWidget(unValue.at(i), rownum, 4);
     }
-    ui->groupBoxUnsaved->setVisible(numUnParams > 0);
+    ui->groupBoxUnsaved->setVisible(numUnSavedParams > 0);
 
     int ht = window.height();
     int numshow = num > 1? (num > 10? 10: num-1): 0;
     int newht = baseht + (numshow * rowht);
     int ypos = position.ry() + ((ht - newht)/2);
     int xpos = position.rx();
-    if (numUnParams > 0)
-        newht += baseht + ((numUnParams - 2) * rowht);
+    if (numUnSavedParams > 0)
+        newht += baseht + ((numUnSavedParams - 2) * rowht);
     QPoint parpos = static_cast<QWidget *>(parent())->pos();
     window.setHeight(newht);
     position.setX((xpos == 0)? parpos.rx(): xpos);
@@ -279,7 +283,7 @@ void DialogParameterView::setInputValue(int pnum, double value) {
 
 void DialogParameterView::setNumParamsShown(int num, int unsaved) {
     disconnectAll();
-    numUnParams = unsaved;
+    numUnSavedParams = unsaved;
     if (parameters != nullptr) {
         if (numParamsShown != num) {
             numParamsShown = num;
@@ -300,9 +304,9 @@ int DialogParameterView::getNumParameters() {
     return numParamsShown;
 }
 
-void DialogParameterView::setNumUnParameters(int num) {
-    if (numUnParams != num) {
-        setNumParamsShown(getNumParameters(), numUnParams);
+void DialogParameterView::setNumUnSavedParameters(int num) {
+    if (numUnSavedParams != num) {
+        setNumParamsShown(getNumParameters(), numUnSavedParams);
     }
 }
 
@@ -329,7 +333,7 @@ void DialogParameterView::setSliderRange(int pnum, double min, double max) {
         pMin.at(pnum)->setValue(min);
     }
     else {
-        if (unnum < numUnParams) {
+        if (unnum < numUnSavedParams) {
             unSlider.at(unnum)->setRange(intmin, intmax);
             unValue.at(unnum)->setRange(min, max);
             unMax.at(unnum)->setRange(max);
@@ -348,7 +352,7 @@ void DialogParameterView::setSliderValue(int pnum, double value) {
         sValue.at(pnum)->setValue(value);
     }
     else {
-        if (unnum < numUnParams) {
+        if (unnum < numUnSavedParams) {
             unSlider.at(unnum)->setValue(intval);
             unValue.at(unnum)->setValue(value);
         }
@@ -376,6 +380,7 @@ void DialogParameterView::setType(int pnum, QString type) {
 }
 
 void DialogParameterView::minChanged(double value) {
+    Q_UNUSED(value);
     double dMin = 0, dMax = 1;
 
     for (int i = 0; i < numParamsShown; i++) {
@@ -387,7 +392,7 @@ void DialogParameterView::minChanged(double value) {
         }
         setSliderRange(i, dMin, dMax);
     }
-    for (int i = 0; i < numUnParams; i++) {
+    for (int i = 0; i < numUnSavedParams; i++) {
         dMin = unMin.at(i)->value();
         dMax = unMax.at(i)->value();
         if (checkMinMax(&dMin, &dMax)) {
@@ -411,7 +416,7 @@ void DialogParameterView::maxChanged(double value) {
         }
         setSliderRange(i, dMin, dMax);
     }
-    for (int i = 0; i < numUnParams; i++) {
+    for (int i = 0; i < numUnSavedParams; i++) {
         dMin = unMin.at(i)->value();
         dMax = unMax.at(i)->value();
         if (checkMinMax(&dMin, &dMax)) {
@@ -449,7 +454,7 @@ void DialogParameterView::sliderChanged(int value) {
             changed = true;
         }
     }
-    for (i = 0; i < numUnParams; i++) {
+    for (i = 0; i < numUnSavedParams; i++) {
         val = unSlider.at(i)->value();
         iMin = static_cast<int>(unMin.at(i)->value() * 1000 + .5);
         iMax = static_cast<int>(unMax.at(i)->value() * 1000 + .5);
@@ -507,7 +512,7 @@ void DialogParameterView::sValueChanged(double value) {
         changed = convertToInput(i)? true: changed;
     }
 
-    for (i = 0; i < numUnParams; i++) {
+    for (i = 0; i < numUnSavedParams; i++) {
         sval = unValue.at(i)->value();
         dMin = unMin.at(i)->value();
         dMax = unMax.at(i)->value();
@@ -567,7 +572,7 @@ double DialogParameterView::getValue(int pnum) {
         val = sValue.at(pnum)->value();
     }
     else {
-        if (unnum < numUnParams)
+        if (unnum < numUnSavedParams)
             val = unValue.at(unnum)->value();
     }
     return val;

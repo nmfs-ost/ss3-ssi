@@ -2,6 +2,7 @@
 
 console_redir::console_redir(QWidget *parent)
 {
+    Q_UNUSED(parent);
     process = nullptr;
 }
 
@@ -12,6 +13,7 @@ console_redir::~console_redir()
 
 bool console_redir::StartChildProcess(bool bShowChildWindow)
 {
+    Q_UNUSED(bShowChildWindow);
     process = new QProcess();
     process->setProcessChannelMode(QProcess::MergedChannels);
 
