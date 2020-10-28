@@ -569,6 +569,7 @@ void fleet_widget::set_current_fleet(int index)
         morphObsView->setModel(current_fleet->getMorphModel());
         morphObsView->resizeColumnsToContents();
         ui->spinBox_obs_morph_numObs->setValue(current_fleet->getMorphNumObs());
+
         recapObsView->setModel(current_fleet->getRecapModel());
         recapObsView->resizeColumnsToContents();
         ui->spinBox_obs_rec_numObs->setValue(current_fleet->getRecapNumEvents());

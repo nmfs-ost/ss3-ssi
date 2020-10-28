@@ -107,14 +107,14 @@ public:
     void setNumTagGroups(int num) {setNumObs(num);}
     int getNumTagGroups() {return getNumObs();}
 
-    void setLatency(int n_periods) {numPeriods = n_periods;}
-    int getLatency () {return numPeriods;}
+    void setLatency(int n_periods) {latency = n_periods;}
+    int getLatency () {return latency;}
 
     void setMaxPeriods (int max) {maxPeriods = max;}
     int getMaxPeriods () {return maxPeriods;}
 
 private:
-    int numPeriods;
+    int latency;
     int maxPeriods;
 
 };
@@ -124,8 +124,13 @@ class recapObservation : public ssObservation
 public:
     recapObservation();
 
-    void setNumRecapEvnts(int num) {setNumObs(num);}
-    int getNumRecapEvnts() {return getNumObs();}
+    void setNumRecapEvnts(int num) {numRecaps = num;}
+    int getNumRecapEvnts() {return numRecaps;}
+
+    void addRecapEvent(QStringList data) {addObservation(data);}
+
+private:
+    int numRecaps;
 
 };
 

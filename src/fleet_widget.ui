@@ -94,7 +94,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_fleet">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="movable">
          <bool>false</bool>
@@ -501,7 +501,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_obs">
             <property name="currentIndex">
-             <number>0</number>
+             <number>5</number>
             </property>
             <widget class="QWidget" name="tab_catch">
              <attribute name="title">
@@ -952,7 +952,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_comp">
             <property name="currentIndex">
-             <number>1</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="tab_length">
              <attribute name="title">
@@ -1945,8 +1945,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>878</width>
-                   <height>396</height>
+                   <width>248</width>
+                   <height>286</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2507,8 +2507,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>878</width>
-                   <height>396</height>
+                   <width>910</width>
+                   <height>470</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">

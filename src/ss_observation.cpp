@@ -7,7 +7,7 @@ ssObservation::ssObservation()
 {
     observations = new tablemodel();
     observations->setRowCount(0);
-    obsHeader << "Year" << "Month" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Year" << "Month" << "Sex" << "Part" << "NSamp" ;
     observations->setHeader(obsHeader);
 }
 
@@ -105,7 +105,7 @@ lengthObservation::lengthObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "NSamp" ;
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -116,7 +116,7 @@ ageObservation::ageObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader  << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "Lbin_lo" << "Lbin_hi" << "NSamp";
+    obsHeader  << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "AgeErr" << "Lbin_lo" << "Lbin_hi" << "NSamp";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -127,7 +127,7 @@ saaObservation::saaObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader  << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "NSamp";
+    obsHeader  << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "AgeErr" << "NSamp";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);
@@ -171,7 +171,7 @@ tagObservation::tagObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Tag" << "area" << "year" << "season" << "<tfill>" << "gender" << "age" << "number";
+    obsHeader << "Tag" << "area" << "year" << "season" << "<tfill>" << "sex" << "age" << "numRel";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumTagGroups(0);
@@ -184,7 +184,7 @@ recapObservation::recapObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Tag" << "year" << "season" << "number";
+    obsHeader << "Tag" << "year" << "season" << "fleet" << "numRecap";
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumRecapEvnts(0);
@@ -221,7 +221,7 @@ generalObservation::generalObservation()
     : ssObservation()
 {
     obsHeader.clear();
-    obsHeader << "Method" << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Method" << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "NSamp" ;
     observations->setColumnCount(obsHeader.count());
     observations->setHeader(obsHeader);
     setNumObs(0);

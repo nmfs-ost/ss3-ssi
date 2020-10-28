@@ -17,7 +17,7 @@ public:
     ~doubleLimitSpinBox();
 
 public slots:
-    void setRange(double value);
+    void setRangeValue(double value);
 
 /*private:
     Ui::doubleLimitSpinBox *ui;*/

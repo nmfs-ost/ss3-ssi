@@ -13,7 +13,7 @@ fleet_composition::fleet_composition(QObject *parent)
     i_err_param = 0;    // parm number if error = 1
 
     obsModel = new tablemodel(this);
-    obsHeader << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "NSamp" ;
     obsModel->setColumnCount(obsHeader.count());
     obsModel->setHeader(obsHeader);
 }
@@ -43,7 +43,7 @@ fleet_comp_length::fleet_comp_length(QObject *parent)
 {
     obsModel->setColumnCount(7);
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "NSamp" ;
     obsModel->setHeader(obsHeader);
     obsModel->setRowCount(0);
 }
@@ -69,7 +69,7 @@ fleet_comp_age::fleet_comp_age(QObject *parent)
     i_num_error_defs = 0;
     i_num_saa_obs = 0;
     obsHeader.clear();
-    obsHeader << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "Lbin_lo" << "Lbin_hi" << "NSamp";
+    obsHeader << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "AgeErr" << "Lbin_lo" << "Lbin_hi" << "NSamp";
     obsModel->setColumnCount(obsHeader.count());
     obsModel->setHeader(obsHeader);
     obsModel->setRowCount(0);
@@ -108,7 +108,7 @@ void fleet_comp_age::setNumberBins(int num, int gen)
     obsModel->setColumnCount(header.count());
     obsModel->setHeader(header);
 
-    saaHeader << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "Ignore";
+    saaHeader << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "AgeErr" << "Ignore";
     for (int i = 0; i < num; i++)
         saaHeader.append(QString("F%1").arg(i+1));
     if (gen == 2)
@@ -215,7 +215,7 @@ fleet_comp_general::fleet_comp_general(QObject *parent)
   : fleet_composition(parent)
 {
     obsHeader.clear();
-    obsHeader << "Method" << "Year" << "Month" << "Fleet" << "Gender" << "Part" << "NSamp" ;
+    obsHeader << "Method" << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "NSamp" ;
     obsModel->setColumnCount(obsHeader.count());
     obsModel->setHeader(obsHeader);
 

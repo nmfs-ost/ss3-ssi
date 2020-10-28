@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.2
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.4
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,12 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.16.4
+    2020-10-28
+1. Corrected reading recapture events.
+2. Added line number to file reading error messages.
+3. Changed column headers from "gender" to "sex".
 ============================================================================
     3.30.16.3
     2020-10-05

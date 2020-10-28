@@ -7,7 +7,7 @@ doubleLimitSpinBox::doubleLimitSpinBox(QWidget *parent) :
 //    ui(new Ui::doubleLimitSpinBox)
 {
 //    ui->setupUi(this);
-    connect (this, SIGNAL(valueChanged(double)), SLOT(setRange(double)));
+    connect (this, SIGNAL(valueChanged(double)), SLOT(setRangeValue(double)));
 }
 
 doubleLimitSpinBox::~doubleLimitSpinBox()
@@ -15,7 +15,7 @@ doubleLimitSpinBox::~doubleLimitSpinBox()
 //    delete ui;
 }
 
-void doubleLimitSpinBox::setRange(double value)
+void doubleLimitSpinBox::setRangeValue(double value)
 {
     double limitValue = (fabs(value) + 1) * 10;
     double min = value - limitValue;

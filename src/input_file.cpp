@@ -232,6 +232,7 @@ QString ss_file::get_next_value(QString prompt)
         else
             msg.append(QString("looking for %1 in ").arg(prompt));
         msg.append(QString("file %2.").arg(this->fileName()));
+        msg.append(QString("\n\tLine: %1").arg(QString::number(line_num)));
         QMessageBox::warning(0, tr("Input File unexpected EOF"), msg);
     }
     return tk;

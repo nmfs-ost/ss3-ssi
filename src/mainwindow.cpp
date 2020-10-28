@@ -310,7 +310,7 @@ void MainWindow::readSettings()
         scrRect = desk->screenGeometry(mainScrn);
     }
     else {
-        mainScrn = numscrns - 1;
+        mainScrn = 0;
         scrRect = desk->screenGeometry(mainScrn);
         for (int i = 0; i < mainScrn; i++)
             xdelta += desk->screenGeometry(i).width();

@@ -261,6 +261,12 @@ public slots:
     void set_tag_observation (int index, QStringList data) {tagData->setObservation(index, data);}
     QStringList get_tag_observation (int index) {return tagData->getObservation(index);}
     tablemodel *get_tag_observations () {return tagData->getObservations();}
+    void set_num_tag_recaps (int num) {recapData->setNumRecapEvnts(num);}
+    int get_num_tag_recaps () {return recapData->getNumRecapEvnts();}
+    void add_recap_observation (QStringList data) {recapData->addRecapEvent(data);}
+    int get_num_recap_observations () {return recapData->getNumObs();}
+    QStringList get_recap_observation (int index) {return recapData->getObservation(index);}
+    tablemodel *get_recap_observations () {return recapData->getObservations();}
 
     void setDoMorphComp (bool flag) {doMorphComp = flag;}
     bool getDoMorphComp () {return doMorphComp;}
@@ -429,6 +435,7 @@ private:
     environmentalVars *obsEnvironVars;
     bool doTags;
     tagObservation *tagData;
+    recapObservation *recapData;
 
     QList<BlockPattern *> blockPatterns;
     int iNumBlockPatterns;

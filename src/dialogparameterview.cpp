@@ -43,7 +43,7 @@ DialogParameterView::DialogParameterView(QWidget *parent, bool showTrans) :
     connectAll();
     hide();
     window = size();
-    position = pos();
+    position = QPoint(100, 100);
     int screen = QApplication::desktop()->screenNumber(parent);
     int xdelta = 0;
     if (screen > 0)
@@ -83,18 +83,19 @@ void DialogParameterView::clearAll() {
 
 
 void DialogParameterView::disconnectAll() {
-    for (int i = 0; i < pLabel.count(); i++) {
+    for (int i = 0; i < numParamsShown; i++) {
         disconnect (pMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
         disconnect (pMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
         disconnect (pSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
         disconnect (sValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
     }
-    for (int i = 0; i < unLabel.count(); i++) {
+    for (int i = 0; i < numUnSavedParams; i++) {
         disconnect (unMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
         disconnect (unMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
         disconnect (unSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
         disconnect (unValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
     }
+    disconnect (parameters, SIGNAL(dataChanged()), this, SLOT(reset()));
 }
 
 void DialogParameterView::connectAll() {
@@ -104,12 +105,13 @@ void DialogParameterView::connectAll() {
         connect (pSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
         connect (sValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
     }
-    for (int i = 0; i < unLabel.count(); i++) {
+    for (int i = 0; i < numUnSavedParams; i++) {
         connect (unMin.at(i), SIGNAL(valueChanged(double)), this, SLOT(minChanged(double)));
         connect (unMax.at(i), SIGNAL(valueChanged(double)), this, SLOT(maxChanged(double)));
         connect (unSlider.at(i), SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
         connect (unValue.at(i), SIGNAL(valueChanged(double)), this, SLOT(sValueChanged(double)));
     }
+    connect (parameters, SIGNAL(dataChanged()), this, SLOT(reset()));
 }
 
 void DialogParameterView::setTitle(QString ttl) {
@@ -315,8 +317,8 @@ void DialogParameterView::paramsChanged() {
     {
         disconnectAll();
         setSliders();
-        sliderChanged(1);
         connectAll();
+        emit inputChanged();
     }
 }
 
@@ -327,18 +329,18 @@ void DialogParameterView::setSliderRange(int pnum, double min, double max) {
     if (unnum < 0) {
         pSlider.at(pnum)->setRange(intmin, intmax);
         sValue.at(pnum)->setRange(min, max);
-        pMax.at(pnum)->setRange(max);
+        pMax.at(pnum)->setRangeValue(max);
         pMax.at(pnum)->setValue(max);
-        pMin.at(pnum)->setRange(min);
+        pMin.at(pnum)->setRangeValue(min);
         pMin.at(pnum)->setValue(min);
     }
     else {
         if (unnum < numUnSavedParams) {
             unSlider.at(unnum)->setRange(intmin, intmax);
             unValue.at(unnum)->setRange(min, max);
-            unMax.at(unnum)->setRange(max);
+            unMax.at(unnum)->setRangeValue(max);
             unMax.at(unnum)->setValue(max);
-            unMin.at(unnum)->setRange(min);
+            unMin.at(unnum)->setRangeValue(min);
             unMin.at(unnum)->setValue(min);
         }
     }
@@ -598,7 +600,7 @@ void DialogParameterView::setVisible(bool visible) {
             move(position);
 //        if (parameters != nullptr)
 //            connect (parameters, SIGNAL(dataChanged()), SLOT(paramsChanged()));
-        reset();
+//        reset();
     }
     else {
         position = pos();
@@ -619,7 +621,7 @@ void DialogParameterView::hide() {
 
 void DialogParameterView::closeEvent(QCloseEvent *evt) {
     Q_UNUSED(evt);
-    QDialog::hide();
+    hide();
     emit hidden();
 }
 
@@ -630,8 +632,8 @@ void DialogParameterView::cancel() {
 void DialogParameterView::reset() {
     disconnectAll();
     setSliders();
-//    sValueChanged(0);
     connectAll();
+    emit inputChanged();
 }
 
 void DialogParameterView::apply() {

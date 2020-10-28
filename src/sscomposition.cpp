@@ -151,7 +151,7 @@ void compositionAge::setNumberBins(int num)
     QStringList saaHeader;
     binsModel->setColumnCount(num);
 
-    saaHeader << "Year" << "Month" << "Fleet" << "Gen" << "Part" << "AgeErr" << "Ignore";
+    saaHeader << "Year" << "Month" << "Fleet" << "Sex" << "Part" << "AgeErr" << "Ignore";
     for (int i = 0; i < num; i++)
         saaHeader.append(QString("F%1").arg(i+1));
     for (int i = 0; i < num; i++)

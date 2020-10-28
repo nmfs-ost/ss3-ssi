@@ -392,11 +392,8 @@ void DialogEquationView::apply()
 
 void DialogEquationView::reset()
 {
-    disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
     // reset parameters
     parameterView->reset();
-    connect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
-    update();
 }
 
 void DialogEquationView::resetValues()

@@ -86,6 +86,7 @@ ss_model::ss_model(QWidget *parent) :
 
     doTags = false;
     tagData = new tagObservation();
+    recapData = new recapObservation();
     tagLossInit = new longParameterModel(this);
     tagLossChronic = new longParameterModel(this);
     tagOverdispersion = new longParameterModel(this);

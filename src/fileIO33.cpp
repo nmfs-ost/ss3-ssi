@@ -30,6 +30,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
     {
         //  SS_Label_Info_2.1.1 #Read comments
         d_file->seek(0);
+//        d_file->reset();
         d_file->resetLineNum();
         d_file->read_comments();
 
@@ -478,14 +479,15 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     token = d_file->get_next_value(QString("mean Size_at_Age"));
                     str_lst.append(token);
                 }
-                if (str_lst.at(0).toInt() == END_OF_LIST)
+                year = str_lst.at(0).toInt();
+                if (year == END_OF_LIST)
                     break;
                 if (str_lst.at(0).compare(QString("EOF")) == 0)
                     return false;
                 fleet = abs(str_lst.at(2).toInt());
                 fleet = d_file->checkIntValue(fleet, QString("Fleet Number"), 1, total_fleets, 1);
                 data->getFleet(fleet - 1)->addSaaObservation(str_lst);
-            } while (str_lst.at(0).toInt() != END_OF_LIST);
+            } while (year != END_OF_LIST);
         }
         }
 
@@ -588,11 +590,13 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.12 #Read tag release and recapture data
         temp_int = d_file->getIntValue(QString("Do tags"), 0, 1, 0);
         data->set_do_tags(temp_int == 1);
-        if (temp_int == 1)
+        if (data->get_do_tags())
         {
             temp_int = d_file->get_next_value().toInt();
             data->set_num_tag_groups(temp_int);
-            num_input_lines = d_file->get_next_value().toInt();
+            temp_int = d_file->get_next_value().toInt();
+            data->set_num_tag_recaps(temp_int);
+
             temp_int = d_file->get_next_value().toInt();
             data->set_tag_latency(temp_int);
             temp_int = d_file->get_next_value().toInt();
@@ -606,18 +610,32 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->set_tag_observation(i, str_lst);
             }
             // recapture data
-            for (i = 0; i < num_input_lines; i++)
+            token = d_file->get_next_value("tag");
+            bool last_tag = false;
+            int tag = 0;
+            num_vals = data->get_num_tag_groups();
+            while (!last_tag || token.toInt() == tag)
             {
+                tag = token.toInt();
                 str_lst.clear();
-                for (int j = 0; j < 5; j++)
+                str_lst.append(token);
+                for (int j = 0; j < 4; j++)
                     str_lst.append(d_file->get_next_value());
-                temp_int = abs(str_lst.at(3).toInt());
-                data->getFleet(temp_int - 1)->addRecapObservation(str_lst);
+                fleet = abs(str_lst.at(3).toInt());
+                data->getFleet(fleet - 1)->addRecapObservation(str_lst);
+                if (num_vals == tag)
+                    last_tag = true;
+                token = d_file->get_next_value("tag");
+            }
+            for (int i = 0; i < data->get_num_fleets(); i++)
+            {
+                num_input_lines = data->getFleet(i+1)->getRecapModel()->rowCount();
+                data->getFleet(i+1)->setRecapNumEvents(num_input_lines);
             }
         }
 
         //  SS_Label_Info_2.13 #Morph composition data
-        temp_int = d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
+        temp_int = d_file->checkIntValue(token.toInt(), QString("Do morph composition"), 0, 1, 0); //d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
         data->setDoMorphComp(temp_int == 1);
         total_fleets = data->get_num_fleets();
         if (data->getDoMorphComp())
