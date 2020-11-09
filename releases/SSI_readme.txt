@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.4
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.5
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,12 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.16.5
+    2020-11-09
+1. Set F Mort number of tuning iterations from 1 to 15 for method 3 (hybrid).
+2. Corrected reading of do morph composition.
+3. Corrected reading of time-varying deviation parameters.
 ============================================================================
     3.30.16.4
     2020-10-28

@@ -635,7 +635,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
 
         //  SS_Label_Info_2.13 #Morph composition data
-        temp_int = d_file->checkIntValue(token.toInt(), QString("Do morph composition"), 0, 1, 0); //d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
+        temp_int = d_file->getIntValue(QString("Do morph composition"), 0, 1, 0); //d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
         data->setDoMorphComp(temp_int == 1);
         total_fleets = data->get_num_fleets();
         if (data->getDoMorphComp())
@@ -2894,7 +2894,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->M()->setNumInputs(temp_int); // numInputs
             break;
         case 3:
-            temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 1, 10, 4);
+            temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 1, 15, 4);
             pop->M()->setNumTuningIters(temp_int); // numTuningIters
             break;
         }
@@ -5353,10 +5353,10 @@ int readTimeVaryDevParams(ss_file *infile, ss_model *data, int value, QString hd
     QStringList varParam;
     QString varHeader(hdr);
     Q_UNUSED(data);
-    switch (value)
+//    switch (value)
     {
-    case 1:
-    case 2:
+//    case 1:
+//    case 2:
         varParam = readShortParameter(infile);
         varParamTable->setRowData(row, varParam);
         varParamTable->setRowHeader(row, QString("%1_dev_se").arg(varHeader));
@@ -5364,7 +5364,7 @@ int readTimeVaryDevParams(ss_file *infile, ss_model *data, int value, QString hd
         varParam = readShortParameter(infile);
         varParamTable->setRowData(row, varParam);
         varParamTable->setRowHeader(row, QString("%1_dev_autocorr").arg(varHeader));
-        break;
+//        break;
     }
     return (row + 1);
 }
