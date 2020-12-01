@@ -96,10 +96,14 @@ public:
     bool getOkay() const;
     void setOkay(bool value);
 
+    bool getStop() const;
+    void setStop(bool value);
+
 private:
     int line_num;
     bool wait;
     bool okay;
+    bool stop;
     QString *current_line;
     QStringList *current_tokens;
     int current_line_num_tokens;
@@ -114,7 +118,7 @@ protected:
 
 
 signals:
-    void end_reading_file();
+    void stopReadingFile(QString info = QString(""));
 
 public slots:
     bool reset ();

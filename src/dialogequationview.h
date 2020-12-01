@@ -196,6 +196,9 @@ protected slots:
     void fillValues (const QList<QPointF> fewpoints, QList<double> xvals, QList<QPointF> &fullpoints);
     double posfun(const double &x, const double eps, double& pen);
 
+    bool pointListIsOrdered(QList<QPointF> &plist);
+    bool sortPointList(QList<QPointF> &plist);
+
 protected:
     Ui::DialogEquationView *ui;
 };

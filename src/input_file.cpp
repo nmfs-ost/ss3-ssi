@@ -9,7 +9,7 @@ ss_file::ss_file(QString name, QObject *parent) :
     setFileName(name);
     reset();
 
-    connect (this, SIGNAL(end_reading_file()), SLOT(reset()));
+    connect (this, SIGNAL(stopReadingFile()), SLOT(reset()));
 }
 
 ss_file::~ss_file ()
@@ -31,6 +31,7 @@ bool ss_file::reset()
     line_num = 0;
     wait = false;
     okay = true;
+    stop = false;
     current_line = new QString("");
     current_tokens = new QStringList(*current_line);
     current_tokens->clear();
@@ -228,12 +229,13 @@ QString ss_file::get_next_value(QString prompt)
     if (tk.compare("EOF") == 0)
     {
         if (prompt.isEmpty())
-            msg.append(QString(" reading "));
+            msg.append(QString("reading "));
         else
             msg.append(QString("looking for %1 in ").arg(prompt));
         msg.append(QString("file %2.").arg(this->fileName()));
         msg.append(QString("\n\tLine: %1").arg(QString::number(line_num)));
-        QMessageBox::warning(0, tr("Input File unexpected EOF"), msg);
+        QMessageBox::warning(nullptr, tr("Input File unexpected EOF"), msg);
+        emit stopReadingFile("EOF");
     }
     return tk;
 }
@@ -404,15 +406,16 @@ void ss_file::checkErrCode(float code) {
 void ss_file::checkErrCode(int code) {
     switch (code) {
     case -1000000:
-        QMessageBox::warning(nullptr, tr("Stop Reading on User Input"),
-                     tr(QString("Reading file %1 has stopped.").arg(fileName()).toUtf8()));
+        QMessageBox::warning(nullptr, tr("Stopped Reading on User Input"),
+                     tr(QString("Reading file %1 has stopped at line %2.").arg(fileName(), QString::number(line_num)).toUtf8()));
         reset();
         okay = false;
-        emit end_reading_file();
+        stop = true;
+        emit stopReadingFile("Stop");
         break;
 
     case -999999:
-        QMessageBox::critical(0, tr("Exit on Reading Error"),
+        QMessageBox::critical(nullptr, tr("Exit on Reading Error"),
                     tr("Leaving the application while reading files."));
         reset();
         okay = false;
@@ -428,4 +431,14 @@ bool ss_file::getOkay() const
 void ss_file::setOkay(bool value)
 {
     okay = value;
+}
+
+bool ss_file::getStop() const
+{
+    return stop;
+}
+
+void ss_file::setStop(bool value)
+{
+    stop = value;
 }

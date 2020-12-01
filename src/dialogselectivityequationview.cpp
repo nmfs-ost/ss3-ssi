@@ -2921,74 +2921,76 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
 
         if (okay) {
 
-        for (i = 0; i < size; i++)
-            X[i] = parameterView->getInput(start++);
-        for (i = 0; i < size; i++)
-            Y[i] = parameterView->getInput(start++);
-
-        ptSeries->clear();
-
-        for (i = 0; i < size; i++)
-            ptSeries->append(X[i], Y[i]);
-
-
-        // currently it is required that X is already sorted
-        cubicspl.set_boundary(tk::spline::first_deriv, gradLo,
-                              tk::spline::first_deriv, gradHi);
-        cubicspl.set_points(X, Y);
-
         firstPoints.clear();
-        valSeries->clear();
-        ascendSeries->clear();
-
-        for (i = 0; i < xValList.count(); i++)
+        for (i = 0; i < size; i++)
         {
-            xval = xValList.at(i);
-            if (xval > X[size - 1])
-                break;
-            yval = cubicspl(xval);
-            firstPoints.append(QPointF(xval, yval));
+            X[i] = parameterView->getInput(start+i);
+            Y[i] = parameterView->getInput(start+size+i);
+            firstPoints.append(QPointF(X[i], Y[i]));
         }
-        for ( ; i < xValList.count(); i++)
+
+        if (pointListIsOrdered(firstPoints))
         {
-            xval = xValList.at(i);
-            firstPoints.append(QPointF(xval, yval));
-        }
-        ascendSeries->append(firstPoints);
+            // currently it is required that X is already sorted
+            cubicspl.set_boundary(tk::spline::first_deriv, gradLo,
+                                  tk::spline::first_deriv, gradHi);
+            cubicspl.set_points(X, Y);
 
-        altMinVal = minYvalue (firstPoints);
-        altMaxVal = maxYvalue (firstPoints);
-//        altMax = altMinVal + ((altMaxVal - altMinVal) * 1.2);
-        axisYalt->setRange(altMinVal, altMaxVal);
+            ptSeries->append(firstPoints);
 
-        secndPoints.clear();
-        if (scale > 0)
-        {
-            setLimits(bins.at(loBin-1), bins.at(hiBin-1));
+            firstPoints.clear(); // reuse firstPoints
+            valSeries->clear();
+            ascendSeries->clear();
 
-            temp1 = aveYvalue(firstPoints, loBin-1, hiBin-1);
-            for (i = 0; i < firstPoints.count(); i++) {
-                temp2 = firstPoints.at(i).y();
-                secndPoints.append(QPointF(firstPoints.at(i)));
-                secndPoints[i].setY(exp(temp2 - temp1));
+            for (i = 0; i < xValList.count(); i++)
+            {
+                xval = xValList.at(i);
+                if (xval > X[size - 1])
+                    break;
+                yval = cubicspl(xval);
+                firstPoints.append(QPointF(xval, yval));
             }
-        }
-        else
-        {
-            temp1 = maxYvalue(firstPoints);
-//            if (temp1 > 10) temp1 = 10;
-            for (i = 0; i < firstPoints.count(); i++) {
-                temp2 = firstPoints.at(i).y();
-//                if (temp2 > temp1) temp2 = temp1 - .0000001;
-                secndPoints.append(firstPoints.at(i));
-                secndPoints[i].setY(exp(temp2 - temp1));
+            for ( ; i < xValList.count(); i++)
+            {
+                xval = xValList.at(i);
+                firstPoints.append(QPointF(xval, yval));
             }
-        }
-        yMax = maxYvalue(secndPoints);
-        if (yMax > 1.0)
-            axisY->setRange(0, yMax * 1.2);
+            ascendSeries->append(firstPoints);
 
-        valSeries->append(secndPoints);
+            altMinVal = minYvalue (firstPoints);
+            altMaxVal = maxYvalue (firstPoints);
+    //        altMax = altMinVal + ((altMaxVal - altMinVal) * 1.2);
+            axisYalt->setRange(altMinVal, altMaxVal);
+
+            secndPoints.clear();
+            if (scale > 0)
+            {
+                setLimits(bins.at(loBin-1), bins.at(hiBin-1));
+
+                temp1 = aveYvalue(firstPoints, loBin-1, hiBin-1);
+                for (i = 0; i < firstPoints.count(); i++) {
+                    temp2 = firstPoints.at(i).y();
+                    secndPoints.append(QPointF(firstPoints.at(i)));
+                    secndPoints[i].setY(exp(temp2 - temp1));
+                }
+            }
+            else
+            {
+                temp1 = maxYvalue(firstPoints);
+    //            if (temp1 > 10) temp1 = 10;
+                for (i = 0; i < firstPoints.count(); i++) {
+                    temp2 = firstPoints.at(i).y();
+    //                if (temp2 > temp1) temp2 = temp1 - .0000001;
+                    secndPoints.append(firstPoints.at(i));
+                    secndPoints[i].setY(exp(temp2 - temp1));
+                }
+            }
+            yMax = maxYvalue(secndPoints);
+            if (yMax > 1.0)
+                axisY->setRange(0, yMax * 1.2);
+
+            valSeries->append(secndPoints);
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         //  SS_Label_Info_2.1.2 #Read model time dimensions
 
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         token = d_file->get_next_value(QString("start year"));
         startYear = token.toInt();
         data->set_start_year (startYear);
@@ -44,10 +44,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         endYear = token.toInt();
         data->set_end_year(endYear);
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         numSeas = d_file->getIntValue(QString("seasons per year"), 1, 12, 1);
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
 //        token = d_file->get_next_value(QString("seasons per year"));
 //        numSeas = token.toInt();
         data->set_num_seasons(numSeas);
@@ -60,7 +60,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         //  SS_Label_Info_2.1.3 #Set up seasons
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         data->rescale_months_per_season();
         token = d_file->get_next_value(QString("subseasons"));
         temp_int = token.toInt();
@@ -70,7 +70,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         data->set_spawn_month(temp_float);
         temp_int = d_file->getIntValue(QString("Number of sexes"), 1, 2, 2);
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         n_genders = temp_int;
         data->set_num_genders(n_genders);
         token = d_file->get_next_value(QString("number of ages"));
@@ -90,7 +90,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         data->set_num_fleets(total_fleets);
         num_vals = 0;
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
@@ -127,7 +127,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         // Read bycatch data, if any
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         for (i = 0; i < num_vals; i++)
         {
             temp_int = d_file->getIntValue(QString("Fleet Index"), 1, total_fleets, 1);
@@ -148,7 +148,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         //  ProgLabel_2.2  Read CATCH amount by fleet
         // Catch
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         num_vals = total_fleets;
         do {
             int seas = 0;
@@ -174,7 +174,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.3 #Read fishery CPUE, effort, and Survey index or abundance
         // before we record abundance, get units and error type for all fleets
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         for (i = 0; i < total_fleets; i++)
         {
             Fleet *flt = data->getFleet(i);
@@ -189,7 +189,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             flt->setSDReport(temp_int);
         }
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         // here are the abundance numbers
         do
         {    // year, month, fleet_number, observation, error
@@ -209,7 +209,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
 
         } while (year != END_OF_LIST);
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         //  SS_Label_Info_2.4 #read Discard data
         token = d_file->get_next_value("num fleets with discard");
         num_vals = token.toInt();
@@ -250,7 +250,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
 
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         //  SS_Label_Info_2.5 #Read Mean Body Weight data
         //  note that syntax for storing this info internal is done differently than for surveys and discard
         temp_int = d_file->getIntValue(QString("use mean bwt"), 0, 1, 0);
@@ -277,10 +277,9 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
 
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         //  SS_Label_Info_2.6 #Setup population Length bins
-        {
-            ss_growth *grow = data->getPopulation()->Grow();
+        ss_growth *grow = data->getPopulation()->Grow();
         temp_int = d_file->getIntValue(QString("Length comp alt bin method"), 1, 3, 1);
         grow->setGrowthBinMethod(temp_int);
         switch (temp_int)
@@ -309,8 +308,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             grow->setGrowthBins(str_lst);
             break;
         }
+        }
 
         //  SS_Label_Info_2.7 #Start length data section
+        if (d_file->getOkay() && !d_file->getStop()) {
         compositionLength *l_data = data->get_length_composition();
         if (l_data == nullptr) {
             l_data = new compositionLength();
@@ -337,55 +338,50 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(i)->setLengthMinSampleSize(temp_float);
             }
             num_len_bins = d_file->get_next_value(QString("Length comp number bins")).toInt();
+            l_data->setNumberBins(num_len_bins);
+            for (int j = 0; j < total_fleets; j++)
+                data->getFleet(j)->setLengthNumBins(num_len_bins);
+            str_lst.clear();
+            for (i = 0; i < num_len_bins; i++)
+            {
+                str_lst.append(d_file->get_next_value(QString("Length comp bin")));
+            }
+            l_data->setBins(str_lst);
+            // set pop bins if method = 1
+            ss_growth *grow = data->getPopulation()->Grow();
+            if (grow->getGrowthBinMethod() == 1)
+            {
+                grow->setNumGrowthBins(str_lst.count());
+                grow->setGrowthBins(str_lst);
+            }
+
+            //  SS_Label_Info_2.7.4 #Read Length composition data
+            obslength = data->getFleet(0)->getLengthObsLength();
+            do
+            {
+                str_lst.clear();
+                for (int j = 0; j < obslength; j++)
+                {
+                    token = d_file->get_next_value(QString("Length comp data"));
+                    str_lst.append(token);
+                }
+                if (str_lst.at(0).toInt() == END_OF_LIST)
+                    break;
+                if (str_lst.at(0).compare("EOF") == 0)
+                    return false;
+                temp_int = abs(str_lst.at(2).toInt());
+                data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
+            } while (str_lst.at(0).toInt() != END_OF_LIST);
+            data->set_length_composition(l_data);
         }
         else {
             num_len_bins = 2;
         }
-        l_data->setNumberBins(num_len_bins);
-        for (int j = 0; j < total_fleets; j++)
-            data->getFleet(j)->setLengthNumBins(num_len_bins);
-        str_lst.clear();
-        for (i = 0; i < num_len_bins; i++)
-        {
-            str_lst.append(d_file->get_next_value(QString("Length comp bin")));
-        }
-        l_data->setBins(str_lst);
-
-        // set pop bins if method = 1
-        if (grow->getGrowthBinMethod() == 1)
-        {
-            grow->setNumGrowthBins(str_lst.count());
-            grow->setGrowthBins(str_lst);
-        }
-//        for (i = 0; i < total_fleets; i++)
-//        {
-//            data->getFleet(i)->getSizeSelectivity()->setBins(str_lst);
-//        }
-
-        //  SS_Label_Info_2.7.4 #Read Length composition data
-        obslength = data->getFleet(0)->getLengthObsLength();
-        do
-        {
-            str_lst.clear();
-            for (int j = 0; j < obslength; j++)
-            {
-                token = d_file->get_next_value(QString("Length comp data"));
-                str_lst.append(token);
-            }
-            if (str_lst.at(0).toInt() == END_OF_LIST)
-                break;
-            if (str_lst.at(0).compare("EOF") == 0)
-                return false;
-            temp_int = abs(str_lst.at(2).toInt());
-            data->getFleet(temp_int - 1)->addLengthObservation(str_lst);// getLengthObs.addObservation(data);
-        } while (str_lst.at(0).toInt() != END_OF_LIST);
-        data->set_length_composition(l_data);
-        }
 
         }
-        if (d_file->getOkay()) {
+
         //  SS_Label_Info_2.8 #Start age composition data section
-        {
+        if (d_file->getOkay() && !d_file->getStop()) {
         compositionAge *a_data = data->get_age_composition();
         if (a_data == nullptr)
             a_data = new compositionAge ();
@@ -464,8 +460,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(fleet - 1)->addAgeObservation(str_lst);
             } while (str_lst.at(0).toInt() != END_OF_LIST);
         }
+        }
 
         //  SS_Label_Info_2.9 #Read mean Size_at_Age data
+        if (d_file->getOkay() && !d_file->getStop()) {
         temp_int = d_file->get_next_value().toInt();
         data->setUseMeanSAA(temp_int);
         if (temp_int > 0)
@@ -492,6 +490,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
 
         //  SS_Label_Info_2.10 #Read environmental data that will be used to modify processes and expected values
+        if (d_file->getOkay() && !d_file->getStop()) {
         temp_int = d_file->get_next_value(QString("num env vars")).toInt();
         data->setNumEnvironVars (temp_int);
         data->setNumEnvironVarObs(0);
@@ -512,8 +511,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                     return false;
             } while (temp_int != END_OF_LIST);
         }
+        }
 
         //  SS_Label_Info_2.11 #Start generalized size composition section
+        if (d_file->getOkay() && !d_file->getStop()) {
         num_vals = d_file->get_next_value().toInt();
         if (num_vals > 0)
         {
@@ -584,9 +585,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(fleet-1)->addGenObservation(temp_int-1, str_lst);
             }
         }
-
         }
-        if (d_file->getOkay()) {
+        if (d_file->getOkay() && !d_file->getStop()) {
         //  SS_Label_Info_2.12 #Read tag release and recapture data
         temp_int = d_file->getIntValue(QString("Do tags"), 0, 1, 0);
         data->set_do_tags(temp_int == 1);
@@ -610,22 +610,25 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->set_tag_observation(i, str_lst);
             }
             // recapture data
-            token = d_file->get_next_value("tag");
             bool last_tag = false;
-            int tag = 0;
-            num_vals = data->get_num_tag_groups();
-            while (!last_tag || token.toInt() == tag)
+            int tag = 0, tag_num = data->get_num_tag_groups();
+            num_vals = data->get_num_tag_recaps();
+            for (int i = 0; i < num_vals; i++)
             {
+                token = d_file->get_next_value("tag");
                 tag = token.toInt();
+                if (last_tag && tag != tag_num) {
+                    d_file->return_token(token);
+                    break;
+                }
                 str_lst.clear();
                 str_lst.append(token);
-                for (int j = 0; j < 4; j++)
+                for (int j = 1; j < 5; j++)
                     str_lst.append(d_file->get_next_value());
                 fleet = abs(str_lst.at(3).toInt());
                 data->getFleet(fleet - 1)->addRecapObservation(str_lst);
-                if (num_vals == tag)
+                if (tag_num == tag)
                     last_tag = true;
-                token = d_file->get_next_value("tag");
             }
             for (int i = 0; i < data->get_num_fleets(); i++)
             {
@@ -633,9 +636,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(i+1)->setRecapNumEvents(num_input_lines);
             }
         }
+        }
 
         //  SS_Label_Info_2.13 #Morph composition data
-        temp_int = d_file->getIntValue(QString("Do morph composition"), 0, 1, 0); //d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
+        if (d_file->getOkay() && !d_file->getStop()) {
+        temp_int = d_file->getIntValue(QString("Do morph composition"), 0, 1, 0);
         data->setDoMorphComp(temp_int == 1);
         total_fleets = data->get_num_fleets();
         if (data->getDoMorphComp())
@@ -665,13 +670,12 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         }
         temp_int = d_file->getIntValue(QString("Do dataread for selectivity priors"), 0, 1, 0);
         data->setReadSelectivityPriors(temp_int == 1? true: false);
-
+        }
         //  SS_Label_Info_2.14 #End of datafile indicator
         temp_int = d_file->get_next_value().toInt();
         if (temp_int != END_OF_DATA)
         {
             d_file->error(QString("Found incorrect end of data marker."));
-        }
         }
 
         d_file->close();
@@ -1592,20 +1596,25 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_num_fleets(numFleets);
         fcast->set_num_genders(numGenders);
 
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("Benchmarks/Reference points"), 0, 2, 1);
         fcast->set_benchmarks(temp_int);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("MSY Method"), 1, 4, 1);
         fcast->set_MSY(temp_int);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("SPR target"));
         temp_float = token.toFloat();
         fcast->set_spr_target(temp_float);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("biomass target"));
         temp_float = token.toFloat();
         fcast->set_biomass_target(temp_float);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         for (i = 0; i < 10; i++)
         {
             token = f_file->get_next_value(QString("benchmark year"));
@@ -1614,7 +1623,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         }
         temp_int = f_file->getIntValue(QString("Benchmark Rel F basis"), 1, 2, 1);
         fcast->set_benchmark_rel_f(temp_int);
+        }
 
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("Forecast type"), -1, 5, 2);
         fcast->set_forecast(temp_int);
         token = f_file->get_next_value(QString("number of forecast years"));
@@ -1623,13 +1634,17 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         token = f_file->get_next_value(QString("F scalar"));
         temp_float = token.toFloat();
         fcast->set_f_scalar(temp_float);
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         for (i = 0; i < 6; i++)
         {
             token = f_file->get_next_value(QString("forecast year"));
             temp_int = token.toInt();
             fcast->set_forecast_year(i, temp_int);
         }
+        }
 
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("Forecast selectivity"), 0, 1, 0);
         fcast->setSelectivity (temp_int);
         temp_int = f_file->getIntValue(QString("Control Rule"), 0, 4, 1);
@@ -1643,6 +1658,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         token = f_file->get_next_value(QString("control rule buffer"));
         temp_float = token.toFloat();
         fcast->set_cr_buffer(temp_float);
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = token.toInt();
         if (temp_int == -1) {
             do {
@@ -1657,6 +1674,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 fcast->append_cr_buffer_list(str_lst);
             } while (temp_int != END_OF_LIST);
         }
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("Number of forecast loops"), 1, 3, 3);
         fcast->set_num_forecast_loops(temp_int);
         temp_int = f_file->getIntValue(QString("First forecast loop with stochastic recruitment"), 1, 3, 3);
@@ -1669,14 +1688,18 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         token = f_file->get_next_value(QString("loop control 5"));
         temp_int = token.toInt();
         fcast->set_forecast_loop_ctl5(temp_int);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("caps and allocs first yr"));
         temp_int = token.toInt();
         fcast->set_caps_alloc_st_year(temp_int);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("std dev log(catch/tgt)"));
         temp_float = token.toFloat();
         fcast->set_log_catch_std_dev(temp_float);
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("Do West Coast rebuilder"), 0, 1, 0);
         fcast->set_do_rebuilder(temp_int == 1? true: false);
         token = f_file->get_next_value(QString("rebuilder: first year"));
@@ -1689,14 +1712,16 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         if (temp_int == -1)
             temp_int = data->get_end_year() + 1;
         fcast->set_rebuilder_curr_year(temp_int);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         temp_int = f_file->getIntValue(QString("Fleet Relative F"), 1, 2, 1);
         fcast->set_fleet_rel_f(temp_int);
 
         temp_int = f_file->getIntValue(QString("Basis for max forecast catch"), 2, 6, 2);
         fcast->set_catch_tuning_basis(temp_int);
-
+        }
         // season, fleet, relF
+        if (f_file->getOkay() && !f_file->getStop()) {
         if (fcast->get_fleet_rel_f() == 2)
         {
             for (i = 0; i < numSeas; i++)
@@ -1711,16 +1736,18 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 
             } while (temp_int != END_OF_LIST);
         }
-
+        }
         // max catch fleet
+        if (f_file->getOkay() && !f_file->getStop()) {
         do {
             fleet = f_file->get_next_value().toInt();
             temp_float = f_file->get_next_value(QString("max catch fleet")).toFloat();
             if (fleet != END_OF_LIST)
                 fcast->set_max_catch_fleet((fleet - 1), temp_float);
         } while (fleet != END_OF_LIST);
-
+        }
         // max catch area
+        if (f_file->getOkay() && !f_file->getStop()) {
         for (i = 0; i < fcast->get_num_areas(); i++)
             fcast->set_max_catch_area(i, 0);
         do {
@@ -1729,8 +1756,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             if (area != END_OF_LIST)
                 fcast->set_max_catch_area((area - 1), temp_float);
         } while (area != END_OF_LIST);
-
+        }
         // Allocation groups
+        if (f_file->getOkay() && !f_file->getStop()) {
         fcast->set_num_alloc_groups(0);
         for (i = 0; i < data->get_num_fleets(); i++)
             data->getFleet(i)->setAllocGroup(0);
@@ -1743,7 +1771,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 fcast->setAllocGrp(fleet - 1, temp_int);
             }
         } while (fleet != END_OF_LIST);
-
+        }
+        if (f_file->getOkay() && !f_file->getStop()) {
         if (fcast->get_num_alloc_groups() > 0)
         {
             int j = 0;
@@ -1762,8 +1791,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                     fcast->setAllocFractions(j++, str_lst);
             } while (temp_int != END_OF_LIST);
         }
-
+        }
         // Forecast Catch
+        if (f_file->getOkay() && !f_file->getStop()) {
         fcast->setNumFixedFcastCatch(0);
         token = f_file->get_next_value(QString("Basis for forecast catch"));
         num = token.toInt();
@@ -1782,8 +1812,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             if (temp_int != END_OF_LIST)
                 fcast->addFixedFcastCatch(str_lst);
         } while (temp_int != END_OF_LIST);
-
+        }
         //  SS_Label_Info_3.5 #End of datafile indicator
+        if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("End of data indicator"));
         temp_int = token.toInt();
         if (temp_int != END_OF_DATA)
@@ -1798,7 +1829,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                     f_file->error(QString("Stopped reading before end of data marker!"));
             }
         }
-
+        }
         f_file->close();
     }
     else
@@ -2101,18 +2132,24 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     QMessageBox::information(nullptr, "Information - reading contol file", "Control file start.");
 #endif
         // read wtatage.ss
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Read wtatage.ss?"), 0, 2, 0);
         data->setReadWtAtAge(temp_int);
-
+    }
         // growth patterns
+    if (c_file->getOkay() && !c_file->getStop()) {
         num = c_file->get_next_value(QString("Num growth patterns")).toInt();
         pop->Grow()->setNum_patterns(num);
+    }
         // morphs or platoons
+    if (c_file->getOkay() && !c_file->getStop()) {
         num = c_file->get_next_value(QString("Num growth morphs")).toInt();
         pop->Grow()->setNum_morphs(num); // 1, 3, and 5 are best, normal dist set
         num = pop->Grow()->getNum_morphs();
         pop->Grow()->setMorph_within_ratio(1.0);
         pop->Grow()->setMorph_dist(0, 1.0);
+    }
+    if (c_file->getOkay() && !c_file->getStop()) {
         if (num > 1)
         {
             temp_float = c_file->get_next_value(QString("Morph between ratio")).toFloat();
@@ -2146,11 +2183,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->Grow()->setMorphDist();
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Morphs/platoons read.");
 #endif
 
         // recruitment distribution designs
+    if (c_file->getOkay() && !c_file->getStop()) {
         index = c_file->getIntValue(QString("Recruitment distribution method"), 2, 4, 1);
         pop->SR()->setDistribMethod(index);
         temp_int = c_file->getIntValue(QString("Recruitment distribution area"), 1, 2, 1);
@@ -2159,7 +2198,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setNumAssignments(num);
         temp_int = c_file->get_next_value(QString("Recr unused")).toInt(); // read interact params?
         pop->SR()->setDoRecruitInteract(temp_int);
+    }
 
+    if (c_file->getOkay() && !c_file->getStop()) {
         for (i = 0; i < num; i++) // gr pat, month, area, age for each assignment
         {
             datalist.clear();
@@ -2168,11 +2209,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->SR()->setAssignment(i, datalist);
         }
         datalist.clear();
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Recruitment read.");
 #endif
 
         // movement definitions
+    if (c_file->getOkay() && !c_file->getStop()) {
         pop->Move()->setNumDefs(0);
         pop->Move()->setFirstAge(0);
         if (data->get_num_areas() > 1)
@@ -2192,11 +2235,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Movement read.");
 #endif
 
         // time block definitions
+    if (c_file->getOkay() && !c_file->getStop()) {
         num = c_file->get_next_value(QString("Num block patterns")).toInt();
         data->setNumBlockPatterns(num);
         if (num > 0)
@@ -2217,10 +2262,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Time blocks read.");
 #endif
         // controls for time-varying params
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Adjustment method for time varying params"), 1, 3, 1);
         pop->Grow()->setTimeVaryMethod(temp_int);
         temp_int = c_file->getIntValue(QString("Autogenerate Biology time-varying params"), 0, 2, 0);
@@ -2235,8 +2282,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         temp_int = c_file->getIntValue(QString("Autogenerate Fleet selex time-varying params"), 0, 2, 0);
         for (i = 0; i < data->get_num_fleets(); i++)
             data->getFleet(i)->setSelTimeVaryReadParams(temp_int);
+    }
 
         // natural Mort
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Natural Mortality type"), 0, 4, 0);
         pop->Grow()->setNatural_mortality_type(temp_int);
         datalist.append(temp_string);
@@ -2306,10 +2355,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         {
             pop->Grow()->getPattern(i)->setNumNatMParams(num_vals);
         }
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+    }
 
         // growth model
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Growth Model"), 1, 3, 1);
         pop->Grow()->setModel(temp_int);
 
@@ -2317,8 +2366,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setAge_for_l1(temp_float);
         temp_float = c_file->get_next_value(QString("age for L2")).toFloat();
         pop->Grow()->setAge_for_l2(temp_float);
+    }
 
         // Exponential decay for growth above max age
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_float = c_file->get_next_value(QString("Exponential decay")).toFloat();
         pop->Grow()->setExpDecay(temp_float);
 
@@ -2329,18 +2380,24 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_float = c_file->get_next_value(QString("age max for K")).toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
+    }
         // future feature
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_float = c_file->get_next_value(QString("Future feature")).toFloat();
         pop->Grow()->setFeature(temp_float);
+    }
 
         // SD add to LAA
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_float = c_file->get_next_value(QString("Std dev add to len at age")).toFloat();
         pop->Grow()->setSd_add(temp_float);
         // CV growth pattern
         temp_int = c_file->getIntValue(QString("CV Pattern"), 0, 4, 1);
         pop->Grow()->setCv_growth_pattern(temp_int);
+    }
 
         // maturity
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Maturity option"), 1, 6, 2);
         pop->Grow()->setMaturity_option(temp_int);
         if (temp_int == 3 ||
@@ -2365,8 +2422,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         temp_float = c_file->get_next_value(QString("First mature age")).toFloat();
         pop->Grow()->setFirst_mature_age(temp_float);
+    }
 
         // fecundity
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Fecundity option"), 1, 5, 1);
         pop->Fec()->setMethod(temp_int);
 
@@ -2382,8 +2441,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         temp_int = c_file->getIntValue(QString("Parameter offset method"), 1, 3, 2);
         pop->Grow()->setParam_offset_method(temp_int);
+    }
 
         // mortality growth parameters
+    if (c_file->getOkay() && !c_file->getStop()) {
         num = 0;
         index = 0;
         // female parameters
@@ -2477,9 +2538,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             gp->setFemMatureParam(3, datalist);
             gp->getFemMatureParams()->setRowHeader(3, QString("Eggs/kg_slope_wt_Fem_%1").arg(gpstr));
         }
+    }
 
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+    if (c_file->getOkay() && !c_file->getStop()) {
 
         if (data->get_num_genders() > 1)
         {
@@ -2559,8 +2620,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
         if (QString(datalist.last()).compare(QString("EOF")) == 0)
             return false;
+    }
 
-
+    if (c_file->getOkay() && !c_file->getStop()) {
         if (pop->Fec()->getHermaphroditism())
         {
             for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
@@ -2577,9 +2639,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             gp->getHermaphParams()->setRowHeader(2, QString("Hermaph_asymp_rate"));
             }
         }
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+    }
 
+    if (c_file->getOkay() && !c_file->getStop()) {
         index = pop->SR()->getDistribMethod();
         if (index == 2)
         {
@@ -2616,7 +2678,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             pop->SR()->setNumDistParams(i);
         }
+    }
 
+    if (c_file->getOkay() && !c_file->getStop()) {
         if (pop->SR()->getDoRecruitInteract())
         {
             index = 0;
@@ -2643,14 +2707,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         datalist = readParameter(c_file); // cohort growth deviation
         pop->Grow()->setCohortParam(datalist);
         pop->Grow()->getCohortParams()->setRowHeader(0, QString("CohortGrowDev"));
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Growth params read.");
 #endif
 
 
         // movement parameters (2 per definition)
+    if (c_file->getOkay() && !c_file->getStop()) {
         num = pop->Move()->getNumDefs();
         for (i = 0; i < num; i++)
         {
@@ -2665,10 +2729,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->Move()->setParameter (par + 1, datalist);
             pop->Move()->setParamHeader(par+1, QString("MoveParm_B_%1").arg(temp_string));
         }
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+    }
 
         // ageing error if requested
+    if (c_file->getOkay() && !c_file->getStop()) {
         if (data->get_age_composition()->getUseParameters())
         {
             for (i = 0; i < 7; i++)
@@ -2677,7 +2741,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->get_age_composition()->setErrorParam(i, datalist);
             }
         }
+    }
         // Catch mult
+    if (c_file->getOkay() && !c_file->getStop()) {
         for (i = 0; i < data->get_num_fleets(); i++)
         {
             Fleet *fleet = data->getFleet(i);
@@ -2687,8 +2753,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 fleet->setCatchMultParam(datalist);
             }
         }
+    }
 
         // Fraction Female parameters
+    if (c_file->getOkay() && !c_file->getStop()) {
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
             growthPattern *gp = pop->Grow()->getPattern(i);
@@ -2696,10 +2764,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             gp->setFractionFemaleParam(datalist);
             gp->getFractionFemaleParams()->setRowHeader(0, QString("FracFemale_GP_%1").arg(QString::number(i+1)));
         }
-        if (QString(datalist.last()).compare("EOF") == 0)
-            return false;
+    }
 
         // timevary MG Parameters
+    if (c_file->getOkay() && !c_file->getStop()) {
         timevaryread = pop->Grow()->getTimeVaryReadParams();
         if (timevaryread > 0)
         {
@@ -2739,11 +2807,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 readTimeVaryParams(c_file, data, gp->getFractionFemaleParams(), timevaryread, gp->getFracFmTVParams());
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Time vary params read.");
 #endif
 
         // seasonal_effects_on_biology_parms
+    if (c_file->getOkay() && !c_file->getStop()) {
         datalist.clear();
         num = 0;
         for (i = 0; i < 10; i++)
@@ -2764,11 +2834,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->setSeasonalParam(i, parm);
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Seasonal effects read.");
 #endif
 
         // Spawner-recruitment
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Spawner-Recruit Relationship"), 1, 10, 3);
         pop->SR()->setMethod (temp_int);
         temp_int = c_file->getIntValue(QString("Use steepness in equil calc"), 0, 1, 1);
@@ -2810,19 +2882,24 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setParameterHeader(num-3, QString("SR_sigmaR"));
         pop->SR()->setParameterHeader(num-2, QString("SR_regime"));
         pop->SR()->setParameterHeader(num-1, QString("SR_autocorr"));
+    }
 
         // SR time vary params
+    if (c_file->getOkay() && !c_file->getStop()) {
         timevaryread = pop->SR()->getTimeVaryReadParams();
         readTimeVaryParams(c_file, data, pop->SR()->getFullParameters(), timevaryread, pop->SR()->getTVParameterModel()->getVarParamTable());
-
+    }
         // Recruitment deviations
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Do Recruitment deviations"), 0, 2, 1);
         pop->SR()->setRecDevCode(temp_int);
         pop->SR()->setRecDevStartYr(c_file->get_next_value(QString("Recr dev start yr")).toInt());
         pop->SR()->setRecDevEndYr(c_file->get_next_value(QString("Recr dev end yr")).toInt());
         pop->SR()->setRecDevPhase(c_file->get_next_value(QString("Recr dev phase")).toInt());
+    }
 
         // SR advanced opts
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Do Advanced Recruitment options"), 0, 1, 1);
         pop->SR()->setAdvancedOpts(temp_int != 0);
         if (pop->SR()->getAdvancedOpts())
@@ -2856,11 +2933,13 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->SR()->setRecruitDev(i, datalist);
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Spawn-Recruit read.");
 #endif
 
         // Fishing mortality
+    if (c_file->getOkay() && !c_file->getStop()) {
         num = 0;
         int num_seas = data->get_num_seasons();
         pop->M()->setNumFisheries(data->get_num_fisheries());
@@ -2915,14 +2994,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->M()->setInitialParam(i, datalist);
             pop->M()->getInitialParams()->setRowHeader(i, QString("Fleet%1").arg(QString::number(i+1)));
         }
-        if (QString(datalist.last()).compare("EOF") == 0)
-            return false;
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "F Mort read.");
 #endif
 
 
         // Q setup
+    if (c_file->getOkay() && !c_file->getStop()) {
         do
         {
             datalist.clear();
@@ -2939,7 +3018,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             data->getFleet(flt - 1)->Q()->setSetup(datalist);
             data->getFleet(flt - 1)->setQSetupRead(true);
         } while (flt != -9999);
+    }
 
+    if (c_file->getOkay() && !c_file->getStop()) {
         for (i = 0; i < data->get_num_fleets(); i++)
         {
             if (data->getFleet(i)->getType() == Fleet::Survey ||
@@ -2954,8 +3035,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     showInputMessage (QString("Q Setup line for fleet %1: %2").arg(QString::number(i+1),data->getFleet(i)->getName()));
             }
         }
+    }
 
         // Q parameters
+    if (c_file->getOkay() && !c_file->getStop()) {
         int id = 0;
 
         for (i = 0; i < num_fleets; i++)
@@ -2991,10 +3074,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             }
         }
-        if (QString(datalist.last()).compare(QString("EOF")) == 0)
-            return false;
+    }
 
         // Q timevary params
+    if (c_file->getOkay() && !c_file->getStop()) {
         timevaryread = data->getFleet(0)->getQTimeVaryReadParams();
         if (timevaryread > 0)
         {
@@ -3007,11 +3090,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             data->getFleet(i)->setName(data->getFleet(i)->getName());
         }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Fishery Q read.");
 #endif
 
-        {
+    if (c_file->getOkay() && !c_file->getStop()) {
         selectivity *sizesel = nullptr;
         selectivity *agesel = nullptr;
         // Size selectivity setup
@@ -3228,12 +3312,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
             }
         }
-        }
+    }
+
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Selectivity read.");
 #endif
 
         // 2D-AR1 smoother
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("2D_AR1 selectivity? 0/1"), 0, 1, 0);
         data->setUse2DAR1(temp_int == 1);
         if (temp_int == 1) {
@@ -3264,8 +3350,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 }
             } while (flt != -9999);
         }
+    }
 
         // Tag loss and Tag reporting parameters go next
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Read Tag parameters? 0/1"), 0, 1, 0);
         data->setTagLoss(temp_int);
         if (temp_int == 1)
@@ -3307,11 +3395,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getTagReportDecay()->setParameter(i, datalist);
             }
         }
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Tag Params read.");
 #endif
 
         // #_Variance_adjustments_to_input_value
+    if (c_file->getOkay() && !c_file->getStop()) {
+        int id = 0;
         data->setInputValueVariance(0);
         do
         {
@@ -3349,17 +3440,23 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 break;
             }
         } while (id != END_OF_LIST);
+    }
 
         // Max lambda phase
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->get_next_value(QString("Lambda max phase")).toInt();
         data->setLambdaMaxPhase(temp_int);
+    }
 
         // sd offset
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Lambda sd offset"), 0, 1, 0);
         data->setLambdaSdOffset(temp_int);
+    }
 
         // lambda changes
         // component, fleet, phase, value, sizefreq method
+    if (c_file->getOkay() && !c_file->getStop()) {
         do
         {
             int flt = 1;
@@ -3402,10 +3499,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->addLambdaAdjustment(datalist);
             }
         } while (temp_int != END_OF_LIST);
+    }
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Lambdas read.");
 #endif
 
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->getIntValue(QString("Additional Std dev reporting? 0/1"), 0, 2, 0);
         data->getAddSdReporting()->setActive(temp_int);
         if (temp_int > 0)
@@ -3468,7 +3567,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getAddSdReporting()->setNatMortBins(datalist);
             }
         }
+    }
 
+    if (c_file->getOkay() && !c_file->getStop()) {
         temp_int = c_file->get_next_value().toInt();
         if (temp_int != 999)
         {
@@ -3476,6 +3577,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                         QString::number(temp_int));
             c_file->error(temp_string);
         }
+    }
 
         c_file->close();
     }

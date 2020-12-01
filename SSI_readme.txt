@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.5
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.6
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,13 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.16.6
+    2020-11-27
+1. Restructured reading of tag data.
+2. Added check for ordered x values of spline curves. If not ordered, spline
+   does not build.
+3. Internal change to reading files hopefully works in error conditions.
 ============================================================================
     3.30.16.5
     2020-11-09

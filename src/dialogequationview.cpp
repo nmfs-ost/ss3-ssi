@@ -1060,3 +1060,45 @@ double DialogEquationView::posfun(const double &x, const double eps, double& pen
   }
 }
 
+bool DialogEquationView::pointListIsOrdered(QList<QPointF> &plist)
+{
+    bool ordered = true;
+    if (!plist.isEmpty())
+    {
+        for (int i = 1; i < plist.count(); i++)
+        {
+            if (plist.at(i).x() <= plist.at(i-1).x())
+            {
+                ordered = false;
+                break;
+            }
+        }
+    }
+    return ordered;
+}
+
+bool DialogEquationView::sortPointList(QList<QPointF> &plist)
+{
+    bool ordered = pointListIsOrdered(plist);
+    QPointF tempPt(plist.at(0));
+    while (!ordered)
+    {
+        for (int i = 1; i < plist.count(); i++)
+        {
+            if (plist.at(i).x() < plist.at(i-1).x())
+            {
+                plist[i-1] = plist.at(i);
+                plist[i] = tempPt;
+            }
+            else
+            {
+                tempPt = plist.at(i);
+            }
+        }
+        ordered = pointListIsOrdered(plist);
+    }
+    return ordered;
+}
+
+
+

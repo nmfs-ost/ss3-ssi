@@ -628,19 +628,16 @@ bool file_widget::read_files(ss_model *model_inf)
 #endif
                 okay = read33_controlFile(controlFile, model_info);
             }
-            if (okay)
+            if (okay && ui->checkBox_par_file->isChecked())
             {
 #ifdef DEBUG_FILES
     QMessageBox::information(this, "Information - program flow", "Control file read okay.");
 #endif
-                if (ui->checkBox_par_file->isChecked())
-                {
-                    read33_parameterFile(parameterFile, model_info);
-                }
-                if (ui->checkBox_pro_file->isChecked())
-                {
-                    read33_profileFile(profileFile, model_info);
-                }
+                okay = read33_parameterFile(parameterFile, model_info);
+            }
+            if (okay && ui->checkBox_pro_file->isChecked())
+            {
+                okay = read33_profileFile(profileFile, model_info);
             }
         }
         if (okay)
@@ -718,7 +715,7 @@ bool file_widget::read_starter_file (QString filename)
         starterFile->resetLineNum();
         starterFile->read_comments();
 
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         token = starterFile->get_next_value("data file");
         data_file_name = token;
         set_data_file(QString("%1/%2").arg(current_dir_name, token));
@@ -726,18 +723,18 @@ bool file_widget::read_starter_file (QString filename)
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("Read ss.par choice"), 0, 1, 0);
         ui->checkBox_par_file->setChecked(temp_int != 0);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
 #ifdef DEBUG_FILES
     QMessageBox::information(this, "Information - Read Starter", "File names read.");
 #endif
         temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("detailed age-structured reports in REPORT.SSO"), 0, 3, 1);
         ui->comboBox_report_level->setCurrentIndex(temp_int);
         if (temp_int == 3) {
@@ -752,33 +749,33 @@ bool file_widget::read_starter_file (QString filename)
         chooseRepDetail->hide();
         temp_int = starterFile->getIntValue(QString("write EchoInput.sso choice"), 0, 1, 1);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         ui->checkBox_checkup->setChecked(temp_int);
         temp_int = starterFile->getIntValue(QString("what to write to ParmTrace.sso"), 0, 4, 1);
         set_parmtr_write(temp_int);
         }
 
 
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("what to write to CumReport.sso"), 0, 2, 1);
         ui->comboBox_cumreport->setCurrentIndex(temp_int);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
 #ifdef DEBUG_FILES
     QMessageBox::information(this, "Information - Read Starter", "Reports set.");
 #endif
         temp_int = starterFile->getIntValue(QString("calculate all prior likelihoods"), 0, 1, 1);
         model_info->set_prior_likelihood (temp_int);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("use soft bounds"), 0, 1, 1);
         model_info->set_use_softbounds(temp_int);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("number of datafiles"), 0, 100, 0);
         ui->spinBox_datafiles->setValue(temp_int);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("last estimation phase"), 0, 100, 8);
         model_info->set_last_estim_phase(temp_int);
         temp_int = starterFile->get_next_value("MCMC burn interval").toInt(); //getIntValue(QString("MC burn interval"), 0, 10000, 10);
@@ -788,7 +785,7 @@ bool file_widget::read_starter_file (QString filename)
         temp_int = temp_int < 1? 1: temp_int;
         model_info->set_mc_thin(temp_int);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_float = starterFile->getFloatValue(QString("jitter value"), 0.0, 11.0, 0.0);
         model_info->set_jitter_param(temp_float);
         token = starterFile->get_next_value("std dev report begin year");
@@ -809,7 +806,7 @@ bool file_widget::read_starter_file (QString filename)
 
         }
         temp_float = starterFile->getFloatValue(QString("convergence criteria"), 0.0, 0.1, 0.0001);
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_convergence_criteria(temp_float);
         token = starterFile->get_next_value("retrospective year");
         temp_int = token.toInt();
@@ -819,17 +816,17 @@ bool file_widget::read_starter_file (QString filename)
         model_info->set_biomass_min_age(temp_int);
         temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 4, 1);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_depletion_basis(temp_int);
         token = starterFile->get_next_value("depletion denominator");
         model_info->set_depletion_denom(token.toDouble());
         temp_int = starterFile->getIntValue(QString("SPR report basis"), 0, 4, 1);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_spr_basis(temp_int);
         temp_int = starterFile->getIntValue(QString("F std report value"), 0, 5, 1);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_f_units(temp_int);
         // min and max age over which average F will be calculated with F_reporting=4 or 5
         if (model_info->get_f_units() >= 4)
@@ -843,7 +840,7 @@ bool file_widget::read_starter_file (QString filename)
         }
         temp_int = starterFile->getIntValue(QString("F std report basis"), 0, 4, 1);
         }
-        if (starterFile->getOkay()) {
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_f_basis(temp_int);
 
         token = starterFile->get_next_value("check value for end of file or something else");
@@ -860,7 +857,7 @@ bool file_widget::read_starter_file (QString filename)
         }
         else
         {
-            if (starterFile->getOkay()) {
+            if (starterFile->getOkay() && !starterFile->getStop()) {
             // MCMC output format
             starterFile->checkIntValue(temp_int, QString("MCMC output detail"), 0, 3, 0);
             ui->comboBox_MCMC_output->setCurrentIndex(temp_int);
