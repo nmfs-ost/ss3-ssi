@@ -2196,7 +2196,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->SR()->setDistribArea(temp_int);
         num = c_file->get_next_value(QString("Num recr assigns")).toInt(); // num recr assignments
         pop->SR()->setNumAssignments(num);
-        temp_int = c_file->get_next_value(QString("Recr unused")).toInt(); // read interact params?
+        temp_int = c_file->get_next_value(QString("Recr interact?")).toInt(); // read interact params?
         pop->SR()->setDoRecruitInteract(temp_int);
     }
 
