@@ -1,0 +1,40 @@
+# ss-gui
+
+Source code for the Stock Synthesis Interface (SSI), also known as the SS GUI.
+
+# Installation
+
+Download the most recent [compiled version of SSI](https://vlab.ncep.noaa.gov/web/stock-synthesis/document-library/-/document_library/0LmuycloZeIt/view/5042951) at the [Stock Synthesis website](https://vlab.ncep.noaa.gov/web/stock-synthesis). See the [SSI quick start guide](https://vlab.ncep.noaa.gov/web/stock-synthesis/document-library/-/document_library/0LmuycloZeIt/view_file/9468544) for an overview of how to use SSI.
+
+# How do I ask questions, request features, or report bugs related to SSI?
+
+Please open an [issue](https://github.com/nmfs-stock-synthesis/ss-gui/issues).
+
+# Contributing to the SSI
+*to add*
+
+# Code of Conduct
+This project and everyone participating in it is governed by the [NMFS Fisheries Toolbox Code of Conduct](https://github.com/nmfs-fish-tools/Resources/blob/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [fisheries.toolbox@noaa.gov](mailto:fisheries.toolbox@noaa.gov). Note that the maintainers of SS do not have access to this email account, so unacceptable behavior of the maintainers can also be reported here.
+
+The NFMS Fisheries Toolbox Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
+available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+
+[homepage]: https://www.contributor-covenant.org
+
+For answers to common questions about this code of conduct, see
+https://www.contributor-covenant.org/faq
+
+# Disclaimer
+
+“The United States Department of Commerce (DOC) GitHub project code is provided 
+on an ‘as is’ basis and the user assumes responsibility for its use. DOC has 
+relinquished control of the information and no longer has responsibility to 
+protect the integrity, confidentiality, or availability of the information. Any 
+claims against the Department of Commerce stemming from the use of its GitHub 
+project will be governed by all applicable Federal law. Any reference to 
+specific commercial products, processes, or services by service mark, trademark,
+manufacturer, or otherwise, does not constitute or imply their endorsement,
+recommendation or favoring by the Department of Commerce. The Department of 
+Commerce seal and logo, or the seal and logo of a DOC bureau, shall not be used 
+in any manner to imply endorsement of any commercial product or activity by DOC
+or the United States Government.”
