@@ -229,6 +229,9 @@
     <addaction name="action_Save_data"/>
     <addaction name="action_New"/>
     <addaction name="separator"/>
+    <addaction name="actionView_Readme"/>
+    <addaction name="actionCreate_Readme"/>
+    <addaction name="separator"/>
     <addaction name="action_Exit"/>
    </widget>
    <widget class="QMenu" name="menu_Run">
@@ -241,6 +244,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionAbout_this_model"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout_SS_GUI"/>
     <addaction name="action_About"/>
     <addaction name="separator"/>
@@ -998,6 +1003,21 @@
   <action name="actionShow_copyright_info">
    <property name="text">
     <string>Show copyright info</string>
+   </property>
+  </action>
+  <action name="actionAbout_this_model">
+   <property name="text">
+    <string>About this model</string>
+   </property>
+  </action>
+  <action name="actionCreate_Readme">
+   <property name="text">
+    <string>Create Readme</string>
+   </property>
+  </action>
+  <action name="actionView_Readme">
+   <property name="text">
+    <string>View Readme</string>
    </property>
   </action>
  </widget>

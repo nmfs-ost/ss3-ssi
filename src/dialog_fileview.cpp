@@ -4,19 +4,27 @@
 #include <QPrinter>
 #include <QPrintDialog>
 
-Dialog_fileView::Dialog_fileView(QWidget *parent) :
+Dialog_fileView::Dialog_fileView(QWidget *parent, QString title, bool editable) :
     QDialog(parent),
     ui(new Ui::Dialog_fileView)
 {
     ui->setupUi(this);
+    setTitle(title);
 
     connect (ui->pushButton_print, SIGNAL(clicked()), SLOT(print()));
+    connect (ui->pushButton_edit, SIGNAL(clicked()), SLOT(edit()));
     connect (ui->pushButton_close, SIGNAL(clicked()), SLOT(close()));
 
-    connect (ui->spinBox_fontsize, SIGNAL(valueChanged(int)), SLOT(setFontSize(int)));
+    ui->pushButton_edit->setVisible(editable);
+    ui->pushButton_edit->setEnabled(editable);
 
-    vfont = QFont(fontInfo().family(), fontInfo().pointSize());
-    setFontSize(9);
+
+    sfont = QFont(fontInfo().family(), fontInfo().pointSize());
+    vfont = QFont(sfont);
+    tfont = QFont(sfont);
+    tfont.setBold(true);
+    connect (ui->spinBox_fontsize, SIGNAL(valueChanged(int)), SLOT(setFontSize(int)));
+    ui->spinBox_fontsize->setValue(9);
 }
 
 Dialog_fileView::~Dialog_fileView()
@@ -26,18 +34,30 @@ Dialog_fileView::~Dialog_fileView()
 
 void Dialog_fileView::viewFile(QString filename)
 {
-    ui->label_filename->setText(filename);
-
-    QByteArray text;
     if (!filename.isEmpty())
     {
         QFile qf(filename);
-        if (qf.open(QIODevice::ReadOnly))
-        {
-            text = qf.readAll();
-            ui->plainTextEdit->setPlainText(QString(text));
-        }
+        viewFile(&qf);
     }
+}
+
+bool Dialog_fileView::close()
+{
+    emit closed();
+    return QDialog::close();
+}
+
+void Dialog_fileView::viewFile(QFile *file)
+{
+    QByteArray text;
+
+    ui->label_filename->setText(file->fileName());
+    if (file->open(QIODevice::ReadOnly))
+    {
+        text = file->readAll();
+        ui->plainTextEdit->setPlainText(QString(text));
+    }
+    file->close();
 }
 
 void Dialog_fileView::print()
@@ -50,11 +70,16 @@ void Dialog_fileView::print()
         ui->plainTextEdit->print(&printer);
 }
 
+void Dialog_fileView::edit()
+{
+    emit editRequested();
+}
+
 void Dialog_fileView::increaseFont (bool flag)
 {
     int f_size = vfont.pointSize();
     if (flag)
-    if (f_size < 16)
+    if (f_size < 14)
     {
         f_size += 1;
     }
@@ -74,6 +99,42 @@ void Dialog_fileView::decreaseFont(bool flag)
 
 void Dialog_fileView::setFontSize(int ptsize)
 {
+    // System font (sfont) 10 or greater
+    if (ptsize > 10) {
+        sfont.setPointSize(ptsize);
+    }
+    else {
+        sfont.setPointSize(10);
+    }
+    QDialog::setFont(sfont);
+
+    // title font (tfont)
+    tfont.setPointSize(sfont.pointSize() + 1);
+    tfont.setBold(true);
+    ui->label_title->setFont(tfont);
+
+    // file contents font (vfont)
     vfont.setPointSize(ptsize);
-    setFont(vfont);
+    ui->label_filename->setFont(vfont);
+    ui->plainTextEdit->setFont(vfont);
+}
+
+void Dialog_fileView::setFixedPitch(bool fixed)
+{
+    if (fixed)
+        vfont.setFamily("Monospace");
+    vfont.setFixedPitch(fixed);
+    setFontSize(vfont.pointSize());
+}
+
+void Dialog_fileView::setTitle(QString title)
+{
+    if (title.isEmpty()) {
+        ui->label_title->hide();
+    }
+    else {
+        ui->label_title->setText(title);
+        ui->label_title->setVisible(true);
+        setFontSize(tfont.pointSize());
+    }
 }

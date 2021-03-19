@@ -25,6 +25,7 @@
 #include "model.h"
 
 #include "dialog_run.h"
+#include "dialog_readme.h"
 
 //#define DEBUG 1
 
@@ -84,6 +85,9 @@ public slots:
     QString getControlFile();
     void setReadWtAtAgeSS (bool flag);
 
+    void createReadme();
+    void viewReadme();
+
     void helpGUI();
     void helpSS();
     void helpNFT();
@@ -137,6 +141,7 @@ private:
     population_widget *population;
 
     Dialog_run *dRun;
+    Dialog_readme *readme;
 
     void set_checks_false();
 

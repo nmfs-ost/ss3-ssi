@@ -15,6 +15,10 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.16.7
+    2021-03-18
+1. Added create/view readme.txt file for model info (optional).
+============================================================================
     3.30.16.6
     2020-11-27
 1. Restructured reading of tag data.

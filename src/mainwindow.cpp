@@ -5,6 +5,7 @@
 #include "dialog_about.h"
 #include "dialog_about_admb.h"
 #include "dialog_about_nft.h"
+#include "dialog_readme.h"
 #include "dialog_run.h"
 #include "documentdialog.h"
 #include "message.h"
@@ -42,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Model data set up finished.");
 #endif
+    // set up readme viewer
+    readme = new Dialog_readme(this, modelData, current_dir);
+    readme->hide();
 
     // run dialog
     dRun = new Dialog_run(this);
@@ -59,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Widget set up finished.");
 #endif
-
     readSettings();
 
     // set up information dock widget
@@ -103,8 +106,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
     connect (ui->action_Save_data, SIGNAL(triggered()), SLOT(saveFiles()));
     connect (ui->action_Save_As, SIGNAL(triggered()), SLOT(copyDirectory()));
+    connect (ui->actionCreate_Readme, SIGNAL(triggered()), SLOT(createReadme()));
+    connect (ui->actionView_Readme, SIGNAL(triggered()), SLOT(viewReadme()));
     connect (ui->action_Exit, SIGNAL(triggered()), SLOT(close()));
 
+    connect (ui->actionAbout_this_model, SIGNAL(triggered()), SLOT(viewReadme()));
     connect (ui->actionAbout_SS_GUI, SIGNAL(triggered()), SLOT(helpGUI()));
     connect (ui->action_About, SIGNAL(triggered()), SLOT(helpSS()));
 //    connect (ui->action_About_NFT, SIGNAL(triggered()), SLOT(helpNFT()));
@@ -155,7 +161,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->stackedWidget, SIGNAL(currentChanged(int)), SLOT(mainTabChanged(int)));
     showFiles();
 
-    main_font = QFont(fontInfo().family(), fontInfo().pointSize());//"Arial", 12);
+    main_font = QFont(fontInfo().family(), fontInfo().pointSize());
     setFontSize(9);
 
     readFiles();
@@ -163,6 +169,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete readme;
     delete files;
     delete data;
     delete forecast;
@@ -209,6 +216,9 @@ void MainWindow::setupMenus (QMenuBar *main)
     fileMenu->addAction (ui->action_Save_data);
     fileMenu->addAction (ui->action_Save_As);
     fileMenu->addSeparator();
+    fileMenu->addAction (ui->actionView_Readme);
+    fileMenu->addAction (ui->actionCreate_Readme);
+    fileMenu->addSeparator();
 //    fileMenu.addAction (ui->action_Print);
 //    fileMenu.addSeparator();
     fileMenu->addAction (ui->action_Exit);
@@ -241,6 +251,8 @@ void MainWindow::setupMenus (QMenuBar *main)
     windMenu->addAction (ui->actionTitle_Window);
 
     QMenu *helpMenu = new QMenu(QString("&Help"), main); // helpMenu (ui->menu_Help);
+    helpMenu->addAction (ui->actionAbout_this_model);
+    helpMenu->addSeparator();
     helpMenu->addAction (ui->action_User_Manual);
     helpMenu->addAction (ui->actionAbout_SS_GUI);
     helpMenu->addAction (ui->action_About);
@@ -615,6 +627,28 @@ void MainWindow::setReadWtAtAgeSS(bool flag)
     files->setReadWtAtAge(flag);
 }
 
+void MainWindow::createReadme()
+{
+    readme->setDirectory(current_dir);
+    readme->createReadme();
+//    readme->show();
+//    Dialog_readme *rm = new Dialog_readme(this, modelData, current_dir);
+//    rm->createReadme();
+//    rm->exec(Create);
+//    delete rm;
+}
+
+void MainWindow::viewReadme()
+{
+    readme->setDirectory(current_dir);
+    readme->viewReadme();
+//    readme->show();
+//    Dialog_readme *rm = new Dialog_readme(this, modelData, current_dir);
+//    rm->viewReadme();
+//    rm->exec(View);
+//    delete rm;
+}
+
 void MainWindow::mainTabChanged(int tab)
 {
     switch(tab)
@@ -984,7 +1018,6 @@ void MainWindow::run()
 void MainWindow::runComplete()
 {
     files->read_run_num_file();
-
 }
 
 void MainWindow::runConversion()
@@ -1229,6 +1262,7 @@ void MainWindow::setFontSize(int fsize)
 {
     main_font.setPointSize(fsize);
     setFont(main_font);
+    readme->setFontSize(fsize);
 }
 
 

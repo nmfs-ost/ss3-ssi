@@ -2206,28 +2206,28 @@ void DialogSelexEquationView::dblNormEndpts() {
 
 // equations 20 and 24
 void DialogSelexEquationView::updateDblNormEndpts() {
-    float peak  = parameterView->getInput(0);
-    float top   = logist(parameterView->getValue(1));
-    float asc_wd = parameterView->getInput(2);
-    float dsc_wd = parameterView->getInput(3);
-    float par5  = parameterView->getValue(4);
-    float par6  = parameterView->getValue(5);
-    float binMax = getBinMax();
-    float binWidth = getBinStep();
+    double peak  = parameterView->getInput(0);
+    double top   = logist(parameterView->getValue(1));
+    double asc_wd = parameterView->getInput(2);
+    double dsc_wd = parameterView->getInput(3);
+    double par5  = parameterView->getValue(4);
+    double par6  = parameterView->getValue(5);
+    double binMax = getBinMax();
+    double binWidth = getBinStep();
 
 //    float peak = par1;
-    float peak2 = (peak + binWidth) + (.99*binMax - peak - binWidth) * top;
+    double peak2 = (peak + binWidth) + (.99*binMax - peak - binWidth) * top;
     parameterView->setInputValue(1, peak2);
 //    float asc_wd = exp(par3);
 //    float dsc_wd = exp(par4);
-    float init = logist(par5);
+    double init = logist(par5);
     parameterView->setInputValue(4, init);
-    float final = logist(par6);
+    double final = logist(par6);
     parameterView->setInputValue(5, final);
-    float valmin, valmax, valminpow, valmaxpow;
-    float limit, upsel, dnsel, jn1, jn2;
+    double valmin, valmax, valminpow, valmaxpow;
+    double limit, upsel, dnsel, jn1, jn2;
     int i;
-    float xval = 0, sel = 0;
+    double xval = 0, sel = 0;
 
     firstPoints.clear();
     ascendSeries->clear();
@@ -2838,7 +2838,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     int intScale = static_cast<int>(scale + 0.5);
     int start = intScale + 3;
     int num = parameters->rowCount() - start;
-    int size, end = intScale;
+    unsigned size, end = static_cast<unsigned>(intScale);
     double firstBin, lastBin;
     int loBin = -1, hiBin = -1;
     int setup = 0;
@@ -2863,8 +2863,8 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     }
     else
     {
-        size = static_cast<int>(num / 2);
-        std::vector<double> X(size), Y(size);
+        size = static_cast<unsigned>(num / 2);
+        std::vector<double> Xval(size), Yval(size);
         tk::spline cubicspl;
 
         i = 0;
@@ -2922,11 +2922,11 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         if (okay) {
 
         firstPoints.clear();
-        for (i = 0; i < size; i++)
+        for (unsigned i = 0; i < size; i++)
         {
-            X[i] = parameterView->getInput(start+i);
-            Y[i] = parameterView->getInput(start+size+i);
-            firstPoints.append(QPointF(X[i], Y[i]));
+            Xval[i] = parameterView->getInput(start+i);
+            Yval[i] = parameterView->getInput(start+size+i);
+            firstPoints.append(QPointF(Xval[i], Yval[i]));
         }
 
         if (pointListIsOrdered(firstPoints))
@@ -2934,7 +2934,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
             // currently it is required that X is already sorted
             cubicspl.set_boundary(tk::spline::first_deriv, gradLo,
                                   tk::spline::first_deriv, gradHi);
-            cubicspl.set_points(X, Y);
+            cubicspl.set_points(Xval, Yval);
 
             ptSeries->append(firstPoints);
 
@@ -2945,7 +2945,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
             for (i = 0; i < xValList.count(); i++)
             {
                 xval = xValList.at(i);
-                if (xval > X[size - 1])
+                if (xval > Xval[size - 1])
                     break;
                 yval = cubicspl(xval);
                 firstPoints.append(QPointF(xval, yval));

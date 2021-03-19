@@ -115,7 +115,8 @@ SOURCES += main.cpp\
     dar1.cpp \
     dialogdirectories.cpp \
     dialogchosereport.cpp \
-    sscomposition.cpp
+    sscomposition.cpp \
+    dialog_readme.cpp
 
 HEADERS  += mainwindow.h \
     dialoginputfiles.h \
@@ -219,7 +220,8 @@ HEADERS  += mainwindow.h \
     dar1.h \
     dialogdirectories.h \
     dialogchosereport.h \
-    sscomposition.h
+    sscomposition.h \
+    dialog_readme.h
 
 FORMS    += mainwindow.ui \
     dialoginputfiles.ui \
@@ -265,7 +267,8 @@ FORMS    += mainwindow.ui \
     dialogtable.ui \
     mainwindowrun.ui \
     dialogdirectories.ui \
-    dialogchosereport.ui
+    dialogchosereport.ui \
+    dialog_readme.ui
 
 OTHER_FILES +=
 
