@@ -118,6 +118,7 @@ public slots:
     bool read_files(ss_model *model_inf);
 
     bool read_starter_file(QString filename = QString(""));
+    bool read_starter_file(ss_file *starter);
     int read_run_num_file (QString filename = QString(""));
 
 /*    bool read33_dataFile(ss_file *d_file, ss_model *data);

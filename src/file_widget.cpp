@@ -687,26 +687,56 @@ void file_widget::print_files()
 bool file_widget::read_starter_file (QString filename)
 {
     bool okay = true;
-    bool end = false;
     QString token;
-    float temp_float;
-    int temp_int = 0;
 
 #ifdef DEBUG_FILES
-    QMessageBox::information(this, "Information - Reading Starter", "Start.");
+    QMessageBox::information(this, "Information - Checking Starter file name.");
 #endif
     if (filename.isEmpty())
     {
         filename = ui->label_starter_file->text();
     }
-    if (starterFile != nullptr)
-        delete starterFile;
+    if (starterFile != nullptr) {
+        if (starterFile->fileName() != filename) {
+            delete starterFile;
+            starterFile = nullptr;
+        }
+    }
+    if (starterFile == nullptr)
+        starterFile = new ss_file (filename, this);
 
-    starterFile = new ss_file (filename, this);
-    if (!starterFile->exists())
+    if (!starterFile->exists()) {
         okay = error_no_file(starterFile);
-    if (okay)
-        okay = starterFile->open(QIODevice::ReadOnly);
+        if (okay) {
+            emit directory_changed(starterFile->fileName());
+        }
+    }
+    else {
+        okay = read_starter_file(starterFile);
+    }
+    return okay;
+}
+
+bool file_widget::read_starter_file(ss_file *starter)
+{
+    bool okay = true;
+    bool end = false;
+    QString token;
+    float temp_float;
+    int temp_int = 0;
+
+    if (starterFile == nullptr) {
+        starterFile = starter;
+    }
+    else if (starterFile != starter) {
+        delete starterFile;
+        starterFile = starter;
+    }
+    okay = starterFile->open(QIODevice::ReadOnly);
+
+#ifdef DEBUG_FILES
+    QMessageBox::information(this, "Information - Reading Starter", "Start.");
+#endif
 
     if(okay)
     {

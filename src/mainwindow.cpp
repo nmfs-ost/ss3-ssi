@@ -101,6 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (files, SIGNAL(save_control_file()), SLOT(saveControlFile()));
     connect (files, SIGNAL(choose_control_file()), SLOT(openControlFile()));
     connect (files, SIGNAL(files_read(bool)), SLOT(refreshAll()));
+    connect (files, SIGNAL(directory_changed(QString)), SLOT(openDirectory(QString)));
 
     connect (ui->action_New, SIGNAL(triggered()), SLOT(createNewDirectory()));
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
@@ -446,6 +447,7 @@ void MainWindow::openDirectory(QString fname)
         QDir::setCurrent(current_dir);
         files->new_directory(current_dir);
         dRun->setDir(current_dir);
+        readme->setDirectory(current_dir);
         readFiles();
         files->setReadWtAtAge(modelData->getReadWtAtAge());
     }
