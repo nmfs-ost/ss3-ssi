@@ -12,9 +12,6 @@ DialogChoseReport::DialogChoseReport(QWidget *parent) :
 
     setMinimReps(true);
 
-//    connect (ui->checkBox_min, SIGNAL(toggled(bool)), this, SLOT(changeMinimReps(bool)));
-//    connect (ui->checkBox_all, SIGNAL(toggled(bool)), this, SLOT(changeAllReps(bool)));
-//    connect (ui->checkBox_brief, SIGNAL(toggled(bool)), this, SLOT(changeBriefReps(bool)));
     connect (ui->radioButton_Minimal, SIGNAL(toggled(bool)), this, SLOT(changeMinimReps(bool)));
     connect (ui->radioButton_All, SIGNAL(toggled(bool)), this, SLOT(changeAllReps(bool)));
     connect (ui->radioButton_Brief, SIGNAL(toggled(bool)), this, SLOT(changeBriefReps(bool)));

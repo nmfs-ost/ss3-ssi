@@ -32,10 +32,14 @@ public slots:
 
     void reset();
     void refresh();
+
+    void set_combo_box_bmarks(int value);
+    void change_bmarks(int value);
+    void set_combo_box_MSY(int value);
+    void change_MSY(int value);
     void set_spr_target();
     void set_biomass_target();
-    void set_forecast(int fcast);
-    void set_F_scalar();
+
     void set_bmark_bio_begin(int yr);
     void set_bmark_bio_begin(QString yrStr);
     void set_bmark_bio_end(int yr);
@@ -47,19 +51,32 @@ public slots:
     void set_bmark_recr_end(int yr);
     void set_bmark_srparm_begin(int yr);
     void set_bmark_srparm_end(int yr);
+    void set_combo_box_bmark_relF(int value);
+    void change_bmark_relF (int value);
+
+    void set_combo_box_fcast(int value);
+    void change_forecast(int fcast);
+//    void set_num_fcast_years(int value);
+//    void change_num_fcast_years(int value);
+//    void set_F_mult();
+    void change_F_mult();
     void set_fcast_sel_begin(int yr);
     void set_fcast_sel_end (int yr);
     void set_fcast_relf_begin(int yr);
     void set_fcast_relf_end (int yr);
     void set_fcast_recr_begin(int yr);
     void set_fcast_recr_end(int yr);
-    void set_combo_box_relf_basis (int);
-    void set_combo_box_fixed_catch (int);
+    void change_fixed_catch (int);
 
+    void set_fcast_selex(int value);
+    void change_fcast_selex(int value);
+    void set_combo_box_cr_method(int value);
+    void change_cr_method(int value);
     void set_cr_biomass_const_f();
     void set_cr_biomass_no_f();
     void set_cr_target();
     void set_num_forecast_loops (int num);
+    void change_first_forecast_loop (int num);
     void set_log_catch_std_dev();
 
     void change_use_alloc_groups (bool flag);
@@ -75,11 +92,17 @@ public slots:
     void set_rebuilder_curr_year(int yr);
     void change_rebuilder_curr_yr(int yr);
 
+    void set_combo_box_fleet_relF(int value);
+    void change_fleet_relF(int value);
+    void set_combo_box_tuning_basis(int value);
+    void change_tuning_basis(int value);
     void set_max_catch_fleet ();
     void change_max_catch_fleet ();
     void set_max_catch_area ();
     void change_max_catch_area ();
 
+    void set_combo_box_catch_basis(int value);
+    void change_catch_basis(int value);
     void set_num_input_obs (int num);
     void change_num_input_obs (int num);
 

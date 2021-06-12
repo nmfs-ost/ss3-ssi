@@ -3,6 +3,7 @@
 # Project created by QtCreator 2013-09-24T08:40:37
 #
 #-------------------------------------------------
+CONFIG   += static
 
 QT       += core gui
 

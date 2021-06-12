@@ -70,6 +70,7 @@ public slots:
     void refreshAll();
     void openNewDirectory();
     void createNewDirectory();
+    void changeDirectory(QString dirname);
     void openDirectory(QString fname = QString(""));
     void copyDirectory();
     void openControlFile();

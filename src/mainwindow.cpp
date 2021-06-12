@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr(app_name));
     setWindowIcon(QIcon(":icons/SSI_icon.ico"));
 
+    readSettings();
+
     app_dir = qApp->applicationDirPath();
     mainScrn = 0;
     // set up the default model
@@ -43,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Model data set up finished.");
 #endif
+    // furnish the ui with the default model
+    current_dir = QString(QString("%1/default/").arg(qApp->applicationDirPath()));
+
     // set up readme viewer
     readme = new Dialog_readme(this, modelData, current_dir);
     readme->hide();
@@ -53,8 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
     dRun->setDir(current_dir);
     dRun->setRExe(R_exe);
     dRun->hide();
-    // furnish the ui with the default model
-    current_dir = QString(QString("%1/default/").arg(qApp->applicationDirPath()));
+
+    // all other widgets
     files = new file_widget (modelData, current_dir, this);
     data = new data_widget(modelData, this);
     forecast = new forecast_widget(modelData, this);
@@ -63,8 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef DEBUG
     QMessageBox::information(this, "Information - program flow", "Widget set up finished.");
 #endif
-    readSettings();
-
     // set up information dock widget
 
     QFont title_font ("Tw Cen MT Condensed", 28, 4);
@@ -101,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (files, SIGNAL(save_control_file()), SLOT(saveControlFile()));
     connect (files, SIGNAL(choose_control_file()), SLOT(openControlFile()));
     connect (files, SIGNAL(files_read(bool)), SLOT(refreshAll()));
-    connect (files, SIGNAL(directory_changed(QString)), SLOT(openDirectory(QString)));
+    connect (files, SIGNAL(directory_changed(QString)), SLOT(changeDirectory(QString)));
 
     connect (ui->action_New, SIGNAL(triggered()), SLOT(createNewDirectory()));
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
@@ -403,6 +406,18 @@ void MainWindow::createNewDirectory()
         refreshAll();
     }
     saveFiles();
+}
+
+void MainWindow::changeDirectory(QString dirname)
+{
+    if (!dirname.isEmpty())
+    {
+        fleets->readingNewModel();
+        current_dir = dirname;
+        QDir::setCurrent(current_dir);
+        dRun->setDir(current_dir);
+        readme->setDirectory(current_dir);
+    }
 }
 
 void MainWindow::openDirectory(QString fname)

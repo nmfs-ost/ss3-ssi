@@ -620,10 +620,8 @@ void fleet_widget::set_current_fleet(int index)
 
         setAgeLengthBins();
         selexSizeEqDialog->setFleet(current_fleet);
-        selexAgeEqDialog->setFleet(current_fleet);
-//        selexSizeEqDialog->setMidBin(current_fleet->getSeasTiming());
-//        selexAgeEqDialog->setMidBin(0);
         selexSizeEqDialog->setSelex(current_fleet->getSizeSelectivity());
+        selexAgeEqDialog->setFleet(current_fleet);
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
 
         set2DAR1();
@@ -1366,17 +1364,20 @@ void fleet_widget::setSelexAgePattern(int pat)
     case 26:
         index = 12;
         break;
-    case 41:
+    case 27:
         index = 13;
         break;
-    case 42:
+    case 41:
         index = 14;
         break;
-    case 44:
+    case 42:
         index = 15;
         break;
-    case 45:
+    case 44:
         index = 16;
+        break;
+    case 45:
+        index = 17;
         break;
     }
     if (index != currIndex)
@@ -1434,15 +1435,18 @@ void fleet_widget::changeSelexAgePattern(int value)
         pat = 26; // exponential - logistic
         break;
     case 13:
-        pat = 41; // random walk (17) with scaling
+        pat = 27;
         break;
     case 14:
-        pat = 42; // cubic spline (27) with scaling
+        pat = 41; // random walk (17) with scaling
         break;
     case 15:
-        pat = 44; // random walk (17) with separate params for male/female
+        pat = 42; // cubic spline (27) with scaling
         break;
     case 16:
+        pat = 44; // random walk (17) with separate params for male/female
+        break;
+    case 17:
         pat = 45; // exp at each age (14) with separate params for male/female
         break;
     }

@@ -422,7 +422,7 @@ void data_widget::refresh()
         ui->spinBox_num_evn_var->setValue(model_data->getNumEnvironVars());
 
         ui->spinBox_block_patterns_total->setValue(model_data->getNumBlockPatterns());
-        setBlockPattern(1);
+        setBlockPattern(ui->spinBox_block_patterns_total->value());
 
 //        ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
         ui->spinBox_add_sd_read->setValue (model_data->getAddSdReporting()->getActive());

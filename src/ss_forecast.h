@@ -16,7 +16,7 @@ class ss_forecast : public QObject
 {
     Q_OBJECT
 public:
-    explicit ss_forecast(int fleets = 1, int seasons = 1, QObject *parent = 0);
+    explicit ss_forecast(int fleets = 1, int seasons = 1, QObject *parent = nullptr);
     ~ss_forecast();
 
 signals:
@@ -26,13 +26,17 @@ signals:
 public slots:
     void set_benchmarks (int bmark) {i_bmark = bmark;}
     int get_benchmarks () {return i_bmark;}
+
     void set_MSY (int msy) {i_msy = msy;}
     void set_combo_box_MSY (int msy);
     int get_MSY () {return i_msy;}
+
     void set_spr_target (double spr);
     float get_spr_target () {return f_spr_tgt;}
+
     void set_biomass_target (double bmss) {f_bmass_tgt = (float)bmss;}
     float get_biomass_target () {return f_bmass_tgt;}
+
     void set_benchmark_years (int i, int yr) {i_bmark_yrs[i] = yr;}
     void set_benchmark_bio_beg (int yr) {i_bmark_yrs[0] = yr;}
     void set_benchmark_bio_end (int yr) {i_bmark_yrs[1] = yr;}
@@ -46,8 +50,9 @@ public slots:
     void set_benchmark_srpar_end (int yr) {i_bmark_yrs[9] = yr;}
     int get_benchmark_year (int i) {return i_bmark_yrs[i];}
     void set_benchmark_rel_f (int relf) {i_bmark_rel_f = relf;}
-    void set_combo_box_relf_basis (int relf);
+//    void set_combo_box_relf_basis (int relf);
     int get_benchmark_rel_f () {return i_bmark_rel_f;}
+
     void set_forecast (int fcast) {i_method = fcast;}
     void set_combo_box_forecast(int fcast);
     int get_forecast () {return i_method;}
@@ -66,7 +71,7 @@ public slots:
     void set_cr_method (int ctl) {i_ctl_rule_method = ctl;}
     void set_combo_box_cr_method (int ctl);
     int get_cr_method () {return i_ctl_rule_method;}
-    void set_f_scalar (double f) {f_f_scalar = (float)f;}
+    void set_f_mult (double f) {f_f_scalar = (float)f;}
     float get_f_scalar () {return f_f_scalar;}
     void set_cr_biomass_const_f (double cr) {f_ctl_rule_bmass_const_f = (float)cr;}
     float get_cr_biomass_const_f () {return f_ctl_rule_bmass_const_f;}
@@ -80,8 +85,8 @@ public slots:
     tablemodel *get_cr_buffer_table () {return ctl_rule_buffer_table;}
     void set_num_forecast_loops (int loops) {i_num_fcast_loops = loops;}
     int get_num_forecast_loops () {return i_num_fcast_loops;}
-    void set_forecast_loop_recruitment (int loop) {i_fcast_loop_stch_recruit = loop;}
-    int get_forecast_loop_recruitment () {return i_fcast_loop_stch_recruit;}
+    void set_forecast_loop_first (int loop) {i_fcast_loop_first = loop;}
+    int get_forecast_loop_first () {return i_fcast_loop_first;}
     void set_forecast_recr_adjust (int fra) {i_fcast_recr_adj = fra;}
     int get_forecast_recr_adjust () {return i_fcast_recr_adj;}
     void set_forecast_recr_adj_value (float frav) {f_fcast_recr_adj_val = frav;}
@@ -209,7 +214,7 @@ public slots:
     // N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)
     int   i_num_fcast_loops;
     // First forecast loop with stochastic recruitment
-    int   i_fcast_loop_stch_recruit;
+    int   i_fcast_loop_first;
     // Forecast recruitment adjustment: 0=spawn_recr; 1=value*spawn_recr; 2=value*VirginRecr; 3=recent mean
     int   i_fcast_recr_adj;
     // Forecast recruitment adjustment value

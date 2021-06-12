@@ -2358,8 +2358,8 @@ void DialogSelexEquationView::eachAge () {
     setLabel(QString("Pattern %1: Revise Age").arg(
                  QString::number(equationNum)));
 
-    if (parameters->rowCount() >= bins.count()) {
-        numParams = bins.count() + 1;
+    numParams = bins.count() + 1;
+    if (parameters->rowCount() == numParams) {
         parameterView->setNumParamsShown(numParams);
 
         for (int i = 0; i < numParams; i++)
@@ -2472,12 +2472,12 @@ void DialogSelexEquationView::randomWalk (float scale) {
     int intScale = static_cast<int>(scale);
     setLabel(QString("Pattern %1: Random Walk").arg(
                  QString::number(equationNum)));
-    if (parameters->rowCount() > bins.count()) {
+    if (special > 0)
+        numParams = special + 1;
+    else
         numParams = bins.count() + 1;
-        parameterView->setNumParamsShown(numParams + scale);
-        showBins(true);
-        showJoins(0);
-        cht->removeSeries(valSeries);
+    if (parameters->rowCount() == numParams) {
+        parameterView->setNumParamsShown(numParams + intScale);
 
         if (intScale > 0) {
             parameterView->setName(0, QString("Scale Low Bin"));
@@ -2487,8 +2487,14 @@ void DialogSelexEquationView::randomWalk (float scale) {
             parameterView->setName(i, QString("Value at age %1").arg(QString::number(i-intScale)));
         setParameterHeaders(intScale);
 
-        axisYalt->setTitleText("Param value (blue)");
+        showBins(true);
+        showJoins(0);
+        cht->removeSeries(valSeries);
+
+        axisYalt->setTitleText("Input value (blue)");
         cht->addAxis(axisYalt, Qt::AlignRight);
+        cht->legend()->show();
+        cht->legend()->setAlignment(Qt::AlignLeft);
 
         if (scale > 1) {
             setupLimits();
@@ -2498,7 +2504,7 @@ void DialogSelexEquationView::randomWalk (float scale) {
             limit2->setName(QString("ScaleHiBin"));
         }
 
-        ascendSeries->setName(QString("Param value (blue)"));
+        ascendSeries->setName(QString("Input value (blue)"));
         ascendSeries->setPen(QPen(QBrush(Qt::blue), 3));
         cht->addSeries(ascendSeries);
         ascendSeries->attachAxis(axisX);
@@ -2598,9 +2604,9 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
     int loBin = 1;// scaleLo = bins.first();
     int hiBin = bins.count();// scaleHi = bins.last();
 
+    firstPoints.clear();
     ascendSeries->clear();
     valSeries->clear();
-    firstPoints.clear();
 
     // set last age = special or last bin
     if (special != 0)
@@ -2623,6 +2629,8 @@ void DialogSelexEquationView::updateRandomWalk (float scale) {
         }
         firstPoints.append(QPointF(bins.at(a-1), firstPoints.at(a-1).y() + lastSel));
     }
+    if (numParams < bins.count()+1)
+        firstPoints.append(QPointF(bins.last(), firstPoints.last().y()));
     axisYalt->setRange(minYvalue(firstPoints), maxYvalue(firstPoints));
     ascendSeries->append(firstPoints);
     cht->addSeries(ascendSeries);

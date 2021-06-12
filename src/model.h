@@ -84,6 +84,9 @@ public:
     void setUse2DAR1(bool value);
     void changeUse2DAR1(bool value);
 
+    int getTimeVaryBoundsCheck() const;
+    void setTimeVaryBoundsCheck(int value);
+
 public slots:
     void reset();
 
@@ -444,6 +447,7 @@ private:
 
     QList <Season *> seasons;
 
+    int timeVaryBoundsCheck;
     int tagTvParamsRead;
     int tag_loss;
     longParameter *tag_loss_param;

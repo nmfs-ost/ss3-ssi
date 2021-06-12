@@ -4,7 +4,7 @@ Source code for the Stock Synthesis Interface (SSI), also known as the SS GUI.
 
 # Installation
 
-Download the most recent [compiled version of SSI](https://vlab.ncep.noaa.gov/web/stock-synthesis/document-library/-/document_library/0LmuycloZeIt/view/5042951) at the [Stock Synthesis website](https://vlab.ncep.noaa.gov/web/stock-synthesis). See the [SSI quick start guide](https://vlab.ncep.noaa.gov/web/stock-synthesis/document-library/-/document_library/0LmuycloZeIt/view_file/9468544) for an overview of how to use SSI.
+Download the most recent [compiled version of SSI](https://vlab.noaa.gov/web/stock-synthesis/document-library/-/document_library/0LmuycloZeIt/view/5042951) at the [Stock Synthesis website](https://vlab.noaa.gov/web/stock-synthesis). See the [SSI quick start guide](https://vlab.noaa.gov/web/stock-synthesis/document-library/-/document_library/0LmuycloZeIt/view_file/9468544) for an overview of how to use SSI.
 
 # How do I ask questions, request features, or report bugs related to SSI?
 

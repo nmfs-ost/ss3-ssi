@@ -1,10 +1,14 @@
 #include "input_file.h"
 #include "dialoginputerror.h"
 #include <QMessageBox>
+#include <QFileInfo>
+#include <QDir>
 
 ss_file::ss_file(QString name, QObject *parent) :
     QFile(parent)
 {
+    if (name.compare("starter.ss") == 0)
+        name.prepend("default/");
     inputErrDialog = new DialogInputError();
     setFileName(name);
     reset();
@@ -19,9 +23,12 @@ ss_file::~ss_file ()
     delete current_tokens;
 }
 
-void ss_file::setFileName(const QString &filename) {
-    inputErrDialog->setFileName(filename);
-    QFile::setFileName(filename);
+void ss_file::setFileName(const QString &fname) {
+    QFileInfo info(fname);
+    filename = info.fileName();
+    directory = info.absolutePath();
+    QFile::setFileName(info.filePath());
+    inputErrDialog->setFileName(info.filePath());
 }
 
 bool ss_file::reset()
@@ -30,7 +37,7 @@ bool ss_file::reset()
     bool okay = true;
     line_num = 0;
     wait = false;
-    okay = true;
+//    okay = true;
     stop = false;
     current_line = new QString("");
     current_tokens = new QStringList(*current_line);
@@ -81,11 +88,7 @@ QStringList ss_file::read_comments()
     {
         if (current_line->startsWith("#C"))
         {
-            cmt = current_line->section("#C", 1, -1);
-            while (cmt.startsWith(' '))
-                cmt = cmt.section(' ', 1, -1);
-            while (cmt.endsWith('\n') || cmt.endsWith('\r'))
-                cmt.chop(1);
+            cmt = current_line->section("#C", 1, -1).simplified();
             comments.append(cmt);
         }
         skip_line();
@@ -110,9 +113,11 @@ int ss_file::write_comments()
     QString cmt, line;
     for (int i = 0; i < comments.count(); i++)
     {
-//        cmt = comments.at(i);
-        line = QString("#C %1").arg(comments.at(i));
-        chars = writeline (line);
+        cmt = comments.at(i);
+        cmt.prepend("#C ");
+        chars += writeline(cmt);
+//        line = QString("#C %1").arg(comments.at(i));
+//        chars = writeline (line);
     }
     return chars;
 }
@@ -148,21 +153,37 @@ int ss_file::newline()
 QStringList *ss_file::get_line_tokens()
 {
     QString line(read_line());
-    if (current_line->count() > 0)
+    if (!current_line->isEmpty())
         current_line->clear();
-//    line = ;
-    current_line->append(line);
 
+    current_line->append(line.simplified());
     return get_line_tokens(current_line);
+
+    if (!current_tokens->isEmpty())
+        current_tokens->clear();
+    current_tokens->append(current_line->split(' ', QString::SkipEmptyParts));
+    setNumTokens();
+
+    return current_tokens;
 }
 
 QStringList *ss_file::get_line_tokens(QString *line)
 {
-    QString last;
-    QStringList cl;
+    QString str(line->simplified());
 
+    if (!current_tokens->isEmpty())
+        current_tokens->clear();
+    current_tokens->append(str.split(' ', QString::SkipEmptyParts));
+    if (current_tokens->isEmpty())
+        get_line_tokens();
+    setNumTokens();
+    return current_tokens;
+
+    QString last;
+    QStringList cl(line->split(' ', QString::SkipEmptyParts));
     cl = line->split('\t', QString::SkipEmptyParts);
     current_tokens->clear();
+//    current_tokens->append(cl);
     for (int i = 0; i < cl.count(); i++)
         current_tokens->append(cl.at(i).split (' ', QString::SkipEmptyParts));
 
@@ -340,7 +361,7 @@ int ss_file::write_vector(QStringList vect, int spcng, QString info)
         line.append(QString("%1 ").arg(item));
     }
     if (!info.isEmpty())
-        line.append(QString("# %1").arg(info));
+        line.append(QString("#_%1").arg(info));
     return writeline(line);
 }
 

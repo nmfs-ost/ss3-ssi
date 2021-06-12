@@ -21,7 +21,7 @@ spawn_recruit::spawn_recruit(QObject *parent)
 
     assignments = new tablemodel(parent);
     assignments->setColumnCount(4);
-    assignments->setRowCount(0);
+    assignments->setRowCount(1);
     header << "GP" << "Month" << "Area" << "Settle Age";
     assignments->setHeader(header);
     assignTimings = new tablemodel(parent);
@@ -68,7 +68,7 @@ void spawn_recruit::reset()
     full_parameters->setParamsUsed(parmsUsed);
     setDefaultParameters();
     setParameterHeaders();
-    distrib_method = 1;
+    distrib_method = 2;
     distrib_area = 1;
     setMethod(1);
     env_link = 0;

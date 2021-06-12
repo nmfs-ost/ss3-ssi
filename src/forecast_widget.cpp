@@ -48,8 +48,8 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_catch_basis->addWidget(inputFcastCatch);
     inputFcastCatch->setHeight(0);
 
-    connect (ui->comboBox_benchmarks, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_benchmarks(int)));
-    connect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_MSY(int)));
+    connect (ui->comboBox_benchmarks, SIGNAL(currentIndexChanged(int)), SLOT(change_bmarks(int)));
+    connect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), SLOT(change_MSY(int)));
     connect (ui->lineEdit_SPR_target, SIGNAL(editingFinished()), SLOT(set_spr_target()));
     connect (ui->lineEdit_biomass_target, SIGNAL(editingFinished()), SLOT(set_biomass_target()));
     connect (ui->spinBox_bmark_bio_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_bio_begin(int)));
@@ -63,10 +63,10 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_bmark_srparm_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_begin(int)));
     connect (ui->spinBox_bmark_srparm_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_end(int)));
 
-    connect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_relf_basis(int)));
-    connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), SLOT(set_forecast(int)));
+    connect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), SLOT(change_bmark_relF(int)));
+    connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), SLOT(change_forecast(int)));
     connect (ui->spinBox_fcast_yr_num, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_forecast_years(int)));
-    connect (ui->lineEdit_F_scalar, SIGNAL(editingFinished()), SLOT(set_F_scalar()));
+    connect (ui->lineEdit_F_scalar, SIGNAL(editingFinished()), SLOT(change_F_mult()));
     connect (ui->spinBox_fcast_sel_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_begin(int)));
     connect (ui->spinBox_fcast_sel_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_end(int)));
     connect (ui->spinBox_fcast_relf_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_begin(int)));
@@ -74,13 +74,13 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_fcast_recr_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_recr_begin(int)));
     connect (ui->spinBox_fcast_recr_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_recr_end(int)));
 
-    connect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_cr_method(int)));
+    connect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), SLOT(change_cr_method(int)));
     connect (ui->lineEdit_ctl_rule_const_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_const_f()));
     connect (ui->lineEdit_ctl_rule_no_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_no_f()));
     connect (ui->lineEdit_ctl_tgt_as_fraction, SIGNAL(editingFinished()), SLOT(set_cr_target()));
 
     connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), SLOT(set_num_forecast_loops(int)));
-    connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_recruitment(int)));
+    connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), SLOT(change_first_forecast_loop(int)));
 /*    connect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
     connect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
     connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
@@ -91,11 +91,11 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_first_year(int)));
     connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_curr_year(int)));
 
-    connect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), SLOT(set_combo_box_relf_basis(int)));
+    connect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), SLOT(change_bmark_relF(int)));
 
     connect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
 
-    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), SLOT(set_combo_box_fixed_catch(int)));
+    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), SLOT(change_fixed_catch(int)));
     connect (ui->spinBox_fixed_catch_obs, SIGNAL(valueChanged(int)), SLOT(change_num_input_obs(int)));
 
     if (fcast->getNumFixedFcastCatch() > 0)
@@ -149,7 +149,7 @@ void forecast_widget::reset()
     ui->lineEdit_ctl_rule_const_F->setText("0.4");
     ui->lineEdit_ctl_rule_no_F->setText("0.1");
     ui->spinBox_num_forecast_loops->setValue(3);
-    ui->spinBox_first_loop->setValue(3);
+    ui->spinBox_first_loop->setValue(1);
     ui->spinBox_fcast_recr_adjust->setValue(0);
     ui->lineEdit_fcast_recr_adj_value->setText("0.0");
     ui->spinBox_fcast_loops_5->setValue(0);
@@ -177,8 +177,8 @@ void forecast_widget::refresh()
     QString txt("");
     ss_forecast *fcast = model_data->forecast;
 
-    ui->comboBox_benchmarks->setCurrentIndex(fcast->get_benchmarks());
-    set_combo_box(ui->comboBox_MSY_options, fcast->get_MSY());
+    set_combo_box_bmarks(fcast->get_benchmarks());//ui->comboBox_benchmarks->setCurrentIndex(fcast->get_benchmarks());
+    set_combo_box_MSY(fcast->get_MSY());//(ui->comboBox_MSY_options, fcast->get_MSY());
     ui->lineEdit_SPR_target->setText(QString::number(fcast->get_spr_target()));
     ui->lineEdit_biomass_target->setText(QString::number(fcast->get_biomass_target()));
     ui->spinBox_bmark_bio_beg->setValue(fcast->get_benchmark_year(0));
@@ -201,9 +201,9 @@ void forecast_widget::refresh()
     set_bmark_srparm_begin(fcast->get_benchmark_year(8));
     ui->spinBox_bmark_srparm_end->setValue(fcast->get_benchmark_year(9));
     set_bmark_srparm_end(fcast->get_benchmark_year(9));
+    set_combo_box_bmark_relF(fcast->get_benchmark_rel_f());//(ui->comboBox_bmark_relF_basis, fcast->get_benchmark_rel_f());
 
-    set_combo_box(ui->comboBox_bmark_relF_basis, fcast->get_benchmark_rel_f());
-    set_combo_box(ui->comboBox_fcast_options, fcast->get_forecast());
+    set_combo_box_fcast(fcast->get_forecast());//(ui->comboBox_fcast_options, fcast->get_forecast());
     ui->spinBox_fcast_yr_num->setValue(fcast->get_num_forecast_years());
     ui->lineEdit_F_scalar->setText(QString::number(fcast->get_f_scalar()));
     ui->spinBox_fcast_sel_beg->setValue(fcast->get_forecast_year(0));
@@ -219,13 +219,15 @@ void forecast_widget::refresh()
     ui->spinBox_fcast_recr_end->setValue(fcast->get_forecast_year(5));
     set_fcast_recr_end(fcast->get_forecast_year(5));
 
-    set_combo_box(ui->comboBox_control_rule, fcast->get_cr_method());
+    set_fcast_selex(fcast->getSelectivity());
+    set_combo_box_cr_method(fcast->get_cr_method());//(ui->comboBox_control_rule, fcast->get_cr_method());
     ui->lineEdit_ctl_rule_const_F->setText(QString::number(fcast->get_cr_biomass_const_f()));
     ui->lineEdit_ctl_rule_no_F->setText(QString::number(fcast->get_cr_biomass_no_f()));
     ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(fcast->get_cr_buffer()));
 
     ui->spinBox_num_forecast_loops->setValue(fcast->get_num_forecast_loops());
-    ui->spinBox_first_loop->setValue(fcast->get_forecast_loop_recruitment());
+    ui->spinBox_first_loop->setMaximum(ui->spinBox_num_forecast_loops->value());
+    ui->spinBox_first_loop->setValue(fcast->get_forecast_loop_first());
     ui->spinBox_fcast_recr_adjust->setValue(fcast->get_forecast_recr_adjust());
     ui->lineEdit_fcast_recr_adj_value->setText(QString::number(fcast->get_forecast_recr_adj_value()));
     ui->spinBox_fcast_loops_5->setValue(fcast->get_forecast_loop_ctl5());
@@ -237,10 +239,10 @@ void forecast_widget::refresh()
     ui->spinBox_rebuilder_yinit->setValue(fcast->get_rebuilder_curr_year());
 
     ui->label_input_seas_relf->setVisible(false);
-    set_combo_box(ui->comboBox_relF, fcast->get_fleet_rel_f());
-    set_combo_box_relf_basis(ui->comboBox_relF->currentIndex());
+    set_combo_box_fleet_relF(fcast->get_fleet_rel_f());//(ui->comboBox_relF, );
+//    change_bmark_relF(ui->comboBox_relF->currentIndex());
 
-    set_combo_box(ui->comboBox_tuning_basis, fcast->get_catch_tuning_basis());
+    set_combo_box_tuning_basis(fcast->get_catch_tuning_basis());//(ui->comboBox_tuning_basis, );
 //    set_max_catch_fleet();
 //    set_max_catch_area();
 
@@ -269,7 +271,7 @@ void forecast_widget::refresh()
     inputFcastCatch->resizeColumnsToContents();
 
 //    ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
-    set_combo_box(ui->comboBox_input_catch_basis, fcast->get_input_catch_basis());
+    set_combo_box_catch_basis(fcast->get_input_catch_basis());//(ui->comboBox_input_catch_basis, fcast->get_input_catch_basis());
 //    set_combo_box_fixed_catch(ui->comboBox_input_catch_basis->currentIndex());
 
     ui->tabWidget->setCurrentIndex(0);
@@ -277,17 +279,39 @@ void forecast_widget::refresh()
 
 void forecast_widget::set_combo_box(QComboBox *cbox, int value)
 {
-    QString entry, val(QString::number(value));
+    QString entry;
+    QString val(QString::number(value));
+    val.append(' ');
     int i;
     for (i = 0; i < cbox->count(); i++)
     {
-        cbox->setCurrentIndex(i);
-        entry = cbox->currentText();
+        entry = cbox->itemText(i);
         if (entry.contains (val))
             break;
     }
-    if (i == cbox->maxCount())
-        cbox->setCurrentIndex(0);
+    if (i == cbox->count())
+        i = 0;
+    cbox->setCurrentIndex(i);
+}
+
+void forecast_widget::set_combo_box_bmarks(int value)
+{
+    ui->comboBox_benchmarks->setCurrentIndex(value);
+}
+
+void forecast_widget::change_bmarks(int value)
+{
+    model_data->forecast->set_benchmarks(value);
+}
+
+void forecast_widget::set_combo_box_MSY(int value)
+{
+    ui->comboBox_MSY_options->setCurrentIndex(value-1);
+}
+
+void forecast_widget::change_MSY(int value)
+{
+    model_data->forecast->set_MSY(value+1);
 }
 
 void forecast_widget::set_spr_target()
@@ -306,27 +330,71 @@ void forecast_widget::set_biomass_target()
     ui->lineEdit_biomass_target->setText(QString::number(bmt));
 }
 
-void forecast_widget::set_forecast(int fcast)
+void forecast_widget::set_combo_box_bmark_relF(int value)
 {
-    model_data->forecast->set_forecast(fcast);
-    switch(fcast)
+    if (value < 1) value = 1;
+    if (value > 2) value = 2;
+    ui->comboBox_relF->setCurrentIndex(value-1);
+}
+
+void forecast_widget::change_bmark_relF (int value)
+{
+//    model_data->forecast->set_combo_box_fleet_relf(val);
+    model_data->forecast->set_benchmark_rel_f(value+1);
+    if (value == 1)
     {
-    case 5:
-        ui->label_F_scalar->setVisible(true);
-        ui->lineEdit_F_scalar->setVisible(true);
-        break;
-    default:
-        ui->label_F_scalar->setVisible(false);
-        ui->lineEdit_F_scalar->setVisible(false);
+        seasFltRelF->setVisible(true);
+        seasFltRelF->setHeight(model_data->get_num_seasons());
+        ui->label_input_seas_relf->setVisible(true);
+    }
+    else
+    {
+        seasFltRelF->setVisible(false);
+        seasFltRelF->setHeight(0);
+        ui->label_input_seas_relf->setVisible(false);
     }
 }
 
-void forecast_widget::set_F_scalar()
+void forecast_widget::set_combo_box_fcast(int value)
+{
+    ui->comboBox_fcast_options->setCurrentIndex(value+1);
+}
+
+void forecast_widget::change_forecast(int fcast)
+{
+    int i_fcast = fcast - 1;
+    bool showScalar = (i_fcast == 5);
+    model_data->forecast->set_forecast(i_fcast);
+    ui->label_F_scalar->setVisible(showScalar);
+    ui->lineEdit_F_scalar->setVisible(showScalar);
+}
+
+void forecast_widget::change_F_mult()
 {
     QString value(ui->lineEdit_F_scalar->text());
     double fsc = checkdoublevalue(value);
-    model_data->forecast->set_f_scalar(fsc);
+    model_data->forecast->set_f_mult(fsc);
     ui->lineEdit_F_scalar->setText(QString::number(fsc));
+}
+
+void forecast_widget::set_fcast_selex(int value)
+{
+    ui->comboBox_fcast_selex->setCurrentIndex(value);
+}
+
+void forecast_widget::change_fcast_selex(int value)
+{
+    model_data->forecast->setSelectivity(value);
+}
+
+void forecast_widget::set_combo_box_cr_method(int value)
+{
+    ui->comboBox_control_rule->setCurrentIndex(value);
+}
+
+void forecast_widget::change_cr_method(int value)
+{
+    model_data->forecast->set_cr_method(value);
 }
 
 void forecast_widget::set_cr_biomass_const_f()
@@ -359,6 +427,11 @@ void forecast_widget::set_num_forecast_loops(int num)
     ui->spinBox_first_loop->setMaximum(num);
 }
 
+void forecast_widget::change_first_forecast_loop(int num)
+{
+    model_data->forecast->set_forecast_loop_first(num);
+}
+
 void forecast_widget::set_log_catch_std_dev()
 {
     QString value(ui->lineEdit_log_sd->text());
@@ -366,6 +439,57 @@ void forecast_widget::set_log_catch_std_dev()
     model_data->forecast->set_log_catch_std_dev(val);
     ui->lineEdit_log_sd->setText(QString::number(val));
 
+}
+
+void forecast_widget::set_combo_box_fleet_relF(int value)
+{
+    ui->comboBox_relF->setCurrentIndex(value-1);
+}
+
+void forecast_widget::change_fleet_relF(int value)
+{
+    model_data->forecast->set_fleet_rel_f(value+1);
+}
+
+void forecast_widget::set_combo_box_tuning_basis(int value)
+{
+    int index = 0;
+    switch (value)
+    {
+    case 2:
+        index = 0;
+        break;
+    case 3:
+        index = 1;
+        break;
+    case 5:
+        index = 2;
+        break;
+    case 6:
+        index = 3;
+    }
+    ui->comboBox_tuning_basis->setCurrentIndex(index);
+}
+
+void forecast_widget::change_tuning_basis(int value)
+{
+    int set = 2;
+    switch (value)
+    {
+    case 0:
+        set = 2;
+        break;
+    case 1:
+        set = 3;
+        break;
+    case 2:
+        set = 5;
+        break;
+    case 3:
+        set = 6;
+        break;
+    }
+    model_data->forecast->set_catch_tuning_basis(set);
 }
 
 void forecast_widget::set_allocation_groups()
@@ -549,25 +673,44 @@ void forecast_widget::change_max_catch_area ()
     set_max_catch_area();*/
 }
 
-
-void forecast_widget::set_combo_box_relf_basis (int val)
+void forecast_widget::set_combo_box_catch_basis(int value)
 {
-    model_data->forecast->set_combo_box_fleet_relf(val);
-    if (val == 1)
-    {
-        seasFltRelF->setVisible(true);
-        seasFltRelF->setHeight(model_data->get_num_seasons());
-        ui->label_input_seas_relf->setVisible(true);
-//        ui->lineEdit_seas_relf->setVisible(true);
-//        ui->lineEdit_alloc_assignments->setText(model_data->forecast->seas_fleet_rel_f(0,0));
+    int index = 0;
+    switch (value) {
+    case -1:
+        index = 0;
+        break;
+    case 2:
+        index = 1;
+        break;
+    case 3:
+        index = 2;
+        break;
+    case 99:
+        index = 3;
+        break;
     }
-    else
-    {
-        seasFltRelF->setVisible(false);
-        seasFltRelF->setHeight(0);
-        ui->label_input_seas_relf->setVisible(false);
-//        ui->lineEdit_seas_relf->setVisible(false);
+    ui->comboBox_input_catch_basis->setCurrentIndex(index);
+}
+
+void forecast_widget::change_catch_basis(int value)
+{
+    int set = -1;
+    switch (value) {
+    case 0:
+        set = -1;
+        break;
+    case 1:
+        set = 2;
+        break;
+    case 2:
+        set = 3;
+        break;
+    case 3:
+        set = 99;
+        break;
     }
+    model_data->forecast->set_input_catch_basis(set);
 }
 
 void forecast_widget::set_num_input_obs(int num)
@@ -581,7 +724,7 @@ void forecast_widget::change_num_input_obs(int num)
     inputFcastCatch->setHeight(num);
 }
 
-void forecast_widget::set_combo_box_fixed_catch(int value)
+void forecast_widget::change_fixed_catch(int value)
 {
     model_data->forecast->set_combo_box_catch_input(value);
     if (value > 0)

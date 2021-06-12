@@ -1062,6 +1062,16 @@ QString ss_model::getControlFileName()
     return mw->getControlFile();
 }
 
+int ss_model::getTimeVaryBoundsCheck() const
+{
+    return timeVaryBoundsCheck;
+}
+
+void ss_model::setTimeVaryBoundsCheck(int value)
+{
+    timeVaryBoundsCheck = value;
+}
+
 bool ss_model::getUse2DAR1() const
 {
     return use2DAR1;

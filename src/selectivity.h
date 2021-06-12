@@ -51,6 +51,7 @@ public:
     SelexType getType() const;
     void setType(const SelexType &value);
 
+
 signals:
     void setupChanged(QStringList values);
     void dataChanged();
@@ -165,6 +166,8 @@ public slots:
     void setMethod (int method);
     void setDefaultParams (int method = -1, int special = -1);
     void autogenParameters(int flag = 0);
+    int getMinSel() const;
+    void setMinSel(int value);
 
 protected:
     ss_model *data_model;
@@ -184,6 +187,7 @@ protected:
     int numXvals;
     int numAges;
     int numGenders;
+    int minSel;
 
     setupModel *setup;
     longParameterModel *parameters;

@@ -32,10 +32,12 @@ class ss_file : public QFile
 {
     Q_OBJECT
 public:
-    explicit ss_file(QString name, QObject *parent = 0);
+    explicit ss_file(QString name, QObject *parent = nullptr);
     ~ss_file();
 
-    void setFileName (const QString &filename);
+    void setFileName (const QString &fname);
+    QString getShortFileName() {return filename;}
+    QString getDirectory() {return directory;}
 //    QString get_next_value ();
     QString get_next_value (QString prompt = QString(""));
     QString get_next_token();
@@ -100,6 +102,8 @@ public:
     void setStop(bool value);
 
 private:
+    QString filename;
+    QString directory;
     int line_num;
     bool wait;
     bool okay;

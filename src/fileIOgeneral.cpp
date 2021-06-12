@@ -18,6 +18,11 @@ int writeVersionComment(ss_file *file)
     chars += file->writeline(line);
     line = QString("#Foreign copyrights may apply. See copyright.txt for more information.");
     chars += file->writeline(line);
+    line = QString("#_user_support_available_at:NMFS.Stock.Synthesis@noaa.gov");
+    chars += file->writeline(line);
+    line = QString("#_user_info_available_at:https://vlab.noaa.gov/group/stock-synthesis");
+    chars += file->writeline(line);
+
     return chars;
 }
 

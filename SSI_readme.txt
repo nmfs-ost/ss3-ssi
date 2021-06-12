@@ -1,10 +1,10 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.16.6
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.1
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-versions 3.30.14 through 3.30.16. It allows the user to change the data,
+version 3.30.17. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
@@ -14,6 +14,16 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.17.1
+    2021-06-11
+1. Added -1 as option for forecast method.
+2. Changed control rule method from 1-2 to 0-5.
+3. Fixed bug with Lambdas read twice.
+4. Fixed bug with autogenerating age selex spline values.
+5. Fixed bug with losing age cubic spline data.
+6. Fixed age random walk where special is non-zero.
+7. Changed references to vlab.ncep.noaa.gov to vlab.noaa.gov
 ============================================================================
     3.30.16.7
     2021-03-18

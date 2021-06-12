@@ -59,6 +59,7 @@ void selectivity::reset()
     setSetup(values);
     numXvals = 0;
     numAges = 0;
+    minSel = 0;
 }
 
 void selectivity::connectSigs()
@@ -110,9 +111,9 @@ void selectivity::setSetup(QString text)
 void selectivity::setSetup(QStringList strList)
 {
     setSpecial(strList.at(3).toInt());
-    setPattern(strList.at(0).toInt());
-    setDiscard(strList.at(1).toInt());
     setMale(strList.at(2).toInt());
+    setDiscard(strList.at(1).toInt());
+    setPattern(strList.at(0).toInt());
     if (getNumBins() > 0)
         setDefaultParams();
 }
@@ -479,7 +480,10 @@ void selectivity::setDefaultParams(int method, int special)
     case 17:  // 17 #age selectivity: each age has parameter as random walk
         //    transformation as selex=exp(parm); some special codes
     {
-        numparam = numAges + 1;
+        if (special > 0)
+            numparam = special + 1;
+        else
+            numparam = numAges + 1;
         setNumParameters(numparam);
         parm << "-10" << "5" << "-1000" << "0" << "0" << "0" << "-99" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
         setParameter(0, parm);
@@ -1202,6 +1206,16 @@ void selectivity::autogenParameters(int flag) {
     }
 }
 
+int selectivity::getMinSel() const
+{
+    return minSel;
+}
+
+void selectivity::setMinSel(int value)
+{
+    minSel = value;
+}
+
 // autogenerate Cubic Spline nodes locations
 void selectivity::autogenCubicSpline1(int scale) {
     int numNodes = getSpecial();
@@ -1224,43 +1238,63 @@ void selectivity::autogenCubicSpline1(int scale) {
 
     if (type == Size) {
         numObs = fleet->getLengthNumObs();
-        numBins = fleet->getLengthObservation(0).count() - 7;
-        for (bin = 0; bin < numBins; bin++) {
-            binTotals.append(0.0);
+        if (numObs == 0) {
+            numBins = bins.count();
+            total = numBins;
+            for (int i = 0; i < numBins; i++)
+                binTotals.append(1);
         }
-
-        for (int row = 0; row < numObs; row++) {
+        else {
+            numBins = fleet->getLengthObservation(0).count() - 7;
             for (bin = 0; bin < numBins; bin++) {
-                binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
+                binTotals.append(0.0);
+            }
+
+            for (int row = 0; row < numObs; row++) {
+                for (bin = 0; bin < numBins; bin++) {
+                    binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
+                }
             }
         }
     }
     else { // type == Age
         numObs = fleet->getAgeNumObs();
-        numBins = fleet->getAgeObservation(0).count() - 7;
-        for (bin = 0; bin < numBins; bin++) {
-            binTotals.append(0.0);
+        if (numObs == 0) {
+            numBins = bins.count();
+            total = numBins;
+            for (int i = 0; i < numBins; i++)
+                binTotals.append(1);
         }
-
-        for (int row = 0; row < numObs; row++) {
+        else {
+            numBins = fleet->getAgeObservation(0).count() - 9;
             for (bin = 0; bin < numBins; bin++) {
-                binTotals[bin] += fleet->getAgeObservation(row).at(bin+7).toInt();
+                binTotals.append(0);
+            }
+
+            for (int row = 0; row < numObs; row++) {
+                for (bin = 0; bin < numBins; bin++) {
+                    binTotals[bin] += fleet->getAgeObservation(row).at(bin+9).toInt();
+                }
             }
         }
+        for (bin = 0; bin < numBins; bin++) {
+            total += binTotals.at(bin);
+        }
     }
-    for (bin = 0; bin < numBins; bin++) {
-        total += binTotals.at(bin);
-    }
+
     pctl025 = static_cast<int>(total * 0.025 + .5);
     pctl975 = static_cast<int>(total * 0.975 + .5);
     total = 0;
-    for (bin = 0; bin < numBins; bin++) {
+    for (bin = 0; bin < bins.count()-1; bin++) {
         total += binTotals.at(bin);
         if (total < pctl025)
             nodeFirst = bins.at(bin+1).toFloat();
         else if (total < pctl975)
             nodeLast = bins.at(bin+1).toFloat();
     }
+    if (nodeLast > bins.count() - 1)
+        nodeLast = bins.count() - 2;
+
     nodeRange = nodeLast - nodeFirst;
     interm = nodeRange / (numNodes - 1);
     term = nodeFirst;

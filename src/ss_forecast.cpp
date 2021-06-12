@@ -94,9 +94,10 @@ void ss_forecast::set_combo_box_MSY(int msy)
     }
 }
 
-void ss_forecast::set_combo_box_relf_basis(int relf)
-{
-    switch (relf)
+//void ss_forecast::set_combo_box_relf_basis(int relf)
+//{
+//    set_benchmark_rel_f(relf);
+/*    switch (relf)
     {
     case 0:
         set_benchmark_rel_f(1);
@@ -106,20 +107,20 @@ void ss_forecast::set_combo_box_relf_basis(int relf)
         break;
     default:
         set_benchmark_rel_f(1);
-    }
-}
+    }*/
+//}
 
 void ss_forecast::set_combo_box_forecast(int fcast)
 {
-    set_forecast(fcast);
-/*    switch (fcast)
+    set_forecast(fcast-1);
+    switch (fcast)
     {
     case 0:
         set_forecast(0);
         break;
     default:
         set_forecast(0);
-    }*/
+    }
 }
 
 void ss_forecast::set_num_forecast_years (int yrs)
@@ -150,7 +151,8 @@ QStringList ss_forecast::get_cr_buffer_row (int row)
 
 void ss_forecast::set_combo_box_cr_method(int ctl)
 {
-    switch (ctl)
+    set_cr_method(ctl);
+/*    switch (ctl)
     {
     case 0:
         set_cr_method(1);
@@ -160,7 +162,7 @@ void ss_forecast::set_combo_box_cr_method(int ctl)
         break;
     default:
         set_cr_method(1);
-    }
+    }*/
 }
 
 void ss_forecast::set_combo_box_fleet_relf(int relf)
@@ -507,7 +509,7 @@ void ss_forecast::reset()
     f_ctl_rule_buff = 0.75;// Control rule target as fraction of Flimit (e.g. 0.75)
     ctl_rule_buffer_table->clear();
     i_num_fcast_loops = 3;// N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)
-    i_fcast_loop_stch_recruit = 3;// First forecast loop with stochastic recruitment
+    i_fcast_loop_first = 3;// First forecast loop with stochastic recruitment
     i_fcast_recr_adj = 0;// Forecast loop control #3 (reserved for future bells&whistles)
     f_fcast_recr_adj_val = 0;// Forecast loop control #4 (reserved for future bells&whistles)
     i_fcast_loop_5 = 0;// Forecast loop control #5 (reserved for future bells&whistles)
@@ -552,7 +554,7 @@ void ss_forecast::clear()
     f_ctl_rule_buff = 0.0;
     ctl_rule_buffer_table->clear();
     i_num_fcast_loops = 1;
-    i_fcast_loop_stch_recruit = 1;
+    i_fcast_loop_first = 1;
     i_fcast_recr_adj = 0;
     f_fcast_recr_adj_val = 0;
     i_fcast_loop_5 = 0;

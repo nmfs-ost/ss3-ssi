@@ -35,13 +35,13 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
 
     current_dir = QDir(dir);
 
-    starterFile = new ss_file(QString(STARTER_FILE), this);
-    forecastFile = new ss_file(QString(FORECAST_FILE), this);
-    dataFile = new ss_file(QString(DATA_FILE), this);
-    controlFile = new ss_file(QString(CONTROL_FILE), this);
-    runNumberFile = new ss_file(QString(RUN_NUMBER_FILE), this);
-    parameterFile = new ss_file(QString(PARAMETER_FILE), this);
-    profileFile = new ss_file(QString(PROFILE_VAL_FILE), this);
+    starterFile = new ss_file(QString("%1/%2").arg(dir, STARTER_FILE), this);
+    forecastFile = new ss_file(QString("%1/%2").arg(dir, FORECAST_FILE), this);
+    dataFile = new ss_file(QString("%1/%2").arg(dir, DATA_FILE), this);
+    controlFile = new ss_file(QString("%1/%2").arg(dir, CONTROL_FILE), this);
+    runNumberFile = new ss_file(QString("%1/%2").arg(dir, RUN_NUMBER_FILE), this);
+    parameterFile = new ss_file(QString("%1/%2").arg(dir, PARAMETER_FILE), this);
+    profileFile = new ss_file(QString("%1/%2").arg(dir, PROFILE_VAL_FILE), this);
     userDataFile = nullptr;
     chooseRepDetail = new DialogChoseReport(this);
     connect (chooseRepDetail, SIGNAL(detailChanged(int)), SLOT(changeReportDetail(int)));
@@ -71,6 +71,7 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     connect (ui->pushButton_control_file, SIGNAL(clicked()), SLOT(show_control_file_info()));
     connect (ui->pushButton_viewParFile, SIGNAL(clicked()), SLOT(view_param_file()));
     connect (ui->pushButton_pro_file, SIGNAL(clicked()), SLOT(show_prof_file_info()));
+    connect (ui->checkBox_wtatage, SIGNAL(toggled(bool)), SLOT(changeReadWtAtAge(bool)));
     connect (ui->pushButton_wtatage, SIGNAL(clicked()), SLOT(view_wtatage()));
 
 //    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), SLOT(parm_trace_changed(bool)));
@@ -224,6 +225,7 @@ void file_widget::set_control_file(QString fname, bool keep)
     else if (controlFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         controlFile->setFileName(fname);
+        control_file_name = controlFile->getShortFileName();
 
         if (fname.contains('/'))
             control_file_name = fname.section('/', -1, -1);
@@ -248,8 +250,10 @@ void file_widget::set_data_file(QString fname, bool keep)
     else if (dataFile->fileName().compare(fname, Qt::CaseSensitive))
     {
         dataFile->setFileName(fname);
-        data_file_name = fname.section('/', -1, -1);
-        data_file_name = data_file_name.section('\\', -1, -1);
+        data_file_name = dataFile->getShortFileName();
+//        data_file_name = dataFile->fileName();
+//        data_file_name = fname.section('/', -1, -1);
+//        data_file_name = data_file_name.section('\\', -1, -1);
 
         ui->label_data_file->setText(dataFile->fileName());
         ui->label_data_file->repaint();
@@ -372,6 +376,14 @@ void file_widget::setReadWtAtAge(bool flag)
 {
     ui->label_wtatage->setVisible(flag);
     ui->pushButton_wtatage->setVisible(flag);
+    ui->checkBox_wtatage->setChecked(flag);
+}
+
+void file_widget::changeReadWtAtAge(bool flag)
+{
+    ui->label_wtatage->setVisible(flag);
+    ui->pushButton_wtatage->setVisible(flag);
+    model_info->setReadWtAtAge(flag);
 }
 
 float file_widget::get_version_number(QString token)
@@ -602,7 +614,24 @@ bool file_widget::read_files(ss_model *model_inf)
     if (model_info == nullptr)
         okay = false;
     if (okay)
-        okay = read_starter_file();
+    {
+        if (!starterFile->exists()) {
+            okay = error_no_file(starterFile);
+            if (starterFile->exists()) {
+                new_directory(starterFile->getDirectory());
+                okay = true;
+            }
+        }
+        if (okay && !starterFile->open(QIODevice::ReadOnly)) {
+            okay = false;
+            error_unreadable(starterFile->fileName());
+        }
+        else if (okay) {
+            starterFile->close();
+            okay = read_starter_file();
+        }
+    }
+
     if (okay)
     {
 #ifdef DEBUG_FILES
@@ -707,12 +736,12 @@ bool file_widget::read_starter_file (QString filename)
 
     if (!starterFile->exists()) {
         okay = error_no_file(starterFile);
-        if (okay) {
-            emit directory_changed(starterFile->fileName());
-        }
     }
-    else {
-        okay = read_starter_file(starterFile);
+    if (okay) {
+        current_dir_name = starterFile->getDirectory();
+        current_dir = QDir(current_dir_name);
+        emit directory_changed(current_dir_name);
+        read_starter_file(starterFile);
     }
     return okay;
 }
@@ -961,10 +990,8 @@ void file_widget::write_starter_file (QString filename)
 
     if(starterFile->open(QIODevice::WriteOnly))
     {
-//        chars += starterFile->writeline(QString("#V%1").arg(getDatafileVersionString()));
         chars += writeVersionComment(starterFile);
-
-        starterFile->write_comments();//write_comments(starter);
+        starterFile->write_comments();
 
         chars += starterFile->write_val(data_file_name, 24,
                     QString("data file name"));
@@ -972,90 +999,93 @@ void file_widget::write_starter_file (QString filename)
                     QString("control file name"));
 
         temp_int = getReadParFile()? 1: 0;
-        chars += starterFile->write_val(temp_int, 5,
+        chars += starterFile->write_val(temp_int, 1,
                     QString("0=use init values in control file; 1=use ss.par"));
 
-        chars += starterFile->write_val(ui->comboBox_detail_level->currentIndex(), 5,
+        chars += starterFile->write_val(ui->comboBox_detail_level->currentIndex(), 1,
                     QString("run display detail (0,1,2)"));
 
         temp_int = ui->comboBox_report_level->currentIndex();
         chars += starterFile->write_val(temp_int, 5,
-                    QString("detailed age-structured reports in REPORT.SSO (0-3) "));
+                    QString("detailed output (0=minimal for data-limited, 1=high (w/ wtatage.ss_new), 2=brief, 3=custom) "));
+        chars += starterFile->writeline("# custom report options: -100 to start with minimal; -101 to start with all; -number to remove, +number to add, -999 to end");
         if (temp_int == 3) {
             QList<bool> list = chooseRepDetail->getReports();
             for (int i = 1; i < list.count(); i++) {
                 if (list.at(i)) {
-                    chars += starterFile->write_val(i, 5, QString("Report_%1").arg(QString::number(i)));
+                    chars += starterFile->write_val(i, 1, QString("Report_%1").arg(QString::number(i)));
                 }
             }
-            starterFile->write_val(-999, 5, QString("terminator"));
+            starterFile->write_val(-999, 1, QString("terminator"));
         }
 
-        chars += starterFile->write_val(QString(ui->checkBox_checkup->isChecked()?"1":"0"), 5,
-                    QString("write detailed checkup.sso file (0,1) "));
+        chars += starterFile->write_val(QString(ui->checkBox_checkup->isChecked()?"1":"0"), 1,
+                    QString("write 1st iteration details to echoinput.sso file (0,1) "));
 
-        chars += starterFile->write_val(get_parmtr_write(), 5,
+        chars += starterFile->write_val(get_parmtr_write(), 1,
                     QString("write parm values to ParmTrace.sso (0=no,1=good,active; 2=good,all; 3=every_iter,all_parms; 4=every,active)"));
 
-        chars += starterFile->write_val(ui->comboBox_cumreport->currentIndex(), 5,
+        chars += starterFile->write_val(ui->comboBox_cumreport->currentIndex(), 1,
                     QString("write to cumreport.sso (0=no,1=like&timeseries; 2=add survey fits)"));
 
-        chars += starterFile->write_val(QString(model_info->get_prior_likelihood()?"1":"0"), 5,
+        chars += starterFile->write_val(QString(model_info->get_prior_likelihood()?"1":"0"), 1,
                      QString("Include prior_like for non-estimated parameters (0,1) "));
 
-        chars += starterFile->write_val(QString(model_info->get_use_softbounds()?"1":"0"), 5,
+        chars += starterFile->write_val(QString(model_info->get_use_softbounds()?"1":"0"), 1,
                      QString("Use Soft Boundaries to aid convergence (0,1) (recommended)"));
+        chars += starterFile->writeline("#");
 
-        chars += starterFile->write_val(ui->spinBox_datafiles->value(), 5,
+        chars += starterFile->write_val(ui->spinBox_datafiles->value(), 1,
                      QString("Number of datafiles to produce: 1st is input, 2nd is estimates, 3rd and higher are bootstrap"));
 
-        chars += starterFile->write_val(model_info->get_last_estim_phase(), 5,
+        chars += starterFile->write_val(model_info->get_last_estim_phase(), 1,
                      QString("Turn off estimation for parameters entering after this phase"));
+        chars += starterFile->writeline("#");
 
-        chars += starterFile->write_val(model_info->mc_burn(), 5,
+        chars += starterFile->write_val(model_info->mc_burn(), 1,
                      QString("MCeval burn interval"));
 
-        chars += starterFile->write_val(model_info->mc_thin(), 5,
+        chars += starterFile->write_val(model_info->mc_thin(), 1,
                     QString("MCeval thin interval"));
 
-        chars += starterFile->write_val(model_info->jitter_param(), 5,
+        chars += starterFile->write_val(model_info->jitter_param(), 1,
                     QString("jitter initial parm value by this fraction"));
 
-        chars += starterFile->write_val(model_info->bio_sd_min_year(), 5,
+        chars += starterFile->write_val(model_info->bio_sd_min_year(), 1,
                     QString("min yr for sdreport outputs (-1 for styr)"));
 
-        chars += starterFile->write_val(model_info->bio_sd_max_year(), 5,
-                    QString("max yr for sdreport outputs (-1 for endyr; -2 for endyr+Nforecastyrs)"));
+        chars += starterFile->write_val(model_info->bio_sd_max_year(), 1,
+                    QString("max yr for sdreport outputs (-1 for endyr+1; -2 for endyr+Nforecastyrs)"));
 
-        chars += starterFile->write_val(model_info->get_num_std_years(), 5,
+        chars += starterFile->write_val(model_info->get_num_std_years(), 1,
                     QString("N individual STD years "));
 
         chars += starterFile->write_val(QString("#vector of year values "));
         chars += starterFile->write_vector(model_info->get_std_years(), 6);
 
-        chars += starterFile->write_val(model_info->get_convergence_criteria(), 5,
+        chars += starterFile->write_val(model_info->get_convergence_criteria(), 1,
                     QString("final convergence criteria (e.g. 1.0e-04) "));
 
-        chars += starterFile->write_val(model_info->get_retrospect_year(), 5,
+        chars += starterFile->write_val(model_info->get_retrospect_year(), 1,
                     QString("retrospective year relative to end year (e.g. -4)"));
 
-        chars += starterFile->write_val(model_info->get_biomass_min_age(), 5,
+        chars += starterFile->write_val(model_info->get_biomass_min_age(), 1,
                     QString("min age for calc of summary biomass"));
 
-        chars += starterFile->write_val(model_info->get_depletion_basis(), 5,
-                    QString("Depletion basis:  denom is: 0=skip; 1=rel X*B0; 2=rel X*Bmsy; 3=rel X*B_styr; 4=rel X*B_endyr"));
+        chars += starterFile->write_val(model_info->get_depletion_basis(), 1,
+                    QString("Depletion basis:  denom is: 0=skip; 1=rel X*SPB0; 2=rel SPBmsy; 3=rel X*SPB_styr; 4=rel X*SPB_endyr; values; >=11 invoke N multiyr (up to 9!) with 10's digit; >100 invokes log(ratio)"));
 
-        chars += starterFile->write_val(model_info->get_depletion_denom(), 5,
+        chars += starterFile->write_val(model_info->get_depletion_denom(), 1,
                     QString("Fraction (X) for Depletion denominator (e.g. 0.4)"));
 
-        chars += starterFile->write_val(model_info->get_spr_basis(), 5,
+        chars += starterFile->write_val(model_info->get_spr_basis(), 1,
                     QString("SPR_report_basis:  0=skip; 1=(1-SPR)/(1-SPR_tgt); 2=(1-SPR)/(1-SPR_MSY); 3=(1-SPR)/(1-SPR_Btarget); 4=rawSPR"));
 
-        chars += starterFile->write_val(model_info->get_f_units(), 5,
-                    QString("F_report_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Frates); 4=true F for range of ages; 5=ave F for range of ages"));
+        chars += starterFile->write_val(model_info->get_f_units(), 1,
+                    QString("Annual_F_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Apical_F's); 4=true F for range of ages; 5=unweighted avg. F for range of ages"));
 
         line.clear();
-        line.append(QString(" %1 %2 #_min and max age over which average F will be calculated" ).arg
+        line.append(QString(" %1 %2 #_min and max age over which average F will be calculated with F_reporting=4 or 5" ).arg
                    (QString::number(model_info->get_f_min_age()),
                     QString::number(model_info->get_f_max_age())));
         if (model_info->get_f_units() < 4)
@@ -1064,24 +1094,24 @@ void file_widget::write_starter_file (QString filename)
             line.append(QString(" with F_reporting>3"));
         }
         chars += starterFile->writeline (line);
-        chars += starterFile->write_val (model_info->get_f_basis(), 5,
-                    QString("F_std_basis: 0=raw_F_report; 1=F/Fspr; 2=F/Fmsy ; 3=F/Fbtgt"));
+        chars += starterFile->write_val (model_info->get_f_basis(), 1,
+                    QString("F_std_basis: 0=raw_annual_F; 1=F/Fspr; 2=F/Fmsy; 3=F/Fbtgt; where F means annual_F; values >=11 invoke N multiyr (up to 9!) with 10's digit; >100 invokes log(ratio)"));
 
         if (datafile_version < 3.30)
         {
-            chars += starterFile->write_val(END_OF_DATA, 5,
+            chars += starterFile->write_val(END_OF_DATA, 1,
                     QString("check value for end of file and for version control"));
         }
         else
         {
-            chars += starterFile->write_val(ui->comboBox_MCMC_output->currentIndex(), 5,
-                    QString("MCMC output detail (0=default; 1=obj func components; 2=expanded; 3=make output subdir for each MCMC vector)"));
-            chars += starterFile->write_val(model_info->getALKTol(), 5,
+            chars += starterFile->write_val(ui->comboBox_MCMC_output->currentIndex(), 1,
+                    QString("MCMC output detail: integer part (0=default; 1=adds obj func components); and decimal part (added to SR_LN(R0) on first call to mcmc)"));
+            chars += starterFile->write_val(model_info->getALKTol(), 1,
                     QString ("ALK tolerance (example 0.0001)"));
             if (model_info->getRandSeed() != 0)
-                chars += starterFile->write_val(model_info->getRandSeed(), 5,
-                        QString ("Rand seed"));
-            chars += starterFile->write_val(QString::number(datafile_version, 'f', 2), 5,
+                chars += starterFile->write_val(model_info->getRandSeed(), 1,
+                        QString ("random number seed for bootstrap data (-1 to use long(time) as seed)"));
+            chars += starterFile->write_val(QString::number(datafile_version, 'f', 2), 1,
                     QString("check value for end of file and for version control"));
         }
 
@@ -1165,12 +1195,19 @@ void file_widget::view_wtatage()
     viewer->show();
 }
 
-bool file_widget::error_no_file(ss_file *file)
+bool file_widget::error_no_file(ss_file *file, int type)
 {
     bool okay = true;
     QString fname;
     QString msg(QString("File %1 does not exist.\n").arg(file->fileName()));
     msg = tr(msg.toUtf8());
+    QString filetype;
+    if (type == 1)
+        filetype = QString(tr("Stock Synthesis starter files (starter.ss);;all files (*.*)"));
+    else if (type == 4)
+        filetype = QString(tr("Stock Synthesis forecast files (forecast.ss);;all files (*.*)"));
+    else
+        filetype = QString(tr("Stock Synthesis files (*.ss);;all files (*.*)"));
 #ifdef DEBUG
     error->write(msg.toUtf8()) ;
 #endif
@@ -1179,7 +1216,7 @@ bool file_widget::error_no_file(ss_file *file)
     if (btn == QMessageBox::Ok)
     {
         fname = QFileDialog::getOpenFileName (this, tr("Select File"),
-                           current_dir_name, tr("Stock Synthesis files (*.ss);;all files (*.*)"));
+                           current_dir_name, filetype);
         file->setFileName(fname);
         if (file->exists())
             okay = true;

@@ -25,8 +25,8 @@
 #define WTATAGE_FILE      "wtatage.ss"
 #define RUN_NUMBER_FILE   "runnumber.ss"
 // default input file names
-#define DATA_FILE         "datafile.dat"
-#define CONTROL_FILE      "controlfile.ctl"
+#define DATA_FILE         "data.ss"
+#define CONTROL_FILE      "control.ss"
 
 // standard output file names
 #define CHECKUP_FILE      "checkup.sso"
@@ -104,6 +104,7 @@ public slots:
     QString getControlFileName () {return control_file_name;}
     ss_model *this_model() {return model_info;}
     void setReadWtAtAge (bool flag);
+    void changeReadWtAtAge (bool flag);
 
     float get_version_number(QString token);
     QString getDatafileVersion ();
@@ -191,7 +192,7 @@ private slots:
 
     void reset_run_num ();
 
-    bool error_no_file (ss_file *file);
+    bool error_no_file (ss_file *file, int type = 1);
     void error_unreadable (QString fname);
     void error_problem (ss_file *file);
 
