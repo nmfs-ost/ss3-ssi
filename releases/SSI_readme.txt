@@ -23,8 +23,9 @@ History:
 4. Fixed bug with autogenerating age selex spline values.
 5. Fixed bug with losing age cubic spline data.
 6. Fixed age random walk where special is non-zero.
-7. Fixed bug in forecast that changed benchmark relf.
-8. Changed references to vlab.ncep.noaa.gov to vlab.noaa.gov
+7. Fixed a bug that changed first stochastic loop.
+8. Fixed bug in forecast that changed benchmark relf.
+9. Changed references to vlab.ncep.noaa.gov to vlab.noaa.gov
 ============================================================================
     3.30.16.7
     2021-03-18
