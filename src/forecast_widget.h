@@ -23,6 +23,9 @@ public:
     explicit forecast_widget(ss_model *m_data, QWidget *parent = nullptr);
     ~forecast_widget();
 
+    void disconnectAll(ss_forecast *fcast);
+    void connectAll(ss_forecast *fcast);
+
 public slots:
     void set_model (ss_model * m_data);
 
@@ -37,8 +40,8 @@ public slots:
     void change_bmarks(int value);
     void set_combo_box_MSY(int value);
     void change_MSY(int value);
-    void set_spr_target();
-    void set_biomass_target();
+    void change_spr_target();
+    void change_biomass_target();
 
     void set_bmark_bio_begin(int yr);
     void set_bmark_bio_begin(QString yrStr);

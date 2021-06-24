@@ -167,7 +167,7 @@ void Dialog_readme::writeReadme()
 {
     bool exists = readmeFile.exists();
     if(readmeFile.open(QIODevice::WriteOnly)) {
-        QByteArray wline;
+        QString wline;
 
         QString mName = ui->lineEdit_model->text();
         QString cName = ui->lineEdit_name->text();
@@ -214,7 +214,7 @@ void Dialog_readme::writeReadme()
             wline.append(info);
         }
 
-        readmeFile.write(wline);
+        readmeFile.write(wline.toUtf8());
         readmeFile.close();
     }
     else {

@@ -2442,8 +2442,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Fec()->setHermaphroditism(temp_int);
         if (temp_int != 0)
         {
-            temp_float = c_file->get_next_value(QString("Hermaphroditism season")).toFloat();
-            pop->Fec()->setHermSeason(temp_float);
+            temp_int = c_file->get_next_value(QString("Hermaphroditism season")).toInt();
+            pop->Fec()->setHermSeason(temp_int);
             temp_int = c_file->getIntValue(QString("Include males in Spawn Bmass"), 0, 1, 1);
             pop->Fec()->setHermIncludeMales(temp_int);
         }
@@ -3047,7 +3047,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
     // Q parameters
     if (c_file->getOkay() && !c_file->getStop()) {
-        int id = 0;
+//        int id = 0;
 
         for (i = 0; i < num_fleets; i++)
         {
@@ -3957,9 +3957,9 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline (line);
         if (temp_int == 1)
         {
-            temp_float = pop->Fec()->getHermSeason();
+            temp_int = pop->Fec()->getHermSeason();
             line = QString(QString("%1 #_hermaphroditism Season:  -1 trans at end of each seas; or specific seas").arg(
-                               QString::number(temp_float)));
+                               QString::number(temp_int)));
             chars += c_file->writeline (line);
             temp_int = pop->Fec()->getHermIncludeMales();
             line = QString(QString("%1 #_include males in spawning biomass:  0=no males; 1=add males to females; xx=reserved.").arg(
@@ -5485,6 +5485,7 @@ int readTimeVaryDevParams(ss_file *infile, ss_model *data, int value, QString hd
     QStringList varParam;
     QString varHeader(hdr);
     Q_UNUSED(data);
+    Q_UNUSED(value);
 //    switch (value)
     {
 //    case 1:

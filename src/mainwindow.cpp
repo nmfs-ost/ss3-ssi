@@ -552,9 +552,9 @@ void MainWindow::readFiles()
     if (worked)
     {
         data->refresh();
-        forecast->refresh();
         fleets->refresh();
         population->refresh();
+        forecast->refresh();
     }
     else
     {

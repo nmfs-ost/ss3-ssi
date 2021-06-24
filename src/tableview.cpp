@@ -215,7 +215,7 @@ void tableview::pasteRows()
     if (text.isEmpty())
         return;
     QStringList rowTextList (text.split('\n', QString::SkipEmptyParts));
-    int row, col;//, curr_row, curr_col;
+//    int row, col;//, curr_row, curr_col;
 
     if(rowTextList.count() < 1)
         return;
@@ -225,8 +225,8 @@ void tableview::pasteRows()
     if (list.isEmpty())
         return;
 
-    row = list.first().row();
-    col = list.first().column();
+//    row = list.first().row();
+//    col = list.first().column();
 //    QModelIndex curr_index = list.first();
 
     setHeight(abmodel);

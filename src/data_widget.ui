@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -462,9 +462,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>954</width>
-            <height>568</height>
+            <y>-145</y>
+            <width>950</width>
+            <height>630</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1671,7 +1671,7 @@
             <x>0</x>
             <y>0</y>
             <width>971</width>
-            <height>489</height>
+            <height>485</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -1774,7 +1774,7 @@
             <x>0</x>
             <y>0</y>
             <width>971</width>
-            <height>489</height>
+            <height>485</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1964,7 +1964,7 @@
             <x>0</x>
             <y>0</y>
             <width>971</width>
-            <height>489</height>
+            <height>485</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
@@ -2234,7 +2234,7 @@
             <x>0</x>
             <y>0</y>
             <width>971</width>
-            <height>489</height>
+            <height>485</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_5">
@@ -2350,7 +2350,7 @@
             <x>0</x>
             <y>0</y>
             <width>971</width>
-            <height>489</height>
+            <height>485</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_19">

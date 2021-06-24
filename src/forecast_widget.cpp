@@ -48,69 +48,10 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_catch_basis->addWidget(inputFcastCatch);
     inputFcastCatch->setHeight(0);
 
-    connect (ui->comboBox_benchmarks, SIGNAL(currentIndexChanged(int)), SLOT(change_bmarks(int)));
-    connect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), SLOT(change_MSY(int)));
-    connect (ui->lineEdit_SPR_target, SIGNAL(editingFinished()), SLOT(set_spr_target()));
-    connect (ui->lineEdit_biomass_target, SIGNAL(editingFinished()), SLOT(set_biomass_target()));
-    connect (ui->spinBox_bmark_bio_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_bio_begin(int)));
-    connect (ui->spinBox_bmark_bio_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_bio_end(int)));
-    connect (ui->spinBox_bmark_sel_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_sel_begin(int)));
-    connect (ui->spinBox_bmark_sel_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_sel_end(int)));
-    connect (ui->spinBox_bmark_relf_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_relf_begin(int)));
-    connect (ui->spinBox_bmark_relf_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_relf_end(int)));
-    connect (ui->spinBox_bmark_recr_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_recr_begin(int)));
-    connect (ui->spinBox_bmark_recr_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_recr_end(int)));
-    connect (ui->spinBox_bmark_srparm_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_begin(int)));
-    connect (ui->spinBox_bmark_srparm_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_end(int)));
-
-    connect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), SLOT(change_bmark_relF(int)));
-    connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), SLOT(change_forecast(int)));
-    connect (ui->spinBox_fcast_yr_num, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_forecast_years(int)));
-    connect (ui->lineEdit_F_scalar, SIGNAL(editingFinished()), SLOT(change_F_mult()));
-    connect (ui->spinBox_fcast_sel_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_begin(int)));
-    connect (ui->spinBox_fcast_sel_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_end(int)));
-    connect (ui->spinBox_fcast_relf_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_begin(int)));
-    connect (ui->spinBox_fcast_relf_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_end(int)));
-    connect (ui->spinBox_fcast_recr_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_recr_begin(int)));
-    connect (ui->spinBox_fcast_recr_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_recr_end(int)));
-
-    connect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), SLOT(change_cr_method(int)));
-    connect (ui->lineEdit_ctl_rule_const_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_const_f()));
-    connect (ui->lineEdit_ctl_rule_no_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_no_f()));
-    connect (ui->lineEdit_ctl_tgt_as_fraction, SIGNAL(editingFinished()), SLOT(set_cr_target()));
-
-    connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), SLOT(set_num_forecast_loops(int)));
-    connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), SLOT(change_first_forecast_loop(int)));
-/*    connect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
-    connect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
-    connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
-
-    connect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
-    connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), SLOT(set_log_catch_std_dev()));
-    connect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), fcast, SLOT(set_do_rebuilder(bool)));
-    connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_first_year(int)));
-    connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_curr_year(int)));
-
-    connect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), SLOT(change_bmark_relF(int)));
-
-    connect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
-
-    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), SLOT(change_fixed_catch(int)));
-    connect (ui->spinBox_fixed_catch_obs, SIGNAL(valueChanged(int)), SLOT(change_num_input_obs(int)));
-
     if (fcast->getNumFixedFcastCatch() > 0)
     {
         ui->label_input_seas_relf->setVisible(true);
     }
-
-    connect (fcast, SIGNAL(allocGrpsChanged()), SLOT(alloc_group_assign_changed()));
-    connect (ui->groupBox_alloc_groups, SIGNAL(toggled(bool)), SLOT(change_use_alloc_groups(bool)));
-//    connect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), SLOT(alloc_group_assign_changed()));
-
-//    connect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
-
-//    connect (ui->lineEdit_max_catch_fleet, SIGNAL(editingFinished()), SLOT(change_max_catch_fleet()));
-//    connect (ui->lineEdit_max_catch_area, SIGNAL(editingFinished()), SLOT(change_max_catch_area()));
 
     refresh();
     ui->tabWidget->setCurrentIndex(0);
@@ -163,8 +104,134 @@ void forecast_widget::reset()
 //    ui->lineEdit_max_catch_area->setText("-1");
 }
 
+void forecast_widget::disconnectAll(ss_forecast *fcast)
+{
+    disconnect (ui->comboBox_benchmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(change_bmarks(int)));
+    disconnect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), this, SLOT(change_MSY(int)));
+    disconnect (ui->lineEdit_SPR_target, SIGNAL(editingFinished()), this, SLOT(change_spr_target()));
+    disconnect (ui->lineEdit_biomass_target, SIGNAL(editingFinished()), this, SLOT(change_biomass_target()));
+    disconnect (ui->spinBox_bmark_bio_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_bio_begin(int)));
+    disconnect (ui->spinBox_bmark_bio_end, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_bio_end(int)));
+    disconnect (ui->spinBox_bmark_sel_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_sel_begin(int)));
+    disconnect (ui->spinBox_bmark_sel_end, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_sel_end(int)));
+    disconnect (ui->spinBox_bmark_relf_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_relf_begin(int)));
+    disconnect (ui->spinBox_bmark_relf_end, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_relf_end(int)));
+    disconnect (ui->spinBox_bmark_recr_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_recr_begin(int)));
+    disconnect (ui->spinBox_bmark_recr_end, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_recr_end(int)));
+    disconnect (ui->spinBox_bmark_srparm_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_srparm_begin(int)));
+    disconnect (ui->spinBox_bmark_srparm_end, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_srparm_end(int)));
+
+    disconnect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), this, SLOT(change_bmark_relF(int)));
+    disconnect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), this, SLOT(change_forecast(int)));
+    disconnect (ui->spinBox_fcast_yr_num, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_forecast_years(int)));
+    disconnect (ui->lineEdit_F_scalar, SIGNAL(editingFinished()), this, SLOT(change_F_mult()));
+    disconnect (ui->spinBox_fcast_sel_beg, SIGNAL(valueChanged(int)), this, SLOT(set_fcast_sel_begin(int)));
+    disconnect (ui->spinBox_fcast_sel_end, SIGNAL(valueChanged(int)), this, SLOT(set_fcast_sel_end(int)));
+    disconnect (ui->spinBox_fcast_relf_beg, SIGNAL(valueChanged(int)), this, SLOT(set_fcast_relf_begin(int)));
+    disconnect (ui->spinBox_fcast_relf_end, SIGNAL(valueChanged(int)), this, SLOT(set_fcast_relf_end(int)));
+    disconnect (ui->spinBox_fcast_recr_beg, SIGNAL(valueChanged(int)), this, SLOT(set_fcast_recr_begin(int)));
+    disconnect (ui->spinBox_fcast_recr_end, SIGNAL(valueChanged(int)), this, SLOT(set_fcast_recr_end(int)));
+
+    disconnect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), this, SLOT(change_cr_method(int)));
+    disconnect (ui->lineEdit_ctl_rule_const_F, SIGNAL(editingFinished()), this, SLOT(set_cr_biomass_const_f()));
+    disconnect (ui->lineEdit_ctl_rule_no_F, SIGNAL(editingFinished()), this, SLOT(set_cr_biomass_no_f()));
+    disconnect (ui->lineEdit_ctl_tgt_as_fraction, SIGNAL(editingFinished()), this, SLOT(set_cr_target()));
+
+    disconnect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), this, SLOT(set_num_forecast_loops(int)));
+    disconnect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), this, SLOT(change_first_forecast_loop(int)));
+/*    disconnect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
+    disconnect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
+    disconnect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
+
+    disconnect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
+    disconnect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
+    disconnect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), fcast, SLOT(set_do_rebuilder(bool)));
+    disconnect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), this, SLOT(set_rebuilder_first_year(int)));
+    disconnect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), this, SLOT(set_rebuilder_curr_year(int)));
+
+    disconnect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fleet_relF(int)));
+
+    disconnect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
+
+    disconnect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fixed_catch(int)));
+    disconnect (ui->spinBox_fixed_catch_obs, SIGNAL(valueChanged(int)), this, SLOT(change_num_input_obs(int)));
+
+    disconnect (fcast, SIGNAL(allocGrpsChanged()), this, SLOT(alloc_group_assign_changed()));
+    disconnect (ui->groupBox_alloc_groups, SIGNAL(toggled(bool)), this, SLOT(change_use_alloc_groups(bool)));
+//    disconnect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), this, SLOT(alloc_group_assign_changed()));
+
+//    disconnect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
+
+//    disconnect (ui->lineEdit_max_catch_fleet, SIGNAL(editingFinished()), this, SLOT(change_max_catch_fleet()));
+//    disconnect (ui->lineEdit_max_catch_area, SIGNAL(editingFinished()), this, SLOT(change_max_catch_area()));
+}
+
+void forecast_widget::connectAll(ss_forecast *fcast)
+{
+    connect (ui->comboBox_benchmarks, SIGNAL(currentIndexChanged(int)), SLOT(change_bmarks(int)));
+    connect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), SLOT(change_MSY(int)));
+    connect (ui->lineEdit_SPR_target, SIGNAL(editingFinished()), SLOT(change_spr_target()));
+    connect (ui->lineEdit_biomass_target, SIGNAL(editingFinished()), SLOT(change_biomass_target()));
+    connect (ui->spinBox_bmark_bio_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_bio_begin(int)));
+    connect (ui->spinBox_bmark_bio_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_bio_end(int)));
+    connect (ui->spinBox_bmark_sel_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_sel_begin(int)));
+    connect (ui->spinBox_bmark_sel_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_sel_end(int)));
+    connect (ui->spinBox_bmark_relf_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_relf_begin(int)));
+    connect (ui->spinBox_bmark_relf_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_relf_end(int)));
+    connect (ui->spinBox_bmark_recr_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_recr_begin(int)));
+    connect (ui->spinBox_bmark_recr_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_recr_end(int)));
+    connect (ui->spinBox_bmark_srparm_beg, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_begin(int)));
+    connect (ui->spinBox_bmark_srparm_end, SIGNAL(valueChanged(int)), SLOT(set_bmark_srparm_end(int)));
+
+    connect (ui->comboBox_bmark_relF_basis, SIGNAL(currentIndexChanged(int)), SLOT(change_bmark_relF(int)));
+    connect (ui->comboBox_fcast_options, SIGNAL(currentIndexChanged(int)), SLOT(change_forecast(int)));
+    connect (ui->spinBox_fcast_yr_num, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_forecast_years(int)));
+    connect (ui->lineEdit_F_scalar, SIGNAL(editingFinished()), SLOT(change_F_mult()));
+    connect (ui->spinBox_fcast_sel_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_begin(int)));
+    connect (ui->spinBox_fcast_sel_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_sel_end(int)));
+    connect (ui->spinBox_fcast_relf_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_begin(int)));
+    connect (ui->spinBox_fcast_relf_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_relf_end(int)));
+    connect (ui->spinBox_fcast_recr_beg, SIGNAL(valueChanged(int)), SLOT(set_fcast_recr_begin(int)));
+    connect (ui->spinBox_fcast_recr_end, SIGNAL(valueChanged(int)), SLOT(set_fcast_recr_end(int)));
+
+    connect (ui->comboBox_control_rule, SIGNAL(currentIndexChanged(int)), SLOT(change_cr_method(int)));
+    connect (ui->lineEdit_ctl_rule_const_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_const_f()));
+    connect (ui->lineEdit_ctl_rule_no_F, SIGNAL(editingFinished()), SLOT(set_cr_biomass_no_f()));
+    connect (ui->lineEdit_ctl_tgt_as_fraction, SIGNAL(editingFinished()), SLOT(set_cr_target()));
+
+    connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), SLOT(set_num_forecast_loops(int)));
+    connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), SLOT(change_first_forecast_loop(int)));
+/*    connect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
+    connect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
+    connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
+
+    connect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
+    connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), SLOT(set_log_catch_std_dev()));
+    connect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), fcast, SLOT(set_do_rebuilder(bool)));
+    connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_first_year(int)));
+    connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_curr_year(int)));
+
+    connect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), SLOT(change_fleet_relF(int)));
+
+    connect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
+
+    connect (ui->comboBox_input_catch_basis, SIGNAL(currentIndexChanged(int)), SLOT(change_fixed_catch(int)));
+    connect (ui->spinBox_fixed_catch_obs, SIGNAL(valueChanged(int)), SLOT(change_num_input_obs(int)));
+
+    connect (fcast, SIGNAL(allocGrpsChanged()), SLOT(alloc_group_assign_changed()));
+    connect (ui->groupBox_alloc_groups, SIGNAL(toggled(bool)), SLOT(change_use_alloc_groups(bool)));
+//    connect (ui->lineEdit_alloc_assignments, SIGNAL(editingFinished()), SLOT(alloc_group_assign_changed()));
+
+//    connect (ui->spinBox_fcast_levels, SIGNAL(valueChanged(int)), fcast, SLOT(set_num_catch_levels(int)));
+
+//    connect (ui->lineEdit_max_catch_fleet, SIGNAL(editingFinished()), SLOT(change_max_catch_fleet()));
+//    connect (ui->lineEdit_max_catch_area, SIGNAL(editingFinished()), SLOT(change_max_catch_area()));
+}
+
 void forecast_widget::set_model(ss_model *m_data)
 {
+    ss_forecast *fcast = model_data->forecast;
+    disconnectAll(fcast);
 //    ss_model *old_model = model_data;
     model_data = m_data;
 //    delete old_model;
@@ -177,6 +244,7 @@ void forecast_widget::refresh()
     QString txt("");
     ss_forecast *fcast = model_data->forecast;
 
+    disconnectAll(fcast);
     set_combo_box_bmarks(fcast->get_benchmarks());//ui->comboBox_benchmarks->setCurrentIndex(fcast->get_benchmarks());
     set_combo_box_MSY(fcast->get_MSY());//(ui->comboBox_MSY_options, fcast->get_MSY());
     ui->lineEdit_SPR_target->setText(QString::number(fcast->get_spr_target()));
@@ -225,9 +293,11 @@ void forecast_widget::refresh()
     ui->lineEdit_ctl_rule_no_F->setText(QString::number(fcast->get_cr_biomass_no_f()));
     ui->lineEdit_ctl_tgt_as_fraction->setText(QString::number(fcast->get_cr_buffer()));
 
-    ui->spinBox_num_forecast_loops->setValue(fcast->get_num_forecast_loops());
-    ui->spinBox_first_loop->setMaximum(ui->spinBox_num_forecast_loops->value());
-    ui->spinBox_first_loop->setValue(fcast->get_forecast_loop_first());
+    int numloops = fcast->get_num_forecast_loops();
+    int firstloop = fcast->get_forecast_loop_first();
+    ui->spinBox_num_forecast_loops->setValue(numloops);
+    ui->spinBox_first_loop->setMaximum(numloops);
+    ui->spinBox_first_loop->setValue(firstloop);
     ui->spinBox_fcast_recr_adjust->setValue(fcast->get_forecast_recr_adjust());
     ui->lineEdit_fcast_recr_adj_value->setText(QString::number(fcast->get_forecast_recr_adj_value()));
     ui->spinBox_fcast_loops_5->setValue(fcast->get_forecast_loop_ctl5());
@@ -271,9 +341,10 @@ void forecast_widget::refresh()
     inputFcastCatch->resizeColumnsToContents();
 
 //    ui->spinBox_fcast_levels->setValue(fcast->num_catch_levels());
-    set_combo_box_catch_basis(fcast->get_input_catch_basis());//(ui->comboBox_input_catch_basis, fcast->get_input_catch_basis());
+    set_combo_box_catch_basis(fcast->get_input_catch_basis());
 //    set_combo_box_fixed_catch(ui->comboBox_input_catch_basis->currentIndex());
 
+    connectAll(fcast);
     ui->tabWidget->setCurrentIndex(0);
 }
 
@@ -314,7 +385,7 @@ void forecast_widget::change_MSY(int value)
     model_data->forecast->set_MSY(value+1);
 }
 
-void forecast_widget::set_spr_target()
+void forecast_widget::change_spr_target()
 {
     QString value(ui->lineEdit_SPR_target->text());
     double spr = checkdoublevalue(value);
@@ -322,7 +393,7 @@ void forecast_widget::set_spr_target()
     ui->lineEdit_SPR_target->setText(QString::number(spr));
 }
 
-void forecast_widget::set_biomass_target()
+void forecast_widget::change_biomass_target()
 {
     QString value(ui->lineEdit_biomass_target->text());
     double bmt = checkdoublevalue(value);
@@ -332,27 +403,12 @@ void forecast_widget::set_biomass_target()
 
 void forecast_widget::set_combo_box_bmark_relF(int value)
 {
-    if (value < 1) value = 1;
-    if (value > 2) value = 2;
-    ui->comboBox_relF->setCurrentIndex(value-1);
+    ui->comboBox_relF->setCurrentIndex(value);
 }
 
 void forecast_widget::change_bmark_relF (int value)
 {
-//    model_data->forecast->set_combo_box_fleet_relf(val);
-    model_data->forecast->set_benchmark_rel_f(value+1);
-    if (value == 1)
-    {
-        seasFltRelF->setVisible(true);
-        seasFltRelF->setHeight(model_data->get_num_seasons());
-        ui->label_input_seas_relf->setVisible(true);
-    }
-    else
-    {
-        seasFltRelF->setVisible(false);
-        seasFltRelF->setHeight(0);
-        ui->label_input_seas_relf->setVisible(false);
-    }
+    model_data->forecast->set_benchmark_rel_f(value);
 }
 
 void forecast_widget::set_combo_box_fcast(int value)
@@ -443,12 +499,26 @@ void forecast_widget::set_log_catch_std_dev()
 
 void forecast_widget::set_combo_box_fleet_relF(int value)
 {
+    if (value < 1) value = 1;
+    if (value > 2) value = 2;
     ui->comboBox_relF->setCurrentIndex(value-1);
 }
 
 void forecast_widget::change_fleet_relF(int value)
 {
     model_data->forecast->set_fleet_rel_f(value+1);
+    if (value == 1)
+    {
+        seasFltRelF->setVisible(true);
+        seasFltRelF->setHeight(model_data->get_num_seasons());
+        ui->label_input_seas_relf->setVisible(true);
+    }
+    else
+    {
+        seasFltRelF->setVisible(false);
+        seasFltRelF->setHeight(0);
+        ui->label_input_seas_relf->setVisible(false);
+    }
 }
 
 void forecast_widget::set_combo_box_tuning_basis(int value)

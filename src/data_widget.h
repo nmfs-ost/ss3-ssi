@@ -27,6 +27,9 @@ public:
     explicit data_widget(ss_model *model, QWidget *parent = 0);
     ~data_widget();
 
+    void connectAll();
+    void disconnectAll();
+
     QStringList fleet_names;
     QStringList survey_names;
     QStringList area_names;

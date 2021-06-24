@@ -2846,7 +2846,8 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
     int intScale = static_cast<int>(scale + 0.5);
     int start = intScale + 3;
     int num = parameters->rowCount() - start;
-    unsigned size, end = static_cast<unsigned>(intScale);
+    unsigned size;
+    int end = intScale;
     double firstBin, lastBin;
     int loBin = -1, hiBin = -1;
     int setup = 0;

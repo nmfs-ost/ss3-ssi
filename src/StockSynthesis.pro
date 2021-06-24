@@ -281,3 +281,13 @@ DISTFILES += \
     ../SSI_readme_archive.txt \
     ../SSI_copyright.txt \
     SSI_icon.ico
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../../../Qt/5.12.2/static-mingw73_32/lib/ -lQt5Core \
+ -lQt5Gui -lQt5Widgets -lQt5Charts -lQt5PrintSupport
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../../../Qt/5.12.2/static-mingw73_32/lib/ -lQt5Cored  \
+ -lQt5Guid -lQt5Widgetsd -lQt5Chartsd -lQt5PrintSupportd
+else:unix: LIBS += -L$$PWD/../../../../../../../Qt/5.12.2/static-mingw73_32/lib/ -lQt5Core \
+ -lQt5Gui -lQt5Widgets -lQt5Charts -lQt5PrintSupport
+
+INCLUDEPATH += $$PWD/../../../../../../../Qt/5.12.2/static-mingw73_32/include
+DEPENDPATH += $$PWD/../../../../../../../Qt/5.12.2/static-mingw73_32/include

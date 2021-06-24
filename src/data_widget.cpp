@@ -76,14 +76,6 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     genBins->setParent(this);
     ui->horizontalLayout_gen_bins->addWidget(genBins);
     current_gen_comp = nullptr;
-    connect (ui->spinBox_gen_comp, SIGNAL(valueChanged(int)), SLOT(changeGenCompMethod(int)));
-    connect (ui->pushButton_gen_new, SIGNAL(released()), SLOT(newGenCompMethod()));
-    connect (ui->pushButton_gen_copy, SIGNAL(released()), SLOT(copyGenCompMethod()));
-    connect (ui->pushButton_gen_delete, SIGNAL(released()), SLOT(deleteGenCompMethod()));
-    connect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), SLOT(changeGenUnits(int)));
-    connect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), SLOT(changeGenScale(int)));
-    connect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), SLOT(changeGenMinComp()));
-    connect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), SLOT(changeGenBins(int)));
 
     tagGroups = new tableview();
     tagGroups->setParent(this);
@@ -91,24 +83,15 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     tagGroups->setHeight(model_data->get_tag_observations());
     tagGroups->resizeColumnsToContents();
     ui->horizontalLayout_tag_reldata->addWidget(tagGroups);
-    connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
-    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
-    connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
-    connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
-    connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
-    connect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
 
     tagInit = new tableview();
     tagInit->setParent(this);
     tagInit->setModel(model_data->getTagLossInit()->getParamTable());
     ui->verticalLayout_tagLossInit->addWidget(tagInit);
-    connect (model_data->getTagLossInit()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitChanged()));
     tagInitTV = new tableview();
     tagInitTV->setParent(this);
     tagInitTV->setModel(model_data->getTagLossInitTV()->getVarParamTable());
     ui->verticalLayout_tagInitTV->addWidget(tagInitTV);
-    connect (model_data->getTagLossInitTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitTVChanged()));
-    tagInitChanged();
 
     tagChronic = new tableview();
     tagChronic->setParent(this);
@@ -119,8 +102,6 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     tagChronicTV->setParent(this);
     tagChronicTV->setModel(model_data->getTagLossChronicTV()->getVarParamTable());
     ui->verticalLayout_tagChronicTV->addWidget(tagChronicTV);
-    connect (model_data->getTagLossChronicTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicTVChanged()));
-    tagChronicChanged();
 
     tagOverdisp = new tableview();
     tagOverdisp->setParent(this);
@@ -131,8 +112,6 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     tagOverdispTV->setParent(this);
     tagOverdispTV->setModel(model_data->getTagOverdispersionTV()->getVarParamTable());
     ui->verticalLayout_tagOverdispTV->addWidget(tagOverdispTV);
-    connect (model_data->getTagOverdispersionTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispTVChanged()));
-    tagOverdispChanged();
 
     tagReptFleet = new tableview();
     tagReptFleet->setParent(this);
@@ -143,20 +122,16 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     tagReptFleetTV->setParent(this);
     tagReptFleetTV->setModel(model_data->getTagReportFleetTV()->getVarParamTable());
     ui->verticalLayout_tagReptFleetTV->addWidget(tagReptFleetTV);
-    connect (model_data->getTagReportFleetTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltTVChanged()));
-    tagRptFltChanged();
 
     tagReptFltDecay = new tableview();
     tagReptFltDecay->setParent(this);
     tagReptFltDecay->setModel(model_data->getTagReportDecay()->getParamTable());
     ui->verticalLayout_tagReptDecayFlt->addWidget(tagReptFltDecay);
-    connect (model_data->getTagReportDecay()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayChanged()));
+//    connect (model_data->getTagReportDecay()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayChanged()));
     tagReptDecayFltTV = new tableview();
     tagReptDecayFltTV->setParent(this);
     tagReptDecayFltTV->setModel(model_data->getTagReportDecayTV()->getVarParamTable());
     ui->verticalLayout_tagReptDecayFltTV->addWidget(tagReptDecayFltTV);
-    connect (model_data->getTagReportDecayTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayTVChanged()));
-    tagRptDcayChanged();
 
 
     envVariables = new tableview();
@@ -164,10 +139,6 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     envVariables->setModel(model_data->getEnvVariables());
     envVariables->setHeight(model_data->getEnvVariables());
     ui->verticalLayout_env_var_obs->addWidget(envVariables);
-    connect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), SLOT(changeNumEnvVarObs(int)));
-    connect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(setNumEnvironVars(int)));
-    connect (model_data->getEnvVariables(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-             SLOT(changeEnvVarData(QModelIndex,QModelIndex,QVector<int>)));
 
     timeBlocks = new tableview();
     timeBlocks->setParent(this);
@@ -178,11 +149,6 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     lambdaView->setParent(this);
     lambdaView->setModel(model_data->getLambdaAdjustmentModel());
     ui->verticalLayout_lambdas->addWidget(lambdaView);
-    connect (model_data->getLambdaAdjustmentModel(), SIGNAL(dataChanged()), SLOT(changeLambdas()));
-    changeLambdas();
-    connect (ui->spinBox_lambda_max_phase, SIGNAL(valueChanged(int)), SLOT(changeLambdaMaxPhase(int)));
-    connect (ui->spinBox_lambda_sd_offset, SIGNAL(valueChanged(int)), SLOT(changeLambdaSdOffset(int)));
-    connect (ui->spinBox_lambda_count, SIGNAL(valueChanged(int)), SLOT(changeLambdaCount(int)));
 
     addSdSelexView = new tableview();
     addSdSelexView->setParent(this);
@@ -229,6 +195,65 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     ui->verticalLayout_add_sd_natMort_ages->addWidget(addSdNatMortBinsView);
 
 
+
+
+    ui->spinBox_num_std_yrs->setMaximum(20);
+    setNumSdYears(0);
+
+    refresh();
+
+    ui->tabWidget_data->setCurrentIndex(0);
+}
+
+data_widget::~data_widget()
+{
+    delete sdYearsView;
+    delete ui;
+}
+
+void data_widget::connectAll()
+{
+    connect (ui->spinBox_gen_comp, SIGNAL(valueChanged(int)), SLOT(changeGenCompMethod(int)));
+    connect (ui->pushButton_gen_new, SIGNAL(released()), SLOT(newGenCompMethod()));
+    connect (ui->pushButton_gen_copy, SIGNAL(released()), SLOT(copyGenCompMethod()));
+    connect (ui->pushButton_gen_delete, SIGNAL(released()), SLOT(deleteGenCompMethod()));
+    connect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), SLOT(changeGenUnits(int)));
+    connect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), SLOT(changeGenScale(int)));
+    connect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), SLOT(changeGenMinComp()));
+    connect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), SLOT(changeGenBins(int)));
+
+    connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
+    connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
+    connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
+    connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
+    connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
+    connect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
+    connect (model_data->getTagLossInit()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitChanged()));
+    connect (model_data->getTagLossInitTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitTVChanged()));
+    tagInitChanged();
+    connect (model_data->getTagLossChronic()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicChanged()));
+    connect (model_data->getTagLossChronicTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicTVChanged()));
+    tagChronicChanged();
+    connect (model_data->getTagOverdispersion()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispChanged()));
+    connect (model_data->getTagOverdispersionTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispTVChanged()));
+    tagOverdispChanged();
+    connect (model_data->getTagReportFleet()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltChanged()));
+    connect (model_data->getTagReportFleetTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltTVChanged()));
+    tagRptFltChanged();
+    connect (model_data->getTagReportDecay()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayChanged()));
+    connect (model_data->getTagReportDecayTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayTVChanged()));
+    tagRptDcayChanged();
+
+    connect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), SLOT(changeNumEnvVarObs(int)));
+    connect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(setNumEnvironVars(int)));
+    connect (model_data->getEnvVariables(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             SLOT(changeEnvVarData(QModelIndex,QModelIndex,QVector<int>)));
+
+    connect (model_data->getLambdaAdjustmentModel(), SIGNAL(dataChanged()), SLOT(changeLambdas()));
+    changeLambdas();
+    connect (ui->spinBox_lambda_max_phase, SIGNAL(valueChanged(int)), SLOT(changeLambdaMaxPhase(int)));
+    connect (ui->spinBox_lambda_sd_offset, SIGNAL(valueChanged(int)), SLOT(changeLambdaSdOffset(int)));
+    connect (ui->spinBox_lambda_count, SIGNAL(valueChanged(int)), SLOT(changeLambdaCount(int)));
 
     connect (ui->spinBox_year_start, SIGNAL(valueChanged(int)), model_data, SLOT(set_start_year(int)));
     connect (ui->spinBox_year_start, SIGNAL(valueChanged(int)), SLOT(changeTotalYears()));
@@ -296,19 +321,117 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     connect (ui->spinBox_blocks_count, SIGNAL(valueChanged(int)), SLOT(changeNumBlocks(int)));
 
     connect (ui->spinBox_add_sd_read, SIGNAL(valueChanged(int)), SLOT(changeAddSdRead(int)));
-
-    ui->spinBox_num_std_yrs->setMaximum(20);
-    setNumSdYears(0);
-
-    refresh();
-
-    ui->tabWidget_data->setCurrentIndex(0);
 }
 
-data_widget::~data_widget()
+void data_widget::disconnectAll()
 {
-    delete sdYearsView;
-    delete ui;
+    disconnect (ui->spinBox_gen_comp, SIGNAL(valueChanged(int)), this, SLOT(changeGenCompMethod(int)));
+    disconnect (ui->pushButton_gen_new, SIGNAL(released()),this,  SLOT(newGenCompMethod()));
+    disconnect (ui->pushButton_gen_copy, SIGNAL(released()), this, SLOT(copyGenCompMethod()));
+    disconnect (ui->pushButton_gen_delete, SIGNAL(released()), this, SLOT(deleteGenCompMethod()));
+    disconnect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), this, SLOT(changeGenUnits(int)));
+    disconnect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), this, SLOT(changeGenScale(int)));
+    disconnect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), this, SLOT(changeGenMinComp()));
+    disconnect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), this, SLOT(changeGenBins(int)));
+
+    disconnect (ui->groupBox_tag, SIGNAL(toggled(bool)), this, SLOT(changeDoTags(bool)));
+    disconnect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), this, SLOT(changeNumTagGrps(int)));
+    disconnect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
+    disconnect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
+    disconnect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), this, SIGNAL(showRecapObs()));
+    disconnect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
+    disconnect (model_data->getTagLossInit()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitChanged()));
+    disconnect (model_data->getTagLossInitTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitTVChanged()));
+    disconnect (model_data->getTagLossChronic()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicChanged()));
+    disconnect (model_data->getTagLossChronicTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagChronicTVChanged()));
+//    tagChronicChanged();
+    disconnect (model_data->getTagOverdispersion()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispChanged()));
+    disconnect (model_data->getTagOverdispersionTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagOverdispTVChanged()));
+//    tagOverdispChanged();
+    disconnect (model_data->getTagReportFleet()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltChanged()));
+    disconnect (model_data->getTagReportFleetTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptFltTVChanged()));
+//    tagRptFltChanged();
+    disconnect (model_data->getTagReportDecay()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayChanged()));
+    disconnect (model_data->getTagReportDecayTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagRptDcayTVChanged()));
+//    tagRptDcayChanged();
+
+    disconnect (ui->spinBox_env_var_obs, SIGNAL(valueChanged(int)), this, SLOT(changeNumEnvVarObs(int)));
+    disconnect (ui->spinBox_num_evn_var, SIGNAL(valueChanged(int)), model_data, SLOT(setNumEnvironVars(int)));
+    disconnect (model_data->getEnvVariables(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             this, SLOT(changeEnvVarData(QModelIndex,QModelIndex,QVector<int>)));
+
+    disconnect (model_data->getLambdaAdjustmentModel(), SIGNAL(dataChanged()), this, SLOT(changeLambdas()));
+//    changeLambdas();
+    disconnect (ui->spinBox_lambda_max_phase, SIGNAL(valueChanged(int)), this, SLOT(changeLambdaMaxPhase(int)));
+    disconnect (ui->spinBox_lambda_sd_offset, SIGNAL(valueChanged(int)), this, SLOT(changeLambdaSdOffset(int)));
+    disconnect (ui->spinBox_lambda_count, SIGNAL(valueChanged(int)), this, SLOT(changeLambdaCount(int)));
+
+    disconnect (ui->spinBox_year_start, SIGNAL(valueChanged(int)), model_data, SLOT(set_start_year(int)));
+    disconnect (ui->spinBox_year_start, SIGNAL(valueChanged(int)), this, SLOT(changeTotalYears()));
+    disconnect (ui->spinBox_year_end, SIGNAL(valueChanged(int)), model_data, SLOT(set_end_year(int)));
+    disconnect (ui->spinBox_year_end, SIGNAL(valueChanged(int)), this, SLOT(changeTotalYears()));
+    disconnect (ui->spinBox_seas_per_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_seasons(int)));
+    disconnect (ui->spinBox_seas_per_yr, SIGNAL(valueChanged(int)), this, SLOT(changeMaxSeason(int)));
+    disconnect (ui->spinBox_subseasons, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_subseasons(int)));
+    disconnect (ui->spinBox_season, SIGNAL(valueChanged(int)), this, SLOT(changeSeason(int)));
+    disconnect (ui->lineEdit_num_mo_season, SIGNAL(textChanged(QString)), this, SLOT(changeMoPerSeason(QString)));
+    disconnect (ui->doubleSpinBox_spawn_month, SIGNAL(valueChanged(double)), this, SLOT(changeSpawnMonth(double)));
+    disconnect (ui->spinBox_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_ages(int)));
+    disconnect (ui->spinBox_num_areas, SIGNAL(valueChanged(int)), model_data, SLOT(set_num_areas(int)));
+    disconnect (ui->spinBox_num_genders, SIGNAL(valueChanged(int)), this, SLOT(changeNumGenders(int)));
+
+    disconnect (ui->checkBox_soft_bounds, SIGNAL(toggled(bool)), model_data, SLOT(set_use_softbounds(bool)));
+    disconnect (ui->checkBox_priors, SIGNAL(toggled(bool)), model_data, SLOT(set_prior_likelihood(bool)));
+    disconnect (ui->spinBox_last_phase, SIGNAL(valueChanged(int)), model_data, SLOT(set_last_estim_phase(int)));
+    disconnect (ui->spinBox_mc_burn, SIGNAL(valueChanged(int)), model_data, SLOT(set_mc_burn(int)));
+    disconnect (ui->spinBox_mc_thin, SIGNAL(valueChanged(int)), model_data, SLOT(set_mc_thin(int)));
+    disconnect (ui->lineEdit_jitter, SIGNAL(editingFinished()), this, SLOT(changeJitter()));
+    disconnect (ui->lineEdit_alktol, SIGNAL(editingFinished()), this, SLOT(changeAlkTol()));
+    disconnect (ui->lineEdit_convergence, SIGNAL(editingFinished()), this, SLOT(changeConvergence()));
+    disconnect (ui->spinBox_retrospect_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_retrospect_year(int)));
+    disconnect (ui->spinBox_f_bmass_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_biomass_min_age(int)));
+    disconnect (ui->comboBox_f_dep, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_depletion_basis(int)));
+    disconnect (ui->lineEdit_dep_denom, SIGNAL(editingFinished()), this, SLOT(changeDepDenom()));
+    disconnect (ui->comboBox_spr_basis, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_spr_basis(int)));
+    disconnect (ui->comboBox_f_rpt_units, SIGNAL(currentIndexChanged(int)), this, SLOT(setFRptUnits(int)));
+    disconnect (ui->spinBox_f_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_f_min_age(int)));
+    disconnect (ui->spinBox_f_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_f_max_age(int)));
+    disconnect (ui->comboBox_f_report_basis, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_f_basis(int)));
+    disconnect (ui->spinBox_sdrpt_min_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_min_year(int)));
+    disconnect (ui->spinBox_sdrpt_max_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_max_year(int)));
+    disconnect (ui->spinBox_num_std_yrs, SIGNAL(valueChanged(int)), this, SLOT(setNumSdYears(int)));
+//    disconnect (sdYearsDelegate, SIGNAL(commitData(QWidget*)), this, SLOT(numSdYearsChanged(QWidget *)));
+
+//    disconnect (ui->spinBox_length_bin_method, SIGNAL(valueChanged(int)), this, SLOT(changeLengthCompMethod(int)));
+    disconnect (ui->spinBox_length_num_bins, SIGNAL(valueChanged(int)), this, SLOT(changeLengthBins(int)));
+//    disconnect (ui->spinBox_length_combine, SIGNAL(valueChanged(int)), this, SLOT(changeLengthCombine(int)));
+//    disconnect (ui->lineEdit_length_comp_tails, SIGNAL(editingFinished()), this, SLOT(changeLengthCompress()));
+//    disconnect (ui->lineEdit_length_constant, SIGNAL(editingFinished()), this, SLOT(changeLengthAdd()));
+    disconnect (ui->pushButton_length_obs, SIGNAL(clicked()), this, SIGNAL(showLengthObs()));
+    disconnect (ui->pushButton_length_dirichlet_add, SIGNAL(clicked()), this, SLOT(addLengthDirichlet()));
+
+    disconnect (ui->spinBox_age_bin_method, SIGNAL(valueChanged(int)), this, SLOT(changeAgeCompMethod(int)));
+    disconnect (ui->spinBox_age_num_bins, SIGNAL(valueChanged(int)), this, SLOT(changeAgeBins(int)));
+    disconnect (ui->spinBox_age_error_num, SIGNAL(valueChanged(int)), this, SLOT(changeAgeError(int)));
+    disconnect (ui->pushButton_age_obs, SIGNAL(clicked()), this, SIGNAL(showAgeObs()));
+    disconnect (ui->pushButton_saa_obs, SIGNAL(clicked()), this, SIGNAL(showSAAObs()));
+    disconnect (ui->pushButton_age_dirichlet_add, SIGNAL(clicked()), this, SLOT(addAgeDirichlet()));
+
+    disconnect (model_data->get_age_composition()->getErrorModel(), SIGNAL(dataChanged()),
+             this, SLOT(ageErrorChanged()));
+
+    disconnect (ui->pushButton_gen_obs, SIGNAL(clicked()), this, SLOT(showGenObs()));
+
+    disconnect (ui->groupBox_comp_morph, SIGNAL(toggled(bool)), this, SLOT(changeDoMorphs(bool)));
+    disconnect (ui->spinBox_morph_num_stocks, SIGNAL(valueChanged(int)), this, SLOT(changeNumMorphs(int)));
+    disconnect (ui->lineEdit_morph_min_comp, SIGNAL(editingFinished()), this, SLOT(changeMorphMincomp()));
+    disconnect (ui->pushButton_morph_obs, SIGNAL(clicked()), this, SIGNAL(showMorphObs()));
+
+    disconnect (ui->spinBox_block_patterns_total, SIGNAL(valueChanged(int)), this, SLOT(changeNumBlockPatterns(int)));
+    disconnect (ui->spinBox_block_pattern_num, SIGNAL(valueChanged(int)), this, SLOT(changeBlockPattern(int)));
+    disconnect (ui->spinBox_blocks_count, SIGNAL(valueChanged(int)), this, SLOT(changeNumBlocks(int)));
+
+    disconnect (ui->spinBox_add_sd_read, SIGNAL(valueChanged(int)), this, SLOT(changeAddSdRead(int)));
 }
 
 void data_widget::set_model(ss_model *m_data)
@@ -327,6 +450,7 @@ void data_widget::reset()
 
 void data_widget::refresh()
 {
+    disconnectAll();
     if (model_data != nullptr)
     {
         ui->spinBox_year_start->setValue(model_data->get_start_year());
@@ -343,7 +467,6 @@ void data_widget::refresh()
         ui->spinBox_num_surveys->setValue(model_data->get_num_surveys());
         ui->spinBox_total_fleets->setValue(model_data->get_num_fleets());
         ui->spinBox_num_areas->setValue(model_data->get_num_areas());
-//        ui->spinBox_num_ages->setValue(model_data->num_ages());
         ui->spinBox_max_age->setValue(model_data->get_num_ages());
         ui->spinBox_num_genders->setValue(model_data->get_num_genders());
 
@@ -422,9 +545,11 @@ void data_widget::refresh()
         ui->spinBox_num_evn_var->setValue(model_data->getNumEnvironVars());
 
         ui->spinBox_block_patterns_total->setValue(model_data->getNumBlockPatterns());
-        setBlockPattern(ui->spinBox_block_patterns_total->value());
+        if (model_data->getNumBlockPatterns() > 0) {
+            setBlockPattern(1);
+            changeBlockPattern(1);
+        }
 
-//        ui->groupBox_add_sd->setChecked(model_data->getAddSdReporting()->getActive());
         ui->spinBox_add_sd_read->setValue (model_data->getAddSdReporting()->getActive());
         changeAddSdRead(model_data->getAddSdReporting()->getActive());
 
@@ -437,6 +562,7 @@ void data_widget::refresh()
         addSelexBinsView->resizeColumnsToContents();
         ui->verticalLayout_add_sd_bins->addWidget(addSelexBinsView);*/
         set2DAR1(model_data->getUse2DAR1());
+        connectAll();
     }
 }
 
@@ -552,12 +678,13 @@ void data_widget::changeSpawnMonth(double month)
 
 void data_widget::changeSpawnSeason(float seas)
 {
-    if (seas > ui->spinBox_seas_per_yr->value())
+    int season = static_cast<int>(seas + .5);
+    if (season > ui->spinBox_seas_per_yr->value())
     {
-        seas = setTotalMonths();//ui->spinBox_seas_per_yr->value();
+        season = setTotalMonths();//ui->spinBox_seas_per_yr->value();
 //        ui->doubleSpinBox_spawn_season->setValue(seas);
     }
-    model_data->set_spawn_season(seas);
+    model_data->set_spawn_season(season);
 }
 
 void data_widget::changeTotalYears()
@@ -1172,7 +1299,6 @@ void data_widget::changeDepDenom()
 
 void data_widget::changeRandSeed(int seed)
 {
-//    int seed = ui->spinBox_rseed->value();
     model_data->setRandSeed(seed);
 }
 

@@ -6,6 +6,8 @@
 
 #include <QMessageBox>
 #include <QTime>
+#include <QString>
+#include <QObject>
 
 #include <cmath>
 
@@ -475,11 +477,13 @@ void ss_model::set_num_subseasons(int value)
 
 int ss_model::getTotalMonths()
 {
+    float ftotal = 0;
     int total = 0;
     for (int i = 0; i < get_num_seasons(); i++)
     {
-        total += seasons.at(i)->getNumMonths();
+        ftotal += seasons.at(i)->getNumMonths();
     }
+    total = static_cast<int>(ftotal + .5);
     return total;
 }
 
@@ -517,7 +521,8 @@ int ss_model::get_spawn_season()
 
 int ss_model::find_season(float month)
 {
-    int itr = 0, seasn = 0;
+    float itr = 0;
+    int seasn = 0;
 //    int mn = (int)month;
     for (seasn = 0; seasn < seasons.count(); seasn++)
     {

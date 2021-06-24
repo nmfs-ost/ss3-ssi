@@ -2,17 +2,21 @@
 #include "metadata.h"
 
 #include <QDate>
+#include <QString>
+
+
+#include <QArrayData>
 
 static QString datafile_version_str;
 
 QString getAppVersion ()
 {
-    QString str(QString("%1.%2.%3.%4%5").arg(
-                    QString::number(app_version_major),
-                    QString::number(app_version_minor),
-                    QString::number(app_version_sub),
-                    QString::number(app_version_bugfix),
-                    QString(app_release_level)));
+    QString str(QString("%1.%2.%3.%4%5").
+                    arg(QString::number(app_version_major)).
+                    arg(QString::number(app_version_minor)).
+                    arg(QString::number(app_version_sub)).
+                    arg(QString::number(app_version_bugfix)).
+                    arg(QString(app_release_level)));
     return str;
 }
 
@@ -71,6 +75,6 @@ QString getDatafileVersionString()
 
 void setDatafileVersionString(float ver)
 {
-    int major = (int)(ver * 100.0);
+    int major = static_cast<int>(ver * 100.0);
     datafile_version_str = QString(QString("%1.03.0").arg(QString::number(major)));
 }

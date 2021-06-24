@@ -19,7 +19,7 @@ class Dialog_fileView : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog_fileView(QWidget *parent = nullptr, QString title = QString::null, bool editable = false);
+    explicit Dialog_fileView(QWidget *parent = nullptr, QString title = QString(), bool editable = false);
     ~Dialog_fileView();
     bool close();
 

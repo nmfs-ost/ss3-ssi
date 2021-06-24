@@ -1303,8 +1303,8 @@ e.g. 0, -1, -2, ...</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1051</width>
-            <height>639</height>
+            <width>1071</width>
+            <height>635</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -2188,7 +2188,7 @@ e.g. 0, -1, -2, ...</string>
              <item row="0" column="1" colspan="2">
               <layout class="QHBoxLayout" name="horizontalLayout_relf">
                <item>
-                <widget class="QComboBox" name="comboBox_relF">
+                <widget class="QComboBox" name="comboBox_fleet_relF">
                  <item>
                   <property name="text">
                    <string>1 = use first-last allocation year</string>

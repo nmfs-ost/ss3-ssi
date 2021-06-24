@@ -35,7 +35,6 @@ class Season : public QObject
     Q_OBJECT
 public:
     explicit Season();
-    ~Season() {}
 
 public slots:
     void reset();
@@ -63,7 +62,7 @@ class ss_model : public QObject
 {
     Q_OBJECT
 public:
-    explicit ss_model(QWidget *parent = 0);
+    explicit ss_model(QWidget *parent = nullptr);
     ~ss_model ();
 
     void clear();

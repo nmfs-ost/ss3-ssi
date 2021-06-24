@@ -34,6 +34,7 @@ dialogSummaryOutput::dialogSummaryOutput(QWidget *parent) :
     tabledialog->setTitle(QString("Likelihoods"));
 
     delete ui->verticalLayout_right;
+    ui->verticalLayout_right = nullptr;
 
     reportFile.setFileName(QString(REPORTFILE));
     setWindowTitle(tr("SS Summary Charts: ss_summary.sso"));
@@ -125,6 +126,7 @@ dialogSummaryOutput::~dialogSummaryOutput()
 {
     deleteChart();
     delete tabledialog;
+    tabledialog = nullptr;
 //    removeCharts();
 //    delete axisX;
 //    delete axisY;
@@ -133,18 +135,18 @@ dialogSummaryOutput::~dialogSummaryOutput()
 }
 
 void dialogSummaryOutput::deleteChart() {
-    delete Spawning;
-    delete Recruits;
-    delete Fishing;
-    delete TotalCatch;
+    delete Spawning; Spawning = nullptr;
+    delete Recruits; Recruits = nullptr;
+    delete Fishing;  Fishing = nullptr;
+    delete TotalCatch; TotalCatch = nullptr;
+
+    delete axisX;    axisX = nullptr;
+    delete axisY;    axisY = nullptr;
+    delete axisYalt; axisYalt = nullptr;
 
     disconnectMarkers(summaryChart);
-    delete summaryChart;
-    delete summaryView;
-
-    delete axisX;
-    delete axisY;
-    delete axisYalt;
+    delete summaryChart; summaryChart = nullptr;
+    delete summaryView;  summaryView = nullptr;
 }
 
 void dialogSummaryOutput::setDirectory(QString &dir) {
@@ -231,7 +233,7 @@ void dialogSummaryOutput::readData()
 
                 values = line.split(' ');
                 title = values.at(0).split('_');
-                xvalue = title.last().toFloat();
+                xvalue = title.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
