@@ -96,7 +96,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_spwn_recr_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeSpwnRecReadTimeVary(int)));
     connect (ui->spinBox_recr_num_assigns, SIGNAL(valueChanged(int)), SLOT(changeRecNumAssigns(int)));
     connect (ui->spinBox_recr_dist_params, SIGNAL(valueChanged(int)), SLOT(changeRecrDistParam(int)));
-//    connect (ui->checkBox_recr_interaction, SIGNAL(toggled(bool)), SLOT(changeRecAssignInteract(bool)));
+//    connect (ui->spinBox_recr_unused, SIGNAL(valueChanged(int)), SLOT(changeRecAssignInteract(int)));
     connect (ui->spinBox_sr_do_recr_dev, SIGNAL(valueChanged(int)), SLOT(changeRecDoDev(int)));
     connect (ui->spinBox_sr_recr_dev_begin_yr, SIGNAL(valueChanged(int)), SLOT(changeRecrDevStartYr(int)));
     connect (ui->spinBox_sr_recr_dev_end_yr, SIGNAL(valueChanged(int)), SLOT(changeRecrDevEndYr(int)));
@@ -505,7 +505,7 @@ void population_widget::refresh()
 
     setRecrArea(pop->SR()->getDistribArea());
     setRecrDistParam(pop->SR()->getDistribMethod());
-//    ui->checkBox_recr_interaction->setChecked(pop->SR()->getDoRecruitInteract());
+//    ui->spinBox_recr_unused(pop->SR()->getDoRecruitInteract());
     ui->spinBox_recr_num_assigns->setValue(pop->SR()->getNumAssignments());
     setSpawnRecrSpec(pop->SR()->getMethod());
 
@@ -513,7 +513,6 @@ void population_widget::refresh()
     ui->spinBox_sr_recr_dev_begin_yr->setValue(pop->SR()->getRecDevStartYr());
     ui->spinBox_sr_recr_dev_phase->setValue(pop->SR()->getRecDevPhase());
     ui->spinBox_sr_recr_dev_end_yr->setValue(pop->SR()->getRecDevEndYr());
-//    ui->checkBox_recr_dev_adv_opt->setChecked(pop->SR()->advanced_opts);
     ui->groupBox_recr_dev_adv_opt->setChecked(pop->SR()->getAdvancedOpts());
     ui->spinBox_recr_dev_early_start->setValue(pop->SR()->getRecDevEarlyStart());
     ui->spinBox_recr_dev_early_phase->setValue(pop->SR()->getRecDevEarlyPhase());
@@ -1346,10 +1345,6 @@ void population_widget::changeRecrDistParam(int method)
         changeRecrDistAssignments(method);
         refresh();
     }
-//    if (method == 1)  // no longer used
-//        ui->checkBox_recr_interaction->setVisible(true);
-//    else
-//        ui->checkBox_recr_interaction->setVisible(false);
 }
 
 void population_widget::changeRecrDistAssignments(int method)
@@ -1390,9 +1385,9 @@ int population_widget::getRecrDistParam()
     return ui->spinBox_recr_dist_params->value();
 }
 
-void population_widget::changeRecAssignInteract(bool flag)
+void population_widget::changeRecAssignInteract(int value)
 {
-    pop->SR()->setDoRecruitInteract(flag);
+    pop->SR()->setDoRecruitInteract(value);
 }
 
 void population_widget::changeRecNumAssigns(int num)

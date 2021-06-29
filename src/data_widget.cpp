@@ -544,8 +544,9 @@ void data_widget::refresh()
         ui->spinBox_env_var_obs->setValue(model_data->getNumEnvironVarObs());
         ui->spinBox_num_evn_var->setValue(model_data->getNumEnvironVars());
 
-        ui->spinBox_block_patterns_total->setValue(model_data->getNumBlockPatterns());
-        if (model_data->getNumBlockPatterns() > 0) {
+        int num = model_data->getNumBlockPatterns();
+        ui->spinBox_block_patterns_total->setValue(num);
+        if (num > 0) {
             setBlockPattern(1);
             changeBlockPattern(1);
         }

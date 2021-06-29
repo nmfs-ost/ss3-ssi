@@ -359,22 +359,19 @@ void spawn_recruit::setAssignTimings()
         distParams->setTotalNumParams(datalist.count());
 }
 
-bool spawn_recruit::getDoRecruitInteract() const
+int spawn_recruit::getDoRecruitInteract() const
 {
     return doRecruitInteract;
 }
 
 void spawn_recruit::setDoRecruitInteract(bool value)
 {
-    doRecruitInteract = value;
+    doRecruitInteract = value? 1: 0;
 }
 
 void spawn_recruit::setDoRecruitInteract(int value)
 {
-    if (value != 0)
-        doRecruitInteract = true;
-    else
-        doRecruitInteract = false;
+    doRecruitInteract = value;
 }
 
 void spawn_recruit::setInteractParam(int index, QStringList data)

@@ -134,7 +134,7 @@ private slots:
     void changeRecrDevParams ();
     void changeRecNumAssigns(int num);
     void changeSpawnRecrSpec(int num);
-    void changeRecAssignInteract (bool flag);
+    void changeRecAssignInteract (int value);
     void changeRecDoDev (int num);
     void changeRecrDevStartYr (int yr);
     void changeRecrDevEndYr (int yr);

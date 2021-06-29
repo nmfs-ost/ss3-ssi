@@ -70,7 +70,7 @@ public slots:
     void setDistribMethod (int value);
     int getDistribArea () const {return distrib_area;}
     void setDistribArea (int value) {distrib_area = value;}
-    bool getDoRecruitInteract() const;
+    int getDoRecruitInteract() const;
     void setDoRecruitInteract(bool value);
     void setDoRecruitInteract (int value);
     int getNumAssignments();
@@ -213,7 +213,7 @@ private:
     int distrib_area;
     tablemodel *assignments;
     tablemodel *assignTimings;
-    bool doRecruitInteract;
+    int doRecruitInteract;
     QStringList header;
 
     QList<int> parmsUsed;

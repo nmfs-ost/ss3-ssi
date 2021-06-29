@@ -32,6 +32,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         d_file->seek(0);
 //        d_file->reset();
         d_file->resetLineNum();
+        d_file->setOkay(true);
+        d_file->setStop(false);
         d_file->read_comments();
 
         //  SS_Label_Info_2.1.2 #Read model time dimensions
@@ -1589,6 +1591,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->reset();
         f_file->seek(0);
         f_file->resetLineNum();
+        f_file->setOkay(true);
+        f_file->setStop(false);
         f_file->read_comments();
 
         numFleets = data->get_num_fleets();
@@ -2135,6 +2139,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     {
         c_file->seek(0);
         c_file->resetLineNum();
+        c_file->setOkay(true);
+        c_file->setStop(false);
         c_file->read_comments();
 
 #ifdef DEBUG_CONTROL
@@ -2152,7 +2158,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     }
         // morphs or platoons
     if (c_file->getOkay() && !c_file->getStop()) {
-        num = c_file->get_next_value(QString("Num growth morphs")).toInt();
+        num = c_file->get_next_value(QString("Num platoons")).toInt();
         pop->Grow()->setNum_morphs(num); // 1, 3, and 5 are best, normal dist set
         num = pop->Grow()->getNum_morphs();
         pop->Grow()->setMorph_within_ratio(1.0);
@@ -2689,7 +2695,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
     }
 
-    if (c_file->getOkay() && !c_file->getStop()) {
+/*    if (c_file->getOkay() && !c_file->getStop()) {
         if (pop->SR()->getDoRecruitInteract())
         {
             index = 0;
@@ -2716,7 +2722,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         datalist = readParameter(c_file); // cohort growth deviation
         pop->Grow()->setCohortParam(datalist);
         pop->Grow()->getCohortParams()->setRowHeader(0, QString("CohortGrowDev"));
-    }
+    }*/
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Growth params read.");
 #endif
@@ -3685,7 +3691,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         num = pop->SR()->getNumAssignments();
         line = QString (QString("%1 #_number of recruitment settlement assignments ").arg(QString::number(num)));
         chars += c_file->writeline(line);
-        temp_int = pop->SR()->getDoRecruitInteract()? 1: 0;
+        temp_int = pop->SR()->getDoRecruitInteract();
         chars += c_file->write_val(temp_int, 2, "unused option");
 //        line = QString (QString("%1 #_unused option").arg(QString::number(temp_int)));
 //        chars += c_file->writeline(line);
@@ -4129,7 +4135,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
 
 
-        if (pop->SR()->getDoRecruitInteract())
+/*        if (pop->SR()->getDoRecruitInteract())
         {
             QString desc;
             num = pop->SR()->getNumInteractParams();
@@ -4139,7 +4145,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 desc = QString(pop->SR()->getInteractParams()->getRowHeader(i));
                 chars += c_file->write_vector(str_list, 1, desc);
             }
-        }
+        }*/
         line = QString("#_ Cohort growth dev base");
         chars += c_file->writeline(line);
         line.clear();
@@ -5251,6 +5257,9 @@ bool read33_parameterFile(ss_file *pr_file, ss_model *data)
     {
         flag = true;
         pr_file->seek(0);
+        pr_file->resetLineNum();
+        pr_file->setOkay(true);
+        pr_file->setStop(false);
         pr_file->read_comments();
 
         data->setALKTol(data->getALKTol());
@@ -5287,6 +5296,9 @@ bool read33_userDataFile (ss_file *ud_file, ss_model *data)
     {
         flag = true;
         ud_file->seek(0);
+        ud_file->resetLineNum();
+        ud_file->setOkay(true);
+        ud_file->setStop(false);
         ud_file->read_comments();
 
         data->setALKTol(data->getALKTol());
@@ -5324,6 +5336,9 @@ bool read33_profileFile (ss_file *pf_file, ss_model *data)
     if(pf_file->open(QIODevice::ReadOnly))
     {
         pf_file->seek(0);
+        pf_file->resetLineNum();
+        pf_file->setOkay(true);
+        pf_file->setStop(false);
         pf_file->read_comments();
 
         data->setALKTol(data->getALKTol());
