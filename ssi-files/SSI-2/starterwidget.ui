@@ -23,7 +23,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-700</y>
+        <y>0</y>
         <width>1252</width>
         <height>1227</height>
        </rect>
@@ -560,7 +560,7 @@
        <item row="7" column="2" colspan="4">
         <widget class="QLabel" name="label_customReportOptions">
          <property name="text">
-          <string># custom report options: -100 to start with minimal; -101 to start with all; 
+          <string># COND_3: custom report options: -100 to start with minimal; -101 to start with all; 
    -number to remove, +number to add, -999 to end</string>
          </property>
         </widget>

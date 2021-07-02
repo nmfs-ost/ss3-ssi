@@ -3526,15 +3526,12 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 /*            switch (id)
             {
             case 1:
-                data->getFleet(flt-1)->setInputValueVar(1, true);
                 data->getFleet(flt-1)->setAddToSurveyCV(temp_float);
                 break;
             case 2:
-                data->getFleet(flt-1)->setVarAddToDiscardSD(true);
                 data->getFleet(flt-1)->setAddToDiscardSD(temp_float);
                 break;
             case 3:
-                data->getFleet(flt-1)->setVarAddToBodyWtCV(true);
                 data->getFleet(flt-1)->setAddToBodyWtCV(temp_float);
                 break;
             case 4:

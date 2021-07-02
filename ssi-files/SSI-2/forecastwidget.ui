@@ -13,6 +13,773 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1041</width>
+        <height>2137</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="14" column="0">
+        <widget class="QSpinBox" name="spinBox_writeParmValues">
+         <property name="maximum">
+          <number>4</number>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+       </item>
+       <item row="40" column="0" colspan="17">
+        <widget class="QLabel" name="label_bioMinAge">
+         <property name="text">
+          <string># enter list of:  season,  fleet, relF; if used, terminate with season=-9999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="1" colspan="16">
+        <widget class="QLabel" name="label_numDatafiles">
+         <property name="text">
+          <string># Forecast selectivity (0=fcast selex is mean from year range; 1=fcast selectivity from annual time-vary parms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="1" colspan="9">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string># Rebuilder:  first year catch could have been set to zero (Ydecl)(-1 to set to 1999)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="29" column="1" colspan="8">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string># value is multiplier of SRR</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QSpinBox" name="spinBox_outputDetail">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="prefix">
+          <string/>
+         </property>
+         <property name="minimum">
+          <number>-999</number>
+         </property>
+         <property name="maximum">
+          <number>3000</number>
+         </property>
+         <property name="value">
+          <number>2001</number>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="1">
+        <widget class="QSpinBox" name="spinBox_10"/>
+       </item>
+       <item row="30" column="0">
+        <widget class="QSpinBox" name="spinBox_17"/>
+       </item>
+       <item row="33" column="1" colspan="9">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string># Do West Coast gfish rebuilder output (0/1) </string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="2">
+        <widget class="QSpinBox" name="spinBox_2">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1" colspan="16">
+        <widget class="QLabel" name="label_jitter">
+         <property name="text">
+          <string># Buffer:  enter Control rule target as fraction of Flimit (e.g. 0.75), negative value invokes list of [year, scalar] with filling from year to YrMax</string>
+         </property>
+        </widget>
+       </item>
+       <item row="50" column="0" colspan="3">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string>#_Fleet group</string>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="1" colspan="16">
+        <widget class="QLabel" name="label_strptMin">
+         <property name="text">
+          <string>#_N forecast loops (1=OFL only; 2=ABC; 3=get F from forecast ABC catch with allocations applied)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="36" column="0">
+        <widget class="QSpinBox" name="spinBox_22"/>
+       </item>
+       <item row="23" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+       </item>
+       <item row="16" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+       </item>
+       <item row="0" column="0" colspan="16">
+        <widget class="QPlainTextEdit" name="commentBlock">
+         <property name="plainText">
+          <string>#C forecast comment here
+
+</string>
+         </property>
+        </widget>
+       </item>
+       <item row="39" column="0" colspan="17">
+        <widget class="QLabel" name="label_retroYear">
+         <property name="text">
+          <string># Conditional input if relative F choice = 2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="38" column="1" colspan="16">
+        <widget class="QLabel" name="label_converge">
+         <property name="text">
+          <string># basis for fcast catch tuning and for fcast catch caps and allocation  (2=deadbio; 3=retainbio; 
+5=deadnum; 6=retainnum); NOTE: same units for all fleets</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="0">
+        <widget class="QSpinBox" name="spinBox_lastEstPhase">
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1" colspan="16">
+        <widget class="QLabel" name="label_MCevalThin">
+         <property name="text">
+          <string># Control rule Biomass level for no F (as frac of Bzero, e.g. 0.10)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="55" column="2" colspan="15">
+        <widget class="QLabel" name="label_mcmcOutput">
+         <property name="text">
+          <string># MCMC output detail: integer part (0=default; 1=adds obj func components); and decimal part (added to SR_LN(R0) on first call to mcmc)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="37" column="0" colspan="15">
+        <widget class="QLabel" name="label_stdYears">
+         <property name="text">
+          <string># Note that fleet allocation is used directly as average F if Do_Forecast=4</string>
+         </property>
+        </widget>
+       </item>
+       <item row="46" column="0" colspan="17">
+        <widget class="QLabel" name="label_sprBasis">
+         <property name="text">
+          <string># enter list of area ID and max annual catch; terminate with area=-9999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0" colspan="11">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string># value &lt;0 convert to endyr-value; except -999 converts to start_yr; must be &gt;=start_yr and &lt;=endyr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="60" column="0">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="13">
+        <widget class="QLabel" name="label_year_info">
+         <property name="text">
+          <string># for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="43" column="0" colspan="17">
+        <widget class="QLabel" name="label_depletDenom">
+         <property name="text">
+          <string># enter list of: fleet number, max annual catch for fleets with a max; terminate with fleet=-9999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="0" colspan="6">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>#  2001 2001 1991 2001 1971 2001</string>
+         </property>
+        </widget>
+       </item>
+       <item row="58" column="0" colspan="5">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>#_Year Seas Fleet Catch(or_F)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="5">
+        <widget class="QSpinBox" name="spinBox_5">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QSpinBox" name="spinBox_bmarks_option">
+         <property name="maximum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="1" colspan="10">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string># stddev of log(realized catch/target catch) in forecast (set value&gt;0.0 to cause active impl_error)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1" colspan="16">
+        <widget class="QLabel" name="label_writeParmValues">
+         <property name="text">
+          <string># Forecast: -1=none; 0=simple_1yr; 1=F(SPR); 2=F(MSY) 3=F(Btgt) or F0.1; 4=Ave F (uses first-last relF yrs); 5=input annual F scalar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="29" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_7"/>
+       </item>
+       <item row="27" column="1" colspan="16">
+        <widget class="QLabel" name="label_sdrptMax">
+         <property name="text">
+          <string>#_First forecast loop with stochastic recruitment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="5">
+        <widget class="QSpinBox" name="spinBox_14"/>
+       </item>
+       <item row="18" column="0">
+        <widget class="QSpinBox" name="spinBox_useSoftBounds">
+         <property name="maximum">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QSpinBox" name="spinBox_writeIteration">
+         <property name="maximum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="4">
+        <widget class="QSpinBox" name="spinBox_13"/>
+       </item>
+       <item row="23" column="1" colspan="16">
+        <widget class="QLabel" name="label_MCevalBurn">
+         <property name="text">
+          <string># Control rule Biomass level for constant F (as frac of Bzero, e.g. 0.40); (Must be &gt; the no F level below)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1" colspan="16">
+        <widget class="QLabel" name="label_writeIteration">
+         <property name="text">
+          <string>#Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below</string>
+         </property>
+        </widget>
+       </item>
+       <item row="54" column="0" colspan="2">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>#_Year fraction</string>
+         </property>
+        </widget>
+       </item>
+       <item row="48" column="0" colspan="2">
+        <widget class="QPlainTextEdit" name="plainTextEdit_3">
+         <property name="plainText">
+          <string>-9999 -1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="10" colspan="4">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="4" column="1" colspan="12">
+        <widget class="QLabel" name="label_spr_target">
+         <property name="text">
+          <string># SPR target (e.g. 0.40)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="4">
+        <widget class="QSpinBox" name="spinBox_4">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="0" colspan="8">
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string># values for top, bottom and buffer exist, but not used when Policy=0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="42" column="0" colspan="2">
+        <widget class="QPlainTextEdit" name="plainTextEdit"/>
+       </item>
+       <item row="9" column="3">
+        <widget class="QSpinBox" name="spinBox_3">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="8">
+        <widget class="QSpinBox" name="spinBox_8">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1" colspan="16">
+        <widget class="QLabel" name="label_writeCumreport">
+         <property name="text">
+          <string># N forecast years </string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QSpinBox" name="spinBox_msy_option">
+         <property name="maximum">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+       </item>
+       <item row="19" column="16">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="28" column="1" colspan="16">
+        <widget class="QLabel" name="label_numStdYears">
+         <property name="text">
+          <string>#_Forecast recruitment:  0= spawn_recr; 1=value*spawn_recr_fxn; 2=value*VirginRecr; 
+3=recent mean from yr range above (need to set phase to -1 in control to get constant recruitment in MCMC)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="2">
+        <widget class="QSpinBox" name="spinBox_11"/>
+       </item>
+       <item row="35" column="1" colspan="9">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string># Rebuilder:  year for current age structure (Yinit) (-1 to set to endyear+1)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QSpinBox" name="spinBox_writeCumreport">
+         <property name="maximum">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1" colspan="11">
+        <widget class="QLabel" name="label_bmass_target">
+         <property name="text">
+          <string># Biomass target (e.g. 0.40)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="2">
+        <widget class="QLabel" name="label">
+         <property name="maximumSize">
+          <size>
+           <width>500</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="16">
+        <widget class="QLabel" name="label_displayDetail">
+         <property name="text">
+          <string># MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr) </string>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="0">
+        <widget class="QSpinBox" name="spinBox_20"/>
+       </item>
+       <item row="27" column="0">
+        <widget class="QSpinBox" name="spinBox_16"/>
+       </item>
+       <item row="45" column="0" colspan="2">
+        <widget class="QPlainTextEdit" name="plainTextEdit_2">
+         <property name="plainText">
+          <string>-9999 -1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="59" column="0" colspan="2">
+        <widget class="QPlainTextEdit" name="plainTextEdit_6">
+         <property name="plainText">
+          <string>-9999 -1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="61" column="2" colspan="15">
+        <widget class="QLabel" name="label_checkValue">
+         <property name="text">
+          <string># verify end of input</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="7">
+        <widget class="QSpinBox" name="spinBox_7">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="44" column="0" colspan="3">
+        <widget class="QLabel" name="label_21">
+         <property name="text">
+          <string>#_Fleet max_catch</string>
+         </property>
+        </widget>
+       </item>
+       <item row="55" column="0" colspan="2">
+        <widget class="QPlainTextEdit" name="plainTextEdit_5"/>
+       </item>
+       <item row="61" column="0" colspan="2">
+        <widget class="QLineEdit" name="lineEdit_checkValue">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
+       </item>
+       <item row="38" column="0">
+        <widget class="QSpinBox" name="spinBox_depletBasis">
+         <property name="maximum">
+          <number>199</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="53" column="0" colspan="17">
+        <widget class="QLabel" name="label_fBasis">
+         <property name="text">
+          <string># list sequentially because read values fill to end of N forecast, terminate with -9999 in year field </string>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="0">
+        <widget class="QSpinBox" name="spinBox_19"/>
+       </item>
+       <item row="9" column="9">
+        <widget class="QSpinBox" name="spinBox_9">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="0">
+        <widget class="QSpinBox" name="spinBox_15"/>
+       </item>
+       <item row="35" column="0">
+        <widget class="QSpinBox" name="spinBox_21"/>
+       </item>
+       <item row="49" column="0" colspan="17">
+        <widget class="QLabel" name="label_aveF">
+         <property name="text">
+          <string># enter list of fleet number and allocation group assignment, if any; terminate with fleet=-9999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="52" column="0" colspan="13">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>#_if N allocation groups &gt;0, list year, allocation fraction for each group</string>
+         </property>
+        </widget>
+       </item>
+       <item row="47" column="0" colspan="3">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>#_Area max_catch</string>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="0">
+        <widget class="QSpinBox" name="spinBox_18"/>
+       </item>
+       <item row="56" column="1" colspan="16">
+        <widget class="QLabel" name="label_alkTolerance">
+         <property name="text">
+          <string># basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input apical_F; 
+NOTE: bio vs num based on fleet's catchunits</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QSpinBox" name="spinBox">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QLabel" name="label_23">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="1" colspan="9">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>#FirstYear for caps and allocations (should be after years with fixed inputs)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="13">
+        <widget class="QLabel" name="label_bmarks_year_info">
+         <property name="text">
+          <string>#_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recr_dist, end_recr_dist,
+ beg_SRparm, end_SRparm (enter actual year, or values of 0 or -integer to be rel. endyr)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="1" colspan="16">
+        <widget class="QLabel" name="label_lastEstPhase">
+         <property name="text">
+          <string># Control rule method (0: none; 1: ramp does catch=f(SSB), buffer on F; 2: ramp does F=f(SSB), buffer on F; 
+3: ramp does catch=f(SSB), buffer on catch; 4: ramp does F=f(SSB), buffer on catch) </string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0" colspan="10">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>#  2001 2001 2001 2001 2001 2001 1971 2001 1971 2001 </string>
+         </property>
+        </widget>
+       </item>
+       <item row="30" column="1" colspan="9">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>#_Forecast loop control #5 (reserved for future bells&amp;whistles)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QLabel" name="label_3">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string> </string>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="0">
+        <widget class="QSpinBox" name="spinBox_numDatafiles">
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="36" column="1" colspan="9">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string># fleet relative F:  1=use first-last alloc year; 2=read seas, fleet, alloc list below</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0" colspan="12">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>#_Fcast_years:  beg_selex, end_selex, beg_relF, end_relF, beg_mean recruits, end_recruits 
+ (enter actual year, or values of 0 or -integer to be rel. endyr)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="16">
+        <widget class="QLabel" name="label_bmarks_option">
+         <property name="text">
+          <string># Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F0.1,F_msy </string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1" colspan="16">
+        <widget class="QLabel" name="label_includePrior">
+         <property name="text">
+          <string># Fmult (only used for Do_Forecast==5) such that apical_F(f)=Fmult*relF(f)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="56" column="0">
+        <widget class="QSpinBox" name="spinBox_fBasis">
+         <property name="maximum">
+          <number>199</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="6">
+        <widget class="QSpinBox" name="spinBox_6">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="51" column="0" colspan="2">
+        <widget class="QPlainTextEdit" name="plainTextEdit_4">
+         <property name="plainText">
+          <string>-9999 -1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="57" column="0" colspan="17">
+        <widget class="QLabel" name="label_randSeed">
+         <property name="text">
+          <string>#enter list of Fcast catches or Fa; terminate with line having year=-9999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="3">
+        <widget class="QSpinBox" name="spinBox_12"/>
+       </item>
+       <item row="28" column="0">
+        <widget class="QSpinBox" name="spinBox_numStdYears"/>
+       </item>
+       <item row="41" column="0" colspan="3">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>#_Seas Fleet relF</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

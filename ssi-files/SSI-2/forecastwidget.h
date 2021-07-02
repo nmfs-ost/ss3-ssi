@@ -21,6 +21,9 @@ public slots:
     bool readFile(QString file);
     bool writeFile();
 
+    int getBenchmarks();
+    void setBenchmarks(int bmark);
+
 signals:
     void dataChanged();
 

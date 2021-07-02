@@ -15,6 +15,7 @@ public:
 
     void readComments();
     QStringList getComments();
+    QString getCommentString();
 
 private:
     int lineNum;

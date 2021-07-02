@@ -204,6 +204,9 @@
                  <property name="text">
                   <string>Resulting years</string>
                  </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
                 </widget>
                </item>
                <item row="2" column="2">
@@ -575,6 +578,16 @@ e.g. 0, -1, -2, -3, ...</string>
                  <property name="text">
                   <string>Input years</string>
                  </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>   </string>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -829,19 +842,49 @@ e.g. 0, -1, -2, -3, ...</string>
              </item>
              <item row="10" column="0" rowspan="2" colspan="4">
               <layout class="QGridLayout" name="gridLayout_fcast_years">
-               <item row="0" column="2">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>Input years</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLabel" name="label_fcast_sel">
-                 <property name="text">
-                  <string>Selectivity</string>
-                 </property>
-                </widget>
+               <item row="3" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_beg">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_recr_beg">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_end">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_recr_end">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item row="1" column="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_fcast_sel">
@@ -887,26 +930,6 @@ e.g. 0, -1, -2, -3, ...</string>
                  </item>
                 </layout>
                </item>
-               <item row="1" column="4">
-                <spacer name="horizontalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="3">
-                <widget class="QLabel" name="label_fcast_ref_years">
-                 <property name="text">
-                  <string>Resulting years</string>
-                 </property>
-                </widget>
-               </item>
                <item row="3" column="1">
                 <widget class="QLabel" name="label_2">
                  <property name="text">
@@ -914,52 +937,7 @@ e.g. 0, -1, -2, -3, ...</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="3">
-                <layout class="QHBoxLayout" name="horizontalLayout_sel_ref">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_beg_ref">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_beg_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_end_ref">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_end_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_fcast_years">
-                 <property name="text">
-                  <string>Forecast years</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="3">
+               <item row="2" column="4">
                 <layout class="QHBoxLayout" name="horizontalLayout_relf_ref">
                  <item>
                   <widget class="QLabel" name="label_fcast_relf_beg_ref">
@@ -996,6 +974,23 @@ e.g. 0, -1, -2, -3, ...</string>
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_fcast_years">
+                 <property name="text">
+                  <string>Forecast years</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QLabel" name="label_fcast_ref_years">
+                 <property name="text">
+                  <string>Resulting years</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
                </item>
                <item row="2" column="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_fcast_relf">
@@ -1044,6 +1039,33 @@ e.g. 0, -1, -2, -3, ...</string>
                  </item>
                 </layout>
                </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="label_fcast_bio">
+                 <property name="text">
+                  <string>Relative F</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="label_fcast_sel">
+                 <property name="text">
+                  <string>Selectivity</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
                <item row="1" column="0" rowspan="3">
                 <widget class="QLabel" name="label_3">
                  <property name="text">
@@ -1053,14 +1075,17 @@ e.g. 0, -1, -2, ...</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="label_fcast_bio">
+               <item row="0" column="2">
+                <widget class="QLabel" name="label">
                  <property name="text">
-                  <string>Relative F</string>
+                  <string>Input years</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="3">
+               <item row="3" column="4">
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <item>
                   <widget class="QLabel" name="label_fcast_recr_beg_ref">
@@ -1098,49 +1123,50 @@ e.g. 0, -1, -2, ...</string>
                  </item>
                 </layout>
                </item>
-               <item row="3" column="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item row="1" column="4">
+                <layout class="QHBoxLayout" name="horizontalLayout_sel_ref">
                  <item>
-                  <widget class="QLabel" name="label_fcast_recr_beg">
+                  <widget class="QLabel" name="label_fcast_sel_beg_ref">
                    <property name="text">
                     <string>begin:</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_recr_beg">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
+                  <widget class="QLabel" name="label_fcast_sel_beg_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
                    </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
+                   <property name="text">
+                    <string>year</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_fcast_recr_end">
+                  <widget class="QLabel" name="label_fcast_sel_end_ref">
                    <property name="text">
                     <string>end:</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_recr_end">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
+                  <widget class="QLabel" name="label_fcast_sel_end_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
                    </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
+                   <property name="text">
+                    <string>year</string>
                    </property>
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>    </string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>

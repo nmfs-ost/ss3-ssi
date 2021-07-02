@@ -18,9 +18,6 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     current_fleet = model_data->getFleet(0);
     ui->comboBox_fleet_name->setFont(titleFont);
 
-    ui->label_selex_age_discard->setVisible(false);
-    ui->spinBox_selex_age_discard->setVisible(false);
-
     catchview = new tableview();
     catchview->setParent(this);
     catchedit = new catchdelegate(this);
@@ -95,6 +92,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     sizeSelexMaleTVParamsView = new tableview();
     sizeSelexMaleTVParamsView->setParent(this);
     ui->verticalLayout_selex_size_male_tv_parms->addWidget(sizeSelexMaleTVParamsView);
+
     ageSelexParamsView = new tableview();
     ageSelexParamsView->setParent(this);
     ui->verticalLayout_selex_age_params->addWidget(ageSelexParamsView);
@@ -126,6 +124,9 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     DAR1ParamView->setParent(this);
     DAR1ParamView->setHeight(3);
     ui->verticalLayout_2DAR_params->addWidget(DAR1ParamView);
+
+//    ui->groupBox_input_variance->setVisible(false);
+//    ui->doubleSpinBox_
 
     set_model(m_data);
     totalFleets = m_data->get_num_fleets();

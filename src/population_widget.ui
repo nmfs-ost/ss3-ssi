@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -83,8 +83,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1093</width>
-            <height>595</height>
+            <width>1089</width>
+            <height>664</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -823,7 +823,7 @@
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1059,7 +1059,7 @@
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1353,7 +1353,7 @@
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1643,7 +1643,7 @@
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1807,7 +1807,7 @@
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2103,7 +2103,7 @@ then read num_of_seasons parameters below.</string>
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -2111,6 +2111,9 @@ then read num_of_seasons parameters below.</string>
             <layout class="QGridLayout" name="gridLayout_recruitment">
              <item row="15" column="1">
               <widget class="QSpinBox" name="spinBox_recr_unused">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -2342,6 +2345,9 @@ then read num_of_seasons parameters below.</string>
              </item>
              <item row="15" column="0">
               <widget class="QLabel" name="label_recr_unused">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Unused option</string>
                </property>
@@ -2406,8 +2412,8 @@ then read num_of_seasons parameters below.</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1093</width>
-            <height>562</height>
+            <width>1089</width>
+            <height>621</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -2427,7 +2433,7 @@ then read num_of_seasons parameters below.</string>
               </spacer>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="label_spacer">
+              <widget class="QLabel" name="label_sr_recr_dev_spacer">
                <property name="text">
                 <string/>
                </property>
@@ -2486,7 +2492,7 @@ then read num_of_seasons parameters below.</string>
               </widget>
              </item>
              <item row="0" column="4" colspan="3">
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="label_sr_recr_dev_info">
                <property name="text">
                 <string> 0 = none; 1 = deviation vector; 2 = simple deviations</string>
                </property>
@@ -2842,7 +2848,7 @@ then read num_of_seasons parameters below.</string>
             <x>0</x>
             <y>0</y>
             <width>1110</width>
-            <height>445</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">

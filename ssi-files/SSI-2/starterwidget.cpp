@@ -21,6 +21,16 @@ bool starterWidget::readFile(QString file)
     bool okay = true;
 
     starterFile->setFileName(file);
+    if (starterFile->open(QIODevice::ReadOnly))
+    {
+        starterFile->readComments();
+        ui->commentBlock->setPlainText(starterFile->getCommentString());
+
+    }
+    else
+    {
+        okay = false;
+    }
 
     return okay;
 }
