@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.1
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.3
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,19 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.17.3
+    2021-07-01
+1. Added discard and retention parameters for age selex.
+2. Added option 7 for input value variance.
+3. If catch observation season exceeds number of seasons, will now
+   a. change value to last season, and
+   b. display dialog with this information.
+============================================================================
+    3.30.17.2
+    2021-06-30
+1. Corrected treatment of unused option in control file.
+2. Reordered Population/Recruitment a little.
 ============================================================================
     3.30.17.1
     2021-06-11

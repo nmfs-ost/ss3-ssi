@@ -152,9 +152,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         // Catch
         if (d_file->getOkay() && !d_file->getStop()) {
         num_vals = total_fleets;
+        bool info = false;
         do {
             int seas = 0;
-            float ctch = 0;
+            double ctch = 0;
             str_lst.clear();
             str_lst.append(d_file->get_next_value(QString("year")));
             str_lst.append(d_file->get_next_value(QString("season")));
@@ -167,7 +168,16 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             fleet  = abs(str_lst.at(2).toInt());
             fleet  = d_file->checkIntValue(fleet, QString("Fleet number"), 1, num_vals, 1);
             seas   = str_lst.at(1).toInt();
-            ctch   = str_lst.at(3).toFloat();
+            if (seas > numSeas) {
+                seas = numSeas;
+                if (!info) {
+                QString msg("Catch observation season exceeds number of seasons. This will be changed to the last season.");
+                QMessageBox::information(nullptr, "Reading data file Catch data", msg);
+                info = true;
+                }
+                str_lst[1] = QString::number(seas);
+            }
+            ctch = str_lst.at(3).toDouble();
             if (year == -999)
                 data->getFleet(fleet - 1)->set_catch_equil(seas, ctch);
             data->getFleet(fleet - 1)->addCatchObservation(str_lst);
@@ -2132,6 +2142,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     int flt = 0;
     int num_fleets = data->get_num_fleets();
     int timevaryread = 0;
+    int num_settle_timings = 0;
 //    int startYear = data->get_start_year();
 //    int endYear = data->get_end_year();
 
@@ -2207,18 +2218,31 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     if (c_file->getOkay() && !c_file->getStop()) {
         index = c_file->getIntValue(QString("Recruitment distribution method"), 2, 4, 1);
         pop->SR()->setDistribMethod(index);
-        temp_int = c_file->getIntValue(QString("Recruitment distribution area"), 1, 2, 1);
+        temp_int = c_file->getIntValue(QString("Recruitment distribution area (future)"), 1, 2, 1);
         pop->SR()->setDistribArea(temp_int);
-        num = c_file->get_next_value(QString("Num recr assigns")).toInt(); // num recr assignments
+        num = c_file->get_next_value(QString("Num settle assigns")).toInt(); // num settle assignments
         pop->SR()->setNumAssignments(num);
-        temp_int = c_file->get_next_value(QString("Recr interact?")).toInt(); // read interact params?
+        temp_int = c_file->get_next_value(QString("Future feature")).toInt(); //
         pop->SR()->setDoRecruitInteract(temp_int);
+/*        if (index == 2) {
+            QString msg("Recruitment distributioin method 3 is simpler than method 2\nand takes 1 parameter for each settlement.");
+            QMessageBox::information(nullptr, QString("Information recruitment distribution"), msg);
+        }
+        else if (index != 4 && num == 1) {
+            QString msg("This model has only one settlement event. Changing to\nrecr_dist_method 4 and removing the recruitment params\n");
+            msg.append("at the end of the MG params will produce identical\nresults and simplify the model.");
+            QMessageBox::information(nullptr, QString("Information recruitment distribution"), msg);
+        }*/
     }
-
+    // settlement pattern
     if (c_file->getOkay() && !c_file->getStop()) {
+        if (num == 0) {
+            num_settle_timings = 1;
+        }
         for (i = 0; i < num; i++) // gr pat, month, area, age for each assignment
         {
             datalist.clear();
+            num_settle_timings++;
             for (int j = 0; j < 4; j++)
                 datalist.append(c_file->get_next_value(QString("Recr assign data")));
             pop->SR()->setAssignment(i, datalist);
@@ -2299,8 +2323,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             data->getFleet(i)->setSelTimeVaryReadParams(temp_int);
     }
 
-        // natural Mort
     if (c_file->getOkay() && !c_file->getStop()) {
+        // natural Mort
         temp_int = c_file->getIntValue(QString("Natural Mortality type"), 0, 4, 0);
         pop->Grow()->setNatural_mortality_type(temp_int);
         datalist.append(temp_string);
@@ -2365,6 +2389,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             }
             num_vals = 0; // read no additional parameters
             break;
+        case 5:
+            QString msg("5 is experimental only");
+            QMessageBox::information(nullptr, QString("Natural mortality option"), msg);
+            temp_int = c_file->get_next_value(QString("Lorenz ref age")).toInt(); // ref age for Lorenzen
+            pop->Grow()->setNaturnalMortLorenzenRef(temp_int);
+            num_vals = 1; // read 1 param for each gender for each GP
+            break;
+
         }
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
@@ -2374,36 +2406,53 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         // growth model
     if (c_file->getOkay() && !c_file->getStop()) {
-        temp_int = c_file->getIntValue(QString("Growth Model"), 1, 3, 1);
+        temp_int = c_file->getIntValue(QString("Growth Model"), 1, 8, 1);
         pop->Grow()->setModel(temp_int);
-
+        if (temp_int == 6 || temp_int == 7) {
+            QString msg(QString("Option %1 is not implemented. File reading will terminate.").arg(temp_int));
+            QMessageBox::information(nullptr, "Growth model", msg);
+            c_file->setOkay(false);
+        }
         temp_float = c_file->get_next_value(QString("age for L1")).toFloat();
         pop->Grow()->setAge_for_l1(temp_float);
         temp_float = c_file->get_next_value(QString("age for L2")).toFloat();
         pop->Grow()->setAge_for_l2(temp_float);
     }
 
-        // Exponential decay for growth above max age
     if (c_file->getOkay() && !c_file->getStop()) {
+        // Exponential decay for growth above max age
         temp_float = c_file->get_next_value(QString("Exponential decay")).toFloat();
         pop->Grow()->setExpDecay(temp_float);
 
+        // future feature
+        temp_float = c_file->get_next_value(QString("Future feature")).toFloat();
+        pop->Grow()->setFeature(temp_float);
+
+        // K multipliers
         if (pop->Grow()->getModel() == 3)
         {
+            temp_int = c_file->get_next_value(QString("Num of K multipliers.")).toInt();
+            pop->Grow()->setNumKmults(temp_int);
             temp_float = c_file->get_next_value(QString("age min for K")).toFloat();
             pop->Grow()->setAgeMin_for_K(temp_float);
             temp_float = c_file->get_next_value(QString("age max for K")).toFloat();
             pop->Grow()->setAgeMax_for_K(temp_float);
         }
-    }
-        // future feature
-    if (c_file->getOkay() && !c_file->getStop()) {
-        temp_float = c_file->get_next_value(QString("Future feature")).toFloat();
-        pop->Grow()->setFeature(temp_float);
+        else if (pop->Grow()->getModel() == 4 || pop->Grow()->getModel() == 5)
+        {
+            temp_int = c_file->get_next_value(QString("Num of K multipliers.")).toInt();
+            pop->Grow()->setNumKmults(temp_int);
+            temp_float = c_file->get_next_value(QString("age max for K")).toFloat();
+            pop->Grow()->setAgeMax_for_K(temp_float);
+            temp_float = c_file->get_next_value(QString("age second for K")).toFloat();
+            pop->Grow()->setAgeMid_for_K(temp_float);
+            temp_float = c_file->get_next_value(QString("age min for K")).toFloat();
+            pop->Grow()->setAgeMin_for_K(temp_float);
+        }
     }
 
-        // SD add to LAA
     if (c_file->getOkay() && !c_file->getStop()) {
+        // SD add to LAA
         temp_float = c_file->get_next_value(QString("Std dev add to len at age")).toFloat();
         pop->Grow()->setSd_add(temp_float);
         // CV growth pattern
@@ -2411,8 +2460,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setCv_growth_pattern(temp_int);
     }
 
-        // maturity
     if (c_file->getOkay() && !c_file->getStop()) {
+        // maturity
         temp_int = c_file->getIntValue(QString("Maturity option"), 1, 6, 2);
         pop->Grow()->setMaturity_option(temp_int);
         if (temp_int == 3 ||
@@ -2458,8 +2507,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->Grow()->setParam_offset_method(temp_int);
     }
 
-        // mortality growth parameters
     if (c_file->getOkay() && !c_file->getStop()) {
+        // mortality growth parameters
         num = 0;
         index = 0;
         // female parameters
@@ -2678,7 +2727,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 datalist = readParameter(c_file); // recr apportion to settlement events
                 pop->SR()->setDistParam(i, datalist);
-                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_month_%1").arg(QString::number(num+1)));
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_timing_%1").arg(QString::number(num+1)));
             }
             pop->SR()->setNumDistParams(i);
         }
@@ -2695,6 +2744,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
     }
 
+    // Future feature
 /*    if (c_file->getOkay() && !c_file->getStop()) {
         if (pop->SR()->getDoRecruitInteract())
         {
@@ -2719,17 +2769,20 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 pop->SR()->getInteractParams()->setRowHeader(index, QString("RecrDist_Settle_%1").arg(QString::number(i+1)));
             }
         }
-        datalist = readParameter(c_file); // cohort growth deviation
-        pop->Grow()->setCohortParam(datalist);
-        pop->Grow()->getCohortParams()->setRowHeader(0, QString("CohortGrowDev"));
     }*/
 #ifdef DEBUG_CONTROL
     QMessageBox::information(nullptr, "Information - reading contol file", "Growth params read.");
 #endif
 
-
-        // movement parameters (2 per definition)
     if (c_file->getOkay() && !c_file->getStop()) {
+        // Cohort growth dev base
+        datalist = readParameter(c_file);  //
+        pop->Grow()->setCohortParam(datalist);
+        pop->Grow()->getCohortParams()->setRowHeader(0, QString("CohortGrowDev"));
+    }
+
+    if (c_file->getOkay() && !c_file->getStop()) {
+        // movement parameters (2 per definition)
         num = pop->Move()->getNumDefs();
         for (i = 0; i < num; i++)
         {
@@ -3243,9 +3296,29 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                            data->getFleet(i)->getName(),
                            QString::number(i+1)));
             }
-            // check discard
-            if (agesel->getDiscard() != 0)
-                agesel->setDiscard(0);
+            // read retention and discard parameters
+            num = agesel->getNumRetainParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = readParameter (c_file);
+                agesel->setRetainParameter(j, datalist);
+                agesel->setRetainParameterLabel(j,
+                           QString("Retain_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
+            num = agesel->getNumDiscardParameters();
+            for (int j = 0; j < num; j++)
+            {
+                datalist = readParameter (c_file);
+                agesel->setDiscardParameter(j, datalist);
+                agesel->setDiscardParameterLabel(j,
+                           QString("DiscMort_P%1_%2(%3)").arg(
+                           QString::number(j+1),
+                           data->getFleet(i)->getName(),
+                           QString::number(i+1)));
+            }
             // read male offset
             num = agesel->getNumMaleParameters();
             for (int j = 0; j < num; j++)
@@ -3322,7 +3395,6 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 paramtable = sizesel->getMaleParameterTable();
                 varParamtable = sizesel->getMaleTimeVaryParameterModel();
                 readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
-
             }
             // age selex time varying
             for (i = 0; i < data->get_num_fleets(); i++)
@@ -3331,6 +3403,14 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 agesel = data->getFleet(i)->getAgeSelectivity();
                 paramtable = agesel->getParameterModel();
                 varParamtable = agesel->getTimeVaryParameterModel();
+                readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+                // retain param time varying
+                paramtable = agesel->getRetainParameterTable();
+                varParamtable = agesel->getRetainTimeVaryParameterModel();
+                readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
+                // discard param time varying
+                paramtable = agesel->getDiscardParameterTable();
+                varParamtable = agesel->getDiscardTimeVaryParameterModel();
                 readTimeVaryParams(c_file, data, paramtable, timevaryread, varParamtable);
                 // male param time varying
                 paramtable = agesel->getMaleParameterTable();
@@ -3441,15 +3521,20 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (id == END_OF_LIST)
                 break;
             data->setInputValueVariance(1);
-            switch (id)
+            data->getFleet(flt-1)->setInputVarValue(id, true);
+            data->getFleet(flt-1)->setInputVarianceValue(id, temp_float);
+/*            switch (id)
             {
             case 1:
+                data->getFleet(flt-1)->setInputValueVar(1, true);
                 data->getFleet(flt-1)->setAddToSurveyCV(temp_float);
                 break;
             case 2:
+                data->getFleet(flt-1)->setVarAddToDiscardSD(true);
                 data->getFleet(flt-1)->setAddToDiscardSD(temp_float);
                 break;
             case 3:
+                data->getFleet(flt-1)->setVarAddToBodyWtCV(true);
                 data->getFleet(flt-1)->setAddToBodyWtCV(temp_float);
                 break;
             case 4:
@@ -3462,9 +3547,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(flt-1)->setMultBySAA(temp_float);
                 break;
             case 7:
+                data->getFleet(flt-1)->setMultByGenSize(temp_float);
+                break;
             default:
                 break;
-            }
+            }*/
         } while (id != END_OF_LIST);
     }
 
@@ -3909,6 +3996,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("%1 #_placeholder for future growth feature").arg(
                            QString::number(temp_float)));
         chars += c_file->writeline (line);
+        chars += c_file->newline();
 
         temp_float = pop->Grow()->getSd_add();
         line = QString(QString("%1 #_SD_add_to_LAA (set to 0.1 for SS2 V1.x compatibility)").arg(
@@ -3918,9 +4006,13 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line = QString(QString("%1 #_CV_Growth_Pattern:  0 CV=f(LAA); 1 CV=F(A); 2 SD=F(LAA); 3 SD=F(A); 4 logSD=F(A)").arg(
                            temp_int));
         chars += c_file->writeline (line);
+        chars += c_file->newline();
+
         temp_int = pop->Grow()->getMaturity_option();
         line = QString(QString("%1 #_maturity_option:  1=length logistic; 2=age logistic; 3=read age-maturity matrix by growth_pattern; 4=read age-fecundity; 5=disabled; 6=read length-maturity").arg(
                            temp_int));
+        chars += c_file->writeline (line);
+        line = QString("#_Age_Fecundity by growth pattern from wt-at-age.ss now invoked by read bodywt flag");
         chars += c_file->writeline (line);
         if (temp_int == 3 ||  // age specific maturity
             temp_int == 4)
@@ -4151,10 +4243,6 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         line.clear();
         str_list = pop->Grow()->getCohortParam();
         chars += c_file->write_vector(str_list, 2, "CohortGrowDev");
-/*        for (int l = 0; l < str_list.count(); l++)
-            line.append(QString(" %1").arg(str_list.at(l)));
-        line.append(QString(" #_CohortGrowDev"));
-        c_file->writeline (line);*/
 
         // movement parameters
         line = QString("#_ Movement");
@@ -4920,6 +5008,14 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             {
                 chars += c_file->write_vector(slx->getParameter(j), 6, slx->getParameterLabel(j));
             }
+            for (int j = 0; j < slx->getNumRetainParameters(); j++)
+            {
+                chars += c_file->write_vector(slx->getRetainParameter(j), 6, slx->getRetainParameterLabel(j));
+            }
+            for (int j = 0; j < slx->getNumDiscardParameters(); j++)
+            {
+                chars += c_file->write_vector(slx->getDiscardParameter(j), 6, slx->getDiscardParameterLabel(j));
+            }
             for (int j = 0; j < slx->getNumMaleParameters(); j++)
             {
                 chars += c_file->write_vector(slx->getMaleParameter(j), 6, slx->getMaleParameterLabel(j));
@@ -4978,6 +5074,16 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             for (int j = 0; j < num; j++)
             {
                 chars += c_file->write_vector(slx->getTimeVaryParameter(j), 8, slx->getTimeVaryParameterLabel(j));
+            }
+            num = slx->getNumRetainTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                chars += c_file->write_vector(slx->getRetainTimeVaryParameter(j), 8, slx->getRetainTimeVaryParameterLabel(j));
+            }
+            num = slx->getNumDiscardTimeVaryParameters();
+            for (int j = 0; j < num; j++)
+            {
+                chars += c_file->write_vector(slx->getDiscardTimeVaryParameter(j), 8, slx->getDiscardTimeVaryParameterLabel(j));
             }
             num = slx->getNumMaleTimeVaryParameters();
             for (int j = 0; j < num; j++)
@@ -5121,7 +5227,22 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#_Factor  Fleet  Value");
         chars += c_file->writeline(line);
-        for (int i = 0; i < data->get_num_fleets(); i++)
+        for (int i = 1; i <= 7; i++)
+        {
+            for (int f = 0; f < data->get_num_fleets(); f++)
+            {
+                if (data->getFleet(f)->getInputVarValue(i))
+                {
+                    temp_float = data->getFleet(f)->getInputVarianceValue(i);
+                    line = QString(QString("    %1    %2    %3 ").arg(
+                                       QString::number(i),
+                                       QString::number(f+1),
+                                       QString::number(temp_float)));
+                    chars += c_file->writeline(line);
+                }
+            }
+        }
+/*        for (int i = 0; i < data->get_num_fleets(); i++)
         {
             temp_float = data->getFleet(i)->getAddToSurveyCV();
             if (!floatEquals(temp_float, 0.0))
@@ -5151,7 +5272,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline(line);
             }
             temp_float = data->getFleet(i)->getMultByLenCompN();
-            if (!floatEquals(temp_float, 1.0))
+            if (!floatEquals(temp_float, 0.0))
             {
                 line = QString(QString("    4    %1    %2  #_mult_by_lencomp_N").arg(
                                    QString::number(i+1),
@@ -5159,7 +5280,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline(line);
             }
             temp_float = data->getFleet(i)->getMultByAgeCompN();
-            if (!floatEquals(temp_float, 1.0))
+            if (!floatEquals(temp_float, 0.0))
             {
                 line = QString(QString("    5    %1    %2  #_mult_by_agecomp_N").arg(
                                    QString::number(i+1),
@@ -5167,14 +5288,22 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->writeline(line);
             }
             temp_float = data->getFleet(i)->getMultBySAA();
-            if (!floatEquals(temp_float, 1.0))
+            if (!floatEquals(temp_float, 0.0))
             {
                 line = QString(QString("    6    %1    %2  #_mult_by_size-at-age_N").arg(
                                    QString::number(i+1),
                                    QString::number(temp_float)));
                 chars += c_file->writeline(line);
             }
-        }
+            temp_float = data->getFleet(i)->getMultByGenSize();
+            if (!floatEquals(temp_float, 0.0))
+            {
+                line = QString(QString("    7    %1    %2  #_mult_by_gen_sizecomp").arg(
+                                   QString::number(i+1),
+                                   QString::number(temp_float)));
+                chars += c_file->writeline(line);
+            }
+        }*/
         line = QString (" -9999    1     0  #_terminator");
         chars += c_file->writeline(line);
 
@@ -5204,6 +5333,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         }
         line = QString (" -9999  1  1  1  1  #_terminator");
         chars += c_file->writeline(line);
+        chars += c_file->newline();
 
         // additional SD reporting
         temp_int = data->getAddSdReporting()->getActive();

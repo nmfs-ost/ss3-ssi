@@ -73,7 +73,9 @@ void ss_growth::reset()
     setNum_patterns(1);
     setAge_for_l1(1.66);
     setAge_for_l2(25);
+    setNumKmults(0);
     setAgeMin_for_K(5);
+    setAgeMid_for_K(0);
     setAgeMax_for_K(7);
     setExpDecay(0.2);  // default for 3.24 compatibility
     setSd_add(0);
@@ -95,6 +97,7 @@ void ss_growth::reset()
 
     setNum_morphs(1);
     setMorph_within_ratio(1.0);
+
 }
 
 /*

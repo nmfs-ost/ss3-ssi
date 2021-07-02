@@ -320,6 +320,10 @@ public slots:
     int age_selex_special() {return age_selex->getSpecial();}
     tablemodel *getAgeSelexModel() {return age_selex->getParameterModel();}
 
+    void setInputVarValue (int index = 0, bool on = false) {inputValueVar[index] = on;}
+    bool getInputVarValue (int index) {return inputValueVar[index];}
+    void setInputVarianceValue (int index, float value) {inputVarianceValue[index] = value;}
+    float getInputVarianceValue (int index) {return inputVarianceValue[index];}
     void setAddToSurveyCV (float val) {add_to_survey_CV = val;}
     float getAddToSurveyCV () {return add_to_survey_CV;}
     void setAddToDiscardSD (float val) {add_to_discard_stddev = val;}
@@ -332,6 +336,8 @@ public slots:
     float getMultByAgeCompN () {return mult_by_agecomp_N;}
     void setMultBySAA (float val) {mult_by_saa_N = val;}
     float getMultBySAA () {return mult_by_saa_N;}
+    void setMultByGenSize (float val) {mult_by_gen_size = val;}
+    float getMultByGenSize () {return mult_by_gen_size;}
 
     void resetLambdas() {setNumLambdas(0);}
     void setNumLambdas(int rows) {lambdaModel->setRowCount(rows);}
@@ -426,12 +432,15 @@ protected:
 //    QList<yearIndexMeasure*> f_abundance;
 //    QList<yearIndexMeasure*> f_abundance_error;
 
+    bool inputValueVar[7];
+    float inputVarianceValue[7];
     float add_to_survey_CV;
     float add_to_discard_stddev;
     float add_to_bodywt_CV;
     float mult_by_lencomp_N;
     float mult_by_agecomp_N;
     float mult_by_saa_N;
+    float mult_by_gen_size;
 
     QList<fleetLambda> lambdas;
 

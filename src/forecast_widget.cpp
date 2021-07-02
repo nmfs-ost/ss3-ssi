@@ -98,7 +98,7 @@ void forecast_widget::reset()
     ui->lineEdit_log_sd->setText("0.0");
     ui->spinBox_rebuilder_yinit->setValue(-1);
     ui->spinBox_rebuilder_ydecl->setValue(-1);
-    ui->comboBox_relF->setCurrentIndex(0);
+    ui->comboBox_fleet_relF->setCurrentIndex(0);
     ui->comboBox_input_catch_basis->setCurrentIndex(0);
 //    ui->lineEdit_max_catch_fleet->setText("-1");
 //    ui->lineEdit_max_catch_area->setText("-1");
@@ -149,7 +149,7 @@ void forecast_widget::disconnectAll(ss_forecast *fcast)
     disconnect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), this, SLOT(set_rebuilder_first_year(int)));
     disconnect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), this, SLOT(set_rebuilder_curr_year(int)));
 
-    disconnect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fleet_relF(int)));
+    disconnect (ui->comboBox_fleet_relF, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fleet_relF(int)));
 
     disconnect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
 
@@ -211,7 +211,7 @@ void forecast_widget::connectAll(ss_forecast *fcast)
     connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_first_year(int)));
     connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_curr_year(int)));
 
-    connect (ui->comboBox_relF, SIGNAL(currentIndexChanged(int)), SLOT(change_fleet_relF(int)));
+    connect (ui->comboBox_fleet_relF, SIGNAL(currentIndexChanged(int)), SLOT(change_fleet_relF(int)));
 
     connect (ui->comboBox_tuning_basis, SIGNAL(currentIndexChanged(int)), fcast, SLOT(set_combo_box_catch_tuning(int)));
 
@@ -403,7 +403,7 @@ void forecast_widget::change_biomass_target()
 
 void forecast_widget::set_combo_box_bmark_relF(int value)
 {
-    ui->comboBox_relF->setCurrentIndex(value);
+    ui->comboBox_bmark_relF_basis->setCurrentIndex(value);
 }
 
 void forecast_widget::change_bmark_relF (int value)
@@ -501,7 +501,7 @@ void forecast_widget::set_combo_box_fleet_relF(int value)
 {
     if (value < 1) value = 1;
     if (value > 2) value = 2;
-    ui->comboBox_relF->setCurrentIndex(value-1);
+    ui->comboBox_fleet_relF->setCurrentIndex(value-1);
 }
 
 void forecast_widget::change_fleet_relF(int value)

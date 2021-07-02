@@ -20,7 +20,7 @@ class ss_growth : public QObject
     Q_OBJECT
 
 public:
-    ss_growth(QObject *parent = 0);
+    ss_growth(QObject *parent = nullptr);
     ~ss_growth();
 
     void reset();
@@ -75,8 +75,12 @@ public slots:
     void setAge_for_l1(float value);
     float getAge_for_l2() const;
     void setAge_for_l2(float value);
+    int getNumKmults () const {return num_K_mults;}
+    void setNumKmults (int nmults) {num_K_mults = nmults;}
     float getAgeMin_for_K () const {return age_min_for_K;}
     void setAgeMin_for_K (float mink) {age_min_for_K = mink;}
+    float getAgeMid_for_K () const {return age_mid_for_K;}
+    void setAgeMid_for_K (float midk) {age_mid_for_K = midk;}
     float getAgeMax_for_K () const {return age_max_for_K;}
     void setAgeMax_for_K (float maxk) {age_max_for_K = maxk;}
     float getExpDecay ();
@@ -191,7 +195,9 @@ private:
     int model;
     float age_for_l1;
     float age_for_l2;
+    int num_K_mults;
     float age_min_for_K;
+    float age_mid_for_K;
     float age_max_for_K;
     float age_exp_decay;
     float sd_add;

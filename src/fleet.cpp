@@ -356,12 +356,18 @@ void Fleet::reset()
     dar1->reset();
 
     // Variance
+    for (int i = 0; i <= 7; i++)
+    {
+        inputValueVar[i] = false;
+        inputVarianceValue[i] = 0;
+    }
     add_to_survey_CV = 0;
     add_to_discard_stddev = 0;
     add_to_bodywt_CV = 0;
     mult_by_lencomp_N = 1;
     mult_by_agecomp_N = 1;
     mult_by_saa_N = 1;
+    mult_by_gen_size = 1;
 
     resetLambdas();
 }

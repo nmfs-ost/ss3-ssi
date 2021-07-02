@@ -11,6 +11,8 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     QWidget(parent), ui(new Ui::population_widget)
 {
     ui->setupUi(this);
+    ui->label_recr_unused->setVisible(false);
+    ui->spinBox_recr_unused->setVisible(false);
     ui->radioButton_global->setChecked(true);
     model_data = m_data;
     pop = model_data->pPopulation;

@@ -367,7 +367,7 @@ Season *ss_model::getSeason (int index)
 
 int ss_model::getSeasonByMonth(float month)
 {
-    int mon = static_cast<int>(month);
+    int mon = static_cast<int>(month + .5);
     int index, months = 0;
     for (index = 0; index < seasons.count(); index++)
     {
