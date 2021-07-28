@@ -39,12 +39,34 @@ void ssModel::setDirectory(QString dir)
     directory = QDir(dir);
 }
 
-void ssModel::readModel()
+bool ssModel::readModel()
 {
-
+    bool okay = true;
+    QString dir = directory.path();
+    strtFile = QString("%1/starter.ss").arg(dir);
+    okay = starter->readFile(strtFile);
+    if (okay) {
+    //    if (starter->getReadWtAtAge()) {
+            wtaaFile = QString("%1/wtatage.ss").arg(dir);
+    //    }
+    //    else {
+    //        wtaaFile = QString();
+    //    }
+        dataFile = QString("%1/%2").arg(dir, starter->getDataFile());
+        okay = data->readFile(dataFile);
+    }
+    if (okay) {
+        ctrlFile = QString("%1/%2").arg(dir, starter->getControlFile());
+        okay = control->readFile(ctrlFile);
+    }
+    if (okay) {
+        fcstFile = QString("%1/forecast.ss").arg(dir);
+        okay = forecast->readFile(fcstFile);
+    }
+    return okay;
 }
 
-void ssModel::saveModel()
+bool ssModel::saveModel()
 {
 
 }

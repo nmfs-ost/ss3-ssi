@@ -99,6 +99,18 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     ageSelexTimeVaryParamsView = new tableview();
     ageSelexTimeVaryParamsView->setParent(this);
     ui->verticalLayout_selex_age_timevary_parms->addWidget(ageSelexTimeVaryParamsView);
+    ageSelexRetainParamsView = new tableview();
+    ageSelexRetainParamsView->setParent(this);
+    ui->verticalLayout_sel_age_retain_params->addWidget(ageSelexRetainParamsView);
+    ageSelexRetainTVParamsView = new tableview();
+    ageSelexRetainTVParamsView->setParent(this);
+    ui->verticalLayout_selex_age_retain_tv_parms->addWidget(ageSelexRetainTVParamsView);
+    ageSelexDiscardParamsView = new tableview();
+    ageSelexDiscardParamsView->setParent(this);
+    ui->verticalLayout_sel_age_discard_params->addWidget(ageSelexDiscardParamsView);
+    ageSelexDiscardTVParamsView = new tableview();
+    ageSelexDiscardTVParamsView->setParent(this);
+    ui->verticalLayout_selex_age_discard_tv_parms->addWidget(ageSelexDiscardTVParamsView);
     ageSelexMaleParamsView = new tableview();
     ageSelexMaleParamsView->setParent(this);
     ui->verticalLayout_sel_age_male_params->addWidget(ageSelexMaleParamsView);
@@ -135,8 +147,6 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->comboBox_fleet_name, SIGNAL(currentIndexChanged(int)), SLOT(set_current_fleet(int)));
     connect (ui->pushButton_edit_name, SIGNAL(clicked()), SLOT(edit_name()));
     connect (ui->checkBox_active, SIGNAL(toggled(bool)), SLOT(setActive(bool)));
-//    connect (ui->pushButton_next, SIGNAL(clicked()), SLOT(nextFleet()));
-//    connect (ui->pushButton_prev, SIGNAL(clicked()), SLOT(prevFleet()));
     connect (ui->comboBox_type, SIGNAL(currentIndexChanged(int)), SLOT(set_fleet_type(int)));
     connect (ui->pushButton_delete, SIGNAL(clicked()), SLOT(delete_current_fleet()));
     connect (ui->pushButton_new, SIGNAL(clicked()), SLOT(create_new_fleet()));
@@ -148,11 +158,9 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_byc_lastYear, SIGNAL(editingFinished()), SLOT(changeBycatchLastYr()));
     connect (ui->spinBox_q_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setQTimeVaryReadParams(int)));
 
-    connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setSelTimeVaryReadParams(int)));// model_data->getFleet(0), SLOT(setSelTimeVaryReadParams(int)));
-//    connect (ui->spinBox_ar1, SIGNAL(valueChanged(int)), SLOT(setAr1SelexSmoother(int)));
+    connect (ui->spinBox_sel_time_vary_read, SIGNAL(valueChanged(int)), SLOT(setSelTimeVaryReadParams(int)));
 //    connect (ui->pushButton_selex_size_pattern_info, SIGNAL(clicked()), selexSizeInfoDialog, SLOT(show()));
     connect (ui->comboBox_selex_size_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexSizePattern(int)));
-//    connect (ui->comboBox_selex_size_pattern, SIGNAL(currentTextChanged(QString)), SLOT(changeSelexSizePattern(QString)));
     connect (ui->spinBox_selex_size_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeDiscard(int)));
     connect (ui->spinBox_selex_size_male, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeMale(int)));
     connect (ui->spinBox_selex_size_special, SIGNAL(valueChanged(int)), SLOT(changeSelexSizeSpecial(int)));
@@ -162,6 +170,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
 
 //    connect (ui->pushButton_selex_age_pattern_info, SIGNAL(clicked()), selexAgeInfoDialog, SLOT(show()));
     connect (ui->comboBox_selex_age_pattern, SIGNAL(currentIndexChanged(int)), SLOT(changeSelexAgePattern(int)));
+    connect (ui->spinBox_selex_age_discard, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeDiscard(int)));
     connect (ui->spinBox_selex_age_male, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeMale(int)));
     connect (ui->spinBox_selex_age_special, SIGNAL(valueChanged(int)), SLOT(changeSelexAgeSpecial(int)));
     connect (ui->pushButton_selex_age_curve, SIGNAL(clicked(bool)), SLOT(showSelexAgeCurve(bool)));
@@ -245,10 +254,33 @@ void fleet_widget::disconnectFleet()
              SIGNAL(dataChanged()), this, SLOT(selexAgeTVParamsChanged()));
     disconnect (ui->spinBox_selex_age_num_params, SIGNAL(valueChanged(int)),
              current_fleet->getAgeSelectivity(), SLOT(setNumParameters(int)));
+    disconnect (current_fleet->getAgeSelectivity()->getDiscardParameterTable(),
+             SIGNAL(dataChanged()), this, SLOT(selexAgeDiscParamsChanged()));
+    disconnect (current_fleet->getAgeSelectivity()->getDiscardTimeVaryParameterModel(),
+                SIGNAL(dataChanged()), this, SLOT(selexAgeDiscTVParamsChanged()));
+    disconnect (current_fleet->getAgeSelectivity()->getRetainParameterTable(),
+                SIGNAL(dataChanged()), this, SLOT(selexAgeDiscParamsChanged()));
+    disconnect (current_fleet->getAgeSelectivity()->getRetainTimeVaryParameterModel(),
+                SIGNAL(dataChanged()), this, SLOT(selexAgeDiscTVParamsChanged()));
     disconnect (current_fleet->getAgeSelectivity()->getMaleParameterTable(),
              SIGNAL(dataChanged()), this, SLOT(selexAgeMaleParamsChanged()));
     disconnect (current_fleet->getAgeSelectivity()->getMaleTimeVaryParameterModel(),
                 SIGNAL(dataChanged()), this, SLOT(selexAgeMaleTVParamsChanged()));
+
+    disconnect (ui->checkBox_addto_survey_cv, SIGNAL(toggled(bool)), this, SLOT(changeDoAddToSurveyCV(bool)));
+    disconnect (ui->doubleSpinBox_addtosurvey, SIGNAL(valueChanged(double)), this, SLOT(changeAddToSurveyCV(double)));
+    disconnect (ui->checkBox_addto_discard_std, SIGNAL(toggled(bool)), this, SLOT(changeDoAddToDiscardSD(bool)));
+    disconnect (ui->doubleSpinBox_addtodiscard, SIGNAL(valueChanged(double)), this, SLOT(changeAddToDiscardSD(double)));
+    disconnect (ui->checkBox_addto_bodywt_cv, SIGNAL(toggled(bool)), this, SLOT(changeDoAddToBdyWtCV(bool)));
+    disconnect (ui->doubleSpinBox_addtobodywt, SIGNAL(valueChanged(double)), this, SLOT(changeAddToBdyWtCV(double)));
+    disconnect (ui->checkBox_multby_lencompN, SIGNAL(toggled(bool)), this, SLOT(changeDoMultByLenCmpN(bool)));
+    disconnect (ui->doubleSpinBox_multbylencmp,  SIGNAL(valueChanged(double)), this, SLOT(changeMultByLenCmpN(double)));
+    disconnect (ui->checkBox_multby_agecompN, SIGNAL(toggled(bool)), this, SLOT(changeDoMultByAgeCmpN(bool)));
+    disconnect (ui->doubleSpinBox_multbyagecmp,  SIGNAL(valueChanged(double)), this, SLOT(changeMultByAgeCmpN(double)));
+    disconnect (ui->checkBox_multby_saaN, SIGNAL(toggled(bool)), this, SLOT(changeDoMultBySaaN(bool)));
+    disconnect (ui->doubleSpinBox_multbysaa,  SIGNAL(valueChanged(double)), this, SLOT(changeMultBySaaN(double)));
+    disconnect (ui->checkBox_multby_gen_sizecomp, SIGNAL(toggled(bool)), this, SLOT(changeDoMultByGenSizeCmp(bool)));
+    disconnect (ui->doubleSpinBox_multbygensize,  SIGNAL(valueChanged(double)), this, SLOT(changeMultByGenSizeCmp(double)));
     }
 }
 
@@ -354,15 +386,36 @@ void fleet_widget::connectFleet()
              SIGNAL(dataChanged()), this, SLOT(selexAgeTVParamsChanged()));
     connect (ui->spinBox_selex_age_num_params, SIGNAL(valueChanged(int)),
              current_fleet->getAgeSelectivity(), SLOT(setNumParameters(int)));
+    connect (current_fleet->getAgeSelectivity()->getDiscardParameterTable(),
+             SIGNAL(dataChanged()), this, SLOT(selexAgeDiscParamsChanged()));
+    connect (current_fleet->getAgeSelectivity()->getDiscardTimeVaryParameterModel(),
+                SIGNAL(dataChanged()), this, SLOT(selexAgeDiscTVParamsChanged()));
+    connect (current_fleet->getAgeSelectivity()->getRetainParameterTable(),
+                SIGNAL(dataChanged()), this, SLOT(selexAgeDiscParamsChanged()));
+    connect (current_fleet->getAgeSelectivity()->getRetainTimeVaryParameterModel(),
+                SIGNAL(dataChanged()), this, SLOT(selexAgeDiscTVParamsChanged()));
     connect (current_fleet->getAgeSelectivity()->getMaleParameterTable(),
              SIGNAL(dataChanged()), this, SLOT(selexAgeMaleParamsChanged()));
     connect (current_fleet->getAgeSelectivity()->getMaleTimeVaryParameterModel(),
                 SIGNAL(dataChanged()), this, SLOT(selexAgeMaleTVParamsChanged()));
 
+    connect (ui->checkBox_addto_survey_cv, SIGNAL(toggled(bool)), SLOT(changeDoAddToSurveyCV(bool)));
+    connect (ui->doubleSpinBox_addtosurvey, SIGNAL(valueChanged(double)), SLOT(changeAddToSurveyCV(double)));
+    connect (ui->checkBox_addto_discard_std, SIGNAL(toggled(bool)), SLOT(changeDoAddToDiscardSD(bool)));
+    connect (ui->doubleSpinBox_addtodiscard, SIGNAL(valueChanged(double)), SLOT(changeAddToDiscardSD(double)));
+    connect (ui->checkBox_addto_bodywt_cv, SIGNAL(toggled(bool)), SLOT(changeDoAddToBdyWtCV(bool)));
+    connect (ui->doubleSpinBox_addtobodywt, SIGNAL(valueChanged(double)), SLOT(changeAddToBdyWtCV(double)));
+    connect (ui->checkBox_multby_lencompN, SIGNAL(toggled(bool)), SLOT(changeDoMultByLenCmpN(bool)));
+    connect (ui->doubleSpinBox_multbylencmp,  SIGNAL(valueChanged(double)), SLOT(changeMultByLenCmpN(double)));
+    connect (ui->checkBox_multby_agecompN, SIGNAL(toggled(bool)), SLOT(changeDoMultByAgeCmpN(bool)));
+    connect (ui->doubleSpinBox_multbyagecmp,  SIGNAL(valueChanged(double)), SLOT(changeMultByAgeCmpN(double)));
+    connect (ui->checkBox_multby_saaN, SIGNAL(toggled(bool)), SLOT(changeDoMultBySaaN(bool)));
+    connect (ui->doubleSpinBox_multbysaa,  SIGNAL(valueChanged(double)), SLOT(changeMultBySaaN(double)));
+    connect (ui->checkBox_multby_gen_sizecomp, SIGNAL(toggled(bool)), SLOT(changeDoMultByGenSizeCmp(bool)));
+    connect (ui->doubleSpinBox_multbygensize,  SIGNAL(valueChanged(double)), SLOT(changeMultByGenSizeCmp(double)));
+
 //    connect (current_fleet->getLambdaModel(), SIGNAL(dataChanged()),
 //             SLOT(lambdaParamsChanged()));
-
-    selexSizeTVParamsChanged();
 }
 
 fleet_widget::~fleet_widget()
@@ -449,12 +502,20 @@ void fleet_widget::refresh()
     ui->spinBox_sel_time_vary_read->setValue(model_data->getFleet(0)->getSelTimeVaryReadParams());
     setSelTimeVaryReadParams(model_data->getFleet(0)->getSelTimeVaryReadParams());
 
+    ui->doubleSpinBox_addtosurvey->setEnabled(false);
+    ui->doubleSpinBox_addtodiscard->setEnabled(false);
+    ui->doubleSpinBox_addtobodywt->setEnabled(false);
+    ui->doubleSpinBox_multbylencmp->setEnabled(false);
+    ui->doubleSpinBox_multbyagecmp->setEnabled(false);
+    ui->doubleSpinBox_multbysaa->setEnabled(false);
+    ui->doubleSpinBox_multbygensize->setEnabled(false);
+
     if (curr >= totalFleets)
         curr = totalFleets - 1;
     if (curr < 0)
         curr = 0;
     ui->comboBox_fleet_name->setCurrentIndex(curr);
-//    set_current_fleet(curr);
+    set_current_fleet(curr);
 
 /*    ui->tabWidget_fleet->setCurrentIndex(0);
     ui->tabWidget_obs->setCurrentIndex(0);
@@ -613,11 +674,14 @@ void fleet_widget::set_current_fleet(int index)
         ageSelexParamsView->setModel(current_fleet->getAgeSelectivity()->getParameterModel());
         ageSelexTimeVaryParamsView->setModel(current_fleet->getAgeSelectivity()->getTimeVaryParameterModel());
         selexAgeParamsChanged();
+        ageSelexRetainParamsView->setModel(current_fleet->getAgeSelectivity()->getRetainParameterModel()->getParamTable());
+        ageSelexRetainTVParamsView->setModel(current_fleet->getAgeSelectivity()->getRetainTimeVaryParameterModel());
+        ageSelexDiscardParamsView->setModel(current_fleet->getAgeSelectivity()->getDiscardParameterModel()->getParamTable());
+        ageSelexDiscardTVParamsView->setModel(current_fleet->getAgeSelectivity()->getDiscardTimeVaryParameterModel());
+        selexAgeDiscParamsChanged();
         ageSelexMaleParamsView->setModel(current_fleet->getAgeSelectivity()->getMaleParameterModel()->getParamTable());
         ageSelexMaleTVParamsView->setModel(current_fleet->getAgeSelectivity()->getMaleTimeVaryParameterModel());
         selexAgeMaleParamsChanged();
-
-//        ui->spinBox_ar1->setValue(current_fleet->getAr1SelSmoother());
 
         setAgeLengthBins();
         selexSizeEqDialog->setFleet(current_fleet);
@@ -626,9 +690,29 @@ void fleet_widget::set_current_fleet(int index)
         selexAgeEqDialog->setSelex(current_fleet->getAgeSelectivity());
 
         set2DAR1();
+        ui->doubleSpinBox_addtosurvey->setValue(current_fleet->getInputVarianceValue(1));
+        ui->doubleSpinBox_addtosurvey->setEnabled(current_fleet->getDoInputVariance(1));
+        ui->checkBox_addto_survey_cv->setChecked(current_fleet->getDoInputVariance(1));
+        ui->doubleSpinBox_addtodiscard->setValue(current_fleet->getInputVarianceValue(2));
+        ui->doubleSpinBox_addtodiscard->setEnabled(current_fleet->getDoInputVariance(2));
+        ui->checkBox_addto_discard_std->setChecked(current_fleet->getDoInputVariance(2));
+        ui->doubleSpinBox_addtobodywt->setValue(current_fleet->getInputVarianceValue(3));
+        ui->doubleSpinBox_addtobodywt->setEnabled(current_fleet->getDoInputVariance(3));
+        ui->checkBox_addto_bodywt_cv->setChecked(current_fleet->getDoInputVariance(3));
+        ui->doubleSpinBox_multbylencmp->setValue(current_fleet->getInputVarianceValue(4));
+        ui->doubleSpinBox_multbylencmp->setEnabled(current_fleet->getDoInputVariance(4));
+        ui->checkBox_multby_lencompN->setChecked(current_fleet->getDoInputVariance(4));
+        ui->doubleSpinBox_multbyagecmp->setValue(current_fleet->getInputVarianceValue(5));
+        ui->doubleSpinBox_multbyagecmp->setEnabled(current_fleet->getDoInputVariance(5));
+        ui->checkBox_multby_agecompN->setChecked(current_fleet->getDoInputVariance(5));
+        ui->doubleSpinBox_multbysaa->setValue(current_fleet->getInputVarianceValue(6));
+        ui->doubleSpinBox_multbysaa->setEnabled(current_fleet->getDoInputVariance(6));
+        ui->checkBox_multby_saaN->setChecked(current_fleet->getDoInputVariance(6));
+        ui->doubleSpinBox_multbygensize->setValue(current_fleet->getInputVarianceValue(7));
+        ui->doubleSpinBox_multbygensize->setEnabled(current_fleet->getDoInputVariance(7));
+        ui->checkBox_multby_gen_sizecomp->setChecked(current_fleet->getDoInputVariance(7));
 
         connectFleet ();
-
     }
     ui->tabWidget_fleet->setCurrentIndex(tabfleet);
     ui->tabWidget_comp->setCurrentIndex(tabcomp);
@@ -863,8 +947,8 @@ void fleet_widget::qSetupTVParamsChanged()
     ht = current_fleet->Q()->getNumTVParams();
     qTvParamsView->setHeight(ht);
     qTvParamsView->resizeColumnsToContents();
-    qTvParamsView->setVisible(ht);
-    ui->label_q_tv_parameters->setVisible(ht);
+    qTvParamsView->setVisible(ht > 0);
+    ui->label_q_tv_parameters->setVisible(ht > 0);
 }
 
 void fleet_widget::setQTimeVaryReadParams(int flag)
@@ -1157,7 +1241,6 @@ void fleet_widget::selexSizeDataChanged()
     int mal = current_fleet->getSizeSelectivity()->getMale();
     int dis = current_fleet->getSizeSelectivity()->getDiscard();
     setSelexSizePattern(pat);
-//    ui->spinBox_selex_size_pattern->setValue(pat);
     ui->spinBox_selex_size_special->setValue(spc);
     ui->spinBox_selex_size_male->setValue(mal);
     ui->spinBox_selex_size_discard->setValue(dis);
@@ -1173,38 +1256,42 @@ void fleet_widget::changeSelexSizeDiscard(int disc)
 void fleet_widget::selexSizeDiscParamsChanged()
 {
     int ht = current_fleet->getSizeSelectivity()->getRetainParameterModel()->getNumParams();
+    bool vis = ht > 0;
     sizeSelexRetainParamsView->setHeight(ht);
     sizeSelexRetainParamsView->resizeColumnsToContents();
-    sizeSelexRetainParamsView->setVisible(ht);
-    ui->label_sel_size_retain_params->setVisible(ht);
+    sizeSelexRetainParamsView->setVisible(vis);
+    ui->label_sel_size_retain_params->setVisible(vis);
     ui->spinBox_selex_size_numRetnParams->setValue(ht);
-    ui->spinBox_selex_size_numRetnParams->setVisible(ht);
+    ui->spinBox_selex_size_numRetnParams->setVisible(vis);
     ht = current_fleet->getSizeSelectivity()->getDiscardParameterModel()->getNumParams();
+    vis = ht > 0;
     sizeSelexDiscardParamsView->setHeight(ht);
     sizeSelexDiscardParamsView->resizeColumnsToContents();
-    sizeSelexDiscardParamsView->setVisible(ht);
-    ui->label_sel_size_discard_params->setVisible(ht);
+    sizeSelexDiscardParamsView->setVisible(vis);
+    ui->label_sel_size_discard_params->setVisible(vis);
     ui->spinBox_selex_size_numDiscParams->setValue(ht);
-    ui->spinBox_selex_size_numDiscParams->setVisible(ht);
+    ui->spinBox_selex_size_numDiscParams->setVisible(vis);
     selexSizeDiscTVParamsChanged();
 }
 
 void fleet_widget::selexSizeDiscTVParamsChanged()
 {
     int ht = current_fleet->getSizeSelectivity()->getNumRetainTimeVaryParameters();
+    bool vis = ht > 0;
     sizeSelexRetainTVParamsView->setHeight(ht);
     sizeSelexRetainTVParamsView->resizeColumnsToContents();
-    sizeSelexRetainTVParamsView->setVisible(ht);
-    ui->label_sel_size_retain_tv_params->setVisible(ht);
+    sizeSelexRetainTVParamsView->setVisible(vis);
+    ui->label_sel_size_retain_tv_params->setVisible(vis);
     ui->spinBox_selex_size_numRetnTVParams->setValue(ht);
-    ui->spinBox_selex_size_numRetnTVParams->setVisible(ht);
+    ui->spinBox_selex_size_numRetnTVParams->setVisible(vis);
     ht = current_fleet->getSizeSelectivity()->getNumDiscardTimeVaryParameters();
+    vis = ht > 0;
     sizeSelexDiscardTVParamsView->setHeight(ht);
     sizeSelexDiscardTVParamsView->resizeColumnsToContents();
-    sizeSelexDiscardTVParamsView->setVisible(ht);
-    ui->label_sel_size_discard_tv_params->setVisible(ht);
+    sizeSelexDiscardTVParamsView->setVisible(vis);
+    ui->label_sel_size_discard_tv_params->setVisible(vis);
     ui->spinBox_selex_size_numDiscTVParams->setValue(ht);
-    ui->spinBox_selex_size_numDiscTVParams->setVisible(ht);
+    ui->spinBox_selex_size_numDiscTVParams->setVisible(vis);
 }
 
 void fleet_widget::changeSelexSizeMale(int mal)
@@ -1216,24 +1303,26 @@ void fleet_widget::changeSelexSizeMale(int mal)
 void fleet_widget::selexSizeMaleParamsChanged()
 {
     int ht = current_fleet->getSizeSelectivity()->getMaleParameterModel()->getNumParams();
+    bool vis = ht > 0;
     sizeSelexMaleParamsView->setHeight(ht);
     sizeSelexMaleParamsView->resizeColumnsToContents();
-    sizeSelexMaleParamsView->setVisible(ht);
-    ui->label_sel_size_male_params->setVisible(ht);
+    sizeSelexMaleParamsView->setVisible(vis);
+    ui->label_sel_size_male_params->setVisible(vis);
     ui->spinBox_selex_size_numMaleParams->setValue(ht);
-    ui->spinBox_selex_size_numMaleParams->setVisible(ht);
+    ui->spinBox_selex_size_numMaleParams->setVisible(vis);
     selexSizeMaleTVParamsChanged();
 }
 
 void fleet_widget::selexSizeMaleTVParamsChanged()
 {
     int ht = current_fleet->getSizeSelectivity()->getNumMaleTimeVaryParameters();
+    bool vis = ht > 0;
     sizeSelexMaleTVParamsView->setHeight(ht);
     sizeSelexMaleTVParamsView->resizeColumnsToContents();
-    sizeSelexMaleTVParamsView->setVisible(ht);
-    ui->label_sel_size_male_tv_params->setVisible(ht);
+    sizeSelexMaleTVParamsView->setVisible(vis);
+    ui->label_sel_size_male_tv_params->setVisible(vis);
     ui->spinBox_selex_size_numMaleTVParams->setValue(ht);
-    ui->spinBox_selex_size_numMaleTVParams->setVisible(ht);
+    ui->spinBox_selex_size_numMaleTVParams->setVisible(vis);
 }
 
 
@@ -1248,11 +1337,13 @@ void fleet_widget::selexSizeParamsChanged()
 {
     int ht;
     ht = current_fleet->getSizeSelectivity()->getNumParameters();
+    bool vis = ht > 0;
     sizeSelexParamsView->setHeight(ht);
     sizeSelexParamsView->resizeColumnsToContents();
-    sizeSelexParamsView->setVisible(ht);
-    ui->label_sel_size_pattern_params->setVisible(ht);
-    ui->spinBox_selex_size_num_params->setVisible(ht);
+    sizeSelexParamsView->setVisible(vis);
+    ui->label_sel_size_pattern_params->setVisible(vis);
+    ui->spinBox_selex_size_num_params->setValue(ht);
+    ui->spinBox_selex_size_num_params->setVisible(vis);
     selexSizeTVParamsChanged();
 }
 
@@ -1260,12 +1351,13 @@ void fleet_widget::selexSizeTVParamsChanged()
 {
     int ht;
     ht = current_fleet->getSizeSelectivity()->getNumTimeVaryParameters();
+    bool vis = ht > 0;
     sizeSelexTimeVaryParamsView->setHeight(ht);
     sizeSelexTimeVaryParamsView->resizeColumnsToContents();
-    sizeSelexTimeVaryParamsView->setVisible(ht);
-    ui->label_sel_size_timevary_parms->setVisible(ht);
+    sizeSelexTimeVaryParamsView->setVisible(vis);
+    ui->label_sel_size_timevary_parms->setVisible(vis);
     ui->spinBox_selex_size_numTVParams->setValue(ht);
-    ui->spinBox_selex_size_numTVParams->setVisible(ht);
+    ui->spinBox_selex_size_numTVParams->setVisible(vis);
 }
 
 void fleet_widget::showSelexSizeCurve(bool flag)
@@ -1304,20 +1396,25 @@ void fleet_widget::selexSizeCurveClosed()
 void fleet_widget::selexAgeParamsChanged()
 {
     int ht = current_fleet->getAgeSelectivity()->getNumParameters();
+    bool vis = ht > 0;
     ageSelexParamsView->setHeight (ht);
     ageSelexParamsView->resizeColumnsToContents();
-    ageSelexParamsView->setVisible(ht>0);
+    ageSelexParamsView->setVisible(vis);
+    ui->label_selex_age_params->setVisible(vis);
+    ui->spinBox_selex_age_num_params->setValue(ht);
+    ui->spinBox_selex_age_num_params->setVisible(vis);
     selexAgeTVParamsChanged();
 }
 
 void fleet_widget::selexAgeTVParamsChanged()
 {
     int ht = current_fleet->getAgeSelectivity()->getNumTimeVaryParameters();
+    bool vis = ht > 0;
     ageSelexTimeVaryParamsView->setHeight (ht);
     ageSelexTimeVaryParamsView->resizeColumnsToContents();
-    ageSelexTimeVaryParamsView->setVisible(ht);
-    ui->label_selex_age_timevary_parms->setVisible(ht);
-    ui->spinBox_selex_age_numTVParams->setVisible(ht);
+    ageSelexTimeVaryParamsView->setVisible(vis);
+    ui->label_selex_age_timevary_parms->setVisible(vis);
+    ui->spinBox_selex_age_numTVParams->setVisible(vis);
     ui->spinBox_selex_age_numTVParams->setValue(ht);
 }
 
@@ -1493,6 +1590,53 @@ void fleet_widget::selexAgeCurveClosed()
     ui->pushButton_selex_age_curve->setText("Show Curve");
 }
 
+void fleet_widget::changeSelexAgeDiscard(int disc)
+{
+    current_fleet->getAgeSelectivity()->setDiscard(disc);
+    selexAgeDiscParamsChanged();
+}
+
+void fleet_widget::selexAgeDiscParamsChanged()
+{
+    int ht = current_fleet->getAgeSelectivity()->getRetainParameterModel()->getNumParams();
+    bool vis = ht > 0;
+    ageSelexRetainParamsView->setHeight(ht);
+    ageSelexRetainParamsView->resizeColumnsToContents();
+    ageSelexRetainParamsView->setVisible(vis);
+    ui->label_selex_age_retain_params->setVisible(vis);
+    ui->spinBox_selex_age_numRetnParams->setValue(ht);
+    ui->spinBox_selex_age_numRetnParams->setVisible(vis);
+    ht = current_fleet->getAgeSelectivity()->getDiscardParameterModel()->getNumParams();
+    vis = ht > 0;
+    ageSelexDiscardParamsView->setHeight(ht);
+    ageSelexDiscardParamsView->resizeColumnsToContents();
+    ageSelexDiscardParamsView->setVisible(vis);
+    ui->label_selex_age_discard_params->setVisible(vis);
+    ui->spinBox_selex_age_numDiscParams->setValue(ht);
+    ui->spinBox_selex_age_numDiscParams->setVisible(vis);
+    selexAgeDiscTVParamsChanged();
+}
+
+void fleet_widget::selexAgeDiscTVParamsChanged()
+{
+    int ht = current_fleet->getSizeSelectivity()->getNumRetainTimeVaryParameters();
+    bool vis = ht > 0;
+    ageSelexRetainTVParamsView->setHeight(ht);
+    ageSelexRetainTVParamsView->resizeColumnsToContents();
+    ageSelexRetainTVParamsView->setVisible(vis);
+    ui->label_selex_age_retain_tv_params->setVisible(vis);
+    ui->spinBox_selex_age_numRetnTVParams->setValue(ht);
+    ui->spinBox_selex_age_numRetnTVParams->setVisible(vis);
+    ht = current_fleet->getSizeSelectivity()->getNumDiscardTimeVaryParameters();
+    vis = ht > 0;
+    ageSelexDiscardTVParamsView->setHeight(ht);
+    ageSelexDiscardTVParamsView->resizeColumnsToContents();
+    ageSelexDiscardTVParamsView->setVisible(vis);
+    ui->label_selex_age_discard_tv_params->setVisible(vis);
+    ui->spinBox_selex_age_numDiscTVParams->setValue(ht);
+    ui->spinBox_selex_age_numDiscTVParams->setVisible(vis);
+}
+
 void fleet_widget::changeSelexAgeMale(int mal)
 {
     current_fleet->getAgeSelectivity()->setMale(mal);
@@ -1502,11 +1646,12 @@ void fleet_widget::changeSelexAgeMale(int mal)
 void fleet_widget::selexAgeMaleParamsChanged()
 {
     int ht = current_fleet->getAgeSelectivity()->getMaleParameterModel()->getNumParams();
+    bool vis = ht > 0;
     ageSelexMaleParamsView->setHeight(ht);
     ageSelexMaleParamsView->resizeColumnsToContents();
-    ageSelexMaleParamsView->setVisible(ht);
-    ui->label_selex_age_male_params->setVisible(ht);
-    ui->spinBox_selex_age_numMaleParams->setVisible(ht);
+    ageSelexMaleParamsView->setVisible(vis);
+    ui->label_selex_age_male_params->setVisible(vis);
+    ui->spinBox_selex_age_numMaleParams->setVisible(vis);
     ui->spinBox_selex_age_numMaleParams->setValue(ht);
     selexAgeMaleTVParamsChanged();
 }
@@ -1514,11 +1659,12 @@ void fleet_widget::selexAgeMaleParamsChanged()
 void fleet_widget::selexAgeMaleTVParamsChanged()
 {
     int ht = current_fleet->getAgeSelectivity()->getMaleTimeVaryParameterModel()->rowCount();
+    bool vis = ht > 0;
     ageSelexMaleTVParamsView->setHeight(ht);
     ageSelexMaleTVParamsView->resizeColumnsToContents();
-    ageSelexMaleTVParamsView->setVisible(ht);
-    ui->label_selex_age_male_tv_params->setVisible(ht);
-    ui->spinBox_selex_age_numMaleTVParams->setVisible(ht);
+    ageSelexMaleTVParamsView->setVisible(vis);
+    ui->label_selex_age_male_tv_params->setVisible(vis);
+    ui->spinBox_selex_age_numMaleTVParams->setVisible(vis);
     ui->spinBox_selex_age_numMaleTVParams->setValue(ht);
 }
 
@@ -1560,10 +1706,11 @@ void fleet_widget::selexAgeDataChanged()
     int pat = current_fleet->getAgeSelectivity()->getPattern();
     int spc = current_fleet->getAgeSelectivity()->getSpecial();
     int mal = current_fleet->getAgeSelectivity()->getMale();
+    int dis = current_fleet->getAgeSelectivity()->getDiscard();
     setSelexAgePattern(pat);
-//    ui->spinBox_selex_age_pattern->setValue(pat);
     ui->spinBox_selex_age_special->setValue(spc);
     ui->spinBox_selex_age_male->setValue(mal);
+    ui->spinBox_selex_age_discard->setValue(dis);
     selexAgeEqDialog->restoreAll();
 }
 
@@ -1610,6 +1757,85 @@ void fleet_widget::set2DAR1 ()
     DAR1ParamView->setModel(current_fleet->get2DAR1()->getParamTable());
     DAR1ParamView->resizeColumnsToContents();
 }
+
+void fleet_widget::changeDoAddToSurveyCV(bool set)
+{
+    ui->doubleSpinBox_addtosurvey->setEnabled(set);
+    current_fleet->setDoInputVariance(1, set);
+}
+
+void fleet_widget::changeAddToSurveyCV(double value)
+{
+    current_fleet->setInputVarianceValue(1, value);
+}
+
+void fleet_widget::changeDoAddToDiscardSD(bool set)
+{
+    ui->doubleSpinBox_addtodiscard->setEnabled(set);
+    current_fleet->setDoInputVariance(2, set);
+}
+
+void fleet_widget::changeAddToDiscardSD(double value)
+{
+    current_fleet->setInputVarianceValue(2, value);
+}
+
+void fleet_widget::changeDoAddToBdyWtCV(bool set)
+{
+    ui->doubleSpinBox_addtobodywt->setEnabled(set);
+    current_fleet->setDoInputVariance(3, set);
+}
+
+void fleet_widget::changeAddToBdyWtCV(double value)
+{
+    current_fleet->setInputVarianceValue(3, value);
+}
+
+void fleet_widget::changeDoMultByLenCmpN(bool set)
+{
+    ui->doubleSpinBox_multbylencmp->setEnabled(set);
+    current_fleet->setDoInputVariance(4, set);
+}
+
+void fleet_widget::changeMultByLenCmpN(double value)
+{
+    current_fleet->setInputVarianceValue(4, value);
+}
+
+void fleet_widget::changeDoMultByAgeCmpN(bool set)
+{
+    ui->doubleSpinBox_multbyagecmp->setEnabled(set);
+    current_fleet->setDoInputVariance(5, set);
+}
+
+void fleet_widget::changeMultByAgeCmpN(double value)
+{
+    current_fleet->setInputVarianceValue(5, value);
+}
+
+void fleet_widget::changeDoMultBySaaN(bool set)
+{
+    ui->doubleSpinBox_multbysaa->setEnabled(set);
+    current_fleet->setDoInputVariance(6, set);
+}
+
+void fleet_widget::changeMultBySaaN(double value)
+{
+    current_fleet->setInputVarianceValue(6, value);
+}
+
+void fleet_widget::changeDoMultByGenSizeCmp(bool set)
+{
+    ui->doubleSpinBox_multbygensize->setEnabled(set);
+    current_fleet->setDoInputVariance(7, set);
+}
+
+void fleet_widget::changeMultByGenSizeCmp(double value)
+{
+    current_fleet->setInputVarianceValue(7, value);
+}
+
+
 
 void fleet_widget::setGenMethodTotal(int num)
 {

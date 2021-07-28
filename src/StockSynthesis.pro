@@ -25,7 +25,6 @@ SOURCES += main.cpp\
     control_widget.cpp \
     input_file.cpp \
     model.cpp \
-    area.cpp \
     file_info_widget.cpp \
     file_info_dialog.cpp \
     file_widget.cpp \
@@ -129,7 +128,6 @@ HEADERS  += mainwindow.h \
     metadata.h \
     input_file.h \
     model.h \
-    area.h \
     file_info_widget.h \
     file_info_dialog.h \
     file_widget.h \

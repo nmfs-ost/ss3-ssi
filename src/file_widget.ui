@@ -48,7 +48,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>:/i/icons/papers.png</pixmap>
+        <pixmap resource="stock_synth.qrc">:/i/icons/papers.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -60,451 +60,481 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_input">
       <attribute name="title">
        <string>Input File Settings</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="15" column="0">
-        <spacer name="verticalSpacer_read_set">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="0" column="0" colspan="3">
+        <widget class="QScrollArea" name="scrollArea_input">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-        </spacer>
-       </item>
-       <item row="10" column="0">
-        <widget class="QCheckBox" name="checkBox_par_file">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Read inital values from SS.PAR file</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QPushButton" name="pushButton_viewParFile">
-         <property name="text">
-          <string>View SS.PAR </string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0" colspan="2">
-        <widget class="QCheckBox" name="checkBox_pro_file">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Use ProfileValues.SS for batch processing - RunNumber.SS will be reset.</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="2">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="12" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout_run_num">
-         <item>
-          <widget class="QLabel" name="label_run_num">
-           <property name="text">
-            <string>Run number  </string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_run_num_val">
-           <property name="frameShape">
-            <enum>QFrame::Panel</enum>
-           </property>
-           <property name="text">
-            <string> 0 </string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_run_num">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Minimum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>80</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_runnum_file">
-           <property name="text">
-            <string>Reset Run number to 0</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_run_num_reset">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="16" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label_note_check_value">
-           <property name="text">
-            <string>Check value for end of file data = </string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_check_value">
-           <property name="text">
-            <string>999</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_check_value_info">
-           <property name="text">
-            <string>  (This cannot be changed)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_eof">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="22" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout_version">
-         <item>
-          <spacer name="horizontalSpacer_version_1">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_version">
-           <property name="text">
-            <string>Datafile version = </string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_version">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-           <property name="suffix">
-            <string/>
-           </property>
-           <property name="decimals">
-            <number>2</number>
-           </property>
-           <property name="minimum">
-            <double>3.300000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>3.300000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.100000000000000</double>
-           </property>
-           <property name="value">
-            <double>3.300000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_version_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="8" column="0" colspan="3">
-        <widget class="QGroupBox" name="groupBox_input_files">
-         <property name="title">
-          <string>Input Files</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="3" column="1">
-           <widget class="QLabel" name="label_fcast_file">
-            <property name="text">
-             <string>forecast.SS</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="label_starter_file">
-            <property name="text">
-             <string>starter.SS</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
-           <widget class="QToolButton" name="toolButton_file_read">
-            <property name="toolTip">
-             <string>Read current files.</string>
-            </property>
-            <property name="text">
-             <string>Read</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/i/icons/file-read.png</normaloff>:/i/icons/file-read.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QPushButton" name="pushButton_fcast_file">
-            <property name="text">
-             <string>Forecast File Comments:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="5">
-           <widget class="QToolButton" name="toolButton_data_file_save_as">
-            <property name="toolTip">
-             <string>Save file with a different name</string>
-            </property>
-            <property name="whatsThis">
-             <string>Save as...</string>
-            </property>
-            <property name="text">
-             <string>Save As</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QLabel" name="label_wtatage">
-            <property name="text">
-             <string>wtatage.ss</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLabel" name="label_profile_file">
-            <property name="text">
-             <string>ProfileValues.SS</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="3">
-           <spacer name="horizontalSpacer_input_files">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="5" column="4">
-           <widget class="QToolButton" name="toolButton_control_file_new">
-            <property name="toolTip">
-             <string>Choose a different file</string>
-            </property>
-            <property name="whatsThis">
-             <string>New file</string>
-            </property>
-            <property name="text">
-             <string>Change</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLabel" name="label_control_file">
-            <property name="toolTip">
-             <string>Filename of the control file</string>
-            </property>
-            <property name="text">
-             <string>controlfile</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="5">
-           <widget class="QToolButton" name="toolButton_control_file_save_as">
-            <property name="toolTip">
-             <string>Save file with a different name</string>
-            </property>
-            <property name="whatsThis">
-             <string>Save as...</string>
-            </property>
-            <property name="text">
-             <string>Save As</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QCheckBox" name="checkBox_wtatage">
-            <property name="text">
-             <string>Read Weight-at-Age</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="pushButton_starter_file">
-            <property name="text">
-             <string>Starter File Comments:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" colspan="3">
-           <widget class="QLabel" name="label_current_dir">
-            <property name="toolTip">
-             <string>This is the current directory</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QPushButton" name="pushButton_pro_file">
-            <property name="text">
-             <string>Profile Values Comments:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="4">
-           <widget class="QToolButton" name="toolButton_data_file_new">
-            <property name="toolTip">
-             <string>Choose a different file</string>
-            </property>
-            <property name="whatsThis">
-             <string>New file</string>
-            </property>
-            <property name="text">
-             <string>Change</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_dir">
-            <property name="text">
-             <string>Current Directory: </string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QPushButton" name="pushButton_control_file">
-            <property name="text">
-             <string>Control File Comments:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLabel" name="label_data_file">
-            <property name="toolTip">
-             <string>Filename of the data file</string>
-            </property>
-            <property name="text">
-             <string>datafile</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_data_file">
-            <property name="text">
-             <string>Data File Comments:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="2">
-           <widget class="QPushButton" name="pushButton_wtatage">
-            <property name="text">
-             <string>View wtatage.ss</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>853</width>
+            <height>539</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QGroupBox" name="groupBox_input_files">
+             <property name="title">
+              <string>Input Files</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="3" column="1">
+               <widget class="QLabel" name="label_fcast_file">
+                <property name="text">
+                 <string>forecast.SS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_starter_file">
+                <property name="text">
+                 <string>starter.SS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="4">
+               <widget class="QToolButton" name="toolButton_file_read">
+                <property name="toolTip">
+                 <string>Read current files.</string>
+                </property>
+                <property name="text">
+                 <string>Read</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-read.png</normaloff>:/i/icons/file-read.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="pushButton_fcast_file">
+                <property name="text">
+                 <string>Forecast File Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="5">
+               <widget class="QToolButton" name="toolButton_data_file_save_as">
+                <property name="toolTip">
+                 <string>Save file with a different name</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Save as...</string>
+                </property>
+                <property name="text">
+                 <string>Save As</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="1">
+               <widget class="QLabel" name="label_wtatage">
+                <property name="text">
+                 <string>wtatage.ss</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="1">
+               <widget class="QLabel" name="label_profile_file">
+                <property name="text">
+                 <string>ProfileValues.SS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="3">
+               <spacer name="horizontalSpacer_input_files">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="5" column="4">
+               <widget class="QToolButton" name="toolButton_control_file_new">
+                <property name="toolTip">
+                 <string>Choose a different file</string>
+                </property>
+                <property name="whatsThis">
+                 <string>New file</string>
+                </property>
+                <property name="text">
+                 <string>Change</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLabel" name="label_control_file">
+                <property name="toolTip">
+                 <string>Filename of the control file</string>
+                </property>
+                <property name="text">
+                 <string>controlfile</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="5">
+               <widget class="QToolButton" name="toolButton_control_file_save_as">
+                <property name="toolTip">
+                 <string>Save file with a different name</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Save as...</string>
+                </property>
+                <property name="text">
+                 <string>Save As</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0">
+               <widget class="QCheckBox" name="checkBox_wtatage">
+                <property name="text">
+                 <string>Read Weight-at-Age</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="pushButton_starter_file">
+                <property name="text">
+                 <string>Starter File Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1" colspan="3">
+               <widget class="QLabel" name="label_current_dir">
+                <property name="toolTip">
+                 <string>This is the current directory</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <widget class="QPushButton" name="pushButton_pro_file">
+                <property name="text">
+                 <string>Profile Values Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="4">
+               <widget class="QToolButton" name="toolButton_data_file_new">
+                <property name="toolTip">
+                 <string>Choose a different file</string>
+                </property>
+                <property name="whatsThis">
+                 <string>New file</string>
+                </property>
+                <property name="text">
+                 <string>Change</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-open.png</normaloff>:/i/icons/file-open.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_dir">
+                <property name="text">
+                 <string>Current Directory: </string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QPushButton" name="pushButton_control_file">
+                <property name="text">
+                 <string>Control File Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLabel" name="label_data_file">
+                <property name="toolTip">
+                 <string>Filename of the data file</string>
+                </property>
+                <property name="text">
+                 <string>datafile</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="pushButton_data_file">
+                <property name="text">
+                 <string>Data File Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="2">
+               <widget class="QPushButton" name="pushButton_wtatage">
+                <property name="text">
+                 <string>View wtatage.ss</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_parfile">
+             <item>
+              <widget class="QPushButton" name="pushButton_viewParFile">
+               <property name="text">
+                <string>View SS.PAR </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_par_file">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Read inital values from SS.PAR file</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_parfile">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_profile">
+             <item>
+              <widget class="QCheckBox" name="checkBox_pro_file">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Use ProfileValues.SS for batch processing - RunNumber.SS will be reset.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_run_num">
+             <item>
+              <widget class="QLabel" name="label_run_num">
+               <property name="text">
+                <string>Run number  </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_run_num_val">
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
+               </property>
+               <property name="text">
+                <string> 0 </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_run_num">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>80</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_runnum_file">
+               <property name="text">
+                <string>Reset Run number to 0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_run_num_reset">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_read_set">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label_note_check_value">
+               <property name="text">
+                <string>Check value for end of file data = </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_check_value">
+               <property name="text">
+                <string>999</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_check_value_info">
+               <property name="text">
+                <string>  (This cannot be changed)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_eof">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_version">
+             <item>
+              <spacer name="horizontalSpacer_version_1">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_version">
+               <property name="text">
+                <string>Datafile version = </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_version">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="suffix">
+                <string/>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="minimum">
+                <double>3.300000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>3.300000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>3.300000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_version_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -514,359 +544,381 @@
        <string>Output File Settings</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="12" column="0">
-        <spacer name="verticalSpacer_output">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="0" column="0">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-        </spacer>
-       </item>
-       <item row="11" column="0">
-        <layout class="QGridLayout" name="gridLayout_outputs">
-         <item row="1" column="0" colspan="2">
-          <widget class="QLabel" name="label_detail_level">
-           <property name="text">
-            <string>Run display detail level</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QCheckBox" name="checkBox_parm_trace">
-           <property name="text">
-            <string>Yes</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QLabel" name="label_checkup">
-           <property name="statusTip">
-            <string>Mostly used by developers</string>
-           </property>
-           <property name="whatsThis">
-            <string>Data echoed when read</string>
-           </property>
-           <property name="text">
-            <string>EchoInput.sso include debugging info?</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2" colspan="4">
-          <widget class="QComboBox" name="comboBox_detail_level">
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>853</width>
+            <height>539</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <property name="text">
-             <string>0 - only ADMB outputs</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1 - one brief display line for each iteration</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2 - fuller display for each iteration</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="4" column="5" colspan="2">
-          <widget class="QComboBox" name="comboBox_parm_trace_param">
-           <item>
-            <property name="text">
-             <string>Active Parameters</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>All Parameters</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="5" column="0" colspan="2">
-          <widget class="QLabel" name="label_cumreport">
-           <property name="text">
-            <string>CumReport.sso write output </string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3" colspan="5">
-          <widget class="QLabel" name="label_checkup_info">
-           <property name="text">
-            <string>This output is largely unformatted intermediate calculations. 
+            <layout class="QGridLayout" name="gridLayout_outputs">
+             <item row="1" column="0" colspan="2">
+              <widget class="QLabel" name="label_detail_level">
+               <property name="text">
+                <string>Run display detail level</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="2">
+              <widget class="QCheckBox" name="checkBox_parm_trace">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <widget class="QLabel" name="label_checkup">
+               <property name="statusTip">
+                <string>Mostly used by developers</string>
+               </property>
+               <property name="whatsThis">
+                <string>Data echoed when read</string>
+               </property>
+               <property name="text">
+                <string>EchoInput.sso include debugging info?</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2" colspan="4">
+              <widget class="QComboBox" name="comboBox_detail_level">
+               <item>
+                <property name="text">
+                 <string>0 - only ADMB outputs</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - one brief display line for each iteration</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - fuller display for each iteration</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="4" column="5" colspan="2">
+              <widget class="QComboBox" name="comboBox_parm_trace_param">
+               <item>
+                <property name="text">
+                 <string>Active Parameters</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>All Parameters</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="2">
+              <widget class="QLabel" name="label_cumreport">
+               <property name="text">
+                <string>CumReport.sso write output </string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3" colspan="5">
+              <widget class="QLabel" name="label_checkup_info">
+               <property name="text">
+                <string>This output is largely unformatted intermediate calculations. 
 It is undocumented and mostly used by the developer.</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="2">
-          <widget class="QLabel" name="label_parm_trace">
-           <property name="text">
-            <string>ParmTrace.sso write parameters?</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3" colspan="2">
-          <widget class="QComboBox" name="comboBox_parm_trace_iter">
-           <item>
-            <property name="text">
-             <string>Good Interations</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Every Iteration</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="2" column="2" colspan="4">
-          <widget class="QComboBox" name="comboBox_report_level">
-           <item>
-            <property name="text">
-             <string>0 - Minimal for data-limited</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1 - High (with wtatage.ss_new)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2 - Brief</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3 - Custom</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QCheckBox" name="checkBox_checkup">
-           <property name="text">
-            <string>Yes</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" colspan="8">
-          <widget class="QGroupBox" name="groupBox_output_files">
-           <property name="title">
-            <string>Output Files</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_5">
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_fcast_report">
-              <property name="text">
-               <string>Forecast Report:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_report">
-              <property name="text">
-               <string>Primary Report:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_cum_report">
-              <property name="text">
-               <string>Cumulative Data:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_comp_report">
-              <property name="text">
-               <string>Composition Data:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="label_comp_report_file">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <spacer name="horizontalSpacer_output_files">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_cum_report_file">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="label_fcast_report_file">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_report_file">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="6" column="2" colspan="6">
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QSpinBox" name="spinBox_datafiles">
-             <property name="minimum">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_datafiles_info">
-             <property name="text">
-              <string>1: annotated input files, 2: expected values data file,
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="2">
+              <widget class="QLabel" name="label_parm_trace">
+               <property name="text">
+                <string>ParmTrace.sso write parameters?</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3" colspan="2">
+              <widget class="QComboBox" name="comboBox_parm_trace_iter">
+               <item>
+                <property name="text">
+                 <string>Good Interations</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Every Iteration</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="2" colspan="4">
+              <widget class="QComboBox" name="comboBox_report_level">
+               <item>
+                <property name="text">
+                 <string>0 - Minimal for data-limited</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - High (with wtatage.ss_new)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - Brief</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 - Custom</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QCheckBox" name="checkBox_checkup">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="8">
+              <widget class="QGroupBox" name="groupBox_output_files">
+               <property name="title">
+                <string>Output Files</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_5">
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_fcast_report">
+                  <property name="text">
+                   <string>Forecast Report:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_report">
+                  <property name="text">
+                   <string>Primary Report:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_cum_report">
+                  <property name="text">
+                   <string>Cumulative Data:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_comp_report">
+                  <property name="text">
+                   <string>Composition Data:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLabel" name="label_comp_report_file">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <spacer name="horizontalSpacer_output_files">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_cum_report_file">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="label_fcast_report_file">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_report_file">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="6" column="2" colspan="6">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QSpinBox" name="spinBox_datafiles">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_datafiles_info">
+                 <property name="text">
+                  <string>1: annotated input files, 2: expected values data file,
 3 and higher: N-2 bootstrap data files</string>
-             </property>
-            </widget>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <widget class="QLabel" name="label_report_level">
+               <property name="text">
+                <string>Report.sso report detail</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2" colspan="4">
+              <widget class="QComboBox" name="comboBox_cumreport">
+               <item>
+                <property name="text">
+                 <string>0 - Omit</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - Brief Report</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - Full Report</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="2">
+              <widget class="QLabel" name="label_datafiles">
+               <property name="text">
+                <string>Number of extra data files to produce</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="7">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="7" column="2" colspan="4">
+              <widget class="QComboBox" name="comboBox_MCMC_output">
+               <item>
+                <property name="text">
+                 <string>0 - Default</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - Likelihood components with lambda values</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - Expanded output</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 - Separate dir for each MCMC vector</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="7" column="0" colspan="2">
+              <widget class="QLabel" name="label_mcmc_output">
+               <property name="text">
+                <string>MCMC Output format </string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0" colspan="2">
+              <widget class="QLabel" name="label_mcmc_bump_val">
+               <property name="text">
+                <string>MCMC Bump value</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="2" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
+             </item>
+             <item row="2" column="6">
+              <widget class="QPushButton" name="pushButton_chooseRepDetail">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>View</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <spacer name="horizontalSpacer_2">
+            <spacer name="verticalSpacer_output">
              <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+              <enum>Qt::Vertical</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
-               <height>20</height>
+               <width>20</width>
+               <height>40</height>
               </size>
              </property>
             </spacer>
            </item>
           </layout>
-         </item>
-         <item row="2" column="0" colspan="2">
-          <widget class="QLabel" name="label_report_level">
-           <property name="text">
-            <string>Report.sso report detail</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2" colspan="4">
-          <widget class="QComboBox" name="comboBox_cumreport">
-           <item>
-            <property name="text">
-             <string>0 - Omit</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1 - Brief Report</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2 - Full Report</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="2">
-          <widget class="QLabel" name="label_datafiles">
-           <property name="text">
-            <string>Number of extra data files to produce</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="7">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="7" column="2" colspan="4">
-          <widget class="QComboBox" name="comboBox_MCMC_output">
-           <item>
-            <property name="text">
-             <string>0 - Default</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>1 - Likelihood components with lambda values</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>2 - Expanded output</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3 - Separate dir for each MCMC vector</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="7" column="0" colspan="2">
-          <widget class="QLabel" name="label_mcmc_output">
-           <property name="text">
-            <string>MCMC Output format </string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0" colspan="2">
-          <widget class="QLabel" name="label_mcmc_bump_val">
-           <property name="text">
-            <string>MCMC Bump value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
-         </item>
-         <item row="2" column="6">
-          <widget class="QPushButton" name="pushButton_chooseRepDetail">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>View</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -874,6 +926,8 @@ It is undocumented and mostly used by the developer.</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="stock_synth.qrc"/>
+ </resources>
  <connections/>
 </ui>

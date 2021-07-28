@@ -26,8 +26,8 @@ public slots:
     void setOutput(outputWidget *out);
 
     void setDirectory(QString dir);
-    void readModel();
-    void saveModel();
+    bool readModel();
+    bool saveModel();
     void saveAsModel();
 
 
@@ -41,6 +41,12 @@ private:
     controlWidget *control;
     forecastWidget *forecast;
     outputWidget *output;
+
+    QString strtFile;
+    QString dataFile;
+    QString ctrlFile;
+    QString fcstFile;
+    QString wtaaFile;
 
     QDir directory;
 };

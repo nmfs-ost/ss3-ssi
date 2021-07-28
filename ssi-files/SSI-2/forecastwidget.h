@@ -31,6 +31,8 @@ private:
     Ui::forecastWidget *ui;
 
     ssFile *forecastFile;
+
+    int benchmarks;
 };
 
 #endif // FORECASTWIDGET_H

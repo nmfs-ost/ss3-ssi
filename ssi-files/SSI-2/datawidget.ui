@@ -1,21 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>dataWidget</class>
- <widget name="dataWidget" class="QWidget">
+ <widget class="QWidget" name="dataWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1170</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>File:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>data.ss</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1129</width>
+        <height>2652</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="8" column="0">
+        <widget class="QSpinBox" name="spinBox_6"/>
+       </item>
+       <item row="62" column="0">
+        <widget class="QLabel" name="label_58">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="57" column="1" colspan="3">
+        <widget class="QLabel" name="label_56">
+         <property name="text">
+          <string># binwidth for population size comp </string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QSpinBox" name="spinBox"/>
+       </item>
+       <item row="76" column="0" colspan="4">
+        <widget class="QLineEdit" name="lineEdit_4"/>
+       </item>
+       <item row="73" column="0" colspan="5">
+        <widget class="QLabel" name="label_70">
+         <property name="text">
+          <string># sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QSpinBox" name="spinBox_2"/>
+       </item>
+       <item row="10" column="0">
+        <widget class="QSpinBox" name="spinBox_8"/>
+       </item>
+       <item row="26" column="0" colspan="4">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string># a   b   c   d   e   f </string>
+         </property>
+        </widget>
+       </item>
+       <item row="49" column="0">
+        <widget class="QSpinBox" name="spinBox_10"/>
+       </item>
+       <item row="79" column="4">
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="42" column="0">
+        <widget class="QSpinBox" name="spinBox_9"/>
+       </item>
+       <item row="50" column="0">
+        <widget class="QSpinBox" name="spinBox_11"/>
+       </item>
+       <item row="56" column="1" colspan="4">
+        <widget class="QLabel" name="label_57">
+         <property name="text">
+          <string># length bin method: 1=use databins; 2=generate from binwidth,min,max below; 3=read vector</string>
+         </property>
+        </widget>
+       </item>
+       <item row="58" column="0">
+        <widget class="QSpinBox" name="spinBox_14"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QSpinBox" name="spinBox_3"/>
+       </item>
+       <item row="7" column="1" colspan="6">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>#_Ngenders: 1, 2, -1  (use -1 for 1 sex setup with SSB multiplied by female_frac parameter)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QSpinBox" name="spinBox_5"/>
+       </item>
+       <item row="48" column="0">
+        <widget class="QLabel" name="label_47">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="77" column="0" colspan="4">
+        <widget class="QLabel" name="label_67">
+         <property name="text">
+          <string>#_yr month fleet sex part Nsamp datavector(female-male)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0" colspan="6">
+        <widget class="QLabel" name="label_29">
+         <property name="text">
+          <string>#_catch_mult: 0=no; 1=yes</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0" colspan="4">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>#f:  not used</string>
+         </property>
+        </widget>
+       </item>
+       <item row="41" column="0">
+        <widget class="QLabel" name="label_38">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="43" column="0" colspan="4">
+        <widget class="QLabel" name="label_42">
+         <property name="text">
+          <string>#_discard_units (1=same_as_catchunits(bio/num); 2=fraction; 3=numbers)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="58" column="1" colspan="3">
+        <widget class="QLabel" name="label_55">
+         <property name="text">
+          <string># minimum size in the population (lower edge of first bin and size at age 0.00) </string>
+         </property>
+        </widget>
+       </item>
+       <item row="39" column="0" colspan="4">
+        <widget class="QLabel" name="label_37">
+         <property name="text">
+          <string>#_yr month fleet obs stderr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="44" column="0" colspan="5">
+        <widget class="QLabel" name="label_41">
+         <property name="text">
+          <string>#_discard_errtype:  &gt;0 for DF of T-dist(read CV below); 0 for normal with CV; -1 for normal with se; -2 for lognormal; -3 for trunc normal with CV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="79" column="3">
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="1" colspan="3">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>#_Nsubseasons (even number, minimum is 2)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="0" colspan="3">
+        <widget class="QLabel" name="label_28">
+         <property name="text">
+          <string>#Bycatch_fleet_input_goes_next</string>
+         </property>
+        </widget>
+       </item>
+       <item row="72" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_9">
+         <property name="plainText">
+          <string>-1 0.001 1 0 0 0 1 #_fleet:1_Fleet1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="61" column="0" colspan="4">
+        <widget class="QLineEdit" name="lineEdit_3"/>
+       </item>
+       <item row="27" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_8"/>
+       </item>
+       <item row="2" column="2" colspan="4">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>#_EndYr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0" colspan="6">
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>#_units of catch:  1=bio; 2=num (ignored for surveys; their units read later)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="38" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_4">
+         <property name="plainText">
+          <string>1 1 0 0 # Fleet1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="47" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_6">
+         <property name="plainText">
+          <string>-9999 0 0 0.0 0.0 # terminator for discard data </string>
+         </property>
+        </widget>
+       </item>
+       <item row="66" column="0" colspan="5">
+        <widget class="QLabel" name="label_60">
+         <property name="text">
+          <string>#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation</string>
+         </property>
+        </widget>
+       </item>
+       <item row="63" column="0" colspan="5">
+        <widget class="QLabel" name="label_63">
+         <property name="text">
+          <string>#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="0">
+        <widget class="QLabel" name="label_31">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QSpinBox" name="spinBox_7"/>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QLineEdit" name="lineEdit"/>
+       </item>
+       <item row="57" column="0">
+        <widget class="QSpinBox" name="spinBox_13"/>
+       </item>
+       <item row="65" column="0" colspan="4">
+        <widget class="QLabel" name="label_61">
+         <property name="text">
+          <string>#_combM+F: males and females treated as combined gender below this bin number </string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>#_Nseas</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0" colspan="5">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>#_sample_timing: -1 for fishing fleet to use season-long catch-at-age for observations, or 1 to use observation month;  (always 1 for surveys)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="69" column="0" colspan="4">
+        <widget class="QLabel" name="label_65">
+         <property name="text">
+          <string>#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001</string>
+         </property>
+        </widget>
+       </item>
+       <item row="59" column="1" colspan="3">
+        <widget class="QLabel" name="label_54">
+         <property name="text">
+          <string># maximum size in the population (lower edge of last bin) </string>
+         </property>
+        </widget>
+       </item>
+       <item row="59" column="0">
+        <widget class="QSpinBox" name="spinBox_15"/>
+       </item>
+       <item row="20" column="0" colspan="3">
+        <widget class="QLabel" name="label_26">
+         <property name="text">
+          <string>#a:  fleet index</string>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="0" colspan="4">
+        <widget class="QLabel" name="label_35">
+         <property name="text">
+          <string>#_CPUE_and_surveyabundance_observations</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0" colspan="6">
+        <widget class="QLabel" name="label_23">
+         <property name="text">
+          <string>#e:  last year of range</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>#_spawn_month</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1" colspan="5">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>#_Nfleets (including surveys)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_3">
+         <property name="plainText">
+          <string>-9999 0 0 0 0 # terminator for catch data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="64" column="0" colspan="4">
+        <widget class="QLabel" name="label_62">
+         <property name="text">
+          <string>#_addtocomp:  after accumulation of tails; this value added to all bins</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0" colspan="6">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>#_fleet_area:  area the fleet/survey operates in </string>
+         </property>
+        </widget>
+       </item>
+       <item row="79" column="0">
+        <widget class="QLabel" name="label_51">
+         <property name="text">
+          <string> </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="plainText">
+          <string>#C data file comment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0" colspan="6">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>#_fleet_type: 1=catch fleet; 2=bycatch only fleet; 3=survey; 4=ignore </string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="0" colspan="6">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>#_rows are fleets</string>
+         </property>
+        </widget>
+       </item>
+       <item row="29" column="0" colspan="4">
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string>#_catch_se:  standard error of log(catch)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="52" column="0" colspan="4">
+        <widget class="QLabel" name="label_49">
+         <property name="text">
+          <string>#_yr month fleet part type obs stderr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="67" column="0" colspan="4">
+        <widget class="QLabel" name="label_59">
+         <property name="text">
+          <string>#_Comp_Error:  0=multinomial, 1=dirichlet</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0" colspan="6">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>#_fleet_type fishery_timing area catch_units need_catch_mult fleetname</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2" colspan="4">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>#_StartYr</string>
+         </property>
+        </widget>
+       </item>
+       <item row="42" column="1" colspan="3">
+        <widget class="QLabel" name="label_40">
+         <property name="text">
+          <string>#_N_fleets_with_discard</string>
+         </property>
+        </widget>
+       </item>
+       <item row="46" column="0" colspan="4">
+        <widget class="QLabel" name="label_43">
+         <property name="text">
+          <string>#_Fleet units errtype</string>
+         </property>
+        </widget>
+       </item>
+       <item row="79" column="1">
+        <widget class="QLabel" name="label_52">
+         <property name="text">
+          <string> </string>
+         </property>
+        </widget>
+       </item>
+       <item row="60" column="1" colspan="3">
+        <widget class="QLabel" name="label_53">
+         <property name="text">
+          <string># use length composition data (0/1)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1" colspan="2">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>#_months/season</string>
+         </property>
+        </widget>
+       </item>
+       <item row="28" column="0" colspan="4">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>#_Catch data: yr, seas, fleet, catch, catch_se</string>
+         </property>
+        </widget>
+       </item>
+       <item row="60" column="0">
+        <widget class="QSpinBox" name="spinBox_16"/>
+       </item>
+       <item row="75" column="1" colspan="3">
+        <widget class="QLabel" name="label_68">
+         <property name="text">
+          <string>#_N_LengthBins; then enter lower edge of each length bin</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1" colspan="5">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>#_Nages=accumulator age, first age is always age 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="50" column="1" colspan="3">
+        <widget class="QLabel" name="label_45">
+         <property name="text">
+          <string>#_DF_for_meanbodysize_T-distribution_like</string>
+         </property>
+        </widget>
+       </item>
+       <item row="37" column="0" colspan="4">
+        <widget class="QLabel" name="label_36">
+         <property name="text">
+          <string>#_Fleet Units Errtype SD_Report</string>
+         </property>
+        </widget>
+       </item>
+       <item row="45" column="0" colspan="4">
+        <widget class="QLabel" name="label_39">
+         <property name="text">
+          <string># note, only have units and errtype for fleets with discard </string>
+         </property>
+        </widget>
+       </item>
+       <item row="74" column="0" colspan="4">
+        <widget class="QLabel" name="label_69">
+         <property name="text">
+          <string># partition codes:  (0=combined; 1=discard; 2=retained</string>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="0" colspan="6">
+        <widget class="QLabel" name="label_25">
+         <property name="text">
+          <string>#c:  1=Fmult scales with other fleets; 2=bycatch F constant at input value; 3=bycatch F from range of years</string>
+         </property>
+        </widget>
+       </item>
+       <item row="49" column="1" colspan="3">
+        <widget class="QLabel" name="label_46">
+         <property name="text">
+          <string>#_use meanbodysize_data (0/1)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="51" column="0" colspan="4">
+        <widget class="QLabel" name="label_50">
+         <property name="text">
+          <string># note:  type=1 for mean length; type=2 for mean body weight </string>
+         </property>
+        </widget>
+       </item>
+       <item row="30" column="0" colspan="4">
+        <widget class="QLabel" name="label_21">
+         <property name="text">
+          <string>#_NOTE:  catch data is ignored for survey fleets</string>
+         </property>
+        </widget>
+       </item>
+       <item row="79" column="2">
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="54" column="0" colspan="4">
+        <widget class="QLabel" name="label_48">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="0" colspan="7">
+        <widget class="QLabel" name="label_27">
+         <property name="text">
+          <string>#b:  1=include dead bycatch in total dead catch for F0.1 and MSY optimizations and forecast ABC; 2=omit from total catch for these purposes (but still include the mortality)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_2">
+         <property name="plainText">
+          <string> 1 1 1 1 0 Fleet1 # 1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QLineEdit" name="lineEdit_2"/>
+       </item>
+       <item row="79" column="5">
+        <spacer name="horizontalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="53" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_7">
+         <property name="plainText">
+          <string>-9999 0 0 0 0 0 0 # terminator for mean body size data </string>
+         </property>
+        </widget>
+       </item>
+       <item row="68" column="0" colspan="4">
+        <widget class="QLabel" name="label_66">
+         <property name="text">
+          <string>#_ParmSelect:  parm number for dirichlet</string>
+         </property>
+        </widget>
+       </item>
+       <item row="55" column="0" colspan="5">
+        <widget class="QLabel" name="label_44">
+         <property name="text">
+          <string># set up population length bin structure (note - irrelevant if not using size data and using empirical wtatage</string>
+         </property>
+        </widget>
+       </item>
+       <item row="56" column="0">
+        <widget class="QSpinBox" name="spinBox_12"/>
+       </item>
+       <item row="40" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_5">
+         <property name="plainText">
+          <string>-9999 1 1 1 1 # terminator for survey observations</string>
+         </property>
+        </widget>
+       </item>
+       <item row="35" column="0" colspan="4">
+        <widget class="QLabel" name="label_33">
+         <property name="text">
+          <string>#_Errtype:  -1=normal; 0=lognormal; &gt;0=T</string>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="0" colspan="7">
+        <widget class="QLabel" name="label_34">
+         <property name="text">
+          <string>#_Units:  0=numbers; 1=biomass; 2=F; 30=spawnbio; 31=recdev; 32=spawnbio*recdev; 33=recruitment; 34=depletion(&amp;see Qsetup); 35=parm_dev(&amp;see Qsetup)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QSpinBox" name="spinBox_4"/>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>#_Nareas</string>
+         </property>
+        </widget>
+       </item>
+       <item row="36" column="0" colspan="4">
+        <widget class="QLabel" name="label_32">
+         <property name="text">
+          <string>#_SD_Report: 0=no sdreport; 1=enable sdreport</string>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="0" colspan="6">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>#d:  F or first year of range</string>
+         </property>
+        </widget>
+       </item>
+       <item row="70" column="0" colspan="4">
+        <widget class="QLabel" name="label_64">
+         <property name="text">
+          <string>#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize</string>
+         </property>
+        </widget>
+       </item>
+       <item row="78" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_10">
+         <property name="plainText">
+          <string>-9999 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>

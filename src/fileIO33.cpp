@@ -919,7 +919,9 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline (line);
         line = QString("#_discard_errtype:  >0 for DF of T-dist(read CV below); 0 for normal with CV; -1 for normal with se; -2 for lognormal; -3 for trunc normal with CV");
         chars += d_file->writeline (line);
-        line = QString ("#_note, only have units and errtype for fleets with discard ");
+        line = QString ("# note, only have units and errtype for fleets with discard ");
+        chars += d_file->writeline (line);
+        line = QString ("# note: discard data is the total for an entire season, so input of month here must be to a month in that season");
         chars += d_file->writeline (line);
         line = QString ("#_Fleet units errtype");
         chars += d_file->writeline (line);
@@ -1079,91 +1081,85 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
             break;
         }*/
-        line = QString(QString("%1 #_use length composition data (0/1)").arg(QString::number(1)));
+        temp_int = data->getUseLengthComp();
+        line = QString(QString("%1 #_use length composition data (0/1)").arg(QString::number(temp_int)));
         chars += d_file->writeline(line);
-
-        line = QString("#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.");
-        chars += d_file->writeline (line);
-        line = QString("#_addtocomp:  after accumulation of tails; this value added to all bins");
-        chars += d_file->writeline (line);
-        line = QString("#_combM+F: males and females treated as combined gender below this bin number ");
-        chars += d_file->writeline (line);
-        line = QString("#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation");
-        chars += d_file->writeline (line);
-        line = QString("#_Comp_Error:  0=multinomial, 1=dirichlet");
-        chars += d_file->writeline (line);
-        line = QString("#_ParmSelect:  parm number for dirichlet");
-        chars += d_file->writeline (line);
-        line = QString("#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001");
-        chars += d_file->writeline (line);
-        chars += d_file->writeline("#");
-        line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
-        chars += d_file->writeline (line);
-//        int fleetNum = 1;
-        for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
+        if (temp_int == 1)
         {
-            flt = data->getActiveFleet(i);
-            line.clear();
-            line.append(QString("%1 ").arg((flt->getLengthMinTailComp())));
-            line.append(QString("%1 ").arg((flt->getLengthAddToData())));
-            line.append(QString("%1 ").arg(QString::number(flt->getLengthCombineGen())));
-            line.append(QString("%1 ").arg(QString::number(flt->getLengthCompressBins())));
-            line.append(QString("%1 ").arg(QString::number(flt->getLengthCompError())));
-            line.append(QString("%1 ").arg(QString::number(flt->getLengthCompErrorParm())));
-            line.append(QString("%1 ").arg(QString::number(flt->getLengthMinSampleSize())));
-            line.append(QString("#_fleet:%1_%2").arg(QString::number(i), flt->getName()));
+            line = QString("#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.");
             chars += d_file->writeline (line);
-        }
-
-
-        line = QString("#_sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
-        chars += d_file->writeline (line);
-        line = QString("#_partition codes:  (0=combined; 1=discard; 2=retained");
-        chars += d_file->writeline (line);
-        temp_int = l_data->getNumberBins();
-        line = QString(QString("%1 #_N_LengthBins; then enter lower edge of each length bin").arg(QString::number(temp_int)));
-        chars += d_file->writeline (line);
-        line.clear();
-        str_lst = l_data->getBinsModel()->getRowData(0);
-        for (i = 0; i < str_lst.count(); i++)
-        {
-            line.append(QString(" %1").arg(str_lst.at(i)));
-        }
-
-        chars += d_file->writeline (line);
-
-        line = QString ("#_yr month fleet sex part Nsamp datavector(female-male)");
-        chars += d_file->writeline (line);
-//        for (int type = Fleet::Fishing; type < Fleet::None; type++)
-        for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
-        {
-            flt = data->getActiveFleet(i);
-            num = flt->getLengthNumObs();
-            for( int j = 0; j < num; j++)
+            line = QString("#_addtocomp:  after accumulation of tails; this value added to all bins");
+            chars += d_file->writeline (line);
+            line = QString("#_combM+F: males and females treated as combined gender below this bin number ");
+            chars += d_file->writeline (line);
+            line = QString("#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation");
+            chars += d_file->writeline (line);
+            line = QString("#_Comp_Error:  0=multinomial, 1=dirichlet");
+            chars += d_file->writeline (line);
+            line = QString("#_ParmSelect:  parm number for dirichlet");
+            chars += d_file->writeline (line);
+            line = QString("#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001");
+            chars += d_file->writeline (line);
+            chars += d_file->writeline("#");
+            line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
+            chars += d_file->writeline (line);
+            for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
             {
-                str_lst = flt->getLengthObservation(j);
-                chars += d_file->write_vector(str_lst, 4);
-/*                str_lst.insert(2, QString::number(i));
+                flt = data->getActiveFleet(i);
                 line.clear();
-                for (int j = 0; j < str_lst.count(); j++)
-                    line.append(QString (" %1").arg(str_lst.at(j)));
-
-                chars += d_file->writeline (line);*/
+                line.append(QString("%1 ").arg((flt->getLengthMinTailComp())));
+                line.append(QString("%1 ").arg((flt->getLengthAddToData())));
+                line.append(QString("%1 ").arg(QString::number(flt->getLengthCombineGen())));
+                line.append(QString("%1 ").arg(QString::number(flt->getLengthCompressBins())));
+                line.append(QString("%1 ").arg(QString::number(flt->getLengthCompError())));
+                line.append(QString("%1 ").arg(QString::number(flt->getLengthCompErrorParm())));
+                line.append(QString("%1 ").arg(QString::number(flt->getLengthMinSampleSize())));
+                line.append(QString("#_fleet:%1_%2").arg(QString::number(i), flt->getName()));
+                chars += d_file->writeline (line);
             }
-        }
-        line = QString("-9999");
-        for (int j = 1; j < 6; j++)
-            line.append(QString(" 0"));
-        for (int j = 0; j < temp_int; j++)
-            line.append(QString(" 0"));
-        if (data->get_num_genders() > 1)
+
+
+            line = QString("#_sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution");
+            chars += d_file->writeline (line);
+            line = QString("#_partition codes:  (0=combined; 1=discard; 2=retained");
+            chars += d_file->writeline (line);
+            temp_int = l_data->getNumberBins();
+            line = QString(QString("%1 #_N_LengthBins; then enter lower edge of each length bin").arg(QString::number(temp_int)));
+            chars += d_file->writeline (line);
+            line.clear();
+            str_lst = l_data->getBinsModel()->getRowData(0);
+            for (i = 0; i < str_lst.count(); i++)
+            {
+                line.append(QString(" %1").arg(str_lst.at(i)));
+            }
+
+            chars += d_file->writeline (line);
+
+            line = QString ("#_yr month fleet sex part Nsamp datavector(female-male)");
+            chars += d_file->writeline (line);
+            for (i = 1; i <= total_fleets; i++)
+            {
+                flt = data->getActiveFleet(i);
+                num = flt->getLengthNumObs();
+                for( int j = 0; j < num; j++)
+                {
+                    str_lst = flt->getLengthObservation(j);
+                    chars += d_file->write_vector(str_lst, 4);
+                }
+            }
+            line = QString("-9999");
+            for (int j = 1; j < 6; j++)
+                line.append(QString(" 0"));
             for (int j = 0; j < temp_int; j++)
                 line.append(QString(" 0"));
-        line.append(' ');
-        chars += d_file->writeline (line);
-        chars += d_file->writeline ("#");
+            if (data->get_num_genders() > 1)
+                for (int j = 0; j < temp_int; j++)
+                    line.append(QString(" 0"));
+            line.append(' ');
+            chars += d_file->writeline (line);
+            chars += d_file->writeline ("#");
+            }
         }
-
 
         // age composition
         {
@@ -1215,7 +1211,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline ("#");
             line = QString("#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize");
             chars += d_file->writeline (line);
-            for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
+            for (i = 1; i <= total_fleets; i++)
             {
                 flt = data->getActiveFleet(i);
                 line = QString(QString("%1 %2 %3 %4 %5 %6 %7 #_fleet:%8_%9").arg (
@@ -1247,7 +1243,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             chars += d_file->writeline (line);
             line = QString ("#_yr month fleet sex part ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)");
             chars += d_file->writeline (line);
-            for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
+            for (i = 1; i <= total_fleets; i++)
             {
                 flt = data->getActiveFleet(i);
                 {
@@ -1256,12 +1252,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                     {
                         str_lst = flt->getAgeObservation(j);
                         chars += d_file->write_vector(str_lst, 4);
-    /*                    str_lst.insert(2, QString::number(i));
-                        line.clear();
-                        for (int j = 0; j < str_lst.count(); j++)
-                            line.append(QString (" %1").arg(str_lst.at(j)));
-
-                        chars += d_file->writeline (line);*/
                     }
                 }
             }
@@ -1287,7 +1277,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         num = 0;
         for (i = 1; i <= total_fleets; i++)
         {
-                num += data->getActiveFleet(i)->getSaaModel()->rowCount();
+            num += data->getActiveFleet(i)->getSaaModel()->rowCount();
         }
         temp_int = num > 0? 1: 0;
         line = QString ("%1 #_Use_MeanSize-at-Age_obs (0/1)").arg (
@@ -1315,11 +1305,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                         line.clear();
                         str_lst = flt->getSaaModel()->getRowData(j);
                         chars += d_file->write_vector(str_lst, 4);
-/*                        str_lst.insert(2, QString::number(i));
-                        for (int m = 0; m < str_lst.count(); m++)
-                            line.append(QString(" %1").arg(str_lst.at(m)));
-
-                        chars += d_file->writeline (line);*/
                     }
                 }
             }
@@ -1403,7 +1388,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 for (j = 1; j <= total_fleets; j++)
                 {
                     flt = data->getActiveFleet(j);
-//                    if (data->getFleet(j)->isActive())
                     {
                         temp_int += flt->getGenNumObs(i);
                     }
@@ -1430,7 +1414,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 for (j = 1; j <= total_fleets; j++) // for (int j = 0; j < data->num_fleets(); j++)
                 {
                     flt = data->getActiveFleet(j);
-//                    if (data->getFleet(j)->isActive())
                     {
                         num_lines = flt->getGenNumObs(i);
                         for (int k = 0; k < num_lines; k++)
@@ -1438,11 +1421,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                             line.clear();
                             str_lst = flt->getGenObservation(i, k);
                             chars += d_file->write_vector(str_lst, 4);
-/*                            str_lst.insert(3, QString::number(j));
-                            for (int m = 0; m < str_lst.count(); m++)
-                                line.append(QString (" %1").arg(str_lst.at(m)));
-
-                            chars += d_file->writeline (line);*/
                         }
                     }
                 }
@@ -1462,7 +1440,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             temp_int = 0;
             for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
             {
-//                if (data->getFleet(i)->isActive())
                     temp_int += data->getActiveFleet(i)->getRecapNumEvents();
             }
             line = QString (QString("%1 #_N recap events").arg(QString::number(temp_int)));
@@ -1492,7 +1469,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 for (j = 1; j <= total_fleets; j++) // for (int j = 0; j < data->num_fleets(); j++)
                 {
                     flt = data->getActiveFleet(j);
-//                    if (data->getFleet(j)->isActive())
                     {
                         num_lines = flt->getRecapNumEvents();
                         for (int k = 0; k < num_lines; k++)
@@ -1503,13 +1479,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                             {
                                 chars += d_file->write_vector(str_lst, 4);
                             }
-/*                            str_lst.insert(3, QString::number(j));
-                            if (str_lst.at(0).toInt() == i)
-                            {
-                            for (int m = 0; m < str_lst.count(); m++)
-                                line.append(QString(" %1").arg(str_lst.at(m)));
-                            chars += d_file->writeline (line);
-                            }*/
                         }
                     }
                 }
@@ -1544,7 +1513,6 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             for (i = 1; i <= total_fleets; i++) // for (num = 0; num < data->num_fleets(); num++)
             {
                 flt = data->getActiveFleet(i);
-//                if (data->fleets.at(num)->isActive())
                 {
                     num_lines = flt->getMorphNumObs();
                     for (int j = 0; j < num_lines; j++)
@@ -1552,16 +1520,11 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                         line.clear();
                         str_lst = flt->getMorphObservation(j);
                         chars += d_file->write_vector(str_lst, 4);
-/*                        str_lst.insert(2, QString::number(i));
-                        for (int k = 0; k < str_lst.count(); k++)
-                            line.append(QString(" %1").arg(str_lst.at(k)));
-                        chars += d_file->writeline (line);*/
                     }
                 }
             }
         }
         chars += d_file->writeline ("#");
-//        d_file->newline();
 
         line = QString(QString("%1 #_Do dataread for selectivity priors(0/1)").arg(
                            QString::number(data->getReadSelectivityPriors()? 1: 0)));
@@ -3521,7 +3484,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             if (id == END_OF_LIST)
                 break;
             data->setInputValueVariance(1);
-            data->getFleet(flt-1)->setInputVarValue(id, true);
+            data->getFleet(flt-1)->setDoInputVariance(id, true);
             data->getFleet(flt-1)->setInputVarianceValue(id, temp_float);
 /*            switch (id)
             {
@@ -4875,6 +4838,8 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_1;  parm=2; logistic; with 95% width specification");
         chars += c_file->writeline(line);
+        line = QString("#Pattern:_2;  parm=6; modification of pattern 24 with improved sex-specific offset");
+        chars += c_file->writeline(line);
         line = QString("#Pattern:_5;  parm=2; mirror another size selex; PARMS pick the min-max bin to mirror");
         chars += c_file->writeline(line);
         line = QString("#Pattern:_11; parm=2; selex=1.0  for specified min-max population length bin range");
@@ -4885,7 +4850,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_43; parm=2+special+2;  like 6, with 2 additional param for scaling (average over bin range)");
         chars += c_file->writeline(line);
-        line = QString("#Pattern:_8;  parm=8; New doublelogistic with smooth transitions and constant above Linf option");
+        line = QString("#Pattern:_8;  parm=8; double_logistic with smooth transitions and constant above Linf option");
         chars += c_file->writeline(line);
         line = QString("#Pattern:_9;  parm=6; simple 4-parm double logistic with starting length; parm 5 is first length; parm 6=1 does desc as offset");
         chars += c_file->writeline(line);
@@ -4897,11 +4862,11 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_24; parm=6; double_normal with sel(minL) and sel(maxL), using joiners");
         chars += c_file->writeline(line);
-        line = QString("#Pattern:_25; parm=3; exponential-logistic in size");
+        line = QString("#Pattern:_25; parm=3; exponential-logistic in length");
         chars += c_file->writeline(line);
-        line = QString("#Pattern:_27; parm=3+special; cubic spline ");
+        line = QString("#Pattern:_27; parm=special+3; cubic spline in length; parm1==1 resets knots; parm1==2 resets all ");
         chars += c_file->writeline(line);
-        line = QString("#Pattern:_42; parm=2+special+3; // like 27, with 2 additional param for scaling (average over bin range)");
+        line = QString("#Pattern:_42; parm=special+3+2; cubic spline; like 27, with 2 additional param for scaling (average over bin range)");
         chars += c_file->writeline(line);
         line = QString("#_discard_options:_0=none;_1=define_retention;_2=retention&mortality;_3=all_discarded_dead;_4=define_dome-shaped_retention");
         chars += c_file->writeline(line);
@@ -4946,7 +4911,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         chars += c_file->writeline(line);
         line = QString("#Pattern:_26; parm=3; exponential-logistic in age");
         chars += c_file->writeline(line);
-        line = QString("#Pattern:_27; parm=3+special; cubic spline in age");
+        line = QString("#Pattern:_27; parm=3+special; cubic spline in age; parm1==1 resets knots; parm1==2 resets all ");
         chars += c_file->writeline(line);
         line = QString("#Pattern:_42; parm=2+special+3; // cubic spline; with 2 additional param for scaling (average over bin range)");
         chars += c_file->writeline(line);
@@ -5228,7 +5193,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         {
             for (int f = 0; f < data->get_num_fleets(); f++)
             {
-                if (data->getFleet(f)->getInputVarValue(i))
+                if (data->getFleet(f)->getDoInputVariance(i))
                 {
                     temp_float = data->getFleet(f)->getInputVarianceValue(i);
                     line = QString(QString("    %1    %2    %3 ").arg(

@@ -3,19 +3,26 @@
 
 #include <QFile>
 #include <QObject>
+#include <QStringList>
+#include <QTextStream>
 
 class ssFile : public QFile
 {
 public:
     explicit ssFile(QObject *parent = nullptr);
 
-    void readLine();
-    QString getNextToken();
-    QString getLine();
+    void readNextLine();
+    QString getNextToken(QString prompt = QString());
+    QString getLine(QString prompt = QString());
 
-    void readComments();
+    void readHeader();
+    int writeHeader();
     QStringList getComments();
     QString getCommentString();
+
+    void nextLine();
+
+    QStringList readStringList(int num, QString prompt = QString());
 
 private:
     int lineNum;

@@ -501,7 +501,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_obs">
             <property name="currentIndex">
-             <number>4</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab_catch">
              <attribute name="title">
@@ -952,7 +952,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget_comp">
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="tab_length">
              <attribute name="title">
@@ -2420,7 +2420,7 @@
                   <item>
                    <widget class="QSpinBox" name="spinBox_selex_age_discard">
                     <property name="readOnly">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                     <property name="minimum">
                      <number>-4</number>
@@ -2565,9 +2565,12 @@
                      </widget>
                     </item>
                     <item row="8" column="4">
-                     <widget class="QSpinBox" name="spinBox_2">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numRetnTVParams">
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
                        <enum>QAbstractSpinBox::NoButtons</enum>
@@ -2582,9 +2585,12 @@
                      </widget>
                     </item>
                     <item row="12" column="4">
-                     <widget class="QSpinBox" name="spinBox_4">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numDiscTVParams">
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
                        <enum>QAbstractSpinBox::NoButtons</enum>
@@ -2660,9 +2666,12 @@
                      </widget>
                     </item>
                     <item row="10" column="4">
-                     <widget class="QSpinBox" name="spinBox_3">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numDiscParams">
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
                        <enum>QAbstractSpinBox::NoButtons</enum>
@@ -2723,9 +2732,12 @@
                      </widget>
                     </item>
                     <item row="6" column="4">
-                     <widget class="QSpinBox" name="spinBox">
+                     <widget class="QSpinBox" name="spinBox_selex_age_numRetnParams">
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                      <property name="readOnly">
+                       <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
                        <enum>QAbstractSpinBox::NoButtons</enum>
@@ -2746,7 +2758,7 @@
                      </widget>
                     </item>
                     <item row="18" column="7">
-                     <spacer name="verticalSpacer_4">
+                     <spacer name="verticalSpacer_sekex_age">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -2784,238 +2796,233 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
-               <widget class="QGroupBox" name="groupBox_2DAR1">
-                <property name="title">
-                 <string>Deviation Smoother</string>
-                </property>
-                <property name="checkable">
+               <widget class="QScrollArea" name="scrollArea_selex2dar1">
+                <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_23">
-                 <item>
-                  <widget class="QLabel" name="label_2DAR_spec">
-                   <property name="text">
-                    <string>Specification</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_2DAR_spec"/>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_2DAR_params">
-                   <property name="text">
-                    <string>Parameters</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_2DAR_params"/>
-                 </item>
-                </layout>
+                <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>910</width>
+                   <height>520</height>
+                  </rect>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_24">
+                  <item>
+                   <widget class="QGroupBox" name="groupBox_input_variance">
+                    <property name="title">
+                     <string>Input variance adjustment factors</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_8">
+                     <item row="6" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_multbygensize">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_multbysaa">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_addtobodywt">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_multbylencmp">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="3">
+                      <spacer name="horizontalSpacer_input_var">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="1" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_addtodiscard">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_addtosurvey">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="2">
+                      <widget class="QDoubleSpinBox" name="doubleSpinBox_multbyagecmp">
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QCheckBox" name="checkBox_multby_saaN">
+                       <property name="text">
+                        <string>Multiply by size-at-age N</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QCheckBox" name="checkBox_addto_survey_cv">
+                       <property name="text">
+                        <string>Add to survey CV</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QCheckBox" name="checkBox_addto_discard_std">
+                       <property name="text">
+                        <string>Add to discard Std Dev</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QCheckBox" name="checkBox_addto_bodywt_cv">
+                       <property name="text">
+                        <string>Add to body weight CV</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="1">
+                      <widget class="QCheckBox" name="checkBox_multby_gen_sizecomp">
+                       <property name="text">
+                        <string>Multiply by generalized sizecomp</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QCheckBox" name="checkBox_multby_lencompN">
+                       <property name="text">
+                        <string>Multiply by Lencomp N</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="1">
+                      <widget class="QCheckBox" name="checkBox_multby_agecompN">
+                       <property name="text">
+                        <string>Multiply by Agecomp N</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="groupBox_2DAR1">
+                    <property name="title">
+                     <string>2D-AR1 Deviation Smoother</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_23">
+                     <item>
+                      <widget class="QLabel" name="label_2DAR_spec">
+                       <property name="text">
+                        <string>Specification</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="verticalLayout_2DAR_spec"/>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_2DAR_params">
+                       <property name="text">
+                        <string>Parameters</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="verticalLayout_2DAR_params"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer_2DAR">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_input_variance">
-                <property name="title">
-                 <string>Input variance adjustment factors</string>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_8">
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_multbyagecmp">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Multiply by Agecomp N</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="2">
-                  <spacer name="horizontalSpacer_input_var">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_multbysaa">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Multiply by size-at-age N</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_addtosurvey">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Add to survey CV</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_multbylencmp">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Multiply by Lencomp N</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_addtodiscard">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Add to discard Std Dev</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label_multbygensizecmp">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Multiply by generalized sizecomp</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_addtobodywt">
-                   <property name="minimumSize">
-                    <size>
-                     <width>200</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Add to body weight CV</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_multbygensize">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="decimals">
-                    <number>3</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_multbysaa">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_multbyagecmp">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_multbylencmp">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_addtobodywt">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_addtodiscard">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_addtosurvey">
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_2DAR">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>

@@ -10,7 +10,6 @@
 #include <QStringList>
 
 #include "q_ratio.h"
-#include "area.h"
 #include "selectivity.h"
 #include "fleetlambda.h"
 #include "fleet_composition.h"
@@ -320,8 +319,8 @@ public slots:
     int age_selex_special() {return age_selex->getSpecial();}
     tablemodel *getAgeSelexModel() {return age_selex->getParameterModel();}
 
-    void setInputVarValue (int index = 0, bool on = false) {inputValueVar[index] = on;}
-    bool getInputVarValue (int index) {return inputValueVar[index];}
+    void setDoInputVariance (int index = 0, bool on = false) {inputValueVar[index] = on;}
+    bool getDoInputVariance (int index) {return inputValueVar[index];}
     void setInputVarianceValue (int index, float value) {inputVarianceValue[index] = value;}
     float getInputVarianceValue (int index) {return inputVarianceValue[index];}
     void setAddToSurveyCV (float val) {add_to_survey_CV = val;}

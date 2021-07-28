@@ -2403,7 +2403,7 @@ then read num_of_seasons parameters below.</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_14">
        <item>
-        <widget class="QScrollArea" name="scrollArea">
+        <widget class="QScrollArea" name="scrollArea_recr_adv">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>

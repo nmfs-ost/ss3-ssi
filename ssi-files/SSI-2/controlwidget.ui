@@ -1,21 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>controlWidget</class>
- <widget name="controlWidget" class="QWidget">
+ <widget class="QWidget" name="controlWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>856</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_62">
+       <property name="text">
+        <string>File:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_61">
+       <property name="text">
+        <string>control.ss</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>-1429</y>
+        <width>1173</width>
+        <height>1888</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="60" column="1">
+        <widget class="QLabel" name="label_58">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1" colspan="5">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string># first age that moves (real age at begin of season, not integer) also cond on do_migration&gt;0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1" colspan="5">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string># number of recruitment settlement assignments </string>
+         </property>
+        </widget>
+       </item>
+       <item row="40" column="1" colspan="3">
+        <widget class="QLabel" name="label_40">
+         <property name="text">
+          <string>#_natM_type:_0=1Parm; 1=N_breakpoints;_2=Lorenzen;_3=agespecific;_4=agespec_withseasinterpolate;_5=BETA:_Maunder_link_to_maturity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="36" column="0" colspan="4">
+        <widget class="QLabel" name="label_38">
+         <property name="text">
+          <string>#_Prior_codes:  0=none; 6=normal; 1=symmetric beta; 2=CASAL's beta; 3=lognormal; 4=lognormal with biascorr; 5=gamma</string>
+         </property>
+        </widget>
+       </item>
+       <item row="46" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+         <property name="minimum">
+          <double>-999.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>999.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QSpinBox" name="spinBox_7"/>
+       </item>
+       <item row="44" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+       </item>
+       <item row="39" column="0" colspan="2">
+        <widget class="QLabel" name="label_41">
+         <property name="text">
+          <string>#_NATMORT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="48" column="0">
+        <widget class="QLabel" name="label_48">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="45" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+       </item>
+       <item row="38" column="0" colspan="4">
+        <widget class="QLabel" name="label_42">
+         <property name="text">
+          <string># setup for M, growth, wt-len, maturity, fecundity, (hermaphro), recr_distr, cohort_grow, (movement), (age error), (catch_mult), sex ratio </string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_3">
+         <property name="plainText">
+          <string>1 1 1 2 4 10</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0">
+        <widget class="QSpinBox" name="spinBox_11"/>
+       </item>
+       <item row="18" column="1" colspan="5">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>#_Nblock_Patterns</string>
+         </property>
+        </widget>
+       </item>
+       <item row="43" column="0">
+        <widget class="QSpinBox" name="spinBox_13"/>
+       </item>
+       <item row="27" column="0" colspan="6">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string># where: 0 = autogen time-varying parms of this category; 1 = read each time-varying parm line; 2 = read then autogen if parm min==-12345</string>
+         </property>
+        </widget>
+       </item>
+       <item row="53" column="1" colspan="2">
+        <widget class="QLabel" name="label_44">
+         <property name="text">
+          <string>#_First_Mature_Age</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1" colspan="5">
+        <widget class="QLabel" name="label_23">
+         <property name="text">
+          <string>#_time-vary parm bound check (1=warn relative to base parm bounds; 3=no bound check); 
+Also see env (3) and dev (5) options to constrain with base bounds</string>
+         </property>
+        </widget>
+       </item>
+       <item row="51" column="0">
+        <widget class="QLabel" name="label_49">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="6">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QSpinBox" name="spinBox_2">
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QSpinBox" name="spinBox_5">
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="0" colspan="4">
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>#_EnvLinks:  1: P(y)=P_base*exp(TVP*env(y));  2: P(y)=P_base+TVP*env(y);  3: P(y)=f(TVP,env_Zscore) w/ logit to stay in min-max;  4: P(y)=2.0/(1.0+exp(-TVP1*env(y) - TVP2))</string>
+         </property>
+        </widget>
+       </item>
+       <item row="45" column="1" colspan="3">
+        <widget class="QLabel" name="label_34">
+         <property name="text">
+          <string>#_Growth_Age_for_L2 (999 to use as Linf)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="62" column="1">
+        <widget class="QLabel" name="label_56">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="29" column="0" colspan="5">
+        <widget class="QLabel" name="label_33">
+         <property name="text">
+          <string>#_Available timevary codes</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1" colspan="5">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string># not yet implemented; Future usage: Spawner-Recruitment: 1=global; 2=by area</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+       </item>
+       <item row="13" column="0">
+        <widget class="QSpinBox" name="spinBox_8"/>
+       </item>
+       <item row="0" column="6">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="53" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_7"/>
+       </item>
+       <item row="50" column="1" colspan="3">
+        <widget class="QLabel" name="label_46">
+         <property name="text">
+          <string>#_CV_Growth_Pattern:  0 CV=f(LAA); 1 CV=F(A); 2 SD=F(LAA); 3 SD=F(A); 4 logSD=F(A)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1" colspan="5">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string># recr_dist_method for parameters:  2=main effects for GP, Area, Settle timing; 3=each Settle entity; 4=none (only when N_GP*Nsettle*pop==1)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="5">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string># 0 means do not read wtatage.ss; 1 means read and use wtatage.ss and also read and use growth parameters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="46" column="1" colspan="3">
+        <widget class="QLabel" name="label_35">
+         <property name="text">
+          <string>#_exponential decay for growth above maxage (value should approx initial Z; -999 replicates 3.24; -998 to not allow growth above maxage)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="0" colspan="4">
+        <widget class="QLabel" name="label_31">
+         <property name="text">
+          <string>#_Block_trends: -1: trend bounded by base parm min-max and parms in transformed units (beware); -2: endtrend and infl_year direct values; -3: end and infl as fraction of base range</string>
+         </property>
+        </widget>
+       </item>
+       <item row="61" column="1">
+        <widget class="QLabel" name="label_57">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="3">
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="15" column="0" colspan="6">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string># example move definition for seas=1, morph=1, source=1 dest=2, age1=4, age2=10</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="43" column="1" colspan="4">
+        <widget class="QLabel" name="label_37">
+         <property name="text">
+          <string># GrowthModel: 1=vonBert with L1&amp;L2; 2=Richards with L1&amp;L2; 3=age_specific_K_incr; 4=age_specific_K_decr; 5=age_specific_K_each; 6=NA; 7=NA; 8=growth cessation</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+       </item>
+       <item row="47" column="1" colspan="3">
+        <widget class="QLabel" name="label_47">
+         <property name="text">
+          <string>#_placeholder for future growth feature</string>
+         </property>
+        </widget>
+       </item>
+       <item row="47" column="0">
+        <widget class="QSpinBox" name="spinBox_14"/>
+       </item>
+       <item row="55" column="1" colspan="3">
+        <widget class="QLabel" name="label_53">
+         <property name="text">
+          <string>#_hermaphroditism option:  0=none; 1=female-to-male age-specific fxn; -1=male-to-female age-specific fxn</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="1" colspan="5">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>#_blocks_per_pattern </string>
+         </property>
+        </widget>
+       </item>
+       <item row="49" column="0">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+       </item>
+       <item row="12" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit_2">
+         <property name="plainText">
+          <string>1 1 1 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="0" colspan="4">
+        <widget class="QLabel" name="label_28">
+         <property name="text">
+          <string>#_DevLinks(more):  21-25 keep last dev for rest of years</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="5">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>#_N_platoons_Within_GrowthPattern </string>
+         </property>
+        </widget>
+       </item>
+       <item row="41" column="1" colspan="3">
+        <widget class="QLabel" name="label_39">
+         <property name="text">
+          <string>#_no additional input for selected M option; read 1P per morph</string>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="0" colspan="4">
+        <widget class="QLabel" name="label_29">
+         <property name="text">
+          <string>#_DevLinks:  1: P(y)*=exp(dev(y)*dev_se;  2: P(y)+=dev(y)*dev_se;  3: random walk;  4: zero-reverting random walk with rho;  5: like 4 with logit transform to stay in base min-max</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QSpinBox" name="spinBox_3">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="54" column="0">
+        <widget class="QSpinBox" name="spinBox_17"/>
+       </item>
+       <item row="57" column="1">
+        <widget class="QLabel" name="label_51">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="3">
+        <widget class="QLineEdit" name="lineEdit"/>
+       </item>
+       <item row="35" column="0">
+        <widget class="QLabel" name="label_27">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="4">
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="plainText">
+          <string>#C control file comment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="5">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>#_N_Growth_Patterns (Growth Patterns, Morphs, Bio Patterns, GP are terms used interchangeably in SS)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="55" column="0">
+        <widget class="QSpinBox" name="spinBox_18"/>
+       </item>
+       <item row="26" column="2" colspan="4">
+        <widget class="QLabel" name="label_21">
+         <property name="text">
+          <string># autogen: 1st element for biology, 2nd for SR, 3rd for Q, 4th reserved, 5th for selex</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1" colspan="5">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string># N_movement_definitions goes here if Nareas &gt; 1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="44" column="1" colspan="3">
+        <widget class="QLabel" name="label_36">
+         <property name="text">
+          <string>#_Age(post-settlement)_for_L1;linear growth below this</string>
+         </property>
+        </widget>
+       </item>
+       <item row="63" column="1">
+        <widget class="QLabel" name="label_50">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="0" colspan="6">
+        <widget class="QLabel" name="label_25">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="2">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="3">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>#vector_platoon_dist_(-1_in_first_val_gives_normal_approx)  (no read if N_platoons=1)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="0" colspan="6">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string># controls for all timevary parameters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0" colspan="6">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>#GPattern month  area  age (for each settlement assignment)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="37" column="0" colspan="2">
+        <widget class="QLabel" name="label_43">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="0" colspan="4">
+        <widget class="QLineEdit" name="lineEdit_2"/>
+       </item>
+       <item row="28" column="0" colspan="6">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="40" column="0">
+        <widget class="QSpinBox" name="spinBox_12"/>
+       </item>
+       <item row="19" column="0">
+        <widget class="QSpinBox" name="spinBox_10"/>
+       </item>
+       <item row="9" column="0">
+        <widget class="QSpinBox" name="spinBox_6">
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1" colspan="5">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>#_Platoon_within/between_stdev_ratio (no read if N_platoons=1)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="42" column="0" colspan="2">
+        <widget class="QLabel" name="label_26">
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item row="49" column="1" colspan="3">
+        <widget class="QLabel" name="label_45">
+         <property name="text">
+          <string>#_SD_add_to_LAA (set to 0.1 for SS2 V1.x compatibility)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1" colspan="5">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string># unused option</string>
+         </property>
+        </widget>
+       </item>
+       <item row="54" column="1" colspan="3">
+        <widget class="QLabel" name="label_54">
+         <property name="text">
+          <string>#_fecundity option:(1)eggs=Wt*(a+b*Wt);(2)eggs=a*L^b;(3)eggs=a*Wt^b; (4)eggs=a+b*L; (5)eggs=a+b*W</string>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="0" colspan="6">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string># begin and end years of blocks</string>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="0" colspan="2">
+        <widget class="QLineEdit" name="lineEdit_3"/>
+       </item>
+       <item row="30" column="0" colspan="5">
+        <widget class="QLabel" name="label_32">
+         <property name="text">
+          <string>#_Block types: 0: P_block=P_base*exp(TVP); 1: P_block=P_base+TVP; 2: P_block=TVP; 3: P_block=P_block(-1) + TVP</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QSpinBox" name="spinBox_4">
+         <property name="minimum">
+          <number>2</number>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="50" column="0">
+        <widget class="QSpinBox" name="spinBox_15"/>
+       </item>
+       <item row="26" column="6">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="16" column="0" colspan="6">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string># Seas morph source dest age1 age2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QSpinBox" name="spinBox"/>
+       </item>
+       <item row="18" column="0">
+        <widget class="QSpinBox" name="spinBox_9"/>
+       </item>
+       <item row="59" column="1">
+        <widget class="QLabel" name="label_59">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="58" column="1">
+        <widget class="QLabel" name="label_60">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="56" column="1" colspan="3">
+        <widget class="QLabel" name="label_52">
+         <property name="text">
+          <string>#_parameter_offset_approach for M, G, CV_G:  1- direct, no offset**; 2- male=fem_parm*exp(male_parm); 3: male=female*exp(parm) then old=young*exp(parm)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="56" column="0">
+        <widget class="QSpinBox" name="spinBox_19"/>
+       </item>
+       <item row="57" column="0">
+        <widget class="QSpinBox" name="spinBox_16"/>
+       </item>
+       <item row="52" column="2" colspan="2">
+        <widget class="QLabel" name="label_55">
+         <property name="text">
+          <string>#_maturity_option</string>
+         </property>
+        </widget>
+       </item>
+       <item row="52" column="0" colspan="2">
+        <widget class="QComboBox" name="comboBox">
+         <item>
+          <property name="text">
+           <string>1 = length logistic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2 = age logistic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3 = read age-maturity matrix by growth pattern</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4 = read age-fecundity</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5 = disabled (not allowed)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>6 = read length-maturity </string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>

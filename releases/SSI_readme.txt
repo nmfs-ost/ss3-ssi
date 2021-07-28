@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.3
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.5
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,16 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.17.5
+    2021-07-23
+1. Fixed writing data file for length composition use.
+============================================================================
+3.30.17.4
+2021-07-07
+1. Added view for input variable adjustments.
+2. Added views for age selectivity discard and retention parameters.
+3. Fixed display of number of parameters for size selectivity.
 ============================================================================
     3.30.17.3
     2021-07-01

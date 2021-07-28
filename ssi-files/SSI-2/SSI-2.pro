@@ -14,6 +14,7 @@ SOURCES += \
     forecastwidget.cpp \
     main.cpp \
     mainwindow.cpp \
+    metadata.cpp \
     outputwidget.cpp \
     ssfile.cpp \
     ssmodel.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     datawidget.h \
     forecastwidget.h \
     mainwindow.h \
+    metadata.h \
     outputwidget.h \
     ssfile.h \
     ssmodel.h \

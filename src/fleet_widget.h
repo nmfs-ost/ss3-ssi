@@ -101,6 +101,9 @@ public slots:
     void changeSelexAgePattern(int value);
     void selexAgeParamsChanged();
     void selexAgeTVParamsChanged();
+    void changeSelexAgeDiscard(int disc);
+    void selexAgeDiscParamsChanged();
+    void selexAgeDiscTVParamsChanged();
     void changeSelexAgeMale (int mal);
     void selexAgeMaleParamsChanged();
     void selexAgeMaleTVParamsChanged();
@@ -116,6 +119,20 @@ public slots:
     void adjust2DAR1View (bool use);
     bool getUse2DAR1 ();
     void set2DAR1 ();
+    void changeDoAddToSurveyCV(bool set);
+    void changeAddToSurveyCV(double value);
+    void changeDoAddToDiscardSD(bool set);
+    void changeAddToDiscardSD(double value);
+    void changeDoAddToBdyWtCV(bool set);
+    void changeAddToBdyWtCV(double value);
+    void changeDoMultByLenCmpN(bool set);
+    void changeMultByLenCmpN(double value);
+    void changeDoMultByAgeCmpN(bool set);
+    void changeMultByAgeCmpN(double value);
+    void changeDoMultBySaaN(bool set);
+    void changeMultBySaaN(double value);
+    void changeDoMultByGenSizeCmp(bool set);
+    void changeMultByGenSizeCmp(double value);
 
 private:
 
@@ -161,6 +178,10 @@ private:
 
     tableview *ageSelexParamsView;
     tableview *ageSelexTimeVaryParamsView;
+    tableview *ageSelexRetainParamsView;
+    tableview *ageSelexRetainTVParamsView;
+    tableview *ageSelexDiscardParamsView;
+    tableview *ageSelexDiscardTVParamsView;
     tableview *ageSelexMaleParamsView;
     tableview *ageSelexMaleTVParamsView;
     DialogSelexEquationView *selexAgeEqDialog;

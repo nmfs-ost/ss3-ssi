@@ -29,3 +29,12 @@ bool forecastWidget::writeFile()
     bool okay = true;
     return okay;
 }
+
+int forecastWidget::getBenchmarks()
+{
+    return ui->spinBox_bmarks_option->value();
+}
+void forecastWidget::setBenchmarks(int bmark)
+{
+    ui->spinBox_bmarks_option->setValue(bmark);
+}
