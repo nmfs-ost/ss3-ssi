@@ -599,19 +599,27 @@ void MainWindow::saveFiles()
 
 void MainWindow::copyFiles(QString oldDir, QString newDir)
 {
+    QFileInfo qfi;
+    // save standard files in current directory
     saveFiles();
-    copyFile (oldDir + QString("/wtatage.ss"), newDir);
-    copyFile (oldDir + QString("/ss.par"), newDir);
-    copyFile (oldDir + QString("/ss.bar"), newDir);
-    QFileInfo qfi (oldDir + QString("/ss.par"));
+    // copy readme.txt
+    qfi = QFileInfo (oldDir + QString("/readme.txt"));
     if (qfi.exists())
-    {
-        // copy ss.par file
+        copyFile (qfi.absolutePath(), newDir);
+
+    // copy ss.par
+    qfi = QFileInfo (oldDir + QString("/ss.par"));
+    if (qfi.exists())
         copyFile (qfi.absoluteFilePath(), newDir);
-    }
+
+    // copy ss.bar
+    qfi = QFileInfo (oldDir + QString("/ss.bar"));
+    if (qfi.exists())
+        copyFile (oldDir + QString("/ss.bar"), newDir);
+
+    // copy wtatage.ss
     if (modelData->getReadWtAtAge())
     {
-        // copy wtatage.ss
         copy_file (oldDir + QString("/wtatage.ss_new"), newDir + QString("/wtatage.ss"));
     }
 }

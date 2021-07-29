@@ -80,6 +80,10 @@ void Dialog_readme::createReadme()
         viewFile();
     }
     else {
+        QString model = QDir::currentPath();
+        model = model.split('/', QString::SkipEmptyParts).takeLast();
+        ui->lineEdit_model->setText(model);
+        ui->dateEdit->setDate(QDate::currentDate());
         writeReadme();
         editReadme();
     }
@@ -172,7 +176,7 @@ void Dialog_readme::writeReadme()
         QString mName = ui->lineEdit_model->text();
         QString cName = ui->lineEdit_name->text();
         QString eMail = ui->lineEdit_email->text();
-        QString info = ui->plainTextEdit_info->toPlainText().simplified();
+        QString info = ui->plainTextEdit_info->toPlainText();
 
         if (exists) {
             wline.append(QString("Readme file changed on %1\n").arg(QDate::currentDate().toString()));
@@ -183,15 +187,15 @@ void Dialog_readme::writeReadme()
         wline.append(QString("SS Version   : %1%2%3\n").arg(ui->spinBox_ver1->text(),
                                                ui->spinBox_ver2->text(),
                                                ui->spinBox_ver3->text()));
-        wline.append(QString("\nModel Name   : "));//%1\n").arg(ui->lineEdit_model->text()));
+        wline.append(QString("\nModel Name   : "));
         if (!mName.isEmpty()) {
             wline.append(mName);
         }
-        wline.append(QString("\n\nContact Name : "));//&1\n").arg(ui->lineEdit_name->text()));
+        wline.append(QString("\n\nContact Name : "));
         if (!cName.isEmpty()) {
             wline.append(cName);
         }
-        wline.append(QString("\nContact eMail: "));//%1\n").arg(ui->lineEdit_email->text()));
+        wline.append(QString("\nContact eMail: "));
         if (!eMail.isEmpty()) {
             wline.append(eMail);
         }
@@ -226,8 +230,6 @@ void Dialog_readme::cancelReadme()
 {
     fview->hide();
     close();
-//    QCloseEvent *event = nullptr;
-//    closeEvent(event);
 }
 
 //void Dialog_readme::closeEvent(QCloseEvent *event)
@@ -283,10 +285,6 @@ void Dialog_readme::viewFile()
     fview->viewFile(&readmeFile);
     fview->show();
     hide();
-//    fview->exec();
-//    delete fview;
-//    fview->viewFile(&readmeFile);
-//    emit fileView();
 }
 
 QString &Dialog_readme::formatFeatures()

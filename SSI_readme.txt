@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.5
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.6
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,10 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.17.6
+    2021-0
+1. Added default model to readme.txt.
 ============================================================================
     3.30.17.5
     2021-07-23
