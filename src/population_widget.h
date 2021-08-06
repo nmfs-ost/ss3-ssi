@@ -47,6 +47,7 @@ public slots:
     int getMaturityOpt();
 
     void setMortOption (int opt);
+    void setInitialMort (tablemodel *fmort);
     void changeMortOption (int opt);
     void changeMortNumBkpts (int num);
     void changeNumGrowthPat(int num);
@@ -73,6 +74,7 @@ public slots:
     void changeRecrDistAssignments (int method);
     int getRecrDistParam ();
 
+    void setFMortMethod (int opt);
     void changeFMortMethod (int opt);
     void changeFMortBpark ();
     void changeFMortBparkYr (int yr);

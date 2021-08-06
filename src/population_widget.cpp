@@ -569,9 +569,10 @@ void population_widget::refresh()
     mortInputsView->setModel(pop->M()->getInputModel());
     mortInputsView->setHeight(pop->M()->getInputModel());
     mortInputsView->resizeColumnsToContents();
-    mortInitialParamsView->setModel(pop->M()->getInitialParams());
-    mortInitialParamsView->setHeight(pop->M()->getInitialParams());
-    mortInitialParamsView->resizeColumnsToContents();
+    setInitialMort(pop->M()->getInitialParams());
+//    mortInitialParamsView->setModel(pop->M()->getInitialParams());
+//    mortInitialParamsView->setHeight(pop->M()->getInitialParams());
+//    mortInitialParamsView->resizeColumnsToContents();
     setMortOption (pop->Grow()->getNatural_mortality_type());
 
     // Seasonality
@@ -594,7 +595,7 @@ void population_widget::refresh()
     ui->spinBox_fishingMort_bpark_year->setValue(pop->M()->getBparkYr());
     ui->lineEdit_fishingMort_max->setText(QString::number(pop->M()->getMaxF()));
     ui->comboBox_fishingMort_method->setCurrentIndex(pop->M()->getMethod() - 1);
-    changeFMortMethod(ui->comboBox_fishingMort_method->currentIndex());
+    setFMortMethod(ui->comboBox_fishingMort_method->currentIndex());
     ui->lineEdit_fishingMort_2_fstart->setText(QString::number(pop->M()->getStartF()));
     ui->spinBox_fishingMort_2_phase->setValue(pop->M()->getPhase());
     ui->spinBox_fishingMort_2_num_detail->setValue(pop->M()->getNumInputs());
@@ -667,6 +668,24 @@ int population_widget::getFecundityAdjustment()
 {
 //    return (ui->comboBox_fecund_adj_constraint->currentIndex() + 1);
     return 0;
+}
+
+void population_widget::setInitialMort(tablemodel *fmort)
+{
+    int rows = fmort->rowCount();
+    mortInitialParamsView->setModel(pop->M()->getInitialParams());
+    mortInitialParamsView->setHeight(rows);
+    mortInitialParamsView->resizeColumnsToContents();
+    if (rows > 0)
+    {
+        ui->label_init_F->setVisible(true);
+        mortInitialParamsView->setVisible(true);
+    }
+    else
+    {
+        ui->label_init_F->setVisible(false);
+        mortInitialParamsView->setVisible(false);
+    }
 }
 
 void population_widget::setMortOption(int opt)
@@ -1579,25 +1598,36 @@ void population_widget::changeMoveFirstAge()
     pop->Move()->setFirstAge(age);
 }
 
+void population_widget::setFMortMethod(int opt)
+{
+    switch (opt)
+    {
+    case 0: // no additional info
+        ui->frame_fishingMort_2->setVisible(false);
+        ui->frame_fishingMort_3->setVisible(false);
+        ui->frame_fishingMort_4->setVisible(false);
+        break;
+    case 1: // overall F
+        ui->frame_fishingMort_2->setVisible(true);
+        ui->frame_fishingMort_3->setVisible(false);
+        ui->frame_fishingMort_4->setVisible(false);
+        break;
+    case 2: // tuning iterations
+        ui->frame_fishingMort_2->setVisible(false);
+        ui->frame_fishingMort_3->setVisible(true);
+        ui->frame_fishingMort_4->setVisible(false);
+        break;
+    case 3: // fleet specific + tuning iterations
+        ui->frame_fishingMort_2->setVisible(false);
+        ui->frame_fishingMort_3->setVisible(true);
+        ui->frame_fishingMort_4->setVisible(true);
+        break;
+    }
+}
 void population_widget::changeFMortMethod (int opt)
 {
     pop->M()->setMethod(opt + 1);
-    switch (opt)
-    {
-    case 0:
-        ui->frame_fishingMort_2->setVisible(false);
-        ui->frame_fishingMort_3->setVisible(false);
-        break;
-    case 1:
-        ui->frame_fishingMort_2->setVisible(true);
-        ui->frame_fishingMort_3->setVisible(false);
-        break;
-    case 2:
-        ui->frame_fishingMort_2->setVisible(false);
-        ui->frame_fishingMort_3->setVisible(true);
-        break;
-    }
-
+    setFMortMethod(opt);
 }
 
 void population_widget::changeFMortBpark ()

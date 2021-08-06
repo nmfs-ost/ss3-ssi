@@ -17,7 +17,8 @@ History:
 ============================================================================
     3.30.17.6
     2021-0
-1. Added default model to readme.txt.
+1. Added a default model to readme.txt.
+2. Got ready for fleet specific F mort (population).
 ============================================================================
     3.30.17.5
     2021-07-23

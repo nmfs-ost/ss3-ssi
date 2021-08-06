@@ -2973,6 +2973,10 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     if (c_file->getOkay() && !c_file->getStop()) {
         num = 0;
         int num_seas = data->get_num_seasons();
+        int num_fleets = data->get_num_fleets();
+        float startF = 0;
+        int phaseF = 99;
+        int numInputs = 1;
         pop->M()->setNumFisheries(data->get_num_fisheries());
         for (i = 0; i < num_fleets; i++)
         {
@@ -2996,15 +3000,29 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         switch (pop->M()->getMethod())
         {
         case 2:
-            temp_float = c_file->get_next_value(QString("F Mort start value")).toFloat();
-            pop->M()->setStartF(temp_float); // startF
-            temp_int = c_file->get_next_value(QString("F Mort phase")).toInt();
-            pop->M()->setPhase(temp_int); // phase
-            temp_int = c_file->get_next_value(QString("F Mort num inputs")).toInt();
-            pop->M()->setNumInputs(temp_int); // numInputs
+            startF = c_file->get_next_value(QString("F Mort start value")).toFloat();
+            pop->M()->setStartF(startF); // startF
+            phaseF = c_file->get_next_value(QString("F Mort phase")).toInt();
+            pop->M()->setPhase(phaseF); // phase
+            numInputs = c_file->get_next_value(QString("F Mort num inputs")).toInt();
+            pop->M()->setNumInputs(numInputs); // numInputs
+//            for (int i = 0; i <= num_fleets; i++)
+//                pop->M()->setFleetF(i, startF, phaseF, numInputs);
             break;
         case 3:
             temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 1, 15, 4);
+            pop->M()->setNumTuningIters(temp_int); // numTuningIters
+            break;
+        case 4:
+            int fleet = 0;
+            do {
+                fleet = c_file->getIntValue("Fleet", 1, data->get_num_fleets(), -9999);
+                startF = c_file->get_next_value(QString("F Mort start value")).toFloat();
+                phaseF = c_file->get_next_value(QString("F Mort phase")).toInt();
+                numInputs = c_file->get_next_value(QString("F Mort num inputs")).toInt();
+//                pop->M()->setFleetF(fleet, startF, phaseF, numInputs);
+            } while (fleet != -9999);
+            temp_int = c_file->getIntValue(QString("F Mort num tuning loops (3-7)"), 1, 15, 4);
             pop->M()->setNumTuningIters(temp_int); // numTuningIters
             break;
         }
@@ -4655,40 +4673,66 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
         // mortality
         line = QString("#Fishing Mortality info ");
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 #_F ballpark").arg(
-                           QString::number(pop->M()->getBparkF())));
+        line = QString(QString ("%1 #_F ballpark")
+                           .arg(pop->M()->getBparkF()));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 #_F ballpark year (neg value to disable)").arg(
-                           QString::number(pop->M()->getBparkYr())));
+        line = QString(QString ("%1 #_F ballpark year (neg value to disable)")
+                           .arg(pop->M()->getBparkYr()));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 #_F_Method: 1=Pope; 2=instan. F; 3=hybrid (hybrid is recommended)").arg(
-                           QString::number(pop->M()->getMethod())));
+        line = QString(QString ("%1 #_F_Method: 1=Pope; 2=instan. F; 3=hybrid (hybrid is recommended)")
+                           .arg(pop->M()->getMethod()));
         chars += c_file->writeline(line);
-        line = QString(QString ("%1 #_max F or harvest rate, depends on F_Method").arg(
-                           QString::number(pop->M()->getMaxF())));
+        line = QString(QString ("%1 #_max F or harvest rate, depends on F_Method")
+                           .arg(pop->M()->getMaxF()));
         chars += c_file->writeline(line);
-        line = QString("#_no additional F input needed for Fmethod 1");
+        line = QString("#_for Fmethod=1; no additional F input needed");
         chars += c_file->writeline(line);
-        line = QString("#_if Fmethod=2; read overall start F value; overall phase; N detailed inputs to read");
+        line = QString("#_for Fmethod=2; read overall start F value; overall phase; N detailed inputs to read");
         chars += c_file->writeline(line);
-        line = QString("#_if Fmethod=3; read N iterations for tuning for Fmethod 3");
+        line = QString("#_for Fmethod=3; read N iterations for tuning");
+        chars += c_file->writeline(line);
+        line = QString("#_for Fmethod=4; read list of fleets needing parameters; syntax is: fleet, F_starting_value (if start_PH=1), first PH for parms (99 to stay in hybrid)");
+        chars += c_file->writeline(line);
+        line = QString("#_               then read N tuning loops for hybrid fleets 2-3 normally enough");
         chars += c_file->writeline(line);
 
         switch (pop->M()->getMethod())
         {
         case 1:
             break;
+
         case 2:
-            line = QString(QString ("%1 %2 %3 #_overall start F value, overall phase, N detailed inputs").arg(
-                               QString::number(pop->M()->getStartF()),
-                               QString::number(pop->M()->getPhase()),
-                               QString::number(pop->M()->getNumInputs())));
+            line = QString(QString ("%1 %2 %3 #_overall start F value, overall phase, N detailed inputs")
+                               .arg(pop->M()->getStartF())
+                               .arg(pop->M()->getPhase())
+                               .arg(pop->M()->getNumInputs()));
             chars += c_file->writeline(line);
             break;
+
         case 3:
-            line = QString(QString ("%1 #_N iterations for tuning F in hybrid method (recommend 3 to 7)").arg(
-                               QString::number(pop->M()->getNumTuningIters())));
+            line = QString(QString ("%1 #_N iterations for tuning F in hybrid method (recommend 3 to 7)")
+                               .arg(pop->M()->getNumTuningIters()));
             chars += c_file->writeline(line);
+            break;
+
+        case 4:
+            line = QString("#Fleet start_F first_parm_phase");
+            chars += c_file->writeline(line);
+            //temp_int = pop->M()->getNumFleetF();
+            //for (int i = 0; i < temp_int; i++)
+            //{
+            //  line = QString("%1 %2 %3").arg(pop->M()->getFleetF(i).at(0))
+            //                           .arg(pop->M()->getFleetF(i).at(1))
+            //                           .arg(pop->M()->getFleetF(i).at(2)));
+            //}
+            //  chars += c_file->writeline(line);
+            line = QString("-9999 1 1");
+            chars += c_file->writeline(line);
+            line = QString(QString ("%1 #_number of tuning loops for hybrid fleets; 4 good, 3 faster")
+                               .arg(pop->M()->getNumTuningIters()));
+            chars += c_file->writeline(line);
+            break;
+
         }
 
         line = QString ("#_Fleet Yr Seas F_value se phase (for detailed setup of F_Method=2; -Yr to fill remaining years)");
@@ -5591,8 +5635,8 @@ int readTimeVaryDevParams(ss_file *infile, ss_model *data, int value, QString hd
 {
     QStringList varParam;
     QString varHeader(hdr);
-    Q_UNUSED(data);
-    Q_UNUSED(value);
+    Q_UNUSED(data)
+    Q_UNUSED(value)
 //    switch (value)
     {
 //    case 1:
@@ -5615,7 +5659,7 @@ int readTimeVaryEnvParams(ss_file *infile, ss_model *data, int value, QString hd
     int var = value - (fnx * 100);
     QStringList varParam;
     QString varHeader(hdr);
-    Q_UNUSED(data);
+    Q_UNUSED(data)
 
     if (var > 0)
     {

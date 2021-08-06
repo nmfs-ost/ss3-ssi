@@ -218,7 +218,7 @@
      <x>0</x>
      <y>0</y>
      <width>847</width>
-     <height>31</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -344,6 +344,9 @@
    </property>
    <property name="floating">
     <bool>true</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
@@ -948,6 +951,9 @@
    </property>
    <property name="text">
     <string>Title Window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+/</string>
    </property>
   </action>
   <action name="actionLocate_SS_executable">

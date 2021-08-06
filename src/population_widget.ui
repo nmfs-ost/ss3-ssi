@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1154</width>
-    <height>577</height>
+    <width>1164</width>
+    <height>710</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>8</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -83,7 +83,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1089</width>
+            <width>1099</width>
             <height>664</height>
            </rect>
           </property>
@@ -822,8 +822,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1058,8 +1058,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1352,261 +1352,252 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
-            <widget class="QGroupBox" name="groupBox_natMort">
-             <property name="title">
-              <string>Natural Mortality</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_12">
-              <item>
-               <layout class="QGridLayout" name="gridLayout_mortality">
-                <item row="3" column="0" colspan="4">
-                 <widget class="QWidget" name="widget_mort_lorenz" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout">
-                   <item>
-                    <widget class="QLabel" name="label_mort_lorenz_int">
-                     <property name="text">
-                      <string>Reference integer for the Lorenzen function</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSpinBox" name="spinBox_mort_lorenz_int">
-                     <property name="value">
-                      <number>4</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_mort_lorenz_int">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>80</width>
-                       <height>19</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="5" column="0" colspan="3">
-                 <widget class="QLabel" name="label_mort_f_params">
+            <layout class="QGridLayout" name="gridLayout_mortality">
+             <item row="11" column="4">
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_mort_age_specific">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>160</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Natural Mortality at age</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2">
+              <widget class="QLabel" name="label_mort_option">
+               <property name="text">
+                <string>Natural Mortality option </string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QComboBox" name="comboBox_mort_option">
+               <item>
+                <property name="text">
+                 <string>0: Read one parameter</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1: Age mortality breakpoints</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2: Lorenzen function</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3: Age specific mort only</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4: Age specific mort with seasonal interp</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="10" column="0" colspan="3">
+              <widget class="QLabel" name="label_mort_m_tv_params">
+               <property name="text">
+                <string>Male time varying parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0" colspan="6">
+              <layout class="QVBoxLayout" name="verticalLayout_m_mort_params"/>
+             </item>
+             <item row="0" column="5">
+              <spacer name="horizontalSpacer_13">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="3">
+              <spacer name="horizontalSpacer_14">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="4">
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="0" colspan="4">
+              <widget class="QWidget" name="widget_mort_lorenz" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <item>
+                 <widget class="QLabel" name="label_mort_lorenz_int">
                   <property name="text">
-                   <string>Female Parameters</string>
+                   <string>Reference integer for the Lorenzen function</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_mort_age_specific">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>160</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Natural Mortality at age</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                <item>
+                 <widget class="QSpinBox" name="spinBox_mort_lorenz_int">
+                  <property name="value">
+                   <number>4</number>
                   </property>
                  </widget>
                 </item>
-                <item row="12" column="0" colspan="4">
-                 <layout class="QVBoxLayout" name="verticalLayout_m_mort_tv_params"/>
-                </item>
-                <item row="2" column="0" colspan="4">
-                 <widget class="QWidget" name="widget_mort_breakpoints" native="true">
-                  <layout class="QGridLayout" name="gridLayout_8">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_mort_num_breakpoints">
-                     <property name="text">
-                      <string>Number of breakpoints</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_mort_breakpoints">
-                     <property name="text">
-                      <string>Age breakpoints</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QSpinBox" name="spinBox_mort_num_breakpoints">
-                     <property name="value">
-                      <number>4</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <spacer name="horizontalSpacer_8">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="1" column="1" rowspan="2" colspan="2">
-                    <layout class="QVBoxLayout" name="verticalLayout_breakpoints"/>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QLabel" name="label_mort_option">
-                  <property name="text">
-                   <string>Natural Mortality option </string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="12" column="4">
-                 <spacer name="verticalSpacer_5">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="6" column="0" colspan="6">
-                 <layout class="QVBoxLayout" name="verticalLayout_mort_f_params"/>
-                </item>
-                <item row="1" column="3">
-                 <spacer name="horizontalSpacer_14">
+                <item>
+                 <spacer name="horizontalSpacer_mort_lorenz_int">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>40</width>
-                    <height>20</height>
+                    <width>80</width>
+                    <height>19</height>
                    </size>
                   </property>
                  </spacer>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QComboBox" name="comboBox_mort_option">
-                  <item>
-                   <property name="text">
-                    <string>0: Read one parameter</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>1: Age mortality breakpoints</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>2: Lorenzen function</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>3: Age specific mort only</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>4: Age specific mort with seasonal interp</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="1" column="5">
-                 <spacer name="horizontalSpacer_13">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="11" column="0" colspan="3">
-                 <widget class="QLabel" name="label_mort_m_tv_params">
-                  <property name="text">
-                   <string>Male time varying parameters</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="4">
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="10" column="0" colspan="6">
-                 <layout class="QVBoxLayout" name="verticalLayout_m_mort_params"/>
-                </item>
-                <item row="4" column="1" colspan="5">
-                 <layout class="QHBoxLayout" name="horizontalLayout_mort_age_specific"/>
-                </item>
-                <item row="7" column="0" colspan="3">
-                 <widget class="QLabel" name="label_mort_f_tv_params">
-                  <property name="text">
-                   <string>Female time varying parameters</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="9" column="0" colspan="3">
-                 <widget class="QLabel" name="label_mort_m_params">
-                  <property name="text">
-                   <string>Male Parameters </string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="8" column="0" colspan="4">
-                 <layout class="QVBoxLayout" name="verticalLayout_mort_f_tv_params"/>
                 </item>
                </layout>
-              </item>
-             </layout>
-            </widget>
+              </widget>
+             </item>
+             <item row="8" column="0" colspan="3">
+              <widget class="QLabel" name="label_mort_m_params">
+               <property name="text">
+                <string>Male Parameters </string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0" colspan="4">
+              <layout class="QVBoxLayout" name="verticalLayout_mort_f_tv_params"/>
+             </item>
+             <item row="5" column="0" colspan="6">
+              <layout class="QVBoxLayout" name="verticalLayout_mort_f_params"/>
+             </item>
+             <item row="1" column="0" colspan="4">
+              <widget class="QWidget" name="widget_mort_breakpoints" native="true">
+               <layout class="QGridLayout" name="gridLayout_8">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_mort_num_breakpoints">
+                  <property name="text">
+                   <string>Number of breakpoints</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_mort_breakpoints">
+                  <property name="text">
+                   <string>Age breakpoints</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="spinBox_mort_num_breakpoints">
+                  <property name="value">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="1" rowspan="2" colspan="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_breakpoints"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="3">
+              <widget class="QLabel" name="label_mort_f_tv_params">
+               <property name="text">
+                <string>Female time varying parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0" colspan="4">
+              <layout class="QVBoxLayout" name="verticalLayout_m_mort_tv_params"/>
+             </item>
+             <item row="4" column="0" colspan="3">
+              <widget class="QLabel" name="label_mort_f_params">
+               <property name="text">
+                <string>Female Parameters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" colspan="5">
+              <layout class="QHBoxLayout" name="horizontalLayout_mort_age_specific"/>
+             </item>
+            </layout>
            </item>
            <item>
             <spacer name="verticalSpacer_2">
@@ -1642,8 +1633,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1806,8 +1797,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2102,8 +2093,8 @@ then read num_of_seasons parameters below.</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -2412,7 +2403,7 @@ then read num_of_seasons parameters below.</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1089</width>
+            <width>1099</width>
             <height>621</height>
            </rect>
           </property>
@@ -2442,7 +2433,7 @@ then read num_of_seasons parameters below.</string>
              <item row="0" column="0" colspan="2">
               <widget class="QLabel" name="label_sr_do_recr_dev">
                <property name="text">
-                <string>Recruitment deviations</string>
+                <string>Recruitment deviations option</string>
                </property>
               </widget>
              </item>
@@ -2847,209 +2838,222 @@ then read num_of_seasons parameters below.</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1110</width>
-            <height>441</height>
+            <width>1120</width>
+            <height>574</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
            <item>
-            <widget class="QGroupBox" name="groupBox_fishingMort">
-             <property name="title">
-              <string>Fishing Mortality</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_13">
-              <item>
-               <layout class="QGridLayout" name="gridLayout_fishingMort">
-                <item row="6" column="0" colspan="5">
-                 <widget class="QFrame" name="frame_fishingMort_2">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_2">
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_phase">
-                     <property name="text">
-                      <string>Phase for F params</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_fstart">
-                     <property name="text">
-                      <string>Starting value for each F</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="2">
-                    <spacer name="horizontalSpacer_11">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="0" column="1" colspan="2">
-                    <widget class="QLineEdit" name="lineEdit_fishingMort_2_fstart">
-                     <property name="maximumSize">
-                      <size>
-                       <width>100</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QSpinBox" name="spinBox_fishingMort_2_phase"/>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QSpinBox" name="spinBox_fishingMort_2_num_detail"/>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_spacer">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_fishingMort_2_num_detail">
-                     <property name="text">
-                      <string>Number of inputs below</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="3">
-                    <spacer name="horizontalSpacer_9">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="4" column="1" colspan="3">
-                    <layout class="QVBoxLayout" name="verticalLayout_mort_inputs"/>
-                   </item>
-                   <item row="0" column="4">
-                    <spacer name="horizontalSpacer_10">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="8" column="0" colspan="2">
-                 <widget class="QLabel" name="label_init_F">
+            <layout class="QGridLayout" name="gridLayout_fishingMort">
+             <item row="1" column="3">
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_fishingMort_bpark_year">
+               <property name="text">
+                <string>Ballpark year</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="lineEdit_fishingMort_max">
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="5">
+              <widget class="QFrame" name="frame_fishingMort_4">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_3">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_fishingMort_4_fleetF">
                   <property name="text">
-                   <string>Initial Fishing Mortality</string>
+                   <string>Fleet Specific F</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QLineEdit" name="lineEdit_fishingMort_bpark">
+                <item row="0" column="3">
+                 <spacer name="horizontalSpacer_24">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="2">
+                 <spacer name="horizontalSpacer_25">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="4">
+                 <spacer name="horizontalSpacer_12">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="1">
+                 <spacer name="horizontalSpacer_26">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QLabel" name="label_fishingMort_1_spacer">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1" colspan="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_fishingMort_4_fleetF"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_init_F">
+               <property name="text">
+                <string>Initial Fishing Mortality</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <spacer name="horizontalSpacer_27">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_fishingMort_method">
+               <property name="text">
+                <string>Method</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="5">
+              <widget class="QFrame" name="frame_fishingMort_2">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_2">
+                <item row="2" column="1">
+                 <widget class="QSpinBox" name="spinBox_fishingMort_2_phase"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_fishingMort_2_fstart">
+                  <property name="text">
+                   <string>Starting value for each F</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="4">
+                 <spacer name="horizontalSpacer_10">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_fishingMort_2_phase">
+                  <property name="text">
+                   <string>Phase for F params</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1" colspan="2">
+                 <widget class="QLineEdit" name="lineEdit_fishingMort_2_fstart">
                   <property name="maximumSize">
                    <size>
                     <width>100</width>
                     <height>16777215</height>
                    </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="3">
+                 <spacer name="horizontalSpacer_9">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_fishingMort_2_overallF">
+                  <property name="text">
+                   <string>Overall F</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="2">
-                 <widget class="QSpinBox" name="spinBox_fishingMort_bpark_year">
-                  <property name="minimum">
-                   <number>-2500</number>
-                  </property>
-                  <property name="maximum">
-                   <number>3000</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="2">
-                 <widget class="QLineEdit" name="lineEdit_fishingMort_max">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0" colspan="2">
-                 <widget class="QLabel" name="label_fishingMort_max">
-                  <property name="text">
-                   <string>Maximum mortality</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QLabel" name="label_fishingMort_bpark">
-                  <property name="text">
-                   <string>Ballpark mortality</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0" colspan="2">
-                 <widget class="QLabel" name="label_fishingMort_bpark_year">
-                  <property name="text">
-                   <string>Ballpark year</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1" colspan="3">
-                 <widget class="QComboBox" name="comboBox_fishingMort_method">
-                  <property name="maximumSize">
-                   <size>
-                    <width>300</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>1 = Pope's</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>2 = Continuous F as parameters</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>3 = Hybrid</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_fishingMort_method">
-                  <property name="text">
-                   <string>Method</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="4">
-                 <spacer name="horizontalSpacer_5">
+                 <spacer name="horizontalSpacer_11">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -3061,8 +3065,115 @@ then read num_of_seasons parameters below.</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="2" column="3">
-                 <spacer name="horizontalSpacer_16">
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_fishingMort_2_spacer">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1" colspan="3">
+                 <layout class="QVBoxLayout" name="verticalLayout_mort_inputs"/>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QSpinBox" name="spinBox_fishingMort_2_num_detail"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_fishingMort_2_num_detail">
+                  <property name="text">
+                   <string>Number of inputs below</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lineEdit_fishingMort_bpark">
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="3">
+              <widget class="QComboBox" name="comboBox_fishingMort_method">
+               <property name="maximumSize">
+                <size>
+                 <width>300</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <item>
+                <property name="text">
+                 <string>1 = Pope's</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 = Continuous F as parameters</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 = Hybrid</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <spacer name="horizontalSpacer_16">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSpinBox" name="spinBox_fishingMort_bpark_year">
+               <property name="minimum">
+                <number>-2500</number>
+               </property>
+               <property name="maximum">
+                <number>3000</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_fishingMort_max">
+               <property name="text">
+                <string>Maximum mortality</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="5">
+              <widget class="QFrame" name="frame_fishingMort_3">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_4">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_fishingMort_3_num_iters">
+                  <property name="text">
+                   <string>Number of tuning iterations</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="spinBox_fishingMort_3_num_iters"/>
+                </item>
+                <item row="0" column="2">
+                 <spacer name="horizontalSpacer_17">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -3070,78 +3181,44 @@ then read num_of_seasons parameters below.</string>
                    <size>
                     <width>40</width>
                     <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="9" column="0" colspan="4">
-                 <layout class="QVBoxLayout" name="verticalLayout_init_F"/>
-                </item>
-                <item row="7" column="0" colspan="4">
-                 <widget class="QFrame" name="frame_fishingMort_3">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_4">
-                   <item row="1" column="1">
-                    <widget class="QSpinBox" name="spinBox_fishingMort_3_num_iters"/>
-                   </item>
-                   <item row="1" column="2">
-                    <spacer name="horizontalSpacer_17">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_fishingMort_3_num_iters">
-                     <property name="text">
-                      <string>Number of tuning iterations</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="9" column="4">
-                 <spacer name="verticalSpacer_6">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
                    </size>
                   </property>
                  </spacer>
                 </item>
                </layout>
-              </item>
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_fishingMort_bpark">
+               <property name="text">
+                <string>Ballpark mortality</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string> </string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1" colspan="3">
+              <layout class="QVBoxLayout" name="verticalLayout_init_F"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>

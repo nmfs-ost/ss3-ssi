@@ -74,6 +74,7 @@ private:
     int   phase;
     int   numInputs;
     int   numTuningIters;
+    tablemodel *fleetF;
 
     shortParameterTable *initialParams;
     shortParameterTable *parameterTable;
