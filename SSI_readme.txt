@@ -16,13 +16,14 @@ See ss_gui_copyright.txt for more information.
 History:
 ============================================================================
     3.30.17.6
-    2021-0
-1. Added a default model to readme.txt.
-2. Got ready for fleet specific F mort (population).
+    2021-09-
+1. Fixed recruitment advanced option forecast recruitment phase read/write.
+2. Added a default model name to readme.txt.
+3. Got code in place for fleet specific F mort (population).
 ============================================================================
     3.30.17.5
     2021-07-23
-1. Fixed writing data file for length composition use.
+1. Fixed writing data file for option length composition use.
 ============================================================================
 3.30.17.4
 2021-07-07

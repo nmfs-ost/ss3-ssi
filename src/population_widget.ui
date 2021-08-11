@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>8</number>
+      <number>7</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -2649,7 +2649,7 @@ then read num_of_seasons parameters below.</string>
                    <item row="2" column="1">
                     <widget class="QSpinBox" name="spinBox_recr_dev_fcast_phase">
                      <property name="minimum">
-                      <number>-5</number>
+                      <number>-99</number>
                      </property>
                     </widget>
                    </item>
@@ -2993,7 +2993,11 @@ then read num_of_seasons parameters below.</string>
                </property>
                <layout class="QGridLayout" name="gridLayout_2">
                 <item row="2" column="1">
-                 <widget class="QSpinBox" name="spinBox_fishingMort_2_phase"/>
+                 <widget class="QSpinBox" name="spinBox_fishingMort_2_phase">
+                  <property name="minimum">
+                   <number>-99</number>
+                  </property>
+                 </widget>
                 </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="label_fishingMort_2_fstart">
@@ -3198,7 +3202,7 @@ then read num_of_seasons parameters below.</string>
              <item row="8" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
-                <string> </string>
+                <string/>
                </property>
               </widget>
              </item>
