@@ -16,7 +16,7 @@ See ss_gui_copyright.txt for more information.
 History:
 ============================================================================
     3.30.17.6
-    2021-09-
+    2021-08-11
 1. Fixed recruitment advanced option forecast recruitment phase read/write.
 2. Added a default model name to readme.txt.
 3. Got code in place for fleet specific F mort (population).
@@ -25,8 +25,8 @@ History:
     2021-07-23
 1. Fixed writing data file for option length composition use.
 ============================================================================
-3.30.17.4
-2021-07-07
+    3.30.17.4
+    2021-07-07
 1. Added view for input variable adjustments.
 2. Added views for age selectivity discard and retention parameters.
 3. Fixed display of number of parameters for size selectivity.

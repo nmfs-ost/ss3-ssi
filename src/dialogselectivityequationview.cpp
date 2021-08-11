@@ -104,7 +104,7 @@ void DialogSelexEquationView::changingSelex() {
 }
 
 void DialogSelexEquationView::changedSelex(QStringList &ql) {
-    Q_UNUSED(ql);
+    Q_UNUSED(ql)
 //    connect(parameters, SIGNAL(dataChanged()), this, SLOT(parametersChanged()));
     changeSelex();
 }
@@ -2027,7 +2027,7 @@ void DialogSelexEquationView::updateDblNormPlateau() {
     float dnsel = parameterView->getInput(3);
     float par5  = parameterView->getInput(4);
     float par6  = parameterView->getInput(5);
-    float init, final;
+    float init = 0, final = 0;
 //    float peak = par1;
     float binWidth = getBinStep();
     float binMax = getBinMax();
@@ -2036,12 +2036,12 @@ void DialogSelexEquationView::updateDblNormPlateau() {
 //    float dnsel = exp(par4);
 //    float init = 0;//logist(par5);
 //    float final = (par6);
-    float t1, t1min, t1term;
-    float t2, t2min, t2term;
+    float t1 = 0, t1min = 0, t1term = 0;
+    float t2 = 0, t2min = 0, t2term = 0;
     float apical_selex = 1.0;
     int first = 0, last = xValList.count()-1;
-    float jn1, jn2;
-    int i;
+    float jn1 = 0, jn2 = 0;
+    int i = 0;
     float xval = 0, asc = 0, des = 0, sel = 0;
 
     firstPoints.clear();
@@ -2919,7 +2919,7 @@ void DialogSelexEquationView::updateCubicSpline(float scale) {
         if (parameterView->getInput(start) < bins.first()) {
             parameterView->setSliderValue(start, bins.first());
         }
-        for (int k = 0; k < size - 1; k++) {
+        for (unsigned k = 0; k < size - 1; k++) {
             one = start + k; two = one + 1;
             temp1 = parameterView->getInput(one);
             temp2 = parameterView->getInput(two);

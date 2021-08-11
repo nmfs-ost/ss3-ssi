@@ -198,7 +198,7 @@ void parameterModelTV::changeData(QModelIndex tplt, QModelIndex btrt, QVector<in
 void parameterModelTV::changeData(int firstRow, int firstCol, int lastRow, int lastCol)
 {
     QString schk;
-    int chk, chk2, numPatterns;
+    int chk, numPatterns;
     QStringList ql;
     bool changed = false;
     for (int i = firstRow; i <= lastRow; i++)
@@ -228,7 +228,7 @@ void parameterModelTV::changeData(int firstRow, int firstCol, int lastRow, int l
         }
 
         chk = QString(ql.at(12)).toInt();
-        chk2 = QString(ql.at(13)).toInt();
+//        chk2 = QString(ql.at(13)).toInt();
         numPatterns = parentModel->getNumBlockPatterns();
         if (chk > numPatterns)
         {
@@ -464,7 +464,7 @@ void parameterModelTV::setBlkTimeVaryHeader(int param, int block, QString label)
     int func = QString(ql.at(13)).toInt();
     BlockPattern *bp;
     int k = 3;//blkst;
-    int numBlocks, beg, end;
+    int numBlocks, beg;//, end;
 
     if (label.isEmpty())
         label = getParamHeader(param);
@@ -477,7 +477,7 @@ void parameterModelTV::setBlkTimeVaryHeader(int param, int block, QString label)
         {
             hdr = QString("%1_BLK%2").arg(label, QString::number(i));
             beg = bp->getBlockBegin(i);
-            end = bp->getBlockEnd(i);
+//            end = bp->getBlockEnd(i);
             if (func == 0)
             {
                 hdr.append(QString("mult_%1").arg(QString::number(beg)));
@@ -506,7 +506,7 @@ void parameterModelTV::setBlkTimeVaryHeader(int param, int block, QString label)
     else if (block == -2)
     {
         beg = parentModel->get_start_year();
-        end = parentModel->get_end_year();
+//        end = parentModel->get_end_year();
 //        int infl = (beg + end) / 2;
         sm->setParamHeader(k++, label + QString("_TrendFinal_direct"));
         sm->setParamHeader(k++, label + QString("_TrendInfl_yr"));

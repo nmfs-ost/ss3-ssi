@@ -16,7 +16,7 @@ class DialogSelexEquationView : public DialogEquationView
 
 public:
     explicit DialogSelexEquationView(QWidget *parent, SelexType typ = Size);
-    ~DialogSelexEquationView();
+    ~DialogSelexEquationView() override;
 
     Fleet *getFleet() const;
     void setFleet(Fleet *flt);
@@ -35,19 +35,19 @@ public slots:
     void changedSelex (QStringList &ql);
     void changeSelex ();
 
-    void setXvals(const QList<double> &vals);
-    void setXvalStrings(const QStringList &vals);
+    void setXvals(const QList<double> &vals) override;
+    void setXvalStrings(const QStringList &vals) override;
     void setBinVals(float start, float end, int step);
     void setBinVals(const QList<float> &vals);
     void setBinValStrings(const QStringList &vals);
 
-    void resetValues();
-    void restoreAll();
+    void resetValues() override;
+    void restoreAll() override;
 
     void setParameterHeaders (int scale = 0);
 
-    void setup ();     // start new
-    void update ();   // update from dialog values
+    void setup () override;     // start new
+    void update () override;   // update from dialog values
 
 signals:
     void linearUpdated(float);

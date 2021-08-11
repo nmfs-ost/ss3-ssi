@@ -356,7 +356,7 @@ void Fleet::reset()
     dar1->reset();
 
     // Variance
-    for (int i = 0; i <= 7; i++)
+    for (int i = 0; i < 7; i++)
     {
         inputValueVar[i] = false;
         inputVarianceValue[i] = 0;
@@ -825,6 +825,33 @@ void Fleet::qSetupChanged()
     Q()->changeSetup(getAbundErrType());//setupChanged(getAbundErrType());
 }
 
+void Fleet::setDoInputVariance (int index, bool on)
+{
+    if (index >= 0 && index < 7)
+        inputValueVar[index] = on;
+}
+
+bool Fleet::getDoInputVariance (int index)
+{
+    if (index >= 0 && index < 7)
+        return inputValueVar[index];
+    else
+        return 0;
+}
+
+void Fleet::setInputVarianceValue (int index, float value)
+{
+    if (index >= 0 && index < 7)
+    inputVarianceValue[index] = value;
+}
+
+float Fleet::getInputVarianceValue (int index)
+{
+    if (index >= 0 && index < 7)
+        return inputVarianceValue[index];
+    else
+        return 0;
+}
 
 
 

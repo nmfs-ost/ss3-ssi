@@ -109,14 +109,14 @@ void seasonalEffectsModel::changeParameters(QList<int> setupvals)
 
 void seasonalEffectsModel::setParamHeaders()
 {
-    int total, numparams = setup->getData().count();
+    int numparams = setup->getData().count();//, total
     int mult = params->getMultiplier();
     int i, j;
     int row = 0;
     QString hdrPrm;
     QString hdr;
 
-    total = numparams * mult;
+//    total = numparams * mult;
     // set headers for each season, each param type
     params->setTotalNumParams(numparams);
     for (i = 0; i < numparams; i++)

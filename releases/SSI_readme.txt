@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.5
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.6
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,12 +15,18 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.17.6
+    2021-08-11
+1. Fixed recruitment advanced option forecast recruitment phase read/write.
+2. Added a default model name to readme.txt.
+3. Got code in place for fleet specific F mort (population).
+============================================================================
     3.30.17.5
     2021-07-23
-1. Fixed writing data file for length composition use.
+1. Fixed writing data file for option length composition use.
 ============================================================================
-3.30.17.4
-2021-07-07
+    3.30.17.4
+    2021-07-07
 1. Added view for input variable adjustments.
 2. Added views for age selectivity discard and retention parameters.
 3. Fixed display of number of parameters for size selectivity.

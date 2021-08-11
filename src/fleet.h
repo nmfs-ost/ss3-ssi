@@ -23,7 +23,7 @@ class Fleet : public QObject
     Q_OBJECT
 public:
     explicit Fleet(ss_model *parent = nullptr);
-    ~Fleet();
+    ~Fleet() override;
 
     void reset();
     Fleet * copy (Fleet *oldfl);
@@ -319,10 +319,10 @@ public slots:
     int age_selex_special() {return age_selex->getSpecial();}
     tablemodel *getAgeSelexModel() {return age_selex->getParameterModel();}
 
-    void setDoInputVariance (int index = 0, bool on = false) {inputValueVar[index] = on;}
-    bool getDoInputVariance (int index) {return inputValueVar[index];}
-    void setInputVarianceValue (int index, float value) {inputVarianceValue[index] = value;}
-    float getInputVarianceValue (int index) {return inputVarianceValue[index];}
+    void setDoInputVariance (int index = 0, bool on = false);// {inputValueVar[index] = on;}
+    bool getDoInputVariance (int index);// {return inputValueVar[index];}
+    void setInputVarianceValue (int index, float value);// {inputVarianceValue[index] = value;}
+    float getInputVarianceValue (int index);// {return inputVarianceValue[index];}
     void setAddToSurveyCV (float val) {add_to_survey_CV = val;}
     float getAddToSurveyCV () {return add_to_survey_CV;}
     void setAddToDiscardSD (float val) {add_to_discard_stddev = val;}
