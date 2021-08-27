@@ -2989,7 +2989,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         pop->M()->setBparkF(temp_float); // bparkF ;
         temp_int = c_file->get_next_value(QString("F Mort ballpark year")).toInt();
         pop->M()->setBparkYr(temp_int); // bparkYr
-        temp_int = c_file->getIntValue(QString("F Mort method"), 1, 3, 3);
+        temp_int = c_file->getIntValue(QString("F Mort method"), 1, 4, 3);
         pop->M()->setMethod(temp_int); // method
         temp_float = c_file->get_next_value(QString("F Mort max")).toFloat();
         pop->M()->setMaxF(temp_float); // maxF

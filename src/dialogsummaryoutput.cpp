@@ -167,9 +167,9 @@ void dialogSummaryOutput::refreshData()
 
 void dialogSummaryOutput::readData()
 {
-    QString line;
+    QString line, tempstring;
     QStringList values;
-    QStringList title;
+    QStringList titles;
     int xvalue = 0.0;
     float yvalue = 0.0;
     bool okay = false;
@@ -177,22 +177,31 @@ void dialogSummaryOutput::readData()
     maxBmass = 0;
     maxOther = 0;
 
-    if (reportFile.open(QIODevice::ReadOnly)){// | QIODevice::Text)) {
+    if (reportFile.open(QIODevice::ReadOnly)){
         QTextStream stream(&reportFile);
-
-//        seriesNames << "SpwnStck" << "SpwnRcrt" << "Fishing" << "TotCatch";
-//        createCharts(1, seriesNames);
 
         while (!stream.atEnd())
         {
             line = stream.readLine();
-            if      (line.contains("#_LIKELIHOOD", Qt::CaseInsensitive))
+            if    (line.startsWith("#V"))
+            {
+                line.replace('_', ' ');
+                titles = line.split(';', QString::SkipEmptyParts);
+                tempstring = titles.at(3);
+                ui->label_app->setText(tempstring.simplified());
+                titles[0].replace("#V", "");
+                tempstring = QString(QString("Version %1-%2: Build date %3")
+                                     .arg(titles.at(0))
+                                     .arg(titles.at(2).simplified())
+                                     .arg(titles.at(1)));
+                ui->label_ver->setText(tempstring);
+            }
+            else if (line.contains("#_LIKELIHOOD", Qt::CaseInsensitive))
             {
                 int row = 0;
                 line = stream.readLine();
                 values = line.split(" ", QString::SkipEmptyParts);
                 values.takeFirst();
-//                table->setHeader(values);
                 table->setColumnCount(1);
                 table->setColumnHeader(0, values.last());
                 while (!line.contains("#_PARAMETERS")) {
@@ -210,8 +219,8 @@ void dialogSummaryOutput::readData()
             else if (line.contains("SSB_"))
             {
                 values = line.split(' ');
-                title = values.at(0).split('_');
-                xvalue = title.last().toInt();
+                titles = values.at(0).split('_');
+                xvalue = titles.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
@@ -232,8 +241,8 @@ void dialogSummaryOutput::readData()
                     continue;
 
                 values = line.split(' ');
-                title = values.at(0).split('_');
-                xvalue = title.last().toInt();
+                titles = values.at(0).split('_');
+                xvalue = titles.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
@@ -245,8 +254,8 @@ void dialogSummaryOutput::readData()
             else if (line.contains("F_"))
             {
                 values = line.split(' ');
-                title = values.at(0).split('_');
-                xvalue = title.last().toInt();
+                titles = values.at(0).split('_');
+                xvalue = titles.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {
@@ -259,8 +268,8 @@ void dialogSummaryOutput::readData()
             else if (line.contains("TotCatch"))
             {
                 values = line.split(' ');
-                title = values.at(0).split('_');
-                xvalue = title.last().toInt();
+                titles = values.at(0).split('_');
+                xvalue = titles.last().toInt();
                 yvalue = values.at(1).toFloat(&okay);
                 if (okay && xvalue > 1900)
                 {

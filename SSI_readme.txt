@@ -15,6 +15,10 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.17.7
+    2021-0
+1. Added version info to summary charts.
+============================================================================
     3.30.17.6
     2021-08-11
 1. Fixed recruitment advanced option forecast recruitment phase read/write.

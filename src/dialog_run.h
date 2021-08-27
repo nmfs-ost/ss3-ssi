@@ -37,7 +37,7 @@ class Dialog_run : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog_run(QWidget *parent = 0);
+    explicit Dialog_run(QWidget *parent = nullptr);
     ~Dialog_run();
 
 public slots:

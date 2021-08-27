@@ -81,7 +81,7 @@ void chartDialog::refreshData()
 
 void chartDialog::readData()
 {
-    QString line;
+    QString line, tempstring;
     QStringList values;
     QStringList title;
     float xvalue = 0.0;
@@ -103,7 +103,15 @@ void chartDialog::readData()
         {
             line = stream.readLine();
 
-            if    (line.contains("SSB_"))
+            if    (line.startsWith("#V"))
+            {
+                title = line.split(';', QString::SkipEmptyParts);
+                tempstring = title.at(3);
+                ui->label_app->setText(tempstring.replace('_', ' ').simplified());
+                tempstring = QString(QString("Version %1_%2: Build date %3").arg(title.at(0)).arg(title.at(2)).arg(title.at(1)));
+                ui->label_ver->setText(tempstring);
+            }
+            else if(line.contains("SSB_"))
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');
@@ -122,7 +130,7 @@ void chartDialog::readData()
                     bmassSeries.at(0)->append(xvalue, yvalue);
                 }
             }
-            else if (line.contains("Recr_"))
+            else if(line.contains("Recr_"))
             {
                 if (line.contains("ForeRecr"))
                     continue;
@@ -138,7 +146,7 @@ void chartDialog::readData()
                     bmassSeries.at(1)->append(xvalue, yvalue);
                 }
             }
-            else if (line.contains("F_"))
+            else if(line.contains("F_"))
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');
@@ -152,7 +160,7 @@ void chartDialog::readData()
                 }
 
             }
-            else if (line.contains("TotCatch"))
+            else if(line.contains("TotCatch"))
             {
                 values = line.split(' ');
                 title = values.at(0).split('_');

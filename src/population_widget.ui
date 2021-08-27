@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>7</number>
+      <number>8</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -3123,6 +3123,11 @@ then read num_of_seasons parameters below.</string>
                <item>
                 <property name="text">
                  <string>3 = Hybrid</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4 = Fleet specific F</string>
                 </property>
                </item>
               </widget>
