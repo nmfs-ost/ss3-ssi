@@ -12,6 +12,7 @@ DialogTable::DialogTable(QWidget *parent) :
     view = new tableview();
     view->setParent(this);
     ui->verticalLayout_table->addWidget(view);
+
     connect (ui->pushButton_done, SIGNAL(released()), SLOT(close()));
     resize(500, 900);
 }
@@ -36,7 +37,7 @@ void DialogTable::setTable(tablemodel *value)
 {
     table = value;
     view->setModel(table);
-    view->setHeight(table->rowCount() + 1);
+    view->setHeight(table);
 }
 
 void DialogTable::closeTable()

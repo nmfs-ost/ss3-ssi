@@ -18,7 +18,6 @@ public:
 
     void reset();
     void setYears (int f_year, int num); // num may be number of years or last year
-    void fromFile (ss_file *file, int num);
     QString toText();
 
     void setStartYear(int value);
@@ -44,6 +43,11 @@ public:
 
     int getPhase() const;
     void setPhase(int value);
+
+    tablemodel *getFleetF() {return fleetF;}
+    int getNumFleetSpecF() {return fleetF->rowCount();}
+    QStringList getFleetSpecF(int fleet) {return fleetF->getRowData(fleet);}
+    void setFleetF(int fleet, float startF, int phaseF, int numInputs);
 
     int getNumTuningIters() const;
     void setNumTuningIters(int value);

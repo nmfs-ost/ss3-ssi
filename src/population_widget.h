@@ -83,6 +83,8 @@ public slots:
     void changeFMortPhase (int phs);
     void changeFMortNumInput (int num);
     void changeFMortNumIters (int num);
+    void addFleetSpecificF();
+    void subFleetSpecificF();
 
 signals:
     void readWtAtAgeSS (bool flag);
@@ -178,6 +180,7 @@ private:
 
     tableview *mortInputsView;
     tableview *mortInitialParamsView;
+    tableview *mortFleetFView;
 
     tableview *growthBinsView;
 

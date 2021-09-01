@@ -229,6 +229,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     mortInitialParamsView = new tableview();
     mortInitialParamsView->setParent(this);
     ui->verticalLayout_init_F->addWidget(mortInitialParamsView);
+    mortFleetFView = new tableview();
+    mortFleetFView->setParent(this);
+    ui->verticalLayout_mort_fleetF->addWidget(mortFleetFView);
 
     connect (ui->comboBox_mort_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMortOption(int)));
     connect (ui->spinBox_mort_num_breakpoints, SIGNAL(valueChanged(int)), SLOT(changeMortNumBkpts(int)));
@@ -241,6 +244,8 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_fishingMort_2_phase, SIGNAL(valueChanged(int)), SLOT(changeFMortPhase(int)));
     connect (ui->spinBox_fishingMort_2_num_detail, SIGNAL(valueChanged(int)), SLOT(changeFMortNumInput(int)));
     connect (ui->spinBox_fishingMort_3_num_iters, SIGNAL(valueChanged(int)), SLOT(changeFMortNumIters(int)));
+    connect (ui->toolButton_mortFleetF_add, SIGNAL(clicked()), SLOT(addFleetSpecificF()));
+    connect (ui->toolButton_mortFleetF_sub, SIGNAL(clicked()), SLOT(subFleetSpecificF()));
 
     // Seasonal
     seasonParamsView = new tableview();
@@ -574,6 +579,12 @@ void population_widget::refresh()
 //    mortInitialParamsView->setHeight(pop->M()->getInitialParams());
 //    mortInitialParamsView->resizeColumnsToContents();
     setMortOption (pop->Grow()->getNatural_mortality_type());
+    mortFleetFView->setModel(pop->M()->getFleetF());
+    if (pop->M()->getFleetF()->rowCount() > 0)
+        mortFleetFView->setHeight(pop->M()->getFleetF());
+    else
+        subFleetSpecificF();
+    mortFleetFView->resizeColumnsToContents();
 
     // Seasonality
     ui->checkBox_seas_femWtLen1->setChecked(pop->getFemWtLen1());
@@ -1669,3 +1680,19 @@ void population_widget::changeFMortNumIters (int num)
     pop->M()->setNumTuningIters(num);
 }
 
+void population_widget::addFleetSpecificF()
+{
+    int rows = pop->M()->getFleetF()->rowCount() + 1;
+    pop->M()->getFleetF()->setRowCount(rows);
+    mortFleetFView->setHeight(rows);
+    mortFleetFView->resizeColumnsToContents();
+}
+
+void population_widget::subFleetSpecificF()
+{
+    int rows = pop->M()->getFleetF()->rowCount() - 1;
+    if (rows < 1) rows = 1;
+    pop->M()->getFleetF()->setRowCount(rows);
+    mortFleetFView->setHeight(rows);
+    mortFleetFView->resizeColumnsToContents();
+}

@@ -3006,11 +3006,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             pop->M()->setPhase(phaseF); // phase
             numInputs = c_file->get_next_value(QString("F Mort num inputs")).toInt();
             pop->M()->setNumInputs(numInputs); // numInputs
-//            for (int i = 0; i <= num_fleets; i++)
-//                pop->M()->setFleetF(i, startF, phaseF, numInputs);
             break;
         case 3:
-            temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 1, 15, 4);
+            temp_int = c_file->getIntValue(QString("F Mort num tuning iters (3-7)"), 1, 15, 3);
             pop->M()->setNumTuningIters(temp_int); // numTuningIters
             break;
         case 4:
@@ -3020,9 +3018,9 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 startF = c_file->get_next_value(QString("F Mort start value")).toFloat();
                 phaseF = c_file->get_next_value(QString("F Mort phase")).toInt();
                 numInputs = c_file->get_next_value(QString("F Mort num inputs")).toInt();
-//                pop->M()->setFleetF(fleet, startF, phaseF, numInputs);
+                pop->M()->setFleetF(fleet, startF, phaseF, numInputs);
             } while (fleet != -9999);
-            temp_int = c_file->getIntValue(QString("F Mort num tuning loops (3-7)"), 1, 15, 4);
+            temp_int = c_file->getIntValue(QString("F Mort num tuning loops (3-7)"), 1, 15, 3);
             pop->M()->setNumTuningIters(temp_int); // numTuningIters
             break;
         }

@@ -7,12 +7,16 @@ ss_mortality::ss_mortality(QObject *parent, int n_fisheries, int n_surveys)
 {
     ssModel = static_cast<ss_model *>(parent);
     QStringList pheader;
-    pheader << "fleet" << "year" << "seas" << "F" << "se" << "phase" ;
+    pheader << "fleet" << "year" << "seas" << "F" << "se" << "phase" << " ";
     parameterTable = new shortParameterTable(parent);
-//    parameterTable->setColumnCount(6);
     parameterTable->setHeader(pheader);
     parameterTable->setParamCount(0);
     initialParams = new shortParameterTable(parent);
+    // Fleet specific F
+    pheader.clear();
+    pheader << "fleet" << "F" << "phase" << "numInputs";
+    fleetF = new tablemodel(parent);
+    fleetF->setHeader(pheader);
 //    initialParams->setColumnCount(7);
     initialParams->setParamCount(0);
 //    numFisheries = 0;
@@ -52,56 +56,6 @@ void ss_mortality::setYears(int f_year, int num)
         numYears = (num - numYears) + 1;
 }
 
-void ss_mortality::fromFile(ss_file *file, int num)
-{
-//    QString token('#');
-    QStringList tokenlist;
-    int i;//, temp_int, num_lines;
-//    float temp_float;
-
-    bparkF = file->get_next_value().toFloat();
-    bparkYr = file->get_next_value().toInt();
-    method = file->get_next_value().toInt();
-    maxF = file->get_next_value().toFloat();
-    startF = 0;
-    phase = 0;
-    numInputs = 0;
-    numTuningIters = 0;
-    switch (method)
-    {
-    case 2:
-        startF = file->get_next_value().toFloat();
-        phase = file->get_next_value().toInt();
-        numInputs = file->get_next_value().toInt();
-        break;
-    case 3:
-        numTuningIters = file->get_next_value().toInt();
-        break;
-    }
-
-    tokenlist.clear();
-    if (numInputs > 0)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            tokenlist.append(file->get_next_value());
-        }
-        parameterTable->setParameter(0, tokenlist);
-    }
-    else
-    {
-        parameterTable->setParamCount(0);
-    }
-
-    initialParams->setParamCount(num);
-    for (i = 0; i < num; i++)
-    {
-        tokenlist = readShortParameter(file);
-        initialParams->setParameter(i, tokenlist);
-        initialParams->setParamHeader(i, QString("Fleet%1").arg(QString::number(i+1)));
-    }
-
-}
 
 QString ss_mortality::toText()
 {
@@ -287,7 +241,10 @@ void ss_mortality::setPhase(int value)
     phase = value;
 }
 
+void ss_mortality::setFleetF(int fleet, float startF, int phaseF, int numInputs)
+{
 
+}
 
 
 

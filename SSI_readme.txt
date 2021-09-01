@@ -17,7 +17,12 @@ History:
 ============================================================================
     3.30.17.7
     2021-0
+Major Improvements
+1. Fleet specific F mort - not yet done.
+Minor Improvements
 1. Added version info to summary charts.
+2. Improved look of Likelihoods dialog.
+Bug Fixes
 ============================================================================
     3.30.17.6
     2021-08-11
