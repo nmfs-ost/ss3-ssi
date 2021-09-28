@@ -16,6 +16,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    longparametermodel.cpp \
         mainwindow.cpp \
     dialoginputfiles.cpp \
     fileselector.cpp \
@@ -31,6 +32,7 @@ SOURCES += main.cpp\
     population.cpp \
     selectivity.cpp \
     catchability.cpp \
+    shortparametermodel.cpp \
     sizecomp.cpp \
     agecomp.cpp \
     dialog_about.cpp \
@@ -88,7 +90,6 @@ SOURCES += main.cpp\
     fleet_composition.cpp \
     documentdialog.cpp \
     message.cpp \
-    fileconversiondialog.cpp \
     parametermodelTV.cpp \
     q_ratio.cpp \
     setupmodel.cpp \
@@ -125,6 +126,7 @@ HEADERS  += mainwindow.h \
     form_yearvalue.h \
     data_widget.h \
     control_widget.h \
+    longparametermodel.h \
     metadata.h \
     input_file.h \
     model.h \
@@ -134,6 +136,7 @@ HEADERS  += mainwindow.h \
     population.h \
     selectivity.h \
     catchability.h \
+    shortparametermodel.h \
     sizecomp.h \
     agecomp.h \
     dialog_about.h \
@@ -193,7 +196,6 @@ HEADERS  += mainwindow.h \
     documentdialog.h \
     ss_math.h \
     message.h \
-    fileconversiondialog.h \
     parametermodelTV.h \
     q_ratio.h \
     setupmodel.h \
@@ -251,7 +253,6 @@ FORMS    += mainwindow.ui \
     newfleetdialog.ui \
     dialog_about_gui.ui \
     documentdialog.ui \
-    fileconversiondialog.ui \
     dialog_runoptions.ui \
     chartdialog.ui \
     equationdialog.ui \

@@ -494,10 +494,10 @@ Fleet *Fleet::copy(Fleet *oldfl)
         strList = oldfl->Q()->getParameter(i);
         Q()->setParameter(i, strList);
     }
-    for (i = 0; i < oldfl->Q()->getNumTVParams(); i++)
+    for (i = 0; i < oldfl->Q()->getNumTimeVaryParams(); i++)
     {
         strList = oldfl->Q()->getTVParam(i);
-        Q()->setTVParam(i, strList);
+        Q()->setTimeVaryParam(i, strList);
     }
 
     //   size selex

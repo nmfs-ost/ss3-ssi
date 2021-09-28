@@ -65,9 +65,11 @@ public:
     tablemodel *getParamTable() {return params->getParamTable();}
     void setParamHdrs(int errType = 1);
 
-    int getNumTVParams () {return varParams->getNumVarParams();}
-    void setTVParam (int index, QStringList data) {varParams->setVarParameter(index, data);}
+    int getNumTimeVaryParams () {return varParams->getNumVarParams();}
+    void setTimeVaryParam (int index, QStringList data) {varParams->setVarParameter(index, data);}
+    void setTimeVaryParamLabel (int index, QString data) {varParams->setVarParamHeader(index, data);}
     QStringList getTVParam (int index) {return varParams->getVarParameter(index);}
+    QString getTimeVaryParamLabel (int index) {return varParams->getVarParamHeader(index);}
     tablemodel *getTVParams () {return varParams->getVarParamTable();}
     timeVaryParameterModel *getTVParamModel () {return varParams;}
 

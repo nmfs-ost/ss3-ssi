@@ -342,7 +342,7 @@ int ss_file::write_val(QString val, int spcng, QString info)
         do {
             val.append(' ');
         } while (val.count() < spcng);
-        val.append(QString("#_%1").arg(info));
+        val.append(QString("# %1").arg(info));
     }
     return writeline(val);
 }

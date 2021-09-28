@@ -14,7 +14,7 @@ ss_mortality::ss_mortality(QObject *parent, int n_fisheries, int n_surveys)
     initialParams = new shortParameterTable(parent);
     // Fleet specific F
     pheader.clear();
-    pheader << "fleet" << "F" << "phase" << "numInputs";
+    pheader << "fleet" << "F" << "phase";// << "numInputs";
     fleetF = new tablemodel(parent);
     fleetF->setHeader(pheader);
 //    initialParams->setColumnCount(7);
@@ -241,9 +241,11 @@ void ss_mortality::setPhase(int value)
     phase = value;
 }
 
-void ss_mortality::setFleetF(int fleet, float startF, int phaseF, int numInputs)
+void ss_mortality::setFleetF(int fleet, float startF, int phaseF)//, int numInputs)
 {
-
+    QStringList f;
+    f << QString::number(fleet) << QString::number(startF) << QString::number(phaseF);
+    fleetF->setRowData(fleet-1, f);
 }
 
 

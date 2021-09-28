@@ -111,18 +111,18 @@ void selectivity::setSetup(QString text)
 void selectivity::setSetup(QStringList strList)
 {
     setSpecial(strList.at(3).toInt());
-    setMale(strList.at(2).toInt());
     setDiscard(strList.at(1).toInt());
     setPattern(strList.at(0).toInt());
+    setMale(strList.at(2).toInt());
     if (getNumBins() > 0)
         setDefaultParams();
 }
 void selectivity::setSetup(QList<int> values)
 {
     setSpecial(values.at(3));
-    setMale   (values.at(2));
     setDiscard(values.at(1));
     setMethod (values.at(0));
+    setMale   (values.at(2));
     if (getNumBins() > 0)
         setDefaultParams();
 }
@@ -942,9 +942,17 @@ void selectivity::setMale(int value)
             gender = QString("Fem");
             break;
         case 3:
-        case 4:
-            if (getPattern() == 23 || getPattern() == 24)
+            if (getPattern() == 1)
+                num = 1;
+            if (getPattern() == 20 || getPattern() == 24)
                 num = 5;
+            break;
+        case 4:
+            if (getPattern() == 1)
+                num = 1;
+            if (getPattern() == 20 || getPattern() == 24)
+                num = 5;
+            gender = QString("Fem");
             break;
         default:
             num = 0;

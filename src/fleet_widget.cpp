@@ -147,7 +147,7 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->comboBox_fleet_name, SIGNAL(currentIndexChanged(int)), SLOT(set_current_fleet(int)));
     connect (ui->pushButton_edit_name, SIGNAL(clicked()), SLOT(edit_name()));
     connect (ui->checkBox_active, SIGNAL(toggled(bool)), SLOT(setActive(bool)));
-    connect (ui->comboBox_type, SIGNAL(currentIndexChanged(int)), SLOT(set_fleet_type(int)));
+    connect (ui->comboBox_type, SIGNAL(currentIndexChanged(int)), SLOT(change_fleet_type(int)));
     connect (ui->pushButton_delete, SIGNAL(clicked()), SLOT(delete_current_fleet()));
     connect (ui->pushButton_new, SIGNAL(clicked()), SLOT(create_new_fleet()));
     connect (ui->pushButton_duplicate, SIGNAL(clicked()), SLOT(duplicate_current_fleet()));
@@ -645,9 +645,8 @@ void fleet_widget::set_current_fleet(int index)
         qParamsView->setHeight(current_fleet->Q()->getNumParams());
         qParamsView->resizeColumnsToContents();
         qTvParamsView->setModel(current_fleet->Q()->getTVParams());
-        qTvParamsView->setHeight(current_fleet->Q()->getNumTVParams());
-        qTvParamsView->resizeColumnsToContents();
-        current_fleet->Q()->getTVParamModel()->updateVarParams();
+        qSetupTVParamsChanged();
+//        current_fleet->Q()->getTVParamModel()->updateVarParams();
 
         setSelexSizePattern(current_fleet->getSizeSelectivity()->getPattern());
 //        ui->spinBox_selex_size_pattern->setValue(current_fleet->getSizeSelectivity()->getPattern());
@@ -721,7 +720,7 @@ void fleet_widget::set_current_fleet(int index)
     }
 }
 
-void fleet_widget::set_fleet_type(int type)
+void fleet_widget::change_fleet_type(int type)
 {
     ui->groupBox_bycatch->setVisible(false);
     switch(type)
@@ -746,7 +745,6 @@ void fleet_widget::set_fleet_type(int type)
     }
     model_data->assignFleetNumbers();
     refresh();
-//    current_fleet->setType(Fleet::FleetType(type));
 }
 
 void fleet_widget::set_type_fleet(Fleet::FleetType ft)
@@ -944,25 +942,18 @@ void fleet_widget::qSetupParamsChanged()
 void fleet_widget::qSetupTVParamsChanged()
 {
     int ht;
-    ht = current_fleet->Q()->getNumTVParams();
+    ht = current_fleet->Q()->getNumTimeVaryParams();
     qTvParamsView->setHeight(ht);
     qTvParamsView->resizeColumnsToContents();
-    qTvParamsView->setVisible(ht > 0);
-    ui->label_q_tv_parameters->setVisible(ht > 0);
+    qTvParamsView->setVisible(ht);
+    ui->label_q_tv_parameters->setVisible(ht);
 }
 
 void fleet_widget::setQTimeVaryReadParams(int flag)
 {
     for (int i = 0; i < model_data->get_num_fleets(); i++)
         model_data->getFleet(i)->setQTimeVaryReadParams(flag);
-    if (flag == 0)
-    {
-        qTvParamsView->setEnabled(false);
-    }
-    else
-    {
-        qTvParamsView->setEnabled(true);
-    }
+    qTvParamsView->setEnabled(flag);
 }
 
 void fleet_widget::setSelTimeVaryReadParams(int flag)

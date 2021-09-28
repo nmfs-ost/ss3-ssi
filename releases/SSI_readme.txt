@@ -1,10 +1,10 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.17.6
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.18.0
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-version 3.30.17. It allows the user to change the data,
+version 3.30.18. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
@@ -14,6 +14,20 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.18.0
+    2021-09-28
+Major Improvements
+1. Added Fleet specific F mort.
+2. Allowed Fleet type 4 for predators.
+3. Added Benchmark option 3 and Blimit value.
+4. Removed support for ss_trans.
+Minor Improvements
+1. Added version info to summary charts.
+2. Improved look of Likelihoods dialog.
+Bug Fixes
+1. Fixed treatment of male/female offset selectivity parameters.
+2. Fixed reading/writing of Q time-varying parameters.
 ============================================================================
     3.30.17.6
     2021-08-11

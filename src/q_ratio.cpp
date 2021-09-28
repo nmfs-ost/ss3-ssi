@@ -50,7 +50,7 @@ void q_ratio::setFleetName(QString name)
 {
     fltName = name;
     setParamHdrs();
-    setup->setRowHeader(name);
+//    setup->setRowHeader(name);
 }
 
 void q_ratio::setSetup(QStringList values)

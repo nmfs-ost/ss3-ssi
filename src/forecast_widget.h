@@ -42,6 +42,8 @@ public slots:
     void change_MSY(int value);
     void change_spr_target();
     void change_biomass_target();
+    void set_blimit(double value);
+    void change_blimit();
 
     void set_bmark_bio_begin(int yr);
     void set_bmark_bio_begin(QString yrStr);

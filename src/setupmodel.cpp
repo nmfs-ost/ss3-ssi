@@ -1510,7 +1510,7 @@ void timeVaryParameterModel::updateTableParamHdrs(int tbl)
             parmVars->setRowHeader(j, QString("%1_BLK").arg(title));
         }
     }
-    updateVarParams();
+//    updateVarParams();
 }
 
 int timeVaryParameterModel::getAutoGenerate() const
@@ -1522,6 +1522,6 @@ void timeVaryParameterModel::setAutoGenerate(int value)
 {
     if (value != autoGenerate) {
         autoGenerate = value;
-        updateVarParams();
+//        updateVarParams();
     }
 }

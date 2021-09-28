@@ -302,6 +302,11 @@
               <string>3: Survey</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>4: Predators</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item row="9" column="0">
@@ -1955,14 +1960,14 @@
                     <item row="15" column="0" colspan="3">
                      <widget class="QLabel" name="label_sel_size_male_params">
                       <property name="text">
-                       <string>Male parameters</string>
+                       <string>Offset parameters</string>
                       </property>
                      </widget>
                     </item>
                     <item row="17" column="0" colspan="3">
                      <widget class="QLabel" name="label_sel_size_male_tv_params">
                       <property name="text">
-                       <string>Male time varying parameters</string>
+                       <string>Offset time varying parameters</string>
                       </property>
                      </widget>
                     </item>
@@ -2512,8 +2517,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>910</width>
-                   <height>451</height>
+                   <width>284</width>
+                   <height>310</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -2805,8 +2810,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>910</width>
-                   <height>520</height>
+                   <width>373</width>
+                   <height>357</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_24">

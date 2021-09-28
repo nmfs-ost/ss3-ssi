@@ -1006,7 +1006,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("run display detail (0,1,2)"));
 
         temp_int = ui->comboBox_report_level->currentIndex();
-        chars += starterFile->write_val(temp_int, 5,
+        chars += starterFile->write_val(temp_int, 1,
                     QString("detailed output (0=minimal for data-limited, 1=high (w/ wtatage.ss_new), 2=brief, 3=custom) "));
         chars += starterFile->writeline("# custom report options: -100 to start with minimal; -101 to start with all; -number to remove, +number to add, -999 to end");
         if (temp_int == 3) {

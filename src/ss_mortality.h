@@ -47,7 +47,7 @@ public:
     tablemodel *getFleetF() {return fleetF;}
     int getNumFleetSpecF() {return fleetF->rowCount();}
     QStringList getFleetSpecF(int fleet) {return fleetF->getRowData(fleet);}
-    void setFleetF(int fleet, float startF, int phaseF, int numInputs);
+    void setFleetF(int fleet, float startF, int phaseF);//, int numInputs);
 
     int getNumTuningIters() const;
     void setNumTuningIters(int value);

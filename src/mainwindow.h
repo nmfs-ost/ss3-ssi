@@ -174,7 +174,6 @@ private:
     QString run_num_file;
 
     QString ss_exe;
-    QString ss_trans_exe;
     QString R_exe;
     QString default_dir;
     QString default_model;

@@ -37,6 +37,9 @@ public slots:
     void set_biomass_target (double bmss) {f_bmass_tgt = (float)bmss;}
     float get_biomass_target () {return f_bmass_tgt;}
 
+    void set_blimit (double blmt) {f_blimit = blmt;}
+    double get_blimit () {return f_blimit;}
+
     void set_benchmark_years (int i, int yr) {i_bmark_yrs[i] = yr;}
     void set_benchmark_bio_beg (int yr) {i_bmark_yrs[0] = yr;}
     void set_benchmark_bio_end (int yr) {i_bmark_yrs[1] = yr;}
@@ -188,6 +191,8 @@ public slots:
     float f_spr_tgt;
     // Biomass target (e.g. 0.40)
     float f_bmass_tgt;
+    // COND: Do_Benchmark==3: Blimit as fraction of Bmsy (neg value to use as frac of Bzero) (e.g.0.50)
+    double f_blimit;
     // Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF (enter actual year, or values of 0 or -integer to be rel. endyr)
     int   i_bmark_yrs[10];
     // Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below

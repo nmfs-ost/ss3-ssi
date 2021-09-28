@@ -38,7 +38,7 @@ public slots:
     void setHeader (QStringList hdr);
     void setColHeader (int i, QString hdr) {dataTable->setColumnHeader(i, hdr);}
     QString getColHeader (int i) {return dataTable->getColumnHeader(i);}
-    void setRowHeader (QString rhdr) {dataTable->setRowHeader(0, rhdr);}
+//    void setRowHeader (QString rhdr) {dataTable->setRowHeader(0, rhdr);}
     tablemodel *getTable () {return dataTable;}
     setupModel *getModel () {return this;}
 
@@ -47,8 +47,6 @@ public slots:
     bool useParam (int index) {return valuesList.at(index);}
 
 protected:
-//    ss_model *parentModel;
-
     tablemodel *dataTable;
     QList<int> valuesList;
 

@@ -64,7 +64,7 @@ forecast_widget::~forecast_widget()
 
 void forecast_widget::reset()
 {
-    ui->comboBox_benchmarks->setCurrentIndex(1);
+    set_combo_box_bmarks(1);
     ui->comboBox_MSY_options->setCurrentIndex(1);
     ui->lineEdit_SPR_target->setText("0.4");
     ui->lineEdit_biomass_target->setText("0.2");
@@ -110,6 +110,7 @@ void forecast_widget::disconnectAll(ss_forecast *fcast)
     disconnect (ui->comboBox_MSY_options, SIGNAL(currentIndexChanged(int)), this, SLOT(change_MSY(int)));
     disconnect (ui->lineEdit_SPR_target, SIGNAL(editingFinished()), this, SLOT(change_spr_target()));
     disconnect (ui->lineEdit_biomass_target, SIGNAL(editingFinished()), this, SLOT(change_biomass_target()));
+    disconnect (ui->lineEdit_Blimit, SIGNAL(editingFinished()), this, SLOT(change_blimit()));
     disconnect (ui->spinBox_bmark_bio_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_bio_begin(int)));
     disconnect (ui->spinBox_bmark_bio_end, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_bio_end(int)));
     disconnect (ui->spinBox_bmark_sel_beg, SIGNAL(valueChanged(int)), this, SLOT(set_bmark_sel_begin(int)));
@@ -249,6 +250,7 @@ void forecast_widget::refresh()
     set_combo_box_MSY(fcast->get_MSY());//(ui->comboBox_MSY_options, fcast->get_MSY());
     ui->lineEdit_SPR_target->setText(QString::number(fcast->get_spr_target()));
     ui->lineEdit_biomass_target->setText(QString::number(fcast->get_biomass_target()));
+    set_blimit(fcast->get_blimit());
     ui->spinBox_bmark_bio_beg->setValue(fcast->get_benchmark_year(0));
     set_bmark_bio_begin(fcast->get_benchmark_year(0));
     ui->spinBox_bmark_bio_end->setValue(fcast->get_benchmark_year(1));
@@ -373,6 +375,16 @@ void forecast_widget::set_combo_box_bmarks(int value)
 void forecast_widget::change_bmarks(int value)
 {
     model_data->forecast->set_benchmarks(value);
+    if (value == 3)
+    {
+        ui->label_Blimit->setVisible(true);
+        ui->lineEdit_Blimit->setVisible(true);
+    }
+    else
+    {
+        ui->label_Blimit->setVisible(false);
+        ui->lineEdit_Blimit->setVisible(false);
+    }
 }
 
 void forecast_widget::set_combo_box_MSY(int value)
@@ -399,6 +411,25 @@ void forecast_widget::change_biomass_target()
     double bmt = checkdoublevalue(value);
     model_data->forecast->set_biomass_target(bmt);
     ui->lineEdit_biomass_target->setText(QString::number(bmt));
+}
+
+void forecast_widget::set_blimit(double value)
+{
+    ui->lineEdit_Blimit->setText(QString::number(value));
+    if (value < 0)
+        ui->label_Blimit->setText("Blimit as fraction of Bzero");
+    else
+        ui->label_Blimit->setText("Blimit as fraction of Bmsy");
+}
+
+void forecast_widget::change_blimit()
+{
+    QString value(ui->lineEdit_Blimit->text()), newvalue;
+    double blim = checkdoublevalue(value);
+    model_data->forecast->set_blimit(blim);
+    newvalue = QString::number(blim);
+    if (value.compare(newvalue))
+        ui->lineEdit_Blimit->setText(QString());
 }
 
 void forecast_widget::set_combo_box_bmark_relF(int value)

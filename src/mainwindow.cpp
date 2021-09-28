@@ -205,7 +205,8 @@ void MainWindow::refreshAll()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeSettings();
-    event->accept();
+    QMainWindow::closeEvent(event);
+//    event->accept();
 }
 void MainWindow::setupMenus (QMenuBar *main)
 {
@@ -289,7 +290,6 @@ void MainWindow::writeSettings()
     settings.setValue("defaultModel", default_model);
     settings.setValue("defaultDir", default_dir);
     settings.setValue("ss_exe", ss_exe);
-    settings.setValue("trans_exe", ss_trans_exe);
     settings.setValue("r_exe", R_exe);
     settings.endGroup();
     settings.beginGroup ("HelpWindow");
@@ -354,7 +354,6 @@ void MainWindow::readSettings()
     default_dir = settings.value("defaultDir", app_dir).toString();
     current_dir = default_model;
     ss_exe = settings.value("ss_exe", exe).toString();
-    ss_trans_exe = settings.value("trans_exe", exe).toString();
     R_exe = settings.value("r_exe", blank_exe).toString();
     settings.endGroup();
 
@@ -559,36 +558,35 @@ void MainWindow::readFiles()
     else
     {
         float ver = files->get_version_number(files->getDatafileVersion());
+        QMessageBox msgbx (this);
+        msgbx.setIcon(QMessageBox::Question);
+        msgbx.setWindowTitle("Datafile error");
+        QString normal, detail;
         if (ver < 330)
         {
-            QString normal ("This program does not support datafiles earlier than 3.30\nWhat do you wish to do?");
-            QString detail ("You may proceed in one of three ways:\n 1) convert the model (the program will use ss_trans.exe)\n    (select Run, then Exit, then select a new directory),\n 2) choose another starter.ss (a different model), or\n 3) quit the program.");
-            QMessageBox msgbx (this);
-            msgbx.setIcon(QMessageBox::Question);
             msgbx.setWindowTitle("Datafile version mis-match");
-            msgbx.setText(normal);
-            msgbx.setDetailedText(detail);
-            msgbx.addButton("Convert Model", QMessageBox::AcceptRole);
-            msgbx.addButton("Choose Another", QMessageBox::RejectRole);
-            msgbx.addButton("Exit GUI", QMessageBox::NoRole);
-            choice = msgbx.exec();
-                 if (choice == 0)
-            {
-                runConversion();
-            }
-            else if (choice == 1)
-            {
-                openDirectory();
-            }
-            else if (choice == 2)
-            {
-                close();
-            }
+            normal = QString("This program does not support datafiles earlier than 3.30\nWhat do you wish to do?");
+            detail = QString("You may proceed in one of two ways:\n 1) Choose another starter.ss (a different model) or\n 2) Quit the program.");
         }
-//        else
-//        {
-//            showInputMessage("Problem reading files!");
-//        }
+        else
+        {
+            normal = QString("There was a problem reading the data files.\nWhat do you wish to do?");
+            detail = QString();
+        }
+        msgbx.setText(normal);
+        msgbx.setDetailedText(detail);
+        msgbx.addButton("Choose Another", QMessageBox::RejectRole);
+        msgbx.addButton("Exit GUI", QMessageBox::NoRole);
+        choice = msgbx.exec();
+             if (choice == 0)
+        {
+            openDirectory();
+        }
+        else if (choice == 1)
+        {
+            if (!close())
+                exit(1);
+        }
     }
 }
 
@@ -1057,7 +1055,7 @@ void MainWindow::runConversion()
     files->setReadParFile(false);
     files->write_starter_file();
     // use run dialog to run ss_trans
-    drun.setDir(current_dir);
+/*    drun.setDir(current_dir);
     if (ss_trans_exe.isEmpty())
         locateSSConverter();
     else
@@ -1104,7 +1102,7 @@ void MainWindow::runConversion()
             modelData->set_last_estim_phase(lastEstPhase);
             files->write_starter_file();
         }
-    }
+    }*/
 }
 
 void MainWindow::setDefaultModel()
@@ -1164,8 +1162,8 @@ void MainWindow::locateSSExecutable()
 void MainWindow::locateSSConverter()
 {
     // locate ss_trans.exe
-    locateExecutable(ss_trans_exe, "SS Converter", "ss_tr");
-    changeExecutable(QString("trans_exe"), ss_trans_exe);
+//    locateExecutable(ss_trans_exe, "SS Converter", "ss_tr");
+//    changeExecutable(QString("trans_exe"), ss_trans_exe);
 }
 
 void MainWindow::changeExecutable(QString key, QString filename) {
