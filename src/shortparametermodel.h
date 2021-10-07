@@ -14,7 +14,7 @@ public:
     explicit ShortParameterModel(QObject *parent = nullptr);
     ~ShortParameterModel () override;
 
-    void resetToDefault();
+    void resetToData();
 
 signals:
     void parametersChanged();
@@ -59,7 +59,11 @@ public:
     explicit ShortParameterMultiModel(QObject *parent = nullptr);
 
 public slots:
+    void setMultiplier(int newmult);
+    int getMultiplier() {return mult;}
 
+private:
+    int mult;
 
 };
 

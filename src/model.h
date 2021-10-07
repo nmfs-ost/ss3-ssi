@@ -198,9 +198,6 @@ public slots:
     int getNumLinesCatch ();
     void add_fleet_catch_per_season (int fishery, int yr, int season, double num, double se = 0);
 //    double fleet_catch_per_season (int fishery, int yr, int season);
-    void setCatchMult (QStringList data) {catchMult->setParameter(0, data);}
-    QStringList getCatchMult () {return catchMult->getParameter(0);}
-    tablemodel *getCatchMultParam () {return catchMult->getParamTable();}
     void set_fleet_units_err_type (int fleet, int units, int err_type);
     int fleet_discard_count();
     int fleet_discard_obs_count();
@@ -421,8 +418,6 @@ private:
 
     bool useMeanBwtData;
     int i_mean_bwt_df;
-
-    shortParameterModel *catchMult;
 
     bool useLenCompData;
     compositionLength *lengthData;

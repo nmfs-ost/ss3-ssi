@@ -55,6 +55,10 @@ selectivity::selectivity(QObject *model, SelexType stype, int method)
 void selectivity::reset()
 {
     QStringList values;
+    varParameters->setNumVarParams(0);
+    discardVarParameters->setNumVarParams(0);
+    retainVarParameters->setNumVarParams(0);
+    maleVarParameters->setNumVarParams(0);
     values << "0" << "0" << "0" << "0";
     setSetup(values);
     numXvals = 0;

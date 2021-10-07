@@ -108,10 +108,6 @@ ss_model::ss_model(QWidget *parent) :
     doMorphComp = false;
     lengthData = new compositionLength(this);
 
-    catchMult = new shortParameterModel(this);
-//    catchMult->setColumnCount(7);
-    catchMult->setNumParams(1);
-
     lambdas = new tablemodel(this);
     hdr.clear();
     hdr << "Component" << "fleet" << "phase" << "value" << "method";

@@ -26,6 +26,7 @@ public:
 signals:
     void dataChanged(QList<int> data);
     void dataChanged();
+    void valueChanged(int i, int value);
 
 public slots:
     void setNumValues (int cols);
@@ -33,6 +34,7 @@ public slots:
     void setValue (int i, int value);
     void changeValue (int i, int value);
     int getValue (int i);
+
     void setData (QStringList data);
     QStringList getData () {return dataTable->getRowData(0);}
     void setHeader (QStringList hdr);
@@ -40,7 +42,7 @@ public slots:
     QString getColHeader (int i) {return dataTable->getColumnHeader(i);}
 //    void setRowHeader (QString rhdr) {dataTable->setRowHeader(0, rhdr);}
     tablemodel *getTable () {return dataTable;}
-    setupModel *getModel () {return this;}
+//    setupModel *getModel () {return this;}
 
     void updateTable ();
     void updateValues ();
