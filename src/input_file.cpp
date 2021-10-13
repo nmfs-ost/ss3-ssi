@@ -131,6 +131,17 @@ int ss_file::writeline(QString str)
     return chars;
 }
 
+int ss_file::writeTerminator(int num)
+{
+    int chars = 0;
+    QString line("-9999");
+    for (int i = 0; i < num; i++)
+        line.append(" 0");
+    line.append(" # terminator");
+    chars += writeline(line);
+    return chars;
+}
+
 int ss_file::writechar (QChar chr)
 {
     char ch = chr.toLatin1();
@@ -361,7 +372,7 @@ int ss_file::write_vector(QStringList vect, int spcng, QString info)
         line.append(QString("%1 ").arg(item));
     }
     if (!info.isEmpty())
-        line.append(QString("#_%1").arg(info));
+        line.append(QString("# %1").arg(info));
     return writeline(line);
 }
 

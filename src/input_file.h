@@ -60,6 +60,7 @@ public:
     int write_comments();
     int newline();
     int writeline(QString str = QString(""));
+    int writeTerminator(int num);
     int writechar(QChar chr);
     int read_int (QString info = QString(""));
     float read_float (QString info = QString(""));

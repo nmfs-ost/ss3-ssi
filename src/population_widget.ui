@@ -273,7 +273,11 @@
               </widget>
              </item>
              <item row="12" column="3" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_min"/>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_min">
+               <property name="decimals">
+                <number>3</number>
+               </property>
+              </widget>
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_growth_bin_method">
@@ -405,7 +409,11 @@
               </widget>
              </item>
              <item row="13" column="3" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_max"/>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_spec_max">
+               <property name="decimals">
+                <number>3</number>
+               </property>
+              </widget>
              </item>
              <item row="17" column="0">
               <widget class="QLabel" name="label_growth_cv_pattern">
@@ -455,6 +463,9 @@
              </item>
              <item row="9" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amin">
+               <property name="decimals">
+                <number>3</number>
+               </property>
                <property name="maximum">
                 <double>999.000000000000000</double>
                </property>
@@ -575,6 +586,9 @@
              </item>
              <item row="10" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_age_Amax">
+               <property name="decimals">
+                <number>3</number>
+               </property>
                <property name="minimum">
                 <double>0.000000000000000</double>
                </property>
@@ -585,6 +599,9 @@
              </item>
              <item row="11" column="3" colspan="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_exp_decay">
+               <property name="decimals">
+                <number>3</number>
+               </property>
                <property name="minimum">
                 <double>-999.000000000000000</double>
                </property>
@@ -678,7 +695,7 @@
                       <number>3</number>
                      </property>
                      <property name="maximum">
-                      <double>20.000000000000000</double>
+                      <double>50.000000000000000</double>
                      </property>
                      <property name="singleStep">
                       <double>0.010000000000000</double>
@@ -696,6 +713,9 @@
                     <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_bin_max">
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                      <property name="minimum">
                       <double>2.000000000000000</double>
@@ -716,6 +736,9 @@
                     <widget class="QDoubleSpinBox" name="doubleSpinBox_growth_bin_width">
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                      <property name="minimum">
                       <double>0.010000000000000</double>
@@ -2427,7 +2450,7 @@ then read num_of_seasons parameters below.</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-21</y>
             <width>1099</width>
             <height>621</height>
            </rect>
@@ -2792,6 +2815,9 @@ then read num_of_seasons parameters below.</string>
                    </item>
                    <item row="7" column="1">
                     <widget class="QDoubleSpinBox" name="doubleSpinBox_recr_dev_first_nobias">
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                      <property name="minimum">
                       <double>0.000000000000000</double>
                      </property>
@@ -2802,6 +2828,9 @@ then read num_of_seasons parameters below.</string>
                    </item>
                    <item row="6" column="1">
                     <widget class="QDoubleSpinBox" name="doubleSpinBox_recr_dev_last_bias">
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                      <property name="maximum">
                       <double>3000.000000000000000</double>
                      </property>
@@ -2809,6 +2838,9 @@ then read num_of_seasons parameters below.</string>
                    </item>
                    <item row="5" column="1">
                     <widget class="QDoubleSpinBox" name="doubleSpinBox_recr_dev_first_bias">
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                      <property name="maximum">
                       <double>3000.000000000000000</double>
                      </property>
@@ -2816,6 +2848,9 @@ then read num_of_seasons parameters below.</string>
                    </item>
                    <item row="4" column="1">
                     <widget class="QDoubleSpinBox" name="doubleSpinBox_recr_dev_last_nobias">
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                      <property name="maximum">
                       <double>3000.000000000000000</double>
                      </property>
