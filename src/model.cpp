@@ -204,18 +204,22 @@ void ss_model::reset()
 
     if (ageData == nullptr)
         ageData = new compositionAge(this);
-    ageData->setNumberBins(0);
+    else
+        ageData->reset();
+/*    ageData->setNumberBins(0);
     ageData->setNumberObs(0);
     ageData->set_num_error_defs(0);
     ageData->set_number_saa_observations(0);
-    ageData->set_number_ages(0);
+    ageData->set_number_ages(0);*/
 //    QMessageBox::information(this, "Program Flow", "Model age comp set up.");
 
     if (lengthData == nullptr)
         lengthData = new compositionLength();
-    lengthData->setNumberBins(0);
+    else
+        lengthData->reset();
+/*    lengthData->setNumberBins(0);
     lengthData->setNumberObs(0);
-    lengthData->setNumberAltBins(0);
+    lengthData->setNumberAltBins(0);*/
 //    QMessageBox::information(this, "Program Flow", "Model length comp set up.");
 
     set_mean_body_wt_df(0);

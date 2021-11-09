@@ -370,11 +370,18 @@ void forecast_widget::set_combo_box(QComboBox *cbox, int value)
 void forecast_widget::set_combo_box_bmarks(int value)
 {
     ui->comboBox_benchmarks->setCurrentIndex(value);
+    bmarks_changed();
 }
 
 void forecast_widget::change_bmarks(int value)
 {
     model_data->forecast->set_benchmarks(value);
+    bmarks_changed();
+}
+
+void forecast_widget::bmarks_changed()
+{
+    int value = ui->comboBox_benchmarks->currentIndex();
     if (value == 3)
     {
         ui->label_Blimit->setVisible(true);

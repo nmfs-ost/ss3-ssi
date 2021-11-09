@@ -1104,7 +1104,10 @@ void file_widget::write_starter_file (QString filename)
         }
         else
         {
-            chars += starterFile->write_val(ui->comboBox_MCMC_output->currentIndex(), 1,
+            float temp_float  = ui->lineEdit_mcmc_bump_val->text().toFloat();
+            temp_int = ui->comboBox_MCMC_output->currentIndex();
+            temp_float += temp_int;
+            chars += starterFile->write_val(temp_float, 1,
                     QString("MCMC output detail: integer part (0=default; 1=adds obj func components); and decimal part (added to SR_LN(R0) on first call to mcmc)"));
             chars += starterFile->write_val(model_info->getALKTol(), 1,
                     QString ("ALK tolerance (example 0.0001)"));

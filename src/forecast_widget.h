@@ -38,6 +38,7 @@ public slots:
 
     void set_combo_box_bmarks(int value);
     void change_bmarks(int value);
+    void bmarks_changed();
     void set_combo_box_MSY(int value);
     void change_MSY(int value);
     void change_spr_target();

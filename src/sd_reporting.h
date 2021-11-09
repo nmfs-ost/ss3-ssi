@@ -16,9 +16,8 @@ public:
     sd_reporting();
     ~sd_reporting();
 
-    void setActive (bool flag);
     void setActive (int value);
-    int getActive () {return reporting;}
+    int getActive ();
 
 /*    void setSpecs (QStringList data);
     QStringList getSpecs ();
@@ -53,13 +52,19 @@ public:
 
     void setNatMort (QStringList data);
     QStringList getNatMort ();
-    tablemodel *getNatMortModel () {return numAtAge;}
+    tablemodel *getNatMortModel () {return natMort;}
     int getNumNatMortBins();
     void setNumNatMortBins (int num);
     QStringList getNatMortBins ();
     void setNatMortBins (QStringList data);
-    tablemodel *getNatMortAgeModel() {return numAtAgeAges;}
+    tablemodel *getNatMortAgeModel() {return natMortAges;}
 
+
+    int getDynB0() const;
+    void setDynB0(int newDynB0);
+
+    int getSumBio() const;
+    void setSumBio(int newSumBio);
 
 private:
     int reporting;
@@ -71,6 +76,8 @@ private:
     tablemodel *growthBins;
     tablemodel *numAtAgeAges;
     tablemodel *natMortAges;
+    int dynB0;
+    int sumBio;
 
     QStringList specsHeader;
     longParameter vector_selex_bins;

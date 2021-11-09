@@ -176,12 +176,12 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     addSdNumAtAgeView->setParent(this);
     addSdNumAtAgeView->setModel(model_data->getAddSdReporting()->getNumAtAgeModel());
     addSdNumAtAgeView->setHeight(1);
-    ui->verticalLayout_add_sd_NatAge->addWidget(addSdNumAtAgeView);
+    ui->verticalLayout_add_sd_natAge->addWidget(addSdNumAtAgeView);
     addNumAtAgeBinsView = new tableview();
     addNumAtAgeBinsView->setParent(this);
     addNumAtAgeBinsView->setModel(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
     addNumAtAgeBinsView->setHeight(1);
-    ui->verticalLayout_add_sd_NatAge_ages->addWidget(addNumAtAgeBinsView);
+    ui->verticalLayout_add_sd_natAge_ages->addWidget(addNumAtAgeBinsView);
 
     addSdNatMortView = new tableview();
     addSdNatMortView->setParent(this);
@@ -193,9 +193,10 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
     addSdNatMortBinsView->setModel(model_data->getAddSdReporting()->getNatMortAgeModel());
     addSdNatMortBinsView->setHeight(1);
     ui->verticalLayout_add_sd_natMort_ages->addWidget(addSdNatMortBinsView);
+    ui->spinBox_add_sd_dynB0->setValue(model_data->getAddSdReporting()->getDynB0());
+    ui->spinBox_add_sd_sumBio->setValue(model_data->getAddSdReporting()->getSumBio());
 
-
-
+    setAddSdRead(model_data->getAddSdReporting()->getActive());
 
     ui->spinBox_num_std_yrs->setMaximum(20);
     setNumSdYears(0);
@@ -321,6 +322,8 @@ void data_widget::connectAll()
     connect (ui->spinBox_blocks_count, SIGNAL(valueChanged(int)), SLOT(changeNumBlocks(int)));
 
     connect (ui->spinBox_add_sd_read, SIGNAL(valueChanged(int)), SLOT(changeAddSdRead(int)));
+    connect (ui->spinBox_add_sd_dynB0, SIGNAL(valueChanged(int)), SLOT(changeAddSdDynB0(int)));
+    connect (ui->spinBox_add_sd_sumBio, SIGNAL(valueChanged(int)), SLOT(changeAddSdSumBio(int)));
 }
 
 void data_widget::disconnectAll()
@@ -432,6 +435,8 @@ void data_widget::disconnectAll()
     disconnect (ui->spinBox_blocks_count, SIGNAL(valueChanged(int)), this, SLOT(changeNumBlocks(int)));
 
     disconnect (ui->spinBox_add_sd_read, SIGNAL(valueChanged(int)), this, SLOT(changeAddSdRead(int)));
+    disconnect (ui->spinBox_add_sd_dynB0, SIGNAL(valueChanged(int)), this, SLOT(changeAddSdDynB0(int)));
+    disconnect (ui->spinBox_add_sd_sumBio, SIGNAL(valueChanged(int)), this, SLOT(changeAddSdSumBio(int)));
 }
 
 void data_widget::set_model(ss_model *m_data)
@@ -458,7 +463,7 @@ void data_widget::refresh()
         changeTotalYears();
         ui->spinBox_seas_per_yr->setValue(model_data->get_num_seasons());
         ui->spinBox_subseasons->setValue(model_data->get_num_subseasons());
-//
+
         ui->doubleSpinBox_spawn_month->setValue(model_data->get_spawn_month());
         ui->spinBox_season->setValue(1);
         setMoPerSeason(1);
@@ -494,18 +499,12 @@ void data_widget::refresh()
         sdYearsView->setModel(model_data->sdYearsModel);
         sdYearsView->resizeColumnsToContents();
 
-/*        ui->spinBox_mbwt_df->setValue(model_data->mean_body_wt_df());
-        setMBWTObs(model_data->mean_body_wt_count());
-        mbweightview->setModel(model_data->getMeanBwtModel());
-        mbweightview->resizeColumnsToContents();*/
-
         setLengthCompMethod(model_data->get_length_composition()->getAltBinMethod());
         setLengthBins (model_data->get_length_composition()->getNumberBins());
         lengthBins->setModel(model_data->get_length_composition()->getBinsModel());
         lengthBins->setHeight(1);
         lengthBins->resizeColumnsToContents();
-//        lengthObs->setModel(model_data->get_length_composition()->getObsModel());
-//        lengthObs->resizeColumnsToContents();
+
         lengthDirichlet->setModel(model_data->get_length_composition()->getDirichletParamTable());
         lengthDirichlet->setHeight(model_data->get_length_composition()->getDirichletParamTable());
         lengthDirichlet->resizeColumnsToContents();
@@ -517,14 +516,11 @@ void data_widget::refresh()
         ageBins->setModel(model_data->get_age_composition()->getBinsModel());
         ageBins->setHeight(40);
         ageBins->resizeColumnsToContents();
-//        QSize size (ageBins->size());
-//        size.setHeight(40);
-//        ageBins->resize(size);
+
         ageError->setModel(model_data->get_age_composition()->getErrorModel());
         ageError->setHeight(model_data->get_age_composition()->getErrorModel());
         ageError->resizeColumnsToContents();
-//        ageObs->setModel(model_data->get_age_composition()->getObsModel());
-//        ageObs->resizeColumnsToContents();
+
         ageDirichlet->setModel(model_data->get_age_composition()->getDirichletParamTable());
         ageDirichlet->setHeight(model_data->get_age_composition()->getDirichletParamTable());
         ageDirichlet->resizeColumnsToContents();
@@ -552,16 +548,10 @@ void data_widget::refresh()
         }
 
         ui->spinBox_add_sd_read->setValue (model_data->getAddSdReporting()->getActive());
-        changeAddSdRead(model_data->getAddSdReporting()->getActive());
+        setAddSdRead(model_data->getAddSdReporting()->getActive());
+        ui->spinBox_add_sd_dynB0->setValue(model_data->getAddSdReporting()->getDynB0());
+        ui->spinBox_add_sd_sumBio->setValue(model_data->getAddSdReporting()->getSumBio());
 
-/*        addSdSelexView->setModel(model_data->getAddSdReporting()->getSpecModel());
-        addSdSelexView->setHeight(model_data->getAddSdReporting()->getSpecModel());
-        addSdSelexView->resizeColumnsToContents();
-        ui->verticalLayout_add_sd_spec->addWidget(addSdSelexView);
-        addSelexBinsView->setModel(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
-        addSelexBinsView->setHeight(model_data->getAddSdReporting()->getNumAtAgeAgeModel());
-        addSelexBinsView->resizeColumnsToContents();
-        ui->verticalLayout_add_sd_bins->addWidget(addSelexBinsView);*/
         set2DAR1(model_data->getUse2DAR1());
         connectAll();
     }
@@ -569,68 +559,74 @@ void data_widget::refresh()
 
 void data_widget::changeAddSdRead(int value) {
     model_data->getAddSdReporting()->setActive(value);
-    if (value == 0) {
-        ui->label_add_sd_selex->setEnabled(false);
-        addSdSelexView->setEnabled(false);
-        addSelexBinsView->setEnabled(false);
+    setAddSdRead(value);
+}
 
-        ui->label_add_sd_growth->setEnabled(false);
-        addSdGrowthView->setEnabled(false);
-        addGrowthBinsView->setEnabled(false);
-
-        ui->label_add_sd_NatAge->setEnabled(false);
-        addSdNumAtAgeView->setEnabled(false);
-        addNumAtAgeBinsView->setEnabled(false);
-
-        ui->label_add_sd_natMort->setEnabled(false);
-        addSdNatMortView->setEnabled(false);
-        addSdNatMortBinsView->setEnabled(false);
+void data_widget::setAddSdRead(int value) {
+    if (ui->spinBox_add_sd_read->value() != value) {
+        ui->spinBox_add_sd_read->setValue(value);
     }
-    else {
-        ui->label_add_sd_selex->setEnabled(true);
-        addSdSelexView->setEnabled(true);
+    // set everthing invisible
+    addSdSelexView->setVisible(false);
+    addSelexBinsView->setVisible(false);
+
+    addSdGrowthView->setVisible(false);
+    addGrowthBinsView->setVisible(false);
+
+    addSdNumAtAgeView->setVisible(false);
+    addNumAtAgeBinsView->setVisible(false);
+
+    ui->label_add_sd_natMort->setVisible(false);
+    addSdNatMortView->setVisible(false);
+    addSdNatMortBinsView->setVisible(false);
+
+    ui->label_add_sd_dynB0->setVisible(false);
+    ui->spinBox_add_sd_dynB0->setVisible(false);
+    ui->label_add_sd_sumBio->setVisible(false);
+    ui->spinBox_add_sd_sumBio->setVisible(false);
+
+    // turn on correct elements
+    if (value > 0) {
+        addSdSelexView->setVisible(true);
         addSdSelexView->resizeColumnsToContents();
-        addSelexBinsView->setEnabled(true);
+        addSelexBinsView->setVisible(true);
         addSelexBinsView->resizeColumnsToContents();
 
         if (model_data->getReadWtAtAge() == 0) {
-            ui->label_add_sd_growth->setEnabled(true);
-            ui->label_add_sd_growth->setVisible(true);
-            addSdGrowthView->setEnabled(true);
             addSdGrowthView->setVisible(true);
             addSdGrowthView->resizeColumnsToContents();
-            addGrowthBinsView->setEnabled(true);
             addGrowthBinsView->setVisible(true);
             addGrowthBinsView->resizeColumnsToContents();
         }
-        else {
-            ui->label_add_sd_growth->setVisible(false);
-            addSdGrowthView->setVisible(false);
-            addGrowthBinsView->setVisible(false);
-        }
 
-        ui->label_add_sd_NatAge->setEnabled(true);
-        addSdNumAtAgeView->setEnabled(true);
+        addSdNumAtAgeView->setVisible(true);
         addSdNumAtAgeView->resizeColumnsToContents();
-        addNumAtAgeBinsView->setEnabled(true);
+        addNumAtAgeBinsView->setVisible(true);
         addNumAtAgeBinsView->resizeColumnsToContents();
 
-        if (value > 1) {
+        if (value == 2) {
             ui->label_add_sd_natMort->setVisible(true);
-            ui->label_add_sd_natMort->setEnabled(true);
-            addSdNatMortView->setEnabled(true);
             addSdNatMortView->setVisible(true);
             addSdNatMortView->resizeColumnsToContents();
-            addSdNatMortBinsView->setEnabled(true);
             addSdNatMortBinsView->setVisible(true);
             addSdNatMortBinsView->resizeColumnsToContents();
+            ui->label_add_sd_dynB0->setVisible(true);
+            ui->spinBox_add_sd_dynB0->setVisible(true);
+            ui->label_add_sd_sumBio->setVisible(true);
+            ui->spinBox_add_sd_sumBio->setVisible(true);
         }
-        else {
-            ui->label_add_sd_natMort->setVisible(false);
-            addSdNatMortView->setVisible(false);
-            addSdNatMortBinsView->setVisible(false);
-        }
+
     }
+}
+
+void data_widget::changeAddSdDynB0(int value)
+{
+    model_data->getAddSdReporting()->setDynB0(value);
+}
+
+void data_widget::changeAddSdSumBio(int value)
+{
+    model_data->getAddSdReporting()->setSumBio(value);
 }
 
 void data_widget::changeMaxSeason(int num)
@@ -885,7 +881,9 @@ void data_widget::ageErrorChanged()
     {
         index = i * 2 + 1;
         ql = model_data->get_age_composition()->getErrorParam(index);
-        if (ql.at(0).toFloat() < 0)
+        if (ql.isEmpty())
+            usingParams = false;
+        else if (ql.at(0).toFloat() < 0)
         {
             usingParams = true;
             break;

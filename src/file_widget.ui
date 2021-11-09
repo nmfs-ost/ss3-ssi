@@ -320,6 +320,10 @@
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="toolTip">
+                <string>Do not use if there have been any changes to the control file that 
+would alter the number or order of parameters stored in the ss.par file.</string>
+               </property>
                <property name="text">
                 <string>Read inital values from SS.PAR file</string>
                </property>
@@ -593,6 +597,10 @@
              </item>
              <item row="1" column="2" colspan="4">
               <widget class="QComboBox" name="comboBox_detail_level">
+               <property name="toolTip">
+                <string>With option 2, the display shows value of each -logL component for 
+each iteration and it displays where crash penalties are created.</string>
+               </property>
                <item>
                 <property name="text">
                  <string>0 - only ADMB outputs</string>
@@ -641,6 +649,9 @@ It is undocumented and mostly used by the developer.</string>
              </item>
              <item row="4" column="0" colspan="2">
               <widget class="QLabel" name="label_parm_trace">
+               <property name="toolTip">
+                <string>This controls the output to parmtrace.sso. The contents of this output \ncan be used to determine which values are changing when a model \napproaches a crash condition. It also can be used to investigate \npatterns of parameter changes as model convergence slowly moves \nalong a ridge. In order to access parameter gradients,select every iter \nand all params, which will write the gradient of each parameter with \nrespect to each likelihood component.</string>
+               </property>
                <property name="text">
                 <string>ParmTrace.sso write parameters?</string>
                </property>
@@ -662,6 +673,14 @@ It is undocumented and mostly used by the developer.</string>
              </item>
              <item row="2" column="2" colspan="4">
               <widget class="QComboBox" name="comboBox_report_level">
+               <property name="toolTip">
+                <string>Option 0 will forgo the writing of the Report file, but the ss_summary 
+file will be written that has minimal derived and estimated quantities. 
+This is a useful option for some data-limited assessment approaches 
+(e.g., XSSS or SSS). Option 1 will write out the full Report file. Option 
+2 will write out select items in the Report file and will omit some more 
+detailed sections (e.g., numbers-at-age).</string>
+               </property>
                <item>
                 <property name="text">
                  <string>0 - Minimal for data-limited</string>
@@ -829,6 +848,9 @@ It is undocumented and mostly used by the developer.</string>
              </item>
              <item row="6" column="0" colspan="2">
               <widget class="QLabel" name="label_datafiles">
+               <property name="toolTip">
+                <string>1: annotated input files, \n2: expected values data file, \n3 and higher: N-2 bootstrap data files</string>
+               </property>
                <property name="text">
                 <string>Number of extra data files to produce</string>
                </property>

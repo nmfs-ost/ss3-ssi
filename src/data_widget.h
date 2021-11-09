@@ -135,7 +135,10 @@ private slots:
     void tagRptDcayChanged();
     void tagRptDcayTVChanged();
 
+    void setAddSdRead(int value);
     void changeAddSdRead(int value);
+    void changeAddSdDynB0(int value);
+    void changeAddSdSumBio(int value);
     void change2DAR1 (bool use);
 
 private:

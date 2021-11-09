@@ -487,7 +487,7 @@ void population_widget::refresh()
     ui->doubleSpinBox_exp_decay->setValue(pop->Grow()->getExpDecay());
     ui->doubleSpinBox_growth_sd_add->setValue(pop->Grow()->getSd_add());
     ui->comboBox_growth_cv_pattern->setCurrentIndex(pop->Grow()->getCv_growth_pattern());
-    ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
+//    ui->spinBox_growth_num_patterns->setValue(pop->Grow()->getNum_patterns());
     ui->spinBox_growth_num_submorphs->setValue(pop->Grow()->getNum_morphs());
     ui->comboBox_growth_time_vary->setCurrentIndex(pop->Grow()->getTimeVaryMethod()-1);
     ui->spinBox_bio_time_vary_read->setValue(pop->Grow()->getTimeVaryReadParams());
@@ -801,25 +801,35 @@ void population_widget::changeNumSubMorph(int num)
     bool vis = false;
     int nmph = pop->Grow()->getNum_morphs();
     float value, within, between;
+    if (num == 2)
+    {
+        ui->spinBox_growth_num_submorphs->setValue(3);
+        return;
+    }
+    if (num == 4)
+    {
+        ui->spinBox_growth_num_submorphs->setValue(5);
+        return;
+    }
     if (nmph != num)
     {
         if (num > 1)
         {
             value = pop->Grow()->getMorph_within_ratio();
-            if (value == 1.0)
-            {
-                between = .000001;
-                within = 1.0;
-            }
-            else
-            {
-                between = std::sqrt(1. / (1. + value * value));
-                within = value * between;
-            }
+            if (value == 1) value = .7;
+            between = std::sqrt(1. / (1. + value * value));
+            within = value * between;
+
             vis = true;
             ui->doubleSpinBox_growth_morph_ratio->setValue(value);
             ui->doubleSpinBox_growth_morph_between->setValue(between);
             ui->doubleSpinBox_growth_morph_within->setValue(within);
+        }
+        else
+        {
+            ui->doubleSpinBox_growth_morph_ratio->setValue(1);
+            ui->doubleSpinBox_growth_morph_between->setValue(.000001);
+            ui->doubleSpinBox_growth_morph_within->setValue(1);
         }
         pop->Grow()->setNum_morphs(num);
     }

@@ -154,6 +154,7 @@ public slots:
     void set_alloc_group (int flt, int grp);
     void set_num_alloc_groups (int num);
     int get_num_alloc_groups () {return i_num_alloc_groups;}
+    void reset_alloc_fractions() {allocGroupFrac->setRowCount(0);}
     void set_alloc_fractions (int yr, QStringList fractions) {allocGroupFrac->setRowData(yr, fractions);}
     QStringList get_alloc_fractions (int yr) {return allocGroupFrac->getRowData(yr);}
     void setAllocFractions (int index, QStringList data) {allocGroupFrac->setRowData(index, data);}

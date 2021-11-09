@@ -20,9 +20,10 @@ tablemodel::~tablemodel()
 
 void tablemodel::reset()
 {
-    QStringList ql("no row string");
-    setRowData(0, ql);
-    clear();
+//    QStringList ql("no row string");
+//    setRowData(0, ql);
+    if (rowCount() > 0)
+        clear();
 }
 
 void tablemodel::setRowCount(int rows)

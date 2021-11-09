@@ -15,6 +15,15 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.18.02
+    2021-11-08
+Minor Improvements
+1. Added Cessation parameter for Growth model 8.
+Bug Fixes
+1. A default is set for BLimit and it only shows for Benchmarks = 3.
+2. Number of platoons is forced to 1, 3, or 5 and a default is set
+   for the between/within ratio.
+============================================================================
     3.30.18.01
     2021-10-13
 Bug Fixes

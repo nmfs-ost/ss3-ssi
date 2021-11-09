@@ -92,28 +92,10 @@ sd_reporting::~sd_reporting()
     delete natMortAges;
 }
 
-void sd_reporting::setActive(bool flag)
+int sd_reporting::getActive()
 {
-    if (flag) {
-        reporting = 1;
-    }
-    else {
-        reporting = 0;
-    }
-//    reporting = flag;
-/*    if (reporting)
-    {
-        specs->setRowCount(1);
-        setNumBins(3);
-    }
-    else
-    {
-        specs->setRowCount(0);
-        setNumBins(0);
-    }
-*/
+     return reporting;
 }
-
 void sd_reporting::setActive(int value)
 {
     reporting = value;
@@ -278,5 +260,25 @@ QStringList sd_reporting::getNatMortBins ()
 void sd_reporting::setNatMortBins (QStringList data)
 {
     natMortAges->setRowData(0, data);
+}
+
+int sd_reporting::getDynB0() const
+{
+    return dynB0;
+}
+
+void sd_reporting::setDynB0(int newDynB0)
+{
+    dynB0 = newDynB0;
+}
+
+int sd_reporting::getSumBio() const
+{
+    return sumBio;
+}
+
+void sd_reporting::setSumBio(int newSumBio)
+{
+    sumBio = newSumBio;
 }
 

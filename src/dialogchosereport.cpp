@@ -414,6 +414,7 @@ void DialogChoseReport::changeMinimReps(bool value)
     if (minimReps != value) {
         minimReps = value;
         if (value) {
+            clearReports();
             // set minimum reports to true
             repDetail = 0;
             //1Y  DEFINITIONS report:1
@@ -452,6 +453,7 @@ void DialogChoseReport::changeBriefReps(bool value)
     if (briefReps != value) {
         briefReps = value;
         if (value) {
+            clearReports();
             // set brief reports to true
             //1Y  DEFINITIONS report:1
             reports[1] = true;

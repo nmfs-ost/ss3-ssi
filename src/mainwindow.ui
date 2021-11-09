@@ -412,7 +412,7 @@
      <item>
       <widget class="QLabel" name="label_gui_ver">
        <property name="text">
-        <string>User Interface Version 2</string>
+        <string>User Interface Version 3</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -454,7 +454,7 @@
          </property>
          <property name="icon">
           <iconset resource="stock_synth.qrc">
-           <normaloff>:/icons/StockSynth_icon_128.png</normaloff>:/icons/StockSynth_icon_128.png</iconset>
+           <normaloff>:/icons/ss3_icon.png</normaloff>:/icons/ss3_icon.png</iconset>
          </property>
          <property name="iconSize">
           <size>
