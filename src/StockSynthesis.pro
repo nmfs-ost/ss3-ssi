@@ -23,7 +23,6 @@ SOURCES += main.cpp\
     dialog_yearlyvalues.cpp \
     form_yearvalue.cpp \
     data_widget.cpp \
-    control_widget.cpp \
     input_file.cpp \
     model.cpp \
     file_info_widget.cpp \
@@ -34,7 +33,6 @@ SOURCES += main.cpp\
     catchability.cpp \
     shortparametermodel.cpp \
     sizecomp.cpp \
-    agecomp.cpp \
     dialog_about.cpp \
     forecast_widget.cpp \
     dialog_about_admb.cpp \
@@ -78,7 +76,6 @@ SOURCES += main.cpp\
     lineeditdelegate.cpp \
     tablemodel.cpp \
     tableview.cpp \
-    lambdadelegate.cpp \
     catchdelegate.cpp \
     abundancedelegate.cpp \
     mbweightdelegate.cpp \
@@ -125,7 +122,6 @@ HEADERS  += mainwindow.h \
     dialog_yearlyvalues.h \
     form_yearvalue.h \
     data_widget.h \
-    control_widget.h \
     longparametermodel.h \
     metadata.h \
     input_file.h \
@@ -138,7 +134,6 @@ HEADERS  += mainwindow.h \
     catchability.h \
     shortparametermodel.h \
     sizecomp.h \
-    agecomp.h \
     dialog_about.h \
     forecast_widget.h \
     dialog_about_admb.h \
@@ -182,7 +177,6 @@ HEADERS  += mainwindow.h \
     lineeditdelegate.h \
     tablemodel.h \
     tableview.h \
-    lambdadelegate.h \
     catchdelegate.h \
     abundancedelegate.h \
     mbweightdelegate.h \
@@ -230,7 +224,6 @@ FORMS    += mainwindow.ui \
     dialog_yearlyvalues.ui \
     form_yearvalue.ui \
     data_widget.ui \
-    control_widget.ui \
     length_bin_data.ui \
     length_bin_boundaries.ui \
     file_info_widget.ui \

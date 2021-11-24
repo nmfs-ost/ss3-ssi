@@ -18,6 +18,11 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     model_data = m_data;
     ss_forecast *fcast = model_data->forecast;
 
+    msyCostsView = new tableview();
+    msyCostsView->setParent(this);
+    ui->horizontalLayout_msyCosts->addWidget(msyCostsView);
+    msyCostsView->setHeight(0);
+
     seasFltRelF = new tableview();
     seasFltRelF->setParent(this);
     ui->verticalLayout_seas_flt_relf->addWidget(seasFltRelF);
@@ -248,6 +253,10 @@ void forecast_widget::refresh()
     disconnectAll(fcast);
     set_combo_box_bmarks(fcast->get_benchmarks());//ui->comboBox_benchmarks->setCurrentIndex(fcast->get_benchmarks());
     set_combo_box_MSY(fcast->get_MSY());//(ui->comboBox_MSY_options, fcast->get_MSY());
+    change_MSY(ui->comboBox_MSY_options->currentIndex());
+    msyCostsView->setModel(fcast->getMsyCosts());
+    msyCostsView->setHeight(fcast->getMsyCosts());
+    msyCostsView->resizeColumnsToContents();
     ui->lineEdit_SPR_target->setText(QString::number(fcast->get_spr_target()));
     ui->lineEdit_biomass_target->setText(QString::number(fcast->get_biomass_target()));
     set_blimit(fcast->get_blimit());
@@ -396,12 +405,19 @@ void forecast_widget::bmarks_changed()
 
 void forecast_widget::set_combo_box_MSY(int value)
 {
-    ui->comboBox_MSY_options->setCurrentIndex(value-1);
+    int cboxval = value - 1;
+    ui->comboBox_MSY_options->setCurrentIndex(cboxval);
 }
 
 void forecast_widget::change_MSY(int value)
 {
-    model_data->forecast->set_MSY(value+1);
+    int msy = value + 1;
+    bool usingMey = (msy == 5);
+    model_data->forecast->set_MSY(msy);
+
+    ui->label_msyUnits->setVisible(usingMey);
+    ui->comboBox_msyUnits->setVisible(usingMey);
+    msyCostsView->setVisible(usingMey);
 }
 
 void forecast_widget::change_spr_target()
@@ -803,22 +819,22 @@ void forecast_widget::set_combo_box_catch_basis(int value)
 
 void forecast_widget::change_catch_basis(int value)
 {
-    int set = -1;
+    int basis = -1;
     switch (value) {
     case 0:
-        set = -1;
+        basis = -1;
         break;
     case 1:
-        set = 2;
+        basis = 2;
         break;
     case 2:
-        set = 3;
+        basis = 3;
         break;
     case 3:
-        set = 99;
+        basis = 99;
         break;
     }
-    model_data->forecast->set_input_catch_basis(set);
+    model_data->forecast->set_input_catch_basis(basis);
 }
 
 void forecast_widget::set_num_input_obs(int num)

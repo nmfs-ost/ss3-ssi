@@ -122,6 +122,7 @@ private:
     void set_combo_box (QComboBox *cbox, int value);
     QList <QLineEdit *> edit_fixed_catch_list;
 
+    tableview *msyCostsView;
     tableview *seasFltRelF;
     tableview *maxCatchFleets;
     tableview *maxCatchAreas;

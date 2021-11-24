@@ -31,6 +31,14 @@ public slots:
     void set_combo_box_MSY (int msy);
     int get_MSY () {return i_msy;}
 
+    void setMsyUnits(int msyu) {i_msyUnits = msyu;}
+    int getMsyUnits() {return i_msyUnits;}
+
+    void setMsyCosts(int row, QStringList data) {msyCosts->setRowData(row, data);}
+    void appendMsyCosts(QStringList data);
+    QStringList getMsyCostRow (int row) {return msyCosts->getRowData(row);}
+    tablemodel *getMsyCosts () {return msyCosts;}
+
     void set_spr_target (double spr);
     float get_spr_target () {return f_spr_tgt;}
 
@@ -188,6 +196,11 @@ public slots:
     int   i_bmark;
     // MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt); 4=set to F(endyr)
     int   i_msy;
+    // MSY Units
+    int   i_msyUnits;
+    // MSY Costs
+    tablemodel *msyCosts;
+    //
     // SPR target (e.g. 0.40)
     float f_spr_tgt;
     // Biomass target (e.g. 0.40)

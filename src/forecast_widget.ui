@@ -81,582 +81,8 @@
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <layout class="QGridLayout" name="gridLayout_fcast1">
-             <item row="0" column="0" colspan="2">
-              <widget class="QLabel" name="label_benchmarks">
-               <property name="toolTip">
-                <string>Turn benchmarks on or off</string>
-               </property>
-               <property name="text">
-                <string>Calculate benchmarks/reference points</string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="2" colspan="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_fcast_options">
-               <item>
-                <widget class="QComboBox" name="comboBox_fcast_options">
-                 <property name="currentIndex">
-                  <number>1</number>
-                 </property>
-                 <item>
-                  <property name="text">
-                   <string>-1 = none</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>0 = simple_single_yr</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>1 = F(SPR)</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>2 = F(MSY) </string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>3 = F(B target)</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>4 = Ave F (uses relative F years)</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>5 = input annual F scalar</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="11" column="0" rowspan="2" colspan="4">
-              <layout class="QGridLayout" name="gridLayout_fcast_years">
-               <item row="3" column="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_3">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_recr_beg">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_recr_beg">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_recr_end">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_recr_end">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_fcast_sel">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_beg">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_sel_beg">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_end">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_sel_end">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>Recruits</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="4">
-                <layout class="QHBoxLayout" name="horizontalLayout_relf_ref">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_relf_beg_ref">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_relf_beg_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_relf_end_ref">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_relf_end_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_fcast_years">
-                 <property name="text">
-                  <string>Forecast years</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="4">
-                <widget class="QLabel" name="label_fcast_ref_years">
-                 <property name="text">
-                  <string>Resulting years</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_fcast_relf">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_relf_beg">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_relf_beg">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
-                   </property>
-                   <property name="value">
-                    <number>0</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_relf_end">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_fcast_relf_end">
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>-999</number>
-                   </property>
-                   <property name="maximum">
-                    <number>3000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="label_fcast_bio">
-                 <property name="text">
-                  <string>Relative F</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLabel" name="label_fcast_sel">
-                 <property name="text">
-                  <string>Selectivity</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="5">
-                <spacer name="horizontalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="0" rowspan="3">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>Input actual year or 
-relative to end yr 
-e.g. 0, -1, -2, ...</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>Input years</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="4">
-                <layout class="QHBoxLayout" name="horizontalLayout_4">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_recr_beg_ref">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_recr_beg_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_recr_end_ref">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_recr_end_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="4">
-                <layout class="QHBoxLayout" name="horizontalLayout_sel_ref">
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_beg_ref">
-                   <property name="text">
-                    <string>begin:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_beg_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_end_ref">
-                   <property name="text">
-                    <string>end:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_fcast_sel_end_yr_ref">
-                   <property name="frameShape">
-                    <enum>QFrame::Panel</enum>
-                   </property>
-                   <property name="text">
-                    <string>year</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="3">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="7" column="2" colspan="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_relf_basis">
-               <item>
-                <widget class="QComboBox" name="comboBox_bmark_relF_basis">
-                 <item>
-                  <property name="text">
-                   <string>0 = none</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>1 = use year range</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>2 = set relF same as forecast below</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_20">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="13" column="3">
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="0" column="2" colspan="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_benchmarks">
-               <item>
-                <widget class="QComboBox" name="comboBox_benchmarks">
-                 <item>
-                  <property name="text">
-                   <string>0 = omit</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>1 = calc Fspr, Fbtarget, Fmsy</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>2 = calc Fspr, Fbtarget, Fmsy, F</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>3 = add F_BLimit</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_benchmarks">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="7" column="0" colspan="2">
-              <widget class="QLabel" name="label_bmark_relF_basis">
-               <property name="text">
-                <string>Benchmark relative F basis</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_SPR_target">
-               <item>
-                <widget class="QLineEdit" name="lineEdit_SPR_target">
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="9" column="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_fcast_yr_num">
-               <item>
-                <widget class="QSpinBox" name="spinBox_fcast_yr_num">
-                 <property name="minimum">
-                  <number>1</number>
-                 </property>
-                 <property name="value">
-                  <number>1</number>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_21">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="9" column="0" colspan="2">
-              <widget class="QLabel" name="label_fcast_yr_num">
-               <property name="text">
-                <string>Number of forecast years (at least one)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0" colspan="2">
-              <widget class="QLabel" name="label_SPR_target">
-               <property name="toolTip">
-                <string>Level of spawning biomass per recruit</string>
-               </property>
-               <property name="text">
-                <string>SPR target (e.g. 0.45)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QLabel" name="label_MSY_options">
-               <property name="text">
-                <string>Set MSY</string>
-               </property>
-              </widget>
-             </item>
-             <item row="9" column="3">
-              <spacer name="horizontalSpacer_14">
+             <item row="15" column="2">
+              <spacer name="horizontalSpacer_37">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -668,14 +94,7 @@ e.g. 0, -1, -2, ...</string>
                </property>
               </spacer>
              </item>
-             <item row="8" column="0" colspan="2">
-              <widget class="QLabel" name="label_fcast_options">
-               <property name="text">
-                <string>Forecast option</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0" rowspan="2" colspan="4">
+             <item row="7" column="0" rowspan="2" colspan="4">
               <layout class="QGridLayout" name="gridLayout_bmark_years">
                <item row="4" column="4">
                 <layout class="QHBoxLayout" name="horizontalLayout_bmark_recr_ref">
@@ -1186,20 +605,29 @@ e.g. 0, -1, -2, -3, ...</string>
                </item>
               </layout>
              </item>
-             <item row="10" column="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_F_scalar">
+             <item row="9" column="2" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_relf_basis">
                <item>
-                <widget class="QLineEdit" name="lineEdit_F_scalar">
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>20</height>
-                  </size>
-                 </property>
+                <widget class="QComboBox" name="comboBox_bmark_relF_basis">
+                 <item>
+                  <property name="text">
+                   <string>0 = none</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>1 = use year range</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = set relF same as forecast below</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_27">
+                <spacer name="horizontalSpacer_20">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1213,48 +641,28 @@ e.g. 0, -1, -2, -3, ...</string>
                </item>
               </layout>
              </item>
-             <item row="1" column="2" colspan="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_MSY_options">
-               <item>
-                <widget class="QComboBox" name="comboBox_MSY_options">
-                 <item>
-                  <property name="text">
-                   <string>1 = set to F(SPR)</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>2 = calculate F(MSY)</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>3 = set to F(B target) or F0.1</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>4 = set to F(end year)</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_3">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
+             <item row="12" column="0" colspan="2">
+              <widget class="QLabel" name="label_F_scalar">
+               <property name="text">
+                <string>F scalar (only used for forecast option = 5)</string>
+               </property>
+              </widget>
              </item>
-             <item row="3" column="2">
+             <item row="6" column="0" colspan="2">
+              <widget class="QLabel" name="label_Blimit">
+               <property name="text">
+                <string>Blimit as fraction of Bmsy</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0" colspan="2">
+              <widget class="QLabel" name="label_bmark_relF_basis">
+               <property name="text">
+                <string>Benchmark relative F basis</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
               <layout class="QHBoxLayout" name="horizontalLayout_biomass_target">
                <item>
                 <widget class="QLineEdit" name="lineEdit_biomass_target">
@@ -1281,37 +689,61 @@ e.g. 0, -1, -2, -3, ...</string>
                </item>
               </layout>
              </item>
-             <item row="10" column="0" colspan="2">
-              <widget class="QLabel" name="label_F_scalar">
-               <property name="text">
-                <string>F scalar (only used for forecast option = 5)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="13" column="2">
-              <spacer name="horizontalSpacer_37">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="3" column="0" colspan="2">
-              <widget class="QLabel" name="label_biomass_target">
+             <item row="4" column="0" colspan="2">
+              <widget class="QLabel" name="label_SPR_target">
                <property name="toolTip">
-                <string>Level of spawning biomass not per recruit</string>
+                <string>Level of spawning biomass per recruit</string>
                </property>
                <property name="text">
-                <string>Relative Biomass target (e.g. 0.40)</string>
+                <string>SPR target (e.g. 0.45)</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="2">
+             <item row="0" column="0" colspan="2">
+              <widget class="QLabel" name="label_benchmarks">
+               <property name="toolTip">
+                <string>Turn benchmarks on or off</string>
+               </property>
+               <property name="text">
+                <string>Calculate benchmarks/reference points</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_fcast_yr_num">
+               <item>
+                <widget class="QSpinBox" name="spinBox_fcast_yr_num">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="value">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_21">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="11" column="0" colspan="2">
+              <widget class="QLabel" name="label_fcast_yr_num">
+               <property name="text">
+                <string>Number of forecast years (at least one)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
               <layout class="QHBoxLayout" name="horizontalLayout_blimit">
                <item>
                 <widget class="QLineEdit" name="lineEdit_Blimit">
@@ -1338,12 +770,637 @@ e.g. 0, -1, -2, -3, ...</string>
                </item>
               </layout>
              </item>
-             <item row="4" column="0" colspan="2">
-              <widget class="QLabel" name="label_Blimit">
+             <item row="12" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_F_scalar">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_F_scalar">
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_27">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="11" column="3">
+              <spacer name="horizontalSpacer_14">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="10" column="0" colspan="2">
+              <widget class="QLabel" name="label_fcast_options">
                <property name="text">
-                <string>Blimit as fraction of Bmsy</string>
+                <string>Forecast option</string>
                </property>
               </widget>
+             </item>
+             <item row="4" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_SPR_target">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_SPR_target">
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QLabel" name="label_MSY_options">
+               <property name="text">
+                <string>Set MSY</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="0" rowspan="2" colspan="4">
+              <layout class="QGridLayout" name="gridLayout_fcast_years">
+               <item row="3" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_beg">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_recr_beg">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_end">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_recr_end">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_fcast_sel">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_sel_beg">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_sel_beg">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_sel_end">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_sel_end">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>Recruits</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="4">
+                <layout class="QHBoxLayout" name="horizontalLayout_relf_ref">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_relf_beg_ref">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_relf_beg_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="text">
+                    <string>year</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_relf_end_ref">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_relf_end_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="text">
+                    <string>year</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_fcast_years">
+                 <property name="text">
+                  <string>Forecast years</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QLabel" name="label_fcast_ref_years">
+                 <property name="text">
+                  <string>Resulting years</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_fcast_relf">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_relf_beg">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_relf_beg">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                   <property name="value">
+                    <number>0</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_relf_end">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="spinBox_fcast_relf_end">
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="label_fcast_bio">
+                 <property name="text">
+                  <string>Relative F</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="label_fcast_sel">
+                 <property name="text">
+                  <string>Selectivity</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" rowspan="3">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Input actual year or 
+relative to end yr 
+e.g. 0, -1, -2, ...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Input years</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="4">
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_beg_ref">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_beg_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="text">
+                    <string>year</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_end_ref">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_recr_end_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="text">
+                    <string>year</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="4">
+                <layout class="QHBoxLayout" name="horizontalLayout_sel_ref">
+                 <item>
+                  <widget class="QLabel" name="label_fcast_sel_beg_ref">
+                   <property name="text">
+                    <string>begin:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_sel_beg_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="text">
+                    <string>year</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_sel_end_ref">
+                   <property name="text">
+                    <string>end:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_fcast_sel_end_yr_ref">
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="text">
+                    <string>year</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="10" column="2" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_fcast_options">
+               <item>
+                <widget class="QComboBox" name="comboBox_fcast_options">
+                 <property name="currentIndex">
+                  <number>1</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>-1 = none</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>0 = simple_single_yr</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>1 = F(SPR)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = F(MSY) </string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3 = F(B target)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>4 = Ave F (uses relative F years)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>5 = input annual F scalar</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="0" colspan="2">
+              <widget class="QLabel" name="label_biomass_target">
+               <property name="toolTip">
+                <string>Level of spawning biomass not per recruit</string>
+               </property>
+               <property name="text">
+                <string>Relative Biomass target (e.g. 0.40)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="3">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_msyUnits">
+               <property name="text">
+                <string>MSY units: </string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_msyCosts"/>
+             </item>
+             <item row="2" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_msyUnits">
+               <item>
+                <widget class="QComboBox" name="comboBox_msyUnits">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>1 = dead biomass</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = retained biomass</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3 = profits</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_benchmarks">
+               <item>
+                <widget class="QComboBox" name="comboBox_benchmarks">
+                 <item>
+                  <property name="text">
+                   <string>0 = omit</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>1 = calc Fspr, Fbtarget, Fmsy</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = calc Fspr, Fbtarget, Fmsy, F</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3 = add F_BLimit</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_benchmarks">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_MSY_options">
+               <item>
+                <widget class="QComboBox" name="comboBox_MSY_options">
+                 <item>
+                  <property name="text">
+                   <string>1 = set to F(SPR)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2 = calculate F(MSY)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3 = set to F(B target) or F0.1</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>4 = set to F(end year)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>5 = MEY</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>

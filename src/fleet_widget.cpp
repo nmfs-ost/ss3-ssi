@@ -1610,7 +1610,7 @@ void fleet_widget::selexAgeDiscParamsChanged()
 
 void fleet_widget::selexAgeDiscTVParamsChanged()
 {
-    int ht = current_fleet->getSizeSelectivity()->getNumRetainTimeVaryParameters();
+    int ht = current_fleet->getAgeSelectivity()->getNumRetainTimeVaryParameters();
     bool vis = ht > 0;
     ageSelexRetainTVParamsView->setHeight(ht);
     ageSelexRetainTVParamsView->resizeColumnsToContents();

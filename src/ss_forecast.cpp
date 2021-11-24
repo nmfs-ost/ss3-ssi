@@ -3,7 +3,14 @@
 ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
     QObject (parent)
 {
-//    o_fixed_ctch_list = new ssObservation();
+    QStringList header;
+
+    msyCosts = new tablemodel();
+    msyCosts->setColumnCount(3);
+    msyCosts->setParent(this);
+    header << "Fleet" << "cost/F" << "price/mt";
+    msyCosts->setHeader(header);
+
     seasFleetRelF_table = new tablemodel(this);
     seasFleetRelF_table->setColumnCount(0);
     seasFleetRelF_table->setRowCount(1);
@@ -32,7 +39,7 @@ ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
     fixedFcastCatch = new tablemodel(this);
     fixedFcastCatch->setRowCount(0);
     fixedFcastCatch->setColumnCount(5);
-    QStringList header;
+    header.clear();
     header << "Year" << "Season" << "Fleet" << "Catch" << "Basis";
     fixedFcastCatch->setHeader(header);
 
@@ -63,6 +70,12 @@ ss_forecast::~ss_forecast()
     delete maxCatchArea;
     delete seasFleetRelF_table;
     delete fixedFcastCatch;
+}
+
+void ss_forecast::appendMsyCosts(QStringList data)
+{
+    int row = msyCosts->rowCount();
+    msyCosts->setRowData(row, data);
 }
 
 void ss_forecast::set_spr_target(double spr)
@@ -136,7 +149,6 @@ void ss_forecast::set_num_forecast_years (int yrs)
 void ss_forecast::append_cr_buffer_list (QStringList rowdata)
 {
     int num = ctl_rule_buffer_table->rowCount();
-    ctl_rule_buffer_table->setRowCount(num + 1);
     ctl_rule_buffer_table->setRowData(num, rowdata);
 }
 int ss_forecast::get_num_cr_buffer_rows ()
@@ -493,6 +505,8 @@ void ss_forecast::reset()
 {
     i_bmark = 1; // Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy
     i_msy = 2;   // MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt); 4=set to F(endyr)
+    i_msyUnits = 1; //
+    msyCosts->clear();
     f_spr_tgt = 0.45;  // SPR target (e.g. 0.40)
     f_bmass_tgt = 0.40;// Biomass target (e.g. 0.40)
     for (int i = 0; i < 6; i++)
@@ -538,6 +552,8 @@ void ss_forecast::clear()
 {
     i_bmark = 0;
     i_msy = 0;
+    i_msyUnits = 0;
+    msyCosts->clear();
     f_spr_tgt = 0.0;
     f_bmass_tgt = 0.0;
     for (int i = 0; i < 6; i++)

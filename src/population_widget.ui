@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>7</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -2697,7 +2697,7 @@ then read num_of_seasons parameters below.</string>
                    <item row="1" column="1">
                     <widget class="QSpinBox" name="spinBox_recr_dev_early_phase">
                      <property name="minimum">
-                      <number>-5</number>
+                      <number>-99</number>
                      </property>
                     </widget>
                    </item>

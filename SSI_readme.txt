@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.18.02
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.18.03
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,16 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.18.03
+    2021-11-17
+Bug Fixes
+1. The negative limit for early rec dev phase was set to -5, now set to -99.
+   The positive limit remains at 99.
+2. Fixed age selectivity retain time varying param display.
+   The age selex retain tv params display was reading the number of parameters
+   from size retain tv params. The data files were unaffected, but the display
+   was incorrect.
 ============================================================================
     3.30.18.02
     2021-11-08

@@ -1451,8 +1451,27 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_benchmarks(temp_int);
         }
         if (f_file->getOkay() && !f_file->getStop()) {
-        temp_int = f_file->getIntValue(QString("MSY Method"), 1, 4, 1);
+        temp_int = f_file->getIntValue(QString("MSY Method"), 1, 5, 1);
         fcast->set_MSY(temp_int);
+        if (temp_int == 5)
+        {
+            temp_int = f_file->getIntValue(QString("MSY Units"), 1, 3, 1);
+            fcast->setMsyUnits(temp_int);
+            // read fleet, cost/F, price/mt until fleet==-9999
+            do {
+                str_lst.clear();
+                token = f_file->get_next_value(QString("fleet"));
+                temp_int = token.toInt();
+                str_lst.append(token);
+                token = f_file->get_next_value(QString("cost/F"));
+                str_lst.append(token);
+                token = f_file->get_next_value(QString("price/mt"));
+                str_lst.append(token);
+                if (temp_int == END_OF_LIST)
+                    break;
+                fcast->appendMsyCosts(str_lst);
+            } while (temp_int != END_OF_LIST);
+        }
         }
         if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("SPR target"));
@@ -1704,7 +1723,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 int write33_forecastFile(ss_file *f_file, ss_model *data)
 {
     int temp_int, num, i, chars = 0;
-    int yr;
+    int yr = 0, bmarks = 0, msy = 0;
     float temp_float;
     QString value, line, temp_string;
     QStringList str_lst, tmp_lst;
@@ -1719,19 +1738,35 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         line = QString("# for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr");
         chars += f_file->writeline(line);
 
-        temp_int = fcast->get_benchmarks();
-        chars += f_file->write_val(temp_int, 1,
+        bmarks = fcast->get_benchmarks();
+        chars += f_file->write_val(bmarks, 1,
                     QString("Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F_0.1,F_msy; 3=add F_BLimit"));
 
-        chars += f_file->write_val(fcast->get_MSY(), 1,
-                    QString("MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr) "));
+        msy = fcast->get_MSY();
+        chars += f_file->write_val(msy, 1,
+                    QString("Do_MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr); 5=calc F(MEY)"));
+        if (msy == 5)
+        {
+            chars += f_file->writeline("# if Do_MSY=5, enter MSY_Units; then list fleet_ID, cost/F, price/mt; -fleet_ID to fill; -9999 to terminate");
+            // write msyUnits
+            temp_int = fcast->getMsyUnits();
+            chars += f_file->write_val(temp_int, 1,
+                        QString("MSY_units: 1=dead biomass, 2=retained biomass, 3=profits"));
+            chars += f_file->writeline("# fleet   cost/F  price/mt");
+            temp_int = fcast->getMsyCosts()->rowCount();
+            for (i = 0; i < temp_int; i++)
+            {
+                f_file->write_vector(fcast->getMsyCosts()->getRowData(i), 2);
+            }
+            f_file->writeTerminator(2);
+        }
 
         chars += f_file->write_val(fcast->get_spr_target(), 1,
                     QString("SPR target (e.g. 0.40)"));
 
         chars += f_file->write_val(fcast->get_biomass_target(), 1,
                     QString("Biomass target (e.g. 0.40)"));
-        if (temp_int == 3)
+        if (bmarks == 3)
         {
             chars += f_file->write_val(fcast->get_blimit(), 1, QString("COND: Do_Benchmark=3: Blimit as fraction of Bmsy (neg value to use as frac of Bzero) (e.g. 0.50)"));
         }
@@ -1890,7 +1925,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->writeline(line);
         str_lst = fcast->getAllocGrpList();
         line.clear();
-        if (fcast->get_num_alloc_groups() > 0)
+        if (fcast->get_num_alloc_groups() > 0 && msy != 5)
         {
             for (i = 0; i < fcast->get_num_fleets(); i++)
             {
