@@ -548,7 +548,7 @@ would alter the number or order of parameters stored in the ss.par file.</string
        <string>Output File Settings</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QScrollArea" name="scrollArea">
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
@@ -568,34 +568,167 @@ would alter the number or order of parameters stored in the ss.par file.</string
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <layout class="QGridLayout" name="gridLayout_outputs">
-             <item row="1" column="0" colspan="2">
+             <item row="8" column="2" colspan="4">
+              <widget class="QComboBox" name="comboBox_cumreport">
+               <item>
+                <property name="text">
+                 <string>0 - Omit</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - Brief Report</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - Full Report</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="10" column="1">
+              <widget class="QLabel" name="label_mcmc_output">
+               <property name="text">
+                <string>MCMC Output format </string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_output_ssnew">
+               <property name="text">
+                <string>Output .ss_new files in separate folder?</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="2" colspan="6">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QSpinBox" name="spinBox_datafiles">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_datafiles_info">
+                 <property name="text">
+                  <string>1: annotated input files, 2: expected values data file,
+3 and higher: N-2 bootstrap data files</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="2">
+              <widget class="QCheckBox" name="checkBox_output_ssnew">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="label_output_sso">
+               <property name="text">
+                <string>Output .sso files in separate folder?</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="2" colspan="4">
+              <widget class="QComboBox" name="comboBox_MCMC_output">
+               <item>
+                <property name="text">
+                 <string>0 - Default</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 - Likelihood components with lambda values</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2 - Expanded output</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3 - Separate dir for each MCMC vector</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="11" column="1">
+              <widget class="QLabel" name="label_mcmc_bump_val">
+               <property name="text">
+                <string>MCMC Bump value</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QLabel" name="label_datafiles">
+               <property name="toolTip">
+                <string>1: annotated input files, \n2: expected values data file, \n3 and higher: N-2 bootstrap data files</string>
+               </property>
+               <property name="text">
+                <string>Number of extra data files to produce</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLabel" name="label_report_level">
+               <property name="text">
+                <string>Report.sso report detail</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="6">
+              <widget class="QPushButton" name="pushButton_chooseRepDetail">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>View</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="7">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="4" column="1">
               <widget class="QLabel" name="label_detail_level">
                <property name="text">
                 <string>Run display detail level</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="2">
-              <widget class="QCheckBox" name="checkBox_parm_trace">
-               <property name="text">
-                <string>Yes</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0" colspan="2">
-              <widget class="QLabel" name="label_checkup">
-               <property name="statusTip">
-                <string>Mostly used by developers</string>
-               </property>
-               <property name="whatsThis">
-                <string>Data echoed when read</string>
-               </property>
-               <property name="text">
-                <string>EchoInput.sso include debugging info?</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2" colspan="4">
+             <item row="4" column="2" colspan="4">
               <widget class="QComboBox" name="comboBox_detail_level">
                <property name="toolTip">
                 <string>With option 2, the display shows value of each -logL component for 
@@ -618,60 +751,7 @@ each iteration and it displays where crash penalties are created.</string>
                </item>
               </widget>
              </item>
-             <item row="4" column="5" colspan="2">
-              <widget class="QComboBox" name="comboBox_parm_trace_param">
-               <item>
-                <property name="text">
-                 <string>Active Parameters</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>All Parameters</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="5" column="0" colspan="2">
-              <widget class="QLabel" name="label_cumreport">
-               <property name="text">
-                <string>CumReport.sso write output </string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="3" colspan="5">
-              <widget class="QLabel" name="label_checkup_info">
-               <property name="text">
-                <string>This output is largely unformatted intermediate calculations. 
-It is undocumented and mostly used by the developer.</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0" colspan="2">
-              <widget class="QLabel" name="label_parm_trace">
-               <property name="toolTip">
-                <string>This controls the output to parmtrace.sso. The contents of this output \ncan be used to determine which values are changing when a model \napproaches a crash condition. It also can be used to investigate \npatterns of parameter changes as model convergence slowly moves \nalong a ridge. In order to access parameter gradients,select every iter \nand all params, which will write the gradient of each parameter with \nrespect to each likelihood component.</string>
-               </property>
-               <property name="text">
-                <string>ParmTrace.sso write parameters?</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="3" colspan="2">
-              <widget class="QComboBox" name="comboBox_parm_trace_iter">
-               <item>
-                <property name="text">
-                 <string>Good Interations</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Every Iteration</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="2" column="2" colspan="4">
+             <item row="5" column="2" colspan="4">
               <widget class="QComboBox" name="comboBox_report_level">
                <property name="toolTip">
                 <string>Option 0 will forgo the writing of the Report file, but the ss_summary 
@@ -703,14 +783,97 @@ detailed sections (e.g., numbers-at-age).</string>
                </item>
               </widget>
              </item>
-             <item row="3" column="2">
+             <item row="6" column="1">
+              <widget class="QLabel" name="label_checkup">
+               <property name="statusTip">
+                <string>Mostly used by developers</string>
+               </property>
+               <property name="whatsThis">
+                <string>Data echoed when read</string>
+               </property>
+               <property name="text">
+                <string>EchoInput.sso include debugging info?</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3" colspan="5">
+              <widget class="QLabel" name="label_checkup_info">
+               <property name="text">
+                <string>This output is largely unformatted intermediate calculations. 
+It is undocumented and mostly used by the developer.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QCheckBox" name="checkBox_output_sso">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
               <widget class="QCheckBox" name="checkBox_checkup">
                <property name="text">
                 <string>Yes</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="0" colspan="8">
+             <item row="7" column="3" colspan="2">
+              <widget class="QComboBox" name="comboBox_parm_trace_iter">
+               <item>
+                <property name="text">
+                 <string>Good Interations</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Every Iteration</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="11" column="2" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
+             </item>
+             <item row="7" column="2">
+              <widget class="QCheckBox" name="checkBox_parm_trace">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QLabel" name="label_cumreport">
+               <property name="text">
+                <string>CumReport.sso write output </string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLabel" name="label_parm_trace">
+               <property name="toolTip">
+                <string>This controls the output to parmtrace.sso. The contents of this output \ncan be used to determine which values are changing when a model \napproaches a crash condition. It also can be used to investigate \npatterns of parameter changes as model convergence slowly moves \nalong a ridge. In order to access parameter gradients,select every iter \nand all params, which will write the gradient of each parameter with \nrespect to each likelihood component.</string>
+               </property>
+               <property name="text">
+                <string>ParmTrace.sso write parameters?</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="5" colspan="2">
+              <widget class="QComboBox" name="comboBox_parm_trace_param">
+               <item>
+                <property name="text">
+                 <string>Active Parameters</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>All Parameters</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="3" column="1" colspan="7">
               <widget class="QGroupBox" name="groupBox_output_files">
                <property name="title">
                 <string>Output Files</string>
@@ -788,138 +951,17 @@ detailed sections (e.g., numbers-at-age).</string>
                </layout>
               </widget>
              </item>
-             <item row="6" column="2" colspan="6">
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <item>
-                <widget class="QSpinBox" name="spinBox_datafiles">
-                 <property name="minimum">
-                  <number>0</number>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_datafiles_info">
-                 <property name="text">
-                  <string>1: annotated input files, 2: expected values data file,
-3 and higher: N-2 bootstrap data files</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="2" column="0" colspan="2">
-              <widget class="QLabel" name="label_report_level">
+             <item row="1" column="3" colspan="4">
+              <widget class="QLabel" name="label_output_sso_info">
                <property name="text">
-                <string>Report.sso report detail</string>
+                <string>The output directory is /sso (ver 3.30.19+)</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="2" colspan="4">
-              <widget class="QComboBox" name="comboBox_cumreport">
-               <item>
-                <property name="text">
-                 <string>0 - Omit</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>1 - Brief Report</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2 - Full Report</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="6" column="0" colspan="2">
-              <widget class="QLabel" name="label_datafiles">
-               <property name="toolTip">
-                <string>1: annotated input files, \n2: expected values data file, \n3 and higher: N-2 bootstrap data files</string>
-               </property>
+             <item row="2" column="3" colspan="4">
+              <widget class="QLabel" name="label_output_ssnew_info">
                <property name="text">
-                <string>Number of extra data files to produce</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="7">
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="7" column="2" colspan="4">
-              <widget class="QComboBox" name="comboBox_MCMC_output">
-               <item>
-                <property name="text">
-                 <string>0 - Default</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>1 - Likelihood components with lambda values</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2 - Expanded output</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>3 - Separate dir for each MCMC vector</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="7" column="0" colspan="2">
-              <widget class="QLabel" name="label_mcmc_output">
-               <property name="text">
-                <string>MCMC Output format </string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="0" colspan="2">
-              <widget class="QLabel" name="label_mcmc_bump_val">
-               <property name="text">
-                <string>MCMC Bump value</string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="2" colspan="2">
-              <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
-             </item>
-             <item row="2" column="6">
-              <widget class="QPushButton" name="pushButton_chooseRepDetail">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>View</string>
+                <string>The new directory is /ssnew (ver 3.30.19+)</string>
                </property>
               </widget>
              </item>

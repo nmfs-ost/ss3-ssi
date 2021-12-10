@@ -38,7 +38,7 @@ public:
     void setFileName (const QString &fname);
     QString getShortFileName() {return filename;}
     QString getDirectory() {return directory;}
-//    QString get_next_value ();
+
     QString get_next_value (QString prompt = QString(""));
     QString get_next_token();
     QString get_next_token(QString line);
@@ -50,7 +50,7 @@ public:
     int getLineNum() {return line_num;}
     void resetLineNum () {line_num = 0;}
 
-    void skip_line();// {current_line->clear(); current_tokens->clear();}
+    void skip_line();
 
     QStringList comments;
     QString read_line();
@@ -64,25 +64,11 @@ public:
     int writechar(QChar chr);
     int read_int (QString info = QString(""));
     float read_float (QString info = QString(""));
-/*    observation *read_environ_obs (QString info = QString(""));
-    observation *read_length_obs (QString info = QString(""));
-    observation *read_age_obs (QString info = QString(""));
-    observation *read_saa_obs (QString info = QString(""));
-    observation *read_discard_obs (QString info = QString(""));
-    observation *read_mean_bw_obs (QString info = QString(""));
-    observation *read_abund_obs (QString info = QString(""));
-  */
+
     int write_val (int i_val, int spcng = 0, QString info = QString(""));
     int write_val (double f_val, int spcng = 0, QString info = QString(""));
     int write_val (QString val, int spcng = 0, QString info = QString(""));
-/*    int write_environ_obs (observation *obs);
-    int write_length_obs (observation *obs);
-    int write_age_obs (observation *obs);
-    int write_saa_obs (observation *obs);
-    int write_discard_obs (observation *obs);
-    int write_mean_bw_obs (observation *obs);
-    int write_abund_obs (observation *obs);
-  */
+
     int write_vector (QStringList vect, int spcng = 0, QString info = QString(""));
 
     float getFloatValue (QString desc, float min, float max, float dfault);
@@ -121,7 +107,6 @@ protected:
 
     DialogInputError *inputErrDialog;
 
-
 signals:
     void stopReadingFile(QString info = QString(""));
 
@@ -129,7 +114,6 @@ public slots:
     bool reset ();
     int error (QString msg);
     int message (QString msg);
-
 
 };
 

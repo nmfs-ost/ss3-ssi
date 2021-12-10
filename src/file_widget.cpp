@@ -92,6 +92,8 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     ui->label_version->setVisible(false);
     ui->doubleSpinBox_version->setVisible(false);
 
+    connect (ui->checkBox_output_sso, SIGNAL(toggled(bool)), SLOT(changeOutputDirectory(bool)));
+    connect (ui->checkBox_output_ssnew, SIGNAL(toggled(bool)), SLOT(changeNewDirectory(bool)));
     connect (ui->comboBox_report_level, SIGNAL(currentIndexChanged(int)), SLOT(reportDetailChanged(int)));
     connect (ui->pushButton_chooseRepDetail, SIGNAL(clicked()), SLOT(chooseReportDetail()));
 
@@ -107,6 +109,8 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     set_default_file_names (current_dir_name, false);
     viewer = new Dialog_fileView(this);
 
+    setSsoutDir(QString());
+    setSsnewDir(QString());
 }
 
 void file_widget::reset()
@@ -1198,6 +1202,19 @@ void file_widget::view_wtatage()
     viewer->show();
 }
 
+void file_widget::changeOutputDirectory(bool flag)
+{
+    emit outDirectoryChanged(flag);
+    ui->label_output_sso_info->setVisible(flag);
+}
+
+void file_widget::changeNewDirectory(bool flag)
+{
+    emit newDirectoryChanged(flag);
+    ui->label_output_ssnew_info->setVisible(flag);
+}
+
+
 bool file_widget::error_no_file(ss_file *file, int type)
 {
     bool okay = true;
@@ -1251,6 +1268,32 @@ void file_widget::error_problem(ss_file *file)
     error->write (msg.toUtf8()) ;
 #endif
     QMessageBox::warning((QWidget*)parent(), tr("File Read Error"), msg, QMessageBox::Cancel | QMessageBox::Ok);
+}
+
+const QString &file_widget::getSsoutDir() const
+{
+    return ssoutDir;
+}
+
+void file_widget::setSsoutDir(const QString &newSsoutDir)
+{
+    ssoutDir = newSsoutDir;
+    bool used = !ssoutDir.isEmpty();
+    ui->label_output_sso_info->setVisible(used);
+    ui->checkBox_output_sso->setChecked(used);
+}
+
+const QString &file_widget::getSsnewDir() const
+{
+    return ssnewDir;
+}
+
+void file_widget::setSsnewDir(const QString &newSsnewDir)
+{
+    ssnewDir = newSsnewDir;
+    bool used = !ssnewDir.isEmpty();
+    ui->label_output_ssnew_info->setVisible(used);
+    ui->checkBox_output_ssnew->setChecked(used);
 }
 
 void file_widget::reportDetailChanged(int value)

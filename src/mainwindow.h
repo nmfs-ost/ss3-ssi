@@ -165,6 +165,8 @@ private:
 
     QString app_dir;
     QString current_dir;
+    QString output_dir;
+    QString new_dir;
     QString starter_file;
     QString control_file;
     QString forecast_file;
@@ -193,6 +195,13 @@ private slots:
     void increaseFont();
     void decreaseFont();
     void setFontSize (int fsize);
+
+    void setNewDir(QString dir);
+    void setOutDir(QString dir);
+    bool checkNewDir(QString dir);
+    bool checkOutDir(QString dir);
+    void changeNewDir(bool flag);
+    void changeOutDir(bool flag);
 
 };
 

@@ -22,6 +22,9 @@
 #include <QUrl>
 #include <QSettings>
 
+static QString NEWDIR("ssnew");
+static QString OUTDIR("sso");
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -47,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
     // furnish the ui with the default model
     current_dir = QString(QString("%1/default/").arg(qApp->applicationDirPath()));
+    new_dir = QString();
+    output_dir = QString();
 
     // set up readme viewer
     readme = new Dialog_readme(this, modelData, current_dir);
@@ -105,6 +110,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (files, SIGNAL(choose_control_file()), SLOT(openControlFile()));
     connect (files, SIGNAL(files_read(bool)), SLOT(refreshAll()));
     connect (files, SIGNAL(directory_changed(QString)), SLOT(changeDirectory(QString)));
+    connect (files, SIGNAL(newDirectoryChanged(bool)), SLOT(changeNewDir(bool)));
+    connect (files, SIGNAL(outDirectoryChanged(bool)), SLOT(changeOutDir(bool)));
 
     connect (ui->action_New, SIGNAL(triggered()), SLOT(createNewDirectory()));
     connect (ui->action_Open, SIGNAL(triggered()), SLOT(openDirectory()));
@@ -464,7 +471,10 @@ void MainWindow::openDirectory(QString fname)
         readme->setDirectory(current_dir);
         readFiles();
         files->setReadWtAtAge(modelData->getReadWtAtAge());
+        setNewDir(current_dir);
+        setOutDir(current_dir);
     }
+
 }
 
 void MainWindow::copyDirectory()
@@ -620,6 +630,26 @@ void MainWindow::copyFiles(QString oldDir, QString newDir)
     {
         copy_file (oldDir + QString("/wtatage.ss_new"), newDir + QString("/wtatage.ss"));
     }
+
+    // check for output and new directories
+    if (checkNewDir(oldDir))
+    {
+        new_dir = NEWDIR;
+    }
+    else
+    {
+        new_dir = QString();
+    }
+    files->setSsnewDir(new_dir);
+    if (checkOutDir(oldDir))
+    {
+        output_dir = OUTDIR;
+    }
+    else
+    {
+        output_dir = QString();
+    }
+    files->setSsoutDir(output_dir);
 }
 
 void MainWindow::copyFile(QString fname, QString newDir)
@@ -654,22 +684,12 @@ void MainWindow::createReadme()
 {
     readme->setDirectory(current_dir);
     readme->createReadme();
-//    readme->show();
-//    Dialog_readme *rm = new Dialog_readme(this, modelData, current_dir);
-//    rm->createReadme();
-//    rm->exec(Create);
-//    delete rm;
 }
 
 void MainWindow::viewReadme()
 {
     readme->setDirectory(current_dir);
     readme->viewReadme();
-//    readme->show();
-//    Dialog_readme *rm = new Dialog_readme(this, modelData, current_dir);
-//    rm->viewReadme();
-//    rm->exec(View);
-//    delete rm;
 }
 
 void MainWindow::mainTabChanged(int tab)
@@ -731,7 +751,6 @@ void MainWindow::showPopulations()
 void MainWindow::showSurveys()
 {
     set_checks_false();
-//    ui->stackedWidget->setCurrentIndex(SURVEYS);
     ui->action_Surveys->setChecked(true);
 }
 
@@ -1310,3 +1329,62 @@ void MainWindow::copy_file(QString old_file, QString new_file)
         cur.remove(new_file);
     old.copy(new_file);
 }
+
+void MainWindow::setNewDir(QString dir)
+{
+    if (checkNewDir(dir))
+        files->setSsnewDir(NEWDIR);
+    else
+        files->setSsnewDir(QString());
+}
+void MainWindow::setOutDir(QString dir)
+{
+    if (checkOutDir(dir))
+        files->setSsoutDir(OUTDIR);
+    else
+        files->setSsoutDir(QString());
+}
+
+bool MainWindow::checkNewDir(QString dir)
+{
+    QDir check(dir + "/" + NEWDIR);
+    return check.exists();
+}
+
+bool MainWindow::checkOutDir(QString dir)
+{
+    QDir check(dir + '/' + OUTDIR);
+    return check.exists();
+}
+
+void MainWindow::changeNewDir(bool flag)
+{
+    if (flag)
+    {
+        new_dir = QString("/" + NEWDIR);
+        if (!checkNewDir(current_dir))
+            QDir::current().mkdir(current_dir + new_dir);
+    }
+    else
+    {
+        new_dir = QString();
+        if (checkNewDir(current_dir))
+            QDir::current().rmdir(current_dir + "/" + NEWDIR);
+    }
+}
+void MainWindow::changeOutDir(bool flag)
+{
+    if (flag)
+    {
+        output_dir = QString("/" + OUTDIR);
+        if (!checkOutDir(current_dir))
+            QDir::current().mkdir(current_dir + output_dir);
+    }
+    else
+    {
+        output_dir = QString();
+        if (checkOutDir(current_dir))
+            QDir::current().rmdir(current_dir + "/" + OUTDIR);
+    }
+}
+

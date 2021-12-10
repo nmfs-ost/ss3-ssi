@@ -58,6 +58,12 @@ public:
     explicit file_widget (ss_model *mod = 0, QString dir = QString(""), QWidget *parent = 0);
     ~file_widget();
 
+    const QString &getSsnewDir() const;
+    void setSsnewDir(const QString &newSsnewDir);
+
+    const QString &getSsoutDir() const;
+    void setSsoutDir(const QString &newSsoutDir);
+
 private:
     Ui::file_widget *ui;
 
@@ -163,6 +169,8 @@ signals:
     void save_data_file();
     void read_all_files();
     void files_read(bool okay);
+    void newDirectoryChanged(bool);
+    void outDirectoryChanged(bool);
 
 private slots:
 
@@ -179,8 +187,10 @@ private slots:
     void view_param_file ();
     void show_prof_file_info () {show_file_info (profileFile);}
 
-
     void reset_run_num ();
+
+    void changeOutputDirectory(bool flag);
+    void changeNewDirectory(bool flag);
 
     bool error_no_file (ss_file *file, int type = 1);
     void error_unreadable (QString fname);
@@ -188,6 +198,9 @@ private slots:
 
 private:
     DialogChoseReport *chooseRepDetail;
+
+    QString ssnewDir;
+    QString ssoutDir;
 
 };
 
