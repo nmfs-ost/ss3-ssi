@@ -1359,32 +1359,50 @@ bool MainWindow::checkOutDir(QString dir)
 
 void MainWindow::changeNewDir(bool flag)
 {
+    bool newDirExists = checkNewDir(current_dir);
     if (flag)
     {
         new_dir = QString("/" + NEWDIR);
-        if (!checkNewDir(current_dir))
+        if (!newDirExists)
+        {
             QDir::current().mkdir(current_dir + new_dir);
+        }
     }
     else
     {
+        if (newDirExists)
+        {
+            QDir nwDir(current_dir + new_dir);
+            QStringList files(nwDir.entryList());
+            for (int i = 0; i < files.count(); i++)
+                nwDir.remove(files.at(i));
+            QDir::current().rmdir(nwDir.path());
+        }
         new_dir = QString();
-        if (checkNewDir(current_dir))
-            QDir::current().rmdir(current_dir + "/" + NEWDIR);
     }
 }
 void MainWindow::changeOutDir(bool flag)
 {
+    bool outDirExists = checkOutDir(current_dir);
     if (flag)
     {
         output_dir = QString("/" + OUTDIR);
-        if (!checkOutDir(current_dir))
+        if (!outDirExists)
+        {
             QDir::current().mkdir(current_dir + output_dir);
+        }
     }
     else
     {
+        if (outDirExists)
+        {
+            QDir outDir(current_dir + output_dir);
+            QStringList files(outDir.entryList());
+            for (int i = 0; i < files.count(); i++)
+                outDir.remove(files.at(i));
+            QDir::current().rmdir(outDir.path());
+        }
         output_dir = QString();
-        if (checkOutDir(current_dir))
-            QDir::current().rmdir(current_dir + "/" + OUTDIR);
     }
 }
 

@@ -15,12 +15,18 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.19.01
+    2022-01-06
+Minor Improvements
+1. Added capability for Do_Msy=5 (MEY).
+2. Added switches for sso and ss_new files for saving to separate folders.
+============================================================================
     3.30.18.04
     2021-11-23
 Minor Improvements
 1. Added capability for Do_Msy=5 (MEY).
 Bug Fixes
-1.
+
 ============================================================================
     3.30.18.03
     2021-11-17
