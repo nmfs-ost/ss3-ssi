@@ -18,7 +18,6 @@ public:
 
     void reset();
     void setYears (int f_year, int num); // num may be number of years or last year
-    QString toText();
 
     void setStartYear(int value);
     void setNumYears(int value);
@@ -44,25 +43,25 @@ public:
     int getPhase() const;
     void setPhase(int value);
 
-    tablemodel *getFleetF() {return fleetF;}
-    int getNumFleetSpecF() {return fleetF->rowCount();}
-    QStringList getFleetSpecF(int fleet) {return fleetF->getRowData(fleet);}
-    void setFleetF(int fleet, float startF, int phaseF);//, int numInputs);
-
     int getNumTuningIters() const;
     void setNumTuningIters(int value);
 
-    int getNumInputs() const {return parameterTable->getParamCount();}
-    void setNumInputs(int value) {parameterTable->setParamCount(value);}
-    void setInputLine (int index, QStringList data) {parameterTable->setParameter(index, data);}
-    QStringList getInputLine (int index) {return parameterTable->getParameter(index);}
-    tablemodel *getInputModel () {return parameterTable->getParameters();}
+    int getNumInputs() const {return fleetYearValues->rowCount();}
+    void setNumInputs(int value) {fleetYearValues->setRowCount(value);}
+    void setInputLine (int index, QStringList data) {fleetYearValues->setRowData(index, data);}
+    QStringList getInputLine (int index) {return fleetYearValues->getRowData(index);}
+    tablemodel *getInputModel () {return fleetYearValues;}
 
     int getNumInitialParams () {return initialParams->getParamCount();}
     void setNumInitialParams (int num) {initialParams->setParamCount(num);}
     void setInitialParam (int index, QStringList data) {initialParams->setParameter(index, data);}
     QStringList getInitialParam (int index) {return initialParams->getParameter(index);}
     tablemodel *getInitialParams () {return initialParams->getParameters();}
+
+    tablemodel *getFleetF() {return fleetF;}
+    int getNumFleetSpecF() {return fleetF->rowCount();}
+    QStringList getFleetSpecF(int fleet) {return fleetF->getRowData(fleet);}
+    void setFleetF(int fleet, float startF, int phaseF);
 
 private:
     ss_model *ssModel;
@@ -78,10 +77,10 @@ private:
     int   phase;
     int   numInputs;
     int   numTuningIters;
-    tablemodel *fleetF;
 
-    shortParameterTable *initialParams;
-    shortParameterTable *parameterTable;
+    tablemodel *fleetYearValues; // Method 2
+    shortParameterTable *initialParams; // Method 3
+    tablemodel *fleetF; // Method 4
 
     QString m_text;
 };

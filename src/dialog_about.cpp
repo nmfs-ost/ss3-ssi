@@ -16,8 +16,6 @@ Dialog_about::Dialog_about(QWidget *parent) :
     ui->label_ver->setText (QString ("%1 %2").arg(tr("Version"), getAppAppliesTo()));
     ui->label_ver->setFont(qf);
     ui->label_copyright->setText (" ");
-//            (tr("copyright ") + getAppCopyright()
-//             + tr(" by ") + getAppOrg());
 
     connect (ui->pushButton_ok, SIGNAL(clicked()), SLOT(close()));
     connect (ui->pushButton_manual, SIGNAL(clicked()), SIGNAL(show_manual()));

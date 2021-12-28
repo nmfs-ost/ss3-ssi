@@ -59,6 +59,7 @@ public:
 
     void setHeader (QStringList hdr);
     QStringList getHeader ();
+    void setColumnCount(int cols) {paramTable.setColumnCount(cols);}
     void setParamCount(int rows);
     int getParamCount() {return paramTable.rowCount();}
     void setParameter (int row, QStringList param) {paramTable.setRowData(row, param);}

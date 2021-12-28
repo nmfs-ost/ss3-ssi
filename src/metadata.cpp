@@ -1,5 +1,6 @@
 
 #include "metadata.h"
+#include "dialog_copyright.h"
 
 #include <QDate>
 #include <QString>
@@ -8,6 +9,7 @@
 #include <QArrayData>
 
 static QString datafile_version_str;
+static Dialog_copyright *notice = nullptr;
 
 QString getAppVersion ()
 {
@@ -68,6 +70,13 @@ QString getAppGuiManual ()
     return str;
 }
 
+Dialog_copyright *copyrightNotice()
+{
+    if (notice == nullptr)
+        notice = new Dialog_copyright();
+    return notice;
+}
+
 QString getDatafileVersionString()
 {
     return datafile_version_str;
@@ -75,6 +84,8 @@ QString getDatafileVersionString()
 
 void setDatafileVersionString(float ver)
 {
-    int major = static_cast<int>(ver * 100.0);
-    datafile_version_str = QString(QString("%1.03.0").arg(QString::number(major)));
+    int largever = static_cast<int>(ver * 100.0);
+    int major = static_cast<int>(largever / 100.0);
+    int minor = static_cast<int>(largever - major);
+    datafile_version_str = QString(QString("%1.%2").arg(QString::number(major), QString::number(minor)));
 }

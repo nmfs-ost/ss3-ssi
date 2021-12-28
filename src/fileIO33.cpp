@@ -2622,7 +2622,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 datalist = readParameter(c_file); // recr apportion to settlement events
                 pop->SR()->setDistParam(i, datalist);
-                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_timing_%1").arg(QString::number(num+1)));
+                pop->SR()->getDistParams()->setRowHeader(i, QString("RecrDist_Timing_%1").arg(QString::number(num+1)));
             }
             pop->SR()->setNumDistParams(i);
         }
@@ -2890,7 +2890,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 if (data->getFleet(i)->catch_equil(j) > 0)
                     num++;
         }
-        pop->M()->setNumInitialParams(num);
+        pop->M()->setNumInitialParams(num * num_seas);
         temp_float = c_file->get_next_value(QString("F Mort ballpark")).toFloat();
         pop->M()->setBparkF(temp_float); // bparkF ;
         temp_int = c_file->get_next_value(QString("F Mort ballpark year")).toInt();
@@ -2921,10 +2921,8 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             int fleet = 0;
             do {
                 fleet = c_file->get_next_value("Fleet number").toInt();
-//                fleet = c_file->getIntValue("Fleet", 1, data->get_num_fleets(), -9999);
                 startF = c_file->get_next_value(QString("F Mort start value")).toFloat();
                 phaseF = c_file->get_next_value(QString("F Mort phase")).toInt();
-//                numInputs = c_file->get_next_value(QString("F Mort num inputs")).toInt();
                 if (fleet == -9999)
                     break;
                 if (c_file->checkIntValue(fleet, "Fleet number", 1, data->get_num_fleets(), 1) < 0)

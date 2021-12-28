@@ -83,6 +83,8 @@ public slots:
     void changeFMortPhase (int phs);
     void changeFMortNumInput (int num);
     void changeFMortNumIters (int num);
+    void addMortInitParam();
+    void subMortInitParam();
     void addFleetSpecificF();
     void subFleetSpecificF();
 

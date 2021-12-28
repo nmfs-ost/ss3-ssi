@@ -228,7 +228,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     ui->verticalLayout_mort_inputs->addWidget(mortInputsView);
     mortInitialParamsView = new tableview();
     mortInitialParamsView->setParent(this);
-    ui->verticalLayout_init_F->addWidget(mortInitialParamsView);
+    ui->verticalLayout_mort_init_F->addWidget(mortInitialParamsView);
     mortFleetFView = new tableview();
     mortFleetFView->setParent(this);
     ui->verticalLayout_mort_fleetF->addWidget(mortFleetFView);
@@ -243,7 +243,9 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->lineEdit_fishingMort_2_fstart, SIGNAL(editingFinished()), SLOT(changeFMortStartF()));
     connect (ui->spinBox_fishingMort_2_phase, SIGNAL(valueChanged(int)), SLOT(changeFMortPhase(int)));
     connect (ui->spinBox_fishingMort_2_num_detail, SIGNAL(valueChanged(int)), SLOT(changeFMortNumInput(int)));
-    connect (ui->spinBox_fishingMort_3_num_iters, SIGNAL(valueChanged(int)), SLOT(changeFMortNumIters(int)));
+    connect (ui->toolButton_mortInit_add, SIGNAL(clicked()), SLOT(addMortInitParam()));
+    connect (ui->toolButton_mortInit_sub, SIGNAL(clicked()), SLOT(subMortInitParam()));
+    connect (ui->spinBox_fishingMort_3_4_num_iters, SIGNAL(valueChanged(int)), SLOT(changeFMortNumIters(int)));
     connect (ui->toolButton_mortFleetF_add, SIGNAL(clicked()), SLOT(addFleetSpecificF()));
     connect (ui->toolButton_mortFleetF_sub, SIGNAL(clicked()), SLOT(subFleetSpecificF()));
 
@@ -580,7 +582,7 @@ void population_widget::refresh()
 //    mortInitialParamsView->resizeColumnsToContents();
     setMortOption (pop->Grow()->getNatural_mortality_type());
     mortFleetFView->setModel(pop->M()->getFleetF());
-    if (pop->M()->getFleetF()->rowCount() > 0)
+    if (pop->M()->getNumFleetSpecF() > 0)
         mortFleetFView->setHeight(pop->M()->getFleetF());
     else
         subFleetSpecificF();
@@ -610,7 +612,7 @@ void population_widget::refresh()
     ui->lineEdit_fishingMort_2_fstart->setText(QString::number(pop->M()->getStartF()));
     ui->spinBox_fishingMort_2_phase->setValue(pop->M()->getPhase());
     ui->spinBox_fishingMort_2_num_detail->setValue(pop->M()->getNumInputs());
-    ui->spinBox_fishingMort_3_num_iters->setValue(pop->M()->getNumTuningIters());
+    ui->spinBox_fishingMort_3_4_num_iters->setValue(pop->M()->getNumTuningIters());
 
     hermaphParamsView->resizeColumnsToContents();
     seasonParamsView->resizeColumnsToContents();
@@ -687,16 +689,6 @@ void population_widget::setInitialMort(tablemodel *fmort)
     mortInitialParamsView->setModel(pop->M()->getInitialParams());
     mortInitialParamsView->setHeight(rows);
     mortInitialParamsView->resizeColumnsToContents();
-    if (rows > 0)
-    {
-        ui->label_init_F->setVisible(true);
-        mortInitialParamsView->setVisible(true);
-    }
-    else
-    {
-        ui->label_init_F->setVisible(false);
-        mortInitialParamsView->setVisible(false);
-    }
 }
 
 void population_widget::setMortOption(int opt)
@@ -1623,25 +1615,29 @@ void population_widget::setFMortMethod(int opt)
 {
     switch (opt)
     {
-    case 0: // no additional info
-        ui->frame_fishingMort_2->setVisible(false);
-        ui->frame_fishingMort_3->setVisible(false);
-        ui->frame_fishingMort_4->setVisible(false);
+    case 0: // Method 1, no additional info
+//        ui->frame_fishingMort_2->setVisible(false);
+//        ui->frame_fishingMort_3->setVisible(false);
+//        ui->frame_fishingMort_4->setVisible(false);
+        ui->frame_fishingMort_3_4->setVisible(false);
         break;
-    case 1: // overall F
-        ui->frame_fishingMort_2->setVisible(true);
-        ui->frame_fishingMort_3->setVisible(false);
-        ui->frame_fishingMort_4->setVisible(false);
+    case 1: // Method 2, overall F
+//        ui->frame_fishingMort_2->setVisible(true);
+//        ui->frame_fishingMort_3->setVisible(false);
+//        ui->frame_fishingMort_4->setVisible(false);
+        ui->frame_fishingMort_3_4->setVisible(false);
         break;
-    case 2: // tuning iterations
-        ui->frame_fishingMort_2->setVisible(false);
-        ui->frame_fishingMort_3->setVisible(true);
-        ui->frame_fishingMort_4->setVisible(false);
+    case 2: // Method 3, parameters + tuning iterations
+//        ui->frame_fishingMort_2->setVisible(false);
+//        ui->frame_fishingMort_3->setVisible(true);
+//        ui->frame_fishingMort_4->setVisible(false);
+        ui->frame_fishingMort_3_4->setVisible(true);
         break;
-    case 3: // fleet specific + tuning iterations
-        ui->frame_fishingMort_2->setVisible(false);
-        ui->frame_fishingMort_3->setVisible(true);
-        ui->frame_fishingMort_4->setVisible(true);
+    case 3: // Method 4, fleet specific + tuning iterations
+//        ui->frame_fishingMort_2->setVisible(false);
+//        ui->frame_fishingMort_3->setVisible(false);
+//        ui->frame_fishingMort_4->setVisible(true);
+        ui->frame_fishingMort_3_4->setVisible(true);
         break;
     }
 }
@@ -1690,6 +1686,23 @@ void population_widget::changeFMortNumIters (int num)
     pop->M()->setNumTuningIters(num);
 }
 
+void population_widget::addMortInitParam()
+{
+    int rows = pop->M()->getNumInitialParams() + 1;
+    pop->M()->setNumInitialParams(rows);
+    mortInitialParamsView->setHeight(rows);
+    mortInitialParamsView->resizeColumnsToContents();
+}
+
+void population_widget::subMortInitParam()
+{
+    int rows = pop->M()->getNumInitialParams() - 1;
+    if (rows < 0) rows = 0;
+    pop->M()->setNumInitialParams(rows);
+    mortInitialParamsView->setHeight(rows);
+    mortInitialParamsView->resizeColumnsToContents();
+}
+
 void population_widget::addFleetSpecificF()
 {
     int rows = pop->M()->getFleetF()->rowCount() + 1;
@@ -1700,8 +1713,8 @@ void population_widget::addFleetSpecificF()
 
 void population_widget::subFleetSpecificF()
 {
-    int rows = pop->M()->getFleetF()->rowCount() - 1;
-    if (rows < 1) rows = 1;
+    int rows = pop->M()->getNumFleetSpecF() - 1;
+    if (rows < 0) rows = 0;
     pop->M()->getFleetF()->setRowCount(rows);
     mortFleetFView->setHeight(rows);
     mortFleetFView->resizeColumnsToContents();
