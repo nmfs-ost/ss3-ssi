@@ -1,6 +1,6 @@
 # ss-gui
 
-Source code for the Stock Synthesis Interface (SSI), also known as the SS GUI.
+Source code for the Stock Synthesis Interface (SSI), also known as the Stock Synthesis (SS3) GUI. This tool provides a guided user interface for configuring, running, and viewing output from SS3 models.
 
 # Installation
 
@@ -8,13 +8,14 @@ Download the most recent [compiled version of SSI](https://vlab.noaa.gov/web/sto
 
 # How do I ask questions, request features, or report bugs related to SSI?
 
-Please open an [issue](https://github.com/nmfs-stock-synthesis/ss-gui/issues).
+Please open an [issue](https://github.com/nmfs-stock-synthesis/ss-gui/issues), post on the [forums](https://vlab.noaa.gov/web/stock-synthesis/public-forums) (account required), or email nmfs.stock.synthesis@noaa.gov.
 
 # Contributing to the SSI
-*to add*
+
+Please email nmfs.stock.synthesis@noaa.gov if interested in contributing.
 
 # Code of Conduct
-This project and everyone participating in it is governed by the [NMFS Fisheries Toolbox Code of Conduct](https://github.com/nmfs-fish-tools/Resources/blob/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [fisheries.toolbox@noaa.gov](mailto:fisheries.toolbox@noaa.gov). Note that the maintainers of SS do not have access to this email account, so unacceptable behavior of the maintainers can also be reported here.
+This project and everyone participating in it is governed by the [NMFS Fisheries Toolbox Code of Conduct](https://github.com/nmfs-fish-tools/Resources/blob/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [fisheries.toolbox@noaa.gov](mailto:fisheries.toolbox@noaa.gov). Note that the maintainers of SS3 do not have access to this email account, so unacceptable behavior of the maintainers can also be reported here.
 
 # Disclaimer
 
