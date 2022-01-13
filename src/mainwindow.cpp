@@ -392,6 +392,8 @@ void MainWindow::openNewDirectory()
             waa.copy (new_dir + waa_str);*/
 
         current_dir = new_dir;
+        changeNewDir(checkNewDir(current_dir));
+        changeOutDir(checkOutDir(current_dir));
         files->new_directory(current_dir, true);
         dRun->setDir(current_dir);
     }
@@ -423,6 +425,8 @@ void MainWindow::changeDirectory(QString dirname)
         QDir::setCurrent(current_dir);
         dRun->setDir(current_dir);
         readme->setDirectory(current_dir);
+        setNewDir(current_dir);
+        setOutDir(current_dir);
     }
 }
 
@@ -471,8 +475,6 @@ void MainWindow::openDirectory(QString fname)
         readme->setDirectory(current_dir);
         readFiles();
         files->setReadWtAtAge(modelData->getReadWtAtAge());
-        setNewDir(current_dir);
-        setOutDir(current_dir);
     }
 
 }
@@ -1380,6 +1382,7 @@ void MainWindow::changeNewDir(bool flag)
         }
         new_dir = QString();
     }
+    files->setSsnewDir(new_dir);
 }
 void MainWindow::changeOutDir(bool flag)
 {
@@ -1404,5 +1407,6 @@ void MainWindow::changeOutDir(bool flag)
         }
         output_dir = QString();
     }
+    files->setSsoutDir(output_dir);
 }
 

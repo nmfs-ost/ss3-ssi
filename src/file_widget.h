@@ -120,6 +120,7 @@ public slots:
     void decrease_font();
 
     void set_default_file_names (QString dir, bool keep = false);
+    void updateOutputFiles(QString dir);
     void new_directory (QString dir, bool keep = false);
     bool read_files();
     bool read_files(ss_model *model_inf);

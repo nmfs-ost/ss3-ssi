@@ -35,6 +35,9 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
 
     current_dir = QDir(dir);
 
+    setSsoutDir(QString());
+    setSsnewDir(QString());
+
     starterFile = new ss_file(QString("%1/%2").arg(dir, STARTER_FILE), this);
     forecastFile = new ss_file(QString("%1/%2").arg(dir, FORECAST_FILE), this);
     dataFile = new ss_file(QString("%1/%2").arg(dir, DATA_FILE), this);
@@ -108,9 +111,6 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     control_file_name = QString (CONTROL_FILE);
     set_default_file_names (current_dir_name, false);
     viewer = new Dialog_fileView(this);
-
-    setSsoutDir(QString());
-    setSsnewDir(QString());
 }
 
 void file_widget::reset()
@@ -457,6 +457,14 @@ void file_widget::decrease_font()
     }
 }
 
+void file_widget::updateOutputFiles(QString curdir)
+{
+    ui->label_comp_report_file->setText(QString("%1%2/%3").arg(curdir, ssoutDir, QString(COMP_REPORT_FILE)));
+    ui->label_cum_report_file->setText(QString("%1%2/%3").arg(curdir, ssoutDir, QString(CUM_REPORT_FILE)));
+    ui->label_fcast_report_file->setText(QString("%1%2/%3").arg(curdir, ssoutDir, QString(FCAST_REPORT_FILE)));
+    ui->label_report_file->setText(QString("%1%2/%3").arg(curdir, ssoutDir, QString(REPORT_FILE)));
+}
+
 void file_widget::set_default_file_names(QString dir, bool keep)
 {
     // standard input file names
@@ -467,12 +475,9 @@ void file_widget::set_default_file_names(QString dir, bool keep)
 //    set_par_file(QString("%1/%2").arg(dir, QString(PARAMETER_FILE)));
     setReadProFile(QString("%1/%2").arg(dir, QString(PROFILE_VAL_FILE)));
 
-    ui->label_comp_report_file->setText(QString("%1/%2").arg(dir, QString(COMP_REPORT_FILE)));
-    ui->label_cum_report_file->setText(QString("%1/%2").arg(dir, QString(CUM_REPORT_FILE)));
-    ui->label_fcast_report_file->setText(QString("%1/%2").arg(dir, QString(FCAST_REPORT_FILE)));
-    ui->label_report_file->setText(QString("%1/%2").arg(dir, QString(REPORT_FILE)));
-    ui->label_wtatage->setText(QString("%1/%2").arg(dir, QString(WTATAGE_FILE)));
+    updateOutputFiles(dir);
 
+    ui->label_wtatage->setText(QString("%1/%2").arg(dir, QString(WTATAGE_FILE)));
     QFileInfo qfi(ui->label_wtatage->text());
     if (qfi.exists() && qfi.size() > 0)
     {
@@ -1281,6 +1286,7 @@ void file_widget::setSsoutDir(const QString &newSsoutDir)
     bool used = !ssoutDir.isEmpty();
     ui->label_output_sso_info->setVisible(used);
     ui->checkBox_output_sso->setChecked(used);
+    updateOutputFiles(current_dir_name);
 }
 
 const QString &file_widget::getSsnewDir() const

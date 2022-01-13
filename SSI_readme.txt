@@ -15,11 +15,16 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.30.18.04
-    2021-12-23
+    3.30.18.05
+    2022-01-13
+Bug Fixes
+1. Fixed the display of output and new file directories on Output Files tab.
+============================================================================
+   3.30.18.04
+   2021-12-23
 Bug Fixes
 1. Fixed handling of F Method = 2. An extra value was being added causing
-   the model to fail to execute.
+  the model to fail to execute.
 Minor Improvements
 1. Added capability for Do_Msy=5 (MEY).
 2. Added switches for sso and ss_new files for saving to separate folders.
