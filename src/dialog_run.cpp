@@ -1,6 +1,5 @@
 #include "dialog_run.h"
 #include "ui_dialog_run.h"
-#include "dialog_view.h"
 #include "dialog_fileview.h"
 
 #include <QFileDialog>

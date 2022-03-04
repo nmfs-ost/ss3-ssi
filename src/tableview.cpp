@@ -333,7 +333,7 @@ void tableview::setHeight(int rows)
     if (rows == 0)
         setFixedHeight(0);
     else
-        setFixedHeight(75 + display * 37);
+        setFixedHeight(75 + display * 35);
 }
 
 void tableview::createActions()

@@ -135,7 +135,6 @@ void ss_model::clear()
         deleteFleet(i);
     if (pPopulation != nullptr) delete pPopulation;
     pPopulation = nullptr;
- //   populations.clear();
     if (forecast != nullptr) delete forecast;
     forecast = nullptr;
     if (lengthData != nullptr) delete lengthData;
@@ -186,7 +185,6 @@ void ss_model::reset()
     set_spawn_month(3.5);
     set_num_genders(2);
     set_num_std_years(0);
- //   set_f;
 //    QMessageBox::information(this, "Program Flow", "Model seasons set up.");
     set_num_fleets(1);
     getActiveFleet(1)->reset();
@@ -206,20 +204,12 @@ void ss_model::reset()
         ageData = new compositionAge(this);
     else
         ageData->reset();
-/*    ageData->setNumberBins(0);
-    ageData->setNumberObs(0);
-    ageData->set_num_error_defs(0);
-    ageData->set_number_saa_observations(0);
-    ageData->set_number_ages(0);*/
 //    QMessageBox::information(this, "Program Flow", "Model age comp set up.");
 
     if (lengthData == nullptr)
         lengthData = new compositionLength();
     else
         lengthData->reset();
-/*    lengthData->setNumberBins(0);
-    lengthData->setNumberObs(0);
-    lengthData->setNumberAltBins(0);*/
 //    QMessageBox::information(this, "Program Flow", "Model length comp set up.");
 
     set_mean_body_wt_df(0);

@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.18.04
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.04
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,10 +15,23 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.30.18.05
-    2022-01-13
+    3.30.19.04
+    2022-02-xx
+Bug Fixes
+1. .
+Minor Improvements
+1. Removed code that was not used.
+============================================================================
+    3.30.19.03
+    2022-02-17
 Bug Fixes
 1. Fixed the display of output and new file directories on Output Files tab.
+2. Fixed autogenerating spline parameters.
+3. Fixed initial display of spline.
+Minor Improvements
+1. Spline setup: Added options 10, 11, and 12 to the setup parameter. They
+   are similar to 0, 1, and 2 but set selectivity to 0 for x-values less
+   than the first knot.
 ============================================================================
    3.30.18.04
    2021-12-23

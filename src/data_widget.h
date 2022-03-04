@@ -24,7 +24,7 @@ class data_widget : public QWidget
     Q_OBJECT
 
 public:
-    explicit data_widget(ss_model *model, QWidget *parent = 0);
+    explicit data_widget(ss_model *model, QWidget *parent = nullptr);
     ~data_widget();
 
     void connectAll();
@@ -37,7 +37,7 @@ public:
 
 
 public slots:
-    void set_model (ss_model *m_data = 0);
+    void set_model (ss_model *m_data = nullptr);
     void reset();
     void refresh();
 

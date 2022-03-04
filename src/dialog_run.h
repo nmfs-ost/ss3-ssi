@@ -17,11 +17,8 @@
 #include <QMessageBox>
 
 
-#include "dialog_view.h"
 #include "dialog_fileview.h"
-#include "console_redir.h"
 #include "dialog_runoptions.h"
-//#include "chartdialog.h"
 #include "dialogsummaryoutput.h"
 #include "dialogdirectories.h"
 

@@ -14,8 +14,6 @@ Dialog_runoptions::Dialog_runoptions(QWidget *parent) :
     connect (ui->checkBox_lprof,  SIGNAL(toggled(bool)), SIGNAL(doLikeProf(bool)));
     connect (ui->checkBox_mcdiag, SIGNAL(toggled(bool)), SIGNAL(doMCDiag(bool)));
 
-//    connect (ui->buttonBox, SIGNAL(accepted()), SLOT(acceptOptions()));
-//    connect (ui->buttonBox, SIGNAL(rejected()), SLOT(rejectOptions()));
     connect (ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonPressed(QAbstractButton*)));
 }
 

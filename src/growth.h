@@ -112,32 +112,6 @@ public slots:
     QStringList getCohortTVParam (int row) {return cohortVarParam->getVarParameter(row);}
     tablemodel *getCohortTVParams () {return cohortVarParam->getVarParamTable();}
 
-
-
-
-/*    int getHermaphroditism() const;
-    void setHermaphroditism(int value);
-    int getHermaphSeason() const {return hermaphSeason;}
-    void setHermaphSeason(int value) {hermaphSeason = value;}
-    int getHermaphMales() const {return hermaphMales;}
-    void setHermaphMales(int value) {hermaphMales = value;}
-    tablemodel *getHermaphParams () {return hermaphParams;}
-    QStringList getHermaphParam (int index) {return hermaphParams->getRowData(index);}
-    void setHermaphParam (int index, QStringList data) {hermaphParams->setRowData(index, data);}*/
-/*    growth_pattern * getPattern(int i) const;
-    void setPattern(int i, growth_pattern *&value);*/
-
-//    int getNum_params() const {return paramtable->rowCount();}
-//    void setNum_params(int value);
-
-//    void setParameter(int index, QStringList data);
-//    void addParameter(QStringList data);
-//    QStringList getParameter(int index);
-//    tablemodel *getParamsModel() {return paramtable;}
-
-//    longParameter * getParam(int i) const;
-//    void setParam(int i, longParameter *&value);
-
     int getNum_morphs() const;
     void setNum_morphs(int value);
     float getMorph_within_ratio() const;
@@ -226,11 +200,7 @@ private:
     int devPhase;
 
     int customEnvLink;
-//    longParameterModel *environmentParams;
-//    timeVaryParameterModel *environmentVarParams;
     int customBlock;
-//    longParameterModel *blockParams;
-//    timeVaryParameterModel *blockVarParams;
 
     int timeVaryMethod;
     int timeVaryReadParams;

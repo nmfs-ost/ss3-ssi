@@ -13,7 +13,6 @@
 #include "ss_recruitment.h"
 #include "growth.h"
 #include "ss_fecundity.h"
-#include "srequationdialog.h"
 #include "dialogspwnrcrequationview.h"
 
 
@@ -213,7 +212,7 @@ private:
     tableview *hermaphParamsView;
     tableview *hermaphTVParamsView;
 
-    DialogSpwnRcrEquationView *srEquationView; //srOptionDialog;
+    DialogSpwnRcrEquationView *srEquationView;
     tableview *recruitParamsView;
     tableview *recruitTVParamsView;
     tableview *recruitDistParamsView;

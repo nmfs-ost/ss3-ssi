@@ -168,6 +168,7 @@ public slots:
     void autogenParameters(int flag = 0);
     int getMinSel() const;
     void setMinSel(int value);
+    void getPctTileBins(const QStringList &bins, QList<int> &binTotals, float &nodeFirst, float &nodeLast);
 
 protected:
     ss_model *data_model;

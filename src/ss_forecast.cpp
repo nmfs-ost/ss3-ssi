@@ -6,9 +6,9 @@ ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
     QStringList header;
 
     msyCosts = new tablemodel();
-    msyCosts->setColumnCount(3);
+    msyCosts->setColumnCount(4);
     msyCosts->setParent(this);
-    header << "Fleet" << "cost/F" << "price/mt";
+    header << "Fleet" << "Cost/F" << "Price/F" << "Include in search";
     msyCosts->setHeader(header);
 
     seasFleetRelF_table = new tablemodel(this);

@@ -39,10 +39,10 @@
      <item row="0" column="1">
       <widget class="QSpinBox" name="spinBox_int1">
        <property name="minimum">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <number>12</number>
        </property>
       </widget>
      </item>
@@ -277,6 +277,64 @@
         <bool>true</bool>
        </property>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_autogen">
+     <item>
+      <widget class="QLabel" name="label_autogen_info">
+       <property name="text">
+        <string>Autogenerate option (Parameter 1)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_autogen">
+       <item>
+        <property name="text">
+         <string>0 = No autogenerate, read parameters from file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 = Autogenerate node locations</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2 = Autogenerate all parameters</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>10 = same as 0 with selex=0 before first node</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>11 = same as 1 with selex=0 before first node</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>12 = same as 2 with selex=0 before first node</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_autogen">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

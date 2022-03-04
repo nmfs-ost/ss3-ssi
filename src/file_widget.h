@@ -13,7 +13,6 @@
 #include "model.h"
 #include "ssComposition.h"
 #include "tableview.h"
-#include "catchdelegate.h"
 #include "dialog_fileview.h"
 #include "dialogchosereport.h"
 

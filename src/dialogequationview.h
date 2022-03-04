@@ -43,7 +43,7 @@ class DialogEquationView : public QDialog
 
 public:
     explicit DialogEquationView(QWidget *parent = nullptr);
-    ~DialogEquationView();
+    ~DialogEquationView() override;
 
     QString getName() const;
     void setName(const QString &value);
@@ -80,11 +80,14 @@ public slots:
     void setIntVar1InfoLabel (QString &txt);
     virtual void intVar1Changed (int value);
 
+    void setAutogenComboBox(int value);
+    int getAutogenComboBox();
+
     void apply();
     void reset();
     virtual void resetValues();
     virtual void restoreAll();
-    void setVisible(bool vis);
+    void setVisible(bool vis) override;
     void show ();
     void hide ();
     void close();
@@ -96,11 +99,11 @@ public slots:
     void refresh ();  // update from population values
     virtual void setup(); // start new
     virtual void update ();   // update from dialog values
-    void resizeEvent(QResizeEvent *event);
-    void moveEvent(QMoveEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
 
     void buttonClicked (QAbstractButton *btn);
-    void closeEvent (QCloseEvent *event);
+    void closeEvent (QCloseEvent *event) override;
 
     int getBinMin ();
     void setBinMin (int min);
@@ -125,6 +128,7 @@ signals:
     void hidden ();
     void applyingValues();
     void applyingComplete();
+    void autogenChanged(int);
 
 protected:
     QString name;
@@ -178,6 +182,7 @@ protected slots:
     void showInt1 (bool flag, QString label = QString("Int 1"), QString labelinfo = QString("No info"));
     void showJoins (int num);
     void showBins (bool flag);
+    void showAutogen (bool flag);
 
     void blank (BlankType btype, int eqn, int rep = 0, QString msg = QString(""));
     void linear (); // an example only

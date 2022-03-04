@@ -3,7 +3,6 @@
 #include <QDateTime>
 
 #include <cmath>
-//#include <cstdio>
 using namespace std;
 
 
@@ -15,7 +14,6 @@ using namespace std;
 //#include "fileIO32.h"
 #include "fileIO33.h"
 #include "ui_file_widget.h"
-#include "dialog_view.h"
 
 //#define DEBUG_FILES
 

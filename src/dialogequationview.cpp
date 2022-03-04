@@ -74,11 +74,13 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     showBins(false);
     showJoins(0);
     showInt1(false);
+    showAutogen(false);
 
     setJoinOne(20);
     setJoinTwo(20);
     setJoinThree(20);
 
+    ui->spinBox_int1->setValue(2);
     connect (ui->spinBox_int1, SIGNAL(valueChanged(int)), this, SLOT(intVar1Changed(int)));
     intvar1 = ui->spinBox_int1->value();
 
@@ -118,11 +120,13 @@ DialogEquationView::~DialogEquationView()
 void DialogEquationView::connectAll()
 {
     connect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+    connect (ui->comboBox_autogen, SIGNAL(currentIndexChanged(int)), this, SIGNAL(autogenChanged(int)));
 }
 
 void DialogEquationView::disconnectAll()
 {
     disconnect (parameterView, SIGNAL(inputChanged()), this, SLOT(update()));
+    disconnect (ui->comboBox_autogen, SIGNAL(currentIndexChanged(int)), this, SIGNAL(autogenChanged(int)));
 }
 
 void DialogEquationView::setXvalsConst(const QList<double> &vals)
@@ -383,6 +387,63 @@ void DialogEquationView::intVar1Changed(int value)
         setIntVar1 (value);
         update();
     }
+}
+
+int DialogEquationView::getAutogenComboBox()
+{
+    int val = 0;
+    switch (ui->comboBox_autogen->currentIndex())
+    {
+    case 0:
+        val = 0;
+        break;
+    case 1:
+        val = 1;
+        break;
+    case 2:
+        val = 2;
+        break;
+    case 3:
+        val = 10;
+        break;
+    case 4:
+        val = 11;
+        break;
+    case 5:
+        val = 12;
+        break;
+    default:
+        val = 0;
+    }
+    return val;
+}
+
+void DialogEquationView::setAutogenComboBox(int value)
+{
+    switch (value)
+    {
+    case 0:
+        ui->comboBox_autogen->setCurrentIndex(0);
+        break;
+    case 1:
+        ui->comboBox_autogen->setCurrentIndex(1);
+        break;
+    case 2:
+        ui->comboBox_autogen->setCurrentIndex(2);
+        break;
+    case 10:
+        ui->comboBox_autogen->setCurrentIndex(3);
+        break;
+    case 11:
+        ui->comboBox_autogen->setCurrentIndex(4);
+        break;
+    case 12:
+        ui->comboBox_autogen->setCurrentIndex(5);
+        break;
+    default:
+        ui->comboBox_autogen->setCurrentIndex(0);
+    }
+
 }
 
 void DialogEquationView::apply()
@@ -789,6 +850,13 @@ void DialogEquationView::showInt1(bool flag, QString label, QString labelinfo)
     ui->spinBox_int1->setVisible(flag);
     ui->label_int1->setVisible(flag);
     ui->label_int1_info->setVisible(flag);
+}
+
+// An additional combobox for spline autogenerate
+void DialogEquationView::showAutogen(bool flag)
+{
+    ui->label_autogen_info->setVisible(flag);
+    ui->comboBox_autogen->setVisible(flag);
 }
 
 // No equation for various reasons

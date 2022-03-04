@@ -12,9 +12,6 @@
 #include "model.h"
 #include "fleet.h"
 #include "tableview.h"
-#include "catchdelegate.h"
-#include "abundancedelegate.h"
-//#include "equationdialog.h"
 #include "dialoginfo.h"
 #include "dialogselectivityequationview.h"
 
@@ -27,7 +24,7 @@ class fleet_widget : public QWidget
     Q_OBJECT
 
 public:
-    explicit fleet_widget(ss_model *m_data, QWidget *parent = 0);
+    explicit fleet_widget(ss_model *m_data, QWidget *parent = nullptr);
     ~fleet_widget();
 
 public slots:
@@ -144,13 +141,8 @@ private:
     int totalFleets;
 
     tableview *catchview;
-    catchdelegate *catchedit;
-
     tableview *abundview;
-    abundancedelegate *abundedit;
-
     tableview *discardview;
-    abundancedelegate *discardedit;
 
     tableview *mbwtView;
     tableview *lenCompView;

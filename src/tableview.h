@@ -13,7 +13,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 
-#include "lineeditdelegate.h"
+//#include "lineeditdelegate.h"
 #include "tablemodel.h"
 
 class tableview : public QTableView

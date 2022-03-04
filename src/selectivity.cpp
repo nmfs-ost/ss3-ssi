@@ -1190,28 +1190,19 @@ double selectivity::evaluate(int f, float m)
     return val;
 }*/
 
-// autogenerate Parameters if setup parameter = 1 or 2
-void selectivity::autogenParameters(int flag) {
+// autogenerate Parameters if setup parameter = 1, 2, 11, or 12
+void selectivity::autogenParameters(int flg) {
     int pat = getPattern();
     int scale = 0;
-    int setup = 0;
-    switch (pat) {
-    case 42:
-        scale = 2;
-        [[clang::fallthrough]];
-    case 27:
-        QStringList parm1 = getParameter(scale);
-        setup = parm1.at(2).toInt();
-        break;
-    }
-    if (flag != 0) {
-        setup = flag;
-    }
+    int setup = flg;
+
     switch (setup) {
     case 1:
+    case 11:
         autogenCubicSpline1(scale);
         break;
     case 2:
+    case 12:
         autogenCubicSpline1(scale);
         autogenCubicSpline2(scale);
         break;
@@ -1238,83 +1229,60 @@ void selectivity::autogenCubicSpline1(int scale) {
     int pctl025 = 0;
     int pctl975 = 2;
     float term = .5, interm = 1;
-    QList<float> nodes;
-    float nodeFirst = 1, nodeLast = 10, nodeRange = 9;
-//    QStringList bins (type == Size? altbins: bins);
+    float nodeFirst = 0, nodeLast = 0, nodeRange = 0;
+    float valFirst = bins.first().toFloat();
+    float valLast = bins.last().toFloat();
+    float valRange = valLast - valFirst;
     int numBins = 0;
     QStringList data;
 
-    for (int i = 0; i < numNodes; i++) {
-        nodes.append(0.0);
-    }
 
-    if (type == Size) {
+    if (type == Size && fleet->getLengthNumObs() > 0) {
         numObs = fleet->getLengthNumObs();
-        if (numObs == 0) {
-            numBins = bins.count();
-            total = numBins;
-            for (int i = 0; i < numBins; i++)
-                binTotals.append(1);
-        }
-        else {
-            numBins = fleet->getLengthObservation(0).count() - 7;
-            for (bin = 0; bin < numBins; bin++) {
-                binTotals.append(0.0);
-            }
-
-            for (int row = 0; row < numObs; row++) {
-                for (bin = 0; bin < numBins; bin++) {
-                    binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
-                }
-            }
-        }
-    }
-    else { // type == Age
-        numObs = fleet->getAgeNumObs();
-        if (numObs == 0) {
-            numBins = bins.count();
-            total = numBins;
-            for (int i = 0; i < numBins; i++)
-                binTotals.append(1);
-        }
-        else {
-            numBins = fleet->getAgeObservation(0).count() - 9;
-            for (bin = 0; bin < numBins; bin++) {
-                binTotals.append(0);
-            }
-
-            for (int row = 0; row < numObs; row++) {
-                for (bin = 0; bin < numBins; bin++) {
-                    binTotals[bin] += fleet->getAgeObservation(row).at(bin+9).toInt();
-                }
-            }
-        }
+        numBins = fleet->getLengthObservation(0).count() - 7;
         for (bin = 0; bin < numBins; bin++) {
-            total += binTotals.at(bin);
+            binTotals.append(0);
         }
-    }
 
-    pctl025 = static_cast<int>(total * 0.025 + .5);
-    pctl975 = static_cast<int>(total * 0.975 + .5);
-    total = 0;
-    for (bin = 0; bin < bins.count()-1; bin++) {
-        total += binTotals.at(bin);
-        if (total < pctl025)
-            nodeFirst = bins.at(bin+1).toFloat();
-        else if (total < pctl975)
-            nodeLast = bins.at(bin+1).toFloat();
+        for (int row = 0; row < numObs; row++) {
+            for (bin = 0; bin < numBins; bin++) {
+                binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
+            }
+        }
+        getPctTileBins(data_model->get_length_composition()->getBins(), binTotals, nodeFirst, nodeLast);
     }
-    if (nodeLast > bins.count() - 1)
-        nodeLast = bins.count() - 2;
+    else if (type == Age && fleet->getAgeNumObs() > 0) {
+        numObs = fleet->getAgeNumObs();
+        numBins = fleet->getAgeObservation(0).count() - 9;
+        for (bin = 0; bin < numBins; bin++) {
+            binTotals.append(0);
+        }
 
+        for (int row = 0; row < numObs; row++) {
+            for (bin = 0; bin < numBins; bin++) {
+                binTotals[bin] += fleet->getAgeObservation(row).at(bin+9).toInt();
+            }
+        }
+        getPctTileBins(data_model->get_age_composition()->getBins(), binTotals, nodeFirst, nodeLast);
+    }
+    if (nodeLast < 1)
+    {
+        float val = 0;
+        val = bins.at(1).toFloat();
+        nodeFirst = valRange * .025 + valFirst;
+        if (nodeFirst < val) nodeFirst = val;
+        nodeLast  = valRange * .975 + valFirst;
+        val = bins.at(bins.count() - 2).toFloat();
+        if (nodeLast > val) nodeLast = val;
+    }
     nodeRange = nodeLast - nodeFirst;
     interm = nodeRange / (numNodes - 1);
     term = nodeFirst;
     int index = scale + 3;
     for (int i = 0; i < numNodes; i++) {
         data  = getParameter(index + i);
-        data[0] = QString::number(nodeFirst);
-        data[1] = QString::number(nodeLast);
+        data[0] = QString::number(valFirst);
+        data[1] = QString::number(valLast);
         data[2] = QString::number(term);
         data[6] = QString::number(-99);
         setParameter(index +i, data);
@@ -1325,18 +1293,36 @@ void selectivity::autogenCubicSpline1(int scale) {
 void selectivity::autogenCubicSpline2(int scale) {
     int numNodes = getSpecial();
     int index = scale + 3 + numNodes;
+    QStringList data;
+
+    // scaling bins
+    if (scale > 0)
+    {
+        data = parameters->getParameter(0);
+        data[0] = QString::number(1);
+        data[1] = QString::number(bins.count());
+        data[2] = QString::number(bins.count()/2);
+        data[6] = QString::number(2);
+        parameters->setParameter(0, data);
+        data = parameters->getParameter(1);
+        data[0] = QString::number(1);
+        data[1] = QString::number(bins.count());
+        data[2] = QString::number(bins.count()/2 + 5);
+        data[6] = QString::number(2);
+        parameters->setParameter(1, data);
+    }
 
     // grad lo and hi
-    QStringList data = parameters->getParameter(scale + 1);
+    data = parameters->getParameter(scale + 1);
     data[0] = QString::number(-0.001);
     data[1] = QString::number(1.0);
-    data[2] = QString::number(0.13);
+    data[2] = QString::number(0.03);
     data[6] = QString::number(2);
     parameters->setParameter(scale + 1, data);
     data = parameters->getParameter(scale + 2);
     data[0] = QString::number(-1);
     data[1] = QString::number(0.001);
-    data[2] = QString::number(-0.03);
+    data[2] = QString::number(-0.01);
     data[6] = QString::number(2);
     parameters->setParameter(scale + 2, data);
 
@@ -1357,4 +1343,36 @@ void selectivity::autogenCubicSpline2(int scale) {
     parameters->setParameter(index+numNodes-1, data);
 }
 
+
+void selectivity::getPctTileBins(const QStringList &bins, QList<int> &binTotals, float &nodeFirst, float &nodeLast)
+{
+    int bin = 0;
+    int total = 0;
+    int numBins = binTotals.count();
+
+    for (bin = 0; bin < numBins; bin++) {
+        total += binTotals.at(bin);
+    }
+    if (total > 0) {
+        int pct025 = static_cast<int>(total * 0.025 + .5);
+        int pct975 = static_cast<int>(total * 0.975 + .5);
+
+        total = 0;
+        for (bin = 0; bin < numBins-1; bin++) {
+            total += binTotals.at(bin);
+            if (total < pct025)
+                nodeFirst = bins.at(bin+1).toFloat();
+            else if (total < pct975)
+                nodeLast = bins.at(bin+1).toFloat();
+        }
+        if (nodeLast >= bins.at(bins.count() - 1).toFloat())
+        {
+            nodeLast = bins.at(bins.count() - 2).toFloat();
+        }
+    }
+    else
+    {
+        nodeFirst = nodeLast = 0;
+    }
+}
 

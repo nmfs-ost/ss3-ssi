@@ -1467,10 +1467,12 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
                 str_lst.append(token);
                 token = f_file->get_next_value(QString("price/mt"));
                 str_lst.append(token);
-                if (temp_int == END_OF_LIST)
+                token = f_file->get_next_value(QString("include"));
+                str_lst.append(token);
+                if (temp_int == -999)
                     break;
                 fcast->appendMsyCosts(str_lst);
-            } while (temp_int != END_OF_LIST);
+            } while (temp_int != -999);
         }
         }
         if (f_file->getOkay() && !f_file->getStop()) {
@@ -1747,18 +1749,19 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
                     QString("Do_MSY: 1=set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr); 5=calc F(MEY)"));
         if (msy == 5)
         {
-            chars += f_file->writeline("# if Do_MSY=5, enter MSY_Units; then list fleet_ID, cost/F, price/mt; -fleet_ID to fill; -9999 to terminate");
+            chars += f_file->writeline("# if Do_MSY=5, enter MSY_Units; then list fleet_ID, cost/F, price/F, and include;");
+            chars += f_file->writeline("#   use -fleet_ID to fill; -999 to terminate");
             // write msyUnits
             temp_int = fcast->getMsyUnits();
             chars += f_file->write_val(temp_int, 1,
                         QString("MSY_units: 1=dead biomass, 2=retained biomass, 3=profits"));
-            chars += f_file->writeline("# fleet   cost/F  price/mt");
+            chars += f_file->writeline("# Fleet Cost_per_F Price_per_F include_in_Fmey_search");
             temp_int = fcast->getMsyCosts()->rowCount();
             for (i = 0; i < temp_int; i++)
             {
-                f_file->write_vector(fcast->getMsyCosts()->getRowData(i), 2);
+                f_file->write_vector(fcast->getMsyCostRow(i), 2);
             }
-            f_file->writeTerminator(2);
+            f_file->writeline("-999 1 1 1 # terminate list of fleet costs and prices");
         }
 
         chars += f_file->write_val(fcast->get_spr_target(), 1,
@@ -3059,8 +3062,24 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         // Size selectivity setup
         for (int i = 0; i < num_fleets; i++)
         {
+            int minsel = 0;
+            int selopt = 0;
             datalist.clear();
-            datalist.append(c_file->get_next_value("Size selex Pattern"));
+            temp_string = c_file->get_next_value("Size selex Pattern");
+            selopt = temp_string.toInt();
+            if (selopt > 100)
+            {
+                minsel = selopt/100;
+                QMessageBox::information(nullptr, "Reading control file length selex",
+                                         "Min selection not valid for length selex. Fixing ...");
+                selopt = selopt - (minsel * 100);
+                minsel = 0;
+            }
+//            if (data->getReadWtAtAge() && selopt > 0)
+//                QMessageBox::information(nullptr, "Reading control file length selex",
+//                                         "Min selection not valid for length selex. Fixing ...");
+
+            datalist.append(QString::number(selopt));
             datalist.append(c_file->get_next_value("Size selex Discard"));
             datalist.append(c_file->get_next_value("Size selex Male"));
             datalist.append(c_file->get_next_value("Size selex Special"));
@@ -3082,11 +3101,45 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             temp_int = temp_string.toInt();
             if (temp_int > 100) {
                 minsel = temp_int/100;
-                selopt = temp_int - minsel;
+                selopt = temp_int - (minsel * 100);
                 datalist.append(QString::number(selopt));
             }
             else {
                 datalist.append(temp_string);
+            }
+            if (minsel > 0)
+            {
+                switch (selopt)
+                {
+                case 12:
+                case 13:
+                case 14:
+                case 16:
+                case 18:
+                case 26:
+                case 27:
+                    // minsel okay
+                    break;
+                case 17:
+                case 19:
+                case 44:
+                case 45:
+                    // minsel not used because separate control exists
+                    QMessageBox::information(nullptr, "Reading control file age selex",
+                                             "Min selection not used because separate control exists.");
+                    minsel = 0;
+                    break;
+                case 20:
+                    // minsel okay but be aware that a separate control for parm 5 can set sel = 1.0e-06 below a specified age
+                    QMessageBox::information(nullptr, "Reading control file age selex",
+                                             "Min selection okay to use.");
+                    break;
+                default:
+                    // minsel not implemented and not relevant
+                    QMessageBox::information(nullptr, "Reading control file age selex",
+                                             "Min selection not relevant and not implemented for this selex.");
+                    minsel = 0;
+                }
             }
             datalist.append(c_file->get_next_value("Age selex Discard"));
             datalist.append(c_file->get_next_value("Age selex Male"));

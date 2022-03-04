@@ -111,6 +111,7 @@ private slots:
 
     bool checkScaleSliders(int first, int secnd, QList<double> bins, double &binLo, double &binHi);
     double aveYvalue(const QList<QPointF> &pointlist, int lowBin = 1, int highBin = 100);
+    void changeAutogen(int value);
 };
 
 #endif // DIALOGSELECTIVITYEQUATIONVIEW_H

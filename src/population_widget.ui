@@ -3077,7 +3077,7 @@ then read num_of_seasons parameters below.</string>
              <item row="5" column="0" rowspan="2" colspan="4">
               <widget class="QStackedWidget" name="stackedWidget_method">
                <property name="currentIndex">
-                <number>1</number>
+                <number>3</number>
                </property>
                <widget class="QWidget" name="page_F1"/>
                <widget class="QWidget" name="page_F2">

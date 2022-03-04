@@ -90,8 +90,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     setRecrArea(2);
     connect (ui->radioButton_area, SIGNAL(clicked()), SLOT(changeRecrArea()));
     connect (ui->radioButton_global, SIGNAL(clicked()), SLOT(changeRecrArea()));
-//    setRecrDistParam(1);
-//    ui->checkBox_recr_interaction->setChecked(false);
     connect (ui->comboBox_recr_spec, SIGNAL(currentIndexChanged(int)), SLOT(changeSpawnRecrSpec(int)));
     connect (ui->pushButton_equation, SIGNAL(toggled(bool)), SLOT(setSRequationDialogVisible(bool)));
     connect (srEquationView, SIGNAL(hidden()), SLOT(setSRequationDialogVisible()));
@@ -474,14 +472,12 @@ void population_widget::refresh()
     ui->doubleSpinBox_growth_bin_min->setValue(pop->Grow()->getGrowthBinMin());
     ui->doubleSpinBox_growth_bin_width->setValue(pop->Grow()->getGrowthBinWidth());
     ui->comboBox_growth_bin_method->setCurrentIndex(value);
-//    changeGrowthBinMethod(value);
     growthBinsView->setModel(pop->Grow()->getGrowthBinTable());
     growthBinsView->resizeColumnsToContents();
 
     // growth
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
     growthMorphDistView->setHeight(pop->Grow()->getMorphDistModel());
-//    growthParamsView->setModel(pop->Grow()->getMaturityParams());
     growthMorphDistView->resizeColumnsToContents();
     setGrowthModel(pop->Grow()->getModel());
     ui->doubleSpinBox_growth_age_Amin->setValue(pop->Grow()->getAge_for_l1());
@@ -577,9 +573,6 @@ void population_widget::refresh()
     mortInputsView->setHeight(pop->M()->getInputModel());
     mortInputsView->resizeColumnsToContents();
     setInitialMort(pop->M()->getInitialParams());
-//    mortInitialParamsView->setModel(pop->M()->getInitialParams());
-//    mortInitialParamsView->setHeight(pop->M()->getInitialParams());
-//    mortInitialParamsView->resizeColumnsToContents();
     setMortOption (pop->Grow()->getNatural_mortality_type());
     mortFleetFView->setModel(pop->M()->getFleetF());
     if (pop->M()->getNumFleetSpecF() > 0)
@@ -617,7 +610,6 @@ void population_widget::refresh()
     hermaphParamsView->resizeColumnsToContents();
     seasonParamsView->resizeColumnsToContents();
     recruitAssignParamsView->resizeColumnsToContents();
-//    recruitParamsView->resizeColumnsToContents();
     recruitTVParamsView->resizeColumnsToContents();
     recruitParamsView->resizeColumnsToContents();
     mortBreakPtsView->resizeColumnsToContents();
@@ -667,7 +659,7 @@ int population_widget::getFecundityOffsetOption()
 
 void population_widget::setFecundityAdjustment(int opt)
 {
-    Q_UNUSED(opt);
+    Q_UNUSED(opt)
 //    ui->comboBox_fecund_adj_constraint->setCurrentIndex(opt - 1);
 }
 
@@ -856,8 +848,6 @@ void population_widget::changeGrowthModel(int opt)
     ui->doubleSpinBox_growth_age_spec_min->setVisible(vis);
     ui->label_growth_age_spec_max->setVisible(vis);
     ui->doubleSpinBox_growth_age_spec_max->setVisible(vis);
-//    ui->frame_growth_age_spec_k->setVisible(vis);
-
 }
 
 int population_widget::getGrowthModel()

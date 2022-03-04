@@ -18,9 +18,7 @@ TEMPLATE = app
 SOURCES += main.cpp\
     longparametermodel.cpp \
         mainwindow.cpp \
-    dialoginputfiles.cpp \
     fileselector.cpp \
-    dialog_yearlyvalues.cpp \
     form_yearvalue.cpp \
     data_widget.cpp \
     input_file.cpp \
@@ -30,7 +28,6 @@ SOURCES += main.cpp\
     file_widget.cpp \
     population.cpp \
     selectivity.cpp \
-    catchability.cpp \
     shortparametermodel.cpp \
     sizecomp.cpp \
     dialog_about.cpp \
@@ -40,7 +37,6 @@ SOURCES += main.cpp\
     error_vector.cpp \
     ss_forecast.cpp \
     fleet_widget.cpp \
-    observation_widget.cpp \
     growth.cpp \
     growth_morph.cpp \
     ss_observation.cpp \
@@ -53,31 +49,21 @@ SOURCES += main.cpp\
     method_setup.cpp \
     block_pattern.cpp \
     sd_reporting.cpp \
-    variance_adjustment.cpp \
     tag.cpp \
     selex_equation.cpp \
     growth_season_effects.cpp \
     growth_pattern.cpp \
     dialog_about_nft.cpp \
     population_widget.cpp \
-    yearindexmeasure.cpp \
     composition_widget.cpp \
-    dialog_float_list.cpp \
-    observation_dialog.cpp \
     fleetlambda.cpp \
     errorfloatdialog.cpp \
     dialog_run.cpp \
-    dialog_view.cpp \
     spinboxdelegate.cpp \
-    doublespinboxdelegate.cpp \
     dialog_fileview.cpp \
-    console_redir.cpp \
     fleet_catch.cpp \
-    lineeditdelegate.cpp \
     tablemodel.cpp \
     tableview.cpp \
-    catchdelegate.cpp \
-    abundancedelegate.cpp \
     mbweightdelegate.cpp \
     newfleetdialog.cpp \
     fileIO33.cpp \
@@ -98,7 +84,6 @@ SOURCES += main.cpp\
     ttk_spline.cpp \
     dialoginfo.cpp \
     dialoginputerror.cpp \
-    srequationdialog.cpp \
     parameterview.cpp \
     dialogequationview.cpp \
     dialogparameterview.cpp \
@@ -117,9 +102,7 @@ SOURCES += main.cpp\
     dialog_readme.cpp
 
 HEADERS  += mainwindow.h \
-    dialoginputfiles.h \
     fileselector.h \
-    dialog_yearlyvalues.h \
     form_yearvalue.h \
     data_widget.h \
     longparametermodel.h \
@@ -131,7 +114,6 @@ HEADERS  += mainwindow.h \
     file_widget.h \
     population.h \
     selectivity.h \
-    catchability.h \
     shortparametermodel.h \
     sizecomp.h \
     dialog_about.h \
@@ -141,7 +123,6 @@ HEADERS  += mainwindow.h \
     error_vector.h \
     ss_forecast.h \
     fleet_widget.h \
-    observation_widget.h \
     growth.h \
     growth_morph.h \
     ss_observation.h \
@@ -154,31 +135,21 @@ HEADERS  += mainwindow.h \
     method_setup.h \
     block_pattern.h \
     sd_reporting.h \
-    variance_adjustment.h \
     tag.h \
     selex_equation.h \
     growth_season_effects.h \
     growth_pattern.h \
     dialog_about_nft.h \
     population_widget.h \
-    yearindexmeasure.h \
     composition_widget.h \
-    dialog_float_list.h \
-    observation_dialog.h \
     fleetlambda.h \
     errorfloatdialog.h \
     dialog_run.h \
-    dialog_view.h \
     spinboxdelegate.h \
-    doublespinboxdelegate.h \
     dialog_fileview.h \
-    console_redir.h \
     fleet_catch.h \
-    lineeditdelegate.h \
     tablemodel.h \
     tableview.h \
-    catchdelegate.h \
-    abundancedelegate.h \
     mbweightdelegate.h \
     newfleetdialog.h \
     fileIO33.h \
@@ -201,7 +172,6 @@ HEADERS  += mainwindow.h \
     ttk_spline.h \
     dialoginfo.h \
     dialoginputerror.h \
-    srequationdialog.h \
     parameterview.h \
     dialogequationview.h \
     dialogparameterview.h \
@@ -219,9 +189,7 @@ HEADERS  += mainwindow.h \
     dialog_readme.h
 
 FORMS    += mainwindow.ui \
-    dialoginputfiles.ui \
     fileselector.ui \
-    dialog_yearlyvalues.ui \
     form_yearvalue.ui \
     data_widget.ui \
     length_bin_data.ui \
@@ -233,15 +201,11 @@ FORMS    += mainwindow.ui \
     forecast_widget.ui \
     dialog_about_admb.ui \
     fleet_widget.ui \
-    observation_widget.ui \
     dialog_about_nft.ui \
     population_widget.ui \
     composition_widget.ui \
-    dialog_float_list.ui \
-    observation_dialog.ui \
     errorfloatdialog.ui \
     dialog_run.ui \
-    dialog_view.ui \
     dialog_fileview.ui \
     newfleetdialog.ui \
     dialog_about_gui.ui \
@@ -251,11 +215,9 @@ FORMS    += mainwindow.ui \
     equationdialog.ui \
     dialoginfo.ui \
     dialoginputerror.ui \
-    srequationdialog.ui \
     parameterview.ui \
     dialogequationview.ui \
     dialogparameterview.ui \
-    doublelimitspinbox.ui \
     dialog_copyright.ui \
     dialogtable.ui \
     mainwindowrun.ui \

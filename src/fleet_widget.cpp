@@ -20,20 +20,14 @@ fleet_widget::fleet_widget(ss_model *m_data, QWidget *parent) :
 
     catchview = new tableview();
     catchview->setParent(this);
-    catchedit = new catchdelegate(this);
-//    catchview->setItemDelegate(catchedit);
     ui->verticalLayout_catch_table->addWidget(catchview);
 
     abundview = new tableview();
     abundview->setParent(this);
-//    abundedit = new abundancedelegate(this);
-//    abundview->setItemDelegate(abundedit);
     ui->verticalLayout_abund->addWidget(abundview);
 
     discardview = new tableview();
     discardview->setParent(this);
-//    discardedit = new abundancedelegate(this);
-//    discardview->setItemDelegate(discardedit);
     ui->verticalLayout_discard->addWidget(discardview);
 
     mbwtView = new tableview();
@@ -483,13 +477,6 @@ void fleet_widget::refreshFleetNames()
 void fleet_widget::refresh()
 {
     int curr = ui->comboBox_fleet_name->currentIndex();
-    catchedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
-    catchedit->setNumSeasons(model_data->get_num_seasons());
-    catchedit->setMaxCatch(1999999.0);
-//    abundedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
-//    abundedit->setValueRange(0, 1999999.0);
-//    discardedit->setYearRange(model_data->get_start_year(), model_data->get_end_year());
-//    discardedit->setValueRange(0, 1999999.0);
 
     totalFleets = model_data->get_num_fleets();
     ui->spinBox_selex_size_discard->setMinimum(-totalFleets);
@@ -516,11 +503,6 @@ void fleet_widget::refresh()
         curr = 0;
     ui->comboBox_fleet_name->setCurrentIndex(curr);
     set_current_fleet(curr);
-
-/*    ui->tabWidget_fleet->setCurrentIndex(0);
-    ui->tabWidget_obs->setCurrentIndex(0);
-    ui->tabWidget_comp->setCurrentIndex(0);
-    ui->tabWidget_selex->setCurrentIndex(0);*/
 }
 
 void fleet_widget::set_model (ss_model *model)
@@ -532,12 +514,14 @@ void fleet_widget::set_model (ss_model *model)
 void fleet_widget::setAgeLengthBins()
 {
     QStringList agebinlist;
-    int ages = model_data->get_age_composition()->getBins().count();
+    int maxAge = 0;
+    int ages = 0;
+    ages = model_data->get_age_composition()->getBins().count();
     if (ages > 0) {
         agebinlist = model_data->get_age_composition()->getBins();
     }
     else {
-        int maxAge = model_data->get_num_ages();
+        maxAge = model_data->get_num_ages();
         for (int i = 1; i <= maxAge; i++)
             agebinlist.append(QString::number(i));
     }

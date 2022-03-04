@@ -44,8 +44,6 @@ public slots:
     QStringList getMeanBwt (int index) {return meanBwtModel->getRowData(index);}
 
     void changeSPR(float spr) {SR()->setSPR(spr);}
-//    void readSeasonalEffects(ss_file *input);
-//    QString writeSeasonalEffects();
 
     float get_frac_female() const;
     void set_frac_female(float value);
@@ -96,7 +94,6 @@ public slots:
 signals:
 
 private:
-//    ss_model ssModel;
     spawn_recruit *pop_recruitment;
     ss_movement *pop_movement;
     ss_fecundity *pop_fecundity;
@@ -119,8 +116,6 @@ private:
     int iNumAges;
 
     seasonalEffectsModel *seasparamtable;
-//    setupShortParamModel *seasparamtable;
-//    shortParameterModel *seasparamtable;
 
 };
 

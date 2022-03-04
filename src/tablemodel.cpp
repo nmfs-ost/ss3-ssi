@@ -84,7 +84,7 @@ void tablemodel::setRowData(int row, QStringList &rowstringlist)
     }
     insertRow(row, px);
     removeRow(row + 1);
-    emit dataChanged();
+//    emit dataChanged();
 }
 
 void tablemodel::setRowData(int &row, QString rowstring)
