@@ -16,7 +16,7 @@ See ss_gui_copyright.txt for more information.
 History:
 ============================================================================
     3.30.20.01
-    2022-02-xx
+    2022-03-22
 Bug Fixes
 1. Removed parameter view for equations with no parameters.
 Minor Improvements

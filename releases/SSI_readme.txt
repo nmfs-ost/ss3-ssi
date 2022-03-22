@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.03
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.04
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,6 +15,14 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.20.01
+    2022-03-22
+Bug Fixes
+1. Removed parameter view for equations with no parameters.
+Minor Improvements
+1. Added options to West Coast Rebuilder (0-2) to comply with 3.30.20.
+2. Removed some code that was not used.
+============================================================================
     3.30.19.03
     2022-02-17
 Bug Fixes
@@ -24,7 +32,7 @@ Bug Fixes
 Minor Improvements
 1. Spline setup: Added options 10, 11, and 12 to the setup parameter. They
    are similar to 0, 1, and 2 but set selectivity to 0 for x-values less
-   than the first knot. Added a combo-box to select the setup parameter.
+   than the first knot.
 ============================================================================
    3.30.18.04
    2021-12-23
