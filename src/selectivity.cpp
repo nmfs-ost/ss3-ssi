@@ -1192,7 +1192,7 @@ double selectivity::evaluate(int f, float m)
 
 // autogenerate Parameters if setup parameter = 1, 2, 11, or 12
 void selectivity::autogenParameters(int flg) {
-    int pat = getPattern();
+//    int pat = getPattern();
     int scale = 0;
     int setup = flg;
 
@@ -1225,9 +1225,9 @@ void selectivity::autogenCubicSpline1(int scale) {
     int bin = 0;
     int numObs = 1;
     QList<int> binTotals;
-    int total = 0;
-    int pctl025 = 0;
-    int pctl975 = 2;
+//    int total = 0;
+//    int pctl025 = 0;
+//    int pctl975 = 2;
     float term = .5, interm = 1;
     float nodeFirst = 0, nodeLast = 0, nodeRange = 0;
     float valFirst = bins.first().toFloat();

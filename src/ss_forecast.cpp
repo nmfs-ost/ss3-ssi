@@ -529,7 +529,7 @@ void ss_forecast::reset()
     i_fcast_loop_5 = 0;// Forecast loop control #5 (reserved for future bells&whistles)
     i_caps_st_year = 2015;// FirstYear for caps and allocations (should be after years with fixed inputs)
     f_log_ctch_stdv = 0.0;// stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)
-    b_rebuilder = false;// Do West Coast gfish rebuilder output (0/1)
+    i_rebuilder = false;// Do West Coast gfish rebuilder output (0/1)
     i_rebuilder_st_yr = 2004;// Rebuilder:  first year catch could have been set to zero (Ydecl)(-1 to set to 1999)
     i_rebuilder_cur_yr = -1;// Rebuilder:  year for current age structure (Yinit) (-1 to set to endyear+1)
     i_fleet_rel_f = 1;// fleet relative F:  1=use first-last alloc year; 2=read seas(row) x fleet(col) below
@@ -576,7 +576,7 @@ void ss_forecast::clear()
     i_fcast_loop_5 = 0;
     i_caps_st_year = 0;
     f_log_ctch_stdv = 0.0;
-    b_rebuilder = 0;
+    i_rebuilder = 0;
     i_rebuilder_st_yr = 0;
     i_rebuilder_cur_yr = 0;
     i_fleet_rel_f = 0;

@@ -87,9 +87,9 @@ DialogEquationView::DialogEquationView(QWidget *parent) :
     parameterView = new DialogParameterView(this);
     parameterView->setName("Parameters");
     parameterView->moveDelta(position);
-    connect (parameterView, SIGNAL(hidden()), this, SLOT(setParametersVisible()));
+    connect (parameterView, SIGNAL(hidden()), this, SLOT(hideParameterView()));
     connect (ui->pushButton_showParameters, SIGNAL(toggled(bool)), this, SLOT(setParametersVisible(bool)));
-    setParametersVisible();
+    hideParameterView();
 
     connectAll();
 }
@@ -508,13 +508,17 @@ void DialogEquationView::setVisible(bool visible) {
     }
 }
 void DialogEquationView::show() {
-    if (!isVisible())
+    if (!isVisible()) {
         setVisible(true);
+        setParametersVisible(ui->pushButton_showParameters->isChecked());
+    }
 }
 
 void DialogEquationView::hide() {
-    if (isVisible())
+    hideParameterView();
+    if (isVisible()) {
         setVisible(false);
+    }
 }
 
 void DialogEquationView::close()
@@ -572,7 +576,7 @@ void DialogEquationView::parametersChanged()
 
 void DialogEquationView::parameterViewClosed()
 {
-    setParametersVisible (false);
+    hideParameterView();
 }
 
 void DialogEquationView::setupChanged()
@@ -616,6 +620,11 @@ void DialogEquationView::setMessage(const QString &value)
 
 void DialogEquationView::setMessageVisible(bool flag) {
     ui->label_msg->setVisible(flag);
+}
+
+void DialogEquationView::setParameterButtonVisible(bool flag)
+{
+    ui->pushButton_showParameters->setVisible(flag);
 }
 
 QString DialogEquationView::getName() const

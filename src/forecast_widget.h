@@ -8,8 +8,11 @@
 
 #include <QWidget>
 
+#include"dialog_fileview.h"
 #include "input_file.h"
 #include "model.h"
+
+#define REBUILDER_FILE "rebuild.dat"
 
 namespace Ui {
 class forecast_widget;
@@ -92,11 +95,13 @@ public slots:
     void alloc_group_assign_changed ();
     void set_allocation_group_fract();
     void alloc_group_fract_changed ();
-    void set_rebuilder (bool flag);
+    void set_rebuilder (int option);
+    void change_rebuilder (int option);
     void set_rebuilder_first_year(int yr);
     void change_rebuilder_first_yr(int yr);
     void set_rebuilder_curr_year(int yr);
     void change_rebuilder_curr_yr(int yr);
+    void view_rebuilder_file();
 
     void set_combo_box_fleet_relF(int value);
     void change_fleet_relF(int value);
@@ -129,6 +134,8 @@ private:
     tableview *allocGrpList;
     tableview *allocGrpFracts;
     tableview *inputFcastCatch;
+
+    Dialog_fileView *fileViewer;
 };
 
 #endif // FORECAST_WIDGET_H

@@ -50,6 +50,8 @@ private slots:
     void updateHockeyStick ();
     void bevertonHoltBzeroFlat ();
     void updateBevertonHoltBzeroFlat ();
+    void bevertonHoltSigmoidal ();
+    void updateBevertonHoltSigmoidal ();
     void survivorship ();
     void updateSurvivorship ();
     void shepherd ();
@@ -58,6 +60,8 @@ private slots:
     void updateShepherdReParm ();
     void rickerReParm ();
     void updateRickerReParm ();
+    void sailaLorda ();
+    void updateSailaLorda ();
 
 };
 

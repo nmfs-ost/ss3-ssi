@@ -31,6 +31,7 @@ public slots:
     void setFontSize (int ptsize);
     void setTitle (QString title = QString(""));
     void setFixedPitch(bool fixed = false);
+    void hideFont();
 
 signals:
     void editRequested();

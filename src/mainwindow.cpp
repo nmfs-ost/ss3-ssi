@@ -1066,7 +1066,7 @@ void MainWindow::runComplete()
 
 void MainWindow::runConversion()
 {
-    int lastEstPhase = modelData->get_last_estim_phase();
+//    int lastEstPhase = modelData->get_last_estim_phase();
     QString notice ("If the model has complex features, it may not convert completely.\n");
     notice.append("Also note that reading the parameter file is set to false.\n");
     QMessageBox::information(this, "NOTICE", notice);

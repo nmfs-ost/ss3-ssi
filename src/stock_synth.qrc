@@ -98,6 +98,8 @@
         <file>icons/flat_pause_button.png</file>
         <file>icons/flat_stop_button.png</file>
         <file>icons/SSI_icon.ico</file>
-        <file>icons/ss3_icon.png</file>
+        <file>icons/ss3_rough_logo.ico</file>
+        <file>icons/SSI_icon.png</file>
+        <file>icons/ss3_rough_logo.png</file>
     </qresource>
 </RCC>

@@ -1582,8 +1582,8 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_log_catch_std_dev(temp_float);
         }
         if (f_file->getOkay() && !f_file->getStop()) {
-        temp_int = f_file->getIntValue(QString("Do West Coast rebuilder"), 0, 1, 0);
-        fcast->set_do_rebuilder(temp_int == 1? true: false);
+        temp_int = f_file->getIntValue(QString("Do West Coast rebuilder"), 0, 2, 0);
+        fcast->set_do_rebuilder(temp_int);
         token = f_file->get_next_value(QString("rebuilder: first year"));
         temp_int = token.toInt();
         if (temp_int == -1)

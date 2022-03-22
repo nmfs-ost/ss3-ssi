@@ -1344,7 +1344,7 @@ void fleet_widget::showSelexSizeCurve(bool flag)
         ui->pushButton_selex_size_curve->setText("Show Curve");
     }
     selexSizeEqDialog->setVisible(flag);
-    selexSizeEqDialog->restoreAll();
+//    selexSizeEqDialog->restoreAll();
 }
 
 void fleet_widget::showSelexSizeInfo() {

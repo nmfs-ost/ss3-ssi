@@ -108,8 +108,8 @@ public slots:
     int get_caps_alloc_st_year () {return i_caps_st_year;}
     void set_log_catch_std_dev (double sd) {f_log_ctch_stdv = (float)sd;}
     float get_log_catch_std_dev () {return f_log_ctch_stdv;}
-    void set_do_rebuilder (bool flag) {b_rebuilder = flag;}
-    bool get_do_rebuilder () {return b_rebuilder;}
+    void set_do_rebuilder (int option) {i_rebuilder = option;}
+    int get_do_rebuilder () {return i_rebuilder;}
     void set_rebuilder_first_year (int yr) {i_rebuilder_st_yr = yr;}
     int get_rebuilder_first_year () {return i_rebuilder_st_yr;}
     void set_rebuilder_curr_year (int yr) {i_rebuilder_cur_yr = yr;}
@@ -245,7 +245,7 @@ public slots:
     // stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)
     float f_log_ctch_stdv;
     // Do West Coast gfish rebuilder output (0/1)
-    bool  b_rebuilder;
+    int   i_rebuilder;
     // Rebuilder:  first year catch could have been set to zero (Ydecl)(-1 to set to 1999)
     int   i_rebuilder_st_yr;
     // Rebuilder:  year for current age structure (Yinit) (-1 to set to endyear+1)

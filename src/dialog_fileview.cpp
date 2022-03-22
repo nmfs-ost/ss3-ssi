@@ -127,6 +127,12 @@ void Dialog_fileView::setFixedPitch(bool fixed)
     setFontSize(vfont.pointSize());
 }
 
+void Dialog_fileView::hideFont()
+{
+    ui->spinBox_fontsize->hide();
+    ui->label_fontsize->hide();
+}
+
 void Dialog_fileView::setTitle(QString title)
 {
     if (title.isEmpty()) {

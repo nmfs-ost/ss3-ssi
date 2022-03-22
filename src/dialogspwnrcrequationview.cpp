@@ -383,8 +383,7 @@ void DialogSpwnRcrEquationView::updateBevertonHoltStandard()
 //    double SSB_virgin_adj = 1.0;
     int yMax;
     double SSB_curr_adj, Recruits;
- //   double logRecr_virgin_adj = val1;// ui->doubleSpinBox_1_value->value();
-    double steep = parameterView->getInput(1);//val2;
+    double steep = parameterView->getInput(1);
 
     double Recr_virgin_adj = parameterView->getInput(0);//exp(logRecr_virgin_adj);
 
@@ -568,6 +567,47 @@ void DialogSpwnRcrEquationView::updateBevertonHoltBzeroFlat()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
+}
+
+void DialogSpwnRcrEquationView::bevertonHoltSigmoidal ()
+{
+    setLabel(QString("Option x: Beverton-Holt Sigmoidal"));
+
+    chartview->setVisible(false);
+
+    numParams = 3;
+    parameterView->setNumParamsShown(numParams);
+    parameterView->setName(0, "SR_LN(R0)");
+    parameterView->setType(0, "Exp");
+    parameterView->setName(1, "SR_SL_steep");
+    parameterView->setType(1, "Value");
+    parameterView->setName(2, "SR_SL_gamma");
+    parameterView->setType(2, "Value");
+
+    updateBevertonHoltSigmoidal();
+    chartview->setVisible(true);
+}
+void DialogSpwnRcrEquationView::updateBevertonHoltSigmoidal ()
+{
+    //    double SSB_virgin_adj = 1.0;
+        int yMax;
+        double SSB_curr_adj, Recruits;
+        double Recr_virgin_adj = parameterView->getInput(0);
+        double steep = parameterView->getInput(1);
+        double gamma = parameterView->getInput(2);
+
+        valSeries->clear();
+
+        // SSB_virgin_adj = 1.0
+        for (int i = 0; i < xValList.count(); i++)
+        {
+            SSB_curr_adj = pow(xValList.at(i), gamma);
+            Recruits = (4.0 * Recr_virgin_adj * steep * SSB_curr_adj) /
+                    ((1.0-steep) + SSB_curr_adj * (5.0*steep - 1.0));
+            valSeries->append(SSB_curr_adj, Recruits);
+        }
+        yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
+        axisY->setRange(0, yMax);
 }
 
 
@@ -847,6 +887,30 @@ void DialogSpwnRcrEquationView::updateRickerReParm()
     }
     yMax = static_cast<int>((maxYvalue(valSeries->points()) + 100) / 100) * 100;
     axisY->setRange(0, yMax);
+}
+
+// Is this Ricker reparam?
+void DialogSpwnRcrEquationView::sailaLorda ()
+{
+    setLabel(QString("Option x: Saila-Lorda"));
+
+    chartview->setVisible(false);
+
+    numParams = 3;
+    parameterView->setNumParamsShown(numParams);
+    parameterView->setName(0, "SR_LN(R0)");
+    parameterView->setType(0, "Exp");
+    parameterView->setName(1, "SR_SL_steep");
+    parameterView->setType(1, "Value");
+    parameterView->setName(2, "SR_SL_gamma");
+    parameterView->setType(2, "Value");
+
+    updateSailaLorda();
+    chartview->setVisible(true);
+}
+void DialogSpwnRcrEquationView::updateSailaLorda ()
+{
+
 }
 
 

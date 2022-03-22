@@ -54,6 +54,7 @@ public:
     QString getMessage ();
     void setMessage (const QString &value);
     void setMessageVisible (bool flag);
+    void setParameterButtonVisible (bool flag);
 
 public slots:
     virtual void setXvalsConst(const QList<double> &vals);
@@ -69,6 +70,8 @@ public slots:
 
     void setParameterHeader(int pnum, QString hdr);
     void setParametersVisible (bool vis = false);
+    void showParameterView() {setParametersVisible(true);}
+    void hideParameterView() {setParametersVisible(false);}
 
     void setupLimits();
     void setLimits(double xval1, double xval2);

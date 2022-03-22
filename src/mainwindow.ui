@@ -14,8 +14,8 @@
    <string>Stock Synthesis</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="stock_synth.qrc">
-    <normaloff>:/i/icons/SSI_icon.ico</normaloff>:/i/icons/SSI_icon.ico</iconset>
+   <iconset>
+    <normaloff>icons/ss3_rough_logo.ico</normaloff>icons/ss3_rough_logo.ico</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -453,7 +453,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="stock_synth.qrc">
+          <iconset>
            <normaloff>:/icons/ss3_icon.png</normaloff>:/icons/ss3_icon.png</iconset>
          </property>
          <property name="iconSize">

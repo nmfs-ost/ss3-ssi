@@ -246,6 +246,8 @@ void DialogSelexEquationView::setup() {
         numParams = parameters->rowCount();
         disconnectAll();
 
+        setParameterButtonVisible(numParams);
+
         switch (equationNum)
         {
         case 0:  // case 0: size and age selectivity - constant
@@ -550,17 +552,17 @@ void DialogSelexEquationView::constant (double val) {
     setLabel(msg);
 
     showBins(true);
-//    chartview->setVisible(false);
 
     if (equationNum == 11) {
         constantRange();
     }
     else  {
         numParams = 0;
-        parameterView->setNumParamsShown(numParams);
+        setParametersVisible(numParams);
+//        parameterView->setNumParamsShown(numParams);
+        setParameterButtonVisible(numParams);
         updateConstant(val);
     }
-//    chartview->setVisible(true);
 }
 
 // Size selectivity 0, age selectivity 10 - 0 parameters
@@ -2760,8 +2762,8 @@ void DialogSelexEquationView::cubicSpline(float scale) {
     int intScale = static_cast<int>(scale + .5);
     int numParams = intScale + 3 + (numNodes * 2);
     QString typestr (selex->getType() == Age? "Age": "Length");
-    int setup = 0;
-    double value = 0;
+//    int setup = 0;
+//    double value = 0;
     parameterView->setNumParamsShown(numParams);
     setParameterHeaders(intScale);
 

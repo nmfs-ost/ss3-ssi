@@ -57,7 +57,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_specification">
       <attribute name="title">
@@ -1740,41 +1740,12 @@ e.g. 0, -1, -2, ...</string>
                 <string>US West Coast Rebuilder</string>
                </property>
                <property name="checkable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="checked">
                 <bool>false</bool>
                </property>
                <layout class="QGridLayout" name="gridLayout_3">
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_rebuilder_ydecl">
-                  <property name="text">
-                   <string>First year catch should be set to zero (Year Declared)
-(-1 to set to 1999)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_rebuilder_yinit">
-                  <property name="text">
-                   <string>Year for current age structure (Year Initial)
-(-1 to set to end year +1)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="3">
-                 <spacer name="horizontalSpacer_10">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item row="1" column="2">
                  <widget class="QSpinBox" name="spinBox_rebuilder_ydecl">
                   <property name="minimumSize">
@@ -1800,6 +1771,14 @@ e.g. 0, -1, -2, ...</string>
                   </property>
                  </widget>
                 </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QLabel" name="label_rebuilder_yinit">
+                  <property name="text">
+                   <string>Year for current age structure (Year Initial)
+(-1 to set to end year +1)</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="3" column="2">
                  <widget class="QSpinBox" name="spinBox_rebuilder_yinit">
                   <property name="minimumSize">
@@ -1822,8 +1801,44 @@ e.g. 0, -1, -2, ...</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="3">
-                 <spacer name="horizontalSpacer_8">
+                <item row="1" column="0" colspan="2">
+                 <widget class="QLabel" name="label_rebuilder_ydecl">
+                  <property name="text">
+                   <string>First year catch should be set to zero (Year Declared)
+(-1 to set to 1999)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QPushButton" name="pushButton_rebuilder_file">
+                  <property name="text">
+                   <string>View rebuild.dat</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QSpinBox" name="spinBox_rebuilder_option">
+                  <property name="maximum">
+                   <number>2</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="2">
+                 <widget class="QLabel" name="label_rebuilder_option">
+                  <property name="text">
+                   <string>Rebuilder output option for rebuild.dat</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLabel" name="label_6">
+                  <property name="text">
+                   <string> 0=none; 1=standard; 2=expanded</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="3">
+                 <spacer name="horizontalSpacer_10">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -1835,33 +1850,18 @@ e.g. 0, -1, -2, ...</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="1" column="1">
-                 <widget class="QLabel" name="label_rebuilder_yeardecl">
-                  <property name="text">
-                   <string>TextLabel</string>
+                <item row="4" column="3">
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="label_rebuilder_fromfile">
-                  <property name="text">
-                   <string>From File</string>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
                   </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QLabel" name="label_rebuilder_yearinit">
-                  <property name="text">
-                   <string>TextLabel</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>Year Used</string>
-                  </property>
-                 </widget>
+                 </spacer>
                 </item>
                </layout>
               </widget>
