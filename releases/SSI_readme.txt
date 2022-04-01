@@ -15,12 +15,12 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.30.20.01
-    2022-03-22
+    3.30.19.04
+    2022-03-31
 Bug Fixes
 1. Removed parameter view for equations with no parameters.
 Minor Improvements
-1. Added options to West Coast Rebuilder (0-2) to comply with 3.30.20.
+1. Added options to view West Coast Rebuilder file (rebuild.dat).
 2. Removed some code that was not used.
 ============================================================================
     3.30.19.03

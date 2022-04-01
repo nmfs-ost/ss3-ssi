@@ -155,9 +155,10 @@ void forecast_widget::disconnectAll(ss_forecast *fcast)
 
     disconnect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
     disconnect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
-    disconnect (ui->spinBox_rebuilder_option, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder(int)));
-    disconnect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), this, SLOT(set_rebuilder_first_year(int)));
-    disconnect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), this, SLOT(set_rebuilder_curr_year(int)));
+    disconnect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), this, SLOT(change_rebuilder(bool)));
+//    connect (ui->spinBox_rebuilder_option, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder(int)));
+    disconnect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder_first_yr(int)));
+    disconnect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder_curr_yr(int)));
     disconnect (ui->pushButton_rebuilder_file, SIGNAL(clicked()), this, SLOT(view_rebuilder_file()));
 
     disconnect (ui->comboBox_fleet_relF, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fleet_relF(int)));
@@ -217,10 +218,11 @@ void forecast_widget::connectAll(ss_forecast *fcast)
     connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
 
     connect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
-    connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), SLOT(set_log_catch_std_dev()));
-    connect (ui->spinBox_rebuilder_option, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder(int)));
-    connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_first_year(int)));
-    connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), SLOT(set_rebuilder_curr_year(int)));
+    connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
+    connect (ui->groupBox_rebuilder, SIGNAL(toggled(bool)), this, SLOT(change_rebuilder(bool)));
+//    connect (ui->spinBox_rebuilder_option, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder(int)));
+    connect (ui->spinBox_rebuilder_ydecl, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder_first_yr(int)));
+    connect (ui->spinBox_rebuilder_yinit, SIGNAL(valueChanged(int)), this, SLOT(change_rebuilder_curr_yr(int)));
     connect (ui->pushButton_rebuilder_file, SIGNAL(clicked()), this, SLOT(view_rebuilder_file()));
 
     connect (ui->comboBox_fleet_relF, SIGNAL(currentIndexChanged(int)), SLOT(change_fleet_relF(int)));
@@ -242,8 +244,6 @@ void forecast_widget::connectAll(ss_forecast *fcast)
 
 void forecast_widget::set_model(ss_model *m_data)
 {
-    ss_forecast *fcast = model_data->forecast;
-    disconnectAll(fcast);
 //    ss_model *old_model = model_data;
     model_data = m_data;
 //    delete old_model;
@@ -322,8 +322,8 @@ void forecast_widget::refresh()
     ui->spinBox_first_caps_yr->setValue(fcast->get_caps_alloc_st_year());
     ui->lineEdit_log_sd->setText(QString::number(fcast->get_log_catch_std_dev()));
     set_rebuilder(fcast->get_do_rebuilder());
-    ui->spinBox_rebuilder_ydecl->setValue(fcast->get_rebuilder_first_year());
-    ui->spinBox_rebuilder_yinit->setValue(fcast->get_rebuilder_curr_year());
+    set_rebuilder_first_year(fcast->get_rebuilder_first_year());
+    set_rebuilder_curr_year(fcast->get_rebuilder_curr_year());
 
     ui->label_input_seas_relf->setVisible(false);
     set_combo_box_fleet_relF(fcast->get_fleet_rel_f());//(ui->comboBox_relF, );
@@ -1147,16 +1147,17 @@ void forecast_widget::set_fcast_recr_end(int yr)
 void forecast_widget::set_rebuilder(int option)
 {
     bool enable = option != 0;
-    ui->spinBox_rebuilder_option->setValue(option);
-    ui->spinBox_rebuilder_yinit->setEnabled(enable);
-    ui->spinBox_rebuilder_ydecl->setEnabled(enable);
-    ui->pushButton_rebuilder_file->setEnabled(enable);
+    ui->groupBox_rebuilder->setChecked(enable);
+//    ui->spinBox_rebuilder_option->setValue(option);
+//    ui->spinBox_rebuilder_yinit->setEnabled(enable);
+//    ui->spinBox_rebuilder_ydecl->setEnabled(enable);
+//    ui->pushButton_rebuilder_file->setEnabled(enable);
 }
 
-void forecast_widget::change_rebuilder(int option)
+void forecast_widget::change_rebuilder(bool option)
 {
-    model_data->forecast->set_do_rebuilder(option);
-    set_rebuilder(option);
+    int opt = option? 1: 0;
+    model_data->forecast->set_do_rebuilder(opt);
 }
 
 void forecast_widget::set_rebuilder_first_year(int yr)
@@ -1169,17 +1170,13 @@ void forecast_widget::set_rebuilder_first_year(int yr)
     else if (yr < model_data->get_start_year())
     {
         year = model_data->get_start_year();
-//        yr = year;
-//        model_data->forecast->set_rebuilder_first_year(year);
     }
     else if (yr > model_data->get_end_year())
     {
         year = model_data->get_end_year();
-//        yr = year;
-//        model_data->forecast->set_rebuilder_first_year(year);
     }
     ui->spinBox_rebuilder_ydecl->setValue(year);
-//    ui->label_rebuilder_yeardecl->setText(QString::number(yr));
+    ui->label_rebuild_ydecl->setText(QString::number(yr));
 }
 
 void forecast_widget::change_rebuilder_first_yr(int yr)
@@ -1193,7 +1190,7 @@ void forecast_widget::change_rebuilder_first_yr(int yr)
         yr = model_data->get_end_year();
     }
     model_data->forecast->set_rebuilder_first_year(yr);
-//    ui->label_rebuilder_yeardecl->setText(QString::number(yr));
+    ui->label_rebuild_ydecl->setText(QString::number(yr));
 }
 
 void forecast_widget::set_rebuilder_curr_year(int yr)
@@ -1216,7 +1213,7 @@ void forecast_widget::set_rebuilder_curr_year(int yr)
 //        model_data->forecast->set_rebuilder_curr_year(year);
     }
     ui->spinBox_rebuilder_yinit->setValue(year);
-//    ui->label_rebuilder_yearinit->setText(QString::number(yr));
+    ui->label_rebuild_yinit->setText(QString::number(yr));
 }
 
 void forecast_widget::change_rebuilder_curr_yr(int yr)
@@ -1230,7 +1227,7 @@ void forecast_widget::change_rebuilder_curr_yr(int yr)
         yr = model_data->get_end_year() + 1;
     }
     model_data->forecast->set_rebuilder_curr_year(yr);
-//    ui->label_rebuilder_yearinit->setText(QString::number(yr));
+    ui->label_rebuild_yinit->setText(QString::number(yr));
 }
 
 void forecast_widget::view_rebuilder_file()

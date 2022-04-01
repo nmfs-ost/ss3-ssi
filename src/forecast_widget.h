@@ -96,7 +96,7 @@ public slots:
     void set_allocation_group_fract();
     void alloc_group_fract_changed ();
     void set_rebuilder (int option);
-    void change_rebuilder (int option);
+    void change_rebuilder (bool option);
     void set_rebuilder_first_year(int yr);
     void change_rebuilder_first_yr(int yr);
     void set_rebuilder_curr_year(int yr);

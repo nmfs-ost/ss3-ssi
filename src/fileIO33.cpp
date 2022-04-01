@@ -1586,13 +1586,9 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_do_rebuilder(temp_int);
         token = f_file->get_next_value(QString("rebuilder: first year"));
         temp_int = token.toInt();
-        if (temp_int == -1)
-            temp_int = data->get_start_year();
         fcast->set_rebuilder_first_year(temp_int);
         token = f_file->get_next_value(QString("rebuilder: curr year"));
         temp_int = token.toInt();
-        if (temp_int == -1)
-            temp_int = data->get_end_year() + 1;
         fcast->set_rebuilder_curr_year(temp_int);
         }
         if (f_file->getOkay() && !f_file->getStop()) {

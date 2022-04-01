@@ -63,7 +63,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>8</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -90,50 +90,6 @@
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <layout class="QGridLayout" name="gridLayout_growth">
-             <item row="8" column="1" colspan="5">
-              <widget class="QComboBox" name="comboBox_growth_model">
-               <item>
-                <property name="text">
-                 <string>1: von Bertalanffy (2 parameters)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2: Schnute's general growth curve (3 parameters)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>3: von Bert with age-specific K devs for age range</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>4: age specific K.</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>5: age specific K.</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>6: not implemented</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>7: not implemented</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>8: growth cessation (2 parameters)</string>
-                </property>
-               </item>
-              </widget>
-             </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_growth_num_submorphs">
                <property name="text">
@@ -826,6 +782,50 @@
                <property name="text">
                 <string>1, 3, or 5 are allowed</string>
                </property>
+              </widget>
+             </item>
+             <item row="8" column="1" colspan="6">
+              <widget class="QComboBox" name="comboBox_growth_model">
+               <item>
+                <property name="text">
+                 <string>1: von Bertalanffy (2 parameters)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2: Schnute's (Richard's) growth curve (3 parameters)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3: von Bert with age-specific K devs for age range</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4: age specific K.</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5: age specific K.</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>6: not implemented</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>7: not implemented</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>8: growth cessation (2 parameters)</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>
