@@ -233,6 +233,10 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
     connect (ui->comboBox_mort_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMortOption(int)));
     connect (ui->spinBox_mort_num_breakpoints, SIGNAL(valueChanged(int)), SLOT(changeMortNumBkpts(int)));
+    connect (ui->spinBox_mort_lorenz_int, SIGNAL(valueChanged(int)), SLOT(changeLorenzRef(int)));
+    connect (ui->spinBox_mort_maunderOption, SIGNAL(valueChanged(int)), SLOT(changeMaunderOpt(int)));
+    connect (ui->spinBox_mort_lorenzenMaxAge, SIGNAL(valueChanged(int)), SLOT(changeLorenzMinAge(int)));
+    connect (ui->spinBox_mort_lorenzenMaxAge, SIGNAL(valueChanged(int)), SLOT(changeLorenzMaxAge(int)));
 
     connect (ui->lineEdit_fishingMort_bpark, SIGNAL(editingFinished()), SLOT(changeFMortBpark()));
     connect (ui->spinBox_fishingMort_bpark_year, SIGNAL(valueChanged(int)), SLOT(changeFMortBparkYr(int)));
@@ -685,11 +689,19 @@ void population_widget::setInitialMort(tablemodel *fmort)
 
 void population_widget::setMortOption(int opt)
 {
-    int numgen = (model_data->get_num_genders() > 1)? 2: 1;
     ui->comboBox_mort_option->setCurrentIndex(opt);
+    setMortOption();
+}
+
+void population_widget::setMortOption()
+{
+    int numgen = model_data->get_num_genders() > 1? 2: 1;
+    int opt = ui->comboBox_mort_option->currentIndex();
     ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);
     ui->label_mort_age_specific->setVisible(false);
+    ui->widget_mort_maunder->setVisible(false);
+    ui->widget_mort_lorenzenRange->setVisible(false);
     mortAgesView->setVisible(false);
     mortFemParamsView->setVisible(true);
     switch (opt)
@@ -705,7 +717,7 @@ void population_widget::setMortOption(int opt)
         break;
     case 2: // lorenzen
         ui->widget_mort_lorenz->setVisible(true);
-        ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
+        ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRefMin());
         mortFemParamsView->setHeight(1);
         mortMaleParamsView->setHeight(numgen - 1);
         break;
@@ -717,16 +729,25 @@ void population_widget::setMortOption(int opt)
         mortFemParamsView->setVisible(false);
         ui->label_mort_m_params->setVisible(false);
         mortMaleParamsView->setVisible(false);
-
+        break;
+    case 5: // Maunder M
+        ui->widget_mort_maunder->setVisible(true);
+        setMaunderOption (pop->Grow()->getNaturalMortLorenzenRefMin());
+        break;
+    case 6: // lorenzen range
+        ui->widget_mort_lorenzenRange->setVisible(true);
+        ui->spinBox_mort_lorenzenMinAge->setValue(pop->Grow()->getNaturalMortLorenzenRefMin());
+        ui->spinBox_mort_lorenzenMaxAge->setValue(pop->Grow()->getNaturalMortLorenzenRefMax());
         break;
     }
 }
 
 void population_widget::changeMortOption(int opt)
 {
-    int numgen = model_data->get_num_genders() > 1? 2: 1;
     pop->Grow()->setNatural_mortality_type(opt);
-    ui->widget_mort_breakpoints->setVisible(false);
+    setMortOption();
+}
+/*    ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);
     ui->label_mort_age_specific->setVisible(false);
     mortAgesView->setVisible(false);
@@ -744,7 +765,7 @@ void population_widget::changeMortOption(int opt)
         break;
     case 2:
         ui->widget_mort_lorenz->setVisible(true);
-        ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRef());
+        ui->spinBox_mort_lorenz_int->setValue(pop->Grow()->getNaturalMortLorenzenRefMin());
         mortFemParamsView->setHeight(numgen);
         break;
     case 3:
@@ -756,6 +777,11 @@ void population_widget::changeMortOption(int opt)
         break;
     }
 
+}*/
+
+void population_widget::setMaunderOption(int opt)
+{
+    ui->spinBox_mort_maunderOption->setValue(opt);
 }
 
 void population_widget::changeMortNumBkpts(int num)
@@ -767,9 +793,29 @@ void population_widget::changeMortNumBkpts(int num)
     mortFemParamsView->resizeColumnsToContents();
 }
 
+void population_widget::changeLorenzRef (int num)
+{
+    pop->Grow()->setNaturalMortLorenzenRef(num);
+}
+
+void population_widget::changeMaunderOpt (int num)
+{
+    pop->Grow()->setNatMortMaunderOption(num);
+}
+
+void population_widget::changeLorenzMinAge (int num)
+{
+    pop->Grow()->setNaturnalMortLorenzenRefMin(num);
+}
+
+void population_widget::changeLorenzMaxAge (int num)
+{
+    pop->Grow()->setNaturnalMortLorenzenRefMax(num);
+}
+
 void population_widget::changeNumGrowthPat(int num)
 {
-    bool vis = (bool)num;
+    bool vis = num > 0;
     pop->Grow()->setNum_patterns(num);
     ui->spinBox_growth_pattern->setMaximum(num);
     ui->label_growth_num_submorphs->setVisible(vis);

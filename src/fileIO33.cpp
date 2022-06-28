@@ -2017,6 +2017,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     int i = 0, temp_int = 0, index = 0, num = 0, num_vals = 0;
     float temp_float = 0;
     QString temp_string;
+    QString msg;
     QStringList datalist;
     population * pop = data->pPopulation;
     int flt = 0;
@@ -2225,7 +2226,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             break;
         case 2:
             temp_int = c_file->get_next_value(QString("Lorenz ref age")).toInt(); // ref age for Lorenzen
-            pop->Grow()->setNaturnalMortLorenzenRef(temp_int);
+            pop->Grow()->setNaturnalMortLorenzenRefMin(temp_int);
             num_vals = 1; // read 1 param for each gender for each GP
             break;
         case 3:
@@ -2270,13 +2271,22 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             num_vals = 0; // read no additional parameters
             break;
         case 5:
-            QString msg("5 is experimental only");
+            msg = QString("5 is experimental only");
             QMessageBox::information(nullptr, QString("Natural mortality option"), msg);
-            temp_int = c_file->get_next_value(QString("Lorenz ref age")).toInt(); // ref age for Lorenzen
-            pop->Grow()->setNaturnalMortLorenzenRef(temp_int);
+            temp_int = c_file->get_next_value(QString("Maunder natM option")).toInt(); // ref age for Lorenzen
+            pop->Grow()->setNaturnalMortLorenzenRefMin(temp_int);
+            if (temp_int == 3)
+                num_vals = 6;
+            else
+                num_vals = 4;
+            break;
+        case 6:
+            temp_int = c_file->get_next_value(QString("Lorenz ref min age")).toInt(); // ref min age for Lorenzen
+            pop->Grow()->setNaturnalMortLorenzenRefMin(temp_int);
+            temp_int = c_file->get_next_value(QString("Lorenz ref max age")).toInt(); // ref max age for Lorenzen
+            pop->Grow()->setNaturnalMortLorenzenRefMax(temp_int);
             num_vals = 1; // read 1 param for each gender for each GP
             break;
-
         }
         for (i = 0; i < pop->Grow()->getNum_patterns(); i++)
         {
@@ -3876,7 +3886,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
             chars += c_file->write_vector(str_list, 2, QString("age(real) at M breakpoints"));
             break;
         case 2:
-            num = pop->Grow()->getNaturalMortLorenzenRef();
+            num = pop->Grow()->getNaturalMortLorenzenRefMin();
             line = QString("%1 #_Lorenzen ref age ").arg(num);
             chars += c_file->writeline(line);
             num_vals = 1;
@@ -3900,6 +3910,24 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                     chars += c_file->write_vector(str_list, 2, QString("_Male_M_GP%1").arg(QString::number(i+1)));
                 }
             num_vals = 0;
+            break;
+        case 5:
+            num = pop->Grow()->getNaturalMortLorenzenRefMin();
+            line = QString("%1 #_Maunder NatMort option ").arg(num);
+            chars += c_file->writeline(line);
+            if (num == 3)
+                num_vals = 6;
+            else
+                num_vals = 4;
+            break;
+        case 6:
+            num = pop->Grow()->getNaturalMortLorenzenRefMin();
+            line = QString("%1 #_Lorenzen ref age min").arg(num);
+            chars += c_file->writeline(line);
+            num = pop->Grow()->getNaturalMortLorenzenRefMax();
+            line = QString("%1 #_Lorenzen ref age max").arg(num);
+            chars += c_file->writeline(line);
+            num_vals = 1;
             break;
         }
         chars += c_file->writeline(QString("#"));

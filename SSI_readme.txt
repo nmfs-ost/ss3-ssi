@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.04
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.05
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,12 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.19.05
+    2022-06-28
+Minor Improvements
+1. Added options 5 (Maunder) and 6 (Lorenzen range) to Natural Mortality.
+2. Made sure all options had default assignments.
 ============================================================================
     3.30.19.04
     2022-03-31

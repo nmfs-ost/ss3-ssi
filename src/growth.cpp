@@ -25,7 +25,8 @@ ss_growth::ss_growth(QObject *parent)
     natMortAges = new tablemodel(parent);
     natMortAges->setRowCount(0);
     natMortAges->setColumnCount(1);
-    natMort_lorenzen_ref_age = 0;
+    natMort_lorenzen_ref_age1 = 0;
+    natMort_lorenzen_ref_age2 = 1;
 
     matAgeValues = new tablemodel(parent);
     matAgeValues->setRowCount(1);
@@ -417,23 +418,24 @@ void ss_growth::setNatural_mortality_type(int value)
         }
         break;
     case 1:
-        for (int i = 0; i < num_patterns; i++) {
-            getPattern(i)->getFemNatMParams()->setRowCount(natMortNumBreakPoints);
-            getPattern(i)->getMaleNatMParams()->setRowCount(natMortNumBreakPoints);
-        }
-        natMortBreakPoints->setColumnCount(natMortNumBreakPoints);
+        setNatMortNumBreakPts(1);
         break;
     case 2:
-        for (int i = 0; i < num_patterns; i++) {
-            getPattern(i)->getFemNatMParams()->setRowCount(1);
-            getPattern(i)->getMaleNatMParams()->setRowCount(1);
-        }
+        setNaturalMortLorenzenRef(4);
         break;
     case 3:
     case 4:
         for (int i = 0; i < num_patterns; i++) {
+            getPattern(i)->getNatMAges()->setRowCount(1);
             getPattern(i)->getNatMAges()->setColumnCount(num_ages+1);
         }
+        break;
+    case 5:
+        setNatMortMaunderOption(1);
+        break;
+    case 6:
+        setNaturnalMortLorenzenRefMin(0);
+        setNaturnalMortLorenzenRefMax(10);
         break;
     }
 }
@@ -487,6 +489,38 @@ void ss_growth::setNatMortAges(QStringList data)
     setNatMortAgesHeader(data.count());
     for (int i = 0; i < data.count(); i++)
         natMortAges->setRowData(i, data.at(i));
+}
+
+void ss_growth::setNaturnalMortLorenzenRefMin(int value)
+{
+    natMort_lorenzen_ref_age1 = value;
+    QStringList datalist;
+    int numparams = 1;
+    datalist << "0.0" << "0.0" << "0.0" << "0.0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0" << "0";
+    if (getNatural_mortality_type() == 5)
+    {
+        if (value == 3)
+        {
+            numparams = 6;
+        }
+        else
+        {
+            numparams = 4;
+        }
+    }
+
+    for (int i = 0; i < num_patterns; i++)
+    {
+        getPattern(i)->getFemNatMParams()->setRowCount(numparams);
+        getPattern(i)->getMaleNatMParams()->setRowCount(numparams);
+        for (int j = 0; j < numparams; j++)
+        {
+            getPattern(i)->getFemNatMParams()->setRowData(j, datalist);
+            getPattern(i)->getFemNatMParams()->setRowHeader(j, QString("natM_p_%1_Fem_GP_%2").arg(j+1).arg(i+1));
+            getPattern(i)->getMaleNatMParams()->setRowData(j, datalist);
+            getPattern(i)->getMaleNatMParams()->setRowHeader(j, QString("natM_p_%1_Mal_GP_%2").arg(j+1).arg(i+1));
+        }
+    }
 }
 
 void ss_growth::setNumGenders(int num)

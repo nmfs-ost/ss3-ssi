@@ -13,10 +13,10 @@
 #define app_version_major  3
 #define app_version_minor  30
 #define app_version_sub    19
-#define app_version_bugfix 4
+#define app_version_bugfix 5
 #define app_release_level  " "  // a - alpha, b - beta, blank - release candidate
 #define app_version_apply ("3.30.19")
-#define app_build_date    ("2022-03-22")
+#define app_build_date    ("2022-06-28")
 #define app_copyright_org ("NOAA")
 
 #define app_manual        ("SS330_User_Manual.pdf")

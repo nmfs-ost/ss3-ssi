@@ -55,8 +55,14 @@ public slots:
     void setFraction_female(float value);
     int getNatural_mortality_type() const;
     void setNatural_mortality_type(int value);
-    int getNaturalMortLorenzenRef() const {return natMort_lorenzen_ref_age;}
-    void setNaturnalMortLorenzenRef(int value) {natMort_lorenzen_ref_age = value;}
+    int getNaturalMortLorenzenRefMin() const {return natMort_lorenzen_ref_age1;}
+    void setNaturnalMortLorenzenRefMin(int value);
+    int getNaturalMortLorenzenRefMax() const {return natMort_lorenzen_ref_age2;}
+    void setNaturnalMortLorenzenRefMax(int value) {natMort_lorenzen_ref_age2 = value;}
+    int getNaturalMortLorenzenRef () {return getNaturalMortLorenzenRefMin();}
+    void setNaturalMortLorenzenRef (int ref) {setNaturnalMortLorenzenRefMin(ref);}
+    int getNatMortMaunderOption () {return getNaturalMortLorenzenRefMin();}
+    void setNatMortMaunderOption (int opt) {setNaturnalMortLorenzenRefMin(opt);}
     int getNatMortNumBreakPts () const;
     void setNatMortNumBreakPts (int num);
     tablemodel *getNatMortValues() {return natMortBreakPoints;}
@@ -160,7 +166,8 @@ private:
     float fraction_female;
     int natural_mortality_type;
     int natMortNumBreakPoints;
-    int natMort_lorenzen_ref_age;
+    int natMort_lorenzen_ref_age1;
+    int natMort_lorenzen_ref_age2;
     tablemodel *natMortBreakPoints;
     QStringList natMortHeader;
     tablemodel *natMortAges;

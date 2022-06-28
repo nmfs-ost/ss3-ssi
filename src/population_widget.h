@@ -45,10 +45,16 @@ public slots:
     void setMaturityOpt(int opt);
     int getMaturityOpt();
 
+    void setMortOption ();
+    void setMaunderOption (int opt);
     void setMortOption (int opt);
     void setInitialMort (tablemodel *fmort);
     void changeMortOption (int opt);
     void changeMortNumBkpts (int num);
+    void changeLorenzRef (int num);
+    void changeMaunderOpt (int num);
+    void changeLorenzMinAge (int num);
+    void changeLorenzMaxAge (int num);
     void changeNumGrowthPat(int num);
     void changeNumSubMorph(int num);
     void setGrowthModel(int opt);
