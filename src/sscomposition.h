@@ -190,10 +190,18 @@ public slots:
     float getMinComp() const;
     void setMinComp(float value);
 
+    int getCompErrorType() const;
+    void setCompErrorType(int newCompErrorType);
+
+    int getCompErrorIndex() const;
+    void setCompErrorIndex(int newCompErrorIndex);
+
 private:
     int i_scale;
     int i_units;
     float min_comp;
+    int compErrorType;
+    int compErrorIndex;
 };
 
 #endif // SSCOMPOSITION_H
