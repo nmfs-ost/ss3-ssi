@@ -617,8 +617,8 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
         }
         }
-        if (d_file->getOkay() && !d_file->getStop()) {
         //  SS_Label_Info_2.12 #Read tag release and recapture data
+        if (d_file->getOkay() && !d_file->getStop()) {
         temp_int = d_file->getIntValue(QString("Do tags"), 0, 1, 0);
         data->set_do_tags(temp_int == 1);
         if (data->get_do_tags())

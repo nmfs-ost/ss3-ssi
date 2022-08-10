@@ -221,6 +221,8 @@ void data_widget::connectAll()
     connect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), SLOT(changeGenUnits(int)));
     connect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), SLOT(changeGenScale(int)));
     connect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), SLOT(changeGenMinComp()));
+    connect (ui->spinBox_genCompErrorType, SIGNAL(valueChanged(int)), SLOT(changeGenCompErrorType(int)));
+    connect (ui->spinBox_genCompErrorIndex, SIGNAL(valueChanged(int)), SLOT(changeGenCompErrorIndex(int)));
     connect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), SLOT(changeGenBins(int)));
 
     connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
@@ -334,6 +336,8 @@ void data_widget::disconnectAll()
     disconnect (ui->pushButton_gen_delete, SIGNAL(released()), this, SLOT(deleteGenCompMethod()));
     disconnect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), this, SLOT(changeGenUnits(int)));
     disconnect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), this, SLOT(changeGenScale(int)));
+    disconnect (ui->spinBox_genCompErrorType, SIGNAL(valueChanged(int)), this, SLOT(changeGenCompErrorType(int)));
+    disconnect (ui->spinBox_genCompErrorIndex, SIGNAL(valueChanged(int)), this, SLOT(changeGenCompErrorIndex(int)));
     disconnect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), this, SLOT(changeGenMinComp()));
     disconnect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), this, SLOT(changeGenBins(int)));
 
@@ -1057,6 +1061,18 @@ void data_widget::changeGenScale(int scale)
 
     if (current_gen_comp != nullptr)
         current_gen_comp->setScale(scale);
+}
+
+void data_widget::changeGenCompErrorType(int type)
+{
+    if (current_gen_comp != nullptr)
+        current_gen_comp->setCompErrorType(type);
+}
+
+void data_widget::changeGenCompErrorIndex(int index)
+{
+    if (current_gen_comp != nullptr)
+        current_gen_comp->setCompErrorIndex(index);
 }
 
 void data_widget::changeGenMinComp()

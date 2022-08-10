@@ -7,6 +7,34 @@ See ss_gui_copyright.txt for copyright information.
 
 History:
 ============================================================================
+    3.30.16.7
+    2021-03-18
+1. Added create/view readme.txt file for model info (optional).
+============================================================================
+    3.30.16.6
+    2020-11-27
+1. Restructured reading of tag data.
+2. Added check for ordered x values of spline curves. If not ordered, spline
+   does not build.
+3. Internal change to reading files hopefully works in error conditions.
+============================================================================
+    3.30.16.5
+    2020-11-09
+1. Set F Mort number of tuning iterations from 1 to 15 for method 3 (hybrid).
+2. Corrected reading of do morph composition.
+3. Corrected reading of time-varying deviation parameters.
+============================================================================
+    3.30.16.4
+    2020-10-28
+1. Corrected reading recapture events.
+2. Added line number to file reading error messages.
+3. Changed column headers from "gender" to "sex".
+============================================================================
+    3.30.16.3
+    2020-10-05
+1. Corrected reading tag groups.
+2. Cleaned up some unused files and commented out code.
+============================================================================
     3.30.16.2
     2020-09-10
 1. Corrected age and length bins for selectivity curves.
@@ -395,7 +423,6 @@ History:
      Added number of population size bins,
      Changed output of environment observations to current format, and
      Corrected output of benchmark and forecast years.
-
 ============================================================================
       3.3.5
       2016-11-01
@@ -421,7 +448,6 @@ History:
       2016-07-25
 1. Data displays and is interactive.
 2. Four main data files read/write correctly.
-
 ============================================================================
 
 Neal Schindler

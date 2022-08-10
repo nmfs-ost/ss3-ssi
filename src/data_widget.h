@@ -80,6 +80,8 @@ public slots:
     void changeGenBins(int numBins);
     void changeGenUnits(int units);
     void changeGenScale(int scale);
+    void changeGenCompErrorType(int type);
+    void changeGenCompErrorIndex(int index);
     void changeGenMinComp();
     void showGenObs();
     void setDoMorphs(bool flag);
