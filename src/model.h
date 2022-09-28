@@ -242,6 +242,8 @@ public slots:
 
     void setNumGeneralCompMethods(int num);
     int getNumGeneralCompMethods () {return cListGeneralMethods.count();}
+    void setDMError(int num) {iDMError = num;}
+    int getDMError() {return iDMError;}
     void addGeneralCompMethod (compositionGeneral *method) {cListGeneralMethods.append (method);}
     compositionGeneral *getGeneralCompMethod (int index) {return cListGeneralMethods.at(index);}
     void copyGeneralCompMethod (compositionGeneral *method);
@@ -422,6 +424,7 @@ private:
     bool useLenCompData;
     compositionLength *lengthData;
 
+    int iDMError;
     compositionAge *ageData;
     QList<compositionGeneral *> cListGeneralMethods;
     bool doMorphComp;

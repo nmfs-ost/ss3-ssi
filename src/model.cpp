@@ -231,6 +231,7 @@ void ss_model::reset()
         compositionGeneral *a = cListGeneralMethods.takeFirst();
         delete a;
     }
+    setDMError(0);
 
     setAddVarSetupFromText(QString("0 0 0 0 0 0 0 0 0"));
     setAddVariance(0);

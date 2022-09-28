@@ -50,14 +50,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         numSeas = d_file->getIntValue(QString("seasons per year"), 1, 12, 1);
         }
         if (d_file->getOkay() && !d_file->getStop()) {
-//        token = d_file->get_next_value(QString("seasons per year"));
-//        numSeas = token.toInt();
         data->set_num_seasons(numSeas);
         for (i = 1; i <= numSeas; i++)
         {
-            temp_float = d_file->getFloatValue(QString("months per season"), 1, 12, 12);
-//            token = d_file->get_next_value(QString("months per season"));
-//            temp_float = token.toFloat();
+            temp_float = d_file->getFloatValue(QString("months per season"), .1, 13.9, 12);
             data->set_months_per_season(i, temp_float);
         }
         //  SS_Label_Info_2.1.3 #Set up seasons
@@ -528,6 +524,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.11 #Start generalized size composition section
         if (d_file->getOkay() && !d_file->getStop()) {
         num_vals = d_file->get_next_value().toInt();
+        if (num_vals < 0)
+        {
+            data->setDMError(num_vals);
+            num_vals = d_file->get_next_value().toInt();
+        }
         if (num_vals > 0)
         {
             for (i = 0; i < num_vals; i++)
@@ -555,7 +556,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             // Sizefreq scale
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->getIntValue("Sizefreq scale (1=kg/2=lbs/3=cm/4=inches)", 1, 3, 1);//d_file->get_next_value().toInt();
+                temp_int = d_file->getIntValue("Sizefreq scale (1=kg/2=lbs/3=cm/4=inches)", 1, 4, 1);//d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setScale(temp_int);
             }
             // Sizefreq small constant to add to comps
@@ -571,17 +572,28 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 temp_int = d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setNumberObs(temp_int);
             }
-            // Comp_Error: type
-            for (i = 0; i < num_vals; i++)
+            if (data->getDMError() == -1)
             {
-                temp_int = d_file->getIntValue("Comp_Error: 0=multinomial, 1=dirichlet using Theta*n, 2=dirichlet using beta, 3=MV_Tweedie", 0, 3, 0);
-                data->getGeneralCompMethod(i)->setCompErrorType(temp_int);
+                // Comp_Error: type
+                for (i = 0; i < num_vals; i++)
+                {
+                    temp_int = d_file->getIntValue("Comp_Error: 0=multinomial, 1=dirichlet using Theta*n, 2=dirichlet using beta, 3=MV_Tweedie", 0, 3, 0);
+                    data->getGeneralCompMethod(i)->setCompErrorType(temp_int);
+                }
+                // Comp_Error: index
+                for (i = 0; i < num_vals; i++)
+                {
+                    temp_int = d_file->getIntValue("Comp_Error:  index for dirichlet or MV_Tweedie", 0, 1, 0);
+                    data->getGeneralCompMethod(i)->setCompErrorIndex(temp_int);
+                }
             }
-            // Comp_Error: index
-            for (i = 0; i < num_vals; i++)
+            else
             {
-                temp_int = d_file->getIntValue("Comp_Error:  index for dirichlet or MV_Tweedie", 0, 1, 0);
-                data->getGeneralCompMethod(i)->setCompErrorIndex(temp_int);
+                for (i = 0; i < num_vals; i++)
+                {
+                    data->getGeneralCompMethod(i)->setCompErrorType(0);
+                    data->getGeneralCompMethod(i)->setCompErrorIndex(0);
+                }
             }
             //
             for (i = 0; i < num_vals; i++)
