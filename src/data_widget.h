@@ -88,8 +88,8 @@ public slots:
     void changeDoMorphs(bool flag);
     void changeNumMorphs(int num);
     void changeMorphMincomp ();
-    void setDoTags(bool flag);
-    void changeDoTags(bool flag);
+    void setDoTags(int flag);
+    void changeDoTags(int flag);
     void changeNumTagGrps (int num);
     void changeLambdas();
     void setLambdaMaxPhase(int value);

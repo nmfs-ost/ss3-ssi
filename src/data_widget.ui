@@ -66,7 +66,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab_dimensions">
       <attribute name="title">
@@ -1072,8 +1072,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>947</width>
-                <height>445</height>
+                <width>198</width>
+                <height>158</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1947,63 +1947,86 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_do_tags">
+             <item>
+              <widget class="QLabel" name="label_do_tags">
+               <property name="text">
+                <string>Tags setting (0, 1, or 2 - read additional min recap </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_do_tags">
+               <property name="maximum">
+                <number>2</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
             <widget class="QGroupBox" name="groupBox_tag">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="title">
-              <string>Enable Tag-Recapture Data</string>
+              <string>Tag-Recapture Data</string>
              </property>
              <property name="checkable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <layout class="QGridLayout" name="gridLayout">
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_tag_latency_period">
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_tag_time_vary">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
                 <property name="text">
-                 <string>Mixing latency period</string>
+                 <string>Time variance</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="spinBox_tag_latency"/>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_max_per"/>
               </item>
-              <item row="0" column="3">
-               <spacer name="horizontalSpacer_tag">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>54</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_num_groups"/>
               </item>
-              <item row="4" column="3">
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_time_vary">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <number>2</number>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="3">
                <widget class="QPushButton" name="pushButton_tag_rec_obs">
                 <property name="text">
                  <string>Recapture Data</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="label_tag_max_info">
-                <property name="text">
-                 <string>in which to track recoveries. After that, tags enter accumulator</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_tag_release_data">
-                <property name="text">
-                 <string>Release Data by Tag Group</string>
-                </property>
-               </widget>
+              <item row="6" column="1" colspan="2">
+               <layout class="QHBoxLayout" name="horizontalLayout_tag_reldata"/>
               </item>
               <item row="0" column="2">
                <spacer name="horizontalSpacer_tag_num_groups">
@@ -2018,50 +2041,17 @@
                 </property>
                </spacer>
               </item>
-              <item row="5" column="1" colspan="2">
-               <layout class="QHBoxLayout" name="horizontalLayout_tag_reldata"/>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_tag_num_groups">
+              <item row="3" column="2">
+               <widget class="QLabel" name="label_time_vary_info">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
                 <property name="text">
-                 <string>Number of tag groups</string>
+                 <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_tag_max_periods">
-                <property name="text">
-                 <string>Maximum periods</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="spinBox_tag_max_per"/>
-              </item>
-              <item row="4" column="4">
-               <spacer name="horizontalSpacer_tag_recap">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox_tag_num_groups"/>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_tag_latency_info">
-                <property name="text">
-                 <string>N periods to delay before comparing observed to expected recoveries. (0=release period)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0">
+              <item row="9" column="0">
                <spacer name="verticalSpacer_tag_rec_obs">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -2074,33 +2064,91 @@
                 </property>
                </spacer>
               </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_tag_time_vary">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_tag_release_data">
                 <property name="text">
-                 <string>Time variance</string>
+                 <string>Release Data by Tag Group</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QSpinBox" name="spinBox_tag_time_vary">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="maximum">
-                 <number>2</number>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_tag_latency_period">
+                <property name="text">
+                 <string>Mixing latency period</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="2">
-               <widget class="QLabel" name="label_time_vary_info">
-                <property name="enabled">
-                 <bool>true</bool>
+              <item row="0" column="3">
+               <spacer name="horizontalSpacer_tag">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>54</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="label_tag_max_info">
                 <property name="text">
-                 <string>0 = auto-generate all, 1 = read all from file, 2 = auto-generate if low = -12345</string>
+                 <string>in which to track recoveries. After that, tags enter accumulator</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_tag_max_periods">
+                <property name="text">
+                 <string>Maximum periods</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinBox_tag_latency"/>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_tag_latency_info">
+                <property name="text">
+                 <string>N periods to delay before comparing observed to expected recoveries. (0=release period)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_tag_num_groups">
+                <property name="text">
+                 <string>Number of tag groups</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="4">
+               <spacer name="horizontalSpacer_tag_recap">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="4" column="1">
+               <widget class="QSpinBox" name="spinBox_min_recaps"/>
+              </item>
+              <item row="4" column="2">
+               <widget class="QLabel" name="label_min_recaps_info">
+                <property name="text">
+                 <string>min recaps &gt;= mixperiod for inclusion in logL</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_min_recaps">
+                <property name="text">
+                 <string>Min recaps</string>
                 </property>
                </widget>
               </item>

@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.06
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.20.0
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,10 +15,15 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.30.19.06
-    2022-08-09
-Minor Improvements
-1. Updated read/write for Sizefreq composition to include Comp_Error.
+    3.30.20.00
+    2022-10-04
+Major Improvements
+1. Updated for SS 3.30.20.
+   a. Updated read/write for Sizefreq composition to include Comp_Error.
+   b. Changed do_tags from bool (0,1) to int (0,1,2) and changes to
+      data_widget to accomodate.
+Minor Improvement
+1. Added warning for size freq scale/units mismatch.
 ============================================================================
     3.30.19.05
     2022-06-28

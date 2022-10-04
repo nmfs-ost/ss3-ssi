@@ -148,7 +148,7 @@ void ss_model::clear()
         compositionGeneral *a = cListGeneralMethods.takeFirst();
         delete a;
     }
-    set_do_tags(false);
+    setDoTags(0);
 }
 
 void ss_model::reset()
@@ -237,9 +237,10 @@ void ss_model::reset()
     setAddVariance(0);
     setInputValueVariance(0);
 
-    set_do_tags(false);
-    set_num_tag_groups(0);
+    setDoTags(0);
+    setNumTagGroups(0);
     setTagLoss(0);
+    setMinRecap(0);
     set_num_fleets(1);
 
     setNumLambdaAdjustments(0);
@@ -716,11 +717,16 @@ void ss_model::set_num_genders(int genders)
     forecast->set_num_genders(num);
 }
 
-void ss_model::set_num_tag_groups(int num)
+void ss_model::setNumTagGroups(int num)
 {
     tagData->setNumTagGroups(num);
     if (num == 0)
-        doTags = false;
+        doTags = 0;
+}
+
+void ss_model::setTagLatency(int period)
+{
+    tagData->setLatency(period);
 }
 
 void ss_model::setNumBlockPatterns(int num)
@@ -845,6 +851,19 @@ void ss_model::deleteGeneralCompMethod(int index)
 {
     compositionGeneral *method = cListGeneralMethods.takeAt(index);
     deleteGeneralCompMethod(method);
+}
+
+void ss_model::setDoTags(int flag)
+{
+    doTags = flag;
+    if (flag == 0)
+    {
+        setNumTagGroups(0);
+        setTagLatency(0);
+        setTagMaxPeriods(0);
+        setNumTagRecaps(0);
+        setMinRecap(0);
+    }
 }
 
 void ss_model::setTagLossParameter(longParameter *lp)
