@@ -50,14 +50,10 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         numSeas = d_file->getIntValue(QString("seasons per year"), 1, 12, 1);
         }
         if (d_file->getOkay() && !d_file->getStop()) {
-//        token = d_file->get_next_value(QString("seasons per year"));
-//        numSeas = token.toInt();
         data->set_num_seasons(numSeas);
         for (i = 1; i <= numSeas; i++)
         {
-            temp_float = d_file->getFloatValue(QString("months per season"), 1, 12, 12);
-//            token = d_file->get_next_value(QString("months per season"));
-//            temp_float = token.toFloat();
+            temp_float = d_file->getFloatValue(QString("months per season"), .1, 13.9, 12);
             data->set_months_per_season(i, temp_float);
         }
         //  SS_Label_Info_2.1.3 #Set up seasons
@@ -528,16 +524,26 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         //  SS_Label_Info_2.11 #Start generalized size composition section
         if (d_file->getOkay() && !d_file->getStop()) {
         num_vals = d_file->get_next_value().toInt();
+        if (num_vals < 0)
+        {
+            data->setDMError(-1);
+            num_vals = d_file->get_next_value().toInt();
+        }
+        else
+        {
+            data->setDMError(0);
+        }
         if (num_vals > 0)
         {
             for (i = 0; i < num_vals; i++)
             {
                 compositionGeneral *cps = new compositionGeneral ();
+                cps->setNumber(i+1);
                 data->addGeneralCompMethod(cps);
-                data->getGeneralCompMethod(i)->setNumber(i+1);
             }
             for (int j = 0; j < total_fleets; j++)
                 data->getFleet(j)->setGenModelTotal(num_vals);
+            // Sizefreq N bins
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->get_next_value().toInt();
@@ -545,26 +551,57 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 for (int j = 0; j < total_fleets; j++)
                     data->getFleet(j)->setGenNumBins(i, temp_int);
             }
+            // Sizefreq units (1=biomass, 2=numbers)
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->get_next_value().toInt();
+                temp_int = d_file->getIntValue("Sizefreg units (1=bio/2=num)", 1, 2, 1);
                 data->getGeneralCompMethod(i)->setUnits(temp_int);
             }
+            // Sizefreq scale
             for (i = 0; i < num_vals; i++)
             {
-                temp_int = d_file->get_next_value().toInt();
+                temp_int = d_file->getIntValue("Sizefreq scale (1=kg/2=lbs/3=cm/4=inches)", 1, 4, 1);
                 data->getGeneralCompMethod(i)->setScale(temp_int);
+                if (temp_int > 2 && data->getGeneralCompMethod(i)->getUnits() == 1)
+                    QMessageBox::warning(nullptr, QString("Fatal combination - SizeFreq scale and units "),
+                          QString("Error: cannot accumulate biomass into length-based szfreq scale for method: %1").arg(i));
             }
+            // Sizefreq mincomp
             for (i = 0; i < num_vals; i++)
             {
-                temp_float = d_file->get_next_value().toFloat();
+                temp_float = d_file->getFloatValue("Sizefreq small constant to add to comps", 0.0, .0001, .0000001);
                 data->getGeneralCompMethod(i)->setMinComp(temp_float);
             }
+            // Sizefreq num obs per method
             for (i = 0; i < num_vals; i++)
             {
                 temp_int = d_file->get_next_value().toInt();
                 data->getGeneralCompMethod(i)->setNumberObs(temp_int);
             }
+            if (data->getDMError() == -1)
+            {
+                // SizeFreq Comp_Error: type
+                for (i = 0; i < num_vals; i++)
+                {
+                    temp_int = d_file->getIntValue("Comp_Error: 0=multinomial, 1=dirichlet using Theta*n, 2=dirichlet using beta, 3=MV_Tweedie", 0, 3, 0);
+                    data->getGeneralCompMethod(i)->setCompErrorType(temp_int);
+                }
+                // SizeFreq Comp_Error: index
+                for (i = 0; i < num_vals; i++)
+                {
+                    temp_int = d_file->getIntValue("Comp_Error:  index for dirichlet or MV_Tweedie", 0, 1, 0);
+                    data->getGeneralCompMethod(i)->setCompErrorIndex(temp_int);
+                }
+            }
+            else
+            {
+                for (i = 0; i < num_vals; i++)
+                {
+                    data->getGeneralCompMethod(i)->setCompErrorType(0);
+                    data->getGeneralCompMethod(i)->setCompErrorIndex(0);
+                }
+            }
+            // SizeFreq bins
             for (i = 0; i < num_vals; i++)
             {
                 compositionGeneral *cps = data->getGeneralCompMethod(i);
@@ -598,33 +635,34 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             }
         }
         }
-        if (d_file->getOkay() && !d_file->getStop()) {
+
         //  SS_Label_Info_2.12 #Read tag release and recapture data
-        temp_int = d_file->getIntValue(QString("Do tags"), 0, 1, 0);
-        data->set_do_tags(temp_int == 1);
-        if (data->get_do_tags())
+        if (d_file->getOkay() && !d_file->getStop()) {
+        temp_int = d_file->getIntValue(QString("Do tags"), 0, 2, 0);
+        data->setDoTags(temp_int);
+        if (data->getDoTags())
         {
             temp_int = d_file->get_next_value().toInt();
-            data->set_num_tag_groups(temp_int);
+            data->setNumTagGroups(temp_int);
             temp_int = d_file->get_next_value().toInt();
-            data->set_num_tag_recaps(temp_int);
+            data->setNumTagRecaps(temp_int);
 
             temp_int = d_file->get_next_value().toInt();
-            data->set_tag_latency(temp_int);
+            data->setTagLatency(temp_int);
             temp_int = d_file->get_next_value().toInt();
-            data->set_tag_max_periods(temp_int);
+            data->setTagMaxPeriods(temp_int);
             // release data
-            for (i = 0; i < data->get_num_tag_groups(); i++)
+            for (i = 0; i < data->getNumTagGroups(); i++)
             {
                 str_lst.clear();
                 for (int j = 0; j < 8; j++)
                     str_lst.append(d_file->get_next_value());
-                data->set_tag_observation(i, str_lst);
+                data->setTagObservation(i, str_lst);
             }
             // recapture data
             bool last_tag = false;
-            int tag = 0, tag_num = data->get_num_tag_groups();
-            num_vals = data->get_num_tag_recaps();
+            int tag = 0, tag_num = data->getNumTagGroups();
+            num_vals = data->getNumTagRecaps();
             for (int i = 0; i < num_vals; i++)
             {
                 token = d_file->get_next_value("tag");
@@ -1241,7 +1279,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 temp_str = QString::number(data->getGeneralCompMethod(i)->getUnits());
                 line.append(QString("%1 ").arg(temp_str));
             }
-            line.append("# Sizetfreq units (bio/num) per method");
+            line.append("# Sizetfreq units (1=bio/2=num) per method");
             chars += d_file->writeline (line);
             line.clear();
             for (i = 0; i < num; i++)
@@ -1249,7 +1287,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 temp_str = QString::number(data->getGeneralCompMethod(i)->getScale());
                 line.append(QString("%1 ").arg(temp_str));
             }
-            line.append("# Sizefreq scale (kg/lbs/cm/inches) per method");
+            line.append("# Sizefreq scale (1=kg/2=lbs/3=cm/4=inches) per method");
             chars += d_file->writeline (line);
             line.clear();
             for (i = 0; i < num; i++)
@@ -1273,6 +1311,22 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                 line.append(QString("%1 ").arg(QString::number(temp_int)));
             }
             line.append("# Sizefreq N obs per method");
+            chars += d_file->writeline (line);
+            line.clear();
+            for (i = 0; i < num; i++)
+            {
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getCompErrorType());
+                line.append(QString("%1 ").arg(temp_str));
+            }
+            line.append("# Comp_Error: 0=multinomial; 1=dirichlet using Theta*n; 2=dirichelt using beta; 3=MV_Tweedie");
+            chars += d_file->writeline (line);
+            line.clear();
+            for (i = 0; i < num; i++)
+            {
+                temp_str = QString::number(data->getGeneralCompMethod(i)->getCompErrorIndex());
+                line.append(QString("%1 ").arg(temp_str));
+            }
+            line.append("# Comp_Error: index for dirchelt or MV_Tweedie");
             chars += d_file->writeline (line);
             line = QString("#_Sizefreq bins");
             chars += d_file->writeline (line);
@@ -1307,11 +1361,11 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
         chars += d_file->writeline ("#");
 
         // tag recapture
-        temp_int = data->get_do_tags()? 1: 0;
+        temp_int = data->getDoTags()? 1: 0;
         chars += d_file->write_val(temp_int, 1, QString("do tags (0/1)"));
         if (temp_int == 1)
         {
-            num = data->get_num_tag_groups();
+            num = data->getNumTagGroups();
             chars += d_file->write_val(num, 1, QString("N tag groups"));
             temp_int = 0;
             for (i = 1; i <= total_fleets; i++) // for (i = 0; i < data->num_fleets(); i++)
@@ -1319,9 +1373,9 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
                     temp_int += data->getActiveFleet(i)->getRecapNumEvents();
             }
             chars += d_file->write_val(temp_int, 1, QString("N recap events"));
-            temp_int = data->get_tag_latency();
+            temp_int = data->getTagLatency();
             chars += d_file->write_val(temp_int, 1, QString("mixing latency period: N periods to delay before comparing observed to expected recoveries (0 = release period)"));
-            temp_int = data->get_tag_max_periods();
+            temp_int = data->getTagMaxPeriods();
             chars += d_file->write_val(temp_int, 1, QString("max periods (seasons) to track recoveries, after which tags enter accumulator"));
             line = QString (QString("#_Release data for each tag group.  Tags are considered to be released at the beginning of a season (period)"));
             chars += d_file->writeline (line);
@@ -1330,7 +1384,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             for (i = 0; i < num; i++)
             {
                 line.clear();
-                str_lst = data->get_tag_observation(i);
+                str_lst = data->getTagObservation(i);
                 chars += d_file->write_vector(str_lst, 4);
             }
             line = QString("# Recapture data");
@@ -1379,7 +1433,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
             temp_str = data->getFleet(0)->getMorphMinTailComp();//get_morph_composition()->mincomp();
             line = QString (QString("%1 # Mincomp").arg(temp_str));//QString::number(temp_float)));
             chars += d_file->writeline (line);
-            temp_int = data->get_tag_latency();
+            temp_int = data->getTagLatency();
             line = QString("# Year month fleet partition Nsamp data_vector");
             chars += d_file->writeline (line);
             for (i = 1; i <= total_fleets; i++) // for (num = 0; num < data->num_fleets(); num++)
@@ -3424,7 +3478,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 if (data->getFleet(i)->getType() == 1 ||
                         data->getFleet(i)->getType() == 2)
                     numCfleets++;
-            num = data->get_num_tag_groups();
+            num = data->getNumTagGroups();
             // tag loss init
             data->getTagLossInit()->setNumParams(num);
             for (i = 0; i < num; i++) {
@@ -3547,7 +3601,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 data->getFleet(flt-1)->appendLambda(datalist);
                 break;
             case 15:
-                num = data->get_num_tag_groups();
+                num = data->getNumTagGroups();
                 datalist.append(temp_string);
                 datalist.append(c_file->get_next_value(QString("lambda fleet")));
                 datalist.append(c_file->get_next_value(QString("lambda phase")));
@@ -5037,7 +5091,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 if (data->getFleet(i)->getType() == 1 ||
                         data->getFleet(i)->getType() == 2)
                     numCfleets++;
-            num = data->get_num_tag_groups();
+            num = data->getNumTagGroups();
             // tag loss init
             for (i = 0; i < num; i++) {
                 str_list = data->getTagLossInit()->getParameter(i);

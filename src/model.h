@@ -242,6 +242,8 @@ public slots:
 
     void setNumGeneralCompMethods(int num);
     int getNumGeneralCompMethods () {return cListGeneralMethods.count();}
+    void setDMError(int num) {iDMError = num;}
+    int getDMError() {return iDMError;}
     void addGeneralCompMethod (compositionGeneral *method) {cListGeneralMethods.append (method);}
     compositionGeneral *getGeneralCompMethod (int index) {return cListGeneralMethods.at(index);}
     void copyGeneralCompMethod (compositionGeneral *method);
@@ -249,23 +251,25 @@ public slots:
     void deleteGeneralCompMethod (int index);
 
 
-    void set_do_tags (bool flag) {doTags = flag;}
-    bool get_do_tags () {return doTags;}
-    void set_num_tag_groups (int num);
-    int get_num_tag_groups () {return tagData->getNumTagGroups();}
-    void set_tag_latency (int period) {tagData->setLatency(period);}
-    int get_tag_latency () {return tagData->getLatency();}
-    void set_tag_max_periods (int periods) {tagData->setMaxPeriods(periods);}
-    int get_tag_max_periods () {return tagData->getMaxPeriods();}
-    void set_tag_observation (int index, QStringList data) {tagData->setObservation(index, data);}
-    QStringList get_tag_observation (int index) {return tagData->getObservation(index);}
-    tablemodel *get_tag_observations () {return tagData->getObservations();}
-    void set_num_tag_recaps (int num) {recapData->setNumRecapEvnts(num);}
-    int get_num_tag_recaps () {return recapData->getNumRecapEvnts();}
-    void add_recap_observation (QStringList data) {recapData->addRecapEvent(data);}
-    int get_num_recap_observations () {return recapData->getNumObs();}
-    QStringList get_recap_observation (int index) {return recapData->getObservation(index);}
-    tablemodel *get_recap_observations () {return recapData->getObservations();}
+    void setDoTags (int flag);
+    int getDoTags () {return doTags;}
+    void setNumTagGroups (int num);
+    int getNumTagGroups () {return tagData->getNumTagGroups();}
+    void setTagLatency (int period);
+    int getTagLatency () {return tagData->getLatency();}
+    void setTagMaxPeriods (int periods) {tagData->setMaxPeriods(periods);}
+    int getTagMaxPeriods () {return tagData->getMaxPeriods();}
+    void setTagObservation (int index, QStringList data) {tagData->setObservation(index, data);}
+    QStringList getTagObservation (int index) {return tagData->getObservation(index);}
+    tablemodel *getTagObservations () {return tagData->getObservations();}
+    void setNumTagRecaps (int num) {recapData->setNumRecapEvnts(num);}
+    int getNumTagRecaps () {return recapData->getNumRecapEvnts();}
+    void addRecapObservation (QStringList data) {recapData->addRecapEvent(data);}
+    int getNumRecapObservations () {return recapData->getNumObs();}
+    QStringList getRecapObservation (int index) {return recapData->getObservation(index);}
+    tablemodel *getRecapObservations () {return recapData->getObservations();}
+    void setMinRecap (int min) {minRecap = min;}
+    int getMinRecap () {return minRecap;}
 
     void setDoMorphComp (bool flag) {doMorphComp = flag;}
     bool getDoMorphComp () {return doMorphComp;}
@@ -422,6 +426,7 @@ private:
     bool useLenCompData;
     compositionLength *lengthData;
 
+    int iDMError;
     compositionAge *ageData;
     QList<compositionGeneral *> cListGeneralMethods;
     bool doMorphComp;
@@ -430,9 +435,10 @@ private:
     bool useMeanSAAData;
 
     environmentalVars *obsEnvironVars;
-    bool doTags;
+    int doTags;
     tagObservation *tagData;
     recapObservation *recapData;
+    int minRecap;
 
     QList<BlockPattern *> blockPatterns;
     int iNumBlockPatterns;

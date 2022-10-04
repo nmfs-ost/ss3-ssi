@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.05
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.19.06
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -14,6 +14,11 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.19.06
+    2022-08-09
+Minor Improvements
+1. Updated read/write for Sizefreq composition to include Comp_Error.
 ============================================================================
     3.30.19.05
     2022-06-28
@@ -131,34 +136,8 @@ Bug Fixes
 8. Fixed bug in forecast that changed benchmark relf.
 9. Changed references to vlab.ncep.noaa.gov to vlab.noaa.gov
 ============================================================================
-    3.30.16.7
-    2021-03-18
-1. Added create/view readme.txt file for model info (optional).
-============================================================================
-    3.30.16.6
-    2020-11-27
-1. Restructured reading of tag data.
-2. Added check for ordered x values of spline curves. If not ordered, spline
-   does not build.
-3. Internal change to reading files hopefully works in error conditions.
-============================================================================
-    3.30.16.5
-    2020-11-09
-1. Set F Mort number of tuning iterations from 1 to 15 for method 3 (hybrid).
-2. Corrected reading of do morph composition.
-3. Corrected reading of time-varying deviation parameters.
-============================================================================
-    3.30.16.4
-    2020-10-28
-1. Corrected reading recapture events.
-2. Added line number to file reading error messages.
-3. Changed column headers from "gender" to "sex".
-============================================================================
-    3.30.16.3
-    2020-10-05
-1. Corrected reading tag groups.
-2. Cleaned up some unused files and commented out code.
-============================================================================
+
+For earlier history, see SSI_readme_archive.txt
 
 Neal Schindler
 neal.schindler(at)noaa.gov

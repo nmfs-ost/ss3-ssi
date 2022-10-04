@@ -294,3 +294,23 @@ void compositionGeneral::setMinComp(float value)
 {
     min_comp = value;
 }
+
+int compositionGeneral::getCompErrorIndex() const
+{
+    return compErrorIndex;
+}
+
+void compositionGeneral::setCompErrorIndex(int newCompErrorIndex)
+{
+    compErrorIndex = newCompErrorIndex;
+}
+
+int compositionGeneral::getCompErrorType() const
+{
+    return compErrorType;
+}
+
+void compositionGeneral::setCompErrorType(int newCompErrorType)
+{
+    compErrorType = newCompErrorType;
+}

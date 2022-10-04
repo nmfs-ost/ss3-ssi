@@ -79,8 +79,8 @@ data_widget::data_widget(ss_model *model, QWidget *parent) :
 
     tagGroups = new tableview();
     tagGroups->setParent(this);
-    tagGroups->setModel(model_data->get_tag_observations());
-    tagGroups->setHeight(model_data->get_tag_observations());
+    tagGroups->setModel(model_data->getTagObservations());
+    tagGroups->setHeight(model_data->getTagObservations());
     tagGroups->resizeColumnsToContents();
     ui->horizontalLayout_tag_reldata->addWidget(tagGroups);
 
@@ -221,14 +221,17 @@ void data_widget::connectAll()
     connect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), SLOT(changeGenUnits(int)));
     connect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), SLOT(changeGenScale(int)));
     connect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), SLOT(changeGenMinComp()));
+    connect (ui->spinBox_genCompErrorType, SIGNAL(valueChanged(int)), SLOT(changeGenCompErrorType(int)));
+    connect (ui->spinBox_genCompErrorIndex, SIGNAL(valueChanged(int)), SLOT(changeGenCompErrorIndex(int)));
     connect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), SLOT(changeGenBins(int)));
 
-    connect (ui->groupBox_tag, SIGNAL(toggled(bool)), SLOT(changeDoTags(bool)));
+    connect (ui->spinBox_do_tags, SIGNAL(valueChanged(int)), SLOT(changeDoTags(int)));
     connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
     connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
     connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
     connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
     connect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
+    connect (ui->spinBox_min_recaps, SIGNAL(valueChanged(int)), model_data, SLOT(setMinRecap(int)));
     connect (model_data->getTagLossInit()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitChanged()));
     connect (model_data->getTagLossInitTV()->getVarParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitTVChanged()));
     tagInitChanged();
@@ -334,10 +337,12 @@ void data_widget::disconnectAll()
     disconnect (ui->pushButton_gen_delete, SIGNAL(released()), this, SLOT(deleteGenCompMethod()));
     disconnect (ui->spinBox_gen_units, SIGNAL(valueChanged(int)), this, SLOT(changeGenUnits(int)));
     disconnect (ui->spinBox_gen_scale, SIGNAL(valueChanged(int)), this, SLOT(changeGenScale(int)));
+    disconnect (ui->spinBox_genCompErrorType, SIGNAL(valueChanged(int)), this, SLOT(changeGenCompErrorType(int)));
+    disconnect (ui->spinBox_genCompErrorIndex, SIGNAL(valueChanged(int)), this, SLOT(changeGenCompErrorIndex(int)));
     disconnect (ui->lineEdit_gen_mincomp, SIGNAL(editingFinished()), this, SLOT(changeGenMinComp()));
     disconnect (ui->spinBox_gen_num_bins, SIGNAL(valueChanged(int)), this, SLOT(changeGenBins(int)));
 
-    disconnect (ui->groupBox_tag, SIGNAL(toggled(bool)), this, SLOT(changeDoTags(bool)));
+    disconnect (ui->spinBox_do_tags, SIGNAL(valueChanged(int)), this, SLOT(changeDoTags(int)));
     disconnect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), this, SLOT(changeNumTagGrps(int)));
     disconnect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
     disconnect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
@@ -530,7 +535,7 @@ void data_widget::refresh()
 
         setDoMorphs(model_data->getDoMorphComp());
 
-        setDoTags(model_data->get_do_tags());
+        setDoTags(model_data->getDoTags());
         ui->spinBox_tag_time_vary->setValue(model_data->getTagTimeVaryReadParams());
 
         setLambdaMaxPhase(model_data->getLambdaMaxPhase());
@@ -1059,6 +1064,18 @@ void data_widget::changeGenScale(int scale)
         current_gen_comp->setScale(scale);
 }
 
+void data_widget::changeGenCompErrorType(int type)
+{
+    if (current_gen_comp != nullptr)
+        current_gen_comp->setCompErrorType(type);
+}
+
+void data_widget::changeGenCompErrorIndex(int index)
+{
+    if (current_gen_comp != nullptr)
+        current_gen_comp->setCompErrorIndex(index);
+}
+
 void data_widget::changeGenMinComp()
 {
     float temp = ui->lineEdit_gen_mincomp->text().toFloat();
@@ -1122,38 +1139,58 @@ void data_widget::changeMorphMincomp()
         model_data->getFleet(i)->setMorphMinTailComp(val);
 }
 
-void data_widget::setDoTags(bool flag)
+void data_widget::setDoTags(int flag)
 {
-    ui->groupBox_tag->setChecked(flag);
+    ui->spinBox_do_tags->setValue(flag);
     changeDoTags(flag);
-    ui->scrollArea_tagParams->setEnabled(flag);
 }
 
-void data_widget::changeDoTags(bool flag)
+void data_widget::changeDoTags(int flag)
 {
-    model_data->set_do_tags(flag);
-    if (flag)
+    model_data->setDoTags(flag);
+    if (flag > 0)
     {
-        ui->spinBox_tag_num_groups->setValue(model_data->get_num_tag_groups());
-        ui->spinBox_tag_latency->setValue(model_data->get_tag_latency());
-        ui->spinBox_tag_max_per->setValue(model_data->get_tag_max_periods());
-        tagGroups->setModel(model_data->get_tag_observations());
-        tagGroups->setHeight(model_data->get_tag_observations());
+        ui->groupBox_tag->setEnabled(true);
+        ui->scrollArea_tagParams->setEnabled(true);
+        ui->spinBox_tag_num_groups->setValue(model_data->getNumTagGroups());
+        ui->spinBox_tag_latency->setValue(model_data->getTagLatency());
+        ui->spinBox_tag_max_per->setValue(model_data->getTagMaxPeriods());
+        tagGroups->setModel(model_data->getTagObservations());
+        tagGroups->setHeight(model_data->getTagObservations());
         tagGroups->resizeColumnsToContents();
+        ui->scrollAreaWidgetContents_tagParams->setEnabled(true);
+        if (flag > 1)
+        {
+            ui->spinBox_min_recaps->setValue(model_data->getMinRecap());
+            ui->spinBox_min_recaps->setVisible(true);
+            ui->label_min_recaps->setVisible(true);
+            ui->label_min_recaps_info->setVisible(true);
+        }
+        else
+        {
+            ui->spinBox_min_recaps->setVisible(false);
+            ui->label_min_recaps->setVisible(false);
+            ui->label_min_recaps_info->setVisible(false);
+        }
     }
     else
     {
+        ui->groupBox_tag->setEnabled(false);
+        ui->scrollArea_tagParams->setEnabled(false);
         ui->spinBox_tag_num_groups->setValue(0);
         ui->spinBox_tag_latency->setValue(0);
         ui->spinBox_tag_max_per->setValue(0);
         tagGroups->setModel(nullptr);
+        ui->scrollAreaWidgetContents_tagParams->setEnabled(false);
+        ui->spinBox_min_recaps->setVisible(false);
+        ui->label_min_recaps->setVisible(false);
+        ui->label_min_recaps_info->setVisible(false);
     }
-    ui->scrollAreaWidgetContents_tagParams->setEnabled(flag);
 }
 
 void data_widget::changeNumTagGrps(int num)
 {
-    model_data->set_num_tag_groups(num);
+    model_data->setNumTagGroups(num);
     tagGroups->setHeight(num);
 }
 

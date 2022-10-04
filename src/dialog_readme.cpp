@@ -305,7 +305,7 @@ QString &Dialog_readme::formatFeatures()
         featurelist.append("Multiple areas");
     if (model->getNumEnvironVars() > 0)
         featurelist.append("Using environment variable(s)");
-    if (model->get_do_tags())
+    if (model->getDoTags())
         featurelist.append("Using tags");
     if (model->getDoMorphComp())
         featurelist.append("Using Morph composition");

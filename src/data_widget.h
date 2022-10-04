@@ -80,14 +80,16 @@ public slots:
     void changeGenBins(int numBins);
     void changeGenUnits(int units);
     void changeGenScale(int scale);
+    void changeGenCompErrorType(int type);
+    void changeGenCompErrorIndex(int index);
     void changeGenMinComp();
     void showGenObs();
     void setDoMorphs(bool flag);
     void changeDoMorphs(bool flag);
     void changeNumMorphs(int num);
     void changeMorphMincomp ();
-    void setDoTags(bool flag);
-    void changeDoTags(bool flag);
+    void setDoTags(int flag);
+    void changeDoTags(int flag);
     void changeNumTagGrps (int num);
     void changeLambdas();
     void setLambdaMaxPhase(int value);
