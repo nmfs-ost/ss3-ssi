@@ -94,9 +94,7 @@ void Dialog_readme::readReadme()
     QString line;
     QStringList values;
     bool okay = true;
-//    bool firstLine = false;
-//    bool firstName = false;
-//    bool lastName = false;
+
     if(readmeFile.open(QIODevice::ReadOnly)) {
         while (!readmeFile.atEnd() && okay) {
             line = QString(readmeFile.readLine(1024));
@@ -107,9 +105,9 @@ void Dialog_readme::readReadme()
             else if (values.at(0).contains("Model Name")) {
                 ui->lineEdit_model->setText(values.at(1).simplified());
             }
-            else if (values.at(0).contains("Version")) {
-                okay = parseVersion(values.at(1).simplified());
-            }
+//            else if (values.at(0).contains("Version")) {
+//                okay = parseVersion(values.at(1).simplified());
+//            }
             else if (values.at(0).contains("Name")) {
                 ui->lineEdit_name->setText(values.at(1).simplified());
             }
@@ -184,9 +182,6 @@ void Dialog_readme::writeReadme()
         else {
             wline.append(QString("Readme file created on %1\n").arg(QDate::currentDate().toString()));
         }
-        wline.append(QString("SS Version   : %1%2%3\n").arg(ui->spinBox_ver1->text(),
-                                               ui->spinBox_ver2->text(),
-                                               ui->spinBox_ver3->text()));
         wline.append(QString("\nModel Name   : "));
         if (!mName.isEmpty()) {
             wline.append(mName);
@@ -269,11 +264,6 @@ bool Dialog_readme::parseVersion(QString line)
         v2 = toks[1].toInt(&okay);
     if (okay)
         v3 = toks[2].toInt(&okay);
-    if (okay) {
-        ui->spinBox_ver1->setValue(v1);
-        ui->spinBox_ver2->setValue(v2);
-        ui->spinBox_ver3->setValue(v3);
-    }
     if (!okay) {
         QMessageBox::information(this, tr("File Error"), tr("Problem reading version information."));
     }
