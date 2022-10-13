@@ -81,7 +81,7 @@
             <x>0</x>
             <y>0</y>
             <width>853</width>
-            <height>539</height>
+            <height>543</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -562,7 +562,7 @@ would alter the number or order of parameters stored in the ss.par file.</string
             <x>0</x>
             <y>0</y>
             <width>853</width>
-            <height>539</height>
+            <height>543</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

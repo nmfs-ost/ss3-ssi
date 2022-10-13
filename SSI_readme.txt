@@ -15,6 +15,13 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.20.01
+    2022-10-13
+Major Improvements
+1. Added multiyear and use log(ratio) to depletion basis.
+2. Added 5 to options for F report values.
+3. Added multiyear and use log(ratio) to f report basis.
+============================================================================
     3.30.20.00
     2022-10-04
 Major Improvements

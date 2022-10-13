@@ -13,7 +13,7 @@
 #define app_version_major  3
 #define app_version_minor  30
 #define app_version_sub    20
-#define app_version_bugfix 0
+#define app_version_bugfix 01
 #define app_release_level  " "  // a - alpha, b - beta, blank - release candidate
 #define app_version_apply ("3.30.20")
 #define app_build_date    ("2022-10-04")

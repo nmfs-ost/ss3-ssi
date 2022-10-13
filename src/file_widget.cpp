@@ -718,8 +718,6 @@ void file_widget::print_files()
 
 }
 
-
-
 bool file_widget::read_starter_file (QString filename)
 {
     bool okay = true;
@@ -788,15 +786,14 @@ bool file_widget::read_starter_file(ss_file *starter)
         token = starterFile->get_next_value("control file");
         control_file_name = token;
         set_control_file(QString("%1/%2").arg(current_dir_name, token));
-        }
-        if (starterFile->getOkay() && !starterFile->getStop()) {
+
         temp_int = starterFile->getIntValue(QString("Read ss.par choice"), 0, 1, 0);
         ui->checkBox_par_file->setChecked(temp_int != 0);
         }
-        if (starterFile->getOkay() && !starterFile->getStop()) {
 #ifdef DEBUG_FILES
     QMessageBox::information(this, "Information - Read Starter", "File names read.");
 #endif
+        if (starterFile->getOkay() && !starterFile->getStop()) {
         temp_int = starterFile->getIntValue(QString("run display detail"), 0, 2, 1);
         ui->comboBox_detail_level->setCurrentIndex(temp_int);
         }
@@ -813,7 +810,7 @@ bool file_widget::read_starter_file(ss_file *starter)
             }
         }
         chooseRepDetail->hide();
-        temp_int = starterFile->getIntValue(QString("write EchoInput.sso choice"), 0, 1, 1);
+        temp_int = starterFile->getIntValue(QString("write check up data to  echoInput.sso"), 0, 1, 1);
         }
         if (starterFile->getOkay() && !starterFile->getStop()) {
         ui->checkBox_checkup->setChecked(temp_int);
@@ -871,7 +868,7 @@ bool file_widget::read_starter_file(ss_file *starter)
         starterFile->skip_line();
 
         }
-        temp_float = starterFile->getFloatValue(QString("convergence criteria"), 0.0, 0.1, 0.0001);
+        temp_float = starterFile->getFloatValue(QString("final convergence criteria"), 0.0, 0.1, 0.0001);
         if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_convergence_criteria(temp_float);
         token = starterFile->get_next_value("retrospective year");
@@ -880,7 +877,7 @@ bool file_widget::read_starter_file(ss_file *starter)
         token = starterFile->get_next_value("summary biomass min age");
         temp_int = token.toInt();
         model_info->set_biomass_min_age(temp_int);
-        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 4, 1);
+        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 104, 1);
         }
         if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_depletion_basis(temp_int);

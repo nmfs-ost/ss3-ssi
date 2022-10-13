@@ -48,7 +48,9 @@ public slots:
     void changeSpawnMonth (double month);
     void changeSpawnSeason (float seas);
 //    QString get_mo_per_seas ();
+    void changeFRptVis(bool flag);
     void setFRptUnits(int val);
+    void changeFRptUnits(int val);
     void setNumSdYears(int val);
     void changeNumGenders (int val);
 
@@ -109,6 +111,16 @@ public slots:
     void changeDepDenom();
     void changeRandSeed(int seed);
     void setRandSeed (int seed);
+    void changeDepletionBasis (int base, int multi, bool uselog);
+    void changeDepletionBase (int base);
+    void setDepletionBasis (int basis);
+    void changeDepletionMulti(int multi);
+    void changeDepletionLog(int state);
+    void changeFRptBasis (int base, int multi, bool uselog);
+    void changeFRptBase (int base);
+    void setFRptBasis (int basis);
+    void changeFRptMulti(int multi);
+    void changeFRptLog(int state);
     void set2DAR1 (bool use);
     bool get2DAR1 ();
 

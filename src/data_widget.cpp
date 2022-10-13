@@ -283,13 +283,17 @@ void data_widget::connectAll()
     connect (ui->lineEdit_convergence, SIGNAL(editingFinished()), SLOT(changeConvergence()));
     connect (ui->spinBox_retrospect_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_retrospect_year(int)));
     connect (ui->spinBox_f_bmass_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_biomass_min_age(int)));
-    connect (ui->comboBox_f_dep, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_depletion_basis(int)));
+    connect (ui->comboBox_f_dep, SIGNAL(currentIndexChanged(int)), this, SLOT(changeDepletionBase(int)));
+    connect (ui->spinBox_f_dep_multi, SIGNAL(valueChanged(int)), this, SLOT(changeDepletionMulti(int)));
+    connect (ui->checkBox_f_dep_log, SIGNAL(stateChanged(int)), this, SLOT(changeDepletionLog(int)));
     connect (ui->lineEdit_dep_denom, SIGNAL(editingFinished()), SLOT(changeDepDenom()));
     connect (ui->comboBox_spr_basis, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_spr_basis(int)));
-    connect (ui->comboBox_f_rpt_units, SIGNAL(currentIndexChanged(int)), SLOT(setFRptUnits(int)));
+    connect (ui->comboBox_f_rpt_units, SIGNAL(currentIndexChanged(int)), SLOT(changeFRptUnits(int)));
     connect (ui->spinBox_f_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_f_min_age(int)));
     connect (ui->spinBox_f_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_f_max_age(int)));
-    connect (ui->comboBox_f_report_basis, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_f_basis(int)));
+    connect (ui->comboBox_f_rpt_base, SIGNAL(currentIndexChanged(int)), this, SLOT(changeFRptBase(int)));
+    connect (ui->spinBox_f_rpt_multi, SIGNAL(valueChanged(int)), this, SLOT(changeFRptMulti(int)));
+    connect (ui->checkBox_f_rpt_log, SIGNAL(stateChanged(int)), this, SLOT(changeFRptLog(int)));
     connect (ui->spinBox_sdrpt_min_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_min_year(int)));
     connect (ui->spinBox_sdrpt_max_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_max_year(int)));
     connect (ui->spinBox_num_std_yrs, SIGNAL(valueChanged(int)), SLOT(setNumSdYears(int)));
@@ -398,13 +402,17 @@ void data_widget::disconnectAll()
     disconnect (ui->lineEdit_convergence, SIGNAL(editingFinished()), this, SLOT(changeConvergence()));
     disconnect (ui->spinBox_retrospect_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_retrospect_year(int)));
     disconnect (ui->spinBox_f_bmass_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_biomass_min_age(int)));
-    disconnect (ui->comboBox_f_dep, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_depletion_basis(int)));
+    disconnect (ui->comboBox_f_dep, SIGNAL(currentIndexChanged(int)), this, SLOT(changeDepletionBase(int)));
+    disconnect (ui->spinBox_f_dep_multi, SIGNAL(valueChanged(int)), this, SLOT(changeDepletionMulti(int)));
+    disconnect (ui->checkBox_f_dep_log, SIGNAL(stateChanged(int)), this, SLOT(changeDepletionLog(int)));
     disconnect (ui->lineEdit_dep_denom, SIGNAL(editingFinished()), this, SLOT(changeDepDenom()));
     disconnect (ui->comboBox_spr_basis, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_spr_basis(int)));
-    disconnect (ui->comboBox_f_rpt_units, SIGNAL(currentIndexChanged(int)), this, SLOT(setFRptUnits(int)));
+    disconnect (ui->comboBox_f_rpt_units, SIGNAL(currentIndexChanged(int)), this, SLOT(changeFRptUnits(int)));
     disconnect (ui->spinBox_f_min_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_f_min_age(int)));
     disconnect (ui->spinBox_f_max_age, SIGNAL(valueChanged(int)), model_data, SLOT(set_f_max_age(int)));
-    disconnect (ui->comboBox_f_report_basis, SIGNAL(currentIndexChanged(int)), model_data, SLOT(set_f_basis(int)));
+    disconnect (ui->comboBox_f_rpt_base, SIGNAL(currentIndexChanged(int)), this, SLOT(changeFRptBase(int)));
+    disconnect (ui->spinBox_f_rpt_multi, SIGNAL(valueChanged(int)), this, SLOT(changeFRptMulti(int)));
+    disconnect (ui->checkBox_f_rpt_log, SIGNAL(stateChanged(int)), this, SLOT(changeFRptLog(int)));
     disconnect (ui->spinBox_sdrpt_min_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_min_year(int)));
     disconnect (ui->spinBox_sdrpt_max_yr, SIGNAL(valueChanged(int)), model_data, SLOT(set_bio_sd_max_year(int)));
     disconnect (ui->spinBox_num_std_yrs, SIGNAL(valueChanged(int)), this, SLOT(setNumSdYears(int)));
@@ -490,13 +498,14 @@ void data_widget::refresh()
         ui->lineEdit_alktol->setText(QString::number(model_data->getALKTol()));
         ui->lineEdit_convergence->setText(QString::number(model_data->get_convergence_criteria()));
         ui->spinBox_f_bmass_min_age->setValue(model_data->get_biomass_min_age());
+        setDepletionBasis(model_data->get_depletion_basis());
         ui->comboBox_f_dep->setCurrentIndex(model_data->get_depletion_basis());
         ui->lineEdit_dep_denom->setText(QString::number(model_data->get_depletion_denom()));
         ui->comboBox_spr_basis->setCurrentIndex(model_data->get_spr_basis());
-        ui->comboBox_f_rpt_units->setCurrentIndex(model_data->get_f_units());
+        setFRptUnits (model_data->get_f_units());
         ui->spinBox_f_min_age->setValue(model_data->get_f_min_age());
         ui->spinBox_f_max_age->setValue(model_data->get_f_max_age());
-        ui->comboBox_f_report_basis->setCurrentIndex(model_data->get_f_basis());
+        setFRptBasis(model_data->get_f_basis());
 
         ui->spinBox_sdrpt_min_yr->setValue(model_data->bio_sd_min_year());
         ui->spinBox_sdrpt_max_yr->setValue(model_data->bio_sd_max_year());
@@ -696,18 +705,24 @@ void data_widget::changeTotalYears()
     ui->spinBox_year_total->setValue(end - start + 1);
 }
 
-void data_widget::setFRptUnits(int val)
+void data_widget::changeFRptVis(bool flag)
 {
-    bool flag = false;
-    if (val == 4)
-    {
-        flag = true;
-    }
     ui->label_f_min_age->setVisible(flag);
     ui->spinBox_f_min_age->setVisible(flag);
     ui->label_f_max_age->setVisible(flag);
     ui->spinBox_f_max_age->setVisible(flag);
+}
+
+void data_widget::setFRptUnits(int val)
+{
+    ui->comboBox_f_rpt_units->setCurrentIndex(val);
+    changeFRptVis(val > 3);
+}
+
+void data_widget::changeFRptUnits(int val)
+{
     model_data->set_f_units(val);
+    changeFRptVis(val > 3);
 }
 
 void data_widget::setNumSdYears(int val)
@@ -1341,6 +1356,111 @@ void data_widget::changeRandSeed(int seed)
 void data_widget::setRandSeed(int seed)
 {
     ui->spinBox_rseed->setValue(seed);
+}
+
+void data_widget::changeDepletionBasis(int base, int multi, bool uselog)
+{
+    int log = uselog? 100: 0;
+    int basis = log + (multi * 10) + base;
+    model_data->set_depletion_basis(basis);
+    ui->spinBox_f_dep->setValue(basis);
+}
+
+void data_widget::changeDepletionBase(int base)
+{
+//    int base = ui->comboBox_f_dep->currentIndex();
+    int multi = ui->spinBox_f_dep_multi->value();
+    bool uselog = ui->checkBox_f_dep_log->isChecked();
+    changeDepletionBasis(base, multi, uselog);
+}
+
+void data_widget::setDepletionBasis(int basis)
+{
+    int multi = 0;
+    int base = basis - 100;
+    bool uselog = false;
+    ui->spinBox_f_dep->setValue(basis);
+    if (base > 0)
+    {
+        uselog = true;
+        basis = base;
+    }
+    if (basis > 9)
+    {
+        multi = basis / 10;
+        basis = basis - multi;
+    }
+    ui->comboBox_f_dep->setCurrentIndex(basis);
+    ui->spinBox_f_dep_multi->setValue(multi);
+    ui->checkBox_f_dep_log->setChecked(uselog);
+}
+
+void data_widget::changeDepletionMulti(int multi)
+{
+    int base = ui->comboBox_f_dep->currentIndex();
+//    int multi = ui->spinBox_f_dep_multi->value();
+    bool uselog = ui->checkBox_f_dep_log->isChecked();
+    changeDepletionBasis(base, multi, uselog);
+}
+
+void data_widget::changeDepletionLog(int state)
+{
+    int base = ui->comboBox_f_dep->currentIndex();
+    int multi = ui->spinBox_f_dep_multi->value();
+    bool uselog = ui->checkBox_f_dep_log->isChecked();
+    changeDepletionBasis(base, multi, uselog);
+}
+
+void data_widget::changeFRptBasis(int base, int multi, bool uselog)
+{
+    int log = uselog? 100: 0;
+    int basis = log + (multi * 10) + base;
+    model_data->set_f_basis(basis);
+    ui->spinBox_f_rpt_basis->setValue(basis);
+}
+
+void data_widget::changeFRptBase(int base)
+{
+//    int base = ui->comboBox_f_rpt_base->currentIndex();
+    int multi = ui->spinBox_f_rpt_multi->value();
+    bool uselog = ui->checkBox_f_rpt_log->isChecked();
+    changeFRptBasis(base, multi, uselog);
+}
+
+void data_widget::setFRptBasis(int basis)
+{
+    int multi = 0;
+    int base = basis;
+    bool uselog = ((basis - 100) > 0);
+    ui->spinBox_f_rpt_basis->setValue(basis);
+    if (uselog)
+    {
+        basis -= 100;
+    }
+    if (basis > 9)
+    {
+        multi = basis / 10;
+        base = basis - multi;
+    }
+    ui->comboBox_f_rpt_base->setCurrentIndex(base);
+    ui->spinBox_f_rpt_multi->setValue(multi);
+    ui->checkBox_f_rpt_log->setChecked(uselog);
+}
+
+void data_widget::changeFRptMulti(int multi)
+{
+    int base = ui->comboBox_f_rpt_base->currentIndex();
+//    int multi = ui->spinBox_f_rpt_multi->value();
+    bool uselog = ui->checkBox_f_rpt_log->isChecked();
+    changeFRptBasis(base, multi, uselog);
+}
+
+void data_widget::changeFRptLog(int state)
+{
+    int base = ui->comboBox_f_rpt_base->currentIndex();
+    int multi = ui->spinBox_f_rpt_multi->value();
+    bool uselog = ui->checkBox_f_rpt_log->isChecked();
+    changeFRptBasis(base, multi, uselog);
 }
 
 void data_widget::addLengthDirichlet()

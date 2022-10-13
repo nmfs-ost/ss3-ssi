@@ -101,10 +101,7 @@ QStringList ss_file::read_comments()
 void ss_file::set_comments(QStringList cmts)
 {
     comments.clear();
-    for (int i = 0; i < cmts.count(); i++)
-    {
-        comments.append(QString(cmts.at(i)));
-    }
+    comments.append(cmts);
 }
 
 int ss_file::write_comments()
@@ -116,8 +113,6 @@ int ss_file::write_comments()
         cmt = comments.at(i);
         cmt.prepend("#C ");
         chars += writeline(cmt);
-//        line = QString("#C %1").arg(comments.at(i));
-//        chars = writeline (line);
     }
     return chars;
 }
