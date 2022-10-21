@@ -66,7 +66,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         token = d_file->get_next_value(QString("spawning month"));
         temp_float = token.toFloat();
         data->set_spawn_month(temp_float);
-        temp_int = d_file->getIntValue(QString("Number of sexes"), 1, 2, 2);
+        temp_int = d_file->getIntValue(QString("Number of sexes"), -1, 2, 2);
         }
         if (d_file->getOkay() && !d_file->getStop()) {
         n_genders = temp_int;
@@ -150,6 +150,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         num_vals = total_fleets;
         bool info = false;
         do {
+            bool neg = false;
             int seas = 0;
             double ctch = 0;
             str_lst.clear();
@@ -162,7 +163,13 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             if (year == END_OF_LIST)
                 break;
             fleet  = abs(str_lst.at(2).toInt());
-            fleet  = d_file->checkIntValue(fleet, QString("Fleet number"), 1, num_vals, 1);
+            if (fleet < 0)
+                neg = true;
+            fleet  = d_file->checkIntValue(fleet, QString("Fleet number for catch"), 1, num_vals, 1);
+            if (neg)
+                str_lst[2] = QString("-%1").arg(fleet);
+            else
+                str_lst[2] = QString("%1").arg(fleet);
             seas   = str_lst.at(1).toInt();
             if (seas > numSeas) {
                 seas = numSeas;
@@ -191,7 +198,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 d_file->error(QString("Fleet number does not match."));
             units = d_file->get_next_value(QString("Abund units")).toInt(); // units
             flt->setAbundUnits(units);
-            err_type = d_file->get_next_value(QString("Abund err-type")).toInt(); // err_flt->setAbundErrType(err_type);
+            err_type = d_file->get_next_value(QString("Abund error dist")).toInt(); // err_flt->setAbundErrType(err_type);
             flt->setAbundErrType(err_type);
             temp_int = d_file->getIntValue(QString("Abund enable SD_Report"), 0, 1, 0);
             flt->setSDReport(temp_int);
@@ -227,7 +234,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
             {
                 fleet = abs(d_file->get_next_value(QString("discard fleet")).toInt()) - 1;
                 units = d_file->get_next_value(QString("discard units")).toInt();
-                err_type = d_file->get_next_value(QString("discard err-type")).toInt();
+                err_type = d_file->get_next_value(QString("discard error dist")).toInt();
                 data->getFleet(fleet)->setDiscardUnits(units);
                 data->getFleet(fleet)->setDiscardErrType(err_type);
             }
@@ -241,11 +248,6 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 str_lst.append(d_file->get_next_value(QString("Discard obs")));
                 str_lst.append(d_file->get_next_value(QString("Discard err")));
                 year = str_lst.at(0).toInt();
-/*                year = d_file->get_next_value().toInt();
-                month = d_file->get_next_value().toFloat();
-                fleet = abs(d_file->get_next_value().toInt()) - 1;
-                obs = d_file->get_next_value().toFloat();
-                err = d_file->get_next_value().toFloat();*/
                 if (year == END_OF_LIST)
                     break;
 
@@ -261,23 +263,23 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         if (d_file->getOkay() && !d_file->getStop()) {
         //  SS_Label_Info_2.5 #Read Mean Body Weight data
         //  note that syntax for storing this info internal is done differently than for surveys and discard
-        temp_int = d_file->getIntValue(QString("use mean bwt"), 0, 1, 0);
+        temp_int = d_file->getIntValue(QString("use mean body weight"), 0, 1, 0);
         data->setUseMeanBwt(temp_int);
         if (temp_int > 0)
         {
-            temp_int = d_file->get_next_value(QString("mean bwt df")).toInt();
+            temp_int = d_file->get_next_value(QString("mean body wt deg of freedom")).toInt();
             for (i = 0; i < total_fleets; i++)
                 data->getFleet(i)->setMbwtDF(temp_int);
             do
             {    // year, month, fleet_number, partition, type, obs, stderr
                 str_lst.clear();
                 for (int j = 0; j < 7; j++)
-                    str_lst.append(d_file->get_next_value(QString("mean bwt")));
+                    str_lst.append(d_file->get_next_value(QString("mean body wt data")));
                 year = str_lst.at(0).toInt();
                 if (year == END_OF_LIST)
                     break;
                 fleet = abs(str_lst.at(2).toInt());
-                fleet = d_file->checkIntValue(fleet, QString("Fleet number"), 1, total_fleets, 1);
+                fleet = d_file->checkIntValue(fleet, QString("Fleet number for body wt data"), 1, total_fleets, 1);
                 data->getFleet(fleet - 1)->addMbwtObservation(str_lst);
                 if (str_lst.at(4).compare(QString("EOF")) == 0)
                     return false;
@@ -338,7 +340,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 data->getFleet(i)->setLengthCombineGen(temp_int);
                 temp_int = d_file->get_next_value(QString("compress bins")).toInt();
                 data->getFleet(i)->setLengthCompressBins(temp_int);
-                temp_int = d_file->get_next_value(QString("error")).toInt();
+                temp_int = d_file->get_next_value(QString("error dist")).toInt();
                 data->getFleet(i)->setLengthCompError(temp_int);
                 temp_int = d_file->get_next_value(QString("error parameter")).toInt();
                 data->getFleet(i)->setLengthCompErrorParm(temp_int);

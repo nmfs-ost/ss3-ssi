@@ -669,6 +669,7 @@ void data_widget::changeMoPerSeason(QString txt)
     int seas = ui->spinBox_season->value();
     float months = txt.toFloat();
     model_data->getSeason(seas)->setNumMonths(months);
+//    model_data->rescale_months_per_season();
     setTotalMonths();
 }
 
@@ -741,7 +742,7 @@ void data_widget::numSdYearsChanged()
 void data_widget::changeNumGenders(int val)
 {
     model_data->set_num_genders(val);
-
+//    int posGender = abs(val);
     for (int i = 0; i < model_data->get_num_fleets(); i++)
     {
         int bins = model_data->get_length_composition()->getNumberBins();

@@ -433,24 +433,36 @@ void ss_model::set_months_per_season(int seasn, float months)
 
 void ss_model::rescale_months_per_season()
 {
-    float sum = 0;
+    bool monchanged = false;
+    float sumseas = 0;
     float dur = 0;
     float months = 0;
-    for (int i = 0; i < get_num_seasons(); i++)
-        sum += get_months_per_season(i);
-    if (sum > 0.0)
+    float newmonths = 0;
+    int numseas = get_num_seasons();
+    for (int i = 0; i < numseas; i++)
+        sumseas += get_months_per_season(i);
+    if (sumseas >= 11.9)
     {
-        if (sum < 11.9)
-            sum = 12;
         for (int i = 0; i < get_num_seasons(); i++)
         {
             months = get_months_per_season(i);
-            dur = months / sum;
-            seasons.at(i)->setDuration(dur);
-            months = dur * 12.0;
-            seasons.at(i)->setNumMonths(months);
+            dur = months / sumseas;
+//            seasons.at(i)->setDuration(dur);
+            newmonths = dur * 12.0;
+//            seasons.at(i)->setNumMonths(newmonths);
+            if (!floatEquals(months, newmonths))
+                monchanged = true;
         }
     }
+    else
+    {
+        if (numseas > 1)
+            QMessageBox::warning(nullptr, "Error.", "Can only have one season when using seasons as pseudo-years.");
+        set_num_seasons(1);
+        seasons.at(0)->setNumMonths(sumseas);
+    }
+    if (monchanged)
+        QMessageBox::information(nullptr, "Info", "SS3 will rescale the number of months per season.");
 }
 
 int ss_model::get_num_subseasons () const
@@ -482,6 +494,8 @@ int ss_model::getTotalMonths()
 void ss_model::set_spawn_month(float month)
 {
     fSpawnMonth = month;
+    if (month > 12.99)
+        QMessageBox::information(nullptr, "Error.", "Spawn month must be <= 12.99");
     set_spawn_season(find_season(month));
 }
 
@@ -492,7 +506,15 @@ float ss_model::get_spawn_month()
 
 void ss_model::set_spawn_season(int seasn)
 {
-    if (seasn > 0 && seasn <= seasons.count())
+    if (seasn < 1.0)
+    {
+        QMessageBox::information(nullptr, "Error.", "Spawn season is < 1; check spawn month.");
+    }
+    else if (seasn > seasons.count())
+    {
+        QMessageBox::information(nullptr, "Error.", "Spawn season is > num seasons; check spawn month.");
+    }
+    else
     {
         for (int i = 0; i < seasons.count(); i++)
             seasons.at(i)->setSpawning(false);
