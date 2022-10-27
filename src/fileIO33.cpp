@@ -716,6 +716,12 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 {
                     str_lst.append(d_file->get_next_value());
                 }
+                temp_int = str_lst.at(1).toInt();
+                if (temp_int < 0)
+                {
+                    d_file->error("Negative month not allowed since superperiods not implemented. Changed.");
+                    str_lst[1] = QString::number(-temp_int);
+                }
                 temp_int = abs(str_lst.at(2).toInt());
                 data->getFleet(temp_int - 1)->addMorphObservation(str_lst);
             }
@@ -1456,7 +1462,7 @@ int write33_dataFile(ss_file *d_file, ss_model *data)
 
         temp_int = data->getReadSelectivityPriors()? 1: 0;
         chars += d_file->write_val(temp_int, 1, QString("Do dataread for selectivity priors(0/1)"));
-        line = QString("# Yr, Seas, Fleet,  Age/Size,  Bin,  selex_prior,  prior_sd");
+        line = QString("# Yr, Month, Fleet,  Age/Size,  Bin,  selex_prior,  prior_sd");
         chars += d_file->writeline (line);
         line = QString("# feature not yet implemented");
         chars += d_file->writeline (line);
@@ -1511,7 +1517,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_MSY(temp_int);
         if (temp_int == 5)
         {
-            temp_int = f_file->getIntValue(QString("MSY Units"), 1, 3, 1);
+            temp_int = f_file->getIntValue(QString("MSY Units"), 1, 4, 1);
             fcast->setMsyUnits(temp_int);
             // read fleet, cost/F, price/mt until fleet==-9999
             do {

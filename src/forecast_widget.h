@@ -44,6 +44,9 @@ public slots:
     void bmarks_changed();
     void set_combo_box_MSY(int value);
     void change_MSY(int value);
+    void set_MSY_units (bool flag);
+    void set_combo_box_MSY_units(int value);
+    void change_MSY_units(int value);
     void change_spr_target();
     void change_biomass_target();
     void set_blimit(double value);

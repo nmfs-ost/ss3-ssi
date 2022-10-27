@@ -413,6 +413,7 @@ void forecast_widget::set_combo_box_MSY(int value)
 {
     int cboxval = value - 1;
     ui->comboBox_MSY_options->setCurrentIndex(cboxval);
+    set_MSY_units (value == 5);
 }
 
 void forecast_widget::change_MSY(int value)
@@ -420,10 +421,25 @@ void forecast_widget::change_MSY(int value)
     int msy = value + 1;
     bool usingMey = (msy == 5);
     model_data->forecast->set_MSY(msy);
+    set_MSY_units(usingMey);
+}
 
-    ui->label_msyUnits->setVisible(usingMey);
-    ui->comboBox_msyUnits->setVisible(usingMey);
-    msyCostsView->setVisible(usingMey);
+void forecast_widget::set_MSY_units(bool flag)
+{
+    set_combo_box_MSY_units(model_data->forecast->getMsyUnits());
+    ui->label_msyUnits->setVisible(flag);
+    ui->comboBox_msyUnits->setVisible(flag);
+    msyCostsView->setVisible(flag);
+}
+
+void forecast_widget::set_combo_box_MSY_units(int value)
+{
+    ui->comboBox_msyUnits->setCurrentIndex(value - 1);
+}
+
+void forecast_widget::change_MSY_units(int value)
+{
+    model_data->forecast->setMsyUnits(value + 1);
 }
 
 void forecast_widget::change_spr_target()

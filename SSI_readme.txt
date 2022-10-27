@@ -22,6 +22,7 @@ Major Improvements
 2. Added 5 to options for F report values.
 3. Added multiyear and use log(ratio) to f report basis.
 4. Allows number of sexes to be negative.
+5. Added MSY units 5 and fixed display of MSY units.
 ============================================================================
     3.30.20.00
     2022-10-04
