@@ -72,7 +72,7 @@ file_widget::file_widget(ss_model *mod, QString dir, QWidget *parent) :
     connect (ui->pushButton_control_file, SIGNAL(clicked()), SLOT(show_control_file_info()));
     connect (ui->pushButton_viewParFile, SIGNAL(clicked()), SLOT(view_param_file()));
     connect (ui->pushButton_pro_file, SIGNAL(clicked()), SLOT(show_prof_file_info()));
-    connect (ui->checkBox_wtatage, SIGNAL(toggled(bool)), SLOT(changeReadWtAtAge(bool)));
+    connect (ui->spinBox_wtatage, SIGNAL(valueChanged(int)), SLOT(changeReadWtAtAge(int)));
     connect (ui->pushButton_wtatage, SIGNAL(clicked()), SLOT(view_wtatage()));
 
 //    connect (ui->checkBox_parm_trace, SIGNAL(toggled(bool)), SLOT(parm_trace_changed(bool)));
@@ -374,16 +374,18 @@ void file_widget::setReadProFile(QString fname, bool keep)
     }
 }
 
-void file_widget::setReadWtAtAge(bool flag)
+void file_widget::setReadWtAtAge(int flag)
 {
-    ui->label_wtatage->setVisible(flag);
+    ui->label_wtatage_file->setVisible(flag);
+    ui->label_wtatage_info->setVisible(flag);
     ui->pushButton_wtatage->setVisible(flag);
-    ui->checkBox_wtatage->setChecked(flag);
+    ui->spinBox_wtatage->setValue(flag);
 }
 
-void file_widget::changeReadWtAtAge(bool flag)
+void file_widget::changeReadWtAtAge(int flag)
 {
-    ui->label_wtatage->setVisible(flag);
+    ui->label_wtatage_file->setVisible(flag);
+    ui->label_wtatage_info->setVisible(flag);
     ui->pushButton_wtatage->setVisible(flag);
     model_info->setReadWtAtAge(flag);
 }
@@ -475,17 +477,17 @@ void file_widget::set_default_file_names(QString dir, bool keep)
 
     updateOutputFiles(dir);
 
-    ui->label_wtatage->setText(QString("%1/%2").arg(dir, QString(WTATAGE_FILE)));
-    QFileInfo qfi(ui->label_wtatage->text());
+    ui->label_wtatage_file->setText(QString("%1/%2").arg(dir, QString(WTATAGE_FILE)));
+    QFileInfo qfi(ui->label_wtatage_file->text());
     if (qfi.exists() && qfi.size() > 0)
     {
         ui->pushButton_wtatage->show();
-        ui->label_wtatage->show();
+        ui->label_wtatage_file->show();
     }
     else
     {
         ui->pushButton_wtatage->hide();
-        ui->label_wtatage->hide();
+        ui->label_wtatage_file->hide();
     }
     // reset defaults
     setReadParFile(false);
@@ -1198,7 +1200,7 @@ void file_widget::view_param_file()
 
 void file_widget::view_wtatage()
 {
-    viewer->viewFile(ui->label_wtatage->text());
+    viewer->viewFile(ui->label_wtatage_file->text());
     viewer->show();
 }
 

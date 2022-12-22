@@ -11,7 +11,7 @@
 
 #include "input_file.h"
 #include "model.h"
-#include "ssComposition.h"
+#include "sscomposition.h"
 #include "tableview.h"
 #include "dialog_fileview.h"
 #include "dialogchosereport.h"
@@ -108,8 +108,8 @@ public slots:
     QString getDataFileName () {return data_file_name;}
     QString getControlFileName () {return control_file_name;}
     ss_model *this_model() {return model_info;}
-    void setReadWtAtAge (bool flag);
-    void changeReadWtAtAge (bool flag);
+    void setReadWtAtAge (int flag);
+    void changeReadWtAtAge (int flag);
 
     float get_version_number(QString token);
     QString getDatafileVersion ();

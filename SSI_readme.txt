@@ -1,10 +1,10 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.20.0
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.20.02
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-version 3.30.18. It allows the user to change the data,
+version 3.30.20. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
@@ -14,6 +14,11 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.20.02
+    2022-12-21
+Major Improvements
+1. Changed read wtatage.ss to value instead of true/false (0-2).
 ============================================================================
     3.30.20.01
     2022-10-13

@@ -137,7 +137,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 
     connect (ui->comboBox_maturity_option, SIGNAL(currentIndexChanged(int)), SLOT(changeMaturityOpt(int)));
     connect (ui->lineEdit_maturity_first_age, SIGNAL(editingFinished()), SLOT(changeFirstMatureAge()));
-    connect (ui->checkBox_wtatage, SIGNAL(toggled(bool)), SIGNAL(readWtAtAgeSS(bool)));
+    connect (ui->spinBox_wtatage, SIGNAL(valueChanged(int)), SIGNAL(readWtAtAgeSS(int)));
 
     // Fecundity
     fracFemParamsView = new tableview();
@@ -541,7 +541,7 @@ void population_widget::refresh()
 
     // Maturity
     setMaturityOpt(pop->Grow()->getMaturity_option());
-    ui->checkBox_wtatage->setChecked(model_data->getReadWtAtAge());
+    ui->spinBox_wtatage->setValue(model_data->getReadWtAtAge());
     ui->lineEdit_maturity_first_age->setText(QString::number(pop->Grow()->getFirst_mature_age()));
 
     maturityParamsView->setModel(pop->Grow()->getCohortParams());
@@ -1275,7 +1275,7 @@ void population_widget::changeMaturityOpt(int opt)
 //    bool vis = true;
     pop->Grow()->setMaturity_option(option);
     if (option == 5)
-        ui->checkBox_wtatage->setChecked(true);
+        ui->spinBox_wtatage->setValue(1);
 /*    if (opt == 2 || opt == 3)
         vis = true;
     ui->frame_growth_age_spec->setVisible(vis);*/

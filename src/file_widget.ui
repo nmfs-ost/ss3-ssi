@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_input">
       <attribute name="title">
@@ -91,6 +91,40 @@
               <string>Input Files</string>
              </property>
              <layout class="QGridLayout" name="gridLayout">
+              <item row="1" column="1" colspan="4">
+               <widget class="QLabel" name="label_current_dir">
+                <property name="toolTip">
+                 <string>This is the current directory</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QPushButton" name="pushButton_control_file">
+                <property name="text">
+                 <string>Control File Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <widget class="QPushButton" name="pushButton_pro_file">
+                <property name="text">
+                 <string>Profile Values Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="pushButton_starter_file">
+                <property name="text">
+                 <string>Starter File Comments:</string>
+                </property>
+               </widget>
+              </item>
               <item row="3" column="1">
                <widget class="QLabel" name="label_fcast_file">
                 <property name="text">
@@ -98,80 +132,8 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="label_starter_file">
-                <property name="text">
-                 <string>starter.SS</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="4">
-               <widget class="QToolButton" name="toolButton_file_read">
-                <property name="toolTip">
-                 <string>Read current files.</string>
-                </property>
-                <property name="text">
-                 <string>Read</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="stock_synth.qrc">
-                  <normaloff>:/i/icons/file-read.png</normaloff>:/i/icons/file-read.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="pushButton_fcast_file">
-                <property name="text">
-                 <string>Forecast File Comments:</string>
-                </property>
-               </widget>
-              </item>
               <item row="4" column="5">
-               <widget class="QToolButton" name="toolButton_data_file_save_as">
-                <property name="toolTip">
-                 <string>Save file with a different name</string>
-                </property>
-                <property name="whatsThis">
-                 <string>Save as...</string>
-                </property>
-                <property name="text">
-                 <string>Save As</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="stock_synth.qrc">
-                  <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="1">
-               <widget class="QLabel" name="label_wtatage">
-                <property name="text">
-                 <string>wtatage.ss</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="1">
-               <widget class="QLabel" name="label_profile_file">
-                <property name="text">
-                 <string>ProfileValues.SS</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="3">
-               <spacer name="horizontalSpacer_input_files">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="5" column="4">
-               <widget class="QToolButton" name="toolButton_control_file_new">
+               <widget class="QToolButton" name="toolButton_data_file_new">
                 <property name="toolTip">
                  <string>Choose a different file</string>
                 </property>
@@ -187,69 +149,29 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
-               <widget class="QLabel" name="label_control_file">
-                <property name="toolTip">
-                 <string>Filename of the control file</string>
-                </property>
+              <item row="8" column="1">
+               <widget class="QLabel" name="label_profile_file">
                 <property name="text">
-                 <string>controlfile</string>
+                 <string>ProfileValues.SS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_starter_file">
+                <property name="text">
+                 <string>starter.SS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="pushButton_data_file">
+                <property name="text">
+                 <string>Data File Comments:</string>
                 </property>
                </widget>
               </item>
               <item row="5" column="5">
-               <widget class="QToolButton" name="toolButton_control_file_save_as">
-                <property name="toolTip">
-                 <string>Save file with a different name</string>
-                </property>
-                <property name="whatsThis">
-                 <string>Save as...</string>
-                </property>
-                <property name="text">
-                 <string>Save As</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="stock_synth.qrc">
-                  <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="0">
-               <widget class="QCheckBox" name="checkBox_wtatage">
-                <property name="text">
-                 <string>Read Weight-at-Age</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="pushButton_starter_file">
-                <property name="text">
-                 <string>Starter File Comments:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1" colspan="3">
-               <widget class="QLabel" name="label_current_dir">
-                <property name="toolTip">
-                 <string>This is the current directory</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0">
-               <widget class="QPushButton" name="pushButton_pro_file">
-                <property name="text">
-                 <string>Profile Values Comments:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="4">
-               <widget class="QToolButton" name="toolButton_data_file_new">
+               <widget class="QToolButton" name="toolButton_control_file_new">
                 <property name="toolTip">
                  <string>Choose a different file</string>
                 </property>
@@ -272,10 +194,105 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
-               <widget class="QPushButton" name="pushButton_control_file">
+              <item row="8" column="4">
+               <spacer name="horizontalSpacer_input_files">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="pushButton_fcast_file">
                 <property name="text">
-                 <string>Control File Comments:</string>
+                 <string>Forecast File Comments:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="6">
+               <widget class="QToolButton" name="toolButton_control_file_save_as">
+                <property name="toolTip">
+                 <string>Save file with a different name</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Save as...</string>
+                </property>
+                <property name="text">
+                 <string>Save As</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <item>
+                 <widget class="QLabel" name="label_wtatage">
+                  <property name="text">
+                   <string>Read Weight-at-Age</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinBox_wtatage">
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="maximum">
+                   <number>2</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="4" column="6">
+               <widget class="QToolButton" name="toolButton_data_file_save_as">
+                <property name="toolTip">
+                 <string>Save file with a different name</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Save as...</string>
+                </property>
+                <property name="text">
+                 <string>Save As</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-save-as.png</normaloff>:/i/icons/file-save-as.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="5">
+               <widget class="QToolButton" name="toolButton_file_read">
+                <property name="toolTip">
+                 <string>Read current files.</string>
+                </property>
+                <property name="text">
+                 <string>Read</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="stock_synth.qrc">
+                  <normaloff>:/i/icons/file-read.png</normaloff>:/i/icons/file-read.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLabel" name="label_control_file">
+                <property name="toolTip">
+                 <string>Filename of the control file</string>
+                </property>
+                <property name="text">
+                 <string>controlfile</string>
                 </property>
                </widget>
               </item>
@@ -289,17 +306,24 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
-               <widget class="QPushButton" name="pushButton_data_file">
-                <property name="text">
-                 <string>Data File Comments:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="2">
+              <item row="10" column="0">
                <widget class="QPushButton" name="pushButton_wtatage">
                 <property name="text">
                  <string>View wtatage.ss</string>
+                </property>
+               </widget>
+              </item>
+              <item row="10" column="1">
+               <widget class="QLabel" name="label_wtatage_file">
+                <property name="text">
+                 <string>wtatage.ss</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="1" colspan="6">
+               <widget class="QLabel" name="label_wtatage_info">
+                <property name="text">
+                 <string>0 = don't read wtatage.ss, 1 = read wtatage.ss and use growth params, 2 = future capability - unreliably acts like 1</string>
                 </property>
                </widget>
               </item>

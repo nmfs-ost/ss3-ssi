@@ -14,6 +14,7 @@ Dialog_readme::Dialog_readme(QWidget *parent, ss_model *mdata, QString dir) :
     ui(new Ui::Dialog_readme)
 {
     model = mdata;
+    version = QString("3.30.20");
     ui->setupUi(this);
 
     connect(ui->pushButton_save, SIGNAL(clicked()), SLOT(okayReadme()));
@@ -257,14 +258,22 @@ bool Dialog_readme::parseDate(QString line, QDateEdit *de)
 bool Dialog_readme::parseVersion(QString line)
 {
     bool okay = true;
-    int v1 = 3, v2 = 30, v3 = 0;
+    int v1, v2, v3;
     QStringList toks(line.split('.'));
-    v1 = toks[0].toInt(&okay);
-    if (okay)
-        v2 = toks[1].toInt(&okay);
-    if (okay)
-        v3 = toks[2].toInt(&okay);
-    if (!okay) {
+    if (toks.count() < 3) {
+        okay = false;
+    }
+    else {
+        v1 = toks[0].toInt(&okay);
+        if (okay)
+            v2 = toks[1].toInt(&okay);
+        if (okay)
+            v3 = toks[2].toInt(&okay);
+    }
+    if (okay) {
+        version = line.simplified();
+    }
+    else {
         QMessageBox::information(this, tr("File Error"), tr("Problem reading version information."));
     }
     return okay;

@@ -84,7 +84,7 @@ public slots:
     void printFiles();
     QString getDataFile();
     QString getControlFile();
-    void setReadWtAtAgeSS (bool flag);
+    void setReadWtAtAgeSS (int flag);
 
     void createReadme();
     void viewReadme();

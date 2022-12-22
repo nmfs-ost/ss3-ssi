@@ -157,7 +157,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (data, SIGNAL(showMorphObs()), SLOT(showMorphObs()));
     connect (data, SIGNAL(showRecapObs()), SLOT(showRecapObs()));
 
-    connect (population, SIGNAL(readWtAtAgeSS(bool)), SLOT(setReadWtAtAgeSS(bool)));
+    connect (population, SIGNAL(readWtAtAgeSS(int)), SLOT(setReadWtAtAgeSS(int)));
 
     ui->stackedWidget->setCurrentIndex(FILES);
     ui->stackedWidget->currentWidget()->layout()->addWidget(files);
@@ -676,7 +676,7 @@ QString MainWindow::getControlFile()
     return files->getControlFileName();
 }
 
-void MainWindow::setReadWtAtAgeSS(bool flag)
+void MainWindow::setReadWtAtAgeSS(int flag)
 {
     modelData->setReadWtAtAge(flag);
     files->setReadWtAtAge(flag);

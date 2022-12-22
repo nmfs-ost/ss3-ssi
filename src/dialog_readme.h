@@ -59,6 +59,7 @@ private:
     void viewFile();
     QString &formatFeatures();
     QString features;
+    QString version;
 
     ss_model *model;
 

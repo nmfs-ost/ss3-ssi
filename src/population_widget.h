@@ -94,7 +94,7 @@ public slots:
     void subFleetSpecificF();
 
 signals:
-    void readWtAtAgeSS (bool flag);
+    void readWtAtAgeSS (int flag);
 
 private slots:
     void changeFracFemParams();

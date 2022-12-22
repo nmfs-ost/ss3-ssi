@@ -1132,12 +1132,12 @@ void ss_model::changeUse2DAR1(bool value)
     emit darChanged(use);
 }
 
-bool ss_model::getReadWtAtAge() const
+int ss_model::getReadWtAtAge() const
 {
     return readWtAtAge;
 }
 
-void ss_model::setReadWtAtAge(bool value)
+void ss_model::setReadWtAtAge(int value)
 {
     readWtAtAge = value;
 }

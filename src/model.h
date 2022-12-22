@@ -94,8 +94,8 @@ public slots:
     int getSelexAdjustMethod() const;
     void setSelexAdjustMethod(int value);
 
-    bool getReadWtAtAge() const;
-    void setReadWtAtAge(bool value);
+    int getReadWtAtAge() const;
+    void setReadWtAtAge(int value);
 
     Fleet *getFleet(int index);
     Fleet *newFleet (QString name = QString(""));
