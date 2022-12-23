@@ -323,7 +323,7 @@
               <item row="9" column="1" colspan="6">
                <widget class="QLabel" name="label_wtatage_info">
                 <property name="text">
-                 <string>0 = don't read wtatage.ss, 1 = read wtatage.ss and use growth params, 2 = future capability - unreliably acts like 1</string>
+                 <string>0 = don't read wtatage.ss, 1 = read wtatage.ss and use growth params</string>
                 </property>
                </widget>
               </item>
