@@ -1,10 +1,10 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.20.0
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.20.02
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-version 3.30.18. It allows the user to change the data,
+version 3.30.20. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
@@ -15,6 +15,12 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.20.02
+    2022-12-23
+Major Improvements
+1. Changed read wtatage.ss to value instead of true/false (0-1).
+   This is in anticipation of adding 2 as an option.
+============================================================================
     3.30.20.01
     2022-10-13
 Major Improvements
@@ -22,6 +28,7 @@ Major Improvements
 2. Added 5 to options for F report values.
 3. Added multiyear and use log(ratio) to f report basis.
 4. Allows number of sexes to be negative.
+5. Added MSY units 5 and fixed display of MSY units.
 ============================================================================
     3.30.20.00
     2022-10-04
