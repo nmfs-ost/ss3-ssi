@@ -16,9 +16,10 @@ See ss_gui_copyright.txt for more information.
 History:
 ============================================================================
     3.30.20.02
-    2022-12-21
+    2022-12-23
 Major Improvements
-1. Changed read wtatage.ss to value instead of true/false (0-2).
+1. Changed read wtatage.ss to value instead of true/false (0-1).
+   This is in anticipation of adding 2 as an option.
 ============================================================================
     3.30.20.01
     2022-10-13

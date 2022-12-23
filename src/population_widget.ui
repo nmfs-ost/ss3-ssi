@@ -420,7 +420,7 @@
              <item row="20" column="0">
               <widget class="QLabel" name="label_wtatage">
                <property name="text">
-                <string>Read wtatage.ss</string>
+                <string>Read wtatage.ss (for reference)</string>
                </property>
               </widget>
              </item>
@@ -839,14 +839,14 @@
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="maximum">
-                <number>2</number>
+                <number>1</number>
                </property>
               </widget>
              </item>
              <item row="20" column="2" colspan="8">
               <widget class="QLabel" name="label_wtatage_info">
                <property name="text">
-                <string>0 = don't read wtatage.ss, 1 = read wtatage.ss and use growth params, 2 = future capability - unreliably acts like 1 (change on Files tab)</string>
+                <string>0 = don't read wtatage.ss, 1 = read wtatage.ss and use growth params (change on Files tab)</string>
                </property>
               </widget>
              </item>

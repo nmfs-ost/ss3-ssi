@@ -249,7 +249,7 @@
                    <enum>QAbstractSpinBox::NoButtons</enum>
                   </property>
                   <property name="maximum">
-                   <number>2</number>
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>

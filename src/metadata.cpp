@@ -36,13 +36,13 @@ QString getAppName ()
 
 QString getAppBuildDate ()
 {
-    QString str(app_build_date);
+    QString str("app_build_date");
     return str;
 }
 
 QString getAppCopyright ()
 {
-    QString str(app_build_date);
+    QString str("app_build_date");
     return str;
 }
 
