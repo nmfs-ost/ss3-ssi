@@ -841,7 +841,7 @@ bool file_widget::read_starter_file(ss_file *starter)
         ui->spinBox_datafiles->setValue(temp_int);
         }
         if (starterFile->getOkay() && !starterFile->getStop()) {
-        temp_int = starterFile->getIntValue(QString("last estimation phase"), 0, 100, 8);
+        temp_int = starterFile->getIntValue(QString("last estimation phase"), -1, 100, 8);
         model_info->set_last_estim_phase(temp_int);
         temp_int = starterFile->get_next_value("MCMC burn interval").toInt(); //getIntValue(QString("MC burn interval"), 0, 10000, 10);
         temp_int =  (temp_int < 0)? 0: temp_int;
@@ -879,7 +879,7 @@ bool file_widget::read_starter_file(ss_file *starter)
         token = starterFile->get_next_value("summary biomass min age");
         temp_int = token.toInt();
         model_info->set_biomass_min_age(temp_int);
-        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 104, 1);
+        temp_int = starterFile->getIntValue(QString("depletion basis"), 0, 105, 1);
         }
         if (starterFile->getOkay() && !starterFile->getStop()) {
         model_info->set_depletion_basis(temp_int);
@@ -1079,7 +1079,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("min age for calc of summary biomass"));
 
         chars += starterFile->write_val(model_info->get_depletion_basis(), 1,
-                    QString("Depletion basis:  denom is: 0=skip; 1=rel X*SPB0; 2=rel SPBmsy; 3=rel X*SPB_styr; 4=rel X*SPB_endyr; values; >=11 invoke N multiyr (up to 9!) with 10's digit; >100 invokes log(ratio)"));
+                    QString("Depletion basis: denom is: 0=skip; 1=X*SPBvirgin; 2=X*SPBmsy; 3=X*SPB_styr; 4=X*SPB_endyr; 5=X*dyn_Bzero; values>=11 invoke N multiyr (up to 9!) with 10's digit; >100 invokes log(ratio)"));
 
         chars += starterFile->write_val(model_info->get_depletion_denom(), 1,
                     QString("Fraction (X) for Depletion denominator (e.g. 0.4)"));

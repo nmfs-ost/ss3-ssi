@@ -857,7 +857,11 @@ It is undocumented and mostly used by the developer.</string>
               </widget>
              </item>
              <item row="11" column="2" colspan="2">
-              <widget class="QLineEdit" name="lineEdit_mcmc_bump_val"/>
+              <widget class="QLineEdit" name="lineEdit_mcmc_bump_val">
+               <property name="text">
+                <string>.01</string>
+               </property>
+              </widget>
              </item>
              <item row="7" column="2">
               <widget class="QCheckBox" name="checkBox_parm_trace">

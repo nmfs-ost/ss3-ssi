@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.20.02
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.21.01
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,15 +15,20 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.30.20.02
-    2022-12-23
-Major Improvements
+    3.30.21.01
+    2023-01-27
+Improvements
+1. Added option 5 to depletion basis.
+============================================================================
+   3.30.20.02
+   2022-12-23
+Improvements
 1. Changed read wtatage.ss to value instead of true/false (0-1).
-   This is in anticipation of adding 2 as an option.
+  This is in anticipation of adding 2 as an option.
 ============================================================================
     3.30.20.01
     2022-10-13
-Major Improvements
+Improvements
 1. Added multiyear and use log(ratio) to depletion basis.
 2. Added 5 to options for F report values.
 3. Added multiyear and use log(ratio) to f report basis.
@@ -32,7 +37,7 @@ Major Improvements
 ============================================================================
     3.30.20.00
     2022-10-04
-Major Improvements
+Improvements
 1. Updated for SS 3.30.20.
    a. Updated read/write for Sizefreq composition to include Comp_Error.
    b. Changed do_tags from bool (0,1) to int (0,1,2) and changes to

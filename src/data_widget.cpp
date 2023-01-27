@@ -499,7 +499,7 @@ void data_widget::refresh()
         ui->lineEdit_convergence->setText(QString::number(model_data->get_convergence_criteria()));
         ui->spinBox_f_bmass_min_age->setValue(model_data->get_biomass_min_age());
         setDepletionBasis(model_data->get_depletion_basis());
-        ui->comboBox_f_dep->setCurrentIndex(model_data->get_depletion_basis());
+//        ui->comboBox_f_dep->setCurrentIndex(model_data->get_depletion_basis());
         ui->lineEdit_dep_denom->setText(QString::number(model_data->get_depletion_denom()));
         ui->comboBox_spr_basis->setCurrentIndex(model_data->get_spr_basis());
         setFRptUnits (model_data->get_f_units());
@@ -1378,20 +1378,21 @@ void data_widget::changeDepletionBase(int base)
 void data_widget::setDepletionBasis(int basis)
 {
     int multi = 0;
-    int base = basis - 100;
+    int hundreds = basis / 100;
+    int base = basis - (100 * hundreds);
+    int tens = base / 10;
     bool uselog = false;
     ui->spinBox_f_dep->setValue(basis);
-    if (base > 0)
+    if (hundreds > 0)
     {
         uselog = true;
-        basis = base;
     }
-    if (basis > 9)
+    if (tens > 1)
     {
-        multi = basis / 10;
-        basis = basis - multi;
+        multi = tens;
+        base = base - (multi * 10);
     }
-    ui->comboBox_f_dep->setCurrentIndex(basis);
+    ui->comboBox_f_dep->setCurrentIndex(base);
     ui->spinBox_f_dep_multi->setValue(multi);
     ui->checkBox_f_dep_log->setChecked(uselog);
 }
