@@ -258,7 +258,7 @@ bool Dialog_readme::parseDate(QString line, QDateEdit *de)
 bool Dialog_readme::parseVersion(QString line)
 {
     bool okay = true;
-    int v1, v2, v3;
+    int v1 = 0, v2 = 0, v3 = 0;
     QStringList toks(line.split('.'));
     if (toks.count() < 3) {
         okay = false;
