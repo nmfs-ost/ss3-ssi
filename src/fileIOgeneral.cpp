@@ -11,16 +11,17 @@ int writeVersionComment(ss_file *file)
     QString line;
     line = QString ("#V%1;_Stock_Synthesis_by_Richard_Methot_(NOAA)").arg
             (getAppAppliesTo());
+    line.append(QString(";File_written_by_SSI_version_%1").arg(getAppVersion()));
     chars = file->writeline (line);
-    line = QString ("#_File written by GUI version %1").arg(getAppVersion());
-    chars += file->writeline (line);
-    line = QString("#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.");
+    line = QString("#_Stock_Synthesis_is_a_work_of_the_U.S._Government_and_is_not_subject_to_copyright_protection_in_the_United_States.");
     chars += file->writeline(line);
-    line = QString("#Foreign copyrights may apply. See copyright.txt for more information.");
+    line = QString("#_Foreign_copyrights_may_apply._See_copyright.txt_for_more_information.");
     chars += file->writeline(line);
-    line = QString("#_user_support_available_at:NMFS.Stock.Synthesis@noaa.gov");
+    line = QString("##_User_support_available_at:NMFS.Stock.Synthesis@noaa.gov");
     chars += file->writeline(line);
-    line = QString("#_user_info_available_at:https://vlab.noaa.gov/group/stock-synthesis");
+    line = QString("#_User_info_available_at:https://vlab.noaa.gov/group/stock-synthesis");
+    chars += file->writeline(line);
+    line = QString("#_Source_code_at:_https://github.com/nmfs-stock-synthesis/stock-synthesis");
     chars += file->writeline(line);
 
     return chars;

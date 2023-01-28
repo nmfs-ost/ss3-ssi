@@ -1042,7 +1042,7 @@ void file_widget::write_starter_file (QString filename)
         chars += starterFile->writeline("#");
 
         chars += starterFile->write_val(ui->spinBox_datafiles->value(), 1,
-                     QString("Number of datafiles to produce: 1st is input, 2nd is estimates, 3rd and higher are bootstrap"));
+                     QString("Number of datafiles to produce: 0 turns off all *.ss_new; 1st is data_echo.ss_new, 2nd is data_expval.ss, 3rd and higher are data_boot_**N.ss,"));
 
         chars += starterFile->write_val(model_info->get_last_estim_phase(), 1,
                      QString("Turn off estimation for parameters entering after this phase"));
@@ -1088,7 +1088,7 @@ void file_widget::write_starter_file (QString filename)
                     QString("SPR_report_basis:  0=skip; 1=(1-SPR)/(1-SPR_tgt); 2=(1-SPR)/(1-SPR_MSY); 3=(1-SPR)/(1-SPR_Btarget); 4=rawSPR"));
 
         chars += starterFile->write_val(model_info->get_f_units(), 1,
-                    QString("Annual_F_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Apical_F's); 4=true F for range of ages; 5=unweighted avg. F for range of ages"));
+                    QString("F_reporting_units: 0=skip; 1=exploitation(Bio); 2=exploitation(Num); 3=sum(Apical_F's); 4=true F for range of ages; 5=unweighted avg. F for range of ages"));
 
         line.clear();
         line.append(QString(" %1 %2 #_min and max age over which average F will be calculated with F_reporting=4 or 5" ).arg
@@ -1114,9 +1114,9 @@ void file_widget::write_starter_file (QString filename)
             temp_int = ui->comboBox_MCMC_output->currentIndex();
             temp_float += temp_int;
             chars += starterFile->write_val(temp_float, 1,
-                    QString("MCMC output detail: integer part (0=default; 1=adds obj func components); and decimal part (added to SR_LN(R0) on first call to mcmc)"));
+                    QString("MCMC output detail: integer part (0=default; 1=adds obj func components; 2= +write_report_for_each_mceval); and decimal part (added to SR_LN(R0) on first call to mcmc)"));
             chars += starterFile->write_val(model_info->getALKTol(), 1,
-                    QString ("ALK tolerance (example 0.0001)"));
+                    QString ("ALK tolerance ***disabled in code*** (example 0.0001)"));
             if (model_info->getRandSeed() != 0)
                 chars += starterFile->write_val(model_info->getRandSeed(), 1,
                         QString ("random number seed for bootstrap data (-1 to use long(time) as seed)"));
