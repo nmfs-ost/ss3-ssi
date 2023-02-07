@@ -99,8 +99,8 @@ void forecast_widget::reset()
     ui->lineEdit_ctl_rule_no_F->setText("0.1");
     ui->spinBox_num_forecast_loops->setValue(3);
     ui->spinBox_first_loop->setValue(1);
-    ui->spinBox_fcast_recr_adjust->setValue(0);
-    ui->lineEdit_fcast_recr_adj_value->setText("0.0");
+    ui->comboBox_fcast_recr_adjust->setCurrentIndex(0);
+    ui->lineEdit_fcast_recr_adj_value->setText("1.0");
     ui->spinBox_fcast_loops_5->setValue(0);
     ui->spinBox_first_caps_yr->setValue(-1);
     ui->lineEdit_log_sd->setText("0.0");
@@ -149,9 +149,9 @@ void forecast_widget::disconnectAll(ss_forecast *fcast)
 
     disconnect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), this, SLOT(set_num_forecast_loops(int)));
     disconnect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), this, SLOT(change_first_forecast_loop(int)));
-/*    disconnect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
-    disconnect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
-    disconnect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
+    disconnect (ui->comboBox_fcast_recr_adjust, SIGNAL(currentIndexChanged(int)), fcast, SLOT(change_fcast_recr_adj(int)));
+    disconnect (ui->lineEdit_fcast_recr_adj_value, SIGNAL(editEnded()), this, SLOT(change_fcast_recr_adj_value(int)));
+    disconnect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));
 
     disconnect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
     disconnect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
@@ -213,9 +213,9 @@ void forecast_widget::connectAll(ss_forecast *fcast)
 
     connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), SLOT(set_num_forecast_loops(int)));
     connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), SLOT(change_first_forecast_loop(int)));
-/*    connect (ui->spinBox_fcast_loops_3, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl3(int)));
-    connect (ui->spinBox_fcast_loops_4, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl4(int)));
-    connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));*/
+    connect (ui->comboBox_fcast_recr_adjust, SIGNAL(currentIndexChanged(int)), fcast, SLOT(change_fcast_recr_adj(int)));
+    connect (ui->lineEdit_fcast_recr_adj_value, SIGNAL(editEnded()), SLOT(change_fcast_recr_adj_value(int)));
+    connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));
 
     connect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
     connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
@@ -315,7 +315,7 @@ void forecast_widget::refresh()
     ui->spinBox_num_forecast_loops->setValue(numloops);
     ui->spinBox_first_loop->setMaximum(numloops);
     ui->spinBox_first_loop->setValue(firstloop);
-    ui->spinBox_fcast_recr_adjust->setValue(fcast->get_forecast_recr_adjust());
+    ui->comboBox_fcast_recr_adjust->setCurrentIndex(fcast->get_forecast_recr_adjust());
     ui->lineEdit_fcast_recr_adj_value->setText(QString::number(fcast->get_forecast_recr_adj_value()));
     ui->spinBox_fcast_loops_5->setValue(fcast->get_forecast_loop_ctl5());
 
@@ -562,6 +562,24 @@ void forecast_widget::set_num_forecast_loops(int num)
 void forecast_widget::change_first_forecast_loop(int num)
 {
     model_data->forecast->set_forecast_loop_first(num);
+}
+
+void forecast_widget::change_fcast_recr_adj(int index)
+{
+    switch (index) {
+    default:
+        ;
+    }
+    model_data->forecast->set_forecast_recr_adjust(index);
+}
+
+void forecast_widget::change_fcast_recr_adj_value()
+{
+    bool okay = true;
+    QString value = ui->lineEdit_fcast_recr_adj_value->text();
+    float fvalue = value.toFloat(&okay);
+    if (okay)
+        model_data->forecast->set_forecast_recr_adj_value(fvalue);
 }
 
 void forecast_widget::set_log_catch_std_dev()

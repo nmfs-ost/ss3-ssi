@@ -1626,7 +1626,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         fcast->set_num_forecast_loops(temp_int);
         temp_int = f_file->getIntValue(QString("First forecast loop with stochastic recruitment"), 1, 3, 3);
         fcast->set_forecast_loop_first(temp_int);
-        temp_int = f_file->getIntValue(QString("Forecast recruitment"), 0, 3, 0);
+        temp_int = f_file->getIntValue(QString("Forecast recruitment"), 0, 5, 0);
         fcast->set_forecast_recr_adjust(temp_int);
         token = f_file->get_next_value(QString("Scalar or N years to ave recruitment"));
         temp_float = token.toFloat();

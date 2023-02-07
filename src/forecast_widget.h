@@ -89,6 +89,8 @@ public slots:
     void set_cr_target();
     void set_num_forecast_loops (int num);
     void change_first_forecast_loop (int num);
+    void change_fcast_recr_adj(int index);
+    void change_fcast_recr_adj_value();
     void set_log_catch_std_dev();
 
     void change_use_alloc_groups (bool flag);
