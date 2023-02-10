@@ -20,6 +20,8 @@ History:
 Improvements
 1. Added options 4 and 5 to forecast recruitment adjustments.
    Changed the spinBox to a comboBox.
+2. Fixed display of parameters, i.e. tablemodels.
+3. Fixed initial display of morph distribution values.
 ============================================================================
     3.30.21.01
     2023-01-27

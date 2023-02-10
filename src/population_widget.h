@@ -57,6 +57,7 @@ public slots:
     void changeLorenzMaxAge (int num);
     void changeNumGrowthPat(int num);
     void changeNumSubMorph(int num);
+    void normalizeGrowthMorphDist();
     void setGrowthModel(int opt);
     void changeGrowthModel(int opt);
     int getGrowthModel();

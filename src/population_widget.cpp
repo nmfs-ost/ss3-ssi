@@ -186,6 +186,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_growth_pattern, SIGNAL(valueChanged(int)), SLOT(changeGrowthPattern(int)));
     connect (ui->spinBox_growth_num_patterns, SIGNAL(valueChanged(int)), SLOT(changeNumGrowthPat(int)));
     connect (ui->spinBox_growth_num_submorphs, SIGNAL(valueChanged(int)), SLOT(changeNumSubMorph(int)));
+    connect (ui->pushButton_growth_submorph_dist, SIGNAL(clicked()), SLOT(normalizeGrowthMorphDist()));
 
     // Movement
     moveDefsView = new tableview();
@@ -481,7 +482,7 @@ void population_widget::refresh()
 
     // growth
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
-    growthMorphDistView->setHeight(pop->Grow()->getMorphDistModel());
+    growthMorphDistView->setHeight(1);
     growthMorphDistView->resizeColumnsToContents();
     setGrowthModel(pop->Grow()->getModel());
     ui->doubleSpinBox_growth_age_Amin->setValue(pop->Grow()->getAge_for_l1());
@@ -502,7 +503,6 @@ void population_widget::refresh()
         changeGrowthPattern(1);
         temp_int = pop->Grow()->getNum_morphs();
         ui->spinBox_growth_num_submorphs->setValue(temp_int);
-        changeNumSubMorph(temp_int);
     }
 
     // recruitment
@@ -635,7 +635,8 @@ void population_widget::changeFecundityOption(int opt)
 {
     int num = opt + 1;
     pop->Fec()->setMethod(num);
-    fecundParamsView->setHeight(2);
+    fecundParamsView->setModel(currPattern->getFemMatureParams());
+    fecundTVParamsView->setModel(currPattern->getFemMatureTVParams());
     fecundParamsView->resizeColumnsToContents();
 }
 
@@ -818,19 +819,16 @@ void population_widget::changeNumGrowthPat(int num)
     bool vis = num > 0;
     pop->Grow()->setNum_patterns(num);
     ui->spinBox_growth_pattern->setMaximum(num);
-    ui->label_growth_num_submorphs->setVisible(vis);
-    ui->spinBox_growth_num_submorphs->setVisible(vis);
+//    ui->label_growth_num_submorphs->setVisible(vis);
+//    ui->spinBox_growth_num_submorphs->setVisible(vis);
     if (vis)
         changeNumSubMorph(ui->spinBox_growth_num_submorphs->value());
-    else
-        changeNumSubMorph(1);
 }
 
 void population_widget::changeNumSubMorph(int num)
 {
-    bool vis = false;
+    bool enable = true;
     int nmph = pop->Grow()->getNum_morphs();
-    float value, within, between;
     if (num == 2)
     {
         ui->spinBox_growth_num_submorphs->setValue(3);
@@ -841,36 +839,37 @@ void population_widget::changeNumSubMorph(int num)
         ui->spinBox_growth_num_submorphs->setValue(5);
         return;
     }
+
     if (nmph != num)
     {
-        if (num > 1)
-        {
-            value = pop->Grow()->getMorph_within_ratio();
-            if (value == 1) value = .7;
-            between = std::sqrt(1. / (1. + value * value));
-            within = value * between;
-
-            vis = true;
-            ui->doubleSpinBox_growth_morph_ratio->setValue(value);
-            ui->doubleSpinBox_growth_morph_between->setValue(between);
-            ui->doubleSpinBox_growth_morph_within->setValue(within);
-        }
-        else
-        {
-            ui->doubleSpinBox_growth_morph_ratio->setValue(1);
-            ui->doubleSpinBox_growth_morph_between->setValue(.000001);
-            ui->doubleSpinBox_growth_morph_within->setValue(1);
-        }
         pop->Grow()->setNum_morphs(num);
     }
-    ui->label_growth_submorph_ratio->setVisible(vis);
-    ui->doubleSpinBox_growth_morph_ratio->setVisible(vis);
-    ui->label_growth_morph_within->setVisible(vis);
-    ui->doubleSpinBox_growth_morph_within->setVisible(vis);
-    ui->label_growth_morph_between->setVisible(vis);
-    ui->doubleSpinBox_growth_morph_between->setVisible(vis);
-    ui->label_growth_submorph_dist->setVisible(vis);
-    growthMorphDistView->setVisible(vis);
+    if (num == 1)
+        enable = false;
+    changeGrowthMorphRatio(pop->Grow()->getMorph_within_ratio());
+    ui->doubleSpinBox_growth_morph_ratio->setEnabled(enable);
+    growthMorphDistView->setEnabled(enable);
+    growthMorphDistView->resizeColumnsToContents();
+}
+
+void population_widget::normalizeGrowthMorphDist()
+{
+    QStringList valstr = pop->Grow()->getMorphDist_str();
+    QList<float> vals;
+    int count = valstr.count();
+    float total = 0;
+    for (int i = 0; i < count; i++)
+    {
+        vals.append(valstr.at(i).toFloat());
+        total += vals.at(i);
+    }
+    for (int i = 0; i < count; i++)
+    {
+        vals[i] /= total;
+        valstr[i] = QString::number(vals[i], 'f', 4);
+    }
+    pop->Grow()->setMorph_dist(valstr);
+    growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
     growthMorphDistView->resizeColumnsToContents();
 }
 
@@ -1007,7 +1006,6 @@ void population_widget::changeGrowthBinLength(int num)
 void population_widget::changeGrowthMorphRatio(double ratio)
 {
     double between, within;
-    pop->Grow()->setMorph_within_ratio(ratio);
 
     if (ui->spinBox_growth_num_submorphs->value() == 1)
     {
@@ -1017,6 +1015,7 @@ void population_widget::changeGrowthMorphRatio(double ratio)
     }
     else
     {
+        pop->Grow()->setMorph_within_ratio(ratio);
         between = std::sqrt(1. / (1. + ratio * ratio));
         within = ratio * between;
     }
