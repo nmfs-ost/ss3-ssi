@@ -142,7 +142,7 @@ void ErrorFloatDialog::acceptedClicked()
         okay = checkValsWithSum();
 
     if (okay)
-        accepted();
+        emit accepted();
 }
 
 void ErrorFloatDialog::rejectedClicked()

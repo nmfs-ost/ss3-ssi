@@ -1485,6 +1485,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 {
     QString token;
     QString temp_str;
+    bool temp_bool;
     QStringList str_lst(" ");
     float temp_float;
     int temp_int = 0;
@@ -1631,9 +1632,23 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         token = f_file->get_next_value(QString("Scalar or N years to ave recruitment"));
         temp_float = token.toFloat();
         fcast->set_forecast_recr_adj_value(temp_float);
-        token = f_file->get_next_value(QString("loop control 5"));
+        token = f_file->get_next_value(QString("MGparm averaging"));
         temp_int = token.toInt();
-        fcast->set_forecast_loop_ctl5(temp_int);
+        fcast->setMGparmAveraging(temp_int);
+        if (temp_int == 1)
+        {
+            num = 0;
+            do {
+                str_lst.clear();
+                str_lst.append(f_file->get_next_value(QString("Type")));
+                str_lst.append(f_file->get_next_value(QString("Start year")));
+                str_lst.append(f_file->get_next_value(QString("End year")));
+                temp_int = str_lst[0].toInt();
+                if (temp_int != END_OF_LIST)
+                    fcast->setMGparmAveLine(num, str_lst);
+                num++;
+            } while (temp_int != END_OF_LIST);
+        }
         }
         if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("caps and allocs first yr"));
@@ -1787,6 +1802,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
     int temp_int, num, i, chars = 0;
     int yr = 0, bmarks = 0, msy = 0;
     float temp_float;
+    bool temp_bool;
     QString value, line, temp_string;
     QStringList str_lst, tmp_lst;
     ss_forecast *fcast = data->forecast;
@@ -1899,7 +1915,25 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->write_val(fcast->get_forecast_loop_first(), 1, QString("First forecast loop with stochastic recruitment"));
         chars += f_file->write_val(fcast->get_forecast_recr_adjust(), 1, QString("Forecast recruitment: 0=spawn_recr; 1=value*spawn_recr_fxn; 2=value*VirginRecr; 3=recent mean from yr range above (need to set phase to -1 in control to get constant recruitment in MCMC)"));
         chars += f_file->write_val(fcast->get_forecast_recr_adj_value(), 1, QString("value is multiplier of SRR "));
-        chars += f_file->write_val(fcast->get_forecast_loop_ctl5(), 1, QString("Forecast loop control #5 (reserved for future bells&whistles)"));
+        temp_bool = fcast->getMGparmAveraging();
+        chars += f_file->write_val((temp_bool?1:0), 1, QString("MGparam averaging"));
+        if (!temp_bool)
+        {
+            line = QString("# Conditional input if MGparam averaging == 1");
+            chars += f_file->writeline(line);
+            line = QString("# enter list of:  type, st_year, end_year and end with type=-9999");
+            chars += f_file->writeline(line);
+        }
+        if (temp_bool)
+        {
+            line = QString("# type st_year end_year ");
+            chars += f_file->writeline(line);
+            for (int i = 0, total = fcast->getNumMGparmAve(); i < total; i++)
+            {
+                chars += f_file->write_vector(fcast->getMGparmAveLine(i), 1);
+            }
+            chars += f_file->writeline(QString(" -9999 -1 -1"));
+        }
 
         chars += f_file->write_val(fcast->get_caps_alloc_st_year(), 1, QString("FirstYear for caps and allocations (should be after years with fixed inputs)"));
 

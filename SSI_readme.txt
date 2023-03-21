@@ -16,6 +16,12 @@ See ss_gui_copyright.txt for more information.
 History:
 ============================================================================
     3.30.21.02
+    2023-03-23
+Improvements
+1. Added forecast control 5.
+
+============================================================================
+    3.30.21.02
     2023-02-06
 Improvements
 1. Added options 4 and 5 to forecast recruitment adjustments.
