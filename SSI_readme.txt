@@ -1,6 +1,6 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.21.01
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.22.00
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
@@ -15,11 +15,13 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
-    3.30.21.02
-    2023-03-23
+    3.30.22.00
+    2023-03-21
 Improvements
-1. Added forecast control 5.
-
+1. Changed forecast control 5 to MG parameter averaging.
+   - Changed to checkbox (whether or not to do).
+   - Added spinBox for number of lines in table.
+   - Added tableview for list of options.
 ============================================================================
     3.30.21.02
     2023-02-06
