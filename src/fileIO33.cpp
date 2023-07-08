@@ -324,7 +324,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         if (d_file->getOkay() && !d_file->getStop()) {
         compositionLength *l_data = data->get_length_composition();
         if (l_data == nullptr) {
-            l_data = new compositionLength();
+            l_data = new compositionLength(data);
             data->set_length_composition(l_data);
         }
         int num_len_bins = 2;
@@ -425,6 +425,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 for (int j = 0; j <= numAges; j++)
                     str_lst.append(d_file->get_next_value());
                 a_data->set_error_def(i, str_lst);
+                if (a_data->get_error_def(i).at(0).toInt() < 0)
+                {
+                    if (a_data->getUseAgeKeyZero() < 0)
+                        a_data->setUseAgeKeyZero(i);
+                }
             }
             for (i = 0; i < total_fleets; i++)
             {
@@ -539,7 +544,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         {
             for (i = 0; i < num_vals; i++)
             {
-                compositionGeneral *cps = new compositionGeneral ();
+                compositionGeneral *cps = new compositionGeneral (data);
                 cps->setNumber(i+1);
                 data->addGeneralCompMethod(cps);
             }
@@ -1641,11 +1646,13 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
             do {
                 str_lst.clear();
                 str_lst.append(f_file->get_next_value(QString("Type")));
-                str_lst.append(f_file->get_next_value(QString("Start year")));
-                str_lst.append(f_file->get_next_value(QString("End year")));
+                str_lst.append(f_file->get_next_value(QString("Method")));
+                str_lst.append(f_file->get_next_value(QString("Min year")));
+                str_lst.append(f_file->get_next_value(QString("Max year")));
                 temp_int = str_lst[0].toInt();
-                if (temp_int != END_OF_LIST)
-                    fcast->setMGparmAveLine(num, str_lst);
+                if (temp_int == END_OF_LIST)
+                    break;
+                fcast->setMGparmAveLine(num, str_lst);
                 num++;
             } while (temp_int != END_OF_LIST);
         }
@@ -1926,13 +1933,13 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         }
         if (temp_bool)
         {
-            line = QString("# type st_year end_year ");
+            line = QString("# type method st_year end_year ");
             chars += f_file->writeline(line);
             for (int i = 0, total = fcast->getNumMGparmAve(); i < total; i++)
             {
                 chars += f_file->write_vector(fcast->getMGparmAveLine(i), 1);
             }
-            chars += f_file->writeline(QString(" -9999 -1 -1"));
+            chars += f_file->writeline(QString(" -9999 -1 -1 -1"));
         }
 
         chars += f_file->write_val(fcast->get_caps_alloc_st_year(), 1, QString("FirstYear for caps and allocations (should be after years with fixed inputs)"));
@@ -2777,7 +2784,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
 
         // ageing error if requested
     if (c_file->getOkay() && !c_file->getStop()) {
-        if (data->get_age_composition()->getUseParameters())
+        if (data->get_age_composition()->getUseAgeKeyZero() >= 0)
         {
             for (i = 0; i < 7; i++)
             {
@@ -2849,6 +2856,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 gp = pop->Grow()->getPattern(i);
                 readTimeVaryParams(c_file, data, gp->getFractionFemaleParams(), timevaryread, gp->getFracFmTVParams());
+            }
+            if (data->get_age_composition()->getUseAgeKeyZero() >= 0)
+            {
+                compositionAge *agec = data->get_age_composition();
+                readTimeVaryParams(c_file, data, agec->getErrorParameters(), timevaryread, agec->getErrorTVParameters());
             }
         }
     }

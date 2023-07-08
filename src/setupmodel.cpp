@@ -670,7 +670,7 @@ void shortParamMultModel::updateParamData(QModelIndex tl, QModelIndex br, QVecto
 
 
 
-longParameterModel::longParameterModel(QObject *parent) : shortParameterModel(parent)
+longParameterModel::longParameterModel(ss_model *parent) : shortParameterModel(parent)
 {
     header << "Env" << "Use_Dev" << "Dev_min" << "Dev_max" << "Dev_sd" << "Use_Blk" << "B_type";
     defaultParam << "0" << "0" << "0" << "0" << "0" << "0" << "0";
@@ -734,7 +734,7 @@ void longParameterModel::updateParamData(QModelIndex tl, QModelIndex br, QVector
 // Create the setup model that includes parameters
 // and associated time-varying parameters
 //
-timeVaryParameterModel::timeVaryParameterModel(QObject *parent) : QObject(parent)
+timeVaryParameterModel::timeVaryParameterModel(ss_model *parent) : QObject(parent)
 {
     model_data = static_cast<ss_model *>(parent);
     header << "Lo" << "Hi" << "Init" << "Prior" << "P_sd" << "P_type" << "Phase";

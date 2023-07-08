@@ -10,7 +10,7 @@ Fleet::Fleet(ss_model *parent) :
     f_timing = .5;
 
     set_max_catch(-1);
-    catchMultiplierParam = new longParameterModel(this);
+    catchMultiplierParam = new longParameterModel(parent);
     retainCatch = new tablemodel(this);
     retainCatch->setColumnCount(5);
     catchHeader << "Year" << "Season" << "Fleet" << "Catch" << "Catch SE";

@@ -1,10 +1,10 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.22.00
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.22.01
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-version 3.30.20. It allows the user to change the data,
+version 3.30.22. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12

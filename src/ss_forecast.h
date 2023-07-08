@@ -17,7 +17,7 @@ class ss_forecast : public QObject
     Q_OBJECT
 public:
     explicit ss_forecast(int fleets = 1, int seasons = 1, QObject *parent = nullptr);
-    ~ss_forecast();
+    ~ss_forecast() override;
 
 signals:
     void allocGrpsChanged();

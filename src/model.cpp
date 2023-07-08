@@ -207,7 +207,7 @@ void ss_model::reset()
 //    QMessageBox::information(this, "Program Flow", "Model age comp set up.");
 
     if (lengthData == nullptr)
-        lengthData = new compositionLength();
+        lengthData = new compositionLength(this);
     else
         lengthData->reset();
 //    QMessageBox::information(this, "Program Flow", "Model length comp set up.");
@@ -835,9 +835,9 @@ void ss_model::setNumGeneralCompMethods(int num)
     if (cListGeneralMethods.count() != num)
     {
         if (cListGeneralMethods.isEmpty())
-            cListGeneralMethods.append(new compositionGeneral());
+            cListGeneralMethods.append(new compositionGeneral(this));
         while (cListGeneralMethods.count() < num)
-            cListGeneralMethods.append(new compositionGeneral());
+            cListGeneralMethods.append(new compositionGeneral(this));
         while (num < cListGeneralMethods.count())
         {
             compositionGeneral *cg = cListGeneralMethods.takeLast();

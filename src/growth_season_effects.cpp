@@ -2,15 +2,16 @@
 #include "parametermodel.h"
 #include "setupmodel.h"
 
-GrowthSeasonalEffects::GrowthSeasonalEffects()
+GrowthSeasonalEffects::GrowthSeasonalEffects(ss_model *model)
 {
+    ssModel = model;
     effects = new tablemodel();
     effects->setRowCount(1);
     effHeader << "FWtLen1" << "FWtLen2" << "Mat1" << "Mat2" << "Fec1" << "Fec2";
     effHeader << "MWtLen1" << "MWtLen2" << "L1" << "K";
     effects->setHeader(effHeader);
     effects->setRowHeader(0, "");
-    paramtable = new timeVaryParameterModel();//parameterModelTV();
+    paramtable = new timeVaryParameterModel(ssModel);//parameterModelTV();
     clear();
 }
 

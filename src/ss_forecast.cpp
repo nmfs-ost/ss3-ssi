@@ -26,7 +26,7 @@ ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
     maxCatchArea->setRowHeader(0, QString("Catch"));
 
     header.clear();
-    header << "Type" << "St_year" << "End_year";
+    header << "Type" << "Method" << "Min_yr" << "Max_yr";
     mgParmAveList = new tablemodel(this);
     mgParmAveList->setRowCount(1);
     mgParmAveList->setHeader(header);

@@ -149,7 +149,7 @@ class longParameterModel : public shortParameterModel
 {
     Q_OBJECT
 public:
-    explicit longParameterModel(QObject *parent = nullptr);
+    explicit longParameterModel(ss_model *parent);
     ~longParameterModel();
 
 signals:
@@ -177,7 +177,7 @@ class timeVaryParameterModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit timeVaryParameterModel(QObject *parent = nullptr);
+    explicit timeVaryParameterModel(ss_model *parent);
     ~timeVaryParameterModel();
 
 signals:

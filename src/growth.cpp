@@ -34,10 +34,10 @@ ss_growth::ss_growth(QObject *parent)
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new longParameterModel(parent);
+    cohortParam = new longParameterModel(ssModel);
     cohortParam->setNumParams(1);
     cohortParam->setParamHeader(0, QString("CohortGrowDev"));
-    cohortVarParam = new timeVaryParameterModel(parent);
+    cohortVarParam = new timeVaryParameterModel(ssModel);
     cohortVarParam->setTotalNumVarTables(1);
     cohortVarParam->setTableTitle(0, QString("CohortGrowDev"));
     connect (cohortParam, SIGNAL(paramChanged(int,QStringList)),

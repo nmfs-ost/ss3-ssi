@@ -18,7 +18,7 @@ class growthPattern : public QObject
     Q_OBJECT
 
 public:
-    growthPattern(QObject *parent);
+    growthPattern(ss_model *parent);
     growthPattern(const growthPattern &rhs);
     ~growthPattern();
 
