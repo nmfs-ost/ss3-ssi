@@ -15,6 +15,13 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.22.01
+    2023-07-21
+Improvements
+1. Fixed nodeLast for generating nodes for spline selectivity.
+2. Added Method for MG param averaging.
+3. Corrected use of UseAgeKeyZero.
+============================================================================
     3.30.22.00
     2023-03-21
 Improvements
