@@ -128,6 +128,10 @@ public slots:
     void setMorph_dist (int index, float value);
     void setMorphDist ();
     tablemodel *getMorphDistModel() {return morphdisttable;}
+    void setMorphDistStDev (QStringList &stdevlist);
+    tablemodel *getMorphDistStDevModel() const;
+    QStringList getMorphDistStDev() const;
+
 
     int getDevPhase() const;
     void setDevPhase(int value);
@@ -197,6 +201,7 @@ private:
     int hermaphMales;
 
     tablemodel *morphdisttable;
+    tablemodel *morphdiststdevtable;
 
     longParameterModel *cohortParam;
     timeVaryParameterModel *cohortVarParam;

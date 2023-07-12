@@ -1,10 +1,10 @@
 SSI_readme.txt
 
-        Stock Synthesis ver 3.30 GUI Interface ver 3.30.22.00
+        Stock Synthesis ver 3.30 GUI Interface ver 3.30.22.01
         -----------------------------------------------------
 
 This GUI is created as a front-end to the Stock Synthesis application,
-version 3.30.20. It allows the user to change the data,
+version 3.30.22. It allows the user to change the data,
 run the executable, and display some results.
 
 Built on Windows 10 using MinGW 5.3 with Qt 5.12
@@ -14,6 +14,15 @@ protection in the United States. Foreign copyrights may apply.
 See ss_gui_copyright.txt for more information.
 
 History:
+============================================================================
+    3.30.22.01
+    2023-07-21
+Improvements
+1. Fixed nodeLast for generating nodes for spline selectivity.
+2. Added Method for MG param averaging.
+3. Corrected use of UseAgeKeyZero.
+4. Added parameter for Platoon St Dev (when within ratio < 0).
+5. Corrected handling of Nat Mort break points.
 ============================================================================
     3.30.22.00
     2023-03-21

@@ -2164,7 +2164,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     if (c_file->getOkay() && !c_file->getStop()) {
         if (num > 1)
         {
-            temp_float = c_file->get_next_value(QString("Morph between ratio")).toFloat();
+            temp_float = c_file->get_next_value(QString("Morph within/between ratio")).toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
             temp_float = c_file->get_next_value(QString("Morph dist")).toFloat();
             if ((int)temp_float != -1)
@@ -2530,7 +2530,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 {
                     datalist = readParameter (c_file);
                     gp->setFemNatMParam(j, datalist);
-                    gp->getFemNatMParams()->setRowHeader(j, QString("NatM_p_%1_Fem_%2").arg(QString::number(j+1), gpstr));
+                    gp->getFemNatMParams()->setRowHeader(j, QString("NatM_break_%1_Fem_%2").arg(QString::number(j+1), gpstr));
                     index++;
                 }
                 break;
@@ -2632,7 +2632,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     {
                         datalist = readParameter (c_file);
                         gp->setMaleNatMParam(j, datalist);
-                        gp->setMaleNatMParamHeader(j, QString("NatM_p_%1_Mal_%2").arg(QString::number(j+1), gpstr));
+                        gp->setMaleNatMParamHeader(j, QString("NatM_break_%1_Mal_%2").arg(QString::number(j+1), gpstr));
                     }
                     break;
                 case 3:
@@ -2782,8 +2782,17 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
     }
 
-        // ageing error if requested
     if (c_file->getOkay() && !c_file->getStop()) {
+        // Platoon StDev Ratio
+        if (pop->Grow()->getNum_morphs() > 1 && pop->Grow()->getMorph_within_ratio() < 0)
+        {
+            datalist = readParameter(c_file);    // Morph within StDev
+            pop->Grow()->setMorphDistStDev(datalist);
+        }
+    }
+
+    if (c_file->getOkay() && !c_file->getStop()) {
+        // ageing error if requested
         if (data->get_age_composition()->getUseAgeKeyZero() >= 0)
         {
             for (i = 0; i < 7; i++)
@@ -4325,6 +4334,16 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(QString(" #_%1").arg(pop->Move()->getMovementParams()->getRowHeader(par+1)));
             chars += c_file->writeline (line);*/
+        }
+
+        // Platoon StDev Ratio
+        line = QString("#  Platoon StDev Ratio");
+        chars += c_file->writeline(line);
+        if (pop->Grow()->getNum_morphs() > 1 && pop->Grow()->getMorph_within_ratio() < 0)
+        {
+            line.clear();
+            str_list = pop->Grow()->getMorphDistStDev();
+            chars += c_file->write_vector(str_list, 2, QString(QString(" # Platoon_SD_Ratio")));
         }
 
         //ageing error parameters

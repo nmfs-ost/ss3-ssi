@@ -112,7 +112,7 @@ private slots:
     void changeFecundityOffsetOption(int opt);
     void changeFecundityAdjustment(int opt);
     void changeFirstMatureAge();
-    void changeGrowthMorphRatio(double ratio);
+    bool changeGrowthMorphRatio(double ratio);
     void changeGrowthTimeVaryRead(int flag);
 
     void changeGrowthBinMethod(int value);
@@ -195,6 +195,8 @@ private:
     growthPattern *currPattern;
 
     tableview *growthMorphDistView;
+    tableview *growthMorphStDev;
+
     tableview *growthFemParamsView;
     tableview *growthFemTVParamsView;
     tableview *cvFemParamsView;

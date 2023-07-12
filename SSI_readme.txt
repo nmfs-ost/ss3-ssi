@@ -21,6 +21,8 @@ Improvements
 1. Fixed nodeLast for generating nodes for spline selectivity.
 2. Added Method for MG param averaging.
 3. Corrected use of UseAgeKeyZero.
+4. Added parameter for Platoon St Dev (when within ratio < 0).
+5. Corrected handling of Nat Mort break points.
 ============================================================================
     3.30.22.00
     2023-03-21
