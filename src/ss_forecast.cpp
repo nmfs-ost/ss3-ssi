@@ -25,6 +25,12 @@ ss_forecast::ss_forecast(int fleets, int seasons, QObject *parent) :
     maxCatchArea->setColumnCount(0);
     maxCatchArea->setRowHeader(0, QString("Catch"));
 
+    header.clear();
+    header << "Type" << "Method" << "Min_yr" << "Max_yr";
+    mgParmAveList = new tablemodel(this);
+    mgParmAveList->setRowCount(1);
+    mgParmAveList->setHeader(header);
+
     allocGrpList = new tablemodel(this);
     allocGrpList->setRowCount(1);
     allocGrpList->setColumnCount(0);
@@ -526,7 +532,7 @@ void ss_forecast::reset()
     i_fcast_loop_first = 3;// First forecast loop with stochastic recruitment
     i_fcast_recr_adj = 0;// Forecast loop control #3 (reserved for future bells&whistles)
     f_fcast_recr_adj_val = 0;// Forecast loop control #4 (reserved for future bells&whistles)
-    i_fcast_loop_5 = 0;// Forecast loop control #5 (reserved for future bells&whistles)
+    mgParmAveraging = 0;// Forecast loop control #5 (reserved for future bells&whistles)
     i_caps_st_year = 2015;// FirstYear for caps and allocations (should be after years with fixed inputs)
     f_log_ctch_stdv = 0.0;// stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)
     i_rebuilder = false;// Do West Coast gfish rebuilder output (0/1)
@@ -573,7 +579,7 @@ void ss_forecast::clear()
     i_fcast_loop_first = 1;
     i_fcast_recr_adj = 0;
     f_fcast_recr_adj_val = 0;
-    i_fcast_loop_5 = 0;
+    mgParmAveraging = 0;
     i_caps_st_year = 0;
     f_log_ctch_stdv = 0.0;
     i_rebuilder = 0;

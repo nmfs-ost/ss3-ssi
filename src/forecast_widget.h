@@ -93,6 +93,11 @@ public slots:
     void change_fcast_recr_adj_value();
     void set_log_catch_std_dev();
 
+    void adjustMGparmAve(bool isused);
+    void setMGparmAve(bool isused);
+    void changeMGparmAve(bool isused);
+    void changeNumMGparmAve(int num);
+
     void change_use_alloc_groups (bool flag);
     void set_num_alloc_groups (int num);
     void set_allocation_groups();
@@ -136,6 +141,7 @@ private:
     tableview *seasFltRelF;
     tableview *maxCatchFleets;
     tableview *maxCatchAreas;
+    tableview *mgParmAveList;
     tableview *allocGrpList;
     tableview *allocGrpFracts;
     tableview *inputFcastCatch;

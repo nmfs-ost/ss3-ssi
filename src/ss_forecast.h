@@ -17,7 +17,7 @@ class ss_forecast : public QObject
     Q_OBJECT
 public:
     explicit ss_forecast(int fleets = 1, int seasons = 1, QObject *parent = nullptr);
-    ~ss_forecast();
+    ~ss_forecast() override;
 
 signals:
     void allocGrpsChanged();
@@ -102,8 +102,14 @@ public slots:
     int get_forecast_recr_adjust () {return i_fcast_recr_adj;}
     void set_forecast_recr_adj_value (float frav) {f_fcast_recr_adj_val = frav;}
     float get_forecast_recr_adj_value () {return f_fcast_recr_adj_val;}
-    void set_forecast_loop_ctl5 (int floop) {i_fcast_loop_5 = floop;}
-    int get_forecast_loop_ctl5 () {return i_fcast_loop_5;}
+    void setMGparmAveraging (bool doParmAve) {mgParmAveraging = doParmAve;}
+    void setMGparmAveraging (int value) {mgParmAveraging = (value == 1? true: false);}
+    bool getMGparmAveraging () {return mgParmAveraging;}
+    QStringList getMGparmAveLine (int line) {return mgParmAveList->getRowData(line);}
+    void setMGparmAveLine (int line, QStringList data) {mgParmAveList->setRowData(line, data);}
+    tablemodel *getMGparmAveList () {return mgParmAveList;}
+    void setNumMGparmAve (int num) {mgParmAveList->setRowCount(num);}
+    int getNumMGparmAve () {return mgParmAveList->rowCount();}
     void set_caps_alloc_st_year (int yr) {i_caps_st_year = yr;}
     int get_caps_alloc_st_year () {return i_caps_st_year;}
     void set_log_catch_std_dev (double sd) {f_log_ctch_stdv = (float)sd;}
@@ -238,8 +244,10 @@ public slots:
     int   i_fcast_recr_adj;
     // Forecast recruitment adjustment value
     float f_fcast_recr_adj_val;
-    // Forecast loop control #5 (reserved for future bells&whistles)
-    int   i_fcast_loop_5;
+    // Maturity/Growth parameter averaging
+    bool  mgParmAveraging;
+    // MG parameter averaging spec
+    tablemodel *mgParmAveList;
     // FirstYear for caps and allocations (should be after years with fixed inputs)
     int   i_caps_st_year;
     // stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)

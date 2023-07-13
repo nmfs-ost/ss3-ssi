@@ -15,7 +15,7 @@
 class GrowthSeasonalEffects
 {
 public:
-    GrowthSeasonalEffects();
+    GrowthSeasonalEffects(ss_model *model);
     GrowthSeasonalEffects(const GrowthSeasonalEffects &other);
     ~GrowthSeasonalEffects();
 
@@ -67,6 +67,7 @@ public:
     GrowthSeasonalEffects& operator = (const GrowthSeasonalEffects &other);
 
 private:
+    ss_model *ssModel;
 
     float FemaleWtLen1;
     float FemaleWtLen2;

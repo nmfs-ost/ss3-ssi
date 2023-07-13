@@ -8,7 +8,7 @@ q_ratio::q_ratio(ss_model *model)
     : QObject(model)
 {
     setup = new setupModel(this);
-    params = new longParameterModel(this);
+    params = new longParameterModel(model);
     varParams = new timeVaryParameterModel(model);
 
     QStringList hdr;

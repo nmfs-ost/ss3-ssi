@@ -27,8 +27,8 @@ class selectivity : public QObject
 {
     Q_OBJECT
 public:
-    explicit selectivity (QObject *model, int method = 0);
-    selectivity(QObject *model, SelexType sType, int method = 0);
+    explicit selectivity (ss_model *model, int method = 0);
+    selectivity(ss_model *model, SelexType sType, int method = 0);
     ~selectivity();
 
     int getNumGenders() const;
@@ -168,7 +168,7 @@ public slots:
     void autogenParameters(int flag = 0);
     int getMinSel() const;
     void setMinSel(int value);
-    void getPctTileBins(const QStringList &bins, QList<int> &binTotals, float &nodeFirst, float &nodeLast);
+    void getPctTileBins(const QStringList &bins, QList<float> &binTotals, float &nodeFirst, float &nodeLast);
 
 protected:
     ss_model *data_model;

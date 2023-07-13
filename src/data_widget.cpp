@@ -227,8 +227,8 @@ void data_widget::connectAll()
 
     connect (ui->spinBox_do_tags, SIGNAL(valueChanged(int)), SLOT(changeDoTags(int)));
     connect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), SLOT(changeNumTagGrps(int)));
-    connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
-    connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
+    connect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(setTagLatency(int)));
+    connect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(setTagMaxPeriods(int)));
     connect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), SIGNAL(showRecapObs()));
     connect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
     connect (ui->spinBox_min_recaps, SIGNAL(valueChanged(int)), model_data, SLOT(setMinRecap(int)));
@@ -348,8 +348,8 @@ void data_widget::disconnectAll()
 
     disconnect (ui->spinBox_do_tags, SIGNAL(valueChanged(int)), this, SLOT(changeDoTags(int)));
     disconnect (ui->spinBox_tag_num_groups, SIGNAL(valueChanged(int)), this, SLOT(changeNumTagGrps(int)));
-    disconnect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_latency(int)));
-    disconnect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(set_tag_max_periods(int)));
+    disconnect (ui->spinBox_tag_latency, SIGNAL(valueChanged(int)), model_data, SLOT(setTagLatency(int)));
+    disconnect (ui->spinBox_tag_max_per, SIGNAL(valueChanged(int)), model_data, SLOT(setTagMaxPeriods(int)));
     disconnect (ui->pushButton_tag_rec_obs, SIGNAL(clicked()), this, SIGNAL(showRecapObs()));
     disconnect (ui->spinBox_tag_time_vary, SIGNAL(valueChanged(int)), model_data, SLOT(setTagTimeVaryReadParams(int)));
     disconnect (model_data->getTagLossInit()->getParamTable(), SIGNAL(dataChanged()), this, SLOT(tagInitChanged()));

@@ -3,7 +3,7 @@
 #include "fleet.h"
 #include "model.h"
 
-selectivity::selectivity(QObject *model, int method)
+selectivity::selectivity(ss_model *model, int method)
     : QObject (model)
 {
     data_model = static_cast<ss_model *>(model);
@@ -12,14 +12,14 @@ selectivity::selectivity(QObject *model, int method)
     hdr << tr("Pattern") << tr("Discard") << tr("Male") << tr("Special");
     setup->setHeader(hdr);
 
-    parameters = new longParameterModel();
+    parameters = new longParameterModel(model);
     varParameters = new timeVaryParameterModel(model);
 
-    discardParameters = new longParameterModel();
+    discardParameters = new longParameterModel(model);
     discardVarParameters = new timeVaryParameterModel(model);
-    retainParameters = new longParameterModel();
+    retainParameters = new longParameterModel(model);
     retainVarParameters = new timeVaryParameterModel(model);
-    maleParameters = new longParameterModel();
+    maleParameters = new longParameterModel(model);
     maleVarParameters = new timeVaryParameterModel(model);
     connectSigs();
 
@@ -27,7 +27,7 @@ selectivity::selectivity(QObject *model, int method)
     setMethod(method);
 }
 
-selectivity::selectivity(QObject *model, SelexType stype, int method)
+selectivity::selectivity(ss_model *model, SelexType stype, int method)
     : QObject (model)
 {
     data_model = static_cast<ss_model *>(model);
@@ -37,14 +37,14 @@ selectivity::selectivity(QObject *model, SelexType stype, int method)
     hdr << tr("Pattern") << tr("Discard") << tr("Male") << tr("Special");
     setup->setHeader(hdr);
 
-    parameters = new longParameterModel();
+    parameters = new longParameterModel(model);
     varParameters = new timeVaryParameterModel(model);
 
-    discardParameters = new longParameterModel();
+    discardParameters = new longParameterModel(model);
     discardVarParameters = new timeVaryParameterModel(model);
-    retainParameters = new longParameterModel();
+    retainParameters = new longParameterModel(model);
     retainVarParameters = new timeVaryParameterModel(model);
-    maleParameters = new longParameterModel();
+    maleParameters = new longParameterModel(model);
     maleVarParameters = new timeVaryParameterModel(model);
     connectSigs();
 
@@ -168,7 +168,7 @@ QString selectivity::getSetupText()
 
 void selectivity::changeSetup(QList<int> values)
 {
-    Q_UNUSED(values);
+    Q_UNUSED(values)
     emit setupChanged(getSetup());
 }
 
@@ -1224,7 +1224,7 @@ void selectivity::autogenCubicSpline1(int scale) {
     int numNodes = getSpecial();
     int bin = 0;
     int numObs = 1;
-    QList<int> binTotals;
+    QList<float> binTotals;
 //    int total = 0;
 //    int pctl025 = 0;
 //    int pctl975 = 2;
@@ -1235,23 +1235,27 @@ void selectivity::autogenCubicSpline1(int scale) {
     float valRange = valLast - valFirst;
     int numBins = 0;
     QStringList data;
-
+    int index = 0;
 
     if (type == Size && fleet->getLengthNumObs() > 0) {
+        binTotals.clear();
         numObs = fleet->getLengthNumObs();
-        numBins = fleet->getLengthObservation(0).count() - 7;
+        numBins = fleet->getLengthObservation(0).count() - 6;
         for (bin = 0; bin < numBins; bin++) {
             binTotals.append(0);
         }
 
         for (int row = 0; row < numObs; row++) {
+            data = fleet->getLengthObservation(row);
             for (bin = 0; bin < numBins; bin++) {
-                binTotals[bin] += fleet->getLengthObservation(row).at(bin+7).toInt();
+                index = bin + 6;
+                binTotals[bin] += data[index].toFloat();
             }
         }
         getPctTileBins(data_model->get_length_composition()->getBins(), binTotals, nodeFirst, nodeLast);
     }
     else if (type == Age && fleet->getAgeNumObs() > 0) {
+        binTotals.clear();
         numObs = fleet->getAgeNumObs();
         numBins = fleet->getAgeObservation(0).count() - 9;
         for (bin = 0; bin < numBins; bin++) {
@@ -1259,8 +1263,10 @@ void selectivity::autogenCubicSpline1(int scale) {
         }
 
         for (int row = 0; row < numObs; row++) {
+            data = fleet->getAgeObservation(row);
             for (bin = 0; bin < numBins; bin++) {
-                binTotals[bin] += fleet->getAgeObservation(row).at(bin+9).toInt();
+                index = bin + 9;
+                binTotals[bin] += data[index].toFloat();
             }
         }
         getPctTileBins(data_model->get_age_composition()->getBins(), binTotals, nodeFirst, nodeLast);
@@ -1278,7 +1284,7 @@ void selectivity::autogenCubicSpline1(int scale) {
     nodeRange = nodeLast - nodeFirst;
     interm = nodeRange / (numNodes - 1);
     term = nodeFirst;
-    int index = scale + 3;
+    index = scale + 3;
     for (int i = 0; i < numNodes; i++) {
         data  = getParameter(index + i);
         data[0] = QString::number(valFirst);
@@ -1344,13 +1350,14 @@ void selectivity::autogenCubicSpline2(int scale) {
 }
 
 
-void selectivity::getPctTileBins(const QStringList &bins, QList<int> &binTotals, float &nodeFirst, float &nodeLast)
+void selectivity::getPctTileBins(const QStringList &bins, QList<float> &binTotals, float &nodeFirst, float &nodeLast)
 {
     int bin = 0;
     int total = 0;
-    int numBins = binTotals.count();
+    int numBins = bins.count();
+    int numBinTots = binTotals.count();
 
-    for (bin = 0; bin < numBins; bin++) {
+    for (bin = 0; bin < numBinTots; bin++) {
         total += binTotals.at(bin);
     }
     if (total > 0) {
@@ -1358,16 +1365,17 @@ void selectivity::getPctTileBins(const QStringList &bins, QList<int> &binTotals,
         int pct975 = static_cast<int>(total * 0.975 + .5);
 
         total = 0;
-        for (bin = 0; bin < numBins-1; bin++) {
+        for (bin = 0; bin < numBinTots; bin++) {
             total += binTotals.at(bin);
-            if (total < pct025)
-                nodeFirst = bins.at(bin+1).toFloat();
-            else if (total < pct975)
-                nodeLast = bins.at(bin+1).toFloat();
-        }
-        if (nodeLast >= bins.at(bins.count() - 1).toFloat())
-        {
-            nodeLast = bins.at(bins.count() - 2).toFloat();
+            if (total < pct025) {
+                nodeFirst = bins.at(bin).toFloat();
+            }
+            else if (total > pct975) {
+                if (bin >= numBins)
+                    bin = numBins - 1;
+                nodeLast = bins.at(bin).toFloat();
+                break;
+            }
         }
     }
     else

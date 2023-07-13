@@ -6,8 +6,8 @@ spawn_recruit::spawn_recruit(QObject *parent)
 {
     ssModel = static_cast<ss_model *>(parent);
 
-    full_parameters = new longParameterModel(parent);
-    varParameters = new timeVaryParameterModel (parent);
+    full_parameters = new longParameterModel(ssModel);
+    varParameters = new timeVaryParameterModel (ssModel);
 
     full_parameters->setNumParams(10);
 /*    parmsUsed << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
@@ -29,15 +29,15 @@ spawn_recruit::spawn_recruit(QObject *parent)
     assignTimings->setColumnCount(1);
     assignTimings->setRowHeader(0, QString("Settle Timings"));
 
-    interactParams = new longParameterModel(parent);
-    interVarParams = new timeVaryParameterModel(parent);
-    distParams = new longParameterModel(parent);
+    interactParams = new longParameterModel(ssModel);
+    interVarParams = new timeVaryParameterModel(ssModel);
+    distParams = new longParameterModel(ssModel);
     distParams->setNumParams(2);
-    distVarParams = new timeVaryParameterModel(parent);
+    distVarParams = new timeVaryParameterModel(ssModel);
     distVarParams->setNumParams(2);
 
-    cycleParams = new longParameterModel(parent);
-    cycleVarParams = new timeVaryParameterModel(parent);
+    cycleParams = new longParameterModel(ssModel);
+    cycleVarParams = new timeVaryParameterModel(ssModel);
 
     header.clear();
     header << "Year" << "Input_value";

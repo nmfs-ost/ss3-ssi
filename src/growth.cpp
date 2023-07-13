@@ -17,7 +17,11 @@ ss_growth::ss_growth(QObject *parent)
 
     morphdisttable = new tablemodel(parent);
     morphdisttable->setRowCount(1);
+    morphdiststdevtable = new tablemodel(parent);
+    morphdiststdevtable->setColumnCount(14);
+    morphdiststdevtable->setRowCount(1);
 
+    setNatural_mortality_type(0);
     natMortNumBreakPoints = 1;
     natMortBreakPoints = new tablemodel(parent);
     natMortBreakPoints->setRowCount(1);
@@ -34,10 +38,10 @@ ss_growth::ss_growth(QObject *parent)
     timeVaryMethod = 1;
     timeVaryReadParams = 0;
 
-    cohortParam = new longParameterModel(parent);
+    cohortParam = new longParameterModel(ssModel);
     cohortParam->setNumParams(1);
     cohortParam->setParamHeader(0, QString("CohortGrowDev"));
-    cohortVarParam = new timeVaryParameterModel(parent);
+    cohortVarParam = new timeVaryParameterModel(ssModel);
     cohortVarParam->setTotalNumVarTables(1);
     cohortVarParam->setTableTitle(0, QString("CohortGrowDev"));
     connect (cohortParam, SIGNAL(paramChanged(int,QStringList)),
@@ -54,6 +58,7 @@ ss_growth::~ss_growth()
 
     delete growthBins;
     delete morphdisttable;
+    delete morphdiststdevtable;
     delete natMortBreakPoints;
     delete natMortAges;
     delete matAgeValues;
@@ -320,6 +325,21 @@ void ss_growth::autogenerateTimeVaryParams()
     cohortVarParam->changeVarParamData(0, getCohortParam());
 }
 
+void ss_growth::setMorphDistStDev (QStringList &stdev)
+{
+    morphdiststdevtable->setRowData(0, stdev);
+}
+
+tablemodel *ss_growth::getMorphDistStDevModel() const
+{
+    return morphdiststdevtable;
+}
+
+QStringList ss_growth::getMorphDistStDev() const
+{
+    return morphdiststdevtable->getRowData(0);
+}
+
 void ss_growth::setGrowthBinStep(float value)
 {
     growthBinStep = value;
@@ -418,7 +438,7 @@ void ss_growth::setNatural_mortality_type(int value)
         }
         break;
     case 1:
-        setNatMortNumBreakPts(1);
+        setNatMortNumBreakPts(natMortNumBreakPoints);
         break;
     case 2:
         setNaturalMortLorenzenRef(4);

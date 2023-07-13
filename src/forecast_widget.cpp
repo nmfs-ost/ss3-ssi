@@ -12,8 +12,8 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     ui(new Ui::forecast_widget)
 {
     ui->setupUi(this);
-    ui->label_fcast_loops_5->setVisible(false);
-    ui->spinBox_fcast_loops_5->setVisible(false);
+    ui->label_mgParmAveNum->setVisible(false);
+    ui->spinBox_mgParmAve->setVisible(false);
 
     model_data = m_data;
     ss_forecast *fcast = model_data->forecast;
@@ -37,6 +37,11 @@ forecast_widget::forecast_widget(ss_model *m_data, QWidget *parent) :
     maxCatchAreas->setParent(this);
     ui->horizontalLayout_area_max->addWidget(maxCatchAreas);
     maxCatchAreas->setHeight(1);
+
+    mgParmAveList = new tableview();
+    mgParmAveList->setParent(this);
+    ui->verticalLayout_mgParmAve->addWidget(mgParmAveList);
+    mgParmAveList->setHeight(1);
 
     allocGrpList = new tableview();
     allocGrpList->setParent(this);
@@ -101,7 +106,8 @@ void forecast_widget::reset()
     ui->spinBox_first_loop->setValue(1);
     ui->comboBox_fcast_recr_adjust->setCurrentIndex(0);
     ui->lineEdit_fcast_recr_adj_value->setText("1.0");
-    ui->spinBox_fcast_loops_5->setValue(0);
+    ui->checkBox_mgParmAve->setChecked(false);
+    ui->spinBox_mgParmAve->setValue(0);
     ui->spinBox_first_caps_yr->setValue(-1);
     ui->lineEdit_log_sd->setText("0.0");
     set_rebuilder(0);
@@ -149,9 +155,10 @@ void forecast_widget::disconnectAll(ss_forecast *fcast)
 
     disconnect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), this, SLOT(set_num_forecast_loops(int)));
     disconnect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), this, SLOT(change_first_forecast_loop(int)));
-    disconnect (ui->comboBox_fcast_recr_adjust, SIGNAL(currentIndexChanged(int)), fcast, SLOT(change_fcast_recr_adj(int)));
-    disconnect (ui->lineEdit_fcast_recr_adj_value, SIGNAL(editEnded()), this, SLOT(change_fcast_recr_adj_value(int)));
-    disconnect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));
+    disconnect (ui->comboBox_fcast_recr_adjust, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fcast_recr_adj(int)));
+    disconnect (ui->lineEdit_fcast_recr_adj_value, SIGNAL(editingFinished()), this, SLOT(change_fcast_recr_adj_value()));
+    disconnect (ui->checkBox_mgParmAve, SIGNAL(toggled(bool)), this, SLOT(setMGparmAve(bool)));
+    disconnect (ui->spinBox_mgParmAve, SIGNAL(valueChanged(int)), this, SLOT(changeNumMGparmAve(int)));
 
     disconnect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
     disconnect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
@@ -213,9 +220,10 @@ void forecast_widget::connectAll(ss_forecast *fcast)
 
     connect (ui->spinBox_num_forecast_loops, SIGNAL(valueChanged(int)), SLOT(set_num_forecast_loops(int)));
     connect (ui->spinBox_first_loop, SIGNAL(valueChanged(int)), SLOT(change_first_forecast_loop(int)));
-    connect (ui->comboBox_fcast_recr_adjust, SIGNAL(currentIndexChanged(int)), fcast, SLOT(change_fcast_recr_adj(int)));
-    connect (ui->lineEdit_fcast_recr_adj_value, SIGNAL(editEnded()), SLOT(change_fcast_recr_adj_value(int)));
-    connect (ui->spinBox_fcast_loops_5, SIGNAL(valueChanged(int)), fcast, SLOT(set_forecast_loop_ctl5(int)));
+    connect (ui->comboBox_fcast_recr_adjust, SIGNAL(currentIndexChanged(int)), this, SLOT(change_fcast_recr_adj(int)));
+    connect (ui->lineEdit_fcast_recr_adj_value, SIGNAL(editingFinished()), SLOT(change_fcast_recr_adj_value()));
+    connect (ui->checkBox_mgParmAve, SIGNAL(toggled(bool)), this, SLOT(setMGparmAve(bool)));
+    connect (ui->spinBox_mgParmAve, SIGNAL(valueChanged(int)), this, SLOT(changeNumMGparmAve(int)));
 
     connect (ui->spinBox_first_caps_yr, SIGNAL(valueChanged(int)), fcast, SLOT(set_caps_alloc_st_year(int)));
     connect (ui->lineEdit_log_sd, SIGNAL(editingFinished()), this, SLOT(set_log_catch_std_dev()));
@@ -317,7 +325,10 @@ void forecast_widget::refresh()
     ui->spinBox_first_loop->setValue(firstloop);
     ui->comboBox_fcast_recr_adjust->setCurrentIndex(fcast->get_forecast_recr_adjust());
     ui->lineEdit_fcast_recr_adj_value->setText(QString::number(fcast->get_forecast_recr_adj_value()));
-    ui->spinBox_fcast_loops_5->setValue(fcast->get_forecast_loop_ctl5());
+    setMGparmAve(fcast->getMGparmAveraging());
+    mgParmAveList->setModel(fcast->getMGparmAveList());
+    mgParmAveList->resizeColumnsToContents();
+    mgParmAveList->setHeight(fcast->getMGparmAveList());
 
     ui->spinBox_first_caps_yr->setValue(fcast->get_caps_alloc_st_year());
     ui->lineEdit_log_sd->setText(QString::number(fcast->get_log_catch_std_dev()));
@@ -743,6 +754,39 @@ void forecast_widget::alloc_group_assign_changed ()
     allocGrpFracts->setHeight(model_data->forecast->getAllocFractModel());
     allocGrpFracts->resizeColumnsToContents();
 }
+
+void forecast_widget::adjustMGparmAve(bool isused)
+{
+    ui->spinBox_mgParmAve->setVisible(isused);
+    ui->label_mgParmAveNum->setVisible(isused);
+    mgParmAveList->setVisible(isused);
+    if (isused)
+    {
+        int num = model_data->forecast->getNumMGparmAve();
+        ui->spinBox_mgParmAve->setValue(num);
+        mgParmAveList->setHeight(num);
+        mgParmAveList->resizeColumnsToContents();
+    }
+}
+
+void forecast_widget::setMGparmAve(bool isused)
+{
+    ui->checkBox_mgParmAve->setChecked(isused);
+    adjustMGparmAve(isused);
+}
+
+void forecast_widget::changeMGparmAve(bool isused)
+{
+    model_data->getForecast()->setMGparmAveraging(isused);
+    adjustMGparmAve(isused);
+}
+
+void forecast_widget::changeNumMGparmAve(int num)
+{
+    model_data->forecast->setNumMGparmAve(num);
+    mgParmAveList->setHeight(num);
+}
+
 
 void forecast_widget::change_use_alloc_groups(bool flag)
 {

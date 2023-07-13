@@ -21,7 +21,7 @@ class ssComposition : public QObject
 {
     Q_OBJECT
 public:
-    explicit ssComposition(QObject *parent = nullptr);
+    explicit ssComposition(ss_model *parent);
     ~ssComposition();
 
 signals:
@@ -69,6 +69,7 @@ public slots:
     tablemodel *getDirichletParamTable () {return dirichletParams->getParameters();}
 
 protected:
+    ss_model *ssModel;
     tablemodel *binsModel;
     tablemodel *altBinsModel;
 
@@ -88,7 +89,7 @@ class compositionLength : public ssComposition
 {
     Q_OBJECT
 public:
-    compositionLength (QObject *parent = nullptr);
+    compositionLength (ss_model *parent);
 
 public slots:
     void setNumberBins(int num);
@@ -100,8 +101,11 @@ class compositionAge : public ssComposition
 {
     Q_OBJECT
 public:
-    compositionAge (QObject *parent = nullptr);
+    compositionAge (ss_model *parent = nullptr);
     ~compositionAge ();
+
+    int getUseAgeKeyZero() const;
+    void setUseAgeKeyZero(int newUseAgeKeyZero);
 
 public slots:
     void reset();
@@ -146,6 +150,7 @@ private:
     tablemodel *errorModel;
     tablemodel *saaModel;
 
+    int useAgeKeyZero;
     int i_num_error_defs;
     QList<error_vector *> error_defs;
 
@@ -162,7 +167,7 @@ class compositionMorph : public ssComposition
 {
     Q_OBJECT
 public:
-    compositionMorph (QObject *parent = 0);
+    compositionMorph (ss_model *parent = 0);
     ~compositionMorph () {}
 
 public slots:
@@ -175,7 +180,7 @@ class compositionGeneral : public ssComposition
 {
     Q_OBJECT
 public:
-    compositionGeneral (QObject * parent = 0);
+    compositionGeneral (ss_model *parent);
     ~compositionGeneral ();
 
 public slots:

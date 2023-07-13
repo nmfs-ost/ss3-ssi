@@ -34,6 +34,10 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     growthMorphDistView = new tableview();
     growthMorphDistView->setParent(this);
     ui->horizontalLayout_growth_submorph_dist->addWidget(growthMorphDistView);
+    growthMorphStDev = new tableview();
+    growthMorphStDev->setParent(this);
+    ui->horizontalLayout_platoon_sd_ratio->addWidget(growthMorphStDev);
+
     growthFemParamsView = new tableview();
     growthFemParamsView->setParent(this);
     ui->verticalLayout_f_growth_params->addWidget(growthFemParamsView);
@@ -173,7 +177,6 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
 //    connect (ui->comboBox_fecund_adj_constraint, SIGNAL(currentIndexChanged(int)), SLOT(changeFecundityAdjustment(int)));
 
 
-    connect (ui->doubleSpinBox_growth_morph_ratio, SIGNAL(valueChanged(double)), SLOT(changeGrowthMorphRatio(double)));
     connect (ui->spinBox_bio_time_vary_read, SIGNAL(valueChanged(int)), SLOT(changeGrowthTimeVaryRead(int)));
     connect (ui->comboBox_growth_model, SIGNAL(currentIndexChanged(int)), SLOT(changeGrowthModel(int)));
     connect (ui->doubleSpinBox_growth_age_Amin, SIGNAL(valueChanged(double)), SLOT(changeAmin (double)));
@@ -187,6 +190,7 @@ population_widget::population_widget(ss_model *m_data, QWidget *parent) :
     connect (ui->spinBox_growth_num_patterns, SIGNAL(valueChanged(int)), SLOT(changeNumGrowthPat(int)));
     connect (ui->spinBox_growth_num_submorphs, SIGNAL(valueChanged(int)), SLOT(changeNumSubMorph(int)));
     connect (ui->pushButton_growth_submorph_dist, SIGNAL(clicked()), SLOT(normalizeGrowthMorphDist()));
+    connect (ui->doubleSpinBox_growth_morph_ratio, SIGNAL(valueChanged(double)), SLOT(changeGrowthMorphRatio(double)));
 
     // Movement
     moveDefsView = new tableview();
@@ -484,6 +488,9 @@ void population_widget::refresh()
     growthMorphDistView->setModel(pop->Grow()->getMorphDistModel());
     growthMorphDistView->setHeight(1);
     growthMorphDistView->resizeColumnsToContents();
+    growthMorphStDev->setModel(pop->Grow()->getMorphDistStDevModel());
+    growthMorphStDev->setHeight(1);
+    growthMorphStDev->resizeColumnsToContents();
     setGrowthModel(pop->Grow()->getModel());
     ui->doubleSpinBox_growth_age_Amin->setValue(pop->Grow()->getAge_for_l1());
     ui->doubleSpinBox_growth_age_Amax->setValue(pop->Grow()->getAge_for_l2());
@@ -504,6 +511,7 @@ void population_widget::refresh()
         temp_int = pop->Grow()->getNum_morphs();
         ui->spinBox_growth_num_submorphs->setValue(temp_int);
     }
+    ui->doubleSpinBox_growth_morph_ratio->setValue(pop->Grow()->getMorph_within_ratio());
 
     // recruitment
     changeRecrFullParams();
@@ -698,6 +706,7 @@ void population_widget::setMortOption()
 {
     int numgen = model_data->get_num_genders() > 1? 2: 1;
     int opt = ui->comboBox_mort_option->currentIndex();
+    int numpts = 0;
     ui->widget_mort_breakpoints->setVisible(false);
     ui->widget_mort_lorenz->setVisible(false);
     ui->label_mort_age_specific->setVisible(false);
@@ -712,9 +721,11 @@ void population_widget::setMortOption()
         mortMaleParamsView->setHeight(numgen - 1);
         break;
     case 1: // breakpoints
+        numpts = pop->Grow()->getNatMortNumBreakPts();
+        ui->spinBox_mort_num_breakpoints->setValue(numpts);
         ui->widget_mort_breakpoints->setVisible(true);
-        ui->spinBox_mort_num_breakpoints->setValue(pop->Grow()->getNatMortNumBreakPts());
-        mortFemParamsView->setHeight(pop->Grow()->getPattern(0)->getFemNatMParams());
+        mortFemParamsView->setHeight(numpts);
+        mortMaleParamsView->setHeight(numpts);
         break;
     case 2: // lorenzen
         ui->widget_mort_lorenz->setVisible(true);
@@ -829,6 +840,7 @@ void population_widget::changeNumSubMorph(int num)
 {
     bool enable = true;
     int nmph = pop->Grow()->getNum_morphs();
+    float ratio = pop->Grow()->getMorph_within_ratio();
     if (num == 2)
     {
         ui->spinBox_growth_num_submorphs->setValue(3);
@@ -844,9 +856,10 @@ void population_widget::changeNumSubMorph(int num)
     {
         pop->Grow()->setNum_morphs(num);
     }
+    changeGrowthMorphRatio(ratio);
+
     if (num == 1)
         enable = false;
-    changeGrowthMorphRatio(pop->Grow()->getMorph_within_ratio());
     ui->doubleSpinBox_growth_morph_ratio->setEnabled(enable);
     growthMorphDistView->setEnabled(enable);
     growthMorphDistView->resizeColumnsToContents();
@@ -1003,24 +1016,39 @@ void population_widget::changeGrowthBinLength(int num)
     growthBinsView->resizeColumnsToContents();
 }
 
-void population_widget::changeGrowthMorphRatio(double ratio)
+bool population_widget::changeGrowthMorphRatio(double ratio)
 {
+    bool gtOne = false;
+    int numMorphs = ui->spinBox_growth_num_submorphs->value();
     double between, within;
 
-    if (ui->spinBox_growth_num_submorphs->value() == 1)
+    if (numMorphs == 1)
     {
-        pop->Grow()->setMorph_within_ratio(1.0);
+        ratio = 1.0;
         between = .000001;
         within = 1.0;
+        ui->doubleSpinBox_growth_morph_ratio->setValue(ratio);
     }
     else
     {
-        pop->Grow()->setMorph_within_ratio(ratio);
         between = std::sqrt(1. / (1. + ratio * ratio));
         within = ratio * between;
+        gtOne = true;
     }
+    pop->Grow()->setMorph_within_ratio(ratio);
+
     ui->doubleSpinBox_growth_morph_between->setValue(between);
     ui->doubleSpinBox_growth_morph_within->setValue(within);
+    if (gtOne && ratio < 0)
+    {
+        growthMorphStDev->setVisible(true);
+        growthMorphStDev->resizeColumnsToContents();
+    }
+    else
+    {
+        growthMorphStDev->setVisible(false);
+    }
+    return gtOne;
 }
 
 void population_widget::changeGrowthTimeVaryRead(int flag)

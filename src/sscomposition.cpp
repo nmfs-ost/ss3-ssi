@@ -1,7 +1,9 @@
 #include "sscomposition.h"
 
-ssComposition::ssComposition(QObject *parent) : QObject(parent)
+ssComposition::ssComposition(ss_model *parent)
 {
+    ssModel = static_cast<ss_model *>(parent);
+
     binsModel = new tablemodel(this);
     binsModel->setColumnCount(0);
     binsModel->setRowCount(1);
@@ -72,7 +74,7 @@ int ssComposition::generateAltBins ()
 }
 
 
-compositionLength::compositionLength(QObject *parent)
+compositionLength::compositionLength(ss_model *parent)
     : ssComposition(parent)
 {
     binsModel->setColumnCount(0);
@@ -85,9 +87,10 @@ void compositionLength::setNumberBins(int num)
     binsModel->setColumnCount(num);
 }
 
-compositionAge::compositionAge(QObject *parent)
+compositionAge::compositionAge(ss_model *parent)
     : ssComposition(parent)
 {
+    useAgeKeyZero = -1;
     i_num_error_defs = 0;
     i_num_saa_obs = 0;
     binsModel->setColumnCount(0);
@@ -103,9 +106,9 @@ compositionAge::compositionAge(QObject *parent)
 
     useParameters = false;
     connect (errorModel, SIGNAL(dataChanged()), SLOT(checkUseParams()));
-    errorParams = new longParameterModel(this);
+    errorParams = new longParameterModel(ssModel);
     errorParams->setNumParams(7);
-    errorTVParams = new timeVaryParameterModel();
+    errorTVParams = new timeVaryParameterModel(ssModel);
     connect (errorParams, SIGNAL(paramsChanged()), SLOT(checkParams()));
 }
 
@@ -131,6 +134,7 @@ void compositionAge::reset()
         error_vector *evct = error_defs.takeFirst();
         delete evct;
     }
+    useAgeKeyZero = -1;
     i_num_error_defs = 0;
 
 /*    while (o_saa_obs_list.count() > 0)
@@ -249,8 +253,18 @@ void compositionAge::checkParams()
     emit dataChanged();
 }
 
+int compositionAge::getUseAgeKeyZero() const
+{
+    return useAgeKeyZero;
+}
 
-compositionMorph::compositionMorph(QObject *parent)
+void compositionAge::setUseAgeKeyZero(int newUseAgeKeyZero)
+{
+    useAgeKeyZero = newUseAgeKeyZero;
+}
+
+
+compositionMorph::compositionMorph(ss_model *parent)
  : ssComposition(parent)
 {
 }
@@ -261,7 +275,7 @@ void compositionMorph::setNumberMorphs(int num)
 }
 
 
-compositionGeneral::compositionGeneral(QObject *parent)
+compositionGeneral::compositionGeneral(ss_model *parent)
   : ssComposition(parent)
 {
     reset();

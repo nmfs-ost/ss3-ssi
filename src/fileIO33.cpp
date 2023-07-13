@@ -324,7 +324,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         if (d_file->getOkay() && !d_file->getStop()) {
         compositionLength *l_data = data->get_length_composition();
         if (l_data == nullptr) {
-            l_data = new compositionLength();
+            l_data = new compositionLength(data);
             data->set_length_composition(l_data);
         }
         int num_len_bins = 2;
@@ -425,6 +425,11 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
                 for (int j = 0; j <= numAges; j++)
                     str_lst.append(d_file->get_next_value());
                 a_data->set_error_def(i, str_lst);
+                if (a_data->get_error_def(i).at(0).toInt() < 0)
+                {
+                    if (a_data->getUseAgeKeyZero() < 0)
+                        a_data->setUseAgeKeyZero(i);
+                }
             }
             for (i = 0; i < total_fleets; i++)
             {
@@ -539,7 +544,7 @@ bool read33_dataFile(ss_file *d_file, ss_model *data)
         {
             for (i = 0; i < num_vals; i++)
             {
-                compositionGeneral *cps = new compositionGeneral ();
+                compositionGeneral *cps = new compositionGeneral (data);
                 cps->setNumber(i+1);
                 data->addGeneralCompMethod(cps);
             }
@@ -1485,6 +1490,7 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
 {
     QString token;
     QString temp_str;
+    bool temp_bool;
     QStringList str_lst(" ");
     float temp_float;
     int temp_int = 0;
@@ -1631,9 +1637,25 @@ bool read33_forecastFile(ss_file *f_file, ss_model *data)
         token = f_file->get_next_value(QString("Scalar or N years to ave recruitment"));
         temp_float = token.toFloat();
         fcast->set_forecast_recr_adj_value(temp_float);
-        token = f_file->get_next_value(QString("loop control 5"));
+        token = f_file->get_next_value(QString("MGparm averaging"));
         temp_int = token.toInt();
-        fcast->set_forecast_loop_ctl5(temp_int);
+        fcast->setMGparmAveraging(temp_int);
+        if (temp_int == 1)
+        {
+            num = 0;
+            do {
+                str_lst.clear();
+                str_lst.append(f_file->get_next_value(QString("Type")));
+                str_lst.append(f_file->get_next_value(QString("Method")));
+                str_lst.append(f_file->get_next_value(QString("Min year")));
+                str_lst.append(f_file->get_next_value(QString("Max year")));
+                temp_int = str_lst[0].toInt();
+                if (temp_int == END_OF_LIST)
+                    break;
+                fcast->setMGparmAveLine(num, str_lst);
+                num++;
+            } while (temp_int != END_OF_LIST);
+        }
         }
         if (f_file->getOkay() && !f_file->getStop()) {
         token = f_file->get_next_value(QString("caps and allocs first yr"));
@@ -1787,6 +1809,7 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
     int temp_int, num, i, chars = 0;
     int yr = 0, bmarks = 0, msy = 0;
     float temp_float;
+    bool temp_bool;
     QString value, line, temp_string;
     QStringList str_lst, tmp_lst;
     ss_forecast *fcast = data->forecast;
@@ -1899,7 +1922,25 @@ int write33_forecastFile(ss_file *f_file, ss_model *data)
         chars += f_file->write_val(fcast->get_forecast_loop_first(), 1, QString("First forecast loop with stochastic recruitment"));
         chars += f_file->write_val(fcast->get_forecast_recr_adjust(), 1, QString("Forecast recruitment: 0=spawn_recr; 1=value*spawn_recr_fxn; 2=value*VirginRecr; 3=recent mean from yr range above (need to set phase to -1 in control to get constant recruitment in MCMC)"));
         chars += f_file->write_val(fcast->get_forecast_recr_adj_value(), 1, QString("value is multiplier of SRR "));
-        chars += f_file->write_val(fcast->get_forecast_loop_ctl5(), 1, QString("Forecast loop control #5 (reserved for future bells&whistles)"));
+        temp_bool = fcast->getMGparmAveraging();
+        chars += f_file->write_val((temp_bool?1:0), 1, QString("MGparam averaging"));
+        if (!temp_bool)
+        {
+            line = QString("# Conditional input if MGparam averaging == 1");
+            chars += f_file->writeline(line);
+            line = QString("# enter list of:  type, st_year, end_year and end with type=-9999");
+            chars += f_file->writeline(line);
+        }
+        if (temp_bool)
+        {
+            line = QString("# type method st_year end_year ");
+            chars += f_file->writeline(line);
+            for (int i = 0, total = fcast->getNumMGparmAve(); i < total; i++)
+            {
+                chars += f_file->write_vector(fcast->getMGparmAveLine(i), 1);
+            }
+            chars += f_file->writeline(QString(" -9999 -1 -1 -1"));
+        }
 
         chars += f_file->write_val(fcast->get_caps_alloc_st_year(), 1, QString("FirstYear for caps and allocations (should be after years with fixed inputs)"));
 
@@ -2123,7 +2164,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
     if (c_file->getOkay() && !c_file->getStop()) {
         if (num > 1)
         {
-            temp_float = c_file->get_next_value(QString("Morph between ratio")).toFloat();
+            temp_float = c_file->get_next_value(QString("Morph within/between ratio")).toFloat();
             pop->Grow()->setMorph_within_ratio (temp_float);
             temp_float = c_file->get_next_value(QString("Morph dist")).toFloat();
             if ((int)temp_float != -1)
@@ -2489,7 +2530,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 {
                     datalist = readParameter (c_file);
                     gp->setFemNatMParam(j, datalist);
-                    gp->getFemNatMParams()->setRowHeader(j, QString("NatM_p_%1_Fem_%2").arg(QString::number(j+1), gpstr));
+                    gp->getFemNatMParams()->setRowHeader(j, QString("NatM_break_%1_Fem_%2").arg(QString::number(j+1), gpstr));
                     index++;
                 }
                 break;
@@ -2591,7 +2632,7 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                     {
                         datalist = readParameter (c_file);
                         gp->setMaleNatMParam(j, datalist);
-                        gp->setMaleNatMParamHeader(j, QString("NatM_p_%1_Mal_%2").arg(QString::number(j+1), gpstr));
+                        gp->setMaleNatMParamHeader(j, QString("NatM_break_%1_Mal_%2").arg(QString::number(j+1), gpstr));
                     }
                     break;
                 case 3:
@@ -2741,9 +2782,18 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         }
     }
 
-        // ageing error if requested
     if (c_file->getOkay() && !c_file->getStop()) {
-        if (data->get_age_composition()->getUseParameters())
+        // Platoon StDev Ratio
+        if (pop->Grow()->getNum_morphs() > 1 && pop->Grow()->getMorph_within_ratio() < 0)
+        {
+            datalist = readParameter(c_file);    // Morph within StDev
+            pop->Grow()->setMorphDistStDev(datalist);
+        }
+    }
+
+    if (c_file->getOkay() && !c_file->getStop()) {
+        // ageing error if requested
+        if (data->get_age_composition()->getUseAgeKeyZero() >= 0)
         {
             for (i = 0; i < 7; i++)
             {
@@ -2815,6 +2865,11 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
             {
                 gp = pop->Grow()->getPattern(i);
                 readTimeVaryParams(c_file, data, gp->getFractionFemaleParams(), timevaryread, gp->getFracFmTVParams());
+            }
+            if (data->get_age_composition()->getUseAgeKeyZero() >= 0)
+            {
+                compositionAge *agec = data->get_age_composition();
+                readTimeVaryParams(c_file, data, agec->getErrorParameters(), timevaryread, agec->getErrorTVParameters());
             }
         }
     }
@@ -4279,6 +4334,16 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 line.append(QString(" %1").arg(str_list.at(l)));
             line.append(QString(" #_%1").arg(pop->Move()->getMovementParams()->getRowHeader(par+1)));
             chars += c_file->writeline (line);*/
+        }
+
+        // Platoon StDev Ratio
+        line = QString("#  Platoon StDev Ratio");
+        chars += c_file->writeline(line);
+        if (pop->Grow()->getNum_morphs() > 1 && pop->Grow()->getMorph_within_ratio() < 0)
+        {
+            line.clear();
+            str_list = pop->Grow()->getMorphDistStDev();
+            chars += c_file->write_vector(str_list, 2, QString(QString(" # Platoon_SD_Ratio")));
         }
 
         //ageing error parameters

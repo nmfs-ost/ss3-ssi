@@ -1437,128 +1437,7 @@ e.g. 0, -1, -2, ...</string>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <layout class="QGridLayout" name="gridLayout_controls">
-             <item row="2" column="1" colspan="4">
-              <layout class="QHBoxLayout" name="horizontalLayout_ctrl_rule_upr">
-               <item>
-                <widget class="QLineEdit" name="lineEdit_ctl_rule_const_F">
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_ctl_rule_const_F_info">
-                 <property name="text">
-                  <string>(Must be &gt; the no F level below)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_ctrl_rule_upr">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_ctl_rule_no_F">
-               <property name="text">
-                <string>Control rule Biomass level for no F (frac of Bzero, e.g. 0.10)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="1" colspan="4">
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
-               <item>
-                <widget class="QSpinBox" name="spinBox_first_caps_yr">
-                 <property name="minimumSize">
-                  <size>
-                   <width>60</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="minimum">
-                  <number>-50</number>
-                 </property>
-                 <property name="maximum">
-                  <number>3000</number>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_7label_first_caps_yr_info">
-                 <property name="text">
-                  <string>(should be after years with fixed inputs)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_12">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_fcast_selex">
-               <property name="text">
-                <string>Forecast Selectivity</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1" colspan="3">
-              <widget class="QComboBox" name="comboBox_fcast_selex">
-               <item>
-                <property name="text">
-                 <string>0 = fcast selex is mean from year range</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>1 = fcast selex from annual time-vary parms</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="1" column="5">
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="12" column="0" colspan="4">
+             <item row="13" column="0" colspan="4">
               <widget class="QGroupBox" name="groupBox_rebuilder">
                <property name="title">
                 <string>US West Coast Rebuilder</string>
@@ -1720,8 +1599,18 @@ e.g. 0, -1, -2, ...</string>
                </layout>
               </widget>
              </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="label_first_loop">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_fcast_selex">
+               <property name="text">
+                <string>Forecast Selectivity</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_fcast_recr_adjust">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -1729,33 +1618,7 @@ e.g. 0, -1, -2, ...</string>
                 </size>
                </property>
                <property name="text">
-                <string>First forecast loop with stochastic recruitment</string>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="1">
-              <widget class="QSpinBox" name="spinBox_first_loop">
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>9</number>
-               </property>
-               <property name="value">
-                <number>1</number>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_ctl_rule_const_F">
-               <property name="text">
-                <string>Control rule Biomass level for constant F(frac of Bzero, e.g. 0.40)</string>
+                <string>Forecast recruitment adjustment</string>
                </property>
               </widget>
              </item>
@@ -1817,6 +1680,114 @@ e.g. 0, -1, -2, ...</string>
                </item>
               </layout>
              </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_control_rule">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Control rule method</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_fcast_recr_adj_value">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_fcast_recr_adj_value">
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer__fcast_recr_adj_value">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="9" column="2">
+              <widget class="QLabel" name="label_mgParmAveNum">
+               <property name="text">
+                <string>Number of lines</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_ctl_rule_no_F">
+               <property name="text">
+                <string>Control rule Biomass level for no F (frac of Bzero, e.g. 0.10)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="1" colspan="4">
+              <layout class="QHBoxLayout" name="horizontalLayout_ctrl_std_dev_log">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_log_sd">
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_log_sd_info">
+                 <property name="text">
+                  <string>(realized catch/target catch)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_ctrl_std_dev_log">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_num_forecast_loops">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>N forecast loops</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_ctl_rule_const_F">
+               <property name="text">
+                <string>Control rule Biomass level for constant F(frac of Bzero, e.g. 0.40)</string>
+               </property>
+              </widget>
+             </item>
              <item row="4" column="1" colspan="4">
               <layout class="QHBoxLayout" name="horizontalLayout_ctrl_rule_buffer">
                <item>
@@ -1851,37 +1822,10 @@ e.g. 0, -1, -2, ...</string>
                </item>
               </layout>
              </item>
-             <item row="11" column="0">
-              <widget class="QLabel" name="label_log_sd">
-               <property name="text">
-                <string>Std dev of log in forecast</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_control_rule">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Control rule method</string>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="0">
-              <widget class="QLabel" name="label_first_caps_yr">
-               <property name="text">
-                <string>First year for caps and allocations</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_ctrl_rule_lwr">
+             <item row="2" column="1" colspan="4">
+              <layout class="QHBoxLayout" name="horizontalLayout_ctrl_rule_upr">
                <item>
-                <widget class="QLineEdit" name="lineEdit_ctl_rule_no_F">
+                <widget class="QLineEdit" name="lineEdit_ctl_rule_const_F">
                  <property name="maximumSize">
                   <size>
                    <width>80</width>
@@ -1891,51 +1835,14 @@ e.g. 0, -1, -2, ...</string>
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_ctrl_rule_lwr">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="9" column="0">
-              <widget class="QLabel" name="label_fcast_loops_5">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>Forecast loop control #5 (reserved)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="11" column="1" colspan="4">
-              <layout class="QHBoxLayout" name="horizontalLayout_ctrl_std_dev_log">
-               <item>
-                <widget class="QLineEdit" name="lineEdit_log_sd">
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_log_sd_info">
+                <widget class="QLabel" name="label_ctl_rule_const_F_info">
                  <property name="text">
-                  <string>(realized catch/target catch)</string>
+                  <string>(Must be &gt; the no F level below)</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_ctrl_std_dev_log">
+                <spacer name="horizontalSpacer_ctrl_rule_upr">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1948,163 +1855,6 @@ e.g. 0, -1, -2, ...</string>
                 </spacer>
                </item>
               </layout>
-             </item>
-             <item row="1" column="6">
-              <spacer name="horizontalSpacer_26">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="8" column="0">
-              <widget class="QLabel" name="label_fcast_recr_adj_value">
-               <property name="text">
-                <string>Forecast recruitment adjustment value</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="0">
-              <widget class="QLabel" name="label_fcast_recr_adjust">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Forecast recruitment adjustment</string>
-               </property>
-              </widget>
-             </item>
-             <item row="13" column="0">
-              <spacer name="verticalSpacer_controls">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="5" column="1">
-              <widget class="QSpinBox" name="spinBox_num_forecast_loops">
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>3</number>
-               </property>
-               <property name="value">
-                <number>1</number>
-               </property>
-              </widget>
-             </item>
-             <item row="9" column="1">
-              <widget class="QSpinBox" name="spinBox_fcast_loops_5">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="maximum">
-                <number>9</number>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="1" colspan="3">
-              <layout class="QHBoxLayout" name="horizontalLayout_fcast_recr_adj_value">
-               <item>
-                <widget class="QLineEdit" name="lineEdit_fcast_recr_adj_value">
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer__fcast_recr_adj_value">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="5" column="2" colspan="4">
-              <widget class="QLabel" name="label_num_forecast_loops_info">
-               <property name="text">
-                <string>1=OFL only; 2=ABC; 3=get F from forecast ABC catch</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_num_forecast_loops">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>N forecast loops</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_ctl_tgt_as_fraction">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Control rule buffer (fraction of Flimit, e.g. 0.75)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="4">
-              <spacer name="horizontalSpacer_28">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="7" column="1" colspan="3">
               <widget class="QComboBox" name="comboBox_fcast_recr_adjust">
@@ -2138,6 +1888,250 @@ e.g. 0, -1, -2, ...</string>
                  <string>5 = mean recrdist</string>
                 </property>
                </item>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <spacer name="horizontalSpacer_28">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_fcast_recr_adj_value">
+               <property name="text">
+                <string>Forecast recruitment adjustment value</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QSpinBox" name="spinBox_first_loop">
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>9</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QSpinBox" name="spinBox_mgParmAve"/>
+             </item>
+             <item row="3" column="1" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_ctrl_rule_lwr">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_ctl_rule_no_F">
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_ctrl_rule_lwr">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_ctl_tgt_as_fraction">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Control rule buffer (fraction of Flimit, e.g. 0.75)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="1" colspan="3">
+              <layout class="QVBoxLayout" name="verticalLayout_mgParmAve"/>
+             </item>
+             <item row="9" column="0">
+              <widget class="QCheckBox" name="checkBox_mgParmAve">
+               <property name="text">
+                <string> MG parameter averaging</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="label_first_caps_yr">
+               <property name="text">
+                <string>First year for caps and allocations</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="6">
+              <spacer name="horizontalSpacer_26">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="5" column="1">
+              <widget class="QSpinBox" name="spinBox_num_forecast_loops">
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>3</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLabel" name="label_log_sd">
+               <property name="text">
+                <string>Std dev of log in forecast</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="0">
+              <spacer name="verticalSpacer_controls">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="5">
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1" colspan="3">
+              <widget class="QComboBox" name="comboBox_fcast_selex">
+               <item>
+                <property name="text">
+                 <string>0 = fcast selex is mean from year range</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1 = fcast selex from annual time-vary parms</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_first_loop">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>First forecast loop with stochastic recruitment</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1" colspan="4">
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QSpinBox" name="spinBox_first_caps_yr">
+                 <property name="minimumSize">
+                  <size>
+                   <width>60</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>-50</number>
+                 </property>
+                 <property name="maximum">
+                  <number>3000</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_7label_first_caps_yr_info">
+                 <property name="text">
+                  <string>(should be after years with fixed inputs)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_12">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="2" colspan="4">
+              <widget class="QLabel" name="label_num_forecast_loops_info">
+               <property name="text">
+                <string>1=OFL only; 2=ABC; 3=get F from forecast ABC catch</string>
+               </property>
               </widget>
              </item>
             </layout>
