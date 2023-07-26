@@ -2338,33 +2338,31 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
         case 4:
             // age-specific M values by sex by growth pattern
             num = pop->Grow()->getNum_patterns();
-            datalist = data->get_age_composition()->getBins();
-            num_vals = datalist.count() + 1;
+            num_vals = data->get_num_ages() + 1;
             for (int i = 0; i < num; i++) // first, female M for each growth pattern
             {
-                pop->Grow()->getPattern(i)->getNatMAges()->setHeader(datalist);
                 pop->Grow()->getPattern(i)->getNatMAges()->setColumnCount(num_vals);
                 datalist.clear();
                 for (int j = 0; j < num_vals; j++)
                 {
                     datalist.append(c_file->get_next_value(QString("age-spec Mort vals female")));
                 }
-                pop->Grow()->getPattern(i)->getNatMAges()->setRowData(0, datalist);
-                pop->Grow()->getPattern(i)->getNatMAges()->setRowHeader(0, QString("Fem_M_GP%1").arg(
+                pop->Grow()->getPattern(i)->getNatMAges()->setRowData(i, datalist);
+                pop->Grow()->getPattern(i)->getNatMAges()->setRowHeader(i, QString("Fem_M_GP%1").arg(
                                                                             QString::number(i+1)));
             }
             if (data->get_num_genders() > 1)
             {
-                for (int i = 0; i < num; i++) // now male M for each growth pattern
+                for (int k = i, i = 0; i < num; i++, k++) // now male M for each growth pattern
                 {
                     datalist.clear();
                     for (int j = 0; j < num_vals; j++)
                     {
                         datalist.append(c_file->get_next_value(QString("age-spec Mort vals male")));
                     }
-                    pop->Grow()->getPattern(i)->getNatMAges()->setRowData(1, datalist);
-                    pop->Grow()->getPattern(i)->getNatMAges()->setRowHeader(1, QString("Mal_M_GP%1").arg(
-                                                                                QString::number(i+1)));
+                    pop->Grow()->getPattern(i)->getNatMAges()->setRowData(k, datalist);
+                    pop->Grow()->getPattern(i)->getNatMAges()->setRowHeader(k, QString("Mal_M_GP%1").arg(
+                                                                                QString::number(k+1)));
                 }
             }
             else {
