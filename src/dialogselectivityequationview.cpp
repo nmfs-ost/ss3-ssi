@@ -221,6 +221,7 @@ void DialogSelexEquationView::setup() {
 
     if (!updating)
     {
+        int x0 = 0, x1 = 1.0;
         updating = true;
 
         showBins(false);
@@ -232,7 +233,12 @@ void DialogSelexEquationView::setup() {
             axisX->setTitleText(QString("Age"));
         else
             axisX->setTitleText(QString("Length"));
-        axisX->setRange(xValList.first(), xValList.last());
+        if (!xValList.isEmpty())
+        {
+            x0 = xValList.first();
+            x1 = xValList.last();
+        }
+        axisX->setRange(x0, x1);
 
         axisY->setTitleText(QString("Selectivity (red)"));
         axisY->setRange(0, 1.2);

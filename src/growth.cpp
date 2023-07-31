@@ -446,7 +446,7 @@ void ss_growth::setNatural_mortality_type(int value)
     case 3:
     case 4:
         for (int i = 0; i < num_patterns; i++) {
-            getPattern(i)->getNatMAges()->setRowCount(1);
+            getPattern(i)->getNatMAges()->setRowCount(num_genders);
             getPattern(i)->getNatMAges()->setColumnCount(num_ages+1);
         }
         break;

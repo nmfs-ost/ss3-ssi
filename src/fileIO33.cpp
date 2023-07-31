@@ -2347,22 +2347,20 @@ bool read33_controlFile(ss_file *c_file, ss_model *data)
                 {
                     datalist.append(c_file->get_next_value(QString("age-spec Mort vals female")));
                 }
-                pop->Grow()->getPattern(i)->getNatMAges()->setRowData(i, datalist);
-                pop->Grow()->getPattern(i)->getNatMAges()->setRowHeader(i, QString("Fem_M_GP%1").arg(
-                                                                            QString::number(i+1)));
+                pop->Grow()->getPattern(i)->setNatMFemAgeList(datalist);
+                pop->Grow()->getPattern(i)->setNatMFemAgeHeader(QString("Fem_M_GP%1").arg(QString::number(i+1)));
             }
             if (data->get_num_genders() > 1)
             {
-                for (int k = i, i = 0; i < num; i++, k++) // now male M for each growth pattern
+                for (i = 0; i < num; i++) // now male M for each growth pattern
                 {
                     datalist.clear();
                     for (int j = 0; j < num_vals; j++)
                     {
                         datalist.append(c_file->get_next_value(QString("age-spec Mort vals male")));
                     }
-                    pop->Grow()->getPattern(i)->getNatMAges()->setRowData(k, datalist);
-                    pop->Grow()->getPattern(i)->getNatMAges()->setRowHeader(k, QString("Mal_M_GP%1").arg(
-                                                                                QString::number(k+1)));
+                    pop->Grow()->getPattern(i)->setNatMMaleAgeList(datalist);
+                    pop->Grow()->getPattern(i)->setNatMMaleAgeHeader(QString("Mal_M_GP%1").arg(QString::number(i+1)));
                 }
             }
             else {
@@ -4021,7 +4019,7 @@ int write33_controlFile(ss_file *c_file, ss_model *data)
                 chars += c_file->write_vector(str_list, 2, QString("_Fem_M_GP%1").arg(QString::number(i+1)));
             }
             if (data->get_num_genders() > 1)
-                for (int j = 0; j < num_vals; j++, i++)
+                for (i = 0; i < num_vals; i++)
                 {
                     str_list = pop->Grow()->getPattern(i)->getNatMMaleAgeList();
                     chars += c_file->write_vector(str_list, 2, QString("_Male_M_GP%1").arg(QString::number(i+1)));

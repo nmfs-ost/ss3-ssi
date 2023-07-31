@@ -28,22 +28,34 @@ void tablemodel::reset()
 
 void tablemodel::setRowCount(int rows)
 {
-    int chk = rowCount();
-    if (rows != chk)
+    QStandardItem *stditem = item(0, 0);
+    if (stditem == nullptr)
     {
-        int cols = columnCount();
-        if (cols < 1) cols = 1;
-        QStringList ql, row;
-        QStandardItemModel::setRowCount(rows);
-        for (int i = 0; i < cols; i++)
-            ql << QString("0");
-        for (int i = chk; i < rows; i++)
+        QList<QStandardItem *> ql;
+        stditem = new QStandardItem("0");
+        ql.append(stditem);
+        for (int i = 0; i < rows; i++)
+            appendRow(ql);
+    }
+    else
+    {
+        int chk = rowCount();
+        if (chk != rows)
         {
-            row = getRowData(i);
-            if (row.count() < cols)
-                setRowData(i, ql);
+            int cols = columnCount();
+            QStandardItemModel::setRowCount(rows);
+            if (cols < 1) cols = 1;
+            QStringList ql, row;
+            for (int i = 0; i < cols; i++)
+                ql << QString("0");
+            for (int i = chk; i < rows; i++)
+            {
+                row = getRowData(i);
+                if (row.count() < cols)
+                    setRowData(i, ql);
+            }
+            emit dataChanged();
         }
-        emit dataChanged();
     }
 }
 
@@ -130,12 +142,21 @@ void tablemodel::removeHeader()
     setHeader(heads);
 }
 
-void tablemodel::setHeader(QStringList &titles)
+void tablemodel::setHeader(QStringList titles)
 {
     int cols = titles.count();
-    setColumnCount(cols);
+    if (cols == 0)
+    {
+        cols = columnCount();
+        for (int i = 0; i < cols; i++)
+            titles.append(QString::number(i+1));
+    }
+    else
+    {
+        setColumnCount(cols);
+    }
     for (int i = 0; i < cols; i++)
-        setHeaderData(i, Qt::Horizontal, QString(titles.at(i)));
+        setColumnHeader(i, QString(titles.at(i)));
 }
 
 void tablemodel::setColumnHeader(int column, QString title)

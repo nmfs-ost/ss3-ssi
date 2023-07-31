@@ -15,6 +15,11 @@ See ss_gui_copyright.txt for more information.
 
 History:
 ============================================================================
+    3.30.22.02
+    2023-07-31
+Improvements
+1. Corrected handling of ages for Nat Mort options 3 and 4.
+============================================================================
     3.30.22.01
     2023-07-21
 Improvements

@@ -32,7 +32,7 @@ public slots:
     QString getRowText (int row);
 
     void removeHeader();
-    void setHeader (QStringList &titles);
+    void setHeader (QStringList titles = QStringList());
     void setColumnHeader (int column, QString title);
     QString getColumnHeader(int column);
     void setRowHeader (int row, QString title);

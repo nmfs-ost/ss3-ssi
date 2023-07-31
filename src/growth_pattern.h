@@ -20,7 +20,7 @@ class growthPattern : public QObject
 public:
     growthPattern(ss_model *parent);
     growthPattern(const growthPattern &rhs);
-    ~growthPattern();
+    ~growthPattern() override;
 
     growthPattern &operator =(const growthPattern &rhs);
 
@@ -31,10 +31,12 @@ public slots:
     growth_morph * getMorph(int index) const;
     void setMorph(int index, growth_morph *value);
 
-    void setNatMMaleAgeList (QStringList data) {natMAges->setRowData(1, data);}
-    QStringList getNatMMaleAgeList () {return natMAges->getRowData(1);}
-    void setNatMFemAgeList (QStringList data) {natMAges->setRowData (0, data);}
+    void setNatMFemAgeList (QStringList &data);
+    void setNatMFemAgeHeader (QString header) {natMAges->setRowHeader(0, header);}
     QStringList getNatMFemAgeList () {return natMAges->getRowData(0);}
+    void setNatMMaleAgeList (QStringList data) {natMAges->setRowData(1, data);}
+    void setNatMMaleAgeHeader (QString header) {natMAges->setRowHeader(1, header);}
+    QStringList getNatMMaleAgeList ();
     tablemodel *getNatMAges () {return natMAges;}
 
     void setNumGenders(int num);
@@ -199,6 +201,7 @@ private:
     void clear();
     growthPattern& copy (const growthPattern &rhs);
 
+    int numGenders;
     tablemodel *natMAges;
 
     int timeVaryReadParams;

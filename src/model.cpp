@@ -731,7 +731,7 @@ void ss_model::set_num_genders(int genders)
 {
     int num = (genders == 1)? 1: 2;
     iNumGenders = genders;
-    getPopulation()->set_gender(num);
+    getPopulation()->setNumGenders(num);
     for (int i = 0; i < get_num_fleets(); i++)
     {
         getFleet(i)->setNumGenders(num);

@@ -30,8 +30,6 @@ growthPattern::growthPattern(ss_model *parent)
     maleCvVarParams->setNumParams(2);
 
     natMAges = new tablemodel ();
-    natMAges->setRowCount(3);
-    natMAges->removeHeader();
     femNatMrtParams = new longParameterModel(ssModel);
     femNatMrtVarParams = new timeVaryParameterModel(ssModel);
     femNatMrtParams->setNumParams(1);
@@ -48,6 +46,13 @@ growthPattern::growthPattern(ss_model *parent)
     connect (femWtLenParams, SIGNAL(paramChanged(int,QStringList)),
              femWtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
 
+    femMatureParams = new longParameterModel(ssModel);
+    femMatureVarParams = new timeVaryParameterModel(ssModel);
+    femMatureParams->setNumParams(4);
+    femMatureVarParams->setTotalNumVarTables(4);
+    connect (femMatureParams, SIGNAL(paramChanged(int,QStringList)),
+             femMatureVarParams, SLOT(changeVarParamData(int,QStringList)));
+
     maleWtLenParams = new longParameterModel(ssModel);
     maleWtLenVarParams = new timeVaryParameterModel(ssModel);
     maleWtLenParams->setNumParams(2);
@@ -55,12 +60,7 @@ growthPattern::growthPattern(ss_model *parent)
     connect (maleWtLenParams, SIGNAL(paramChanged(int,QStringList)),
              maleWtLenVarParams, SLOT(changeVarParamData(int,QStringList)));
 
-    femMatureParams = new longParameterModel(ssModel);
-    femMatureVarParams = new timeVaryParameterModel(ssModel);
-    femMatureParams->setNumParams(4);
-    femMatureVarParams->setTotalNumVarTables(4);
-    connect (femMatureParams, SIGNAL(paramChanged(int,QStringList)),
-             femMatureVarParams, SLOT(changeVarParamData(int,QStringList)));
+    setNumGenders(1);
 
     hermaphParams = new longParameterModel(ssModel);
     hermaphVarParams = new timeVaryParameterModel(ssModel);
@@ -113,8 +113,10 @@ growthPattern& growthPattern::operator = (const growthPattern &rhs)
 growthPattern& growthPattern::copy(const growthPattern &rhs)
 {
     clear();
-    num_morphs = rhs.getNum_morphs();
+    ssModel = static_cast<ss_model *>(parent());
+    setNumGenders(ssModel->get_num_genders());
 
+    num_morphs = rhs.getNum_morphs();
     for (int i = 0; i < num_morphs; i++)
         morphs.append(new growth_morph(*rhs.getMorph(i)));
     return *this;
@@ -153,8 +155,26 @@ void growthPattern::setMorph(int index, growth_morph * value)
     morphs[index] = value;
 }
 
+void growthPattern::setNatMFemAgeList(QStringList &data)
+{
+    natMAges->setColumnCount(data.count());
+    natMAges->setHeader();
+    natMAges->setRowData (0, data);
+}
+
+QStringList growthPattern::getNatMMaleAgeList()
+{
+    if (natMAges->hasIndex(1, 0))
+        return natMAges->getRowData(1);
+    else
+        return getNatMFemAgeList();
+}
+
 void growthPattern::setNumGenders(int num)
 {
+    numGenders = num;
+    natMAges->setRowCount(num);
+
     if (num == 1)
     {
         maleGrowthParams->setNumParams(0);
