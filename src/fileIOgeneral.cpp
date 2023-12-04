@@ -21,7 +21,7 @@ int writeVersionComment(ss_file *file)
     chars += file->writeline(line);
     line = QString("#_User_info_available_at:https://vlab.noaa.gov/group/stock-synthesis");
     chars += file->writeline(line);
-    line = QString("#_Source_code_at:_https://github.com/nmfs-stock-synthesis/stock-synthesis");
+    line = QString("#_Source_code_at:_https://github.com/nmfs-ost/ss3-source-code");
     chars += file->writeline(line);
 
     return chars;

@@ -7,13 +7,13 @@ configuring, running, and viewing output from SS3 models.
 ## Installation (Currently only Windows)
 
 Download the most recent 
-[compiled version of SSI](https://github.com/nmfs-stock-synthesis/ssi/releases). See the 
-[SSI user guides](https://github.com/nmfs-stock-synthesis/doc/tree/main/User_Guides/ssi)
+[compiled version of SSI](https://github.com/nmfs-ost/ss3-ssi/releases). See the 
+[SSI user guides](https://github.com/nmfs-ost/ss3-doc/tree/main/User_Guides/ssi)
 for an overview of how to use SSI.
 
 ## Questions, Requests, or Bugs?
 
-Please open an [issue](https://github.com/nmfs-stock-synthesis/ss-gui/issues),
+Please open an [issue](https://github.com/nmfs-ost/ss3-ssi/issues),
 post on the [forums](https://vlab.noaa.gov/web/stock-synthesis/public-forums)
 (account required), or email 
 [nmfs.stock.synthesis@noaa.gov](mailto:nmfs.stock.synthesis@noaa.gov).
